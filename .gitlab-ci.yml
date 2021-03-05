@@ -1,0 +1,42 @@
+stages:
+  - "API tests"
+  - "Report page"
+
+Auto test:
+  stage: "API tests"
+  allow_failure: true
+  script:
+    - .\startTest.ps1 -athistory_path http://autotest.pages.corp.dev.vtb/opk-api-tests/history
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week
+    when: always
+  except:
+    - pushes
+  only:
+    - web
+    - develop
+    - master
+    - sсhedules
+  tags:
+    - win
+    - at
+
+pages:
+  stage: "Report page"
+  allow_failure: true
+  script:
+    - echo "Deploy Allure Report Page"
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day
+    when: always
+  except:
+    - pushes
+  only:
+    - web
+    - develop
+    - master
+    - sсhedules
