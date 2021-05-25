@@ -1,42 +1,14 @@
 stages:
-  - "API tests"
-  - "Report page"
-
-Auto test:
-  stage: "API tests"
-  allow_failure: true
-  script:
-    - .\startTest.ps1 -athistory_path http://autotest.pages.corp.dev.vtb/opk-api-tests/history
-  artifacts:
-    paths:
-      - public
-    expire_in: 1 week
-    when: always
-  except:
-    - pushes
-  only:
-    - web
-    - develop
-    - master
-    - sсhedules
-  tags:
-    - win
-    - at
+  - run tests
 
 pages:
-  stage: "Report page"
-  allow_failure: true
+  stage: "run tests"
+  tags:
+    - deb
+    - rhel
   script:
-    - echo "Deploy Allure Report Page"
-  artifacts:
+    - /opt/apache-maven-3.6.0/bin/mvn test -Dcucumber.options="--tags @Smoke" -s src/settings/settings.xml -P Nexus -Denv=TEST
     paths:
       - public
-    expire_in: 1 day
-    when: always
-  except:
-    - pushes
-  only:
-    - web
-    - develop
-    - master
-    - sсhedules
+  after_script:
+    - /opt/apache-maven-3.6.0/bin/mvn allure:report -s src/settings/settings.xml -P Nexus -q

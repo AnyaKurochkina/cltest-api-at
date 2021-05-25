@@ -1,0 +1,11 @@
+{
+  "DEV": {
+    "dbAliases": "dbAliasesDev.csv"
+ },
+  "IFT": {
+    "dbAliases": "dbAliasesTest.csv"
+   },
+  "PROD": {
+    "dbAliases": "dbAliasesRelease.csv"
+  }
+}

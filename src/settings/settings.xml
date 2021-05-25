@@ -1,0 +1,20 @@
+<settings>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>http://nexus.ru-central1.internal:8081/repository/maven-central/</url>
+        </repository>
+    </repositories>
+    <servers>
+        <server>
+            <id>sazan-snapshot</id>
+            <username>nexususer</username>
+            <password>nexusUser1</password>
+        </server>
+        <server>
+            <id>sazan-release</id>
+            <username>nexususer</username>
+            <password>nexusUser1</password>
+        </server>
+    </servers>
+</settings>
