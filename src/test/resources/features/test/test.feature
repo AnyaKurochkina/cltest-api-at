@@ -14,13 +14,13 @@
     * Послать HTTP запрос в эндпоинт https://randomuser.me/api/ c дефолтными заголовками
     * Сгенерировать переменную responseVar по ответному http-сообщению
     * вывести в консоль переменную responseVar
- #   * Сохранить results:gender из json-тела сообщения responseVar в переменную param
+    * Сохранить results:gender из json-тела сообщения responseVar в переменную param
     * вывести в консоль переменную param
     * вывести в консоль переменную customerNum
- #   * Изменить значение переменной customerNum на ${param}
+    * Изменить значение переменной customerNum на ${param}
     * вывести в консоль переменную customerNum
 
   Сценарий: Инсерт данных
     * вывести в консоль переменную param
     * вывести в консоль переменную param
- #   * Убедиться в истинности выражения param == customerNum
+    * Убедиться в истинности выражения param == customerNum

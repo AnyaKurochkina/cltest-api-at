@@ -18,9 +18,10 @@ import clp.core.testdata.Templater;
 import clp.core.vars.LocalThead;
 import clp.core.vars.TestVars;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,34 @@ public class USBSSteps {
         LocalThead.setTestVars(null);
     }
 
+    @Тогда("^Запрос на получение токена$")
+    public void sendHttp() throws IOException {
+        String urlParameters  = "client_id=cloud_autotest&client_secret=1b365e15669fc8315245f844c84c4970&grant_type=client_credentials";
+        byte[] postData = urlParameters.getBytes( StandardCharsets.UTF_8 );
+        int postDataLength = postData.length;
+        String request = "http://dev-keycloak.apps.d0-oscp.corp.dev.vtb/auth/realms/Portal/protocol/openid-connect/token";
+        URL url = new URL( request );
+        HttpURLConnection conn= (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+        conn.setInstanceFollowRedirects(false);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setRequestProperty("charset", "utf-8");
+        conn.setRequestProperty("Content-Length", Integer.toString(postDataLength ));
+        conn.setUseCaches(false);
+
+        System.out.println(postDataLength);
+
+        try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
+
+            conn.getOutputStream().write(postData);
+            Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            for (int c; (c = in.read()) >= 0;)
+                System.out.print((char)c);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Тогда("^Послать HTTP запрос ?(.*) в эндпоинт ([^\\s]*)$")
     public void sendHttp(String bodyFile, String endPoint, DataTable dataTable) throws IOException, ParseException, CustomException {
@@ -68,11 +97,13 @@ public class USBSSteps {
         Map<String, String> headers = dataTable.asMap(String.class, String.class);
         for(Map.Entry<String,String> entry : headers.entrySet()) {
             message.setHeader(entry.getKey(), entry.getValue());
-        }
+      }
         if(checkVars(endPoint)) {
             endPoint = replaceTestVariableValue(endPoint, testVars);
         }
+
         testVars.setResponse(NetworkUtils.sendHttp(message, endPoint));
+
         log.debug("Get response with body: {}", testVars.getResponse().getBody());
         LocalThead.setTestVars(testVars);
     }
