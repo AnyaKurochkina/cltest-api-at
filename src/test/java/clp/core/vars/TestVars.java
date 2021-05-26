@@ -24,7 +24,7 @@ public class TestVars {
     public Map<String, KafkaConsumerImpl> getKafkaConsumerMap() {
         return kafkaConsumerMap;
     }
-
+    
     public void addConsumer(String kafkaProducerAlias, KafkaConsumerImpl kafkaConsumer){
         kafkaConsumerMap.put(kafkaProducerAlias, kafkaConsumer);
     }
@@ -77,11 +77,6 @@ public class TestVars {
         //Comment for Sonar, explaining why this method is empty. Its empty because I decided it to be
     }
 
-
-    public Map<String, String> getVariables() {
-        return this.variables;
-    }
-
     public DataTable getDataTable() {
         return dataTable;
     }
@@ -129,7 +124,12 @@ public class TestVars {
         return variables.get(key);
     }
 
+    public Map<String, String> getVariables() {
+        return this.variables;
+    }
+
     public void addMessage(String key, Message message){
         messages.put(key,message);
     }
+
 }
