@@ -3,12 +3,13 @@
 Функциональность: Тестовый пример
 
   Предыстория: Получение токена
-    * Послать HTTP запрос json/test1.json в эндпоинт http://dev-keycloak.apps.d0-oscp.corp.dev.vtb/auth/realms/Portal/protocol/openid-connect/token
-      | Content-Type | application/x-www-form-urlencoded |
+
+    * Авторизация с запросом json/auth.json на портале http://dev-keycloak.apps.d0-oscp.corp.dev.vtb/auth/realms/Portal/protocol/openid-connect/token
+      | username | portal_admin_at |
+      | password | portal_admin_at|
     * Сохранить access_token из json-тела последнего http-сообщения в переменную access_token
-    * вывести в консоль переменную access_token
-  
-  Сценарий: Получение токена
+
+  Сценарий: Просмотр токена
     
      * вывести в консоль переменную access_token
 

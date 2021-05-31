@@ -82,6 +82,33 @@ public class USBSSteps {
         }
     }
 
+    @Тогда("^Авторизация с запросом ?(.*) на портале ([^\\s]*)$")
+    public void AuthHttp(String bodyFile, String endPoint, DataTable dataTable) throws IOException, ParseException, CustomException {
+
+        Map<String, String> map = dataTable.asMap(String.class, String.class);
+        TestVars testVars = LocalThead.getTestVars();
+        Message message;
+        if (checkVars(endPoint)) {
+            endPoint = endPoint.replace("${env}", configer.getEnviroment().toLowerCase());
+        }
+        if (!bodyFile.equals("")) {
+            String body = new PrepareBody(this.scenario.getUri().replaceFirst("file:", ""), bodyFile).loadBody();
+            String filledBody = new Templater(body, testVars.getVariables()).fillTemplate();
+            filledBody = filledBody + "&username=" + map.get("username") + "&password=" + map.get("password");
+            message = new Message(filledBody);
+            log.info("filledBody=" + filledBody);
+        } else {
+            message = new Message("");
+        }
+        message.setHeader("Content-Type","application/x-www-form-urlencoded");
+        if(checkVars(endPoint)) {
+            endPoint = replaceTestVariableValue(endPoint, testVars);
+        }
+        testVars.setResponse(NetworkUtils.sendHttp(message, endPoint));
+        log.debug("Get response with body: {}", testVars.getResponse().getBody());
+        LocalThead.setTestVars(testVars);
+    }
+
     @Тогда("^Послать HTTP запрос ?(.*) в эндпоинт ([^\\s]*)$")
     public void sendHttp(String bodyFile, String endPoint, DataTable dataTable) throws IOException, ParseException, CustomException {
         TestVars testVars = LocalThead.getTestVars();
