@@ -14,7 +14,7 @@ public class Configurier {
     private static volatile Configurier instance;
     private static final Logger log = LoggerFactory.getLogger(Configurier.class);
     private static final String RESOURCE_PATH = StringUtils.concatPath("src", "test", "resources");
-    private static final String APP_FILE_NAME = "application.properties";
+    private static final String APP_FILE_NAME = "config/application.properties";
     private static final String APP_FILE_PATH = StringUtils.concatPathToFile(RESOURCE_PATH, APP_FILE_NAME);
     private static final String ENV_FILE_NAME = "conf.json";
     private static final String ENV_FILE_PATH = StringUtils.concatPathToFile(RESOURCE_PATH, ENV_FILE_NAME);
