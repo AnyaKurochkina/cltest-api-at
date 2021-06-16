@@ -27,8 +27,11 @@ import cucumber.api.java.ru.И;
 import cucumber.api.java.ru.Тогда;
 import io.cucumber.datatable.DataTable;
 import io.qameta.allure.Allure;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jpos.iso.ISOException;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,7 +181,7 @@ public class SystemCommonSteps {
     }
 
     @Тогда("^вывести в консоль переменную ([^\"]*)$")
-    public void printVar(String varname) {
+    public void  printVar(String varname) {
         TestVars testVars = LocalThead.getTestVars();
         System.out.println(testVars.getVariable(varname));
     }
@@ -758,4 +761,153 @@ public class SystemCommonSteps {
         LocalThead.setTestVars(testVars);
         replaceAllTestVariableValue();
     }
+
+    //Данные задаются в feature file под строкой, например
+    //  * пользователь сохраняет файл "filename" в каталог "catalog" c данными
+    //     |   c1r1data       |  c2r1data    |
+    //     |   c1r2data       |  c2r2data    |
+    //     |   c1r3data       |  c2r3data    |
+    @Тогда("^пользователь сохраняет файл \"([^\"]*)\" в каталог \"([^\"]*)\" c данными$")
+    public void createFileToPathWithData(String fileName, String catalogPath, DataTable dataTable) throws IOException {
+
+        String fullPath = catalogPath.trim() + "/" + fileName.trim();
+        log.info("пользователь сохраняет файл " + fileName + " в каталог " + catalogPath + " c данными");
+        if ("JSON".equals(FilenameUtils.getExtension(fileName).toUpperCase())) {
+            writeJsonFile(dataTable, fullPath);
+        }
+    }
+
+    //данные из HashMap "testData" пишутся в файл "fileName" в папке проекта
+    @Тогда("^пользователь сохраняет данные из HashMap (testData|lastJsonData) в файл \"([^\"]*)\" в папке проекта$")
+    public void createFileWithDataFromHashMap(String hashmap, String fileName) throws IOException {
+
+        String fullPath = Configurier.getInstance().getAppProp("data.folder").trim() + "/" + fileName.trim();
+        log.info("пользователь сохраняет файл " + fileName + " в каталог " + Configurier.getInstance().getAppProp("data.folder") + " c данными");
+        if ("JSON".equals(FilenameUtils.getExtension(fileName).toUpperCase())) {
+            writeJsonFileFromHashMap(hashmap, fullPath);
+        }
+    }
+
+    //данные из HashMap "testData" пишутся в файл "fileName" в указанный каталог "catalogPath"
+    @Тогда("^пользователь сохраняет данные из HashMap (testData|lastJsonData) в файл \"([^\"]*)\" в каталоге \"([^\"]*)\"$")
+    public void createFileToPathWithDataFromHashMap(String hashmap, String fileName, String catalogPath) throws IOException {
+
+        String fullPath = catalogPath.trim() + "/" + fileName.trim();
+        log.info("пользователь сохраняет файл " + fileName + " в каталог " + catalogPath + " c данными");
+        if ("JSON".equals(FilenameUtils.getExtension(fileName).toUpperCase())) {
+            writeJsonFileFromHashMap(hashmap, fullPath);
+        }
+    }
+
+    // Пользователь читает файл "fileName" в каталоге "catalogPath" и помещает данные в HashMap lastJsonData
+    @Тогда("^пользователь читает файл \"([^\"]*)\" в каталоге \"([^\"]*)\"$")
+    public void readFileFromPath(String fileName, String catalogPath) {
+
+        String fullPath = catalogPath.trim() + "/" + fileName.trim();
+
+        log.info("пользователь читает файл " + fullPath);
+        if ("JSON".equals(FilenameUtils.getExtension(fullPath).toUpperCase()))
+            readJsonFileWithPath(fullPath);
+    }
+
+    // Пользователь читает файл "fileName" в папке проекта и помещает данные в HashMap lastJsonData
+    @Тогда("^пользователь читает файл \"([^\"]*)\" из папки проекта$")
+    public void readFileFromPrjFolder(String fileName) {
+        String fullPath = Configurier.getInstance().getAppProp("data.folder").trim() + "/" + fileName.trim();
+        log.info("пользователь читает файл " + fileName + " из папки проекта " + Configurier.getInstance().getAppProp("data.folder") + " и помещает данные в HashMap lastJsonData");
+        if ("JSON".equals(FilenameUtils.getExtension(fullPath).toUpperCase()))
+            readJsonFileWithPath(fullPath);
+    }
+
+    // Пользователь читает файл "fileName" с типом "fileType" в каталоге "catalogPath" и помещает данные в HashMap lastJsonData
+    @Тогда("^пользователь читает ([^\"]*) файл \"([^\"]*)\" находящийся в каталоге \"([^\"]*)\"")
+    public void readFileInCatalog(String fileType, String fileName, String filePath) {
+        String fullFilePath = filePath.trim() + "/" + fileName.trim() + "." + fileType.trim();
+        log.info("пользователь читает файл " + fullFilePath);
+        if ("JSON".equals(fileType.toUpperCase())) {
+            readJsonFileWithPath(fullFilePath);
+        }
+    }
+
+
+    @Тогда("^Выгрузка тестовых данных из БД запросом \"([^\"]*)\" в каталог \"([^\"]*)\"")
+    public void writeJsonFilefromdb(String SQLText, String filePath) {
+//       Теперь этот метод вызывается в Aspect efr.aop.JsonHandleAspect, здесь не должно быть реализации
+    }
+
+    @Тогда("^пользователь читает файлы из папки проекта$")
+    public void readFilesFromPrjFolder(DataTable dataTable) {
+        String fileName;
+        List<List<String>> table = dataTable.cells();
+        log.info("пользователь читает файлы и переносит их данные в одну hashmap testData");
+        for (List m : table) {
+            fileName = m.get(0).toString();
+            readFileFromPrjFolder(fileName);
+            log.info("пользователь добавляет данные из lastJsonData к уже имеющимся в testData");
+            TestVars.getTestData().putAll(TestVars.getLastJsonData());
+        }
+        log.info("пользователь очищает lastJsonData и заполняет ее данными из testData");
+        TestVars.getLastJsonData().clear();
+        TestVars.getLastJsonData().putAll(TestVars.getTestData());
+        TestVars.getTestData().clear();
+
+    }
+
+
+    private void writeJsonFile(DataTable dataTable, String filePath) throws IOException {
+        List<List<String>> table = dataTable.cells();
+        JSONObject jsonObject = new JSONObject();
+        for (List list : table) {
+            jsonObject.put(list.get(0).toString(), list.get(1).toString());
+        }
+        DataFileHelper.write(filePath, jsonObject.toJSONString());
+
+    }
+
+    // Используется указанная HashMap
+    private void writeJsonFileFromHashMap(String hashmap, String filePath) throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        HashMap<String, String> tmp = new HashMap<String, String>();
+        switch (hashmap) {
+            case "testData":
+                tmp = new HashMap<String, String>(TestVars.getTestData());
+                break;
+            case "lastJsonData":
+                tmp = new HashMap<String, String>(TestVars.getLastJsonData());
+                break;
+        }
+
+        for (Map.Entry<String, String> entry : tmp.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            jsonObject.put(key, value);
+        }
+        DataFileHelper.write(filePath, jsonObject.toJSONString());
+
+    }
+
+
+    // Используется HashMap lastJsonData
+    private void readJsonFileWithPath(String fullFilePath) {
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = (JSONObject) JSONValue.parseWithException(DataFileHelper.read(fullFilePath));
+        } catch (org.json.simple.parser.ParseException | IOException e) {
+            e.printStackTrace();
+        }
+        TestVars.setLastJsonData(jsonObject);
+    }
+
+    @Тогда("^пользователь добавляет содержимое (lastJsonData в testData|testData в lastJsonData)$")
+    public void putAllFromOneToAnotherHashmap(String hashmap) {
+        switch (hashmap) {
+            case ("lastJsonData в testData"):
+                TestVars.getTestData().putAll(TestVars.getLastJsonData());
+                break;
+            case ("testData в lastJsonData"):
+                TestVars.getLastJsonData().putAll(TestVars.getTestData());
+                break;
+        }
+    }
+
 }
