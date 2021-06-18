@@ -58,7 +58,7 @@ public class CustomSteps {
         Map<String, String> account = dataTable.asMap(String.class, String.class);
 
         org.json.simple.parser.JSONParser parser = new JSONParser();
-        Object obj = parser.parse(new FileReader("./src/test/resources/data/auth.json"));
+        Object obj = parser.parse(new FileReader("./src/test/resources/test/auth.json"));
 
         JSONObject jsonObject =  (JSONObject) obj;
         jsonObject.put("username", account.get("username"));

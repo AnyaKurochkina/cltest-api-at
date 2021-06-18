@@ -36,6 +36,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+//import ru.sbtqa.tag.stepdefs.SetupSteps;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -54,7 +55,6 @@ import java.util.regex.Pattern;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.junit.Assert.*;
-
 
 public class SystemCommonSteps {
     private static final Logger log = LoggerFactory.getLogger(SystemCommonSteps.class);
@@ -761,6 +761,8 @@ public class SystemCommonSteps {
         LocalThead.setTestVars(testVars);
         replaceAllTestVariableValue();
     }
+
+    // Работа с файлами
 
     //Данные задаются в feature file под строкой, например
     //  * пользователь сохраняет файл "filename" в каталог "catalog" c данными

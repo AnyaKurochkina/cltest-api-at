@@ -21,6 +21,8 @@ import static junit.framework.TestCase.fail;
 
 public class JsonHelper {
 
+    // Общие методы
+
     public List getJsonData(String file) throws IOException, ParseException {
         String filePath = Configurier.getInstance().getAppProp("data.folder") + "/" + file;
 
