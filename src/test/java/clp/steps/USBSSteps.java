@@ -1,5 +1,6 @@
 package clp.steps;
 
+import clp.core.helpers.JsonHelper;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -17,6 +18,7 @@ import clp.core.testdata.PrepareBody;
 import clp.core.testdata.Templater;
 import clp.core.vars.LocalThead;
 import clp.core.vars.TestVars;
+import sun.usagetracker.UsageTrackerClient;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -27,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static clp.core.helpers.JsonHelper.testValues;
+import static clp.steps.SystemCommonSteps.*;
 import static org.junit.Assert.assertTrue;
 
 public class USBSSteps {
@@ -46,6 +50,7 @@ public class USBSSteps {
         TestVars testVars = new TestVars();
         LocalThead.setTestVars(testVars);
         configer.loadApplicationPropertiesForSegment();
+
     }
 
     @After
@@ -82,31 +87,56 @@ public class USBSSteps {
         }
     }
 
-    @Тогда("^Авторизация с запросом ?(.*) на портале ([^\\s]*)$")
-    public void AuthHttp(String bodyFile, String endPoint, DataTable dataTable) throws IOException, ParseException, CustomException {
+    @Тогда("^Получение токена для пользователя")
+    public void AuthHttp(DataTable dataTable) throws IOException, ParseException, CustomException {
+
+        TestVars testVars = LocalThead.getTestVars();
+        String tagName = String.valueOf(scenario.getSourceTagNames());
+        String testNum = tagName.replaceAll("[^A-Za-zА-Яа-я0-9]", "");
+        testVars.setVariables("testNum", testNum);
+
+        log.info(testNum);
+        // Читаем ендпоинт кейклок из конфигурационного файла
+        String endPoint = Configurier.getInstance().getAppProp("host_kk");
+        
+        // Читаем тестовые данные для получения токена
+
+        String[] testFields = new String [] {"client_id", "client_secret", "grant_type"};
+
+        JsonHelper.getAllTestDataValues(testNum + ".json", "/json/tests", "Токен" );
 
         Map<String, String> map = dataTable.asMap(String.class, String.class);
-        TestVars testVars = LocalThead.getTestVars();
+      
         Message message;
         if (checkVars(endPoint)) {
             endPoint = endPoint.replace("${env}", configer.getEnviroment().toLowerCase());
         }
-        if (!bodyFile.equals("")) {
-            String body = new PrepareBody(this.scenario.getUri().replaceFirst("file:", ""), bodyFile).loadBody();
-            String filledBody = new Templater(body, testVars.getVariables()).fillTemplate();
-            filledBody = filledBody + "&username=" + map.get("username") + "&password=" + map.get("password");
-            message = new Message(filledBody);
+        if (!testValues.isEmpty()) {
+
+            String filledBody = "client_id=" + testValues.get("client_id") + "&client_secret="+ testValues.get("client_secret") + "&grant_type=" + testValues.get("grant_type") + "&username=" + map.get("username") + "&password=" + map.get("password");
             log.info("filledBody=" + filledBody);
+            message = new Message(filledBody);
         } else {
             message = new Message("");
         }
+
         message.setHeader("Content-Type","application/x-www-form-urlencoded");
         if(checkVars(endPoint)) {
             endPoint = replaceTestVariableValue(endPoint, testVars);
         }
+
         testVars.setResponse(NetworkUtils.sendHttp(message, endPoint));
-        log.debug("Get response with body: {}", testVars.getResponse().getBody());
-        LocalThead.setTestVars(testVars);
+
+        String messagebody = testVars.getResponse().getBody();
+        log.debug("Get response with body: {}", messagebody);
+
+        String jsonTokenVal = getValueFromJsonPath(messagebody, "access_token");
+        testVars.setVariables("access_token", jsonTokenVal);
+        String jsonTokenType = getValueFromJsonPath(messagebody, "token_type");
+        testVars.setVariables("token_type", jsonTokenType);
+        log.debug(String.format("Variable with value %s stored to %s", jsonTokenType, "token_type"));
+        log.debug(String.format("Variable with value %s stored to %s", jsonTokenVal, "access_token"));
+
     }
 
     @Тогда("^Послать HTTP запрос ?(.*) в эндпоинт ([^\\s]*)$")

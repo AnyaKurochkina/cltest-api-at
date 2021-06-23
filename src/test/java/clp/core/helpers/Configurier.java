@@ -80,9 +80,13 @@ public class Configurier {
     public boolean loadApplicationPropertiesForSegment() throws CustomException {
         String propertyPath;
         String envPropertyPath;
+
         if (System.getProperty(APP_FILE_NAME) != null) {
             propertyPath = System.getProperty(APP_FILE_NAME);
             envPropertyPath = System.getProperty(ENV_FILE_NAME);
+
+            System.out.println("propertyPath =" + propertyPath + "envPropertyPath = " + envPropertyPath );
+
         } else {
             String rootPath = System.getProperty("user.dir");
             propertyPath = StringUtils.concatPath(rootPath, APP_FILE_PATH);
