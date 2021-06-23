@@ -1,0 +1,6 @@
+{
+  "Administrator" : {"Логин" :"portal_admin" , "Пароль" : "portal_admin", "Имя" : "Admin", "Email" : "some-admin-email@nonce.fake"},
+  "User" : {"Логин" :"portal_user" , "Пароль" : "portal_user", "Имя" : "User", "Email" : "some-user-email@nonce.fake"}
+}
+
+

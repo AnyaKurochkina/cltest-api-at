@@ -21,6 +21,11 @@
     </properties>
 
     <dependencies>
+<!--        <dependency>-->
+<!--            <groupId>ru.vtb</groupId>-->
+<!--            <artifactId>page-factory</artifactId>-->
+<!--            <version>1.6.4</version>-->
+<!--        </dependency>-->
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -121,11 +126,6 @@
             <version>1.9</version>
         </dependency>
         <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <version>7.2.2.jre8</version>
-        </dependency>
-        <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-cucumber4-jvm</artifactId>
             <version>2.10.0</version>
@@ -180,15 +180,21 @@
         </dependency>
 
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.2.11</version>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>4.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.11.jre6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
         </dependency>
 
         <dependency>
@@ -564,18 +570,4 @@
             </build>
         </profile>
     </profiles>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>clp-snapshot</id>
-            <url>${snapshot_url}</url>
-            <!--<url>${snapshot_url}http://nexus.ru-central1.internal:8081/repository/maven-snapshots/</url>-->
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
-        <repository>
-            <id>clp-release</id>
-            <url>${release_url}</url>
-            <!--<url>${release_url}http://nexus.ru-central1.internal:8081/repository/maven-releases/</url>-->
-            <uniqueVersion>false</uniqueVersion>
-        </repository>
-    </distributionManagement>
 </project>

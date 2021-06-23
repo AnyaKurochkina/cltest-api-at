@@ -14,9 +14,9 @@ public class Configurier {
     private static volatile Configurier instance;
     private static final Logger log = LoggerFactory.getLogger(Configurier.class);
     private static final String RESOURCE_PATH = StringUtils.concatPath("src", "test", "resources");
-    private static final String APP_FILE_NAME = "application.properties";
+    private static final String APP_FILE_NAME = "config/application.properties";
     private static final String APP_FILE_PATH = StringUtils.concatPathToFile(RESOURCE_PATH, APP_FILE_NAME);
-    private static final String ENV_FILE_NAME = "conf.json";
+    private static final String ENV_FILE_NAME = "config/conf.json";
     private static final String ENV_FILE_PATH = StringUtils.concatPathToFile(RESOURCE_PATH, ENV_FILE_NAME);
     private static final String DB_USER = "db.username";
     private static final String DB_PASSWORD = "db.password";
@@ -27,9 +27,12 @@ public class Configurier {
     private static final String DB_PROTOCOL = "db.protocol";
     private static final String ISO_HOST = "iso.host";
     private static final String ISO_PORT = "iso.port";
+    private static final String TEST_DATA_FOLDER = "testdata.folder";
     private static final String ENVIROMENT = "env";
     private static final String COUNT = "count";
     private static final String WAVE = "wave";
+    private static final String HOST_KONG = "host_kk";
+    private static final String HOST = "host";
     private static final String DB_DRIVER_TYPE = "db.driver.type";
     private final String enviroment = System.getProperty(ENVIROMENT);
     private final String count = System.getProperty(COUNT);
@@ -77,9 +80,13 @@ public class Configurier {
     public boolean loadApplicationPropertiesForSegment() throws CustomException {
         String propertyPath;
         String envPropertyPath;
+
         if (System.getProperty(APP_FILE_NAME) != null) {
             propertyPath = System.getProperty(APP_FILE_NAME);
             envPropertyPath = System.getProperty(ENV_FILE_NAME);
+
+            System.out.println("propertyPath =" + propertyPath + "envPropertyPath = " + envPropertyPath );
+
         } else {
             String rootPath = System.getProperty("user.dir");
             propertyPath = StringUtils.concatPath(rootPath, APP_FILE_PATH);
@@ -123,6 +130,7 @@ public class Configurier {
                 applicationProperties.put(key, properties.getProperty(key));
             }
         }
+        // DB Properties -- start
         if (System.getProperty(DB_PORT) != null) {
             applicationProperties.put(DB_PORT, System.getProperty(DB_PORT));
         }
@@ -130,15 +138,26 @@ public class Configurier {
             applicationProperties.put(DB_HOST, System.getProperty(DB_HOST));
             applicationProperties.put("ssh.host", System.getProperty(DB_HOST));
         }
+        // DB Properties -- end
+
+        // ISO Properties -- start
         if (System.getProperty("profile.iso.port") != null) {
             applicationProperties.put(ISO_PORT, System.getProperty(ISO_PORT));
         }
         if (System.getProperty("profile.iso.host") != null) {
             applicationProperties.put(ISO_HOST, System.getProperty(ISO_HOST));
         }
+        // ISO Properties -- end
 
+        // Testdata folder Properties -- start
 
-//        applicationProperties.put("db.url", dbUrl());
+        if (System.getProperty("testdata.folder") != null) {
+            applicationProperties.put(TEST_DATA_FOLDER, System.getProperty(TEST_DATA_FOLDER));
+        }
+
+        // Testdata folder Properties -- end
+
+//
 
         return true;
     }
