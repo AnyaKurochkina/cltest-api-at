@@ -9,8 +9,9 @@
       | username | portal_admin_at |
       | password | portal_admin_at |
 
+  Сценарий: Заказ продукта
 
-  Сценарий: Просмотр токена
-    
-     * вывести в консоль переменную access_token
-     * вывести в консоль переменную testNum
+    * Заказ продукта "Rhel" в проекте proj-k7ua2iq6zh
+      | count       | 2           |
+      | net_segment | dev-srv-app |
+      | platform    | OpenStack   |

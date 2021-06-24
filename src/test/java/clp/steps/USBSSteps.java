@@ -1,6 +1,7 @@
 package clp.steps;
 
 import clp.core.helpers.JsonHelper;
+import com.jayway.jsonpath.JsonPath;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -11,7 +12,6 @@ import io.restassured.RestAssured;
 import io.restassured.config.EncoderConfig;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.velocity.runtime.parser.ParseException;
 import java.util.List;
@@ -145,6 +145,42 @@ public class USBSSteps {
         testVars.setVariables("token_type", jsonTokenType);                 // Записываем тип токена в переменную
         log.debug(String.format("Variable with value %s stored to %s", jsonTokenType, "token_type"));
         log.debug(String.format("Variable with value %s stored to %s", jsonTokenVal, "access_token"));
+
+    }
+
+    @Тогда("^Заказ продукта \"([^\"]*)\" в проекте ([^\\s]*)")
+    public void RhelOrder(String product, String project, DataTable dataTable) throws IOException, org.json.simple.parser.ParseException {
+    
+        baseURI = Configurier.getInstance().getAppProp("host");
+        String datafolder = Configurier.getInstance().getAppProp("data.folder");
+
+        TestVars testVars = LocalThead.getTestVars();
+        String token = testVars.getVariable("token");
+        String tokenType = testVars.getVariable("token_type");
+        String bearerToken = tokenType + " " + token;
+
+        Map<String, String> order = dataTable.asMap(String.class, String.class);
+
+        org.json.simple.parser.JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new FileReader(datafolder + "/" + product.toLowerCase() + ".json"));
+        JSONObject request =  (JSONObject) obj;
+        // Дополнительные настройки продукта
+        com.jayway.jsonpath.JsonPath.parse(request).set("$.order.count", Integer.parseInt(order.get("count")));
+        com.jayway.jsonpath.JsonPath.parse(request).set("$.order.attrs.default_nic.net_segment", order.get("net_segment"));
+        JsonPath.parse(request).set("$.order.attrs.platform", order.get("platform"));
+
+        System.out.println(request);
+//
+//        Response response = RestAssured
+//                .given()
+//                .contentType("application/json; charset=UTF-8")
+//                .header("Authorization", bearerToken)
+//                .header("Content-Type", "application/json")
+//                .body(request)
+//                .when()
+//                .post("order-service/api/v1/projects/" + project + "/orders");
+//
+//        assertTrue("Код ответа не равен 201", response.statusCode() == 201);
 
     }
 
