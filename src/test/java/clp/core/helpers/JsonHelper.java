@@ -111,9 +111,11 @@ public class JsonHelper {
         }
     }
 
-    // Чтение файла из папки внутри "src/test/resources"
-    private static void loadTest(String filename, String testfolder) {
-        getSystemCommonSteps().readFileFromPath(filename, (new File("src/test/resources")).getAbsolutePath() + testfolder); //читаем файл с тестовыми данными
+    // Чтение файла из папки data.folder
+    private static void loadTest(String filename) {
+
+        String datafolder = Configurier.getInstance().getAppProp("data.folder");
+        getSystemCommonSteps().readFileFromPath(filename, (new File(datafolder)).getAbsolutePath()); //читаем файл с тестовыми данными
         HashMap<String, String> tmp = new HashMap<String, String>(TestVars.getLastJsonData());
 
         allTests = new HashMap<String, HashMap<String, String>>();
@@ -141,7 +143,8 @@ public class JsonHelper {
     }
     // Чтение тестовых данных файла "testdata.json" из папки  "/json/tests" в каталоге  "src/test/resources"
     private static void loadAllTests() {
-        getSystemCommonSteps().readFileFromPath("testdata.json", (new File("src/test/resources")).getAbsolutePath() + "/json/tests"); //читаем клиентов
+        String datafolder = Configurier.getInstance().getAppProp("data.folder");
+        getSystemCommonSteps().readFileFromPath("testdata.json", (new File(datafolder)).getAbsolutePath()); 
         HashMap<String, String> tmp = new HashMap<String, String>(TestVars.getLastJsonData());
 
         allTests = new HashMap<String, HashMap<String, String>>();
@@ -168,8 +171,8 @@ public class JsonHelper {
         }
     }
     // Чтение поля конкретного теста из файла в заданной папке
-    public static String getTestDataFieldValue(String filename, String datafolder, String TestID, String fieldName) {
-        if (allTests == null) loadTest(filename, datafolder);
+    public static String getTestDataFieldValue(String filename, String TestID, String fieldName) {
+        if (allTests == null) loadTest(filename);
         String res = null;
         if (allTests.containsKey(TestID)) {
             res = allTests.get(TestID).get(fieldName);
@@ -183,8 +186,8 @@ public class JsonHelper {
     }
 
     // Чтение нескольких полей конкретного теста из файла в заданной папке
-    public static void getAllTestDataValues(String filename, String datafolder, String TestID) {
-        if (allTests == null) loadTest(filename, datafolder);
+    public static void getAllTestDataValues(String filename, String TestID) {
+        if (allTests == null) loadTest(filename);
 
         if (allTests.containsKey(TestID)) {
 
@@ -194,8 +197,8 @@ public class JsonHelper {
         }
     }
     // Чтение массива полей конкретного теста из файла в заданной папке
-    public static void getTestDataValues(String filename, String datafolder, String TestID, String[] TestFields) {
-        if (allTests == null) loadTest(filename, datafolder);
+    public static void getTestDataValues(String filename, String TestID, String[] TestFields) {
+        if (allTests == null) loadTest(filename);
 
         for (int i=0; i<TestFields.length;i++) {
 

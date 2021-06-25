@@ -58,7 +58,7 @@ public class CustomSteps {
         Map<String, String> account = dataTable.asMap(String.class, String.class);
 
         org.json.simple.parser.JSONParser parser = new JSONParser();
-        Object obj = parser.parse(new FileReader("./src/test/resources/test/auth.json"));
+        Object obj = parser.parse(new FileReader("./src/test/resources/features/test/json/auth2.json"));
 
         JSONObject jsonObject =  (JSONObject) obj;
         jsonObject.put("username", account.get("username"));
@@ -80,7 +80,8 @@ public class CustomSteps {
                 .when()
                 .post();
 
-        String token = response.jsonPath().get("access_token");
+
+        String token = response.getBody().jsonPath().getString("access_token");
         testVars.setVariables("token", token);
         String token_type = response.jsonPath().get("token_type");
         testVars.setVariables("token_type", token_type);

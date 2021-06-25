@@ -1,12 +1,22 @@
 package clp.steps;
 
 import clp.core.helpers.JsonHelper;
+import com.jayway.jsonpath.JsonPath;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.ru.Тогда;
+import gherkin.deps.com.google.gson.Gson;
 import io.cucumber.datatable.DataTable;
+import io.restassured.RestAssured;
+import io.restassured.config.EncoderConfig;
+import io.restassured.http.ContentType;
+import io.restassured.parsing.Parser;
+import io.restassured.response.Response;
 import org.apache.velocity.runtime.parser.ParseException;
+import java.util.List;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import clp.core.exception.CustomException;
@@ -18,7 +28,6 @@ import clp.core.testdata.PrepareBody;
 import clp.core.testdata.Templater;
 import clp.core.vars.LocalThead;
 import clp.core.vars.TestVars;
-import sun.usagetracker.UsageTrackerClient;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -31,6 +40,8 @@ import java.util.Properties;
 
 import static clp.core.helpers.JsonHelper.testValues;
 import static clp.steps.SystemCommonSteps.*;
+import static io.restassured.RestAssured.baseURI;
+import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertTrue;
 
 public class USBSSteps {
@@ -58,52 +69,50 @@ public class USBSSteps {
         LocalThead.setTestVars(null);
     }
 
-    @Тогда("^Запрос на получение токена$")
-    public void sendHttp() throws IOException {
-        String urlParameters  = "client_id=cloud_autotest&client_secret=1b365e15669fc8315245f844c84c4970&grant_type=client_credentials";
-        byte[] postData = urlParameters.getBytes( StandardCharsets.UTF_8 );
-        int postDataLength = postData.length;
-        String request = "http://dev-keycloak.apps.d0-oscp.corp.dev.vtb/auth/realms/Portal/protocol/openid-connect/token";
-        URL url = new URL( request );
-        HttpURLConnection conn= (HttpURLConnection) url.openConnection();
-        conn.setDoOutput(true);
-        conn.setInstanceFollowRedirects(false);
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        conn.setRequestProperty("charset", "utf-8");
-        conn.setRequestProperty("Content-Length", Integer.toString(postDataLength ));
-        conn.setUseCaches(false);
+    @Тогда("^Получение Token для пользователя$")
+    public void getTokenRest(DataTable dataTable) throws IOException, org.json.simple.parser.ParseException {
 
-        System.out.println(postDataLength);
+        TestVars testVars = LocalThead.getTestVars();
+        String testNum = SystemCommonSteps.getTagName();
 
-        try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
+        JsonHelper.getAllTestDataValues(testNum + ".json", "Токен" );  // Читаем тестовые данные для получения токена
 
-            conn.getOutputStream().write(postData);
-            Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-            for (int c; (c = in.read()) >= 0;)
-                System.out.print((char)c);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        baseURI = Configurier.getInstance().getAppProp("host_kk");
+        Map<String, String> account = dataTable.asMap(String.class, String.class);
+
+        RestAssured.defaultParser = Parser.JSON;
+
+        Response response = RestAssured
+                .given()
+                .config(RestAssured.config()
+                        .encoderConfig(EncoderConfig.encoderConfig()
+                                .encodeContentTypeAs("x-www-form-urlencoded", ContentType.URLENC)))
+                .contentType("application/x-www-form-urlencoded; charset=UTF-8")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .formParam("client_id", testValues.get("client_id"))
+                .formParam("client_secret", testValues.get("client_secret"))
+                .formParam("grant_type", testValues.get("grant_type"))
+                .formParam("username", account.get("username"))
+                .formParam("password", account.get("password"))
+                .when()
+                .post();
+
+        String jsonTokenVal = getValueFromJsonPath(response.asString(), "access_token");
+        testVars.setVariables("access_token", jsonTokenVal);
+        String jsonTokenType = getValueFromJsonPath(response.asString(), "token_type");
+        testVars.setVariables("token_type", jsonTokenType);
+
     }
 
-    @Тогда("^Получение токена для пользователя")
+    @Тогда("^Получение токена для пользователя$")
     public void AuthHttp(DataTable dataTable) throws IOException, ParseException, CustomException {
 
         TestVars testVars = LocalThead.getTestVars();
-        String tagName = String.valueOf(scenario.getSourceTagNames());
-        String testNum = tagName.replaceAll("[^A-Za-zА-Яа-я0-9]", "");
-        testVars.setVariables("testNum", testNum);
+        String testNum = SystemCommonSteps.getTagName();
+        log.debug(testNum);
 
-        log.info(testNum);
-        // Читаем ендпоинт кейклок из конфигурационного файла
-        String endPoint = Configurier.getInstance().getAppProp("host_kk");
-        
-        // Читаем тестовые данные для получения токена
-
-        String[] testFields = new String [] {"client_id", "client_secret", "grant_type"};
-
-        JsonHelper.getAllTestDataValues(testNum + ".json", "/json/tests", "Токен" );
+        String endPoint = Configurier.getInstance().getAppProp("host_kk");   // Читаем ендпоинт кейклок из конфигурационного файла
+        JsonHelper.getAllTestDataValues(testNum + ".json", "Токен" );  // Читаем тестовые данные для получения токена
 
         Map<String, String> map = dataTable.asMap(String.class, String.class);
       
@@ -120,22 +129,58 @@ public class USBSSteps {
             message = new Message("");
         }
 
-        message.setHeader("Content-Type","application/x-www-form-urlencoded");
+        message.setHeader("Content-Type","application/x-www-form-urlencoded");  // Собираем заголовок
         if(checkVars(endPoint)) {
             endPoint = replaceTestVariableValue(endPoint, testVars);
         }
 
-        testVars.setResponse(NetworkUtils.sendHttp(message, endPoint));
+        testVars.setResponse(NetworkUtils.sendHttp(message, endPoint));       // Отправляем запрос
 
-        String messagebody = testVars.getResponse().getBody();
+        String messagebody = testVars.getResponse().getBody();                // Получаем ответ
         log.debug("Get response with body: {}", messagebody);
 
         String jsonTokenVal = getValueFromJsonPath(messagebody, "access_token");
-        testVars.setVariables("access_token", jsonTokenVal);
+        testVars.setVariables("access_token", jsonTokenVal);                // Записываем токен в переменную
         String jsonTokenType = getValueFromJsonPath(messagebody, "token_type");
-        testVars.setVariables("token_type", jsonTokenType);
+        testVars.setVariables("token_type", jsonTokenType);                 // Записываем тип токена в переменную
         log.debug(String.format("Variable with value %s stored to %s", jsonTokenType, "token_type"));
         log.debug(String.format("Variable with value %s stored to %s", jsonTokenVal, "access_token"));
+
+    }
+
+    @Тогда("^Заказ продукта \"([^\"]*)\" в проекте ([^\\s]*)")
+    public void RhelOrder(String product, String project, DataTable dataTable) throws IOException, org.json.simple.parser.ParseException {
+    
+        baseURI = Configurier.getInstance().getAppProp("host");
+        String datafolder = Configurier.getInstance().getAppProp("data.folder");
+
+        TestVars testVars = LocalThead.getTestVars();
+        String token = testVars.getVariable("token");
+        String tokenType = testVars.getVariable("token_type");
+        String bearerToken = tokenType + " " + token;
+
+        Map<String, String> order = dataTable.asMap(String.class, String.class);
+
+        org.json.simple.parser.JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new FileReader(datafolder + "/" + product.toLowerCase() + ".json"));
+        JSONObject request =  (JSONObject) obj;
+        // Дополнительные настройки продукта
+        com.jayway.jsonpath.JsonPath.parse(request).set("$.order.count", Integer.parseInt(order.get("count")));
+        com.jayway.jsonpath.JsonPath.parse(request).set("$.order.attrs.default_nic.net_segment", order.get("net_segment"));
+        JsonPath.parse(request).set("$.order.attrs.platform", order.get("platform"));
+
+        System.out.println(request);
+//
+//        Response response = RestAssured
+//                .given()
+//                .contentType("application/json; charset=UTF-8")
+//                .header("Authorization", bearerToken)
+//                .header("Content-Type", "application/json")
+//                .body(request)
+//                .when()
+//                .post("order-service/api/v1/projects/" + project + "/orders");
+//
+//        assertTrue("Код ответа не равен 201", response.statusCode() == 201);
 
     }
 

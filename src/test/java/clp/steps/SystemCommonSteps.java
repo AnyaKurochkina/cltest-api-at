@@ -68,7 +68,7 @@ import static org.junit.Assert.*;
 
 public class SystemCommonSteps {
     private static final Logger log = LoggerFactory.getLogger(SystemCommonSteps.class);
-    private Scenario scenario;
+    private static Scenario scenario;
     private static final String FILE = "file:";
     private static final String MSG_FOR_SEND = "Message for send";
     private static final String REQUEST = "Request {}";
@@ -106,6 +106,19 @@ public class SystemCommonSteps {
         log.info("End test: {}", this.scenario.getUri());
     }
 
+
+    @Тогда("^Получение тега текущего теста$")
+    public static String getTagName() {
+
+        //Получение текущего номера теста по тегу
+        TestVars testVars = LocalThead.getTestVars();
+
+        String tagNameStr = String.valueOf(scenario.getSourceTagNames());
+        String testNum = tagNameStr.replaceAll("[^A-Za-zА-Яа-я0-9]", "");
+        testVars.setVariables("testNum", testNum);
+
+        return(testNum);
+    }
 
     @Тогда("^Вызвать удалённую процедуру с телом ([^\"]*)$")
     public void execCallableStatement(String requestName) throws SQLException, IOException, ParseException, CustomException {
