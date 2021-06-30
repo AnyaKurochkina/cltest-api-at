@@ -19,7 +19,7 @@ public class DBAliases {
 
     private static volatile DBAliases instance;
     private static final String RESOURCE_PATH = StringUtils.concatPath("src", "test", "resources");
-    private static final String ALIAS_FILE = "db.aliases";
+    private static final String ALIAS_FILE = "td.aliases";
     private static final String ALIAS_FILE_PATH = StringUtils.concatPathToFile(RESOURCE_PATH, ALIAS_FILE);
     private static final Logger log = LoggerFactory.getLogger(DBAliases.class);
     private static Map<String, DBAliasesNames> alias = new HashMap<>();
