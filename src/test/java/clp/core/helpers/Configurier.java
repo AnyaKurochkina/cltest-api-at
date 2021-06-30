@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Properties;
 
 public class Configurier {
+
     private static volatile Configurier instance;
     private static final Logger log = LoggerFactory.getLogger(Configurier.class);
     private static final String RESOURCE_PATH = StringUtils.concatPath("src", "test", "resources");
@@ -31,8 +32,6 @@ public class Configurier {
     private static final String ENVIROMENT = "env";
     private static final String COUNT = "count";
     private static final String WAVE = "wave";
-    private static final String HOST_KONG = "host_kk";
-    private static final String HOST = "host";
     private static final String DB_DRIVER_TYPE = "db.driver.type";
     private final String enviroment = System.getProperty(ENVIROMENT);
     private final String count = System.getProperty(COUNT);
@@ -70,7 +69,7 @@ public class Configurier {
         return applicationProperties;
     }
 
-    private Map<String, String> applicationProperties = new HashMap<>();
+    public static Map<String, String> applicationProperties = new HashMap<>();
     private String postfix = "";
 
     /**
@@ -85,7 +84,7 @@ public class Configurier {
             propertyPath = System.getProperty(APP_FILE_NAME);
             envPropertyPath = System.getProperty(ENV_FILE_NAME);
 
-            System.out.println("propertyPath =" + propertyPath + "envPropertyPath = " + envPropertyPath );
+            System.out.println("propertyPath =" + propertyPath + "envPropertyPath = " + envPropertyPath);
 
         } else {
             String rootPath = System.getProperty("user.dir");
@@ -121,8 +120,8 @@ public class Configurier {
         log.debug("'{}' loaded successfully!", APP_FILE_PATH);
 
         for (String key : properties.stringPropertyNames()) {
-            if (properties.getProperty(key).contains("conf."+ENVIROMENT)) {
-                String envKey = properties.getProperty(key).split("conf\\."+ENVIROMENT+"\\.")[1];
+            if (properties.getProperty(key).contains("conf." + ENVIROMENT)) {
+                String envKey = properties.getProperty(key).split("conf\\." + ENVIROMENT + "\\.")[1];
                 applicationProperties.put(key, envProperty.get(envKey));
             } else if (key.contains(postfix)) {
                 applicationProperties.put(key.replace(postfix, ""), properties.getProperty(key));
@@ -155,10 +154,8 @@ public class Configurier {
             applicationProperties.put(TEST_DATA_FOLDER, System.getProperty(TEST_DATA_FOLDER));
         }
 
+        EnvParameters.getInstance().loadEnvParams(Configurier.getInstance().getAppProp("td.aliases"));
         // Testdata folder Properties -- end
-
-//
-
         return true;
     }
 
@@ -172,7 +169,7 @@ public class Configurier {
 
     private String dbUrl() {
         StringBuilder stringBuilder = new StringBuilder();
-        if(applicationProperties.get(DB_DRIVER_TYPE).equalsIgnoreCase("Sanchez")) {
+        if (applicationProperties.get(DB_DRIVER_TYPE).equalsIgnoreCase("Sanchez")) {
             stringBuilder.append("protocol=");
             stringBuilder.append(applicationProperties.get(DB_PROTOCOL));
             stringBuilder.append("/database=");
@@ -183,7 +180,7 @@ public class Configurier {
             stringBuilder.append(applicationProperties.get(DB_SID));
             stringBuilder.append("/locale=US:ENGLISH/timeOut=2/transType=MTM/rowPrefetch=30/signOnType=1/processMRPC=0/fileEncoding=");
             stringBuilder.append(applicationProperties.get(DB_ENCODING));
-        }else if(applicationProperties.get(DB_DRIVER_TYPE).equalsIgnoreCase("jdbc")){
+        } else if (applicationProperties.get(DB_DRIVER_TYPE).equalsIgnoreCase("jdbc")) {
             stringBuilder.append(applicationProperties.get(DB_PROTOCOL));
             stringBuilder.append(":thin:@");
             stringBuilder.append(applicationProperties.get(DB_HOST));

@@ -62,7 +62,7 @@ public class StatementExecute {
 
     public Map<String, List<String>> executeSQLQueryNew(Map<String, String> property, String body,String dbAlias) throws SQLException, CustomException, IOException {
         String response = "";
-        DBAliases.getInstance().loadApplicationPropertiesForSegment(Configurier.getInstance().getAppProp("db.aliases"));
+        DBAliases.getInstance().loadApplicationPropertiesForSegment(Configurier.getInstance().getAppProp("td.aliases"));
         DBAliasesNames dbConnectData = DBAliases.getInstance().getValue(dbAlias);
         property.put(DB_DRIVER_TYPE,dbConnectData.getDriverType());
         property.put("db.driver.class.name",dbConnectData.getDriverClassName());
@@ -78,7 +78,7 @@ public class StatementExecute {
 
     public void executeUpdateOrInsertSQLQuery(Map<String, String> property, String body,String dbAlias) throws IOException, SQLException {
         String response = "";
-        DBAliases.getInstance().loadApplicationPropertiesForSegment(Configurier.getInstance().getAppProp("db.aliases"));
+        DBAliases.getInstance().loadApplicationPropertiesForSegment(Configurier.getInstance().getAppProp("td.aliases"));
         DBAliasesNames dbConnectData = DBAliases.getInstance().getValue(dbAlias);
         property.put(DB_DRIVER_TYPE,dbConnectData.getDriverType());
         property.put("db.driver.class.name",dbConnectData.getDriverClassName());
