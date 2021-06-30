@@ -27,10 +27,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,16 +51,32 @@ public class USBSSteps {
     @Before
     public void beforeScenario(final Scenario scenario) throws CustomException {
         this.scenario = scenario;
-
         TestVars testVars = new TestVars();
         LocalThead.setTestVars(testVars);
         configer.loadApplicationPropertiesForSegment();
+        createAllurePropertyFile();
 
     }
 
     @After
     public void afterScenario() {
         LocalThead.setTestVars(null);
+    }
+
+
+    //Этот метод нужен для отображения ENVIRONMENT в отчете allure
+    public void createAllurePropertyFile() {
+        String path = "target/allure-results";
+        try {
+            Properties props = new Properties();
+            FileOutputStream fos = new FileOutputStream(path + "/environment.properties");
+            props.setProperty("Environment", System.getProperty("env"));
+            props.store(fos, "See https://github.com");
+            fos.close();
+        } catch (Exception ex) {
+            log.error("IO problem");
+            ex.printStackTrace();
+        }
     }
 
     @Тогда("^Получение Token для пользователя$")
