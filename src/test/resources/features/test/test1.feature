@@ -11,7 +11,7 @@
 
   Сценарий: Заказ продукта
 
-    * Заказ продукта "Rhel" в проекте proj-k7ua2iq6zh
-      | count       | 2           |
+    * Заказ продукта "Rhel" в проекте proj-0t3kfecbnf
+      | count       | 1           |
       | net_segment | dev-srv-app |
-      | platform    | OpenStack   |
+      | platform    | Nutanix     |

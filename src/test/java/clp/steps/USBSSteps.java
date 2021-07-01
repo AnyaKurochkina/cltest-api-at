@@ -107,6 +107,9 @@ public class USBSSteps {
                 .when()
                 .post();
 
+//        System.out.println(response.statusCode());
+//        System.out.println(response.asString());
+
         String jsonTokenVal = getValueFromJsonPath(response.asString(), "access_token");
         testVars.setVariables("access_token", jsonTokenVal);
         String jsonTokenType = getValueFromJsonPath(response.asString(), "token_type");
@@ -175,23 +178,27 @@ public class USBSSteps {
         Object obj = parser.parse(new FileReader(datafolder + "/orders/" + product.toLowerCase() + ".json"));
         JSONObject request =  (JSONObject) obj;
         // Дополнительные настройки продукта
+        com.jayway.jsonpath.JsonPath.parse(request).set("$.order.project_name", project);
         com.jayway.jsonpath.JsonPath.parse(request).set("$.order.count", Integer.parseInt(order.get("count")));
         com.jayway.jsonpath.JsonPath.parse(request).set("$.order.attrs.default_nic.net_segment", order.get("net_segment"));
         JsonPath.parse(request).set("$.order.attrs.platform", order.get("platform"));
 
-        System.out.println("token=" + token);
         System.out.println(request);
-//
-//        Response response = RestAssured
-//                .given()
-//                .contentType("application/json; charset=UTF-8")
-//                .header("Authorization", bearerToken)
-//                .header("Content-Type", "application/json")
-//                .body(request)
-//                .when()
-//                .post("order-service/api/v1/projects/" + project + "/orders");
-//
-//        assertTrue("Код ответа не равен 201", response.statusCode() == 201);
+
+        Response response = RestAssured
+                .given()
+                .contentType("application/json; charset=UTF-8")
+                .header("Authorization", bearerToken)
+                .header("Content-Type", "application/json")
+                .body(request)
+                .when()
+                .post("order-service/api/v1/projects/" + project + "/orders");
+
+        String Val = response.asString();
+        System.out.println(response.statusCode());
+        System.out.println(response.asString());
+
+        assertTrue("Код ответа не равен 201", response.statusCode() == 201);
 
     }
 
