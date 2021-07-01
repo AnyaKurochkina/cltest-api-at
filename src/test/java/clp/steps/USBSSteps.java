@@ -82,6 +82,7 @@ public class USBSSteps {
     @Тогда("^Получение Token для пользователя$")
     public void getTokenRest(DataTable dataTable) throws IOException, org.json.simple.parser.ParseException {
 
+        RestAssured.useRelaxedHTTPSValidation();
         TestVars testVars = LocalThead.getTestVars();
         String testNum = SystemCommonSteps.getTagName();
 
