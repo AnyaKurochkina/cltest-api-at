@@ -54,15 +54,13 @@ public class USBSSteps {
         TestVars testVars = new TestVars();
         LocalThead.setTestVars(testVars);
         configer.loadApplicationPropertiesForSegment();
-        createAllurePropertyFile();
-
     }
 
     @After
     public void afterScenario() {
         LocalThead.setTestVars(null);
+        createAllurePropertyFile();
     }
-
 
     //Этот метод нужен для отображения ENVIRONMENT в отчете allure
     public void createAllurePropertyFile() {
