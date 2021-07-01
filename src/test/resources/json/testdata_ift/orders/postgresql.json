@@ -1,0 +1,49 @@
+{
+	"order": {
+		"project_name": "proj-0t3kfecbnf",
+		"product_id": "ff48b6ff-700a-42f3-8a55-deee61e2d5a7",
+		"attrs": {
+			"domain": "corp.dev.vtb",
+			"flavor": {
+				"cpus": 2,
+				"name": "c2m4",
+				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+				"memory": 4
+			},
+			"platform": "Nutanix",
+			"boot_disk": {
+				"size": 30
+			},
+			"extra_nics": [],
+			"on_support": true,
+			"os_version": "7.latest",
+			"data_center": "5",
+			"default_nic": {
+				"net_segment": "dev-srv-app"
+			},
+			"extra_mounts": [
+				{
+					"path": "/pg_data",
+					"size": 50,
+					"file_system": "xfs"
+				}
+			],
+			"ad_integration": true,
+			"postgresql_config": {
+				"max_connections": 100
+			},
+			"postgresql_version": "12",
+			"ad_logon_grants": [
+				{
+					"role": "superuser",
+					"groups": [
+						"cloud-dqplux-atgroup"
+					]
+				}
+			]
+		},
+		"count": 1,
+		"label": "PostgreSQL_0002",
+		"graph_version": "1.0.65"
+	}
+}

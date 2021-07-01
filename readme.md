@@ -2,8 +2,7 @@ updates - рабочая ветка с актуальными доработка
 Сюда заливаются обновления из ветки vtb, а также новые тесты/доработки старых (в том числе через merge request).
 
 Конфигурация VM Options для локального запуска через IntelliJ IDEA (на примере Smoke):
--ea -Dcucumber.options="--tags @<тэг>" -Denv=<среда> -Dwave=<волна>
--ea -Dcucumber.options="--tags @0002" -Denv=DEV
 
+-ea -Dcucumber.options="--plugin io.qameta.allure.cucumber4jvm.AllureCucumber4Jvm --tags @0002" -Denv=DEV -Denv=DEV
 
-mvn -Drelease_url="<адрес релизного нексуса>" -Dsnapshot_url="<адрес снапшотного нексуса>" install -Dcucumber.options="--tags @<тег>" -s src/settings/settings.xml -Denv=<тут указываем стенд>
+mvn test -Dcucumber.options="--plugin io.qameta.allure.cucumber4jvm.AllureCucumber4Jvm --tags @0002" -Denv=IFT

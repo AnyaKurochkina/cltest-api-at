@@ -1,0 +1,43 @@
+{
+	"order": {
+		"project_name": "proj-0t3kfecbnf",
+		"product_id": "28bed880-2714-4317-a967-d000d492bd9d",
+		"attrs": {
+			"domain": "corp.dev.vtb",
+			"flavor": {
+				"cpus": 2,
+				"name": "c2m4",
+				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+				"memory": 4
+			},
+			"features": [],
+			"pagefile": "Automatically manage paging file size for all drives",
+			"platform": "Nutanix",
+			"boot_disk": {
+				"path": "C",
+				"size": 80,
+				"file_system": "ntfs"
+			},
+			"extra_nics": [],
+			"on_support": false,
+			"os_version": "Microsoft Windows Server 2016 Datacenter",
+			"data_center": "5",
+			"default_nic": {
+				"net_segment": "dev-srv-app"
+			},
+			"extra_disks": [],
+			"ad_integration": true,
+			"ad_logon_grants": [
+				{
+					"role": "Administrators",
+					"groups": [
+						"cloud-dqplux-atgroup"
+					]
+				}
+			]
+		},
+		"count": 1,
+		"label": "Windows server_0002",
+		"graph_version": "1.0.22"
+	}
+}
