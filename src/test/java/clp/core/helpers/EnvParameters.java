@@ -1,6 +1,6 @@
 package clp.core.helpers;
 
-import lombok.extern.log4j.Log4j;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -16,7 +16,6 @@ import java.util.Map;
 
 import static clp.core.helpers.Configurier.applicationProperties;
 
-@Log4j
 public class EnvParameters {
 
     private static volatile EnvParameters instance;
