@@ -165,7 +165,7 @@ public class USBSSteps {
         String datafolder = Configurier.getInstance().getAppProp("data.folder");
 
         TestVars testVars = LocalThead.getTestVars();
-        String token = testVars.getVariable("token");
+        String token = testVars.getVariable("access_token");
         String tokenType = testVars.getVariable("token_type");
         String bearerToken = tokenType + " " + token;
 
@@ -179,6 +179,7 @@ public class USBSSteps {
         com.jayway.jsonpath.JsonPath.parse(request).set("$.order.attrs.default_nic.net_segment", order.get("net_segment"));
         JsonPath.parse(request).set("$.order.attrs.platform", order.get("platform"));
 
+        System.out.println("token=" + token);
         System.out.println(request);
 //
 //        Response response = RestAssured
