@@ -11,7 +11,4 @@
 
   Сценарий: Заказ продукта
 
-    * Заказ продукта "Rhel" в проекте proj-0t3kfecbnf
-      | count       | 1           |
-      | net_segment | dev-srv-app |
-      | platform    | Nutanix     |
+    * Заказ продукта "Rhel"
