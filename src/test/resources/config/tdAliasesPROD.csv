@@ -1,6 +1,3 @@
-HostKk,"ХОСТ ИЗ ПРОД "
-dataFolder,src/test/resources/json/tests
-someParam1,someParam1
-someParam2,someParam2
-someParam3,someParam3
-someParam4,someParam4
+data.folder,src/test/resources/json/testdata_prod
+host_kk,ift-keycloak.apps.d0-oscp.corp.dev.vtb/auth/realms/Portal/protocol/openid-connect/token
+host,ift-kong-service.apps.d0-oscp.corp.dev.vtb/

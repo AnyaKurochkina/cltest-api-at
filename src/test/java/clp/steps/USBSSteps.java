@@ -62,6 +62,8 @@ public class USBSSteps {
         createAllurePropertyFile();
     }
 
+
+
     //Этот метод нужен для отображения ENVIRONMENT в отчете allure
     public void createAllurePropertyFile() {
         String path = "target/allure-results";
@@ -83,7 +85,7 @@ public class USBSSteps {
         TestVars testVars = LocalThead.getTestVars();
         String testNum = SystemCommonSteps.getTagName();
 
-        JsonHelper.getAllTestDataValues(testNum + ".json", "Токен" );  // Читаем тестовые данные для получения токена
+        JsonHelper.getAllTestDataValues("token" + ".json", "Токен" );  // Читаем тестовые данные для получения токена
 
         baseURI = Configurier.getInstance().getAppProp("host_kk");
         Map<String, String> account = dataTable.asMap(String.class, String.class);
@@ -170,7 +172,7 @@ public class USBSSteps {
         Map<String, String> order = dataTable.asMap(String.class, String.class);
 
         org.json.simple.parser.JSONParser parser = new JSONParser();
-        Object obj = parser.parse(new FileReader(datafolder + "/" + product.toLowerCase() + ".json"));
+        Object obj = parser.parse(new FileReader(datafolder + "/orders/" + product.toLowerCase() + ".json"));
         JSONObject request =  (JSONObject) obj;
         // Дополнительные настройки продукта
         com.jayway.jsonpath.JsonPath.parse(request).set("$.order.count", Integer.parseInt(order.get("count")));

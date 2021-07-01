@@ -1,0 +1,52 @@
+{
+	"order": {
+		"project_name": "proj-aydi9thv3w",
+		"product_id": "6662a03d-20ce-4a83-a684-ddec48393516",
+		"attrs": {
+			"domain": "corp.dev.vtb",
+			"flavor": {
+				"cpus": 2,
+				"name": "c2m4",
+				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+				"memory": 4
+			},
+			"platform": "vSphere",
+			"boot_disk": {
+				"size": 30
+			},
+			"extra_nics": [],
+			"on_support": false,
+			"os_version": "7.latest",
+			"data_center": "5",
+			"default_nic": {
+				"net_segment": "dev-srv-app"
+			},
+			"extra_mounts": [
+				{
+					"path": "/app/redis/data",
+					"size": 10,
+					"file_system": "xfs"
+				},
+				{
+					"path": "/app/redis/logs",
+					"size": 10,
+					"file_system": "xfs"
+				}
+			],
+			"redis_version": "5",
+			"ad_integration": true,
+			"redis_password": "vSrEzXhI2cfqBdvW3NXvvutpp9LbrEdU2S5uYFU2w1KwX1Z2yn0LrhYpENvT",
+			"ad_logon_grants": [
+				{
+					"role": "superuser",
+					"groups": [
+						"cloud-dmcrux-testgroup100"
+					]
+				}
+			]
+		},
+		"count": 1,
+		"label": "Redis",
+		"graph_version": "1.0.69"
+	}
+}
