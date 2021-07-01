@@ -1,0 +1,54 @@
+{
+	"order": {
+		"project_name": "proj-0t3kfecbnf",
+		"product_id": "f566578f-2f8a-480f-9b1d-dd2663a4bfce",
+		"attrs": {
+			"domain": "corp.dev.vtb",
+			"flavor": {
+				"cpus": 2,
+				"name": "c2m4",
+				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+				"memory": 4
+			},
+			"platform": "Nutanix",
+			"boot_disk": {
+				"size": 30
+			},
+			"extra_nics": [],
+			"on_support": false,
+			"os_version": "8.latest",
+			"data_center": "5",
+			"default_nic": {
+				"net_segment": "dev-srv-app"
+			},
+			"extra_mounts": [
+				{
+					"path": "/app",
+					"size": 30,
+					"file_system": "xfs"
+				}
+			],
+			"ad_integration": true,
+			"rabbitmq_version": "3.8.14",
+			"ad_logon_grants": [
+				{
+					"role": "superuser",
+					"groups": [
+						"cloud-dqplux-atgroup"
+					]
+				}
+			],
+			"web_console_grants": [
+				{
+					"role": "administrator",
+					"groups": [
+						"cloud-dqplux-atgroup"
+					]
+				}
+			]
+		},
+		"count": 1,
+		"label": "RabbitMQ",
+		"graph_version": "1.0.32"
+	}
+}
