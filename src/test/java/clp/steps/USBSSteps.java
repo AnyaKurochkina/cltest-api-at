@@ -162,27 +162,30 @@ public class USBSSteps {
 
     }
 
-    @Тогда("^Заказ продукта \"([^\"]*)\" в проекте ([^\\s]*)")
-    public void RhelOrder(String product, String project, DataTable dataTable) throws IOException, org.json.simple.parser.ParseException {
+    @Тогда("^Заказ продукта \"([^\"]*)\"")
+    public void RhelOrder(String product) throws IOException, org.json.simple.parser.ParseException {
     
         baseURI = Configurier.getInstance().getAppProp("host");
         String datafolder = Configurier.getInstance().getAppProp("data.folder");
 
         TestVars testVars = LocalThead.getTestVars();
+        String testNum = SystemCommonSteps.getTagName();
+
+        JsonHelper.getAllTestDataValues(testNum + ".json", "Заказ" );  // Читаем тестовые данные для заказа
+
         String token = testVars.getVariable("access_token");
         String tokenType = testVars.getVariable("token_type");
         String bearerToken = tokenType + " " + token;
-
-        Map<String, String> order = dataTable.asMap(String.class, String.class);
 
         org.json.simple.parser.JSONParser parser = new JSONParser();
         Object obj = parser.parse(new FileReader(datafolder + "/orders/" + product.toLowerCase() + ".json"));
         JSONObject request =  (JSONObject) obj;
         // Дополнительные настройки продукта
-        com.jayway.jsonpath.JsonPath.parse(request).set("$.order.project_name", project);
-        com.jayway.jsonpath.JsonPath.parse(request).set("$.order.count", Integer.parseInt(order.get("count")));
-        com.jayway.jsonpath.JsonPath.parse(request).set("$.order.attrs.default_nic.net_segment", order.get("net_segment"));
-        JsonPath.parse(request).set("$.order.attrs.platform", order.get("platform"));
+        JsonPath.parse(request).set("$.order.project_name", testValues.get("Проект"));
+        JsonPath.parse(request).set("$.order.label", testValues.get("Наименование"));
+        JsonPath.parse(request).set("$.order.count", testValues.get("Количество"));
+        JsonPath.parse(request).set("$.order.attrs.default_nic.net_segment", testValues.get("Сегмент"));
+        JsonPath.parse(request).set("$.order.attrs.platform", testValues.get("Платформа"));
 
         System.out.println(request);
 
@@ -193,7 +196,7 @@ public class USBSSteps {
                 .header("Content-Type", "application/json")
                 .body(request)
                 .when()
-                .post("order-service/api/v1/projects/" + project + "/orders");
+                .post("order-service/api/v1/projects/" + testValues.get("Проект") + "/orders");
 
         String Val = response.asString();
         System.out.println(response.statusCode());
