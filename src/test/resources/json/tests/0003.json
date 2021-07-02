@@ -5,5 +5,12 @@
     "grant_type": "password",
     "username": "portal_admin_at",
     "password": "portal_admin_at"
+  },
+  "Rhel" : {
+    "count": "1",
+    "net_segment": "dev-srv-app",
+    "platform": "Nutanix"
   }
 }
+
+

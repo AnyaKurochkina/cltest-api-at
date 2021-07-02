@@ -1,0 +1,8 @@
+{
+  "Rhel" : {
+    "count": "1",
+    "net_segment": "dev-srv-app",
+    "platform": "Nutanix",
+    "project_name": "proj-9hqv2vfvbg"
+  }
+}

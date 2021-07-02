@@ -1,0 +1,46 @@
+{
+  "order": {
+    "project_name": "proj-tg7jlitmp1",
+    "product_id": "3b3807a6-9ad0-4ca6-930a-a37efffcc605",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m8",
+        "uuid": "930a8be8-1c71-4730-b881-0633a56b7f2b",
+        "memory": 8
+      },
+      "platform": "Nutanix",
+      "boot_disk": {
+        "size": 30
+      },
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "7.latest",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "extra_mounts": [
+        {
+          "path": "/app",
+          "size": 30,
+          "file_system": "xfs"
+        }
+      ],
+      "kafka_version": "2.13-2.4.1",
+      "ad_integration": true,
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-s9crux-testapigroup"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "Apache Kafka",
+    "graph_version": "1.0.36"
+  }
+}
