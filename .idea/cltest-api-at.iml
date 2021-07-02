@@ -67,10 +67,9 @@
     <orderEntry type="library" name="Maven: net.minidev:json-smart:2.3" level="project" />
     <orderEntry type="library" name="Maven: net.minidev:accessors-smart:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.0.4" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy:2.4.3" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.jtidy:jtidy:r938" level="project" />
     <orderEntry type="library" name="Maven: io.rest-assured:json-path:4.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy-json:3.0.8" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy:3.0.8" level="project" />
     <orderEntry type="library" name="Maven: io.rest-assured:rest-assured-common:4.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy-ant:3.0.8" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant:1.10.9" level="project" />
@@ -109,6 +108,7 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.beust:jcommander:1.78" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.webjars:jquery:3.5.1" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy-xml:3.0.8" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.jtidy:jtidy:r938" level="project" />
     <orderEntry type="library" name="Maven: org.hsqldb:hsqldb:2.3.4" level="project" />
     <orderEntry type="library" name="Maven: org.javatuples:javatuples:1.2" level="project" />
     <orderEntry type="library" name="Maven: commons-dbcp:commons-dbcp:1.4" level="project" />
