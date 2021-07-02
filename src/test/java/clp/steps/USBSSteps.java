@@ -202,6 +202,9 @@ public class USBSSteps {
         System.out.println(response.statusCode());
         System.out.println(response.asString());
 
+        String order_id = response.jsonPath().get("[0].id");
+        System.out.println(order_id);
+
         assertTrue("Код ответа не равен 201", response.statusCode() == 201);
 
     }

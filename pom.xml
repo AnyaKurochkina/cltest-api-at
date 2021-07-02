@@ -21,14 +21,6 @@
     </properties>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>ru.vtb</groupId>-->
-<!--            <artifactId>page-factory</artifactId>-->
-<!--            <version>1.6.4</version>-->
-<!--        </dependency>-->
-        <!-- Logging -->
-
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -149,9 +141,15 @@
             <version>2.4.0</version>
         </dependency>
         <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-path</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-            <version>2.4.3</version>
+            <artifactId>groovy-all</artifactId>
+            <version>3.0.8</version>
+            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>net.sf.jtidy</groupId>
@@ -339,7 +337,7 @@
             </properties>
             <build>
                 <plugins>
-<!--                    ###################-->
+                    <!--                    ###################-->
                 </plugins>
             </build>
             <repositories>
