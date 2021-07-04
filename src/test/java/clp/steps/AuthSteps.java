@@ -40,12 +40,6 @@ public class AuthSteps {
         configer.loadApplicationPropertiesForSegment();
     }
 
-    @After
-    public void afterScenario() {
-        LocalThead.setTestVars(null);
-    }
-
-
     @Тогда("^Получение Token$")
     public void getToken() throws IOException, ParseException {
         TestVars testVars = LocalThead.getTestVars();

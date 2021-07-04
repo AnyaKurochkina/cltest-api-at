@@ -2,7 +2,7 @@
   "Rhel" : {
     "count": "1",
     "net_segment": "dev-srv-app",
-    "platform": "Nutanix",
+    "platform": "vSphere",
     "project_name": "proj-9hqv2vfvbg"
   }
 }

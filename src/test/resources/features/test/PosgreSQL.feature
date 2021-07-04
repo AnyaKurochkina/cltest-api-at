@@ -1,15 +1,11 @@
 # language: ru
 @0005
 
-Функционал: Тестовый пример
+Функционал: Заказ продукта PostgreSQL
 
   Предыстория: Получение токена
-    * Получение Token под пользователем
-      | username | portal_admin_at |
-      | password | portal_admin_at |
+    * Получение Token
+
 
   Сценарий: Заказ продукта
     * Заказ продукта "PostgreSQL" в проекте proj-tg7jlitmp1
-      | count       | 1           |
-      | net_segment | dev-srv-app |
-      | platform    | OpenStack   |

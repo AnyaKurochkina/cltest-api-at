@@ -2,11 +2,9 @@ package clp.steps;
 
 import clp.core.exception.CustomException;
 import clp.core.helpers.Configurier;
-import clp.core.helpers.JsonHelper;
 import clp.core.vars.LocalThead;
 import clp.core.vars.TestVars;
 import clp.core.utils.Waiting;
-
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -15,25 +13,26 @@ import cucumber.api.java.ru.Тогда;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
-import static io.restassured.RestAssured.baseURI;
-
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class OrderSteps {
+public class OrderSteps extends Specifications {
 
     private static final Logger log = LoggerFactory.getLogger(OrderSteps.class);
+    private static final String FILE = "file:";
     private Scenario scenario;
     private Configurier configer = Configurier.getInstance();
-    private static final String FILE = "file:";
-    private static final String URL = Configurier.getInstance().getAppProp("host");
 
     @Before
     public void beforeScenario(final Scenario scenario) throws CustomException {
@@ -52,98 +51,79 @@ public class OrderSteps {
     @Тогда("^Заказ продукта ([^\"]*) в проекте ([^\\s]*)")
     public void CreateOrder(String product, String project) throws IOException, org.json.simple.parser.ParseException {
 
-        RestAssured.useRelaxedHTTPSValidation();
-        baseURI = Configurier.getInstance().getAppProp("host");
         TestVars testVars = LocalThead.getTestVars();
         testVars.setVariables("project", project);
-        String token = AuthSteps.getBearerToken();
-        JSONObject request =  TemplateSteps.getRequest(product);
+        JSONObject request = TemplateSteps.getRequest(product);
 
-        log.info("Отправка запроса на создание заказа для");
+        log.info("Отправка запроса на создание заказа для " + product);
         Response response = RestAssured
                 .given()
-                .contentType("application/json; charset=UTF-8")
-                .header("Authorization", token)
-                .header("Content-Type", "application/json")
+                .spec(getRequestSpecificationKong())
                 .body(request)
                 .when()
                 .post("order-service/api/v1/projects/" + project + "/orders");
 
         assertTrue("Код ответа не равен 201", response.statusCode() == 201);
-        String order_id = response.jsonPath().get("[0].attrs.extra_mounts[0].path");
+        String order_id = response.jsonPath().get("[0].id");
         testVars.setVariables("order_id", order_id);
+        testVars.setResp(response);
 
     }
 
     @Тогда("^статус заказа - ([^\\s]*)$")
-    public void CheckOrderStatus(String exp_status) throws IOException, ParseException {
-        RestAssured.useRelaxedHTTPSValidation();
-        baseURI = URL;
+    public void CheckOrderStatus(String exp_status) throws ParseException {
         TestVars testVars = LocalThead.getTestVars();
-        String token = AuthSteps.getBearerToken();
         String order_id = testVars.getVariable("order_id");
         String status = "";
         int counter = 10;
 
         log.info("Проверка статуса заказа");
-        while (status.equals("pending") || status.equals("") && counter > 0) {
+        while ((status.equals("pending") || status.equals("") || status.equals("changing")) && counter > 0) {
 
             Waiting.sleep(120000);
             Response response = RestAssured
                     .given()
-                    .contentType("application/json; charset=UTF-8")
-                    .header("Authorization", token)
-                    .header("Content-Type", "application/json")
+                    .spec(getRequestSpecificationKong())
                     .when()
-                    .get("order-service/api/v1/orders/" + order_id);
-            System.out.println("response = "  + response.getBody().asString());
-            status = getStatusByItemId(response).toLowerCase();
+                    .get("order-service/api/v1/projects/" + testVars.getVariable("project") + "/orders/" + order_id);
+
+            status = getStatusByOrderId(response).toLowerCase();
             counter = counter - 1;
-            System.out.println("counter = "  + counter);
+            System.out.println("counter = " + counter);
         }
 
-        assertEquals(exp_status.toLowerCase(), status);
+        if (!status.equals(exp_status.toLowerCase())) {
+            StateServiceSteps.GetErrorFromOrch(order_id);
+        }
 
     }
 
-    /*@Тогда("^Выполнить действие - ([^\\s]*)$")
+    @Тогда("^Выполнить действие - ([^\\s]*)$")
     public void ExecuteAction(String action) throws IOException, ParseException {
-        RestAssured.useRelaxedHTTPSValidation();
-        baseURI = URL;
+
         TestVars testVars = LocalThead.getTestVars();
-        String token = AuthSteps.getBearerToken();
-        String order_id = testVars.getVariable("order_id");
-        String project = testValues.get("project_name");
-        JSONObject request =  TemplateSteps.getActionRequest(order_id);
+
+        JSONObject request = TemplateSteps.getActionRequest(action);
+        log.info("Отправка запроса на выполнение действия - " + action);
         Response response = RestAssured
                 .given()
-                .contentType("application/json; charset=UTF-8")
-                .header("Authorization", token)
-                .header("Content-Type", "application/json")
+                .spec(getRequestSpecificationKong())
                 .body(request)
                 .when()
-                .post("order-service/api/v1/projects/" + project + "/orders/" +order_id+ "/actions/" + action);
-        System.out.println("response = "  + response.getBody().asString());
+                .patch("order-service/api/v1/projects/" + testVars.getVariable("project") + "/orders/"+ testVars.getVariable("order_id") +"/actions/"+ action);
+        System.out.println("response = " + response.getBody().asString());
+        assertTrue("Код ответа не равен 200", response.statusCode() == 200);
 
-    }*/
-
-    /*private String getItemIdByOrderId(String name) {
-
-        String token = AuthSteps.getBearerToken();
-
-        Response response = RestAssured
-                .given()
-                .contentType("application/json; charset=UTF-8")
-                .header("Authorization", token)
-                .header("Content-Type", "application/json")
-                .when()
-                .get("order-service/api/v1/projects/" + project + "/orders/e3aec8a7-8644-476f-bb5b-69081e3b2375");
-        return response.jsonPath().get("list.find{it.name.contains('" + name.toLowerCase() + "')}.category");
-
-    }*/
+    }
 
 
-    private String getStatusByItemId(Response resp) {
+    protected String getItemIdByOrderId() {
+        TestVars testVars = LocalThead.getTestVars();
+        return testVars.getResp().jsonPath().get("[0].attrs.preview_items[0].item_id");
+    }
+
+
+    private String getStatusByOrderId(Response resp) {
         return resp.jsonPath().get("status");
     }
 }
