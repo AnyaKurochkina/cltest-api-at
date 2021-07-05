@@ -30,6 +30,7 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class OrderSteps extends Specifications {
 
     private static final Logger log = LoggerFactory.getLogger(OrderSteps.class);
     private static final String FILE = "file:";
+    private static final String folder_logs = Configurier.getInstance().getAppProp("folder.logs");
     private Scenario scenario;
     private Configurier configer = Configurier.getInstance();
 
@@ -51,6 +53,9 @@ public class OrderSteps extends Specifications {
         TestVars testVars = new TestVars();
         LocalThead.setTestVars(testVars);
         configer.loadApplicationPropertiesForSegment();
+        for (File myFile : new File(folder_logs).listFiles()) {
+            if (myFile.isFile()) myFile.delete();
+        }
     }
 
     @After
