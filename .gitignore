@@ -13,3 +13,4 @@
 *.log.1
 *.log.gz
 
+src/test/resources/logs/
