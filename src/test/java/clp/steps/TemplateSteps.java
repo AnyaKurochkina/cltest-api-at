@@ -20,9 +20,9 @@ import static clp.core.helpers.JsonHelper.testValues;
 public class TemplateSteps {
 
     private static final Logger log = LoggerFactory.getLogger(OrderSteps.class);
+    private static final String datafolder = Configurier.getInstance().getAppProp("data.folder");
 
     public static JSONObject getRequest(String product) throws IOException, ParseException {
-        String datafolder = Configurier.getInstance().getAppProp("data.folder");
         org.json.simple.parser.JSONParser parser = new JSONParser();
         Object obj = parser.parse(new FileReader(datafolder + "/orders/" + product.toLowerCase() + ".json"));
         JSONObject template = (JSONObject) obj;
