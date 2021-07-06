@@ -1,4 +1,4 @@
-package clp.models.Response;
+package clp.models.response.get_orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,24 +13,12 @@ public class ExtraMountsItem{
 	@JsonProperty("size")
 	private int size;
 
-	public void setPath(String path){
-		this.path = path;
-	}
-
 	public String getPath(){
 		return path;
 	}
 
-	public void setFileSystem(String fileSystem){
-		this.fileSystem = fileSystem;
-	}
-
 	public String getFileSystem(){
 		return fileSystem;
-	}
-
-	public void setSize(int size){
-		this.size = size;
 	}
 
 	public int getSize(){

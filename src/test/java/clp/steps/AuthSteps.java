@@ -26,7 +26,7 @@ import java.io.IOException;
 
 public class AuthSteps {
 
-    private static final Logger log = LoggerFactory.getLogger(OrderSteps.class);
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceSteps.class);
     private Scenario scenario;
     private Configurier configer = Configurier.getInstance();
     private static final String URL_KK = Configurier.getInstance().getAppProp("host_kk");

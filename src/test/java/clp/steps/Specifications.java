@@ -34,4 +34,5 @@ public class Specifications {
                 .baseUri(URL_SS);
         return requestSpecificationspec;
     }
+
 }

@@ -2,7 +2,6 @@ package clp.steps;
 
 import clp.core.helpers.Configurier;
 import clp.core.helpers.JsonHelper;
-import io.restassured.response.Response;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -17,7 +16,7 @@ import static clp.core.helpers.JsonHelper.testValues;
 
 public class TemplateSteps {
 
-    private static final Logger log = LoggerFactory.getLogger(OrderSteps.class);
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceSteps.class);
     private static final String datafolder = Configurier.getInstance().getAppProp("data.folder");
 
     public static JSONObject getRequest(String product) throws IOException, ParseException {
@@ -54,10 +53,10 @@ public class TemplateSteps {
     }
 
     public static JSONObject ChangeActionTemplate(JSONObject request, String action) throws IOException, ParseException {
-        OrderSteps orderSteps = new OrderSteps();
+        OrderServiceSteps orderSteps = new OrderServiceSteps();
         log.info("Заполнение тестовыми данными шаблона для выбранного экшена: ");
         if (!action.equals("test")) {
-            com.jayway.jsonpath.JsonPath.parse(request).set("$.item_id", orderSteps.getItemIdByOrderId());
+            com.jayway.jsonpath.JsonPath.parse(request).set("$.item_id", orderSteps.getItemIdByOrderId(action));
         }
         return request;
     }

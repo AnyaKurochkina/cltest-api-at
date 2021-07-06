@@ -1,9 +1,27 @@
-package clp.models.Response;
+package clp.models.response.get_orders;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Config{
+
+	@JsonProperty("dbs")
+	private List<Object> dbs;
+
+	@JsonProperty("connection_url")
+	private String connectionUrl;
+
+	@JsonProperty("configuration")
+	private Configuration configuration;
+
+	@JsonProperty("db_owners")
+	private List<Object> dbOwners;
+
+	@JsonProperty("db_users")
+	private List<Object> dbUsers;
+
+	@JsonProperty("version")
+	private String version;
 
 	@JsonProperty("image")
 	private Image image;
@@ -11,8 +29,14 @@ public class Config{
 	@JsonProperty("os_version")
 	private String osVersion;
 
+	@JsonProperty("default_v6_address")
+	private String defaultV6Address;
+
 	@JsonProperty("ad_integration")
 	private boolean adIntegration;
+
+	@JsonProperty("mounts")
+	private List<MountsItem> mounts;
 
 	@JsonProperty("extra_nics")
 	private List<Object> extraNics;
@@ -32,14 +56,26 @@ public class Config{
 	@JsonProperty("flavor")
 	private Flavor flavor;
 
+	@JsonProperty("hostname")
+	private String hostname;
+
 	@JsonProperty("environment")
 	private String environment;
 
 	@JsonProperty("default_nic")
 	private DefaultNic defaultNic;
 
+	@JsonProperty("extra_mounts")
+	private List<ExtraMountsItem> extraMounts;
+
 	@JsonProperty("domain")
 	private String domain;
+
+	@JsonProperty("swap_size")
+	private int swapSize;
+
+	@JsonProperty("default_v4_address")
+	private String defaultV4Address;
 
 	@JsonProperty("extra_disks")
 	private List<ExtraDisksItem> extraDisks;
@@ -47,112 +83,104 @@ public class Config{
 	@JsonProperty("tenant")
 	private Tenant tenant;
 
-	public void setImage(Image image){
-		this.image = image;
+	public List<Object> getDbs(){
+		return dbs;
+	}
+
+	public String getConnectionUrl(){
+		return connectionUrl;
+	}
+
+	public Configuration getConfiguration(){
+		return configuration;
+	}
+
+	public List<Object> getDbOwners(){
+		return dbOwners;
+	}
+
+	public List<Object> getDbUsers(){
+		return dbUsers;
+	}
+
+	public String getVersion(){
+		return version;
 	}
 
 	public Image getImage(){
 		return image;
 	}
 
-	public void setOsVersion(String osVersion){
-		this.osVersion = osVersion;
-	}
-
 	public String getOsVersion(){
 		return osVersion;
 	}
 
-	public void setAdIntegration(boolean adIntegration){
-		this.adIntegration = adIntegration;
+	public String getDefaultV6Address(){
+		return defaultV6Address;
 	}
 
 	public boolean isAdIntegration(){
 		return adIntegration;
 	}
 
-	public void setExtraNics(List<Object> extraNics){
-		this.extraNics = extraNics;
+	public List<MountsItem> getMounts(){
+		return mounts;
 	}
 
 	public List<Object> getExtraNics(){
 		return extraNics;
 	}
 
-	public void setResourcePool(ResourcePool resourcePool){
-		this.resourcePool = resourcePool;
-	}
-
 	public ResourcePool getResourcePool(){
 		return resourcePool;
-	}
-
-	public void setEnvironmentType(String environmentType){
-		this.environmentType = environmentType;
 	}
 
 	public String getEnvironmentType(){
 		return environmentType;
 	}
 
-	public void setBootDisk(BootDisk bootDisk){
-		this.bootDisk = bootDisk;
-	}
-
 	public BootDisk getBootDisk(){
 		return bootDisk;
-	}
-
-	public void setOnSupport(boolean onSupport){
-		this.onSupport = onSupport;
 	}
 
 	public boolean isOnSupport(){
 		return onSupport;
 	}
 
-	public void setFlavor(Flavor flavor){
-		this.flavor = flavor;
-	}
-
 	public Flavor getFlavor(){
 		return flavor;
 	}
 
-	public void setEnvironment(String environment){
-		this.environment = environment;
+	public String getHostname(){
+		return hostname;
 	}
 
 	public String getEnvironment(){
 		return environment;
 	}
 
-	public void setDefaultNic(DefaultNic defaultNic){
-		this.defaultNic = defaultNic;
-	}
-
 	public DefaultNic getDefaultNic(){
 		return defaultNic;
 	}
 
-	public void setDomain(String domain){
-		this.domain = domain;
+	public List<ExtraMountsItem> getExtraMounts(){
+		return extraMounts;
 	}
 
 	public String getDomain(){
 		return domain;
 	}
 
-	public void setExtraDisks(List<ExtraDisksItem> extraDisks){
-		this.extraDisks = extraDisks;
+	public int getSwapSize(){
+		return swapSize;
+	}
+
+	public String getDefaultV4Address(){
+		return defaultV4Address;
 	}
 
 	public List<ExtraDisksItem> getExtraDisks(){
 		return extraDisks;
-	}
-
-	public void setTenant(Tenant tenant){
-		this.tenant = tenant;
 	}
 
 	public Tenant getTenant(){

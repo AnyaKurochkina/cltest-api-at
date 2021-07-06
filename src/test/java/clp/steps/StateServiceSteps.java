@@ -18,7 +18,7 @@ import java.util.List;
 
 public class StateServiceSteps extends Specifications {
 
-    private static final Logger log = LoggerFactory.getLogger(OrderSteps.class);
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceSteps.class);
     private static final String folder_logs = Configurier.getInstance().getAppProp("folder.logs");
 
     @Тогда("^Получить логи об ошибке из Оркестратора$")
