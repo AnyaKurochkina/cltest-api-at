@@ -2,14 +2,12 @@ package clp.steps;
 
 import clp.core.helpers.Configurier;
 import clp.core.helpers.JsonHelper;
-import clp.core.vars.LocalThead;
 import io.restassured.response.Response;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import clp.core.vars.TestVars;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -31,7 +29,7 @@ public class TemplateSteps {
         return request;
     }
 
-    public static JSONObject ChangeOrderTemplate(JSONObject request, String product) throws IOException, ParseException {
+    public static JSONObject ChangeOrderTemplate(JSONObject request, String product) throws ParseException {
         JsonHelper.getAllTestDataValues("product" + ".json", product);
         log.info("Изменение базового шаблона запроса тестовыми данными: ");
         if (product.equals("Rhel") || product.equals("Windows") || product.equals("PostgreSQL") || product.equals("Redis") || product.equals("ApacheKafka")) {

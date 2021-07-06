@@ -8,7 +8,6 @@ import clp.core.vars.TestVars;
 import static clp.core.helpers.JsonHelper.testValues;
 
 import cucumber.api.Scenario;
-import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.ru.Тогда;
 

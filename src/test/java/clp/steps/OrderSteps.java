@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
-import cucumber.api.java.ru.И;
+import cucumber.api.java.ru.Если;
 import cucumber.api.java.ru.Тогда;
 
 import io.restassured.RestAssured;
@@ -24,15 +24,12 @@ import io.restassured.path.json.exception.JsonPathException;
 import io.restassured.response.Response;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -77,7 +74,6 @@ public class OrderSteps extends Specifications {
                 .body(request)
                 .when()
                 .post("order-service/api/v1/projects/" + project + "/orders");
-
         assertTrue("Код ответа не равен 201", response.statusCode() == 201);
 
         /*ObjectMapper objectMapper = new ObjectMapper();
@@ -93,8 +89,8 @@ public class OrderSteps extends Specifications {
 
     }
 
-    @Тогда("^Статус заказа - ([^\\s]*)$")
-    public void CheckOrderStatus(String exp_status) throws ParseException {
+    @Если("^Статус заказа - ([^\\s]*)$")
+    public void CheckOrderStatus(String exp_status) throws IOException, ParseException {
         TestVars testVars = LocalThead.getTestVars();
         String order_id = testVars.getVariable("order_id");
         String status = "";
@@ -114,9 +110,15 @@ public class OrderSteps extends Specifications {
             System.out.println("counter = " + counter);
         }
 
-        if (!status.equals(exp_status.toLowerCase())) {
+        try{
+            assertEquals(exp_status.toLowerCase(), status);
+        }   catch (Exception e) {
             StateServiceSteps.GetErrorFromOrch(order_id);
         }
+
+        /*if (!status.equals(exp_status.toLowerCase())) {
+            StateServiceSteps.GetErrorFromOrch(order_id);
+        }*/
 
     }
 
@@ -138,7 +140,7 @@ public class OrderSteps extends Specifications {
 
     }
 
-    @Тогда("^Статус выполнения последнего действия - ([^\\s]*)$")
+    @Если("^Статус выполнения последнего действия - ([^\\s]*)$")
     public void CheckActionStatus(String exp_status) throws ParseException {
         TestVars testVars = LocalThead.getTestVars();
         String order_id = testVars.getVariable("order_id");
@@ -159,13 +161,15 @@ public class OrderSteps extends Specifications {
                         .jsonPath()
                         .get("status");
             } catch (JsonPathException e) {
-                log.error(e.getMessage());
+                log.error("Error get status " + e.getMessage());
             };
-
+            System.out.println("action_status = " + action_status);
             counter = counter - 1;
         }
 
-        if (!action_status.equals(exp_status.toLowerCase())) {
+        try{
+            assertEquals(exp_status.toLowerCase(), action_status);
+        }   catch (Exception e) {
             StateServiceSteps.GetErrorFromOrch(order_id);
         }
 

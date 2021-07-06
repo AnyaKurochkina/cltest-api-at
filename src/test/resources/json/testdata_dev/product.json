@@ -2,7 +2,31 @@
   "Rhel" : {
     "count": "1",
     "net_segment": "dev-srv-app",
-    "platform": "vSphere",
-    "project_name": "proj-9hqv2vfvbg"
+    "platform": "Nutanix",
+    "project_name": "proj-frk0ux52hp"
+  },
+  "Windows" : {
+    "count": "1",
+    "net_segment": "dev-srv-app",
+    "platform": "Nutanix",
+    "project_name": "proj-frk0ux52hp"
+  },
+  "Redis" : {
+    "count": "1",
+    "net_segment": "dev-srv-app",
+    "platform": "Nutanix",
+    "project_name": "proj-frk0ux52hp"
+  },
+  "Apache_Kafka" : {
+    "count": "1",
+    "net_segment": "dev-srv-app",
+    "platform": "Nutanix",
+    "project_name": "proj-frk0ux52hp"
+  },
+  "PostgreSQL" : {
+    "count": "1",
+    "net_segment": "dev-srv-app",
+    "platform": "Nutanix",
+    "project_name": "proj-frk0ux52hp"
   }
 }
