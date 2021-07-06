@@ -62,8 +62,6 @@ public class USBSSteps {
         createAllurePropertyFile();
     }
 
-
-
     //Этот метод нужен для отображения ENVIRONMENT в отчете allure
     public void createAllurePropertyFile() {
         String path = "target/allure-results";
@@ -108,57 +106,13 @@ public class USBSSteps {
                 .when()
                 .post();
 
-//        System.out.println(response.statusCode());
-//        System.out.println(response.asString());
+        System.out.println(response.statusCode());
+        System.out.println(response.asString());
 
         String jsonTokenVal = getValueFromJsonPath(response.asString(), "access_token");
         testVars.setVariables("access_token", jsonTokenVal);
         String jsonTokenType = getValueFromJsonPath(response.asString(), "token_type");
         testVars.setVariables("token_type", jsonTokenType);
-
-    }
-
-    @Тогда("^Получение токена для пользователя$")
-    public void AuthHttp(DataTable dataTable) throws IOException, ParseException, CustomException {
-
-        TestVars testVars = LocalThead.getTestVars();
-        String testNum = SystemCommonSteps.getTagName();
-        log.debug(testNum);
-
-        String endPoint = Configurier.getInstance().getAppProp("host_kk");   // Читаем ендпоинт кейклок из конфигурационного файла
-        JsonHelper.getAllTestDataValues(testNum + ".json", "Токен" );  // Читаем тестовые данные для получения токена
-
-        Map<String, String> map = dataTable.asMap(String.class, String.class);
-      
-        Message message;
-        if (checkVars(endPoint)) {
-            endPoint = endPoint.replace("${env}", configer.getEnviroment().toLowerCase());
-        }
-        if (!testValues.isEmpty()) {
-
-            String filledBody = "client_id=" + testValues.get("client_id") + "&client_secret="+ testValues.get("client_secret") + "&grant_type=" + testValues.get("grant_type") + "&username=" + map.get("username") + "&password=" + map.get("password");
-            log.info("filledBody=" + filledBody);
-            message = new Message(filledBody);
-        } else {
-            message = new Message("");
-        }
-
-        message.setHeader("Content-Type","application/x-www-form-urlencoded");  // Собираем заголовок
-        if(checkVars(endPoint)) {
-            endPoint = replaceTestVariableValue(endPoint, testVars);
-        }
-
-        testVars.setResponse(NetworkUtils.sendHttp(message, endPoint));       // Отправляем запрос
-
-        String messagebody = testVars.getResponse().getBody();                // Получаем ответ
-        log.debug("Get response with body: {}", messagebody);
-
-        String jsonTokenVal = getValueFromJsonPath(messagebody, "access_token");
-        testVars.setVariables("access_token", jsonTokenVal);                // Записываем токен в переменную
-        String jsonTokenType = getValueFromJsonPath(messagebody, "token_type");
-        testVars.setVariables("token_type", jsonTokenType);                 // Записываем тип токена в переменную
-        log.debug(String.format("Variable with value %s stored to %s", jsonTokenType, "token_type"));
-        log.debug(String.format("Variable with value %s stored to %s", jsonTokenVal, "access_token"));
 
     }
 
@@ -206,6 +160,52 @@ public class USBSSteps {
         System.out.println(order_id);
 
         assertTrue("Код ответа не равен 201", response.statusCode() == 201);
+
+    }
+
+    // Не используются
+
+    @Тогда("^Получение токена для пользователя$")
+    public void AuthHttp(DataTable dataTable) throws IOException, ParseException, CustomException {
+
+        TestVars testVars = LocalThead.getTestVars();
+        String testNum = SystemCommonSteps.getTagName();
+        log.debug(testNum);
+
+        String endPoint = Configurier.getInstance().getAppProp("host_kk");   // Читаем ендпоинт кейклок из конфигурационного файла
+        JsonHelper.getAllTestDataValues("token" + ".json", "Токен" );  // Читаем тестовые данные для получения токена
+
+        Map<String, String> map = dataTable.asMap(String.class, String.class);
+
+        Message message;
+        if (checkVars(endPoint)) {
+            endPoint = endPoint.replace("${env}", configer.getEnviroment().toLowerCase());
+        }
+        if (!testValues.isEmpty()) {
+
+            String filledBody = "client_id=" + testValues.get("client_id") + "&client_secret="+ testValues.get("client_secret") + "&grant_type=" + testValues.get("grant_type") + "&username=" + map.get("username") + "&password=" + map.get("password");
+            log.info("filledBody=" + filledBody);
+            message = new Message(filledBody);
+        } else {
+            message = new Message("");
+        }
+
+        message.setHeader("Content-Type","application/x-www-form-urlencoded");  // Собираем заголовок
+        if(checkVars(endPoint)) {
+            endPoint = replaceTestVariableValue(endPoint, testVars);
+        }
+
+        testVars.setResponse(NetworkUtils.sendHttp(message, endPoint));       // Отправляем запрос
+
+        String messagebody = testVars.getResponse().getBody();                // Получаем ответ
+        log.debug("Get response with body: {}", messagebody);
+
+        String jsonTokenVal = getValueFromJsonPath(messagebody, "access_token");
+        testVars.setVariables("access_token", jsonTokenVal);                // Записываем токен в переменную
+        String jsonTokenType = getValueFromJsonPath(messagebody, "token_type");
+        testVars.setVariables("token_type", jsonTokenType);                 // Записываем тип токена в переменную
+        log.debug(String.format("Variable with value %s stored to %s", jsonTokenType, "token_type"));
+        log.debug(String.format("Variable with value %s stored to %s", jsonTokenVal, "access_token"));
 
     }
 

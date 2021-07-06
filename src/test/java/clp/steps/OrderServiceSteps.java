@@ -6,6 +6,10 @@ import clp.core.vars.LocalThead;
 import clp.core.vars.TestVars;
 import clp.core.utils.Waiting;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -24,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -69,8 +74,9 @@ public class OrderServiceSteps extends Specifications {
         assertTrue("Код ответа не равен 201", response.statusCode() == 201);
 
         /*ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true);
-        List <clp.models.Response.ResponseItem> resp = objectMapper.readValue(response.asString(), new TypeReference<List<ResponseItem>>(){});
+        List <clp.models.response.postOrders.ResponseItem> resp = objectMapper.readValue(response.asString(), new TypeReference<List<clp.models.response.postOrders.ResponseItem>>(){});
         for (int i = 0; i < resp.size(); i++) {
             order_id = resp.get(i).getId();
         }*/
