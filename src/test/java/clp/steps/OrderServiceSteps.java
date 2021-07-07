@@ -129,7 +129,7 @@ public class OrderServiceSteps extends Specifications {
     }
 
     @Если("^Статус выполнения последнего действия - ([^\\s]*)$")
-    public void CheckActionStatus(String exp_status) throws ParseException, CustomException {
+    public void CheckActionStatus(String exp_status) throws CustomException {
         TestVars testVars = LocalThead.getTestVars();
         String order_id = testVars.getVariable("order_id");
         String action_id = testVars.getVariable("action_id");
