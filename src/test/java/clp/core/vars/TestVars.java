@@ -1,6 +1,6 @@
 package clp.core.vars;
 
-
+import io.restassured.response.Response;
 import clp.steps.SystemCommonSteps;
 import io.cucumber.datatable.DataTable;
 import org.apache.kafka.clients.producer.Producer;
@@ -17,6 +17,7 @@ public class TestVars {
     private DataTable dataTable;
     private Message request;
     private Message response;
+    private Response respAssured;
     private Map<String, String> variables = new HashMap<>();
     private Map<String, Producer> kafkaProducerMap = new HashMap<>();
     private Map<String, KafkaConsumerImpl> kafkaConsumerMap = new HashMap<>();
@@ -232,6 +233,14 @@ public class TestVars {
 
     public void setResponse(Message response) {
         this.response = response;
+    }
+
+    public Response getResp() {
+        return respAssured;
+    }
+
+    public void setResp(Response respAssured) {
+        this.respAssured = respAssured;
     }
 
     public void setVariables(String variableName, String tagValue) {

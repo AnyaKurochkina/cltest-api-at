@@ -1,6 +1,6 @@
 {
 	"order": {
-		"project_name": "proj-aydi9thv3w",
+		"project_name": "proj-frk0ux52hp",
 		"product_id": "c422069e-8f01-4328-b9dc-4a9e5dafd44e",
 		"attrs": {
 			"domain": "corp.dev.vtb",
@@ -10,7 +10,7 @@
 				"uuid": "d46ef6b2-1d14-472b-990b-82a124de309c",
 				"memory": 1
 			},
-			"platform": "vSphere",
+			"platform": "OpenStack",
 			"boot_disk": {
 				"size": 30
 			},
@@ -33,13 +33,13 @@
 				{
 					"role": "superuser",
 					"groups": [
-						"cloud-dmcrux-testgroup100"
+						"cloud-dbcrux-testgrop"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "RHEL_0001",
-		"graph_version": "1.0.98"
+		"label": "RHEL",
+		"graph_version": "1.0.90"
 	}
 }

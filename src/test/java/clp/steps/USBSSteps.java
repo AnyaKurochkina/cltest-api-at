@@ -119,7 +119,7 @@ public class USBSSteps {
     @Тогда("^Заказ продукта \"([^\"]*)\"")
     public void RhelOrder(String product) throws IOException, org.json.simple.parser.ParseException {
     
-        baseURI = Configurier.getInstance().getAppProp("host");
+        baseURI = Configurier.getInstance().getAppProp("host_kk");
         String datafolder = Configurier.getInstance().getAppProp("data.folder");
 
         TestVars testVars = LocalThead.getTestVars();
