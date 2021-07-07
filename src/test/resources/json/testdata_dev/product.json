@@ -28,5 +28,17 @@
     "net_segment": "dev-srv-app",
     "platform": "vSphere",
     "project_name": "proj-frk0ux52hp"
+  },
+  "RabbitMQ" : {
+    "count": "1",
+    "net_segment": "dev-srv-app",
+    "platform": "vSphere",
+    "project_name": "proj-frk0ux52hp"
+  },
+  "Nginx" : {
+    "count": "1",
+    "net_segment": "dev-srv-app",
+    "platform": "vSphere",
+    "project_name": "proj-frk0ux52hp"
   }
 }

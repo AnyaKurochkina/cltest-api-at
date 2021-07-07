@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class OrderServiceSteps extends Specifications {
@@ -88,7 +87,7 @@ public class OrderServiceSteps extends Specifications {
     }
 
     @Если("^Статус заказа - ([^\\s]*)$")
-    public void CheckOrderStatus(String exp_status) throws IOException, ParseException {
+    public void CheckOrderStatus(String exp_status) throws CustomException {
         TestVars testVars = LocalThead.getTestVars();
         String order_id = testVars.getVariable("order_id");
         String status = "";
@@ -106,15 +105,9 @@ public class OrderServiceSteps extends Specifications {
             counter = counter - 1;
         }
 
-        try{
-            assertEquals(exp_status.toLowerCase(), status);
-        }   catch (Exception e) {
+        if (!status.equals(exp_status.toLowerCase())) {
             StateServiceSteps.GetErrorFromOrch(order_id);
         }
-
-        /*if (!status.equals(exp_status.toLowerCase())) {
-            StateServiceSteps.GetErrorFromOrch(order_id);
-        }*/
 
     }
 
@@ -129,7 +122,6 @@ public class OrderServiceSteps extends Specifications {
                 .body(request)
                 .when()
                 .patch("order-service/api/v1/projects/" + testVars.getVariable("project") + "/orders/"+ testVars.getVariable("order_id") +"/actions/"+ action);
-        System.out.println("response = " + response.getBody().asString());
         assertTrue("Код ответа не равен 200", response.statusCode() == 200);
 
         testVars.setVariables("action_id", response.jsonPath().get("action_id"));
@@ -137,7 +129,7 @@ public class OrderServiceSteps extends Specifications {
     }
 
     @Если("^Статус выполнения последнего действия - ([^\\s]*)$")
-    public void CheckActionStatus(String exp_status) throws ParseException {
+    public void CheckActionStatus(String exp_status) throws ParseException, CustomException {
         TestVars testVars = LocalThead.getTestVars();
         String order_id = testVars.getVariable("order_id");
         String action_id = testVars.getVariable("action_id");
@@ -161,12 +153,9 @@ public class OrderServiceSteps extends Specifications {
             counter = counter - 1;
         }
 
-        try{
-            assertEquals(exp_status.toLowerCase(), action_status);
-        }   catch (Exception e) {
+        if (!action_status.equals(exp_status.toLowerCase())) {
             StateServiceSteps.GetErrorFromOrch(order_id);
         }
-
     }
 
 

@@ -1,5 +1,6 @@
 package clp.steps;
 
+import clp.core.exception.CustomException;
 import clp.core.helpers.Configurier;
 import cucumber.api.java.ru.Тогда;
 import io.restassured.RestAssured;
@@ -22,7 +23,7 @@ public class StateServiceSteps extends Specifications {
     private static final String folder_logs = Configurier.getInstance().getAppProp("folder.logs");
 
     @Тогда("^Получить логи об ошибке из Оркестратора$")
-    public static void GetErrorFromOrch(String order_id) throws ParseException {
+    public static void GetErrorFromOrch(String order_id) throws JsonPathException, CustomException {
         List<String> traceback = null;
         Response resp = RestAssured
                 .given()
@@ -52,6 +53,7 @@ public class StateServiceSteps extends Specifications {
         } catch (Exception e) {
             System.err.println(e);
         }
+        throw new CustomException("Error with VM");
     }
 
 }

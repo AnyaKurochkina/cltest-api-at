@@ -31,7 +31,7 @@ public class TemplateSteps {
     public static JSONObject ChangeOrderTemplate(JSONObject request, String product) throws ParseException {
         JsonHelper.getAllTestDataValues("product" + ".json", product);
         log.info("Изменение базового шаблона запроса тестовыми данными: ");
-        if (product.equals("Rhel") || product.equals("Windows") || product.equals("PostgreSQL") || product.equals("Redis") || product.equals("ApacheKafka")) {
+        if (product.equals("Rhel") || product.equals("Windows") || product.equals("PostgreSQL") || product.equals("Redis") || product.equals("ApacheKafka") || product.equals("RabbitMQ") || product.equals("Nginx")) {
             com.jayway.jsonpath.JsonPath.parse(request).set("$.order.project_name", testValues.get("project_name"));
             com.jayway.jsonpath.JsonPath.parse(request).set("$.order.count", Integer.parseInt(testValues.get("count")));
             com.jayway.jsonpath.JsonPath.parse(request).set("$.order.attrs.default_nic.net_segment", testValues.get("net_segment"));
