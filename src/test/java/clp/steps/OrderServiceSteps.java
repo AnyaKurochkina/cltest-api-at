@@ -2,6 +2,7 @@ package clp.steps;
 
 import clp.core.exception.CustomException;
 import clp.core.helpers.Configurier;
+import clp.core.helpers.JsonHelper;
 import clp.core.vars.LocalThead;
 import clp.core.vars.TestVars;
 import clp.core.utils.Waiting;
@@ -35,7 +36,6 @@ import static org.junit.Assert.assertTrue;
 public class OrderServiceSteps extends Specifications {
 
     private static final Logger log = LoggerFactory.getLogger(OrderServiceSteps.class);
-    private static final String FILE = "file:";
     private static final String folder_logs = Configurier.getInstance().getAppProp("folder.logs");
     private Scenario scenario;
     private Configurier configer = Configurier.getInstance();
@@ -57,8 +57,10 @@ public class OrderServiceSteps extends Specifications {
     }
 
 
-    @Тогда("^Заказ продукта ([^\"]*) в проекте ([^\\s]*)")
-    public void CreateOrder(String product, String project) throws IOException, org.json.simple.parser.ParseException {
+    @Тогда("^Заказ продукта ([^\"]*)")
+    public void CreateOrder(String product) throws IOException, org.json.simple.parser.ParseException {
+        JsonHelper jsonHelper = new JsonHelper();
+        String project = jsonHelper.getTestDataFieldValue("product.json", product, "project_name");
         TestVars testVars = LocalThead.getTestVars();
         testVars.setVariables("project", project);
         JSONObject request = TemplateSteps.getRequest(product);
