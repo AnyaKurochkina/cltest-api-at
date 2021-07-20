@@ -27,8 +27,6 @@ public class OrderRhelTest extends Hooks {
 
     static Stream<Arguments> dataProviderMethod() {
         return Stream.of(Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "Nutanix"),
-                Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "vSphere"),
-                Arguments.arguments("Apache_Kafka", "DEV", "dev-srv-app", "5", "Nutanix"),
-                Arguments.arguments("Apache_Kafka", "DEV", "dev-srv-app", "5", "vSphere"));
+                Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "vSphere"));
     }
 }

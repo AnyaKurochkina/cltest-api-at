@@ -7,10 +7,11 @@ import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.junit.jupiter.api.Assertions;
 
 import javax.net.ssl.*;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -19,14 +20,14 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class Http {
     private final String host;
     private String path;
     private String body = "";
     private String method;
-    private String methodOverride = "";
     private String contentType = "application/json";
 
     static {
@@ -45,6 +46,16 @@ public class Http {
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
             fail(e.getMessage());
+        }
+        try {
+            Field methodsField = HttpURLConnection.class.getDeclaredField("methods");
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(methodsField, methodsField.getModifiers() & ~Modifier.FINAL);
+            methodsField.setAccessible(true);
+            methodsField.set(null, new String[]{"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE", "PATCH"});
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new IllegalStateException(e);
         }
     }
 
@@ -75,8 +86,7 @@ public class Http {
     }
 
     public HttpResponse patch(String path) {
-        this.method = "POST";
-        this.methodOverride = "PATCH";
+        this.method = "PATCH";
         this.path = path;
         return request();
     }
@@ -119,9 +129,6 @@ public class Http {
                 http.setRequestProperty("Authorization", getBearerToken());
             http.setDoOutput(true);
             http.setRequestMethod(method);
-            if (methodOverride.length() > 0) {
-                http.setRequestProperty("X-HTTP-Method-Override", methodOverride);
-            }
             if (body.length() > 0) {
                 http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
             }
@@ -149,7 +156,7 @@ public class Http {
         }
 
         public HttpResponse assertStatus(int s) {
-            Assertions.assertEquals(s, status, (String.format("\nResponse: %s\nRequest: %s\n", response, body)));
+            assertEquals(String.format("\nResponse: %s\nRequest: %s\n", response, body), s, status);
             return this;
         }
 
