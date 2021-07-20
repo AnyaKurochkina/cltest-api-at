@@ -1,5 +1,6 @@
 package tests.order;
 
+import core.exception.CustomException;
 import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -19,14 +20,73 @@ public class OrderRhelTest extends Hooks {
 
     @ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
-    @MethodSource("dataProviderMethod")
-    public void test(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException {
+    @MethodSource("dataProviderMethodRhel")
+    public void Rhel(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
+        orderServiceSteps.CheckOrderStatus("success");
+        orderServiceSteps.ExecuteAction("reset_vm");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_vm_soft");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("start_vm");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_vm_hard");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("delete_vm");
+        orderServiceSteps.CheckActionStatus("success");
+
     }
 
-    static Stream<Arguments> dataProviderMethod() {
-        return Stream.of(Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "Nutanix"),
-                Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "vSphere"));
+    static Stream<Arguments> dataProviderMethodRhel() {
+        return Stream.of(Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "vSphere"));
+    }
+
+    @ParameterizedTest
+    @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
+    @MethodSource("dataProviderMethodNginx")
+    public void Nginx(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
+        orderServiceSteps.CheckOrderStatus("success");
+        orderServiceSteps.ExecuteAction("reset_vm");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_vm_soft");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("start_vm");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_vm_hard");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("delete_two_layer");
+        orderServiceSteps.CheckActionStatus("success");
+
+    }
+
+    static Stream<Arguments> dataProviderMethodNginx() {
+        return Stream.of(Arguments.arguments("Nginx", "DEV", "dev-srv-app", "5", "vSphere"));
+    }
+
+    @ParameterizedTest
+    @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
+    @MethodSource("dataProviderMethodRabbitMQ")
+    public void RabbitMQ(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
+        orderServiceSteps.CheckOrderStatus("success");
+        orderServiceSteps.ExecuteAction("reset_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("start_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_app_hard");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("delete_two_layer");
+        orderServiceSteps.CheckActionStatus("success");
+
+    }
+
+    static Stream<Arguments> dataProviderMethodRabbitMQ() {
+        return Stream.of(Arguments.arguments("RabbitMQ", "DEV", "dev-srv-app", "5", "vSphere"));
     }
 }
