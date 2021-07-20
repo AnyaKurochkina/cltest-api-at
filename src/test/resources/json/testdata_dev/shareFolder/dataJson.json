@@ -1,11 +1,9 @@
 {
-    "projects": [
-        {
-            "id": "proj-tg7jlitmp1",
-            "env": "DEV"
-        }
-    ],
-    "folder_id_department": "fold-yewtq3sn7b",
-    "folder_id_default": "fold-m0z30vayd0",
-    "folder_id_Business": "fold-r6nb1vzluz"
+    "projects": [{
+        "id": "proj-tg7jlitmp1",
+        "env": "DEV"
+    }],
+    "folder_id_department": "fold-9nc025bo1x",
+    "folder_id_default": "fold-dx27j9a0nq",
+    "folder_id_Business": "fold-ep77g0ej87"
 }
