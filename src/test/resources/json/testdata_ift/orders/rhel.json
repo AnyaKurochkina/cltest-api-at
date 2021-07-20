@@ -1,6 +1,6 @@
 {
 	"order": {
-		"project_name": "proj-9hqv2vfvbg",
+		"project_name": "proj-0t3kfecbnf",
 		"product_id": "c422069e-8f01-4328-b9dc-4a9e5dafd44e",
 		"attrs": {
 			"domain": "corp.dev.vtb",
@@ -10,7 +10,7 @@
 				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
 				"memory": 4
 			},
-			"platform": "Openstack",
+			"platform": "Nutanix",
 			"boot_disk": {
 				"size": 30
 			},
