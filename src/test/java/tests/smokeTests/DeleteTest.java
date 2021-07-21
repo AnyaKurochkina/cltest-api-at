@@ -16,7 +16,7 @@ public class DeleteTest extends Hooks {
     @DisplayName("Первый тест на удаление из мапы")
     @Tag("smoke")
     @Test
-    public void test1(){
+    public void test3(){
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.deleteFromMap("some key");
     }
@@ -32,7 +32,7 @@ public class DeleteTest extends Hooks {
     @Description("Что-нибудь > удаляем элемент из мапы по ключу")
     @DisplayName("Первый тест на удаление из мапы")
     @Test
-    public void test3(){
+    public void test1(){
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.deleteFromMap("some key3");
     }

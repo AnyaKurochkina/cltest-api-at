@@ -2,36 +2,36 @@
   "Rhel" : {
     "count": "1",
     "net_segment": "dev-srv-app",
-    "platform": "vSphere",
+    "platform": "vSphere"
   },
   "Windows" : {
     "count": "1",
     "net_segment": "dev-srv-app",
-    "platform": "vSphere",
+    "platform": "vSphere"
   },
   "Redis" : {
     "count": "1",
     "net_segment": "dev-srv-app",
-    "platform": "vSphere",
+    "platform": "vSphere"
   },
   "Apache_Kafka" : {
     "count": "1",
     "net_segment": "dev-srv-app",
-    "platform": "vSphere",
+    "platform": "vSphere"
   },
   "PostgreSQL" : {
     "count": "1",
     "net_segment": "dev-srv-app",
-    "platform": "vSphere",
+    "platform": "vSphere"
   },
   "RabbitMQ" : {
     "count": "1",
     "net_segment": "dev-srv-app",
-    "platform": "vSphere",
+    "platform": "vSphere"
   },
   "Nginx" : {
     "count": "1",
     "net_segment": "dev-srv-app",
-    "platform": "vSphere",
+    "platform": "vSphere"
   }
 }
