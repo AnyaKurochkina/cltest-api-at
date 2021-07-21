@@ -14,7 +14,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <aspectj.version>1.8.10</aspectj.version>
         <allure.version>2.13.2</allure.version>
-        <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
+        <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
         <maven-compiler-plugin-version>3.8.1</maven-compiler-plugin-version>
         <allure-maven-version>2.10.0</allure-maven-version>
         <rest-assured-version>4.4.0</rest-assured-version>
@@ -143,6 +143,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
                     <!--                    <parallel>methods</parallel>-->
                     <!--                    <threadCount>2</threadCount>-->
                     <!--                    <perCoreThreadCount>true</perCoreThreadCount>-->
