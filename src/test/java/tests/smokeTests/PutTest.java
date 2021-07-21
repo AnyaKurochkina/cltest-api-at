@@ -5,11 +5,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import steps.Hooks;
 import steps.smokeProjectRunSteps.SmokeProjectRunSteps;
+import tests.MyExtension;
 
 import java.util.stream.Stream;
 
@@ -48,6 +50,7 @@ public class PutTest extends Hooks {
 
     @Description("Что-нибудь > загружаем в мапу")
     @DisplayName("Третий тест на загрузку мапы")
+    @ExtendWith(MyExtension.class)
     @Test
     public void test3() {
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
