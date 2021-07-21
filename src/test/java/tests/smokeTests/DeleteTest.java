@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import steps.Hooks;
 import steps.smokeProjectRunSteps.SmokeProjectRunSteps;
 @Order(3)
+@Tag("smoke")
 @DisplayName("Тесты на удаление из мапы")
 public class DeleteTest extends Hooks {
 

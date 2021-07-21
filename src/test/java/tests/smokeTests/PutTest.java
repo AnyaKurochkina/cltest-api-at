@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 @DisplayName("Тесты на загрузку мапы")
 @Order(1)
+@Tag("smoke")
 public class PutTest extends Hooks {
 
     @Description("Что-нибудь > загружаем в мапу")

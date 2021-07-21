@@ -7,7 +7,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
-@SelectPackages("tests.smokeTests")
+@SelectPackages("tests")
 @IncludeClassNamePatterns({"^.*Tests?$"})
 @SuiteDisplayName("Набор тестов работы с мапой")
 @IncludeTags("smoke")

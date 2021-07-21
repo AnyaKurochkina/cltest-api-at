@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import steps.Hooks;
 import steps.smokeProjectRunSteps.SmokeProjectRunSteps;
 @Order(2)
-@Tag("kek")
+@Tag("smoke")
 @DisplayName("Тесты на чтение из мапы")
 public class GetTest extends Hooks {
 
