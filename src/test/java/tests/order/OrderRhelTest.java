@@ -89,4 +89,100 @@ public class OrderRhelTest extends Hooks {
     static Stream<Arguments> dataProviderMethodRabbitMQ() {
         return Stream.of(Arguments.arguments("RabbitMQ", "DEV", "dev-srv-app", "5", "vSphere"));
     }
+
+    @ParameterizedTest
+    @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
+    @MethodSource("dataProviderMethodWindows")
+    public void Windows(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
+        orderServiceSteps.CheckOrderStatus("success");
+        orderServiceSteps.ExecuteAction("reset_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("start_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_app_hard");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("delete_two_layer");
+        orderServiceSteps.CheckActionStatus("success");
+
+    }
+
+    static Stream<Arguments> dataProviderMethodWindows() {
+        return Stream.of(Arguments.arguments("Windows", "DEV", "dev-srv-app", "5", "vSphere"));
+    }
+
+    @ParameterizedTest
+    @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
+    @MethodSource("dataProviderMethodRedis")
+    public void Redis(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
+        orderServiceSteps.CheckOrderStatus("success");
+        orderServiceSteps.ExecuteAction("reset_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("start_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_app_hard");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("delete_two_layer");
+        orderServiceSteps.CheckActionStatus("success");
+
+    }
+
+    static Stream<Arguments> dataProviderMethodRedis() {
+        return Stream.of(Arguments.arguments("Redis", "DEV", "dev-srv-app", "5", "vSphere"));
+    }
+
+    @ParameterizedTest
+    @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
+    @MethodSource("dataProviderMethodApacheKafka")
+    public void ApacheKafka(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
+        orderServiceSteps.CheckOrderStatus("success");
+        orderServiceSteps.ExecuteAction("reset_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("start_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_app_hard");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("delete_two_layer");
+        orderServiceSteps.CheckActionStatus("success");
+
+    }
+
+    static Stream<Arguments> dataProviderMethodApacheKafka() {
+        return Stream.of(Arguments.arguments("Apache_Kafka", "DEV", "dev-srv-app", "5", "vSphere"));
+    }
+
+    @ParameterizedTest
+    @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
+    @MethodSource("dataProviderMethodPosgreSQL")
+    public void PosgreSQL(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
+        orderServiceSteps.CheckOrderStatus("success");
+        orderServiceSteps.ExecuteAction("reset_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("start_app");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("stop_app_hard");
+        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.ExecuteAction("delete_two_layer");
+        orderServiceSteps.CheckActionStatus("success");
+
+    }
+
+    static Stream<Arguments> dataProviderMethodPosgreSQL() {
+        return Stream.of(Arguments.arguments("PosgreSQL", "DEV", "dev-srv-app", "5", "vSphere"));
+    }
 }
