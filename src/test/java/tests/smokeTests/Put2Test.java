@@ -15,20 +15,16 @@ import java.util.stream.Stream;
 @DisplayName("Тесты на загрузку мапы 2")
 
 //@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Order(2)
-@Execution(ExecutionMode.SAME_THREAD)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PutTest2 extends Hooks {
+@Tag("smoke")
+public class Put2Test {
 
     @Description("Что-нибудь > загружаем в мапу")
     @DisplayName("Первый тест на загрузку мапы 2")
     @Tag("smoke")
     @ParameterizedTest
     @MethodSource("dataProviderMethod")
-    @Order(1)
-    @Execution(ExecutionMode.CONCURRENT)
     public void test3(String key, String value) {
-        System.out.println("test3()");
+        System.out.println("test4()");
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.loadMap(key, value);
     }
@@ -45,26 +41,22 @@ public class PutTest2 extends Hooks {
     @Description("Что-нибудь > загружаем в мапу")
     @DisplayName("Второй тест на загрузку мапы 2")
     @Tag("smoke")
-    @Order(2)
     @Test
-    @Execution(ExecutionMode.SAME_THREAD)
     public void test2() throws InterruptedException {
-        System.out.println("test2()");
+        System.out.println("test5()");
         Thread.sleep(5000);
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
-        smokeProjectRunSteps.loadMap("some key2", "some value2");
+        smokeProjectRunSteps.loadMap("some key22", "some value22");
     }
 
     @Description("Что-нибудь > загружаем в мапу")
     @DisplayName("Третий тест на загрузку мапы 2")
     @Tag("smoke")
-    @Order(3)
     @Test
-    @Execution(ExecutionMode.SAME_THREAD)
     public void test1() throws InterruptedException {
-        System.out.println("test1()");
+        System.out.println("test6()");
         Thread.sleep(5000);
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
-        smokeProjectRunSteps.loadMap("some key3", "some value3");
+        smokeProjectRunSteps.loadMap("some key33", "some value33");
     }
 }

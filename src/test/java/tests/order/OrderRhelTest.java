@@ -4,6 +4,8 @@ import core.exception.CustomException;
 import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -12,9 +14,7 @@ import steps.OrderServiceSteps;
 
 import java.io.IOException;
 import java.util.stream.Stream;
-
-import static core.helper.JsonHelper.shareData;
-
+@ExtendWith(BeforeEx.class)
 @Order(2)
 public class OrderRhelTest extends Hooks {
 

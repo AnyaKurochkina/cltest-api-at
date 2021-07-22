@@ -7,14 +7,13 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.Hooks;
 import steps.smokeProjectRunSteps.SmokeProjectRunSteps;
-@Order(3)
-@Tag("smoke")
+
+@Tag("regress")
 @DisplayName("Тесты на удаление из мапы")
-public class DeleteTest extends Hooks {
+public class DeleteTest {
 
     @Description("Что-нибудь > удаляем элемент из мапы по ключу")
     @DisplayName("Первый тест на удаление из мапы")
-    @Tag("smoke")
     @Test
     public void test3(){
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();

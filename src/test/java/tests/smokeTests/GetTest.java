@@ -7,14 +7,13 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.Hooks;
 import steps.smokeProjectRunSteps.SmokeProjectRunSteps;
-@Order(2)
-@Tag("smoke")
+
+@Tag("regress")
 @DisplayName("Тесты на чтение из мапы")
-public class GetTest extends Hooks {
+public class GetTest {
 
     @Description("Что-нибудь > загружаем элемент из мапы по ключу")
     @DisplayName("Первый тест на чтение из мапы")
-    @Tag("smoke")
     @Test
     public void test1(){
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
