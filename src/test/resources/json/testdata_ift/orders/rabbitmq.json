@@ -1,6 +1,6 @@
 {
 	"order": {
-		"project_name": "proj-0t3kfecbnf",
+		"project_name": "proj-aydi9thv3w",
 		"product_id": "f566578f-2f8a-480f-9b1d-dd2663a4bfce",
 		"attrs": {
 			"domain": "corp.dev.vtb",
@@ -10,7 +10,7 @@
 				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
 				"memory": 4
 			},
-			"platform": "Nutanix",
+			"platform": "vSphere",
 			"boot_disk": {
 				"size": 30
 			},
@@ -34,7 +34,7 @@
 				{
 					"role": "superuser",
 					"groups": [
-						"cloud-dqplux-atgroup"
+						"cloud-d5plux-apitest"
 					]
 				}
 			],
@@ -42,13 +42,12 @@
 				{
 					"role": "administrator",
 					"groups": [
-						"cloud-dqplux-atgroup"
+						"cloud-d5plux-apitest"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "RabbitMQ",
-		"graph_version": "1.0.32"
+		"label": "RabbitMQ_0001"
 	}
 }

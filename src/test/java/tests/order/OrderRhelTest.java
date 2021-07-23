@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 import static core.helper.JsonHelper.shareData;
 
-@Order(2)
+@Order(3)
 public class OrderRhelTest extends Hooks {
 
     @ParameterizedTest
@@ -39,7 +39,7 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodRhel() {
-        return Stream.of(Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "Nutanix"));
     }
 
     @ParameterizedTest
@@ -63,7 +63,7 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodNginx() {
-        return Stream.of(Arguments.arguments("Nginx", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("Nginx", "DEV", "dev-srv-app", "5", "Nutanix"));
     }
 
     @ParameterizedTest
@@ -87,7 +87,7 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodRabbitMQ() {
-        return Stream.of(Arguments.arguments("RabbitMQ", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("RabbitMQ", "DEV", "dev-srv-app", "5", "Nutanix"));
     }
 
     @ParameterizedTest
@@ -111,7 +111,7 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodWindows() {
-        return Stream.of(Arguments.arguments("Windows", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("Windows", "DEV", "dev-srv-app", "5", "Nutanix"));
     }
 
     @ParameterizedTest
@@ -135,7 +135,7 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodRedis() {
-        return Stream.of(Arguments.arguments("Redis", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("Redis", "DEV", "dev-srv-app", "5", "Nutanix"));
     }
 
     @ParameterizedTest
@@ -159,13 +159,13 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodApacheKafka() {
-        return Stream.of(Arguments.arguments("Apache_Kafka", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("Apache_Kafka", "DEV", "dev-srv-app", "5", "Nutanix"));
     }
 
     @ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
-    @MethodSource("dataProviderMethodPosgreSQL")
-    public void PosgreSQL(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
+    @MethodSource("dataProviderMethodPostgreSQL")
+    public void PostgreSQL(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
         orderServiceSteps.CheckOrderStatus("success");
@@ -182,7 +182,7 @@ public class OrderRhelTest extends Hooks {
 
     }
 
-    static Stream<Arguments> dataProviderMethodPosgreSQL() {
-        return Stream.of(Arguments.arguments("PosgreSQL", "DEV", "dev-srv-app", "5", "vSphere"));
+    static Stream<Arguments> dataProviderMethodPostgreSQL() {
+        return Stream.of(Arguments.arguments("PostgreSQL", "DEV", "dev-srv-app", "5", "Nutanix"));
     }
 }

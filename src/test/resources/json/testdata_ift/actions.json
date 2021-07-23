@@ -1,0 +1,10 @@
+{
+  "Actions" :{
+    "start_vm": "cloud_autotest",
+    "reset_vm": "1b365e15669fc8315245f844c84c4970",
+    "stop_vm_soft": "password",
+    "stop_vm_hard": "portal_admin_at",
+    "delete": "portal_admin_at",
+    "delete_two_layer": "portal_admin_at"
+  }
+}

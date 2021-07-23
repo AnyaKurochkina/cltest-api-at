@@ -1,16 +1,16 @@
 {
 	"order": {
-		"project_name": "proj-0t3kfecbnf",
-		"product_id": "a82f21a2-730c-481c-bebb-ea515cf90e39",
+		"project_name": "proj-aydi9thv3w",
+		"product_id": "62ba467c-3ee8-4631-9393-578ce04f3fd2",
 		"attrs": {
 			"domain": "corp.dev.vtb",
 			"flavor": {
 				"cpus": 2,
-				"name": "c2m8",
-				"uuid": "930a8be8-1c71-4730-b881-0633a56b7f2b",
-				"memory": 8
+				"name": "c2m4",
+				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+				"memory": 4
 			},
-			"platform": "Nutanix",
+			"platform": "vSphere",
 			"boot_disk": {
 				"size": 30
 			},
@@ -22,7 +22,7 @@
 				"net_segment": "dev-srv-app"
 			},
 			"access_group": [
-				"cloud-dqplux-atgroup"
+				"cloud-dmcrux-testgroup100"
 			],
 			"extra_mounts": [
 				{
@@ -42,13 +42,13 @@
 				{
 					"role": "superuser",
 					"groups": [
-						"cloud-dqplux-atgroup"
+						"cloud-dmcrux-testgroup100"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "WildFly_0002",
+		"label": "WildFly_0001",
 		"graph_version": "1.0.15"
 	}
 }
