@@ -1,6 +1,6 @@
 {
 	"order": {
-		"project_name": "proj-0t3kfecbnf",
+		"project_name": "proj-aydi9thv3w",
 		"product_id": "6662a03d-20ce-4a83-a684-ddec48393516",
 		"attrs": {
 			"domain": "corp.dev.vtb",
@@ -10,7 +10,7 @@
 				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
 				"memory": 4
 			},
-			"platform": "Nutanix",
+			"platform": "vSphere",
 			"boot_disk": {
 				"size": 30
 			},
@@ -35,18 +35,17 @@
 			],
 			"redis_version": "5",
 			"ad_integration": true,
-			"redis_password": "PyCZV0afkhLBRms5ynQYdYsebBZT1Ghb",
+			"redis_password": "vSrEzXhI2cfqBdvW3NXvvutpp9LbrEdU2S5uYFU2w1KwX1Z2yn0LrhYpENvT",
 			"ad_logon_grants": [
 				{
 					"role": "superuser",
 					"groups": [
-						"cloud-dqplux-atgroup"
+						"cloud-d5plux-apitest"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "Redis_0002",
-		"graph_version": "1.0.63"
+		"label": "Redis"
 	}
 }

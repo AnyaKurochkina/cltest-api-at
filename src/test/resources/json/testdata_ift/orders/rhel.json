@@ -1,6 +1,6 @@
 {
 	"order": {
-		"project_name": "proj-0t3kfecbnf",
+		"project_name": "proj-aeak5d9285",
 		"product_id": "c422069e-8f01-4328-b9dc-4a9e5dafd44e",
 		"attrs": {
 			"domain": "corp.dev.vtb",
@@ -33,13 +33,12 @@
 				{
 					"role": "superuser",
 					"groups": [
-						"cloud-dqplux-atgroup"
+						"cloud-d5plux-apitest"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "RHEL-0002",
-		"graph_version": "1.0.91"
+		"label": "RHEL"
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"order": {
-		"project_name": "proj-0t3kfecbnf",
+		"project_name": "proj-aydi9thv3w",
 		"product_id": "ebe832bd-ed1c-4998-8a58-6c4d16db1d60",
 		"attrs": {
 			"domain": "corp.dev.vtb",
@@ -10,7 +10,7 @@
 				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
 				"memory": 4
 			},
-			"platform": "Nutanix",
+			"platform": "vSphere",
 			"boot_disk": {
 				"size": 30
 			},
@@ -33,13 +33,12 @@
 				{
 					"role": "superuser",
 					"groups": [
-						"cloud-dqplux-atgroup"
+						"cloud-d5plux-apitest"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "Nginx_0002",
-		"graph_version": "1.0.14"
+		"label": "Nginx_0001"
 	}
 }
