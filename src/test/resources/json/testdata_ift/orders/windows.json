@@ -20,7 +20,7 @@
 			},
 			"extra_nics": [],
 			"on_support": false,
-			"os_version": "Microsoft Windows Server 2016 Datacenter",
+			"os_version": "Microsoft Windows Server 2019",
 			"data_center": "5",
 			"default_nic": {
 				"net_segment": "dev-srv-app"

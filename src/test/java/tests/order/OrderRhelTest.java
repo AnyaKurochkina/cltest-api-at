@@ -18,7 +18,7 @@ import static core.helper.JsonHelper.shareData;
 @Order(3)
 public class OrderRhelTest extends Hooks {
 
-    @ParameterizedTest
+    /*@ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
     @MethodSource("dataProviderMethodRhel")
     public void Rhel(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
@@ -88,7 +88,7 @@ public class OrderRhelTest extends Hooks {
 
     static Stream<Arguments> dataProviderMethodRabbitMQ() {
         return Stream.of(Arguments.arguments("RabbitMQ", "DEV", "dev-srv-app", "5", "Nutanix"));
-    }
+    }*/
 
     @ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
@@ -97,15 +97,15 @@ public class OrderRhelTest extends Hooks {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
         orderServiceSteps.CheckOrderStatus("success");
-        orderServiceSteps.ExecuteAction("reset_app");
+        orderServiceSteps.ExecuteAction("reset_vm");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app");
+        orderServiceSteps.ExecuteAction("stop_vm_soft");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("start_app");
+        orderServiceSteps.ExecuteAction("start_vm");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app_hard");
+        orderServiceSteps.ExecuteAction("stop_vm_hard");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("delete_two_layer");
+        orderServiceSteps.ExecuteAction("delete_vm");
         orderServiceSteps.CheckActionStatus("success");
 
     }
@@ -114,7 +114,7 @@ public class OrderRhelTest extends Hooks {
         return Stream.of(Arguments.arguments("Windows", "DEV", "dev-srv-app", "5", "Nutanix"));
     }
 
-    @ParameterizedTest
+    /*@ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
     @MethodSource("dataProviderMethodRedis")
     public void Redis(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
@@ -145,13 +145,13 @@ public class OrderRhelTest extends Hooks {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
         orderServiceSteps.CheckOrderStatus("success");
-        orderServiceSteps.ExecuteAction("reset_app");
+        orderServiceSteps.ExecuteAction("reset_vm");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app");
+        orderServiceSteps.ExecuteAction("stop_vm_soft");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("start_app");
+        orderServiceSteps.ExecuteAction("start_vm");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app_hard");
+        orderServiceSteps.ExecuteAction("stop_vm_hard");
         orderServiceSteps.CheckActionStatus("success");
         orderServiceSteps.ExecuteAction("delete_two_layer");
         orderServiceSteps.CheckActionStatus("success");
@@ -184,5 +184,5 @@ public class OrderRhelTest extends Hooks {
 
     static Stream<Arguments> dataProviderMethodPostgreSQL() {
         return Stream.of(Arguments.arguments("PostgreSQL", "DEV", "dev-srv-app", "5", "Nutanix"));
-    }
+    }*/
 }
