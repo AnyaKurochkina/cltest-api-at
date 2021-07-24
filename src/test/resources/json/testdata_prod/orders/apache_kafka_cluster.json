@@ -1,7 +1,7 @@
 {
 	"order": {
 		"project_name": "proj-aydi9thv3w",
-		"product_id": "28bed880-2714-4317-a967-d000d492bd9d",
+		"product_id": "1b087ffc-a673-44e1-b816-846cb38582dd",
 		"attrs": {
 			"domain": "corp.dev.vtb",
 			"flavor": {
@@ -10,33 +10,34 @@
 				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
 				"memory": 4
 			},
-			"features": [],
-			"pagefile": "Automatically manage paging file size for all drives",
 			"platform": "vSphere",
-			"boot_disk": {
-				"path": "C",
-				"size": 80,
-				"file_system": "ntfs"
-			},
-			"extra_nics": [],
-			"on_support": false,
-			"os_version": "Microsoft Windows Server 2019",
+			"os_version": "7.latest",
 			"data_center": "5",
 			"default_nic": {
 				"net_segment": "dev-srv-app"
 			},
-			"extra_disks": [],
+			"cluster_name": "kafka-clust-0001",
+			"extra_mounts": [
+				{
+					"path": "/app",
+					"size": 25,
+					"file_system": "xfs"
+				}
+			],
+			"kafka_version": "2.13-2.4.1",
 			"ad_integration": true,
+			"kafka_node_number": 1,
+			"kafka_log_retention_minutes": 30,
 			"ad_logon_grants": [
 				{
-					"role": "Administrators",
+					"role": "superuser",
 					"groups": [
-						"cloud-d5plux-apitest"
+						"cloud-dmcrux-testgroup100"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "Windows server_0001"
+		"label": "Apache Kafka Cluster"
 	}
 }

@@ -1,7 +1,7 @@
 {
 	"order": {
 		"project_name": "proj-aydi9thv3w",
-		"product_id": "28bed880-2714-4317-a967-d000d492bd9d",
+		"product_id": "ebe832bd-ed1c-4998-8a58-6c4d16db1d60",
 		"attrs": {
 			"domain": "corp.dev.vtb",
 			"flavor": {
@@ -10,33 +10,35 @@
 				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
 				"memory": 4
 			},
-			"features": [],
-			"pagefile": "Automatically manage paging file size for all drives",
 			"platform": "vSphere",
 			"boot_disk": {
-				"path": "C",
-				"size": 80,
-				"file_system": "ntfs"
+				"size": 30
 			},
 			"extra_nics": [],
 			"on_support": false,
-			"os_version": "Microsoft Windows Server 2019",
+			"os_version": "8.latest",
 			"data_center": "5",
 			"default_nic": {
 				"net_segment": "dev-srv-app"
 			},
-			"extra_disks": [],
+			"extra_mounts": [
+				{
+					"path": "/app",
+					"size": 30,
+					"file_system": "xfs"
+				}
+			],
 			"ad_integration": true,
 			"ad_logon_grants": [
 				{
-					"role": "Administrators",
+					"role": "superuser",
 					"groups": [
-						"cloud-d5plux-apitest"
+						"cloud-d5zorg-test_api"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "Windows server_0001"
+		"label": "Nginx_0001"
 	}
 }
