@@ -115,6 +115,7 @@ public class Http {
 
     private String getBearerToken() {
         TestVars testVars = LocalThead.getTestVars();
+        System.out.println("token = " + testVars.getVariable("token_type") + " " + testVars.getVariable("token"));
         return testVars.getVariable("token_type") + " " + testVars.getVariable("token");
     }
 

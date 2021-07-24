@@ -18,7 +18,7 @@ import static core.helper.JsonHelper.shareData;
 @Order(3)
 public class OrderRhelTest extends Hooks {
 
-    /*@ParameterizedTest
+    @ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
     @MethodSource("dataProviderMethodRhel")
     public void Rhel(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
@@ -39,7 +39,8 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodRhel() {
-        return Stream.of(Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "Nutanix"));
+        return Stream.of(Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+                        Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 
     @ParameterizedTest
@@ -63,7 +64,8 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodNginx() {
-        return Stream.of(Arguments.arguments("Nginx", "DEV", "dev-srv-app", "5", "Nutanix"));
+        return Stream.of(Arguments.arguments("Nginx", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+                         Arguments.arguments("Nginx", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 
     @ParameterizedTest
@@ -87,8 +89,9 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodRabbitMQ() {
-        return Stream.of(Arguments.arguments("RabbitMQ", "DEV", "dev-srv-app", "5", "Nutanix"));
-    }*/
+        return Stream.of(Arguments.arguments("RabbitMQ", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+                            Arguments.arguments("RabbitMQ", "DEV", "dev-srv-app", "5", "Openstack"));*/
+    }
 
     @ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
@@ -111,10 +114,11 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodWindows() {
-        return Stream.of(Arguments.arguments("Windows", "DEV", "dev-srv-app", "5", "Nutanix"));
+        return Stream.of(Arguments.arguments("Windows", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+                         Arguments.arguments("Windows", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 
-    /*@ParameterizedTest
+    @ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
     @MethodSource("dataProviderMethodRedis")
     public void Redis(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
@@ -135,7 +139,8 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodRedis() {
-        return Stream.of(Arguments.arguments("Redis", "DEV", "dev-srv-app", "5", "Nutanix"));
+        return Stream.of(Arguments.arguments("Redis", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+                         Arguments.arguments("Redis", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 
     @ParameterizedTest
@@ -159,7 +164,8 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodApacheKafka() {
-        return Stream.of(Arguments.arguments("Apache_Kafka", "DEV", "dev-srv-app", "5", "Nutanix"));
+        return Stream.of(Arguments.arguments("Apache_Kafka", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+        Arguments.arguments("Redis", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 
     @ParameterizedTest
@@ -183,6 +189,7 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodPostgreSQL() {
-        return Stream.of(Arguments.arguments("PostgreSQL", "DEV", "dev-srv-app", "5", "Nutanix"));
-    }*/
+        return Stream.of(Arguments.arguments("PostgreSQL", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+        Arguments.arguments("PostgreSQL", "DEV", "dev-srv-app", "5", "Openstack"));*/
+    }
 }

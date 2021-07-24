@@ -1,3 +1,4 @@
 data.folder,src/test/resources/json/testdata_prod
-host_kk,ift-keycloak.apps.d0-oscp.corp.dev.vtb/auth/realms/Portal/protocol/openid-connect/token
-host,ift-kong-service.apps.d0-oscp.corp.dev.vtb/
+host_kk,https://auth.cloud.vtb.ru/
+host_kong,https://prod-kong-service.cloud.vtb.ru/
+host_ss,https://prod-state-service.cloud.vtb.ru/
