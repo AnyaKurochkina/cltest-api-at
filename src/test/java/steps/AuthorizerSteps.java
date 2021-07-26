@@ -8,6 +8,7 @@ import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import org.json.simple.JSONObject;
 import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.List;
 import java.util.Random;
@@ -16,6 +17,44 @@ import java.util.Random;
 @Log4j2
 public class AuthorizerSteps extends Steps {
     private static final String URL = Configurier.getInstance().getAppProp("host_kong");
+
+    @Step("Получение имени организации")
+    public void getOrgName(String orgTitle) {
+        JsonPath jsonPath = new Http(URL)
+                .get(String.format("authorizer/api/v1/organizations?page=1&per_page=25"))
+                .assertStatus(200)
+                .jsonPath();
+
+        String orgName = jsonPath.get(String.format("data.find{it.title=='%s'}.name", orgTitle));
+        ShareData.put("orgName", orgName);
+    }
+
+    @Test
+    public void test() {
+        System.out.println();
+    }
+
+    @Step("Получение информационных систем")
+    public void getInfoSys(String sysName) {
+        JsonPath jsonPath = new Http(URL)
+                .get(String.format("portal/api/v1/organizations/%s/information_systems?page=1&per_page=100&include=total_count", ShareData.getString("orgName")))
+                .assertStatus(200)
+                .jsonPath();
+
+        int countOfIteration = (int)jsonPath.get("meta.total_count")/ 100 + 1;
+
+        for (int i = 1; i <=countOfIteration; i++){
+            JsonPath jsonPathInCycle = new Http(URL)
+                    .get(String.format("portal/api/v1/organizations/%s/information_systems?page=%s&per_page=100&include=total_count", ShareData.getString("orgName"), i))
+                    .assertStatus(200)
+                    .jsonPath();
+
+            if(jsonPathInCycle.get(String.format("list.find{it.code=='%s'}.id", sysName)) != null){
+                ShareData.put("infoSystemId", jsonPathInCycle.get(String.format("list.find{it.code=='%s'}.id", sysName)));
+                break;
+            }
+        }
+    }
 
     @Step("Создание папки {folder_type} и сохраняем в переменную {param}")
     public void createBusinessBlock(String folder_type, String param) {
@@ -42,6 +81,7 @@ public class AuthorizerSteps extends Steps {
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/structure/create_folder.json")
                 .set("$.folder.kind", folder_type)
                 .set("$.folder.title", name)
+                .set("$.folder.information_system_ids.[0]", ShareData.get("infoSystemId"))
                 .send(URL)
                 .post(parentName.equalsIgnoreCase("vtb")
                         ? "authorizer/api/v1/organizations/vtb/folders"
@@ -55,7 +95,7 @@ public class AuthorizerSteps extends Steps {
     }
 
     @Step("Создать проект с именем {project_name} для родительской папки {folder_id}")
-    public void createProject(String project_name, String folder_id)  {
+    public void createProject(String project_name, String folder_id) {
         String infoSystems = jsonHelper.getTestDataFieldValue("structure/projectEnvironmentsDEV.json", "DEV", "information_systems");
         String projectEnvId = jsonHelper.getTestDataFieldValue("structure/projectEnvironmentsDEV.json", "DEV", "project_environment_id");
         String prefix = getPrefixEnv(folder_id, infoSystems, projectEnvId);
