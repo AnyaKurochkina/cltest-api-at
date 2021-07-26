@@ -57,9 +57,7 @@ public class OrderServiceSteps extends Steps{
         //JSONObject request = templates.ChangeOrderTemplate(template, product, projectId);
         String order_id = "";
         log.info("Отправка запроса на создание заказа для " + product);
-
         String projectId = ShareData.get((String.format("projects.find{it.env == '%s'}.id",env)));
-
         JSONArray res = jsonHelper.getJsonTemplate("/orders/" + product.toLowerCase() + ".json")
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
@@ -90,7 +88,9 @@ public class OrderServiceSteps extends Steps{
 
             orderStatus = new Http(URL)
                     .get("order-service/api/v1/projects/" + testVars.getVariable("project_id") + "/orders/" + order_id)
-                    .jsonPath().get("status");
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get("status");
             System.out.println("orderStatus = " + orderStatus);
             counter = counter - 1;
         }

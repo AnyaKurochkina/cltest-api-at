@@ -1,7 +1,7 @@
 {
 	"order": {
-		"project_name": "proj-aeak5d9285",
-		"product_id": "cc6c333b-2612-4c7d-9f6b-c8dd7fe4e36a",
+		"project_name": "proj-aydi9thv3w",
+		"product_id": "f566578f-2f8a-480f-9b1d-dd2663a4bfce",
 		"attrs": {
 			"domain": "corp.dev.vtb",
 			"flavor": {
@@ -10,12 +10,12 @@
 				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
 				"memory": 4
 			},
-			"platform": "Nutanix",
+			"platform": "vSphere",
 			"boot_disk": {
 				"size": 30
 			},
 			"extra_nics": [],
-			"on_support": true,
+			"on_support": false,
 			"os_version": "8.latest",
 			"data_center": "5",
 			"default_nic": {
@@ -23,27 +23,31 @@
 			},
 			"extra_mounts": [
 				{
-					"path": "/pg_data",
-					"size": 50,
+					"path": "/app",
+					"size": 30,
 					"file_system": "xfs"
 				}
 			],
 			"ad_integration": true,
-			"postgresql_config": {
-				"max_connections": 100
-			},
-			"postgresql_version": "12",
+			"rabbitmq_version": "3.8.14",
 			"ad_logon_grants": [
 				{
 					"role": "superuser",
 					"groups": [
-						"cloud-d5plux-apitest"
+						"cloud-d5zorg-test_api"
+					]
+				}
+			],
+			"web_console_grants": [
+				{
+					"role": "administrator",
+					"groups": [
+						"cloud-d5zorg-test_api"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "PostgreSQL",
-		"graph_version": "1.0.68"
+		"label": "RabbitMQ_0001"
 	}
 }

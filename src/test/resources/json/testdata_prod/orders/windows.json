@@ -1,6 +1,6 @@
 {
 	"order": {
-		"project_name": "proj-0t3kfecbnf",
+		"project_name": "proj-aydi9thv3w",
 		"product_id": "28bed880-2714-4317-a967-d000d492bd9d",
 		"attrs": {
 			"domain": "corp.dev.vtb",
@@ -12,7 +12,7 @@
 			},
 			"features": [],
 			"pagefile": "Automatically manage paging file size for all drives",
-			"platform": "Nutanix",
+			"platform": "vSphere",
 			"boot_disk": {
 				"path": "C",
 				"size": 80,
@@ -20,7 +20,7 @@
 			},
 			"extra_nics": [],
 			"on_support": false,
-			"os_version": "Microsoft Windows Server 2016 Datacenter",
+			"os_version": "Microsoft Windows Server 2019",
 			"data_center": "5",
 			"default_nic": {
 				"net_segment": "dev-srv-app"
@@ -31,13 +31,12 @@
 				{
 					"role": "Administrators",
 					"groups": [
-						"cloud-dqplux-atgroup"
+						"cloud-d5zorg-test_api"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "Windows server_0002",
-		"graph_version": "1.0.22"
+		"label": "Windows server_0001"
 	}
 }

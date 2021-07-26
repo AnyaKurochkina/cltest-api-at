@@ -1,14 +1,14 @@
 {
 	"order": {
 		"project_name": "proj-aydi9thv3w",
-		"product_id": "ebe832bd-ed1c-4998-8a58-6c4d16db1d60",
+		"product_id": "3b3807a6-9ad0-4ca6-930a-a37efffcc605",
 		"attrs": {
 			"domain": "corp.dev.vtb",
 			"flavor": {
 				"cpus": 2,
-				"name": "c2m4",
-				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
-				"memory": 4
+				"name": "c2m8",
+				"uuid": "930a8be8-1c71-4730-b881-0633a56b7f2b",
+				"memory": 8
 			},
 			"platform": "vSphere",
 			"boot_disk": {
@@ -16,7 +16,7 @@
 			},
 			"extra_nics": [],
 			"on_support": false,
-			"os_version": "8.latest",
+			"os_version": "7.latest",
 			"data_center": "5",
 			"default_nic": {
 				"net_segment": "dev-srv-app"
@@ -28,17 +28,18 @@
 					"file_system": "xfs"
 				}
 			],
+			"kafka_version": "2.13-2.4.1",
 			"ad_integration": true,
 			"ad_logon_grants": [
 				{
 					"role": "superuser",
 					"groups": [
-						"cloud-d5plux-apitest"
+						"cloud-d5zorg-test_api"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "Nginx_0001"
+		"label": "Apache Kafka"
 	}
 }

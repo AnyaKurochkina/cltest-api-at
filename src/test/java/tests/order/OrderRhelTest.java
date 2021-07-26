@@ -13,7 +13,9 @@ import steps.OrderServiceSteps;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-@Order(2)
+import static core.helper.JsonHelper.shareData;
+
+@Order(3)
 public class OrderRhelTest extends Hooks {
 
     @ParameterizedTest
@@ -37,7 +39,8 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodRhel() {
-        return Stream.of(Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+                        Arguments.arguments("Rhel", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 
     @ParameterizedTest
@@ -61,7 +64,8 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodNginx() {
-        return Stream.of(Arguments.arguments("Nginx", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("Nginx", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+                         Arguments.arguments("Nginx", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 
     @ParameterizedTest
@@ -85,7 +89,8 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodRabbitMQ() {
-        return Stream.of(Arguments.arguments("RabbitMQ", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("RabbitMQ", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+                            Arguments.arguments("RabbitMQ", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 
     @ParameterizedTest
@@ -95,21 +100,22 @@ public class OrderRhelTest extends Hooks {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
         orderServiceSteps.CheckOrderStatus("success");
-        orderServiceSteps.ExecuteAction("reset_app");
+        orderServiceSteps.ExecuteAction("reset_vm");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app");
+        orderServiceSteps.ExecuteAction("stop_vm_soft");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("start_app");
+        orderServiceSteps.ExecuteAction("start_vm");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app_hard");
+        orderServiceSteps.ExecuteAction("stop_vm_hard");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("delete_two_layer");
+        orderServiceSteps.ExecuteAction("delete_vm");
         orderServiceSteps.CheckActionStatus("success");
 
     }
 
     static Stream<Arguments> dataProviderMethodWindows() {
-        return Stream.of(Arguments.arguments("Windows", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("Windows", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+                         Arguments.arguments("Windows", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 
     @ParameterizedTest
@@ -133,7 +139,8 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodRedis() {
-        return Stream.of(Arguments.arguments("Redis", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("Redis", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+                         Arguments.arguments("Redis", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 
     @ParameterizedTest
@@ -143,13 +150,13 @@ public class OrderRhelTest extends Hooks {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
         orderServiceSteps.CheckOrderStatus("success");
-        orderServiceSteps.ExecuteAction("reset_app");
+        orderServiceSteps.ExecuteAction("reset_vm");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app");
+        orderServiceSteps.ExecuteAction("stop_vm_soft");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("start_app");
+        orderServiceSteps.ExecuteAction("start_vm");
         orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app_hard");
+        orderServiceSteps.ExecuteAction("stop_vm_hard");
         orderServiceSteps.CheckActionStatus("success");
         orderServiceSteps.ExecuteAction("delete_two_layer");
         orderServiceSteps.CheckActionStatus("success");
@@ -157,13 +164,14 @@ public class OrderRhelTest extends Hooks {
     }
 
     static Stream<Arguments> dataProviderMethodApacheKafka() {
-        return Stream.of(Arguments.arguments("Apache_Kafka", "DEV", "dev-srv-app", "5", "vSphere"));
+        return Stream.of(Arguments.arguments("Apache_Kafka", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+        Arguments.arguments("Redis", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 
     @ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
-    @MethodSource("dataProviderMethodPosgreSQL")
-    public void PosgreSQL(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
+    @MethodSource("dataProviderMethodPostgreSQL")
+    public void PostgreSQL(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
         orderServiceSteps.CheckOrderStatus("success");
@@ -180,7 +188,8 @@ public class OrderRhelTest extends Hooks {
 
     }
 
-    static Stream<Arguments> dataProviderMethodPosgreSQL() {
-        return Stream.of(Arguments.arguments("PosgreSQL", "DEV", "dev-srv-app", "5", "vSphere"));
+    static Stream<Arguments> dataProviderMethodPostgreSQL() {
+        return Stream.of(Arguments.arguments("PostgreSQL", "DEV", "dev-srv-app", "5", "vSphere"));/*,
+        Arguments.arguments("PostgreSQL", "DEV", "dev-srv-app", "5", "Openstack"));*/
     }
 }

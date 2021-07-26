@@ -37,7 +37,7 @@
 				{
 					"role": "superuser",
 					"groups": [
-						"cloud-d5plux-apitest"
+						"cloud-d5zorg-test_api"
 					]
 				}
 			]

@@ -1,7 +1,7 @@
 {
 	"order": {
-		"project_name": "proj-aeak5d9285",
-		"product_id": "cc6c333b-2612-4c7d-9f6b-c8dd7fe4e36a",
+		"project_name": "proj-aydi9thv3w",
+		"product_id": "6662a03d-20ce-4a83-a684-ddec48393516",
 		"attrs": {
 			"domain": "corp.dev.vtb",
 			"flavor": {
@@ -10,40 +10,42 @@
 				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
 				"memory": 4
 			},
-			"platform": "Nutanix",
+			"platform": "vSphere",
 			"boot_disk": {
 				"size": 30
 			},
 			"extra_nics": [],
-			"on_support": true,
-			"os_version": "8.latest",
+			"on_support": false,
+			"os_version": "7.latest",
 			"data_center": "5",
 			"default_nic": {
 				"net_segment": "dev-srv-app"
 			},
 			"extra_mounts": [
 				{
-					"path": "/pg_data",
-					"size": 50,
+					"path": "/app/redis/data",
+					"size": 10,
+					"file_system": "xfs"
+				},
+				{
+					"path": "/app/redis/logs",
+					"size": 10,
 					"file_system": "xfs"
 				}
 			],
+			"redis_version": "5",
 			"ad_integration": true,
-			"postgresql_config": {
-				"max_connections": 100
-			},
-			"postgresql_version": "12",
+			"redis_password": "vSrEzXhI2cfqBdvW3NXvvutpp9LbrEdU2S5uYFU2w1KwX1Z2yn0LrhYpENvT",
 			"ad_logon_grants": [
 				{
 					"role": "superuser",
 					"groups": [
-						"cloud-d5plux-apitest"
+						"cloud-d5zorg-test_api"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "PostgreSQL",
-		"graph_version": "1.0.68"
+		"label": "Redis"
 	}
 }
