@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.Hooks;
 import steps.smokeProjectRunSteps.SmokeProjectRunSteps;
-@Order(3)
+
+@Tag("delete")
 @DisplayName("Тесты на удаление из мапы")
-public class DeleteTest extends Hooks {
+public class DeleteTest {
 
     @Description("Что-нибудь > удаляем элемент из мапы по ключу")
     @DisplayName("Первый тест на удаление из мапы")
-    @Tag("smoke")
     @Test
-    public void test1(){
+    public void test3(){
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.deleteFromMap("some key");
     }
@@ -31,7 +31,7 @@ public class DeleteTest extends Hooks {
     @Description("Что-нибудь > удаляем элемент из мапы по ключу")
     @DisplayName("Первый тест на удаление из мапы")
     @Test
-    public void test3(){
+    public void test1(){
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.deleteFromMap("some key3");
     }

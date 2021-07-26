@@ -1,4 +1,5 @@
 package tests.suites;
+
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.IncludeTags;
@@ -9,7 +10,7 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 @SelectPackages("tests")
 @IncludeClassNamePatterns({"^.*Tests?$"})
-@SuiteDisplayName("Набор тестов")
-@IncludeTags("put")
-public class Suite1 {
+@SuiteDisplayName("Набор тестов для заказа продуктов")
+@IncludeTags("delete")
+public class Suite3 {
 }
