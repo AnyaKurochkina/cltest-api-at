@@ -7,7 +7,7 @@ import tests.suites.Tests;
 
 @DisplayName("Набор тестов для удаления Орг структуры")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(3)
+@Order(5)
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FoldersDeleteTests extends Tests {

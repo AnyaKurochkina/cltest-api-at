@@ -15,7 +15,6 @@ public class DeleteTest extends Hooks {
     @Tag("smoke")
     @Order(1)
     @Test
-    @Order(3)
     public void test1(){
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.deleteFromMap("some key");
