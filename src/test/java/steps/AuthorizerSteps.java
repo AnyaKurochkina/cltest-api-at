@@ -12,9 +12,6 @@ import org.junit.Assert;
 import java.util.List;
 import java.util.Random;
 
-import static core.helper.JsonHelper.shareData;
-import static org.junit.jupiter.api.Assertions.fail;
-
 
 @Log4j2
 public class AuthorizerSteps extends Steps {

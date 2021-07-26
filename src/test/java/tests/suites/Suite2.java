@@ -11,6 +11,6 @@ import org.junit.runner.RunWith;
 @SelectPackages("tests")
 @IncludeClassNamePatterns({"^.*Tests?$"})
 @SuiteDisplayName("Набор тестов для заказа продуктов")
-@IncludeTags("regress")
+@IncludeTags("get")
 public class Suite2 {
 }

@@ -15,28 +15,29 @@ import java.util.stream.Stream;
 @DisplayName("Тесты на загрузку мапы 2")
 
 //@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Tag("smoke")
+@Tag("put")
 public class Put2Test {
 
     @Description("Что-нибудь > загружаем в мапу")
     @DisplayName("Первый тест на загрузку мапы 2")
     @Tag("smoke")
-    @ParameterizedTest
-    @MethodSource("dataProviderMethod")
-    public void test3(String key, String value) {
+//    @ParameterizedTest
+//    @MethodSource("dataProviderMethod")
+    @Test
+    public void test3() {
         System.out.println("test4()");
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
-        smokeProjectRunSteps.loadMap(key, value);
+        smokeProjectRunSteps.loadMap("some key", "some value");
     }
 
-
-    static Stream<Arguments> dataProviderMethod() {
-        return Stream.of
-                (Arguments.arguments("some key", "some value"),
-                        Arguments.arguments("some key5", "some value5"),
-                        Arguments.arguments("some key7", "some value7"));
-
-    }
+//
+//    static Stream<Arguments> dataProviderMethod() {
+//        return Stream.of
+//                (Arguments.arguments("some key", "some value"),
+//                        Arguments.arguments("some key5", "some value5"),
+//                        Arguments.arguments("some key7", "some value7"));
+//
+//    }
 
     @Description("Что-нибудь > загружаем в мапу")
     @DisplayName("Второй тест на загрузку мапы 2")
@@ -44,7 +45,6 @@ public class Put2Test {
     @Test
     public void test2() throws InterruptedException {
         System.out.println("test5()");
-        Thread.sleep(5000);
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.loadMap("some key22", "some value22");
     }
@@ -55,7 +55,6 @@ public class Put2Test {
     @Test
     public void test1() throws InterruptedException {
         System.out.println("test6()");
-        Thread.sleep(5000);
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.loadMap("some key33", "some value33");
     }
