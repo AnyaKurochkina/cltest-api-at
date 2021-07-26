@@ -1,7 +1,7 @@
 package steps;
 
 import core.helper.Configurier;
-import core.helper.Http;
+import core.helper.HttpOld;
 import core.vars.LocalThead;
 import core.vars.TestVars;
 import io.qameta.allure.Step;
@@ -15,7 +15,7 @@ public class AuthSteps extends Steps{
     @Step("Получение Token")
     public void getToken() {
         TestVars testVars = LocalThead.getTestVars();
-        JsonPath res = new Http(URL)
+        JsonPath res = new HttpOld(URL)
                 .post("auth/realms/Portal/protocol/openid-connect/token", jsonHelper.getStringFromFile("/token.data"))
                 .assertStatus(200)
                 .jsonPath();

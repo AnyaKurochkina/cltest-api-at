@@ -2,7 +2,7 @@ package steps;
 
 import core.exception.CustomException;
 import core.helper.Configurier;
-import core.helper.Http;
+import core.helper.HttpOld;
 import core.helper.ShareData;
 import core.helper.Templates;
 import core.utils.Waiting;
@@ -37,7 +37,7 @@ public class OrderServiceSteps extends Steps{
         String order_id = "";
         log.info("Отправка запроса на создание заказа для " + product);
 
-        JSONArray res = new Http(URL)
+        JSONArray res = new HttpOld(URL)
                 .post("order-service/api/v1/projects/" + shareData.get(projectId) + "/orders", request)
                 .assertStatus(201)
                 .toJsonArray();
@@ -88,7 +88,7 @@ public class OrderServiceSteps extends Steps{
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
             Waiting.sleep(120000);
 
-            orderStatus = new Http(URL)
+            orderStatus = new HttpOld(URL)
                     .get("order-service/api/v1/projects/" + testVars.getVariable("project_id") + "/orders/" + order_id)
                     .jsonPath().get("status");
             System.out.println("orderStatus = " + orderStatus);
@@ -113,7 +113,7 @@ public class OrderServiceSteps extends Steps{
         JSONObject request = templates.ChangeActionTemplate(template, action);
         log.info("Отправка запроса на выполнение действия - " + action);
 
-        JsonPath response = new Http(URL)
+        JsonPath response = new HttpOld(URL)
                 .patch("order-service/api/v1/projects/" + testVars.getVariable("project_id") + "/orders/" + testVars.getVariable("order_id") + "/actions/" + action, request)
                 .assertStatus(200)
                 .jsonPath();
@@ -135,7 +135,7 @@ public class OrderServiceSteps extends Steps{
         while ((action_status.equals("pending") || action_status.equals("")) && counter > 0) {
             Waiting.sleep(60000);
             try {
-                action_status = new Http(URL)
+                action_status = new HttpOld(URL)
                         .get("order-service/api/v1/projects/" + testVars.getVariable("project_id") + "/orders/" + order_id + "/actions/history/" + action_id)
                         .jsonPath().get("status");
             } catch (JsonPathException e) {
@@ -155,7 +155,7 @@ public class OrderServiceSteps extends Steps{
         String order_id = testVars.getVariable("order_id");
         log.info("Получение item_id для " + action);
 
-        return new Http(URL)
+        return new HttpOld(URL)
                 .get("order-service/api/v1/projects/" + testVars.getVariable("project_id") + "/orders/" + order_id)
                 .jsonPath()
                 .get(String.format("data.find{it.actions.find{it.name == '%s'}}.item_id", action));

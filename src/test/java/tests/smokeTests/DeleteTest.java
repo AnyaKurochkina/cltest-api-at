@@ -1,20 +1,21 @@
 package tests.smokeTests;
 
 import io.qameta.allure.Description;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import steps.Hooks;
 import steps.smokeProjectRunSteps.SmokeProjectRunSteps;
 @Order(3)
 @DisplayName("Тесты на удаление из мапы")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DeleteTest extends Hooks {
 
     @Description("Что-нибудь > удаляем элемент из мапы по ключу")
     @DisplayName("Первый тест на удаление из мапы")
     @Tag("smoke")
+    @Order(1)
     @Test
+    @Order(3)
     public void test1(){
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.deleteFromMap("some key");
@@ -22,6 +23,7 @@ public class DeleteTest extends Hooks {
 
     @Description("Что-нибудь > удаляем элемент из мапы по ключу")
     @DisplayName("Первый тест на удаление из мапы")
+    @Order(2)
     @Test
     public void test2(){
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();

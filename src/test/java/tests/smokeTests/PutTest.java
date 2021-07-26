@@ -1,10 +1,9 @@
 package tests.smokeTests;
 
 import io.qameta.allure.Description;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -15,6 +14,8 @@ import java.util.stream.Stream;
 
 @DisplayName("Тесты на загрузку мапы")
 @Order(1)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 public class PutTest extends Hooks {
 
     @Description("Что-нибудь > загружаем в мапу")
@@ -22,7 +23,9 @@ public class PutTest extends Hooks {
     @Tag("smoke")
     @ParameterizedTest
     @MethodSource("dataProviderMethod")
-    public void test1(String key, String value) {
+    @Order(1)
+    public void test3(String key, String value) {
+        System.out.println("test3()");
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.loadMap(key, value);
     }
@@ -38,17 +41,22 @@ public class PutTest extends Hooks {
 
     @Description("Что-нибудь > загружаем в мапу")
     @DisplayName("Второй тест на загрузку мапы")
-    @Tag("production")
+    @Tag("smoke")
     @Test
+    @Order(2)
     public void test2() {
+        System.out.println("test2()");
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.loadMap("some key2", "some value2");
     }
 
     @Description("Что-нибудь > загружаем в мапу")
     @DisplayName("Третий тест на загрузку мапы")
+    @Tag("smoke")
     @Test
-    public void test3() {
+    @Order(3)
+    public void test1() {
+        System.out.println("test1()");
         SmokeProjectRunSteps smokeProjectRunSteps = new SmokeProjectRunSteps();
         smokeProjectRunSteps.loadMap("some key3", "some value3");
     }

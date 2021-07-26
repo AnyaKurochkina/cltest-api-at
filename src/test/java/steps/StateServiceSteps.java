@@ -2,7 +2,7 @@ package steps;
 
 import core.exception.CustomException;
 import core.helper.Configurier;
-import core.helper.Http;
+import core.helper.HttpOld;
 import io.qameta.allure.Step;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
@@ -21,7 +21,7 @@ public class StateServiceSteps extends Steps {
     public void GetErrorFromOrch(String order_id) throws JsonPathException, CustomException {
         List<String> traceback = null;
         try {
-            traceback = new Http(URL)
+            traceback = new HttpOld(URL)
                     .get("actions/?order_id=" + order_id)
                     .jsonPath().get("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {

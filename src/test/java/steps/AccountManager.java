@@ -1,15 +1,13 @@
 package steps;
 
 import core.helper.Configurier;
-import core.helper.Http;
+import core.helper.HttpOld;
 import core.helper.ShareData;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-
-import static core.helper.JsonHelper.shareData;
 
 @Log4j2
 public class AccountManager extends Steps {
@@ -58,7 +56,7 @@ public class AccountManager extends Steps {
         log.info(String.format("Account ID of the last folder: %s",testVars.getVariable("AccountId")));
         log.info(String.format("folderId : %s", ShareData.getString(folderId)));
 
-        new Http(URL)
+        new HttpOld(URL)
                 .post("accountmanager/api/v1/folders/" + ShareData.getString(folderId) + "/accounts/" + testVars.getVariable("AccountId"))
                 .assertStatus(200);
     }
@@ -70,7 +68,7 @@ public class AccountManager extends Steps {
 
     public String getAccountIdByContext(String context) {
         log.info("Получение account_id для контекста - " + context);
-        return new Http(URL)
+        return new HttpOld(URL)
                 .get("accountmanager/api/v1/organizations/vtb/accounts")
                 .jsonPath().get("list.find{it.name.contains('" + context.toLowerCase() + "')}.account_id");
     }

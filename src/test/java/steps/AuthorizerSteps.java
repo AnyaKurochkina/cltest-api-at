@@ -1,7 +1,7 @@
 package steps;
 
 import core.helper.Configurier;
-import core.helper.Http;
+import core.helper.HttpOld;
 import core.helper.ShareData;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -12,7 +12,6 @@ import org.junit.Assert;
 import java.util.List;
 import java.util.Random;
 
-import static core.helper.JsonHelper.shareData;
 import static org.junit.jupiter.api.Assertions.fail;
 
 
@@ -84,7 +83,7 @@ public class AuthorizerSteps extends Steps {
 
     public String getPrefixEnv(String folder_id, String infoSystems, String projectEnvId) {
         log.info(String.format("Получение префикса для ИС: %s и ProjectEnv: %s для контекста %s", infoSystems, projectEnvId, ShareData.getString(folder_id)));
-        JsonPath jsonPath = new Http(URL)
+        JsonPath jsonPath = new HttpOld(URL)
                 .get(String.format("portal/api/v1/folders/%s/information_systems/%s/environment_prefixes?project_environment_id=%s&reserved=false", ShareData.getString(folder_id), infoSystems, projectEnvId))
                 .assertStatus(200)
                 .jsonPath();

@@ -23,7 +23,7 @@ import java.security.cert.X509Certificate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class Http {
+public class HttpOld {
     private final String host;
     private String path;
     private String body = "";
@@ -59,11 +59,11 @@ public class Http {
         }
     }
 
-    public Http(String host) {
+    public HttpOld(String host) {
         this.host = host;
     }
 
-    public Http(String host, JSONObject body) {
+    public HttpOld(String host, JSONObject body) {
         this.host = host;
         this.body = body.toJSONString();
     }
@@ -115,7 +115,7 @@ public class Http {
 
     private String getBearerToken() {
         TestVars testVars = LocalThead.getTestVars();
-        return "bearer " + testVars.getVariable("token");
+        return testVars.getVariable("token_type") + " " + testVars.getVariable("token");
     }
 
     private HttpResponse request() {
@@ -156,7 +156,7 @@ public class Http {
         }
 
         public HttpResponse assertStatus(int s) {
-            assertEquals(String.format("\nResponse: %s\nRequest: %s\n%s\n", response, host + path, body), s, status);
+            assertEquals(String.format("\nResponse: %s\nRequest: %s\n", response, body), s, status);
             return this;
         }
 
