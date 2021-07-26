@@ -3,16 +3,12 @@
         {
             "id": "proj-8hnldhcubd",
             "env": "DEV"
-        },
-        {
-            "id": "proj-sz0lcbc4ga",
-            "env": "DEV"
         }
     ],
     "orgName": "vtb",
-    "folder_id_department": "fold-t9duacyabs",
-    "folder_id_default": "fold-68zlhek62m",
+    "folder_id_department": "fold-833yto9lea",
+    "folder_id_default": "fold-0owgn41ymh",
+    "ProjEnvId": "de8426e7-d10a-42bf-94ef-f8b9e7f300ea",
     "infoSystemId": "c9fd31c7-25a5-45ca-863c-18425d1ae927",
-    "crux": "c9fd31c7-25a5-45ca-863c-18425d1ae927",
-    "folder_id_Business": "fold-hoy6v49i0d"
+    "folder_id_Business": "fold-bokhqtbqgo"
 }
