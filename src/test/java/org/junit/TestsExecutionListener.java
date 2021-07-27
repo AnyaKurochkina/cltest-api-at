@@ -8,10 +8,10 @@ import steps.Steps;
 public class TestsExecutionListener implements TestExecutionListener {
 
     public void testPlanExecutionStarted(TestPlan testPlan) {
-        CacheService.loadEntities(Steps.dataFolder + "/shareFolder/dataJson.json");
+        CacheService.loadEntities(Steps.dataFolder + "/shareFolder/shareData.json");
     }
 
     public void testPlanExecutionFinished(TestPlan testPlan) {
-        CacheService.saveEntities(Steps.dataFolder + "/shareFolder/dataLog.json");
+        CacheService.saveEntities(Steps.dataFolder + "/shareFolder/logData.json");
     }
 }

@@ -43,14 +43,11 @@ public class CacheService {
         try {
             if (Files.exists(Paths.get(file))) {
                 FileInputStream fileInputStream = new FileInputStream(file);
-                List<String> listEntities = new ObjectMapper().readValue(fileInputStream, ArrayList.class);
-
+                List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(fileInputStream, List.class);
                 listEntities.forEach(v ->{
-                    entities.put(v.substring(v.indexOf("objectUid"))
-                            .substring(v.indexOf(":"))
-                            .trim(), v);
+                    entities.put((String) v.get("objectUid"), new JSONObject(v).toString());
                 });
-
+                System.out.println(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
