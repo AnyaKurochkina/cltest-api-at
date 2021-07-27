@@ -4,13 +4,13 @@ import lombok.extern.log4j.Log4j2;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import steps.OrderServiceSteps;
+import stepsOld.OrderServiceSteps;
 
 import java.io.FileReader;
 import java.io.IOException;
 
 import static core.helper.JsonHelper.shareData;
-import static steps.Steps.dataFolder;
+import static stepsOld.Steps.dataFolder;
 
 @Log4j2
 public class Templates {
