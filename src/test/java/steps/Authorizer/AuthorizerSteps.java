@@ -11,25 +11,33 @@ public class AuthorizerSteps extends Steps {
 
     @Step("Создание папки типа {folderType} в родительской папке {parentName} с именем {name}")
     public void createFolder(String folderType, String parentName, String name) {
+        Folder parentFolder = null;
+        if (!parentName.equalsIgnoreCase("vtb")) {
+            parentFolder = ((Folder) cacheService.entity(Folder.class)
+                    .setField("name", parentName)
+                    .setField("isDeleted", false)
+                    .getEntity());
+        }
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/structure/create_folder.json")
                 .set("$.folder.kind", folderType)
                 .set("$.folder.title", name)
                 .send(URL)
                 .post(parentName.equalsIgnoreCase("vtb")
                         ? "authorizer/api/v1/organizations/vtb/folders"
-                        : String.format("authorizer/api/v1/folders/%s/folders", ((Folder) cacheService.entity(Folder.class)
-                        .setField("name", parentName)
-                        .setField("isDeleted", false)
-                        .getEntity())
-                        .id
-                ))
+                        : String.format("authorizer/api/v1/folders/%s/folders", parentFolder.id))
                 .assertStatus(201)
                 .jsonPath();
+
+        String id = "vtb";
+        if (!parentName.equalsIgnoreCase("vtb")) {
+            id = parentFolder.id;
+        }
 
         Folder folder = Folder.builder()
                 .id(jsonPath.get("data.name"))
                 .type(folderType)
                 .name(jsonPath.get("data.title"))
+                .parentId(id)
                 .build();
         cacheService.saveEntity(Folder.class, folder);
     }

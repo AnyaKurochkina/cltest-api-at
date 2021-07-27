@@ -8,10 +8,10 @@ import tests.Tests;
 
 @DisplayName("Набор тестов по проектам")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(3)
+@Order(4)
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProjectTests extends Tests {
+public class ProjectCreateTests extends Tests {
     KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     ProjectSteps projectSteps = new ProjectSteps();
 

@@ -8,7 +8,7 @@ import tests.Tests;
 
 @DisplayName("Набор тестов по группам доступа")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(4)
+@Order(5)
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccessGroupTests extends Tests {

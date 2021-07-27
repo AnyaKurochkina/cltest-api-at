@@ -1,0 +1,44 @@
+[
+    {
+        "objectClassName": "models.Authorizer.Folder",
+        "isDeleted": true,
+        "objectUid": "9368f9dd-aae8-45e3-bf7e-7c31dafe0088",
+        "name": "DEPARTMENT_FOLDER",
+        "id": "fold-jwxann820e",
+        "type": "department",
+        "parentId": "fold-kwsfndc5e1"
+    },
+    {
+        "objectClassName": "models.Authorizer.Project",
+        "id": "proj-4mbax5rzac",
+        "isDeleted": true,
+        "projectName": "PROJECT_DEV",
+        "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+        "objectUid": "38b46ffe-9fb9-4816-b646-1bf600551f61"
+    },
+    {
+        "objectClassName": "models.Authorizer.Folder",
+        "isDeleted": true,
+        "objectUid": "773a1aa9-e9ce-4cfb-acef-fe5605d24cca",
+        "name": "BUSINESS_FOLDER",
+        "id": "fold-kwsfndc5e1",
+        "type": "business_block",
+        "parentId": "vtb"
+    },
+    {
+        "objectClassName": "models.Authorizer.AccessGroup",
+        "name": "cloud-dqplux-access_group_dev",
+        "isDeleted": false,
+        "projectName": "proj-4mbax5rzac",
+        "objectUid": "a24fae6e-6c18-4b6f-bc1f-c4ce19c7c39a"
+    },
+    {
+        "objectClassName": "models.Authorizer.Folder",
+        "isDeleted": true,
+        "objectUid": "1f790a33-f7b0-40e0-ac0a-3ddd674a1802",
+        "name": "FOLDER",
+        "id": "fold-7r7bt2lcqd",
+        "type": "default",
+        "parentId": "fold-jwxann820e"
+    }
+]
