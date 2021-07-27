@@ -2,8 +2,8 @@ package org.junit;
 
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
-import tests.suites.CacheService;
-import tests.suites.Steps;
+import core.CacheService;
+import steps.Steps;
 
 public class TestsExecutionListener implements TestExecutionListener {
 

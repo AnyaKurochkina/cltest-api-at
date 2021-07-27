@@ -87,7 +87,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
     public void invokeAll(List<? extends TestTask> tasks) {
         if (tasks.size() == 1) {
-            //System.out.println(((TestTask)tasks.get(0)).getClass().getName());
             (new ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask((TestTask) tasks.get(0))).compute();
         } else {
             Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> nonConcurrentTasks = new LinkedList();
@@ -98,9 +97,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         }
     }
 
-//    private static List<Integer> tests = new CopyOnWriteArrayList<Integer>();
-//    private static CountDownLatch latch = new CountDownLatch(1);
-    private static Map<Integer, CountDownLatch> tests = new ConcurrentHashMap<>();
+    private static ConcurrentSkipListMap<Integer, CountDownLatch> tests = new ConcurrentSkipListMap<>();
 
     private void forkConcurrentTasks(List<? extends TestTask> tasks, Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> nonConcurrentTasks, Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> concurrentTasksInReverseOrder) {
         tasks.sort(Comparator.comparingInt(i -> {
@@ -122,12 +119,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         }));
 
 
-
-
-
-
+        Map<Integer, Integer> ordersCount = new HashMap<>();
         Iterator var1 = tasks.iterator();
-
         while (var1.hasNext()) {
             TestTask testTask = (TestTask) var1.next();
             try {
@@ -137,29 +130,19 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 if (testDescriptor instanceof ClassTestDescriptor) {
                     Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
                     Order order = clz.getAnnotation(Order.class);
-                    if (order != null) {
-                        CountDownLatch c = tests.get(order.value());
-                        if (c != null)
-                            c = new CountDownLatch((int) (c.getCount()) + 1);
-                        else c = new CountDownLatch(1);
-                        tests.put(order.value(), c);
-                    }
+                    if (order != null)
+                        ordersCount.put(order.value(), (ordersCount.getOrDefault(order.value(), 0)) + 1);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-
-
-
-
-
-
-
+        ordersCount.forEach((k, v) -> {
+            tests.put(k, new CountDownLatch(v));
+        });
 
         Iterator var4 = tasks.iterator();
-
         while (var4.hasNext()) {
             TestTask testTask = (TestTask) var4.next();
             ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask exclusiveTask = new ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask(testTask);
@@ -188,7 +171,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
         while (var2.hasNext()) {
             ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask forkedTask = (ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask) var2.next();
-            //System.out.println(forkedTask.toString());
             forkedTask.join();
         }
 
@@ -227,20 +209,17 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 if (testDescriptor instanceof ClassTestDescriptor) {
                     Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
                     Order o = clz.getAnnotation(Order.class);
-                    if(o != null){
+                    if (o != null) {
                         order = o.value();
-//                        if((int) tests.stream().filter(i -> i < o.value()).count() > 0){
-//                            Thread.sleep(30000);
-//                        }
-                        CountDownLatch c = tests.get(order-1);
-                        if(c != null)
+                        int i = 1;
+                        CountDownLatch c = tests.lowerEntry(order).getValue();
+                        if (c != null)
                             c.await();
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
 
             try {
@@ -264,23 +243,11 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                     lock.close();
                 }
 
-                if(order != null) {
-//                    Iterator var4 = tests.iterator();
-//                    while (var4.hasNext()) {
-//                        Integer orderTask = (Integer) var4.next();
-//                        if (orderTask.equals(order)) {
-//                            var4.remove();
-//                            break;
-//                        }
-//                    }
-
+                if (order != null) {
                     CountDownLatch c = tests.get(order);
-                    if(c != null)
+                    if (c != null)
                         c.countDown();
-
                 }
-
-
 
             } catch (InterruptedException var6) {
                 ExceptionUtils.throwAsUncheckedException(var6);

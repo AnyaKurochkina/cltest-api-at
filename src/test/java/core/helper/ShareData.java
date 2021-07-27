@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static steps.Steps.dataFolder;
+import static stepsOld.Steps.dataFolder;
 
 public class ShareData {
     static JSONObject data;
