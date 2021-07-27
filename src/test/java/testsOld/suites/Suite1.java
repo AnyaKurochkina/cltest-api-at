@@ -1,4 +1,5 @@
 package testsOld.suites;
+
 import core.CacheService;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Tag;
@@ -10,8 +11,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.suite.api.SuiteDisplayName;
-import tests.suites.RhelFullAction;
-
 
 import java.util.stream.Stream;
 
