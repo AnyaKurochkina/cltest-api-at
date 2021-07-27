@@ -28,7 +28,7 @@ public class AuthorizerSteps extends Steps {
                 .assertStatus(201)
                 .jsonPath();
 
-        String id = "vtb";
+        String id = "VTB";
         if (!parentName.equalsIgnoreCase("vtb")) {
             id = parentFolder.id;
         }

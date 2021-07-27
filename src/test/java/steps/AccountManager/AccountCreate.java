@@ -25,7 +25,7 @@ public class AccountCreate extends Steps {
 
         String accountId = jsonHelper.getJsonTemplate("/accountmanager/accountTemplate.json")
                 .set("$.parent_id", getAccountIdByContext(folder.parentId))
-                .set("$.name", folder.id)
+                .set("$.name", String.format("%s (%s)", folderName, folder.id))
                 .send(URL)
                 .post("accountmanager/api/v1/organizations/vtb/accounts")
                 .assertStatus(200)
@@ -70,6 +70,6 @@ public class AccountCreate extends Steps {
                 .get("accountmanager/api/v1/organizations/vtb/accounts")
                 .assertStatus(200)
                 .jsonPath()
-                .get("list.find{it.name.contains('" + context + "')}.account_id");
+                .get(String.format("list.find{it.name.contains('%s')}.account_id", context));
     }
 }

@@ -2,43 +2,64 @@
     {
         "objectClassName": "models.Authorizer.Folder",
         "isDeleted": true,
-        "objectUid": "9368f9dd-aae8-45e3-bf7e-7c31dafe0088",
+        "objectUid": "68882ff3-1d71-452b-baf4-578fac4aeab5",
         "name": "DEPARTMENT_FOLDER",
-        "id": "fold-jwxann820e",
+        "id": "fold-fcak6ch1l6",
         "type": "department",
-        "parentId": "fold-kwsfndc5e1"
+        "parentId": "fold-p9twlwhl9i"
+    },
+    {
+        "objectClassName": "models.Authorizer.Folder",
+        "isDeleted": true,
+        "objectUid": "bdf15538-9ff1-4844-b487-ddb0cf2c122c",
+        "name": "BUSINESS_FOLDER",
+        "id": "fold-p9twlwhl9i",
+        "type": "business_block",
+        "parentId": "VTB"
+    },
+    {
+        "objectClassName": "models.Authorizer.Folder",
+        "isDeleted": true,
+        "objectUid": "db9411ed-f850-4f4f-99fa-4cd7eaa258b1",
+        "name": "FOLDER",
+        "id": "fold-jmvdqnz5nj",
+        "type": "default",
+        "parentId": "fold-fcak6ch1l6"
+    },
+    {
+        "objectClassName": "models.AccountManager.Account",
+        "accountId": "6a0f514c-0690-4553-9b07-bbb250aba817",
+        "isDeleted": false,
+        "folderId": "fold-p9twlwhl9i",
+        "objectUid": "638786cf-d720-4870-ad5d-6fee4dfbe13a"
+    },
+    {
+        "objectClassName": "models.AccountManager.Account",
+        "accountId": "3072cc9b-d92d-4661-979e-d5d8d9afa030",
+        "isDeleted": false,
+        "folderId": "fold-fcak6ch1l6",
+        "objectUid": "d31eb232-3ee7-44d4-89a2-6ed0014d8337"
     },
     {
         "objectClassName": "models.Authorizer.Project",
-        "id": "proj-4mbax5rzac",
+        "id": "proj-ozn699ixoa",
         "isDeleted": true,
         "projectName": "PROJECT_DEV",
         "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
-        "objectUid": "38b46ffe-9fb9-4816-b646-1bf600551f61"
+        "objectUid": "92668ce9-6269-455f-b1e7-77ce342f2aa9"
     },
     {
-        "objectClassName": "models.Authorizer.Folder",
-        "isDeleted": true,
-        "objectUid": "773a1aa9-e9ce-4cfb-acef-fe5605d24cca",
-        "name": "BUSINESS_FOLDER",
-        "id": "fold-kwsfndc5e1",
-        "type": "business_block",
-        "parentId": "vtb"
+        "objectClassName": "models.AccountManager.Account",
+        "accountId": "d9153850-a1fc-4041-83b9-36280a55ec58",
+        "isDeleted": false,
+        "folderId": "fold-jmvdqnz5nj",
+        "objectUid": "9f6a6a46-2b18-4d00-b999-70b3f27055c8"
     },
     {
         "objectClassName": "models.Authorizer.AccessGroup",
-        "name": "cloud-dqplux-access_group_dev",
+        "name": "cloud-dbplux-access_group_dev",
         "isDeleted": false,
-        "projectName": "proj-4mbax5rzac",
-        "objectUid": "a24fae6e-6c18-4b6f-bc1f-c4ce19c7c39a"
-    },
-    {
-        "objectClassName": "models.Authorizer.Folder",
-        "isDeleted": true,
-        "objectUid": "1f790a33-f7b0-40e0-ac0a-3ddd674a1802",
-        "name": "FOLDER",
-        "id": "fold-7r7bt2lcqd",
-        "type": "default",
-        "parentId": "fold-jwxann820e"
+        "projectName": "proj-ozn699ixoa",
+        "objectUid": "e052d2b5-2c33-4bd2-a068-dc5dd91f780d"
     }
 ]
