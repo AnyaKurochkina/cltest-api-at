@@ -6,7 +6,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.suite.api.SuiteDisplayName;
-import tests.suites.RhelFullAction;
 
 //@RunWith(JUnitPlatform.class)
 //@SelectPackages("tests.smokeTests")
