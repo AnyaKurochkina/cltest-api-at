@@ -54,7 +54,8 @@ public class CacheService {
         }
     }
 
-    public synchronized void saveEntity(Class<?> c, Entity e) {
+    public synchronized void saveEntity(Entity e) {
+        Class<?> c = e.getClass();
         if(e.objectUid == null)
             e.setObjectParams(c.getName());
         String serialize = new Gson().toJson(e, c);

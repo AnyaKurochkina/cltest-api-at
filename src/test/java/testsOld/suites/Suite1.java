@@ -29,7 +29,7 @@ public class Suite1 {
     public void test(String s, String s1) throws InterruptedException {
 
        // cs.setEntity(Project.class, new Entity());
-        cs.saveEntity(Project.class, new Project("2"));
+        cs.saveEntity(new Project("2"));
         Project p = cs.entity(Project.class)
                 .setField("name", "2")
                 .getEntity();

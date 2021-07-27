@@ -28,6 +28,6 @@ public class AccessGroupSteps extends Steps {
                 .name(groupName)
                 .projectName(project.id)
                 .build();
-        cacheService.saveEntity(AccessGroup.class, accessGroup);
+        cacheService.saveEntity(accessGroup);
     }
 }
