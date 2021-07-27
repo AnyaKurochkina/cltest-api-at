@@ -1,0 +1,41 @@
+[
+    {
+        "objectClassName": "models.Authorizer.Folder",
+        "name": "FOLDER",
+        "id": "fold-g3how7towb",
+        "isDeleted": true,
+        "type": "default",
+        "objectUid": "099aa2df-6975-4d0b-ae55-984d03d0120f"
+    },
+    {
+        "objectClassName": "models.Authorizer.Folder",
+        "name": "DEPARTMENT_FOLDER",
+        "id": "fold-ho0n3slv15",
+        "isDeleted": true,
+        "type": "department",
+        "objectUid": "7d91d837-3802-4a7b-81f7-012ea1f33b50"
+    },
+    {
+        "objectClassName": "models.Authorizer.AccessGroup",
+        "name": "cloud-dhplux-access_group_dev",
+        "isDeleted": false,
+        "projectName": "proj-im8ul5smt4",
+        "objectUid": "88f5b072-94ad-4af7-90d7-c8e76fe31092"
+    },
+    {
+        "objectClassName": "models.Authorizer.Project",
+        "id": "proj-im8ul5smt4",
+        "isDeleted": true,
+        "projectName": "PROJECT_DEV",
+        "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+        "objectUid": "00cb7463-54c8-466b-84d7-9dc01073c845"
+    },
+    {
+        "objectClassName": "models.Authorizer.Folder",
+        "name": "BUSINESS_FOLDER",
+        "id": "fold-5txrv0rsih",
+        "isDeleted": true,
+        "type": "business_block",
+        "objectUid": "68be5350-43ea-4f51-be23-0d694190df78"
+    }
+]
