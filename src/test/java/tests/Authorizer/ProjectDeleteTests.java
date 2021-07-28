@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 @DisplayName("Удаление проектов")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(99999)
+@Order(99998)
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectDeleteTests extends Tests {
