@@ -53,26 +53,26 @@ public class RabbitMq extends Entity implements IProduct {
                 .assertStatus(201)
                 .jsonPath();
         RabbitMq rabbitMq = RabbitMq.builder().orderId(jsonPath.get("order_id")).build();
-        cacheService.saveEntity(RabbitMq.class, rabbitMq);
+        cacheService.saveEntity(rabbitMq);
     }
 
     @Override
     public void reset() {
-        orderServiceSteps.executeAction("reset_vm", this.getClass());
+        orderServiceSteps.executeAction("reset_vm");
     }
 
     @Override
     public void stop(String method) {
-        orderServiceSteps.executeAction("stop_vm" + method, this.getClass());
+        orderServiceSteps.executeAction("stop_vm" + method);
     }
 
     @Override
     public void start() {
-        orderServiceSteps.executeAction("start_vm", this.getClass());
+        orderServiceSteps.executeAction("start_vm");
     }
 
     @Override
     public void delete() {
-        orderServiceSteps.executeAction("delete_two_layer", this.getClass());
+        orderServiceSteps.executeAction("delete_two_layer");
     }
 }

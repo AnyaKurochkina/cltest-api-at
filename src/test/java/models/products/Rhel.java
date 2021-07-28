@@ -49,7 +49,7 @@ public class Rhel extends Entity implements IProduct {
                 .assertStatus(201)
                 .jsonPath();
         Rhel rhel = Rhel.builder().orderId(jsonPath.get("order_id")).build();
-        cacheService.saveEntity(Rhel.class, rhel);
+        cacheService.saveEntity(rhel);
     }
 
     @Override
