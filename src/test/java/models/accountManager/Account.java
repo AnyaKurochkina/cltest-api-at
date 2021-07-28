@@ -7,5 +7,6 @@ import models.Entity;
 public class Account extends Entity {
     public String accountId;
     public String folderId;
+    @Builder.Default
     public boolean isDeleted = false;
 }

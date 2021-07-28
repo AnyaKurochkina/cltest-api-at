@@ -10,5 +10,6 @@ public class Project extends Entity {
     public String informationSystem;
     public String projectName;
     public String env;
+    @Builder.Default
     public boolean isDeleted = false;
 }

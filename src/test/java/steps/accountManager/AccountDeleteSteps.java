@@ -11,7 +11,7 @@ import models.authorizer.Organization;
 import steps.Steps;
 
 @Log4j2
-public class AccountDelete extends Steps {
+public class AccountDeleteSteps extends Steps {
     private static final String URL = Configurier.getInstance().getAppProp("host_kong");
 
 

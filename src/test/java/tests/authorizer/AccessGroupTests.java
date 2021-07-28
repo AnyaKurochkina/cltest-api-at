@@ -1,36 +1,37 @@
-package tests.Authorizer;
+package tests.authorizer;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import steps.authorizer.ProjectSteps;
+import steps.authorizer.AccessGroupSteps;
 import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
 import java.util.stream.Stream;
 
-@DisplayName("Удаление проектов")
+@DisplayName("Набор тестов по группам доступа")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(99998)
+@Order(600)
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProjectDeleteTests extends Tests {
+public class AccessGroupTests extends Tests {
     KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
-    ProjectSteps projectSteps = new ProjectSteps();
+    AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
 
     @ParameterizedTest
-    @MethodSource("dataFolders")
-    @Order(2)
-    @DisplayName("Удаление проекта")
-    @Description("Удаление проекта с сохранением в Shared Memory")
-    public void deleteDepartmentBlock(String env) {
+    @MethodSource("dataEnv")
+    @Order(1)
+    @DisplayName("Создание Группы доступа")
+    @Description("Создание Группы доступа с сохранением в Shared Memory")
+    public void createBusinessBlock(String env) {
         testVars.setVariables("token", keyCloakSteps.getToken());
-        projectSteps.deleteProject(env);
+        accessGroupSteps.createAccessGroup("PROJECT_"+env, "access_group");
     }
 
-    static Stream<Arguments> dataFolders() {
+    static Stream<Arguments> dataEnv() {
         return Stream.of(Arguments.arguments("DEV"), Arguments.arguments("TEST"));
     }
+
 }
