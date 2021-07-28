@@ -1,37 +1,39 @@
-package tests.Authorizer;
+package tests.portalBack;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import steps.authorizer.AccessGroupSteps;
 import steps.keyCloak.KeyCloakSteps;
+import steps.portalBack.PortalBack;
 import tests.Tests;
 
 import java.util.stream.Stream;
 
-@DisplayName("Набор тестов по группам доступа")
+import static steps.Steps.titleInformationSystem;
+
+@DisplayName("Получение среды назначения")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(600)
+@Order(400)
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AccessGroupTests extends Tests {
+public class ProjectEnvironment extends Tests {
     KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
-    AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
+    PortalBack portalBack = new PortalBack();
 
-    @ParameterizedTest
-    @MethodSource("dataEnv")
+
     @Order(1)
-    @DisplayName("Создание Группы доступа")
-    @Description("Создание Группы доступа с сохранением в Shared Memory")
-    public void createBusinessBlock(String env) {
+    @ParameterizedTest
+    @MethodSource("dataProjectEnv")
+    @DisplayName("Получение среды назначения")
+    @Description("Получение среды назначения с сохранением в Shared Memory")
+    public void getProjectEnv(String env) {
         testVars.setVariables("token", keyCloakSteps.getToken());
-        accessGroupSteps.createAccessGroup("PROJECT_"+env, "access_group");
+        portalBack.getProjectEnv(env);
     }
 
-    static Stream<Arguments> dataEnv() {
+    static Stream<Arguments> dataProjectEnv() {
         return Stream.of(Arguments.arguments("DEV"), Arguments.arguments("TEST"));
     }
-
 }

@@ -4,6 +4,8 @@ import core.helper.Configurier;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import models.authorizer.InformationSystem;
+import models.authorizer.ProjectEnvironment;
 import org.junit.Assert;
 import models.authorizer.Folder;
 import models.authorizer.Project;
@@ -16,20 +18,26 @@ public class ProjectSteps extends Steps {
     private static final String URL = Configurier.getInstance().getAppProp("host_kong");
 
     @Step("Создание проекта в папке {folderName} с названием {projectName}")
-    public void createProject(String folderName, String projectName) {
+    public void createProject(String folderName, String projectName, String env) {
         Folder folder = cacheService.entity(Folder.class)
                 .setField("name", folderName)
                 .setField("isDeleted", false)
                 .getEntity();
 
-        String infoSystems = jsonHelper.getTestDataFieldValue("structure/projectEnvironmentsDEV.json", "DEV", "information_systems");
-        String projectEnvId = jsonHelper.getTestDataFieldValue("structure/projectEnvironmentsDEV.json", "DEV", "project_environment_id");
-        String prefix = getPrefixEnv(folder.id, infoSystems, projectEnvId);
+        //String infoSystems = jsonHelper.getTestDataFieldValue("structure/projectEnvironmentsDEV.json", env, "information_systems");
+        //String projectEnvId = jsonHelper.getTestDataFieldValue("structure/projectEnvironmentsDEV.json", env, "project_environment_id");
+
+        InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();
+        ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
+                .setField("env", env)
+                .getEntity();
+
+        String prefix = getPrefixEnv(folder.id, informationSystem.id, projectEnvironment.id);
 
         String projectId = jsonHelper.getJsonTemplate("/structure/create_project.json")
                 .set("$.project.title", projectName)
-                .set("$.project.information_system_id", infoSystems)
-                .set("$.project.project_environment_id", projectEnvId)
+                .set("$.project.information_system_id", informationSystem.id)
+                .set("$.project.project_environment_id", projectEnvironment.id)
                 .set("$.project.environment_prefix_id", prefix)
                 .send(URL)
                 .post(String.format("authorizer/api/v1/folders/%s/projects", folder.id))
@@ -40,16 +48,16 @@ public class ProjectSteps extends Steps {
         Project project = Project.builder()
                 .projectName(projectName)
                 .id(projectId)
-                .informationSystem(infoSystems)
-                .env("DEV")
+                .informationSystem(informationSystem.id)
+                .env(env)
                 .build();
         cacheService.saveEntity(project);
     }
 
-    @Step("Удаление проекта с названием {name}")
-    public void deleteProject(String name) {
+    @Step("Удаление проекта с названием {env}")
+    public void deleteProject(String env) {
         Project project = cacheService.entity(Project.class)
-                .setField("projectName", name)
+                .setField("env", env)
                 .getEntity();
 
         new Http(URL)

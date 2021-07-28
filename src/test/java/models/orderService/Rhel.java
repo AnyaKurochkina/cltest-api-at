@@ -1,6 +1,7 @@
 package models.orderService;
 
 import core.helper.JsonHelper;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
 import lombok.extern.log4j.Log4j2;

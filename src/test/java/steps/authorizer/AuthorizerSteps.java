@@ -4,6 +4,7 @@ import core.helper.*;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import models.authorizer.Folder;
+import models.authorizer.Organization;
 import steps.Steps;
 
 public class AuthorizerSteps extends Steps {
@@ -57,6 +58,20 @@ public class AuthorizerSteps extends Steps {
         folder.isDeleted = true;
         cacheService.saveEntity(folder);
     }
+
+    @Step("Получение имени организации")
+    public void getOrgName(String orgTitle) {
+        JsonPath jsonPath = new Http(URL)
+                .get(String.format("authorizer/api/v1/organizations?page=1&per_page=25"))
+                .assertStatus(200)
+                .jsonPath();
+        String orgName = jsonPath.get(String.format("data.find{it.title=='%s'}.name", orgTitle));
+        Organization organization = Organization.builder()
+                .name(orgName)
+                .build();
+        cacheService.saveEntity(organization);
+    }
+
 
 }
 

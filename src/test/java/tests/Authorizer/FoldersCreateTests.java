@@ -8,7 +8,7 @@ import tests.Tests;
 
 @DisplayName("Набор тестов для создания Орг структуры")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(2)
+@Order(300)
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FoldersCreateTests extends Tests {

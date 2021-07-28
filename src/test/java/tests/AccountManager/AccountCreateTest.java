@@ -8,7 +8,7 @@ import tests.Tests;
 
 @DisplayName("Набор для создания счета")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(3)
+@Order(400)
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountCreateTest extends Tests {

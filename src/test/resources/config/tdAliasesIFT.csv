@@ -1,3 +1,4 @@
 data.folder,src/test/resources/json/testdata_ift
 host_kk,https://ift-keycloak.apps.d0-oscp.corp.dev.vtb/
 host_kong,https://ift-kong-service.apps.d0-oscp.corp.dev.vtb/
+title_information_system,plux
