@@ -21,7 +21,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static junit.framework.TestCase.fail;
-import static steps.Steps.dataFolder;
+import static stepsOld.Steps.dataFolder;
 
 @Log4j2
 @Data

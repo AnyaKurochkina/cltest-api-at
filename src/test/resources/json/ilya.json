@@ -1,204 +1,61 @@
 {
-  "product": [
+  "list": [
     {
-      "id": "dcc05b81-78ea-4896-84a0-de5d18c46004",
-      "product_id": "c422069e-8f01-4328-b9dc-4a9e5dafd44e",
-      "status": "pending",
-      "attrs": {
-        "domain": "corp.dev.vtb",
-        "flavor": {
-          "cpus": 2,
-          "name": "c2m4",
-          "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
-          "memory": 4
-        },
-        "folder": "fold-fnsonelwzw",
-        "creator": {
-          "id": "0eb30609-f8ea-4f84-8af3-96f1fbe8b09a",
-          "email": "portal_admin_at@test.vtb",
-          "lastname": "Admin",
-          "username": "portal_admin_at",
-          "firstname": "Тестовый Админ АТ"
-        },
-        "platform": "Nutanix",
-        "boot_disk": {
-          "size": 30
-        },
-        "account_id": "e4f5b88f-d4e9-407c-b307-37427c1311ed",
-        "extra_nics": [],
-        "on_support": true,
-        "os_version": "8.latest",
-        "data_center": "5",
-        "default_nic": {
-          "net_segment": "dev-srv-app"
-        },
-        "extra_mounts": [
-          {
-            "path": "/app",
-            "size": 10,
-            "file_system": "xfs"
-          }
-        ],
-        "project_path": "/organization/vtb/folder/fold-9pr9fgw78p/folder/fold-u2s9nzvthy/folder/fold-fnsonelwzw/project/proj-0t3kfecbnf/",
-        "graph_version": "1.0.91",
-        "preview_items": [
-          {
-            "id": "4363424b-3129-432c-9928-4a40d6cb425f",
-            "type": "vm",
-            "state": "on",
-            "config": {
-              "image": {
-                "os": {
-                  "type": "linux",
-                  "vendor": "ibm",
-                  "version": "8.latest",
-                  "architecture": "x86_64",
-                  "distribution": "rhel",
-                  "localization": "en"
-                },
-                "name": "cloud_linux_rhel_8.latest_x86_64_en",
-                "size": 30,
-                "uuid": "e5463492-a277-4cd8-b89b-00d1b10f6f52"
-              },
-              "domain": "corp.dev.vtb",
-              "flavor": {
-                "cpus": 2,
-                "name": "c2m4",
-                "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
-                "memory": 4
-              },
-              "tenant": {},
-              "boot_disk": {
-                "size": 30
-              },
-              "extra_nics": [],
-              "on_support": true,
-              "os_version": "8.latest",
-              "default_nic": {
-                "net_segment": "dev-srv-app"
-              },
-              "environment": "DEV",
-              "extra_disks": [
-                {
-                  "size": 10
-                }
-              ],
-              "resource_pool": {
-                "name": "k37-dell-dev-1",
-                "uuid": "0005b44e-d3f9-4994-4444-2cea7ff188fd",
-                "endpoint": "https://prism-dev.corp.dev.vtb:9440/api/nutanix",
-                "platform": "nutanix",
-                "tenant_prefix": "Nutanix-K37-DEV-Cloud-001"
-              },
-              "ad_integration": true,
-              "environment_type": "DEV"
-            },
-            "item_id": "4363424b-3129-432c-9928-4a40d6cb425f",
-            "subtype": "config",
-            "provider": "nutanix"
-          }
-        ],
-        "product_title": "RHEL",
-        "ad_integration": true,
-        "tariff_plan_id": "6b0dd772-3a0d-45e1-b6c3-ce2ff0bcf48f",
-        "ad_logon_grants": [
-          {
-            "role": "superuser",
-            "groups": [
-              "cloud-dqplux-atgroup"
-            ]
-          }
-        ],
-        "organization_name": "vtb",
-        "environment_prefix_id": "4b0d3f8b-87d7-4aaf-9ef9-daa4b7b397ec",
-        "information_system_id": "9cef3ede-fd3f-407f-bbed-9767e700036e",
-        "project_environment_id": "447044a8-00ae-486e-8e59-6136353ca4ce"
-      },
-      "request_params": {
-        "params": {
-          "image": {
-            "os": {
-              "type": "linux",
-              "vendor": "ibm",
-              "version": "8.latest",
-              "architecture": "x86_64",
-              "distribution": "rhel",
-              "localization": "en"
-            },
-            "name": "cloud_linux_rhel_8.latest_x86_64_en",
-            "size": 30,
-            "uuid": "e5463492-a277-4cd8-b89b-00d1b10f6f52"
-          },
-          "domain": "corp.dev.vtb",
-          "flavor": {
-            "cpus": 2,
-            "name": "c2m4",
-            "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
-            "memory": 4
-          },
-          "ris_id": 2,
-          "is_code": "plux",
-          "code_apd": "",
-          "platform": "Nutanix",
-          "boot_disk": {
-            "size": 30
-          },
-          "env_prefix": "dq",
-          "extra_nics": [],
-          "on_support": true,
-          "os_version": "8.latest",
-          "data_center": {
-            "code": "5",
-            "name": "K37"
-          },
-          "default_nic": {
-            "net_segment": "dev-srv-app"
-          },
-          "environment": "DEV",
-          "extra_mounts": [
-            {
-              "path": "/app",
-              "size": 10,
-              "file_system": "xfs"
-            }
-          ],
-          "resource_pool": {
-            "name": "k37-dell-dev-1",
-            "uuid": "0005b44e-d3f9-4994-4444-2cea7ff188fd",
-            "endpoint": "https://prism-dev.corp.dev.vtb:9440/api/nutanix",
-            "platform": "nutanix",
-            "tenant_prefix": "Nutanix-K37-DEV-Cloud-001"
-          },
-          "ad_integration": true,
-          "ad_logon_grants": [
-            {
-              "role": "superuser",
-              "groups": [
-                "cloud-dqplux-atgroup"
-              ]
-            }
-          ],
-          "environment_type": "DEV"
-        },
-        "version": "1.0.91",
-        "graph_id": "09614aee-7fe4-4825-99bd-cb8032152502",
-        "action_id": "3645f851-1513-4ddc-9632-fcf23b47b7a8",
-        "disable_rollback": false
-      },
-      "order_errors": {},
-      "created_at": "2021-07-02T12:51:31.443+03:00",
-      "updated_at": "2021-07-02T12:51:31.443+03:00",
-      "deploy_info": {},
-      "deletable": true,
-      "project_name": "proj-0t3kfecbnf",
-      "power_status": [],
-      "product_data": {},
-      "data_center_id": "4cd39103-f843-4de8-8adb-56766e80f39e",
-      "net_segment_id": "ffab2850-c9c8-4290-a7e5-c8d7bc77499b",
-      "category": "vm",
-      "label": "RHEL-0002",
-      "platform_id": null,
-      "domain_id": null
+      "id": "92f2acb2-aa33-4317-9352-dc1553e0097f",
+      "created_at": "2021-01-14T10:01:43+03:00",
+      "updated_at": "2021-01-14T10:01:43+03:00",
+      "environment_type": "TEST",
+      "name": "IFT",
+      "purpose": "Интеграционно-функциональное тестирование",
+      "organization": "vtb"
+    },
+    {
+      "id": "cb5d8517-e150-4957-8192-62016b09d928",
+      "created_at": "2021-01-14T10:01:44+03:00",
+      "updated_at": "2021-01-14T10:01:44+03:00",
+      "environment_type": "TEST",
+      "name": "PREPROD",
+      "purpose": "Регрессионное тестирование релизов",
+      "organization": "vtb"
+    },
+    {
+      "id": "f6c7f7b2-9623-4eef-ba67-d09ba2a9a918",
+      "created_at": "2021-01-14T10:01:51+03:00",
+      "updated_at": "2021-01-14T10:01:51+03:00",
+      "environment_type": "TEST",
+      "name": "MIGR",
+      "purpose": "Миграционное тестирование",
+      "organization": "vtb"
+    },
+    {
+      "id": "395a0a01-e83a-4ede-80a5-7354f2a8db39",
+      "created_at": "2021-01-14T10:01:52+03:00",
+      "updated_at": "2021-01-14T10:01:52+03:00",
+      "environment_type": "DEV",
+      "name": "DSO",
+      "purpose": "DevOps services",
+      "organization": "vtb"
+    },
+    {
+      "id": "447044a8-00ae-486e-8e59-6136353ca4ce",
+      "created_at": "2021-01-14T10:01:52+03:00",
+      "updated_at": "2021-01-14T10:01:52+03:00",
+      "environment_type": "DEV",
+      "name": "DEV",
+      "purpose": "Серверы разработки ПО",
+      "organization": "vtb"
+    },
+    {
+      "id": "03eae29d-97cf-403a-93f8-2673aa1aead9",
+      "created_at": "2021-01-14T10:01:53+03:00",
+      "updated_at": "2021-01-14T10:01:53+03:00",
+      "environment_type": "PROD",
+      "name": "PROD",
+      "purpose": "Серверы в промышленной и опытно-промышленной эксплуатации. Основной контур.",
+      "organization": "vtb"
     }
-  ]
+  ],
+  "meta": {
+    "total_count": 6
+  }
 }

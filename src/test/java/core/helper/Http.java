@@ -115,7 +115,7 @@ public class Http {
 
     private String getBearerToken() {
         TestVars testVars = LocalThead.getTestVars();
-        return testVars.getVariable("token_type") + " " + testVars.getVariable("token");
+        return "bearer " + testVars.getVariable("token");
     }
 
     private HttpResponse request() {
@@ -156,7 +156,7 @@ public class Http {
         }
 
         public HttpResponse assertStatus(int s) {
-            assertEquals(String.format("\nResponse: %s\nRequest: %s\n", response, body), s, status);
+            assertEquals(String.format("\nResponse: %s\nRequest: %s\n%s\n", response, host + path, body), s, status);
             return this;
         }
 

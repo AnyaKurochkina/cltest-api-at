@@ -2,15 +2,11 @@ package steps;
 
 import core.helper.Configurier;
 import core.helper.JsonHelper;
-import core.helper.Templates;
-import core.vars.TestVars;
-import lombok.extern.log4j.Log4j2;
+import core.CacheService;
 
-@Log4j2
 public abstract class Steps {
-    protected final JsonHelper jsonHelper = new JsonHelper();
-    protected final Templates templateSteps = new Templates();
     public static final String dataFolder = Configurier.getInstance().getAppProp("data.folder");
-    protected TestVars testVars = new TestVars();
+    public static final String titleInformationSystem = Configurier.getInstance().getAppProp("title_information_system");
+    protected final JsonHelper jsonHelper = new JsonHelper();
+    protected final CacheService cacheService = new CacheService();
 }
-
