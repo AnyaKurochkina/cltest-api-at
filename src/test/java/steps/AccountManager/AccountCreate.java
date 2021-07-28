@@ -53,9 +53,7 @@ public class AccountCreate extends Steps {
                 .getEntity();
         String sourceAccountId = getAccountIdByContext(sourceContext);
         String targetAccountId = getAccountIdByContext(folder.id);
-        System.out.println("SourceAccountId = " + sourceAccountId);
-        System.out.println("targetAccountId = " + targetAccountId);
-        log.info("Отправка запроса на перевод денег со счета папки " + sourceContext + " на счет папки " + targetContext);
+        log.info(String.format("Отправка запроса на перевод денег со счета %s папки %s на счет %s папки %s", sourceAccountId, sourceContext, targetAccountId, targetContext));
 
         jsonHelper.getJsonTemplate("/accountManager/transaction.json")
                 .set("$.from_account_id", sourceAccountId)
