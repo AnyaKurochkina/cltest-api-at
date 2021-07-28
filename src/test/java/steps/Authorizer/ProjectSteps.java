@@ -42,7 +42,7 @@ public class ProjectSteps extends Steps {
                 .id(projectId)
                 .informationSystem(infoSystems)
                 .build();
-        cacheService.saveEntity(Project.class, project);
+        cacheService.saveEntity(project);
     }
 
     @Step("Удаление проекта с названием {name}")
@@ -56,7 +56,7 @@ public class ProjectSteps extends Steps {
                 .assertStatus(204);
 
         project.isDeleted = true;
-        cacheService.saveEntity(Project.class, project);
+        cacheService.saveEntity(project);
     }
 
 

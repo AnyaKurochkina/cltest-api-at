@@ -28,7 +28,7 @@ public class AuthorizerSteps extends Steps {
                 .assertStatus(201)
                 .jsonPath();
 
-        String id = "VTB";
+        String id = "vtb";
         if (!parentName.equalsIgnoreCase("vtb")) {
             id = parentFolder.id;
         }
@@ -39,7 +39,7 @@ public class AuthorizerSteps extends Steps {
                 .name(jsonPath.get("data.title"))
                 .parentId(id)
                 .build();
-        cacheService.saveEntity(Folder.class, folder);
+        cacheService.saveEntity(folder);
     }
 
     @Step("Удаление папки типа {folderType} с именем {name}")
@@ -55,7 +55,7 @@ public class AuthorizerSteps extends Steps {
                 .assertStatus(204);
 
         folder.isDeleted = true;
-        cacheService.saveEntity(Folder.class, folder);
+        cacheService.saveEntity(folder);
     }
 
 }

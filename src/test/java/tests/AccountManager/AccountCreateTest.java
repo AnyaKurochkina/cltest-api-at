@@ -48,7 +48,7 @@ public class AccountCreateTest extends Tests {
     @Description("Перевод денег с VTB на дочерний счет папки")
     public void transferMoneyFromAccountToFolder() {
         testVars.setVariables("token", keyCloakSteps.getToken());
-        accountCreate.transferMoneyFromAccountToFolder("VTB", "FOLDER", "25000.00");
+        accountCreate.transferMoneyFromAccountToFolder("vtb", "FOLDER", "25000.00");
     }
 
 }

@@ -8,6 +8,7 @@ import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import models.AccountManager.Account;
 import models.Authorizer.Folder;
+import org.junit.Assert;
 import steps.Steps;
 
 
@@ -41,17 +42,18 @@ public class AccountCreate extends Steps {
                 .folderId(folder.id)
                 .build();
 
-        cacheService.saveEntity(Account.class, account);
+        cacheService.saveEntity(account);
 
     }
 
     @Step("Перевод со счета {sourceContext} на счет папки {targetContext} проекта {amount}")
     public void transferMoneyFromAccountToFolder(String sourceContext, String targetContext, String amount) {
+        Folder folder = cacheService.entity(Folder.class)
+                .setField("name", targetContext)
+                .getEntity();
         String sourceAccountId = getAccountIdByContext(sourceContext);
-        String targetAccountId = getAccountIdByContext(targetContext);
-        System.out.println("SourceAccountId = " + sourceAccountId);
-        System.out.println("targetAccountId = " + targetAccountId);
-        log.info("Отправка запроса на перевод денег со счета папки " + sourceContext + " на счет папки " + targetContext);
+        String targetAccountId = getAccountIdByContext(folder.id);
+        log.info(String.format("Отправка запроса на перевод денег со счета %s папки %s на счет %s папки %s", sourceAccountId, sourceContext, targetAccountId, targetContext));
 
         jsonHelper.getJsonTemplate("/accountManager/transaction.json")
                 .set("$.from_account_id", sourceAccountId)
@@ -66,10 +68,22 @@ public class AccountCreate extends Steps {
 
     public String getAccountIdByContext(String context) {
         log.info("Получение account_id для контекста - " + context);
-        return new Http(URL)
+        String account_id = null;
+        int total_count = new Http(URL)
                 .get("accountmanager/api/v1/organizations/vtb/accounts")
                 .assertStatus(200)
                 .jsonPath()
-                .get(String.format("list.find{it.name.contains('%s')}.account_id", context));
+                .get("meta.total_count");
+        int countOfIteration = total_count/ 100 + 1;
+        for (int i = 1; i<=countOfIteration; i++) {
+            account_id = new Http(URL)
+                    .get("accountmanager/api/v1/organizations/vtb/accounts?page="+i+"&per_page=100")
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get(String.format("list.find{it.name.contains('%s') || it.name.contains('%s')}.account_id", context.toUpperCase(), context.toLowerCase()));
+            if(account_id != null)
+                break;
+        }
+        return account_id;
     }
 }
