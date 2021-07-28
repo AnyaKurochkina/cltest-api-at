@@ -1,10 +1,8 @@
 package stepsOld;
 
+import core.CacheService;
 import core.exception.CustomException;
-import core.helper.Configurier;
-import core.helper.HttpOld;
-import core.helper.ShareData;
-import core.helper.Templates;
+import core.helper.*;
 import core.utils.Waiting;
 import core.vars.LocalThead;
 import core.vars.TestVars;
@@ -12,6 +10,7 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
+import models.interfaces.IProduct;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -77,7 +76,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Статус заказа - {status}")
-    public void CheckOrderStatus(String exp_status) throws CustomException {
+    public void checkOrderStatus(String exp_status, IProduct product) throws CustomException {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
         TestVars testVars = LocalThead.getTestVars();
         String order_id = testVars.getVariable("order_id");
@@ -104,15 +103,56 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Выполнить действие - {action}")
-    public void ExecuteAction(String action) throws IOException, ParseException {
+    public void executeActionNew(String action){
         Templates templates = new Templates();
         TestVars testVars = LocalThead.getTestVars();
         String datafolder = Configurier.getInstance().getAppProp("data.folder");
         JSONParser parser = new JSONParser();
-        Object obj = parser.parse(new FileReader(datafolder + "/actions/template.json"));
+        Object obj = null;
+        try {
+            obj = parser.parse(new FileReader(datafolder + "/actions/template.json"));
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
 
         JSONObject template = (JSONObject) obj;
-        JSONObject request = templates.ChangeActionTemplate(template, action);
+        JSONObject request = null;
+        try {
+            request = templates.ChangeActionTemplate(template, action);
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        log.info("Отправка запроса на выполнение действия - " + action);
+
+        JsonPath response = new Http(URL)
+                .patch("order-service/api/v1/projects/" + testVars.getVariable("project_id") + "/orders/" + testVars.getVariable("order_id") + "/actions/" + action, request)
+                .assertStatus(200)
+                .jsonPath();
+
+        testVars.setVariables("action_id", response.get("action_id"));
+
+    }
+
+    @Step("Выполнить действие - {action}")
+    public void executeAction(String action){
+        Templates templates = new Templates();
+        TestVars testVars = LocalThead.getTestVars();
+        String datafolder = Configurier.getInstance().getAppProp("data.folder");
+        JSONParser parser = new JSONParser();
+        Object obj = null;
+        try {
+            obj = parser.parse(new FileReader(datafolder + "/actions/template.json"));
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject template = (JSONObject) obj;
+        JSONObject request = null;
+        try {
+            request = templates.ChangeActionTemplate(template, action);
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
         log.info("Отправка запроса на выполнение действия - " + action);
 
         JsonPath response = new HttpOld(URL)
@@ -125,7 +165,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Статус выполнения последнего действия - {exp_status}")
-    public void CheckActionStatus(String exp_status) throws CustomException {
+    public void checkActionStatus(String exp_status) throws CustomException {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
         TestVars testVars = LocalThead.getTestVars();
         String order_id = testVars.getVariable("order_id");

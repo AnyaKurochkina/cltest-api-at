@@ -22,17 +22,17 @@ public class OrderRhelTest extends Hooks {
     public void Rhel(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
-        orderServiceSteps.CheckOrderStatus("success");
-        orderServiceSteps.ExecuteAction("reset_vm");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_vm_soft");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("start_vm");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_vm_hard");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("delete_vm");
-        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.checkOrderStatus("success");
+        orderServiceSteps.executeAction("reset_vm");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_vm_soft");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("start_vm");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_vm_hard");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("delete_vm");
+        orderServiceSteps.checkActionStatus("success");
 
     }
 
@@ -46,17 +46,17 @@ public class OrderRhelTest extends Hooks {
     public void Nginx(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
-        orderServiceSteps.CheckOrderStatus("success");
-        orderServiceSteps.ExecuteAction("reset_vm");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_vm_soft");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("start_vm");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_vm_hard");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("delete_two_layer");
-        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.checkOrderStatus("success");
+        orderServiceSteps.executeAction("reset_vm");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_vm_soft");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("start_vm");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_vm_hard");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("delete_two_layer");
+        orderServiceSteps.checkActionStatus("success");
 
     }
 
@@ -70,17 +70,17 @@ public class OrderRhelTest extends Hooks {
     public void RabbitMQ(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
-        orderServiceSteps.CheckOrderStatus("success");
-        orderServiceSteps.ExecuteAction("reset_app");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("start_app");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app_hard");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("delete_two_layer");
-        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.checkOrderStatus("success");
+        orderServiceSteps.executeAction("reset_app");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_app");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("start_app");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_app_hard");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("delete_two_layer");
+        orderServiceSteps.checkActionStatus("success");
 
     }
 
@@ -95,17 +95,17 @@ public class OrderRhelTest extends Hooks {
     public void Windows(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
-        orderServiceSteps.CheckOrderStatus("success");
-        orderServiceSteps.ExecuteAction("reset_vm");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_vm_soft");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("start_vm");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_vm_hard");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("delete_vm");
-        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.checkOrderStatus("success");
+        orderServiceSteps.executeAction("reset_vm");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_vm_soft");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("start_vm");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_vm_hard");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("delete_vm");
+        orderServiceSteps.checkActionStatus("success");
 
     }
 
@@ -120,17 +120,17 @@ public class OrderRhelTest extends Hooks {
     public void Redis(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
-        orderServiceSteps.CheckOrderStatus("success");
-        orderServiceSteps.ExecuteAction("reset_app");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("start_app");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app_hard");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("delete_two_layer");
-        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.checkOrderStatus("success");
+        orderServiceSteps.executeAction("reset_app");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_app");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("start_app");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_app_hard");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("delete_two_layer");
+        orderServiceSteps.checkActionStatus("success");
 
     }
 
@@ -145,17 +145,17 @@ public class OrderRhelTest extends Hooks {
     public void ApacheKafka(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
-        orderServiceSteps.CheckOrderStatus("success");
-        orderServiceSteps.ExecuteAction("reset_vm");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_vm_soft");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("start_vm");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_vm_hard");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("delete_two_layer");
-        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.checkOrderStatus("success");
+        orderServiceSteps.executeAction("reset_vm");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_vm_soft");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("start_vm");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_vm_hard");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("delete_two_layer");
+        orderServiceSteps.checkActionStatus("success");
 
     }
 
@@ -170,17 +170,17 @@ public class OrderRhelTest extends Hooks {
     public void PostgreSQL(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException, CustomException {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.CreateOrderWithOutline(product, env, segment, dataCentre, platform);
-        orderServiceSteps.CheckOrderStatus("success");
-        orderServiceSteps.ExecuteAction("reset_app");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("start_app");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("stop_app_hard");
-        orderServiceSteps.CheckActionStatus("success");
-        orderServiceSteps.ExecuteAction("delete_two_layer");
-        orderServiceSteps.CheckActionStatus("success");
+        orderServiceSteps.checkOrderStatus("success");
+        orderServiceSteps.executeAction("reset_app");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_app");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("start_app");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("stop_app_hard");
+        orderServiceSteps.checkActionStatus("success");
+        orderServiceSteps.executeAction("delete_two_layer");
+        orderServiceSteps.checkActionStatus("success");
 
     }
 
