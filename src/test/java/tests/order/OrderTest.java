@@ -17,14 +17,14 @@ import java.util.stream.Stream;
 
 @DisplayName("Набор для создания продуктов")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@Order(50)
+@Execution(ExecutionMode.CONCURRENT)
+@Order(650)
 @Tags({@Tag("regress"), @Tag("orders")})
 public class OrderTest extends Tests {
 
     @ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
     @MethodSource("dataProviderMethod")
-//    @Execution(ExecutionMode.CONCURRENT)
     public void order(IProduct product) {
         KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
         testVars.setVariables("token", keyCloakSteps.getToken());
@@ -43,8 +43,8 @@ public class OrderTest extends Tests {
 
     static Stream<Arguments> dataProviderMethod() {
         return Stream.of(
-                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("vSphere").build()),
-                Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("vSphere").build())
+                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+                Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build())
         );
     }
 }
