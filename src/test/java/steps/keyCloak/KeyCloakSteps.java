@@ -1,4 +1,4 @@
-package steps.KeyCloak;
+package steps.keyCloak;
 
 import core.helper.Configurier;
 import core.helper.Http;

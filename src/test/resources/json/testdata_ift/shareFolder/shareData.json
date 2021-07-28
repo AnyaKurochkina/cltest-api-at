@@ -1,0 +1,18 @@
+[
+    {
+        "objectClassName": "models.authorizer.Project",
+        "isDeleted": false,
+        "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+        "objectUid": "c07a9c84-6593-45b6-8ce1-a30ca274ba3b",
+        "id": "proj-c6u73yx1a8",
+        "projectName": "PROJECT_DEV",
+        "env": "DEV"
+    },
+    {
+        "objectClassName": "models.authorizer.AccessGroup",
+        "name": "cloud-d8plux-VTB4044578",
+        "isDeleted": false,
+        "projectName": "proj-c6u73yx1a8",
+        "objectUid": "bdbdec83-41f4-48a4-89fd-1db17156b4d8"
+    }
+]

@@ -1,14 +1,11 @@
-package steps.AccountManager;
+package steps.accountManager;
 
 import core.helper.Configurier;
 import core.helper.Http;
-import core.helper.HttpOld;
-import core.helper.ShareData;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
-import models.AccountManager.Account;
-import models.Authorizer.Folder;
-import org.junit.Assert;
+import models.accountManager.Account;
+import models.authorizer.Folder;
 import steps.Steps;
 
 

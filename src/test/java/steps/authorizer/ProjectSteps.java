@@ -1,12 +1,12 @@
-package steps.Authorizer;
+package steps.authorizer;
 
 import core.helper.Configurier;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import org.junit.Assert;
-import models.Authorizer.Folder;
-import models.Authorizer.Project;
+import models.authorizer.Folder;
+import models.authorizer.Project;
 import steps.Steps;
 
 import java.util.List;
@@ -41,6 +41,7 @@ public class ProjectSteps extends Steps {
                 .projectName(projectName)
                 .id(projectId)
                 .informationSystem(infoSystems)
+                .env("DEV")
                 .build();
         cacheService.saveEntity(project);
     }

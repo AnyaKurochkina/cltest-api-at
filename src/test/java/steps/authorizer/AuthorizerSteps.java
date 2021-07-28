@@ -1,9 +1,9 @@
-package steps.Authorizer;
+package steps.authorizer;
 
 import core.helper.*;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import models.Authorizer.Folder;
+import models.authorizer.Folder;
 import steps.Steps;
 
 public class AuthorizerSteps extends Steps {

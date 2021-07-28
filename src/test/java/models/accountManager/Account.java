@@ -1,4 +1,4 @@
-package models.AccountManager;
+package models.accountManager;
 
 import lombok.Builder;
 import models.Entity;

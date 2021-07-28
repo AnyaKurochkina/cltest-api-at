@@ -1,10 +1,10 @@
-package steps.Authorizer;
+package steps.authorizer;
 
 import core.helper.Configurier;
 import io.qameta.allure.Step;
-import models.Authorizer.AccessGroup;
+import models.authorizer.AccessGroup;
 import steps.Steps;
-import models.Authorizer.Project;
+import models.authorizer.Project;
 
 public class AccessGroupSteps extends Steps {
     private static final String URL = Configurier.getInstance().getAppProp("host_kong");

@@ -25,7 +25,7 @@ public class Suite1 {
 
     @ParameterizedTest
     @MethodSource("dataProviderMethod")
-    @Execution(ExecutionMode.CONCURRENT)
+    //@Execution(ProductParameterResolver.class)
     public void test(String s, String s1) throws InterruptedException {
 
        // cs.setEntity(Project.class, new Entity());

@@ -2,8 +2,8 @@ package tests.Authorizer;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;
-import steps.Authorizer.ProjectSteps;
-import steps.KeyCloak.KeyCloakSteps;
+import steps.authorizer.ProjectSteps;
+import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
 @DisplayName("Набор тестов по проектам")

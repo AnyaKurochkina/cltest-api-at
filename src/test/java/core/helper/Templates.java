@@ -1,10 +1,11 @@
 package core.helper;
 
 import lombok.extern.log4j.Log4j2;
+import models.orderService.interfaces.IProduct;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import stepsOld.OrderServiceSteps;
+import steps.orderService.OrderServiceSteps;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -39,11 +40,11 @@ public class Templates {
     }
 
 
-    public JSONObject ChangeActionTemplate(JSONObject request, String action) throws IOException, ParseException {
+    public JSONObject ChangeActionTemplate(JSONObject request, String action, IProduct product) throws IOException, ParseException {
         OrderServiceSteps orderSteps = new OrderServiceSteps();
         log.info("Заполнение тестовыми данными шаблона для выбранного экшена: ");
         if (!action.equals("test")) {
-            com.jayway.jsonpath.JsonPath.parse(request).set("$.item_id", orderSteps.getItemIdByOrderId(action));
+            com.jayway.jsonpath.JsonPath.parse(request).set("$.item_id", orderSteps.getItemIdByOrderId(action, product));
         }
         return request;
     }

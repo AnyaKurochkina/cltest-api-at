@@ -1,6 +1,5 @@
-package stepsOld;
+package steps.orderService;
 
-import core.CacheService;
 import core.exception.CustomException;
 import core.helper.*;
 import core.utils.Waiting;
@@ -10,11 +9,13 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
-import models.interfaces.IProduct;
+import models.orderService.interfaces.IProduct;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import stepsOld.StateServiceSteps;
+import stepsOld.Steps;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,8 +23,9 @@ import java.io.IOException;
 import static core.helper.JsonHelper.shareData;
 
 @Log4j2
+//TODO: Актуализировать класс
 public class OrderServiceSteps extends Steps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_kong");
+    public static final String URL = Configurier.getInstance().getAppProp("host_kong");
 
     @Step("Заказ продукта {product} в проекте {projectId}")
     public void CreateOrder(String product, String projectId) throws IOException, ParseException {
@@ -75,20 +77,20 @@ public class OrderServiceSteps extends Steps {
         testVars.setVariables("project_id", projectId);
     }
 
-    @Step("Статус заказа - {status}")
-    public void checkOrderStatus(String exp_status, IProduct product) throws CustomException {
+   // @Step("Статус заказа - {status}")
+    public void checkOrderStatus(String exp_status, IProduct product) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
-        TestVars testVars = LocalThead.getTestVars();
-        String order_id = testVars.getVariable("order_id");
-        String orderStatus = new String();
+
+
+        String orderStatus = "";
         int counter = 10;
 
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
             Waiting.sleep(120000);
 
-            orderStatus = new HttpOld(URL)
-                    .get("order-service/api/v1/projects/" + testVars.getVariable("project_id") + "/orders/" + order_id)
+            orderStatus = new Http(URL)
+                    .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()
                     .get("status");
@@ -97,15 +99,20 @@ public class OrderServiceSteps extends Steps {
         }
 
         if (!orderStatus.equals(exp_status.toLowerCase())) {
-            stateServiceSteps.GetErrorFromOrch(order_id);
+            try {
+                stateServiceSteps.GetErrorFromOrch(product.getOrderId());
+            } catch (CustomException e) {
+                e.printStackTrace();
+            }
         }
 
     }
 
+
+
     @Step("Выполнить действие - {action}")
-    public void executeActionNew(String action){
+    public String executeAction(String action, IProduct product){
         Templates templates = new Templates();
-        TestVars testVars = LocalThead.getTestVars();
         String datafolder = Configurier.getInstance().getAppProp("data.folder");
         JSONParser parser = new JSONParser();
         Object obj = null;
@@ -118,58 +125,23 @@ public class OrderServiceSteps extends Steps {
         JSONObject template = (JSONObject) obj;
         JSONObject request = null;
         try {
-            request = templates.ChangeActionTemplate(template, action);
+            request = templates.ChangeActionTemplate(template, action, product);
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
         log.info("Отправка запроса на выполнение действия - " + action);
 
         JsonPath response = new Http(URL)
-                .patch("order-service/api/v1/projects/" + testVars.getVariable("project_id") + "/orders/" + testVars.getVariable("order_id") + "/actions/" + action, request)
+                .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + action, request)
                 .assertStatus(200)
                 .jsonPath();
 
-        testVars.setVariables("action_id", response.get("action_id"));
-
-    }
-
-    @Step("Выполнить действие - {action}")
-    public void executeAction(String action){
-        Templates templates = new Templates();
-        TestVars testVars = LocalThead.getTestVars();
-        String datafolder = Configurier.getInstance().getAppProp("data.folder");
-        JSONParser parser = new JSONParser();
-        Object obj = null;
-        try {
-            obj = parser.parse(new FileReader(datafolder + "/actions/template.json"));
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-
-        JSONObject template = (JSONObject) obj;
-        JSONObject request = null;
-        try {
-            request = templates.ChangeActionTemplate(template, action);
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-        log.info("Отправка запроса на выполнение действия - " + action);
-
-        JsonPath response = new HttpOld(URL)
-                .patch("order-service/api/v1/projects/" + testVars.getVariable("project_id") + "/orders/" + testVars.getVariable("order_id") + "/actions/" + action, request)
-                .assertStatus(200)
-                .jsonPath();
-
-        testVars.setVariables("action_id", response.get("action_id"));
-
+        return response.get("action_id");
     }
 
     @Step("Статус выполнения последнего действия - {exp_status}")
-    public void checkActionStatus(String exp_status) throws CustomException {
+    public void checkActionStatus(String exp_status, IProduct product, String action_id) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
-        TestVars testVars = LocalThead.getTestVars();
-        String order_id = testVars.getVariable("order_id");
-        String action_id = testVars.getVariable("action_id");
         String action_status = "";
         int counter = 10;
 
@@ -177,8 +149,8 @@ public class OrderServiceSteps extends Steps {
         while ((action_status.equals("pending") || action_status.equals("")) && counter > 0) {
             Waiting.sleep(60000);
             try {
-                action_status = new HttpOld(URL)
-                        .get("order-service/api/v1/projects/" + testVars.getVariable("project_id") + "/orders/" + order_id + "/actions/history/" + action_id)
+                action_status = new Http(URL)
+                        .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id)
                         .jsonPath().get("status");
             } catch (JsonPathException e) {
                 log.error("Error get status " + e.getMessage());
@@ -188,17 +160,19 @@ public class OrderServiceSteps extends Steps {
         }
 
         if (!action_status.equals(exp_status.toLowerCase())) {
-            stateServiceSteps.GetErrorFromOrch(order_id);
+            try {
+                stateServiceSteps.GetErrorFromOrch(product.getOrderId());
+            } catch (CustomException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public String getItemIdByOrderId(String action) {
-        TestVars testVars = LocalThead.getTestVars();
-        String order_id = testVars.getVariable("order_id");
+    public String getItemIdByOrderId(String action, IProduct product) {
         log.info("Получение item_id для " + action);
 
-        return new HttpOld(URL)
-                .get("order-service/api/v1/projects/" + testVars.getVariable("project_id") + "/orders/" + order_id)
+        return new Http(URL)
+                .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .jsonPath()
                 .get(String.format("data.find{it.actions.find{it.name == '%s'}}.item_id", action));
     }

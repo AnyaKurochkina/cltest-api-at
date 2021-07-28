@@ -1,4 +1,4 @@
-package models.Authorizer;
+package models.authorizer;
 
 import lombok.*;
 import models.Entity;

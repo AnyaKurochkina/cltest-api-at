@@ -2,8 +2,8 @@ package tests.AccountManager;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;
-import steps.AccountManager.AccountCreate;
-import steps.KeyCloak.KeyCloakSteps;
+import steps.accountManager.AccountCreate;
+import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
 @DisplayName("Набор для создания счета")

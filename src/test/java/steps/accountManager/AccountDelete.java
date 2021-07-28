@@ -1,4 +1,4 @@
-package steps.AccountManager;
+package steps.accountManager;
 
 public class AccountDelete {
 }

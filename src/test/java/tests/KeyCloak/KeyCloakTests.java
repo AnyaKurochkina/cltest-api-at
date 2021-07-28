@@ -3,7 +3,7 @@ package tests.KeyCloak;
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;
 import tests.Tests;
-import steps.KeyCloak.KeyCloakSteps;
+import steps.keyCloak.KeyCloakSteps;
 
 @DisplayName("Набор тестов для проверки KeyCloak")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

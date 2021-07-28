@@ -1,4 +1,4 @@
-package models.Authorizer;
+package models.authorizer;
 
 import lombok.Builder;
 import models.Entity;
@@ -9,5 +9,6 @@ public class Project extends Entity {
     public String id;
     public String informationSystem;
     public String projectName;
+    public String env;
     public boolean isDeleted = false;
 }
