@@ -3,6 +3,7 @@ package steps.authorizer;
 import core.helper.Configurier;
 import io.qameta.allure.Step;
 import models.authorizer.AccessGroup;
+import models.authorizer.Project;
 import steps.Steps;
 import models.authorizer.Project;
 
