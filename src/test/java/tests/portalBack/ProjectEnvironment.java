@@ -6,12 +6,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import steps.keyCloak.KeyCloakSteps;
-import steps.portalBack.PortalBack;
+import steps.portalBack.PortalBackSteps;
 import tests.Tests;
 
 import java.util.stream.Stream;
-
-import static steps.Steps.titleInformationSystem;
 
 @DisplayName("Получение среды назначения")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -20,7 +18,7 @@ import static steps.Steps.titleInformationSystem;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectEnvironment extends Tests {
     KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
-    PortalBack portalBack = new PortalBack();
+    PortalBackSteps portalBackSteps = new PortalBackSteps();
 
 
     @Order(1)
@@ -30,7 +28,7 @@ public class ProjectEnvironment extends Tests {
     @Description("Получение среды назначения с сохранением в Shared Memory")
     public void getProjectEnv(String env) {
         testVars.setVariables("token", keyCloakSteps.getToken());
-        portalBack.getProjectEnv(env);
+        portalBackSteps.getProjectEnv(env);
     }
 
     static Stream<Arguments> dataProjectEnv() {

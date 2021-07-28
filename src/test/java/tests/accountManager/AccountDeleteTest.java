@@ -1,8 +1,8 @@
-package tests.AccountManager;
+package tests.accountManager;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;
-import steps.accountManager.AccountDelete;
+import steps.accountManager.AccountDeleteSteps;
 import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
@@ -13,7 +13,7 @@ import tests.Tests;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountDeleteTest extends Tests {
     KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
-    AccountDelete accountDelete = new AccountDelete();
+    AccountDeleteSteps accountDeleteSteps = new AccountDeleteSteps();
 
     @Test
     @Order(1)
@@ -21,7 +21,7 @@ public class AccountDeleteTest extends Tests {
     @Description("Удаление счета папки")
     public void DeleteAccount() {
         testVars.setVariables("token", keyCloakSteps.getToken());
-        accountDelete.deleteAccount("FOLDER");
+        accountDeleteSteps.deleteAccount("FOLDER");
     }
 
     @Test
@@ -30,7 +30,7 @@ public class AccountDeleteTest extends Tests {
     @Description("Удаление счета папки Департамент")
     public void DeleteAccountDepartment() {
         testVars.setVariables("token", keyCloakSteps.getToken());
-        accountDelete.deleteAccount("DEPARTMENT_FOLDER");
+        accountDeleteSteps.deleteAccount("DEPARTMENT_FOLDER");
     }
 
     @Test
@@ -39,7 +39,7 @@ public class AccountDeleteTest extends Tests {
     @Description("Удаление счета папки Бизнес блок")
     public void DeleteAccountBusinessBlock() {
         testVars.setVariables("token", keyCloakSteps.getToken());
-        accountDelete.deleteAccount("BUSINESS_FOLDER");
+        accountDeleteSteps.deleteAccount("BUSINESS_FOLDER");
     }
 
 }

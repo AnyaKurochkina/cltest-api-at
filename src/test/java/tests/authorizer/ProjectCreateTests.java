@@ -1,7 +1,6 @@
-package tests.Authorizer;
+package tests.authorizer;
 
 import io.qameta.allure.Description;
-import models.orderService.Rhel;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
