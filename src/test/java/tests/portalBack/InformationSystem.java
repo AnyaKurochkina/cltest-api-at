@@ -2,14 +2,9 @@ package tests.portalBack;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import steps.authorizer.ProjectSteps;
 import steps.keyCloak.KeyCloakSteps;
-import steps.portalBack.PortalBack;
+import steps.portalBack.PortalBackSteps;
 import tests.Tests;
-
-import java.util.stream.Stream;
 
 import static steps.Steps.titleInformationSystem;
 
@@ -20,7 +15,7 @@ import static steps.Steps.titleInformationSystem;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class InformationSystem extends Tests {
     KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
-    PortalBack portalBack = new PortalBack();
+    PortalBackSteps portalBackSteps = new PortalBackSteps();
 
 
     @Order(1)
@@ -29,7 +24,7 @@ public class InformationSystem extends Tests {
     @Description("Получение информационной системы с сохранением в Shared Memory")
     public void getInformationSystem() {
         testVars.setVariables("token", keyCloakSteps.getToken());
-        portalBack.getInfoSys(titleInformationSystem);
+        portalBackSteps.getInfoSys(titleInformationSystem);
     }
 
 }

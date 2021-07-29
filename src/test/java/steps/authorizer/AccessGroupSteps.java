@@ -25,7 +25,7 @@ public class AccessGroupSteps extends Steps {
                 .jsonPath()
                 .get("name");
 
-        AccessGroup accessGroup = AccessGroup.builder()
+        models.authorizer.AccessGroup accessGroup = models.authorizer.AccessGroup.builder()
                 .name(groupName)
                 .projectName(project.id)
                 .build();

@@ -10,7 +10,7 @@ import steps.Steps;
 
 
 @Log4j2
-public class AccountCreate extends Steps {
+public class AccountCreateSteps extends Steps {
     private static final String URL = Configurier.getInstance().getAppProp("host_kong");
 
 

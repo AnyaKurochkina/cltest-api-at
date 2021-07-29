@@ -7,5 +7,6 @@ import models.Entity;
 public class AccessGroup extends Entity {
     public String name;
     public String projectName;
+    @Builder.Default
     public boolean isDeleted = false;
 }

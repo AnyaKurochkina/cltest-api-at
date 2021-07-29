@@ -1,15 +1,12 @@
 package models.orderService;
 
 import core.helper.JsonHelper;
-import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
 import models.Entity;
 import models.orderService.interfaces.IProduct;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import steps.orderService.OrderServiceSteps;
 
 @Log4j2
@@ -21,15 +18,15 @@ public class Rhel extends Entity implements IProduct {
     public String platform;
     public String orderId;
     public String projectId;
+    @Builder.Default
     public String product = "Rhel";
+    @Builder.Default
     public String status = "NOT_CREATED";
+    @Builder.Default
     public boolean isDeleted = false;
 
     @Override
     public void order() {
-        product = "Rhel";
-        status = "NOT_CREATED";
-
         JsonHelper jsonHelper = new JsonHelper();
         Project project = cacheService.entity(Project.class).setField("env", env).getEntity();
         projectId = project.id;

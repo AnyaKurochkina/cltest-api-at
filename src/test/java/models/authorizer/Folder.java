@@ -9,5 +9,6 @@ public class Folder extends Entity {
     public String type;
     public String name;
     public String parentId;
+    @Builder.Default
     public boolean isDeleted = false;
 }

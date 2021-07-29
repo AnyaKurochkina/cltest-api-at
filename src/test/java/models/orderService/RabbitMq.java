@@ -17,8 +17,11 @@ public class RabbitMq extends Entity implements IProduct {
     String dataCentre;
     String platform;
     String orderId;
+    @Builder.Default
     String product = "RabbitMQ";
+    @Builder.Default
     public String status = "NOT_CREATED";
+    @Builder.Default
     public boolean isDeleted = false;
     public String projectId;
 
@@ -27,6 +30,7 @@ public class RabbitMq extends Entity implements IProduct {
         final JsonHelper jsonHelper = new JsonHelper();
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class).setField("env", env).getEntity();
+        projectId = project.id;
         log.info("Отправка запроса на создание заказа для " + product);
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/orders/" + product.toLowerCase() + ".json")
                 .set("$.order.attrs.default_nic.net_segment", segment)
@@ -56,6 +60,13 @@ public class RabbitMq extends Entity implements IProduct {
     public void delete() {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         String actionId = orderServiceSteps.executeAction("delete_two_layer", this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+    }
+
+    @Override
+    public void reset() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        String actionId = orderServiceSteps.executeAction("reset_app", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 

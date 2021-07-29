@@ -1,4 +1,4 @@
-package tests.Authorizer;
+package tests.authorizer;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;

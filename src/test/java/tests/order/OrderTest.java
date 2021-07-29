@@ -4,6 +4,8 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.RabbitMq;
 import models.orderService.Rhel;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -14,8 +16,9 @@ import tests.Tests;
 import java.util.stream.Stream;
 
 @DisplayName("Набор для создания продуктов")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(50)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@Execution(ExecutionMode.CONCURRENT)
+@Order(650)
 @Tags({@Tag("regress"), @Tag("orders")})
 public class OrderTest extends Tests {
 
@@ -39,11 +42,9 @@ public class OrderTest extends Tests {
     }
 
     static Stream<Arguments> dataProviderMethod() {
-        return Stream.of(Arguments.arguments(
-                //       Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("vSphere").build(),
-                Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("vSphere").build()
-                //Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()
-                //         RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("vSphere").build()
-        ));
+        return Stream.of(
+                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+                Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build())
+        );
     }
 }

@@ -211,7 +211,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                     Order o = clz.getAnnotation(Order.class);
                     if (o != null) {
                         order = o.value();
-                        if(order != null) {
+                        if(tests.lowerEntry(order) != null) {
                             CountDownLatch c = tests.lowerEntry(order).getValue();
                             if (c != null)
                                 c.await();
