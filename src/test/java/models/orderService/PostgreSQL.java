@@ -10,6 +10,8 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import steps.orderService.OrderServiceSteps;
 
+import static org.junit.Assert.assertTrue;
+
 @Log4j2
 @Builder
 public class PostgreSQL extends Entity implements IProduct {
@@ -66,6 +68,16 @@ public class PostgreSQL extends Entity implements IProduct {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
+    }
+
+    @Override
+    public void expand_mount_point() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        int sizeBefore = orderServiceSteps.getExpandMountSize(this);
+        String actionId = orderServiceSteps.executeAction("Расширить", "{\"size\": 10, \"mount\": \"/pg_data\"}", this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        int sizeAfter = orderServiceSteps.getExpandMountSize(this);
+        assertTrue(sizeBefore<sizeAfter);
     }
 
     @Override
