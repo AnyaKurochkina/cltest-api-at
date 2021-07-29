@@ -11,27 +11,29 @@ import tests.Tests;
 
 import java.util.stream.Stream;
 
-@DisplayName("Набор тестов по группам доступа")
+@DisplayName("Набор тестов по удалению групп доступа")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(600)
+@Order(99997)
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AccessGroupTests extends Tests {
+public class AccessGroupDeleteTests extends Tests {
     KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
 
     @ParameterizedTest
     @MethodSource("dataEnv")
     @Order(1)
-    @DisplayName("Создание Группы доступа")
-    @Description("Создание Группы доступа с сохранением в Shared Memory")
-    public void createBusinessBlock(String env) {
+    @DisplayName("Удаление Группы доступа")
+    @Description("Удаление Группы доступа")
+    public void deleteAccessGroup(String env) {
         testVars.setVariables("token", keyCloakSteps.getToken());
-        accessGroupSteps.createAccessGroup("PROJECT_"+env, "access_group");
+        accessGroupSteps.deleteAccessGroup(env);
     }
 
     static Stream<Arguments> dataEnv() {
-        return Stream.of(Arguments.arguments("DEV"), Arguments.arguments("TEST"));
+        return Stream.of(Arguments.arguments("DEV"),
+                Arguments.arguments("TEST"))
+                ;
     }
 
 }

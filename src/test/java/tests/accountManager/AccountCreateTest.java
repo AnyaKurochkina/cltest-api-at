@@ -2,7 +2,7 @@ package tests.accountManager;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;
-import steps.accountManager.AccountCreateSteps;
+import steps.accountManager.AccountSteps;
 import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
@@ -13,7 +13,7 @@ import tests.Tests;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountCreateTest extends Tests {
     KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
-    AccountCreateSteps accountCreate = new AccountCreateSteps();
+    AccountSteps accountCreate = new AccountSteps();
 
     @Test
     @Order(1)
