@@ -1,10 +1,15 @@
 package core.helper;
 
-import java.nio.file.FileSystems;
+import lombok.extern.log4j.Log4j2;
+import models.orderService.interfaces.IProduct;
 
+import java.nio.file.FileSystems;
+import java.util.Random;
+
+@Log4j2
 public final class StringUtils {
     public static final String SPT = FileSystems.getDefault().getSeparator();
-    private StringUtils() {
+    public StringUtils() {
     }
 
     public static String concatPathToFile(String... names) {
@@ -27,6 +32,18 @@ public final class StringUtils {
             result.setLength(result.length() - SPT.length());
         }
         return result.toString();
+    }
+
+    public String getRandString(int len) {
+        log.info("Генерация рандомной строки");
+        Random random = new Random();
+        String symb = "qwertyuiopasdfghjklzxcvbnm1234567890";
+        String result = "";
+        for (int i=0; i < len; ++i) {
+            int position = random.nextInt(symb.length());
+            result = result + symb.charAt(position);
+        }
+        return result;
     }
 
 }
