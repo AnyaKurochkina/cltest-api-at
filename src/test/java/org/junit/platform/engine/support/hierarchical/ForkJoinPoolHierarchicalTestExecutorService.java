@@ -146,12 +146,40 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         while (var4.hasNext()) {
             TestTask testTask = (TestTask) var4.next();
             ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask exclusiveTask = new ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask(testTask);
+
+
+                Integer order = null;
+                AbstractTestDescriptor testDescriptor = null;
+                try {
+                    Field field = testTask.getClass().getDeclaredField("testDescriptor");
+                    field.setAccessible(true);
+                    testDescriptor = (AbstractTestDescriptor) field.get(testTask);
+                    if (testDescriptor instanceof ClassTestDescriptor) {
+                        Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
+                        Order o = clz.getAnnotation(Order.class);
+                        if (o != null) {
+                            order = o.value();
+                            if(tests.lowerEntry(order) != null) {
+                                CountDownLatch c = tests.lowerEntry(order).getValue();
+                                if (c != null)
+                                    c.await();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             if (testTask.getExecutionMode() == ExecutionMode.CONCURRENT) {
+
                 exclusiveTask.fork();
                 concurrentTasksInReverseOrder.addLast(exclusiveTask);
+
             } else {
                 nonConcurrentTasks.add(exclusiveTask);
             }
+
+
         }
 
     }
@@ -200,27 +228,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
         public void compute() {
 
-            Integer order = null;
-            AbstractTestDescriptor testDescriptor = null;
-            try {
-                Field field = testTask.getClass().getDeclaredField("testDescriptor");
-                field.setAccessible(true);
-                testDescriptor = (AbstractTestDescriptor) field.get(testTask);
-                if (testDescriptor instanceof ClassTestDescriptor) {
-                    Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
-                    Order o = clz.getAnnotation(Order.class);
-                    if (o != null) {
-                        order = o.value();
-                        if(tests.lowerEntry(order) != null) {
-                            CountDownLatch c = tests.lowerEntry(order).getValue();
-                            if (c != null)
-                                c.await();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
 
 
             try {
@@ -242,6 +250,26 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
                 if (lock != null) {
                     lock.close();
+                }
+
+
+
+
+                Integer order = null;
+                AbstractTestDescriptor testDescriptor = null;
+                try {
+                    Field field = testTask.getClass().getDeclaredField("testDescriptor");
+                    field.setAccessible(true);
+                    testDescriptor = (AbstractTestDescriptor) field.get(testTask);
+                    if (testDescriptor instanceof ClassTestDescriptor) {
+                        Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
+                        Order o = clz.getAnnotation(Order.class);
+                        if (o != null) {
+                            order = o.value();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 if (order != null) {
