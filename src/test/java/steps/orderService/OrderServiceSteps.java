@@ -19,6 +19,8 @@ import stepsOld.Steps;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static core.helper.JsonHelper.shareData;
 
@@ -27,61 +29,9 @@ import static core.helper.JsonHelper.shareData;
 public class OrderServiceSteps extends Steps {
     public static final String URL = Configurier.getInstance().getAppProp("host_kong");
 
-    @Step("Заказ продукта {product} в проекте {projectId}")
-    public void CreateOrder(String product, String projectId) throws IOException, ParseException {
-        Templates templates = new Templates();
-        TestVars testVars = LocalThead.getTestVars();
-        JSONParser parser = new JSONParser();
-        Object obj = parser.parse(new FileReader(dataFolder + "/orders/" + product.toLowerCase() + ".json"));
-        JSONObject template = (JSONObject) obj;
-        JSONObject request = templates.ChangeOrderTemplate(template, product, projectId);
-        String order_id = "";
-        log.info("Отправка запроса на создание заказа для " + product);
-
-        JSONArray res = new HttpOld(URL)
-                .post("order-service/api/v1/projects/" + shareData.get(projectId) + "/orders", request)
-                .assertStatus(201)
-                .toJsonArray();
-
-        order_id = (String) ((JSONObject) res.get(0)).get("id");
-        testVars.setVariables("order_id", order_id);
-        testVars.setVariables("project_id", shareData.get(projectId));
-    }
-
-    @Step("Заказ продукта {product} в среде {env}, сегмент {segment}, дата-центр {dataCentre}, платформа {platform}")
-    public void CreateOrderWithOutline(String product, String env, String segment, String dataCentre, String platform) throws IOException, ParseException {
-        Templates templates = new Templates();
-        TestVars testVars = LocalThead.getTestVars();
-        JSONParser parser = new JSONParser();
-        Object obj = parser.parse(new FileReader(dataFolder + "/orders/" + product.toLowerCase() + ".json"));
-        JSONObject template = (JSONObject) obj;
-        //JSONObject request = templates.ChangeOrderTemplate(template, product, projectId);
-        String order_id = "";
-        log.info("Отправка запроса на создание заказа для " + product);
-
-        String projectId = ShareData.get((String.format("projects.find{it.env == '%s'}.id",env)));
-
-        JSONArray res = jsonHelper.getJsonTemplate("/orders/" + product.toLowerCase() + ".json")
-                .set("$.order.attrs.default_nic.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform", platform)
-                .set("$.order.project_name", projectId)
-                .send(URL)
-                .post("order-service/api/v1/projects/" + projectId + "/orders")
-                .assertStatus(201)
-                .toJsonArray();
-
-
-        order_id = (String) ((JSONObject) res.get(0)).get("id");
-        testVars.setVariables("order_id", order_id);
-        testVars.setVariables("project_id", projectId);
-    }
-
    // @Step("Статус заказа - {status}")
     public void checkOrderStatus(String exp_status, IProduct product) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
-
-
         String orderStatus = "";
         int counter = 10;
 
@@ -112,7 +62,6 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Выполнить действие - {action}")
     public String executeAction(String action, IProduct product){
-        Templates templates = new Templates();
         String datafolder = Configurier.getInstance().getAppProp("data.folder");
         JSONParser parser = new JSONParser();
         Object obj = null;
@@ -121,18 +70,13 @@ public class OrderServiceSteps extends Steps {
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-
+        Map<String,String> map = getItemIdByOrderId(action, product);
         JSONObject template = (JSONObject) obj;
-        JSONObject request = null;
-        try {
-            request = templates.ChangeActionTemplate(template, action, product);
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
+        com.jayway.jsonpath.JsonPath.parse(template).set("$.item_id", map.get("item_id"));
         log.info("Отправка запроса на выполнение действия - " + action);
 
         JsonPath response = new Http(URL)
-                .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + action, request)
+                .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"), template)
                 .assertStatus(200)
                 .jsonPath();
 
@@ -144,7 +88,6 @@ public class OrderServiceSteps extends Steps {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
         String action_status = "";
         int counter = 10;
-
         log.info("Проверка статуса выполнения действия");
         while ((action_status.equals("pending") || action_status.equals("")) && counter > 0) {
             Waiting.sleep(60000);
@@ -158,7 +101,6 @@ public class OrderServiceSteps extends Steps {
             ;
             counter = counter - 1;
         }
-
         if (!action_status.equals(exp_status.toLowerCase())) {
             try {
                 stateServiceSteps.GetErrorFromOrch(product.getOrderId());
@@ -168,13 +110,16 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    public String getItemIdByOrderId(String action, IProduct product) {
+    public Map<String,String> getItemIdByOrderId(String action, IProduct product) {
         log.info("Получение item_id для " + action);
-
-        return new Http(URL)
+        JsonPath jsonPath = new Http(URL)
                 .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
-                .jsonPath()
-                .get(String.format("data.find{it.actions.find{it.name == '%s'}}.item_id", action));
+                .jsonPath();
+
+        Map<String,String> map = new HashMap<>();
+        map.put("item_id", jsonPath.get(String.format("data.find{it.actions.find{it.title == '%s'}}.item_id", action)));
+        map.put("name", jsonPath.get(String.format("data.find{it.actions.find{it.title == '%s'}}.actions.find{it.title == '%s'}.name", action, action)));
+        return map;
     }
 
 }

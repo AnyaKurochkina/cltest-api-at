@@ -18,7 +18,7 @@ public class RabbitMq extends Entity implements IProduct {
     String platform;
     String orderId;
     @Builder.Default
-    String product = "RabbitMQ";
+    String productName = "RabbitMQ";
     @Builder.Default
     public String status = "NOT_CREATED";
     @Builder.Default
@@ -31,8 +31,8 @@ public class RabbitMq extends Entity implements IProduct {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class).setField("env", env).getEntity();
         projectId = project.id;
-        log.info("Отправка запроса на создание заказа для " + product);
-        JsonPath jsonPath = jsonHelper.getJsonTemplate("/orders/" + product.toLowerCase() + ".json")
+        log.info("Отправка запроса на создание заказа для " + productName);
+        JsonPath jsonPath = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
@@ -59,20 +59,19 @@ public class RabbitMq extends Entity implements IProduct {
     @Override
     public void delete() {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        String actionId = orderServiceSteps.executeAction("delete_two_layer", this);
+        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    @Override
-    public void reset() {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        String actionId = orderServiceSteps.executeAction("reset_app", this);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
-    }
 
     @Override
     public String getProjectId() {
         return projectId;
+    }
+
+    @Override
+    public String getProductName() {
+        return productName;
     }
 
     @Override
