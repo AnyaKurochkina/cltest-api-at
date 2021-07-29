@@ -84,7 +84,7 @@ public class JsonHelper {
         String res = null;
         if (allTests.containsKey(TestID)) {
             res = allTests.get(TestID).get(fieldName);
-            System.out.println(res);
+            //System.out.println(res);
         }
         if (res == null) {
             fail("Нет такого поля [" + fieldName + "] для теста [" + TestID + "]");

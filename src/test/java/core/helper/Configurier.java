@@ -129,7 +129,7 @@ public class Configurier {
             BufferedReader br = new BufferedReader(fr);
             String line;
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
+                //System.out.println(line);
                 assert false;
                 stringBuilder.append(line);
             }
