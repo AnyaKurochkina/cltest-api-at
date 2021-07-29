@@ -43,9 +43,9 @@ public class OrderTest extends Tests {
 
     static Stream<Arguments> dataProviderMethod() {
         return Stream.of(
-                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
-                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build())/*,
-                Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build())*/
+                /*Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
+                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),*/
+                Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build())
         );
     }
 }

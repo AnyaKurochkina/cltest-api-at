@@ -4,6 +4,7 @@ import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
 import lombok.extern.log4j.Log4j2;
+import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.Entity;
 import models.orderService.interfaces.IProduct;
@@ -29,13 +30,20 @@ public class RabbitMq extends Entity implements IProduct {
     public void order() {
         final JsonHelper jsonHelper = new JsonHelper();
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        Project project = cacheService.entity(Project.class).setField("env", env).getEntity();
+        Project project = cacheService.entity(Project.class)
+                .setField("env", env)
+                .getEntity();
+        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
+                .setField("projectName", project.id)
+                .getEntity();
         projectId = project.id;
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .send(OrderServiceSteps.URL)
                 .post("order-service/api/v1/projects/" + project.id + "/orders")

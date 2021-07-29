@@ -16,7 +16,7 @@ public interface IProduct {
 
     default void reset() {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        String actionId = orderServiceSteps.executeAction("Перезагрузить по питанию", this);
+        String actionId = orderServiceSteps.executeAction("Перезагрузить", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
     default void stopHard() {

@@ -117,8 +117,8 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath();
 
         Map<String,String> map = new HashMap<>();
-        map.put("item_id", jsonPath.get(String.format("data.find{it.actions.find{it.title == '%s'}}.item_id", action)));
-        map.put("name", jsonPath.get(String.format("data.find{it.actions.find{it.title == '%s'}}.actions.find{it.title == '%s'}.name", action, action)));
+        map.put("item_id", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action)));
+        map.put("name", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action)));
         return map;
     }
 
