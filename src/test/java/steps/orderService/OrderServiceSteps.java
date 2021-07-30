@@ -11,6 +11,7 @@ import models.orderService.interfaces.IProduct;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.junit.jupiter.api.Test;
 import stepsOld.StateServiceSteps;
 import stepsOld.Steps;
 
@@ -51,10 +52,7 @@ public class OrderServiceSteps extends Steps {
                 e.printStackTrace();
             }
         }
-
     }
-
-
 
     @Step("Выполнить действие - {action}")
     public String executeAction(String action, IProduct product){
@@ -69,6 +67,36 @@ public class OrderServiceSteps extends Steps {
         Map<String,String> map = getItemIdByOrderId(action, product);
         JSONObject template = (JSONObject) obj;
         com.jayway.jsonpath.JsonPath.parse(template).set("$.item_id", map.get("item_id"));
+        log.info("Отправка запроса на выполнение действия - " + action);
+
+        JsonPath response = new Http(URL)
+                .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"), template)
+                .assertStatus(200)
+                .jsonPath();
+
+        return response.get("action_id");
+    }
+
+    @Step("Выполнить действие - {action}")
+    public String executeAction(String action, String dataString, IProduct product) {
+        String datafolder = Configurier.getInstance().getAppProp("data.folder");
+        JSONParser parser = new JSONParser();
+        Object data = null;
+        try {
+            data = parser.parse(dataString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Object obj = null;
+        try {
+            obj = parser.parse(new FileReader(datafolder + "/actions/template.json"));
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        Map<String,String> map = getItemIdByOrderId(action, product);
+        JSONObject template = (JSONObject) obj;
+        com.jayway.jsonpath.JsonPath.parse(template).set("$.item_id", map.get("item_id"));
+        com.jayway.jsonpath.JsonPath.parse(template).set("$.order.data", data);
         log.info("Отправка запроса на выполнение действия - " + action);
 
         JsonPath response = new Http(URL)
@@ -121,4 +149,15 @@ public class OrderServiceSteps extends Steps {
         return map;
     }
 
+    public int getExpandMountSize(IProduct product) {
+        int size;
+        log.info("Получение количества точек монтирования");
+        size = new Http(URL)
+                .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
+                .assertStatus(200)
+                .jsonPath()
+                .get("data.find{it.type=='vm'}.config.extra_disks.size()");
+        log.info(String.format("Количество дисков %s", size));
+        return size;
+    }
 }

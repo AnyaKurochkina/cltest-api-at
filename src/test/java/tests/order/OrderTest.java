@@ -19,25 +19,36 @@ import java.util.stream.Stream;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @Order(650)
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("orders")})
 public class OrderTest extends Tests {
 
     @ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
     @MethodSource("dataProviderMethod")
     public void order(IProduct product) {
+        KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
+        testVars.setVariables("token", keyCloakSteps.getToken());
         product.order();
+        product.expand_mount_point();
+        testVars.setVariables("token", keyCloakSteps.getToken());
         product.reset();
+        testVars.setVariables("token", keyCloakSteps.getToken());
         product.stopSoft();
+        testVars.setVariables("token", keyCloakSteps.getToken());
         product.start();
+        testVars.setVariables("token", keyCloakSteps.getToken());
         product.stopHard();
+        testVars.setVariables("token", keyCloakSteps.getToken());
         product.delete();
     }
 
     static Stream<Arguments> dataProviderMethod() {
         return Stream.of(
-                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build())
-                //Arguments.arguments(RabbitMq.builder().env("TEST").segment("TEST-SRV-SYNT").dataCentre("5").platform("VMware vSphere").build())
+                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
+                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
+                Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("12").build()),
+                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("11").build())
         );
     }
 }

@@ -1,6 +1,7 @@
 package models.orderService.interfaces;
 
 import core.CacheService;
+import static org.junit.Assert.*;
 import steps.orderService.OrderServiceSteps;
 
 public interface IProduct {
@@ -43,5 +44,13 @@ public interface IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
+    default void expand_mount_point() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        int sizeBefore = orderServiceSteps.getExpandMountSize(this);
+        String actionId = orderServiceSteps.executeAction("Расширить", "{\"size\": 10, \"mount\": \"/app\"}", this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        int sizeAfter = orderServiceSteps.getExpandMountSize(this);
+        assertTrue(sizeBefore<sizeAfter);
+    }
 
 }
