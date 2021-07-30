@@ -11,10 +11,9 @@ import static steps.Steps.titleInformationSystem;
 @DisplayName("Набор тестов по информационным ситсемам")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Order(200)
-@Tag("regress")
+@Tags({@Tag("regress")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class InformationSystem extends Tests {
-    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     PortalBackSteps portalBackSteps = new PortalBackSteps();
 
 
@@ -23,7 +22,6 @@ public class InformationSystem extends Tests {
     @DisplayName("Получение информационной системы")
     @Description("Получение информационной системы с сохранением в Shared Memory")
     public void getInformationSystem() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         portalBackSteps.getInfoSys(titleInformationSystem);
     }
 

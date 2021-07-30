@@ -69,8 +69,7 @@ public class CacheService {
             return this;
         }
 
-
-        public synchronized <T extends Entity> T getEntity() {
+        public synchronized <T extends Entity> T getEntityWithoutAssert() {
             for (String shareDataElement : entities.values()) {
                 JsonObject jsonObject = JsonParser.parseString(shareDataElement).getAsJsonObject();
                 String className = jsonObject.get("objectClassName").getAsString();
@@ -105,8 +104,14 @@ public class CacheService {
                         return (T) e;
                 }
             }
-            Assert.assertTrue("Невозможно получить " + c.getName() + " с параметрами: " + new JSONObject(fields).toString(), false);
             return null;
+        }
+
+        public synchronized <T extends Entity> T getEntity() {
+            Entity e = getEntityWithoutAssert();
+            if(e == null)
+                Assert.assertTrue("Невозможно получить " + c.getName() + " с параметрами: " + new JSONObject(fields).toString(), false);
+            return (T) e;
         }
     }
 

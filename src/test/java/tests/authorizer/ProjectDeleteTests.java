@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectDeleteTests extends Tests {
-    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     ProjectSteps projectSteps = new ProjectSteps();
 
     @ParameterizedTest
@@ -26,7 +25,6 @@ public class ProjectDeleteTests extends Tests {
     @DisplayName("Удаление проекта")
     @Description("Удаление проекта с сохранением в Shared Memory")
     public void deleteDepartmentBlock(String env) {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         projectSteps.deleteProject(env);
     }
 

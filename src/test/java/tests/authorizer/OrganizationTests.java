@@ -13,7 +13,6 @@ import tests.Tests;
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class OrganizationTests extends Tests {
-    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();
 
 
@@ -22,7 +21,6 @@ public class OrganizationTests extends Tests {
     @DisplayName("Получение организации")
     @Description("Получение организации с сохранением в Shared Memory")
     public void createProject() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         authorizerSteps.getOrgName("ВТБ");
     }
 

@@ -12,7 +12,6 @@ import tests.Tests;
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountCreateTest extends Tests {
-    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     AccountSteps accountCreate = new AccountSteps();
 
     @Test
@@ -20,7 +19,6 @@ public class AccountCreateTest extends Tests {
     @DisplayName("Создание счета для папки Бизнес блок")
     @Description("Создание счета папки Бизнес блок с сохранением в Shared Memory")
     public void createAccountBusinessBlock() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         accountCreate.createAccount("BUSINESS_FOLDER");
     }
 
@@ -29,7 +27,6 @@ public class AccountCreateTest extends Tests {
     @DisplayName("Создание счета для папки Департамент")
     @Description("Создание счета папки Департамент с сохранением в Shared Memory")
     public void createAccountDepartment() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         accountCreate.createAccount("DEPARTMENT_FOLDER");
     }
 
@@ -38,17 +35,31 @@ public class AccountCreateTest extends Tests {
     @DisplayName("Создание счета для папки")
     @Description("Создание счета папки с сохранением в Shared Memory")
     public void createAccount() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         accountCreate.createAccount("FOLDER");
     }
 
     @Test
     @Order(4)
-    @DisplayName("Перевод денег с VTB на дочерний счет папки")
-    @Description("Перевод денег с VTB на дочерний счет папки")
+    @DisplayName("Перевод денег со счета организации на счет папки Бизнес блок")
+    @Description("Перевод денег со счета организации на счет папки Бизнес блок")
+    public void transferMoneyFromAccountToBusinessBlock() {
+        accountCreate.transferMoneyFromOrganizationToFolder("ВТБ", "BUSINESS_FOLDER", "1000.00");
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Перевод денег со счета папки Бизнес блок на счет папки Департамент")
+    @Description("Перевод денег со счета папки Бизнес блок на счет папки Департамент")
+    public void transferMoneyFromAccountToDepartment() {
+        accountCreate.transferMoneyFromFolderToFolder("BUSINESS_FOLDER", "DEPARTMENT_FOLDER", "1000.00");
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Перевод денег со счета папки Департамент на счет папки")
+    @Description("Перевод денег со счета папки Департамент на счет папки")
     public void transferMoneyFromAccountToFolder() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
-        accountCreate.transferMoneyFromAccountToFolder("vtb", "FOLDER", "25000.00");
+        accountCreate.transferMoneyFromFolderToFolder("DEPARTMENT_FOLDER","FOLDER", "1000.00");
     }
 
 }
