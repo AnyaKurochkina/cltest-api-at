@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectCreateTests extends Tests {
-    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     ProjectSteps projectSteps = new ProjectSteps();
 
     @ParameterizedTest
@@ -26,7 +25,6 @@ public class ProjectCreateTests extends Tests {
     @MethodSource("dataFolders")
     @Description("Создание проекта с сохранением в Shared Memory")
     public void createProject(String env) {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         projectSteps.createProject("FOLDER", "PROJECT_"+env, env);
     }
 

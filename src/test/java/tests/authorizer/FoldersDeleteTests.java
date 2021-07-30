@@ -12,7 +12,6 @@ import tests.Tests;
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FoldersDeleteTests extends Tests {
-    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();
 
     @Test
@@ -20,7 +19,6 @@ public class FoldersDeleteTests extends Tests {
     @DisplayName("Удаление Папки")
     @Description("Удаление Папки с сохранением в Shared Memory")
     public void deleteFolder() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         authorizerSteps.deleteFolder("default", "FOLDER");
     }
 
@@ -29,7 +27,6 @@ public class FoldersDeleteTests extends Tests {
     @DisplayName("Удаление Департамента")
     @Description("Удаление Департамента с сохранением в Shared Memory")
     public void deleteDepartmentBlock() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         authorizerSteps.deleteFolder("department", "DEPARTMENT_FOLDER");
     }
 
@@ -38,7 +35,6 @@ public class FoldersDeleteTests extends Tests {
     @DisplayName("Удаление Бизнес-блока")
     @Description("Удаление Бизнес-блока с измениенемм состояния в Shared Memory")
     public void deleteBusinessBlock() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         authorizerSteps.deleteFolder("business_block", "BUSINESS_FOLDER");
     }
 }

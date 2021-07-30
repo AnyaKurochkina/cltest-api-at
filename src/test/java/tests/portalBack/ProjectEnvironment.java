@@ -14,10 +14,9 @@ import java.util.stream.Stream;
 @DisplayName("Получение среды назначения")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Order(400)
-@Tag("regress")
+@Tags({@Tag("regress")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectEnvironment extends Tests {
-    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     PortalBackSteps portalBackSteps = new PortalBackSteps();
 
 
@@ -27,7 +26,6 @@ public class ProjectEnvironment extends Tests {
     @DisplayName("Получение среды назначения")
     @Description("Получение среды назначения с сохранением в Shared Memory")
     public void getProjectEnv(String env) {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         portalBackSteps.getProjectEnv(env);
     }
 

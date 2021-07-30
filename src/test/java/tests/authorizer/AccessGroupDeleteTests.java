@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccessGroupDeleteTests extends Tests {
-    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
 
     @ParameterizedTest
@@ -26,7 +25,6 @@ public class AccessGroupDeleteTests extends Tests {
     @DisplayName("Удаление Группы доступа")
     @Description("Удаление Группы доступа")
     public void deleteAccessGroup(String env) {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         accessGroupSteps.deleteAccessGroup(env);
     }
 

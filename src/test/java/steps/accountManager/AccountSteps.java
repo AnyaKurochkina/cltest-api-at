@@ -45,8 +45,23 @@ public class AccountSteps extends Steps {
 
     }
 
+    @Step("Перевод со счета организации {sourceContext} на счет папки {targetContext} суммы {amount}")
+    public void transferMoneyFromOrganizationToFolder(String org, String targetContext, String amount) {
+        Organization organization = cacheService.entity(Organization.class)
+                .setField("title", org)
+                .getEntity();
+        transferMoneyFromAccountToFolder(organization.name, targetContext, amount);
+    }
+
     @Step("Перевод со счета {sourceContext} на счет папки {targetContext} проекта {amount}")
-    public void transferMoneyFromAccountToFolder(String sourceContext, String targetContext, String amount) {
+    public void transferMoneyFromFolderToFolder(String sourceContext, String targetContext, String amount) {
+        Folder folder = cacheService.entity(Folder.class)
+                .setField("name", sourceContext)
+                .getEntity();
+        transferMoneyFromAccountToFolder(folder.id, targetContext, amount);
+    }
+
+    private void transferMoneyFromAccountToFolder(String sourceContext, String targetContext, String amount) {
         Folder folder = cacheService.entity(Folder.class)
                 .setField("name", targetContext)
                 .getEntity();

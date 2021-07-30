@@ -68,6 +68,7 @@ public class AuthorizerSteps extends Steps {
         String orgName = jsonPath.get(String.format("data.find{it.title=='%s'}.name", orgTitle));
         Organization organization = Organization.builder()
                 .name(orgName)
+                .title(orgTitle)
                 .build();
         cacheService.saveEntity(organization);
     }

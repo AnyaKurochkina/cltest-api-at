@@ -3,14 +3,11 @@ package steps.orderService;
 import core.exception.CustomException;
 import core.helper.*;
 import core.utils.Waiting;
-import core.vars.LocalThead;
-import core.vars.TestVars;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -21,8 +18,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import static core.helper.JsonHelper.shareData;
 
 @Log4j2
 //TODO: Актуализировать класс
@@ -40,6 +35,7 @@ public class OrderServiceSteps extends Steps {
             Waiting.sleep(120000);
 
             orderStatus = new Http(URL)
+                    .setProjectId(product.getProjectId())
                     .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()
@@ -76,6 +72,7 @@ public class OrderServiceSteps extends Steps {
         log.info("Отправка запроса на выполнение действия - " + action);
 
         JsonPath response = new Http(URL)
+                .setProjectId(product.getProjectId())
                 .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"), template)
                 .assertStatus(200)
                 .jsonPath();
@@ -93,6 +90,7 @@ public class OrderServiceSteps extends Steps {
             Waiting.sleep(60000);
             try {
                 action_status = new Http(URL)
+                        .setProjectId(product.getProjectId())
                         .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id)
                         .jsonPath().get("status");
             } catch (JsonPathException e) {
@@ -113,6 +111,7 @@ public class OrderServiceSteps extends Steps {
     public Map<String,String> getItemIdByOrderId(String action, IProduct product) {
         log.info("Получение item_id для " + action);
         JsonPath jsonPath = new Http(URL)
+                .setProjectId(product.getProjectId())
                 .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .jsonPath();
 

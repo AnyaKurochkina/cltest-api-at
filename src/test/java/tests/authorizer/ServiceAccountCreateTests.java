@@ -5,27 +5,28 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import steps.authorizer.AccessGroupSteps;
+import steps.authorizer.ProjectSteps;
+import steps.authorizer.ServiceAccountSteps;
 import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
 import java.util.stream.Stream;
 
-@DisplayName("Набор тестов по группам доступа")
+@DisplayName("Набор тестов по сервисным аккаунтам")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Order(600)
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AccessGroupCreateTests extends Tests {
-    AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
+public class ServiceAccountCreateTests extends Tests {
+    ServiceAccountSteps serviceAccountSteps = new ServiceAccountSteps();
 
     @ParameterizedTest
-    @MethodSource("dataEnv")
     @Order(1)
-    @DisplayName("Создание Группы доступа")
-    @Description("Создание Группы доступа с сохранением в Shared Memory")
-    public void createBusinessBlock(String env) {
-        accessGroupSteps.createAccessGroup("PROJECT_"+env, "access_group");
+    @DisplayName("Создание сервисного аккаунта")
+    @MethodSource("dataEnv")
+    @Description("Создание сервисного аккаунта с сохранением в Shared Memory")
+    public void createServiceAccount(String env) {
+        serviceAccountSteps.createServiceAccount("PROJECT_"+env);
     }
 
     static Stream<Arguments> dataEnv() {
@@ -33,3 +34,6 @@ public class AccessGroupCreateTests extends Tests {
     }
 
 }
+
+
+

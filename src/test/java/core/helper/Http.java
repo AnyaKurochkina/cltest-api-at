@@ -3,10 +3,13 @@ package core.helper;
 import core.vars.LocalThead;
 import core.vars.TestVars;
 import io.restassured.path.json.JsonPath;
+import models.authorizer.Project;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import steps.keyCloak.KeyCloakSteps;
+
 
 import javax.net.ssl.*;
 import java.io.InputStream;
@@ -28,7 +31,9 @@ public class Http {
     private String path;
     private String body = "";
     private String method;
+    private String token = "";
     private String contentType = "application/json";
+    private boolean isUsedToken = true;
 
     static {
         try {
@@ -96,14 +101,18 @@ public class Http {
         return patch(path);
     }
 
-    public HttpResponse post(String path, String bodyFormUrlencoded) {
-        this.body = bodyFormUrlencoded;
-        contentType = "application/x-www-form-urlencoded";
-        return post(path);
+    public Http setContentType(String contentType) {
+        this.contentType = contentType;
+        return this;
     }
 
     public HttpResponse post(String path, JSONObject body) {
         this.body = body.toJSONString();
+        return post(path);
+    }
+
+    public HttpResponse post(String path, String body) {
+        this.body = body;
         return post(path);
     }
 
@@ -113,9 +122,15 @@ public class Http {
         return request();
     }
 
-    private String getBearerToken() {
-        TestVars testVars = LocalThead.getTestVars();
-        return "bearer " + testVars.getVariable("token");
+    public Http setProjectId(String projectId) {
+        KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
+        this.token = "bearer " + keyCloakSteps.getServiceAccountToken(projectId);
+        return this;
+    }
+
+    public Http setWithoutToken() {
+        isUsedToken = false;
+        return this;
     }
 
     private HttpResponse request() {
@@ -125,8 +140,15 @@ public class Http {
             URLConnection connection = url.openConnection();
             HttpURLConnection http = (HttpURLConnection) connection;
             http.setRequestProperty("Content-Type", contentType);
-            if (getBearerToken().length() > 10)
-                http.setRequestProperty("Authorization", getBearerToken());
+            if(isUsedToken) {
+                if (token.length() > 0)
+                    http.setRequestProperty("Authorization", token);
+                else {
+                    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
+                    token = "bearer " + keyCloakSteps.getUserToken();
+                    http.setRequestProperty("Authorization", token);
+                }
+            }
             http.setDoOutput(true);
             http.setRequestMethod(method);
             if (body.length() > 0) {
