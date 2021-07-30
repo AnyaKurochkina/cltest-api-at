@@ -31,10 +31,7 @@ public class AuthorizerSteps extends Steps {
         ShareData.put("orgName", orgName);
     }
 
-    @Test
-    public void test() {
-        System.out.println();
-    }
+
 
     @Step("Получение информационных систем")
     public void getInfoSys(String sysName) {

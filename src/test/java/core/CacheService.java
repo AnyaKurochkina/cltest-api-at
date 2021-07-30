@@ -47,7 +47,6 @@ public class CacheService {
                 listEntities.forEach(v ->{
                     entities.put((String) v.get("objectUid"), new JSONObject(v).toString());
                 });
-                System.out.println(1);
             }
         } catch (Exception e) {
             e.printStackTrace();

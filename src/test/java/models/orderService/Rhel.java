@@ -4,6 +4,7 @@ import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
 import lombok.extern.log4j.Log4j2;
+import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.Entity;
 import models.orderService.interfaces.IProduct;
@@ -16,10 +17,11 @@ public class Rhel extends Entity implements IProduct {
     public String segment;
     public String dataCentre;
     public String platform;
+    public String osVersion;
     public String orderId;
     public String projectId;
     @Builder.Default
-    public String product = "Rhel";
+    public String productName = "Rhel";
     @Builder.Default
     public String status = "NOT_CREATED";
     @Builder.Default
@@ -28,19 +30,25 @@ public class Rhel extends Entity implements IProduct {
     @Override
     public void order() {
         JsonHelper jsonHelper = new JsonHelper();
-        Project project = cacheService.entity(Project.class).setField("env", env).getEntity();
+        Project project = cacheService.entity(Project.class)
+                .setField("env", env)
+                .getEntity();
+        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
+                .setField("projectName", project.id)
+                .getEntity();
         projectId = project.id;
-        log.info("Отправка запроса на создание заказа для " + product);
-        JsonPath array = jsonHelper.getJsonTemplate("/orders/" + product.toLowerCase() + ".json")
+        log.info("Отправка запроса на создание заказа для " + productName);
+        JsonPath array = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.os_version", osVersion)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .send(OrderServiceSteps.URL)
                 .post("order-service/api/v1/projects/" + project.id + "/orders")
                 .assertStatus(201)
                 .jsonPath();
-        //orderId = (String) ((JSONObject) array.get(0)).get("order_id");
         orderId = array.get("[0].id");
 
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
@@ -54,6 +62,11 @@ public class Rhel extends Entity implements IProduct {
     @Override
     public String getOrderId(){
         return orderId;
+    }
+
+    @Override
+    public String getProductName(){
+        return productName;
     }
 
     @Override
