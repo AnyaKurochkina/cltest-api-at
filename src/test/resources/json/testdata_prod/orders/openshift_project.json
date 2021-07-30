@@ -1,0 +1,24 @@
+{
+  "order": {
+    "project_name": "proj-xn1jqdw75z",
+    "product_id": "10000003-1111-2222-b9dc-4a9e5dafd44e",
+    "attrs": {
+      "quota": {
+        "cpu": 1,
+        "memory": 1
+      },
+      "roles": [
+        {
+          "role": "edit",
+          "groups": [
+            "cloud-d5plux-vtb4050213"
+          ]
+        }
+      ],
+      "user_mark": "namename",
+      "resource_pool_id": "e5b4d171-1cbb-4b93-8c98-79836c11ce67"
+    },
+    "count": 1,
+    "label": "OpenShift project"
+  }
+}
