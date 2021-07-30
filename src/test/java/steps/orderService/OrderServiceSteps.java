@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Log4j2
-//TODO: Актуализировать класс
 public class OrderServiceSteps extends Steps {
     public static final String URL = Configurier.getInstance().getAppProp("host_kong");
 
@@ -29,11 +28,11 @@ public class OrderServiceSteps extends Steps {
     public void checkOrderStatus(String exp_status, IProduct product) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
         String orderStatus = "";
-        int counter = 10;
+        int counter = 40;
 
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
-            Waiting.sleep(120000);
+            Waiting.sleep(30000);
 
             orderStatus = new Http(URL)
                     .setProjectId(product.getProjectId())
@@ -70,6 +69,7 @@ public class OrderServiceSteps extends Steps {
         log.info("Отправка запроса на выполнение действия - " + action);
 
         JsonPath response = new Http(URL)
+                .setProjectId(product.getProjectId())
                 .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"), template)
                 .assertStatus(200)
                 .jsonPath();
@@ -112,10 +112,10 @@ public class OrderServiceSteps extends Steps {
     public void checkActionStatus(String exp_status, IProduct product, String action_id) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
         String action_status = "";
-        int counter = 10;
+        int counter = 20;
         log.info("Проверка статуса выполнения действия");
         while ((action_status.equals("pending") || action_status.equals("")) && counter > 0) {
-            Waiting.sleep(60000);
+            Waiting.sleep(30000);
             try {
                 action_status = new Http(URL)
                         .setProjectId(product.getProjectId())
@@ -153,6 +153,7 @@ public class OrderServiceSteps extends Steps {
         int size;
         log.info("Получение количества точек монтирования");
         size = new Http(URL)
+                .setProjectId(product.getProjectId())
                 .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
                 .jsonPath()
