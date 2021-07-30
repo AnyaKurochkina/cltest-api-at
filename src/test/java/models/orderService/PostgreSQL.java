@@ -50,6 +50,7 @@ public class PostgreSQL extends Entity implements IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .send(OrderServiceSteps.URL)
+                .setProjectId(project.id)
                 .post("order-service/api/v1/projects/" + project.id + "/orders")
                 .assertStatus(201)
                 .jsonPath();

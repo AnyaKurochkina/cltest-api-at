@@ -10,6 +10,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import steps.Steps;
 import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
@@ -27,28 +28,21 @@ public class OrderTest extends Tests {
     @MethodSource("dataProviderMethod")
     public void order(IProduct product) {
         KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
-        testVars.setVariables("token", keyCloakSteps.getToken());
         product.order();
-        testVars.setVariables("token", keyCloakSteps.getToken());
         product.expand_mount_point();
-        testVars.setVariables("token", keyCloakSteps.getToken());
         product.reset();
-        testVars.setVariables("token", keyCloakSteps.getToken());
         product.stopSoft();
-        testVars.setVariables("token", keyCloakSteps.getToken());
         product.start();
-        testVars.setVariables("token", keyCloakSteps.getToken());
         product.stopHard();
-        testVars.setVariables("token", keyCloakSteps.getToken());
         product.delete();
     }
 
     static Stream<Arguments> dataProviderMethod() {
         return Stream.of(
                 Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
-                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
+                //Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
                 Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
-                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("12").build()),
+                //Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("12").build()),
                 Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("11").build())
         );
     }

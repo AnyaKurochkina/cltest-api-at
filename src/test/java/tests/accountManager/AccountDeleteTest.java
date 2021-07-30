@@ -12,7 +12,6 @@ import tests.Tests;
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountDeleteTest extends Tests {
-    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     AccountSteps accountSteps = new AccountSteps();
 
     @Test
@@ -20,7 +19,6 @@ public class AccountDeleteTest extends Tests {
     @DisplayName("Удаление счета для папки")
     @Description("Удаление счета папки")
     public void DeleteAccount() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         accountSteps.deleteAccount("FOLDER");
     }
 
@@ -29,7 +27,6 @@ public class AccountDeleteTest extends Tests {
     @DisplayName("Удаление счета для папки Department")
     @Description("Удаление счета папки Департамент")
     public void DeleteAccountDepartment() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         accountSteps.deleteAccount("DEPARTMENT_FOLDER");
     }
 
@@ -38,7 +35,6 @@ public class AccountDeleteTest extends Tests {
     @DisplayName("Удаление счета для папки Business block")
     @Description("Удаление счета папки Бизнес блок")
     public void DeleteAccountBusinessBlock() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         accountSteps.deleteAccount("BUSINESS_FOLDER");
     }
 

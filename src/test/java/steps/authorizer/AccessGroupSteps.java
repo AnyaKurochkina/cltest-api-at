@@ -11,8 +11,6 @@ import models.authorizer.Project;
 import steps.Steps;
 import models.authorizer.Project;
 
-import java.util.Random;
-
 @Log4j2
 public class AccessGroupSteps extends Steps {
     private static final String URL = Configurier.getInstance().getAppProp("host_kong");

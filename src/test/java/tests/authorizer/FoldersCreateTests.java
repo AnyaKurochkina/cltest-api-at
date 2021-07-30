@@ -12,7 +12,6 @@ import tests.Tests;
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FoldersCreateTests extends Tests {
-    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();
 
     @Test
@@ -20,7 +19,6 @@ public class FoldersCreateTests extends Tests {
     @DisplayName("Создание Бизнес-блока")
     @Description("Создание Бизнес-блока с сохранением в Shared Memory")
     public void createBusinessBlock() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         authorizerSteps.createFolder("business_block", "vtb", "BUSINESS_FOLDER");
     }
 
@@ -29,7 +27,6 @@ public class FoldersCreateTests extends Tests {
     @DisplayName("Создание Департамента")
     @Description("Создание Департамента с сохранением в Shared Memory")
     public void createDepartmentBlock() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         authorizerSteps.createFolder("department", "BUSINESS_FOLDER", "DEPARTMENT_FOLDER");
     }
 
@@ -38,7 +35,6 @@ public class FoldersCreateTests extends Tests {
     @DisplayName("Создание Папки")
     @Description("Создание Папки с сохранением в Shared Memory")
     public void createFolder() {
-        testVars.setVariables("token", keyCloakSteps.getToken());
         authorizerSteps.createFolder("default", "DEPARTMENT_FOLDER", "FOLDER");
     }
 
