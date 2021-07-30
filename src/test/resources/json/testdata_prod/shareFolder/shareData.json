@@ -1,0 +1,48 @@
+[
+    {
+        "objectClassName": "models.authorizer.ServiceAccount",
+        "objectUid": "4087706b-e9b7-48ef-969d-000000000001",
+        "secret": "f61c3c33c97b1b4b9304a1c633feec42",
+        "name": "sa_proj-ti717c4xdp-3h",
+        "projectId": "proj-ti717c4xdp"
+    },
+    {
+        "objectClassName": "models.authorizer.ServiceAccount",
+        "objectUid": "4087706b-e9b7-48ef-969d-000000000002",
+        "secret": "055ccc260665396914f0274ded7cac9a",
+        "name": "sa_proj-hnsmiuaqg2-3i",
+        "projectId": "proj-hnsmiuaqg2"
+    },
+    {
+        "objectClassName": "models.authorizer.Project",
+        "isDeleted": false,
+        "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+        "objectUid": "4087706b-e9b7-48ef-969d-000000000003",
+        "id": "proj-ti717c4xdp",
+        "projectName": "PROJECT_DEV",
+        "env": "DEV"
+    },
+    {
+        "objectClassName": "models.authorizer.Project",
+        "isDeleted": false,
+        "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+        "objectUid": "4087706b-e9b7-48ef-969d-000000000004",
+        "id": "proj-hnsmiuaqg2",
+        "projectName": "PROJECT_TEST",
+        "env": "TEST"
+    },
+    {
+        "objectClassName": "models.authorizer.AccessGroup",
+        "name": "cloud-d5zorg-proj-ti717c4xdp",
+        "isDeleted": false,
+        "projectName": "proj-ti717c4xdp",
+        "objectUid": "4087706b-e9b7-48ef-969d-000000000005"
+    },
+    {
+        "objectClassName": "models.authorizer.AccessGroup",
+        "name": "cloud-ifzorg-proj-hnsmiuaqg2",
+        "isDeleted": false,
+        "projectName": "proj-hnsmiuaqg2",
+        "objectUid": "4087706b-e9b7-48ef-969d-000000000006"
+    }
+]
