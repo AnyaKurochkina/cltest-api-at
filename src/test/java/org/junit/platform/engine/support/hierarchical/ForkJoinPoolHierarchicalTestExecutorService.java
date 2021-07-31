@@ -5,28 +5,27 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import java.lang.Thread.UncaughtExceptionHandler;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
-import java.util.function.Predicate;
-
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 import org.junit.jupiter.api.Order;
-import org.junit.jupiter.engine.descriptor.*;
+import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
+import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
-import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
+
+import java.lang.Thread.UncaughtExceptionHandler;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.function.Predicate;
 
 @API(
         status = Status.EXPERIMENTAL,
