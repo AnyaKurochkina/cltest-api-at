@@ -1,16 +1,16 @@
 package tests.order;
 
 import models.orderService.PostgreSQL;
-import models.orderService.interfaces.IProduct;
 import models.orderService.RabbitMq;
+import models.orderService.Redis;
 import models.orderService.Rhel;
+import models.orderService.interfaces.IProduct;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import steps.Steps;
 import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
@@ -40,6 +40,7 @@ public class OrderTest extends Tests {
     static Stream<Arguments> dataProviderMethod() {
         return Stream.of(
                 Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
+                Arguments.arguments(Redis.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
                 //Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
                 Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
                 //Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("12").build()),
