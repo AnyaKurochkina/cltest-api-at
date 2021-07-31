@@ -10,19 +10,19 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import steps.orderService.OrderServiceSteps;
 
-import static org.junit.Assert.assertTrue;
-
 @Log4j2
 @Builder
-public class Redis extends Entity implements IProduct {
+public class ApacheKafka extends Entity implements IProduct{
+
 
     String env;
     String segment;
     String dataCentre;
     String platform;
     String orderId;
+    String kafkaVersion;
     @Builder.Default
-    String productName = "Redis";
+    String productName = "Apache_Kafka";
     @Builder.Default
     public String status = "NOT_CREATED";
     @Builder.Default
@@ -62,6 +62,8 @@ public class Redis extends Entity implements IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.kafka_version", kafkaVersion)
+//                .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .send(OrderServiceSteps.URL)
                 .setProjectId(project.id)
@@ -100,28 +102,22 @@ public class Redis extends Entity implements IProduct {
 
     @Override
     public void delete() {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        IProduct.super.delete();
     }
 
     @Override
     public void expand_mount_point() {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        int sizeBefore = orderServiceSteps.getExpandMountSize(this);
-        String actionId = orderServiceSteps.executeAction("Расширить", "{\"size\": 10, \"mount\": \"/app/redis/data\"}", this);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
-        int sizeAfter = orderServiceSteps.getExpandMountSize(this);
-        assertTrue(sizeBefore<sizeAfter);
+        IProduct.super.expand_mount_point();
     }
 
     @Override
     public String toString() {
-        return "Redis {" +
+        return "Apache_Kafka {" +
                 "env='" + env + '\'' +
                 ", segment='" + segment + '\'' +
                 ", dataCentre='" + dataCentre + '\'' +
                 ", platform='" + platform + '\'' +
+                ", kafka_Version" + kafkaVersion + '\'' +
                 '}';
     }
 }
