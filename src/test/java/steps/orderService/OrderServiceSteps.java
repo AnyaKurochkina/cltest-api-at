@@ -79,7 +79,6 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Выполнить действие - {action}")
     public String executeAction(String action, String dataString, IProduct product) {
-        String datafolder = Configurier.getInstance().getAppProp("data.folder");
         JSONParser parser = new JSONParser();
         Object data = null;
         try {
@@ -89,7 +88,7 @@ public class OrderServiceSteps extends Steps {
         }
         Object obj = null;
         try {
-            obj = parser.parse(new FileReader(datafolder + "/actions/template.json"));
+            obj = parser.parse(new FileReader(dataFolder + "/actions/template.json"));
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

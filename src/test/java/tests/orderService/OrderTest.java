@@ -1,5 +1,6 @@
-package tests.order;
+package tests.orderService;
 
+import models.orderService.OpenShiftProject;
 import models.orderService.PostgreSQL;
 import models.orderService.RabbitMq;
 import models.orderService.Redis;
@@ -27,24 +28,33 @@ public class OrderTest extends Tests {
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
     @MethodSource("dataProviderMethod")
     public void order(IProduct product) {
-        KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
         product.order();
-        product.expand_mount_point();
-        product.reset();
-        product.stopSoft();
-        product.start();
-        product.stopHard();
-        product.delete();
+        switch (product.getClass().getSimpleName()){
+            case "OpenShiftProject":
+                ((OpenShiftProject) product).changeProject();
+                ((OpenShiftProject) product).deleteProject();
+                break;
+            default:
+                product.expand_mount_point();
+                product.reset();
+                product.stopSoft();
+                product.start();
+                product.stopHard();
+                product.delete();
+                break;
+        }
     }
 
     static Stream<Arguments> dataProviderMethod() {
         return Stream.of(
                 Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
                 Arguments.arguments(Redis.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+                Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolId("e5b4d171-1cbb-4b93-8c98-79836c11ce67").build())
+                //Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
                 //Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
-                Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+                //Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
                 //Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("12").build()),
-                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("11").build())
+                //Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("11").build())
         );
     }
 }
