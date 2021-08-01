@@ -60,6 +60,13 @@ public class Nginx extends Entity implements IProduct {
     }
 
     @Override
+    public void delete() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+    }
+
+    @Override
     public String getOrderId() {
         return orderId;
     }
