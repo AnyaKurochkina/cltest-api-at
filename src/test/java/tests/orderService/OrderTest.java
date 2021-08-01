@@ -24,13 +24,22 @@ public class OrderTest extends Tests {
     @MethodSource("dataProviderMethod")
     public void order(IProduct product) {
         product.order();
-
         switch (product.getClass().getSimpleName()){
             case "OpenShiftProject":
                 ((OpenShiftProject) product).changeProject();
                 ((OpenShiftProject) product).deleteProject();
                 break;
             case "Windows":
+                product.reset();
+                product.stopSoft();
+                product.resize();
+                product.start();
+                product.stopHard();
+                product.delete();
+                break;
+            case "Redis":
+            case "PostgreSQL":
+                product.expand_mount_point();
                 product.reset();
                 product.stopSoft();
                 product.start();
@@ -41,6 +50,7 @@ public class OrderTest extends Tests {
                 product.expand_mount_point();
                 product.reset();
                 product.stopSoft();
+                product.resize();
                 product.start();
                 product.stopHard();
                 product.delete();
@@ -49,13 +59,13 @@ public class OrderTest extends Tests {
 
     static Stream<Arguments> dataProviderMethod() {
         return Stream.of(
-                //Arguments.arguments(Nginx.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+                //Arguments.arguments(Nginx.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build())//,
                 //Arguments.arguments(Windows.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("Microsoft Windows Server 2019").build()),
-                Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("ds0-bank01 - Demo").build())
+                //Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("ds0-bank01 - Demo").build())
                 //Arguments.arguments(Redis.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
                 //Arguments.arguments(ApacheKafka.builder().env("DEV").kafkaVersion("2.13-2.4.1").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
                 //Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolId("e5b4d171-1cbb-4b93-8c98-79836c11ce67").build()),
-                //Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
+                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build())//,
                 //Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
                 //Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
                 //Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("12").build()),

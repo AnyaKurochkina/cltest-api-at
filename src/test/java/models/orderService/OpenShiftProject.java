@@ -99,6 +99,11 @@ public class OpenShiftProject extends Entity implements IProduct {
     }
 
     @Override
+    public String getEnv() {
+        return env;
+    }
+
+    @Override
     public String toString() {
         return productName+" {" +
                 "env='" + env + '\'' +

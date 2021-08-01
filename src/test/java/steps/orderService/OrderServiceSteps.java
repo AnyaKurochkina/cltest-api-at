@@ -7,21 +7,15 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
+import models.authorizer.InformationSystem;
+import models.orderService.interfaces.IProduct;
 import models.authorizer.Project;
 import models.orderService.ResourcePool;
-import models.orderService.interfaces.IProduct;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONArray;
 import org.junit.Assert;
-import org.junit.jupiter.api.Test;
 import steps.Steps;
 import stepsOld.StateServiceSteps;
-
-
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +54,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Выполнить действие - {action}")
     public String executeAction(String action, IProduct product) {
         Map<String, String> map = getItemIdByOrderId(action, product);
+        log.info("Отправка запроса на выполнение действия - " + action);
         return jsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", map.get("item_id"))
                 .send(URL)
@@ -72,7 +67,8 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Выполнить действие с блоком data - {action}")
     public String executeAction(String action, String dataString, IProduct product) {
-        Map<String, String> map = getItemIdByOrderId(action, product);
+        Map<String,String> map = getItemIdByOrderId(action, product);
+        log.info("Отправка запроса на выполнение действия - " + action);
         return jsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", map.get("item_id"))
                 .set("$.order.data", new JSONObject(dataString))
@@ -112,6 +108,64 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
+    /*@Test
+    public void test(){
+        String URL = "https://ift-kong-service.apps.d0-oscp.corp.dev.vtb/";
+        JsonPath jsonPath  = new Http(URL)
+                .setProjectId("proj-xazpppulba")
+                .get("references/api/v1/pages/?directory__name=flavors&tags=" + "c422069e-8f01-4328-b9dc-4a9e5dafd44e")
+                .assertStatus(200)
+                .jsonPath();
+
+        System.out.println("get resp " + jsonPath);
+        JSONObject obj = jsonPath.get("[1]");
+        System.out.println("get resp num 1 " + obj);
+    }*/
+
+    public Map<String,String> getFlavorByProduct(IProduct product) {
+        log.info("Получение id продукта для продукта " + product.getProductName());
+        InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();
+        String product_id = "";
+        int total_count = new Http(URL)
+                .setProjectId(product.getProjectId())
+                .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=1&per_page=100", product.getEnv().toLowerCase(), informationSystem.id))
+                .assertStatus(200)
+                .jsonPath()
+                .get("meta.total_count");
+
+        int countOfIteration = total_count/ 100 + 1;
+        for (int i = 1; i<=countOfIteration; i++) {
+            product_id = new Http(URL)
+                    .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=%s&per_page=100", product.getEnv().toLowerCase(), informationSystem.id, i))
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get(String.format("list.find{it.title.contains('%s') || it.title.contains('%s') || it.title.contains('%s')}.id", product.getProductName().toLowerCase(), product.getProductName().toUpperCase(), product.getProductName()));
+            if(product_id != null)
+                log.info("Id продукта = " + product_id);
+                break;
+        }
+
+        JsonPath jsonPath  = new Http(URL)
+                .get("references/api/v1/pages/?directory__name=flavors&tags=" + product_id)
+                .assertStatus(200)
+                .jsonPath();
+
+
+        /*JSONArray jsonArray  = new Http(URL)
+                .get("references/api/v1/pages/?directory__name=flavors&tags=" + product_id)
+                .assertStatus(200)
+                .toJsonArray();
+
+        int i = jsonArray.get()*/
+
+        String flavor = String.format("{\"flavor\":{\"cpus\":%s,\"name\":\"%s\",\"uuid\":\"%s\",\"memory\":%s}}", jsonPath.get("[1].data.cpus"), jsonPath.get("[1].name"), jsonPath.get("[1].id"), jsonPath.get("[1].data.memory"));
+        Map<String,String> map = new HashMap<>();
+        map.put("cpus", Integer.toString(jsonPath.get("[1].data.cpus")));
+        map.put("memory", Integer.toString(jsonPath.get("[1].data.memory")));
+        map.put("flavor", flavor);
+        return map;
+    }
+
     public Map<String, String> getItemIdByOrderId(String action, IProduct product) {
         log.info("Получение item_id для " + action);
         JsonPath jsonPath = new Http(URL)
@@ -145,8 +199,6 @@ public class OrderServiceSteps extends Steps {
                     .build();
             cacheService.saveEntity(resourcePool);
         }
-
-
     }
 
     public Comparable getFiledProduct(IProduct product, String path) {

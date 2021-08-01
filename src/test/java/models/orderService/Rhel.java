@@ -76,6 +76,11 @@ public class Rhel extends Entity implements IProduct {
     }
 
     @Override
+    public String getEnv() {
+        return env;
+    }
+
+    @Override
     public String toString() {
         return "Rhel {" +
                 "env='" + env + '\'' +

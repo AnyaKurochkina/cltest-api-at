@@ -40,7 +40,6 @@
       ]
     },
     "count": 1,
-    "label": "Apache Kafka",
-    "graph_version": "1.0.37"
+    "label": "Apache Kafka"
   }
 }

@@ -76,6 +76,11 @@ public class Windows extends Entity implements IProduct {
     }
 
     @Override
+    public String getEnv() {
+        return env;
+    }
+
+    @Override
     public String toString() {
         return "Windows {" +
                 "env='" + env + '\'' +
