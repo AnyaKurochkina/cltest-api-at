@@ -1,33 +1,61 @@
 package core.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.Option;
+import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
+import com.jayway.jsonpath.spi.json.JsonProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
+import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import core.vars.TestVars;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static junit.framework.TestCase.fail;
-import static stepsOld.Steps.dataFolder;
+import static steps.Steps.dataFolder;
 
 @Log4j2
 @Data
 public class JsonHelper {
 
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, String>> allTests = new ConcurrentHashMap<String, ConcurrentHashMap<String, String>>();
+    static {
+        Configuration.setDefaults(new Configuration.Defaults() {
+
+            private final JsonProvider jsonProvider = new JsonOrgJsonProvider();
+            private final MappingProvider mappingProvider = new JacksonMappingProvider();
+
+            @Override
+            public JsonProvider jsonProvider() {
+                return jsonProvider;
+            }
+
+            @Override
+            public MappingProvider mappingProvider() {
+                return mappingProvider;
+            }
+
+            @Override
+            public Set<Option> options() {
+                return EnumSet.noneOf(Option.class);
+            }
+        });
+    }
+
+
+        private ConcurrentHashMap<String, ConcurrentHashMap<String, String>> allTests = new ConcurrentHashMap<String, ConcurrentHashMap<String, String>>();
     public ConcurrentHashMap<String, String> testValues = new ConcurrentHashMap<String, String>();
     public volatile static ConcurrentHashMap<String, String> shareData = new ConcurrentHashMap<>();
     volatile static ReadWriteLock lock = new ReentrantReadWriteLock();
@@ -39,14 +67,12 @@ public class JsonHelper {
         } catch (org.json.simple.parser.ParseException | IOException e) {
             e.printStackTrace();
         }
-        TestVars.setLastJsonData(jsonObject);
+        //TestVars.setLastJsonData(jsonObject);
     }
 
     public static void readFileFromPath(String fileName, String catalogPath) {
 
         String fullPath = catalogPath.trim() + "/" + fileName.trim();
-
-        log.info("пользователь читает файл " + fullPath);
         if ("JSON".equals(FilenameUtils.getExtension(fullPath).toUpperCase()))
             readJsonFileWithPath(fullPath);
     }
@@ -143,7 +169,7 @@ public class JsonHelper {
         }
         try {
             lock.writeLock().lock();
-            DataFileHelper.write(filePath, jsonObject.toJSONString());
+            DataFileHelper.write(filePath, jsonObject.toString());
             lock.writeLock().unlock();
         } catch (Exception ex) {
             lock.writeLock().unlock();
@@ -174,9 +200,7 @@ public class JsonHelper {
 
     public JSONObject getJsonFromFile(String file) {
         try {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(new FileReader(dataFolder + file));
-            return (JSONObject) obj;
+            return new JSONObject(getStringFromFile(file));
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new Error(ex.getMessage());

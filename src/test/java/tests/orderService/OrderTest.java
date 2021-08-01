@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @Order(650)
-@Tags({@Tag("regress"), @Tag("orders")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
 public class OrderTest extends Tests {
 
     @ParameterizedTest
@@ -26,18 +26,26 @@ public class OrderTest extends Tests {
         product.order();
         product.stopSoft();
         product.resize();
-        /*if (product.getClass().getSimpleName().equals("OpenShiftProject")) {
-            ((OpenShiftProject) product).changeProject();
-            ((OpenShiftProject) product).deleteProject();
-        } else {
-            if (!product.getClass().getSimpleName().equals("Windows")){
+
+        /*switch (product.getClass().getSimpleName()){
+            case "OpenShiftProject":
+                ((OpenShiftProject) product).changeProject();
+                ((OpenShiftProject) product).deleteProject();
+                break;
+            case "Windows":
+                product.reset();
+                product.stopSoft();
+                product.start();
+                product.stopHard();
+                product.delete();
+                break;
+            default:
                 product.expand_mount_point();
-            }
-            product.reset();
-            product.stopSoft();
-            product.start();
-            product.stopHard();
-            product.delete();
+                product.reset();
+                product.stopSoft();
+                product.start();
+                product.stopHard();
+                product.delete();
         }*/
     }
 
@@ -45,10 +53,10 @@ public class OrderTest extends Tests {
         return Stream.of(
                 //Arguments.arguments(Nginx.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
                 //Arguments.arguments(Windows.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("Microsoft Windows Server 2019").build()),
-                //Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolId("e5b4d171-1cbb-4b93-8c98-79836c11ce67").build()),
+                //Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("ds0-bank01 - Demo").build())
                 //Arguments.arguments(Redis.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
                 //Arguments.arguments(ApacheKafka.builder().env("DEV").kafkaVersion("2.13-2.4.1").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
-                //Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolId("e5b4d171-1cbb-4b93-8c98-79836c11ce67").build())
+                //Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolId("e5b4d171-1cbb-4b93-8c98-79836c11ce67").build()),
                 Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build())//,
                 //Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
                 //Arguments.arguments(RabbitMq.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),

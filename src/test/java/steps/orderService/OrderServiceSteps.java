@@ -12,8 +12,14 @@ import models.authorizer.InformationSystem;
 import models.orderService.interfaces.IProduct;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import models.authorizer.Project;
+import models.orderService.ResourcePool;
+import models.orderService.interfaces.IProduct;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import steps.Steps;
 import stepsOld.StateServiceSteps;
@@ -28,7 +34,6 @@ import java.util.Map;
 public class OrderServiceSteps extends Steps {
     public static final String URL = Configurier.getInstance().getAppProp("host_kong");
 
-   // @Step("Статус заказа - {status}")
     public void checkOrderStatus(String exp_status, IProduct product) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
         String orderStatus = "";
@@ -58,41 +63,32 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Выполнить действие - {action}")
-    public String executeAction(String action, IProduct product){
-        Map<String,String> map = getItemIdByOrderId(action, product);
+    public String executeAction(String action, IProduct product) {
+        Map<String, String> map = getItemIdByOrderId(action, product);
         log.info("Отправка запроса на выполнение действия - " + action);
-        JsonPath response = jsonHelper.getJsonTemplate("/actions/template.json")
+        return jsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", map.get("item_id"))
-                .send(OrderServiceSteps.URL)
+                .send(URL)
                 .setProjectId(product.getProjectId())
                 .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"))
                 .assertStatus(200)
-                .jsonPath();
-
-        return response.get("action_id");
+                .jsonPath()
+                .get("action_id");
     }
 
-    @Step("Выполнить действие - {action}")
+    @Step("Выполнить действие с блоком data - {action}")
     public String executeAction(String action, String dataString, IProduct product) {
-        JSONParser parser = new JSONParser();
-        Object data = null;
-        try {
-            data = parser.parse(dataString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         Map<String,String> map = getItemIdByOrderId(action, product);
         log.info("Отправка запроса на выполнение действия - " + action);
-        JsonPath response = jsonHelper.getJsonTemplate("/actions/template.json")
+        return jsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", map.get("item_id"))
-                .set("$.order.data", data)
-                .send(OrderServiceSteps.URL)
+                .set("$.order.data", new JSONObject(dataString))
+                .send(URL)
                 .setProjectId(product.getProjectId())
                 .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"))
                 .assertStatus(200)
-                .jsonPath();
-
-        return response.get("action_id");
+                .jsonPath()
+                .get("action_id");
     }
 
     @Step("Статус выполнения последнего действия - {exp_status}")
@@ -181,29 +177,52 @@ public class OrderServiceSteps extends Steps {
         return map;
     }
 
-    public Map<String,String> getItemIdByOrderId(String action, IProduct product) {
+    public Map<String, String> getItemIdByOrderId(String action, IProduct product) {
         log.info("Получение item_id для " + action);
         JsonPath jsonPath = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .jsonPath();
 
-        Map<String,String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map.put("item_id", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action)));
         map.put("name", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action)));
         return map;
     }
 
-    public int getExpandMountSize(IProduct product) {
-        int size;
-        log.info("Получение количества точек монтирования");
-        size = new Http(URL)
+    @Step("Получение списка ресурсных пулов для категории {category} и среды {env}")
+    public void getResourcesPool(String category, String env) {
+        Project project = cacheService.entity(Project.class)
+                .setField("env", env)
+                .getEntity();
+        JSONObject jsonObject = new Http(URL)
+                .setProjectId(project.id)
+                .get(String.format("order-service/api/v1/products/resource_pools?category=%s&project_name=%s", category, project.id))
+                .assertStatus(200)
+                .toJson();
+        JSONArray jsonArray = (JSONArray) jsonObject.get("list");
+        for(Object object : jsonArray){
+            JSONObject j = (JSONObject) object;
+            ResourcePool resourcePool = ResourcePool.builder()
+                    .id(j.getString("id"))
+                    .label(j.getString("label"))
+                    .projectId(project.id)
+                    .build();
+            cacheService.saveEntity(resourcePool);
+        }
+    }
+
+    public Comparable getFiledProduct(IProduct product, String path) {
+        Comparable s;
+        log.info("getFiledProduct path: " + path);
+        JsonPath jsonPath = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
-                .jsonPath()
-                .get("data.find{it.type=='vm'}.config.extra_disks.size()");
-        log.info(String.format("Количество дисков %s", size));
-        return size;
+                .jsonPath();
+        s = jsonPath.get(path);
+        log.info(String.format("getFiledProduct return: %s", s));
+        Assert.assertNotNull("По path '" + path + "' не найден объект в response " + jsonPath.prettify(), s);
+        return s;
     }
 }
