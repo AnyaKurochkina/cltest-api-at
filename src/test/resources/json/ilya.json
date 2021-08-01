@@ -1,61 +1,203 @@
 {
-  "list": [
-    {
-      "id": "92f2acb2-aa33-4317-9352-dc1553e0097f",
-      "created_at": "2021-01-14T10:01:43+03:00",
-      "updated_at": "2021-01-14T10:01:43+03:00",
-      "environment_type": "TEST",
-      "name": "IFT",
-      "purpose": "Интеграционно-функциональное тестирование",
-      "organization": "vtb"
+  "id": "9f18659f-10bd-4368-b55b-71716be78999",
+  "created_at": "2021-08-01T12:41:46+03:00",
+  "updated_at": "2021-08-01T12:41:49+03:00",
+  "attrs": {
+    "quota": {
+      "cpu": 1,
+      "memory": 1
     },
-    {
-      "id": "cb5d8517-e150-4957-8192-62016b09d928",
-      "created_at": "2021-01-14T10:01:44+03:00",
-      "updated_at": "2021-01-14T10:01:44+03:00",
-      "environment_type": "TEST",
-      "name": "PREPROD",
-      "purpose": "Регрессионное тестирование релизов",
-      "organization": "vtb"
+    "roles": [
+      {
+        "role": "edit",
+        "groups": [
+          "cloud-d2plux-access_groupoe6tnief1903"
+        ]
+      }
+    ],
+    "folder": "fold-456ks80urq",
+    "creator": {
+      "id": "0617f6c7-d214-4020-bbae-e86064a2dc44",
+      "email": "portal_admin@test.vtb",
+      "lastname": "Admin",
+      "username": "portal_admin",
+      "firstname": "Тестовый Админ"
     },
+    "user_mark": "7777hjhj",
+    "account_id": "85dcbb9b-b2f5-4247-8d66-b72745d7c189",
+    "project_path": "/organization/vtb/folder/fold-3mjmru4kg1/folder/fold-4qn73gpzqg/folder/fold-456ks80urq/project/proj-xazpppulba/",
+    "graph_version": "1.0.21",
+    "preview_items": [
+      {
+        "type": "project",
+        "state": "on",
+        "config": {
+          "uuid": "INOUT",
+          "quota": {
+            "cpu": 1,
+            "memory": 1
+          },
+          "roles": [
+            {
+              "role": "edit",
+              "groups": [
+                "cloud-d2plux-access_groupoe6tnief1903"
+              ]
+            }
+          ],
+          "cluster": {
+            "name": "ds0-bank01",
+            "uuid": "e5b4d171-1cbb-4b93-8c98-79836c11ce67",
+            "label": "ds0-bank01 - Demo",
+            "api_url": "https://api.demo.ocp.corp.dev.vtb:6443",
+            "segment": "demo",
+            "role_edit": "admin",
+            "project_url_prefix": "https://console-openshift-console.apps.demo.ocp.corp.dev.vtb/k8s/cluster/projects",
+            "container_cpu_ratio": "16",
+            "container_memory_ratio": "8"
+          },
+          "environment": "DSO",
+          "project_url": "INOUT",
+          "project_name": "INOUT",
+          "environment_type": "DEV"
+        },
+        "item_id": "17fb9a91-2e9c-4ea7-9015-bd4a6a61c9fd",
+        "subtype": "state",
+        "provider": "openshift"
+      }
+    ],
+    "product_title": "OpenShift project",
+    "tariff_plan_id": "78aa42b0-3f6b-4317-bda7-66bba923ce40",
+    "resource_pool_id": "e5b4d171-1cbb-4b93-8c98-79836c11ce67",
+    "organization_name": "vtb",
+    "environment_prefix_id": "2636779e-2ddc-4446-8cc4-ae1a71a23cd1",
+    "information_system_id": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "project_environment_id": "395a0a01-e83a-4ede-80a5-7354f2a8db39"
+  },
+  "status": "success",
+  "label": "OpenShift project",
+  "category": "container",
+  "deletable": true,
+  "power_status": [],
+  "product_data": {
+    "project_name": "ds0-bank01-7777hjhj"
+  },
+  "project_name": "proj-xazpppulba",
+  "product_id": "10000003-1111-2222-b9dc-4a9e5dafd44e",
+  "data": [
     {
-      "id": "f6c7f7b2-9623-4eef-ba67-d09ba2a9a918",
-      "created_at": "2021-01-14T10:01:51+03:00",
-      "updated_at": "2021-01-14T10:01:51+03:00",
-      "environment_type": "TEST",
-      "name": "MIGR",
-      "purpose": "Миграционное тестирование",
-      "organization": "vtb"
-    },
-    {
-      "id": "395a0a01-e83a-4ede-80a5-7354f2a8db39",
-      "created_at": "2021-01-14T10:01:52+03:00",
-      "updated_at": "2021-01-14T10:01:52+03:00",
-      "environment_type": "DEV",
-      "name": "DSO",
-      "purpose": "DevOps services",
-      "organization": "vtb"
-    },
-    {
-      "id": "447044a8-00ae-486e-8e59-6136353ca4ce",
-      "created_at": "2021-01-14T10:01:52+03:00",
-      "updated_at": "2021-01-14T10:01:52+03:00",
-      "environment_type": "DEV",
-      "name": "DEV",
-      "purpose": "Серверы разработки ПО",
-      "organization": "vtb"
-    },
-    {
-      "id": "03eae29d-97cf-403a-93f8-2673aa1aead9",
-      "created_at": "2021-01-14T10:01:53+03:00",
-      "updated_at": "2021-01-14T10:01:53+03:00",
-      "environment_type": "PROD",
-      "name": "PROD",
-      "purpose": "Серверы в промышленной и опытно-промышленной эксплуатации. Основной контур.",
-      "organization": "vtb"
+      "item_id": "7d79a947-4cf4-47e2-ab46-e79e7b0e216d",
+      "actions": [
+        {
+          "id": "35f8cc00-7468-40ed-b235-d4f914936b16",
+          "graph_id": "00000009-8f01-4328-b9dc-4a9e5dafd44e",
+          "graph_version": "1.0.21",
+          "name": "update_openshift_project",
+          "title": "Изменить проект",
+          "description": "",
+          "icon": "",
+          "required_order_statuses": [
+            "success"
+          ],
+          "required_item_statuses": [
+            "on"
+          ],
+          "type": null,
+          "event_type": [
+            "project"
+          ],
+          "event_provider": [
+            "openshift"
+          ],
+          "data_config_path": null,
+          "data_config_key": null,
+          "data_config_fields": [
+            "quota",
+            "roles"
+          ],
+          "config_restriction": null,
+          "available_without_money": false,
+          "auto_removing_if_failed": false,
+          "skip_on_prebilling": false,
+          "graph_version_pattern": "",
+          "allowed_groups": [],
+          "restricted_groups": [],
+          "allowed_paths": [],
+          "restricted_paths": [],
+          "active": true
+        },
+        {
+          "id": "8c460646-2779-477f-aeda-c54339e7f74b",
+          "graph_id": "00000008-8f01-4328-b9dc-4a9e5dafd44e",
+          "graph_version": "1.0.14",
+          "name": "delete_openshift_project",
+          "title": "Удалить проект",
+          "description": "",
+          "icon": "",
+          "required_order_statuses": [
+            "success",
+            "damaged"
+          ],
+          "required_item_statuses": [
+            "on"
+          ],
+          "type": "delete",
+          "event_type": [
+            "project"
+          ],
+          "event_provider": [
+            "openshift"
+          ],
+          "data_config_path": null,
+          "data_config_key": null,
+          "data_config_fields": [],
+          "config_restriction": null,
+          "available_without_money": false,
+          "auto_removing_if_failed": false,
+          "skip_on_prebilling": false,
+          "graph_version_pattern": "",
+          "allowed_groups": [],
+          "restricted_groups": [],
+          "allowed_paths": [],
+          "restricted_paths": [],
+          "active": true
+        }
+      ],
+      "type": "project",
+      "config": {
+        "uuid": "7d79a947-4cf4-47e2-ab46-e79e7b0e216d",
+        "quota": {
+          "cpu": 1,
+          "memory": 1
+        },
+        "roles": [
+          {
+            "role": "edit",
+            "groups": [
+              "cloud-d2plux-access_groupoe6tnief1903"
+            ]
+          }
+        ],
+        "cluster": {
+          "name": "ds0-bank01",
+          "uuid": "e5b4d171-1cbb-4b93-8c98-79836c11ce67",
+          "label": "ds0-bank01 - Demo",
+          "api_url": "https://api.demo.ocp.corp.dev.vtb:6443",
+          "segment": "demo",
+          "role_edit": "admin",
+          "project_url_prefix": "https://console-openshift-console.apps.demo.ocp.corp.dev.vtb/k8s/cluster/projects",
+          "container_cpu_ratio": "16",
+          "container_memory_ratio": "8"
+        },
+        "environment": "DSO",
+        "project_url": "https://console-openshift-console.apps.demo.ocp.corp.dev.vtb/k8s/cluster/projects/ds0-bank01-7777hjhj",
+        "project_name": "ds0-bank01-7777hjhj",
+        "environment_type": "DEV"
+      },
+      "virtualization": null,
+      "state": "on"
     }
   ],
-  "meta": {
-    "total_count": 6
-  }
+  "data_center": null,
+  "net_segment": null
 }
