@@ -1,6 +1,5 @@
 package steps.orderService;
 
-import com.google.gson.JsonArray;
 import core.exception.CustomException;
 import core.helper.*;
 import core.utils.Waiting;
@@ -10,24 +9,14 @@ import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.InformationSystem;
 import models.orderService.interfaces.IProduct;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import models.authorizer.Project;
 import models.orderService.ResourcePool;
-import models.orderService.interfaces.IProduct;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONArray;
 import org.junit.Assert;
-import org.junit.jupiter.api.Test;
 import steps.Steps;
 import stepsOld.StateServiceSteps;
-
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -150,7 +139,7 @@ public class OrderServiceSteps extends Steps {
                     .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=%s&per_page=100", product.getEnv().toLowerCase(), informationSystem.id, i))
                     .assertStatus(200)
                     .jsonPath()
-                    .get(String.format("list.find{it.title.contains('%s') || it.title.contains('%s')}.id", product.getProductName().toLowerCase(), product.getProductName().toUpperCase()));
+                    .get(String.format("list.find{it.title.contains('%s') || it.title.contains('%s') || it.title.contains('%s')}.id", product.getProductName().toLowerCase(), product.getProductName().toUpperCase(), product.getProductName()));
             if(product_id != null)
                 log.info("Id продукта = " + product_id);
                 break;
@@ -171,8 +160,8 @@ public class OrderServiceSteps extends Steps {
 
         String flavor = String.format("{\"flavor\":{\"cpus\":%s,\"name\":\"%s\",\"uuid\":\"%s\",\"memory\":%s}}", jsonPath.get("[1].data.cpus"), jsonPath.get("[1].name"), jsonPath.get("[1].id"), jsonPath.get("[1].data.memory"));
         Map<String,String> map = new HashMap<>();
-        map.put("cpus", jsonPath.get("data.cpus"));
-        map.put("memory", jsonPath.get("data.memory"));
+        map.put("cpus", Integer.toString(jsonPath.get("[1].data.cpus")));
+        map.put("memory", Integer.toString(jsonPath.get("[1].data.memory")));
         map.put("flavor", flavor);
         return map;
     }

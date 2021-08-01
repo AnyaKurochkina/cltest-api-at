@@ -8,7 +8,11 @@ import java.util.Map;
 
 public interface IProduct {
     CacheService cacheService = new CacheService();
+
     public static String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
+    public static String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
+    public static String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
+
     public String getOrderId();
 
     public String getProjectId();
@@ -53,6 +57,10 @@ public interface IProduct {
         Map<String, String> map = orderServiceSteps.getFlavorByProduct(this);
         String actionId = orderServiceSteps.executeAction("Изменить конфигурацию", map.get("flavor"), this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
+        int cpusAfter = (Integer) orderServiceSteps.getFiledProduct(this, CPUS);
+        int memoryAfter = (Integer) orderServiceSteps.getFiledProduct(this, MEMORY);
+        assertEquals(Integer.parseInt(map.get("cpus")), cpusAfter);
+        assertEquals(Integer.parseInt(map.get("memory")), memoryAfter);
     }
 
     default void expand_mount_point() {

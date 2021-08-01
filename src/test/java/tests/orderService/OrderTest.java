@@ -24,15 +24,22 @@ public class OrderTest extends Tests {
     @MethodSource("dataProviderMethod")
     public void order(IProduct product) {
         product.order();
-        product.stopSoft();
-        product.resize();
-
-        /*switch (product.getClass().getSimpleName()){
+        switch (product.getClass().getSimpleName()){
             case "OpenShiftProject":
                 ((OpenShiftProject) product).changeProject();
                 ((OpenShiftProject) product).deleteProject();
                 break;
             case "Windows":
+                product.reset();
+                product.stopSoft();
+                product.resize();
+                product.start();
+                product.stopHard();
+                product.delete();
+                break;
+            case "Redis":
+            case "PostgreSQL":
+                product.expand_mount_point();
                 product.reset();
                 product.stopSoft();
                 product.start();
@@ -43,15 +50,16 @@ public class OrderTest extends Tests {
                 product.expand_mount_point();
                 product.reset();
                 product.stopSoft();
+                product.resize();
                 product.start();
                 product.stopHard();
                 product.delete();
-        }*/
+        }
     }
 
     static Stream<Arguments> dataProviderMethod() {
         return Stream.of(
-                //Arguments.arguments(Nginx.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+                //Arguments.arguments(Nginx.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build())//,
                 //Arguments.arguments(Windows.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("Microsoft Windows Server 2019").build()),
                 //Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("ds0-bank01 - Demo").build())
                 //Arguments.arguments(Redis.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
