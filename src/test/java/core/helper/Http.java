@@ -1,13 +1,9 @@
 package core.helper;
 
-import core.vars.LocalThead;
-import core.vars.TestVars;
 import io.restassured.path.json.JsonPath;
-import models.authorizer.Project;
 import org.apache.commons.io.IOUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import steps.keyCloak.KeyCloakSteps;
 
 
@@ -22,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -70,7 +67,7 @@ public class Http {
 
     public Http(String host, JSONObject body) {
         this.host = host;
-        this.body = body.toJSONString();
+        this.body = body.toString();
     }
 
     public HttpResponse get(String path) {
@@ -97,7 +94,7 @@ public class Http {
     }
 
     public HttpResponse patch(String path, JSONObject body) {
-        this.body = body.toJSONString();
+        this.body = body.toString();
         return patch(path);
     }
 
@@ -107,7 +104,7 @@ public class Http {
     }
 
     public HttpResponse post(String path, JSONObject body) {
-        this.body = body.toJSONString();
+        this.body = body.toString();
         return post(path);
     }
 
@@ -140,6 +137,7 @@ public class Http {
             URLConnection connection = url.openConnection();
             HttpURLConnection http = (HttpURLConnection) connection;
             http.setRequestProperty("Content-Type", contentType);
+            http.setRequestProperty("Host", url.getHost());
             if(isUsedToken) {
                 if (token.length() > 0)
                     http.setRequestProperty("Authorization", token);
@@ -188,7 +186,7 @@ public class Http {
 
         public JSONObject toJson() {
             try {
-                return (JSONObject) new JSONParser().parse(response);
+                return (JSONObject) new JSONObject(response);
             } catch (Exception e) {
                 throw new Error(e.getMessage());
             }
@@ -196,7 +194,7 @@ public class Http {
 
         public JSONArray toJsonArray() {
             try {
-                return (JSONArray) new JSONParser().parse(response);
+                return (JSONArray) new JSONArray(response);
             } catch (Exception e) {
                 throw new Error(e.getMessage());
             }

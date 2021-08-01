@@ -2,7 +2,7 @@ package core.helper;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Predicate;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 public class JsonTemplate {
     JSONObject template;

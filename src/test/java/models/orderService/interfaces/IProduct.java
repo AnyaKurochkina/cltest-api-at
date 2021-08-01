@@ -6,7 +6,7 @@ import steps.orderService.OrderServiceSteps;
 
 public interface IProduct {
     CacheService cacheService = new CacheService();
-
+    public static String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
     public String getOrderId();
 
     public String getProjectId();
@@ -46,10 +46,10 @@ public interface IProduct {
 
     default void expand_mount_point() {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        int sizeBefore = orderServiceSteps.getExpandMountSize(this);
+        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         String actionId = orderServiceSteps.executeAction("Расширить", "{\"size\": 10, \"mount\": \"/app\"}", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
-        int sizeAfter = orderServiceSteps.getExpandMountSize(this);
+        int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore<sizeAfter);
     }
 

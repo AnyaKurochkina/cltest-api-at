@@ -9,6 +9,7 @@ import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Role;
+import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.*;
@@ -17,7 +18,7 @@ import java.util.*;
 @Builder
 public class OpenShiftProject extends Entity implements IProduct {
     public String env;
-    public String resourcePoolId;
+    public String resourcePoolLabel;
     public String orderId;
     public String projectId;
     @Builder.Default
@@ -38,10 +39,15 @@ public class OpenShiftProject extends Entity implements IProduct {
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .setField("projectName", project.id)
                 .getEntity();
+
+        ResourcePool resourcePool = cacheService.entity(ResourcePool.class)
+                .setField("label", resourcePoolLabel)
+                .getEntity();
+
         projectId = project.id;
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = jsonHelper.getJsonTemplate("/orders/openshift_project.json")
-                .set("$.order.attrs.resource_pool_id", resourcePoolId)
+                .set("$.order.attrs.resource_pool_id", resourcePool.id)
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.user_mark", "openshift"+ new Random().nextInt())
@@ -67,6 +73,8 @@ public class OpenShiftProject extends Entity implements IProduct {
         String actionId = orderServiceSteps.executeAction("Изменить проект", data, this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
         cacheService.saveEntity(this);
+        Assert.assertEquals(orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.memory"), 2);
+        Assert.assertEquals(orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.roles[0].role"), "view");
     }
 
     public void deleteProject() {
@@ -94,7 +102,7 @@ public class OpenShiftProject extends Entity implements IProduct {
     public String toString() {
         return productName+" {" +
                 "env='" + env + '\'' +
-                ", resourcePoolId='" + resourcePoolId + '\'' +
+                ", resourcePoolLable='" + resourcePoolLabel + '\'' +
                 '}';
     }
 }
