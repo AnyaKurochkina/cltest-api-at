@@ -82,6 +82,11 @@ public class Nginx extends Entity implements IProduct {
     }
 
     @Override
+    public String getEnv() {
+        return env;
+    }
+
+    @Override
     public String toString() {
         return "Nginx {" +
                 "env='" + env + '\'' +

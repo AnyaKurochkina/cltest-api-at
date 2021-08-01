@@ -33,6 +33,7 @@ public class Http {
     private String method;
     private String token = "";
     private String contentType = "application/json";
+    private String accept = "application/json, text/plain, */*";
     private boolean isUsedToken = true;
 
     static {
@@ -140,6 +141,7 @@ public class Http {
             URLConnection connection = url.openConnection();
             HttpURLConnection http = (HttpURLConnection) connection;
             http.setRequestProperty("Content-Type", contentType);
+            http.setRequestProperty("Accept", accept);
             if(isUsedToken) {
                 if (token.length() > 0)
                     http.setRequestProperty("Authorization", token);

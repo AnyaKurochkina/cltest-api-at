@@ -46,6 +46,11 @@ public class ApacheKafka extends Entity implements IProduct{
     }
 
     @Override
+    public String getEnv() {
+        return env;
+    }
+
+    @Override
     public void order() {
         final JsonHelper jsonHelper = new JsonHelper();
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();

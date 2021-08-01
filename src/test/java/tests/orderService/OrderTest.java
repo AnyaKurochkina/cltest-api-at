@@ -24,18 +24,21 @@ public class OrderTest extends Tests {
     @MethodSource("dataProviderMethod")
     public void order(IProduct product) {
         product.order();
-        if (product.getClass().getSimpleName().equals("OpenShiftProject")) {
+        product.stopSoft();
+        product.resize();
+        /*if (product.getClass().getSimpleName().equals("OpenShiftProject")) {
             ((OpenShiftProject) product).changeProject();
             ((OpenShiftProject) product).deleteProject();
-        } else if (!product.getClass().getSimpleName().equals("Windows")){
-            product.expand_mount_point();
         } else {
+            if (!product.getClass().getSimpleName().equals("Windows")){
+                product.expand_mount_point();
+            }
             product.reset();
             product.stopSoft();
             product.start();
             product.stopHard();
             product.delete();
-        }
+        }*/
     }
 
     static Stream<Arguments> dataProviderMethod() {

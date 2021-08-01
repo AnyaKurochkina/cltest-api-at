@@ -4,6 +4,8 @@ import core.CacheService;
 import static org.junit.Assert.*;
 import steps.orderService.OrderServiceSteps;
 
+import java.util.Map;
+
 public interface IProduct {
     CacheService cacheService = new CacheService();
 
@@ -12,6 +14,8 @@ public interface IProduct {
     public String getProjectId();
 
     public String getProductName();
+
+    public String getEnv();
 
     public void order();
 
@@ -41,6 +45,13 @@ public interface IProduct {
     default void delete() {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         String actionId = orderServiceSteps.executeAction("Удалить", this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+    }
+
+    default void resize() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        Map<String, String> map = orderServiceSteps.getFlavorByProduct(this);
+        String actionId = orderServiceSteps.executeAction("Изменить конфигурацию", map.get("flavor"), this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 

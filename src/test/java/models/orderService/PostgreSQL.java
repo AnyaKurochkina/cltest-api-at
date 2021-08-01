@@ -97,6 +97,11 @@ public class PostgreSQL extends Entity implements IProduct {
     }
 
     @Override
+    public String getEnv() {
+        return env;
+    }
+
+    @Override
     public String toString() {
         return "PostgreSQL {" +
                 "env='" + env + '\'' +

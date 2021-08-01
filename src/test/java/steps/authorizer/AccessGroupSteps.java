@@ -9,7 +9,6 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import steps.Steps;
-import models.authorizer.Project;
 
 @Log4j2
 public class AccessGroupSteps extends Steps {
