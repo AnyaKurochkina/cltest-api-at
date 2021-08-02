@@ -15,7 +15,7 @@ public class ServiceAccountSteps extends Steps {
     @Step("Создание сервисного аккаунта в проекте {projectName}")
     public void createServiceAccount(String projectName) {
         Project project = cacheService.entity(Project.class)
-                .setField("projectName", projectName)
+                .withField("projectName", projectName)
                 .getEntity();
 
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/authorizer/service_accounts.json")
@@ -36,10 +36,10 @@ public class ServiceAccountSteps extends Steps {
     @Step("Удаление сервисного аккаунта в проекте {projectName}")
     public void deleteServiceAccount(String projectName) {
         Project project = cacheService.entity(Project.class)
-                .setField("projectName", projectName)
+                .withField("projectName", projectName)
                 .getEntity();
         ServiceAccount serviceAccount = cacheService.entity(ServiceAccount.class)
-                .setField("projectId", project.id)
+                .withField("projectId", project.id)
                 .getEntity();
         new Http(URL)
                 .delete(String.format("authorizer/api/v1/projects/%s/service_accounts/%s", project.id, serviceAccount.name))

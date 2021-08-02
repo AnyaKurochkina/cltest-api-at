@@ -1,14 +1,11 @@
 package tests.orderService;
 
-import models.orderService.OpenShiftProject;
-import models.orderService.interfaces.IProduct;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import steps.authorizer.AuthorizerSteps;
 import steps.orderService.OrderServiceSteps;
 import tests.Tests;
 

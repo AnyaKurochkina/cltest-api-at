@@ -20,7 +20,7 @@ public class AccountSteps extends Steps {
     public void createAccount(String folderName) {
         log.info("Изменение базового шаблона запроса при создании счета папки с типом: " + folderName);
         Folder folder = cacheService.entity(Folder.class)
-                .setField("name", folderName)
+                .withField("name", folderName)
                 .getEntity();
 
         String accountId = jsonHelper.getJsonTemplate("/accountmanager/accountTemplate.json")
@@ -48,7 +48,7 @@ public class AccountSteps extends Steps {
     @Step("Перевод со счета организации {sourceContext} на счет папки {targetContext} суммы {amount}")
     public void transferMoneyFromOrganizationToFolder(String org, String targetContext, String amount) {
         Organization organization = cacheService.entity(Organization.class)
-                .setField("title", org)
+                .withField("title", org)
                 .getEntity();
         transferMoneyFromAccountToFolder(organization.name, targetContext, amount);
     }
@@ -56,14 +56,14 @@ public class AccountSteps extends Steps {
     @Step("Перевод со счета {sourceContext} на счет папки {targetContext} проекта {amount}")
     public void transferMoneyFromFolderToFolder(String sourceContext, String targetContext, String amount) {
         Folder folder = cacheService.entity(Folder.class)
-                .setField("name", sourceContext)
+                .withField("name", sourceContext)
                 .getEntity();
         transferMoneyFromAccountToFolder(folder.id, targetContext, amount);
     }
 
     private void transferMoneyFromAccountToFolder(String sourceContext, String targetContext, String amount) {
         Folder folder = cacheService.entity(Folder.class)
-                .setField("name", targetContext)
+                .withField("name", targetContext)
                 .getEntity();
         String sourceAccountId = getAccountIdByContext(sourceContext);
         String targetAccountId = getAccountIdByContext(folder.id);
@@ -105,10 +105,10 @@ public class AccountSteps extends Steps {
     public void deleteAccount(String folderName) {
         Organization organization = cacheService.entity(Organization.class).getEntity();
         Folder folder = cacheService.entity(Folder.class)
-                .setField("name", folderName)
+                .withField("name", folderName)
                 .getEntity();
         Account account = cacheService.entity(Account.class)
-                .setField("folderId", folder.id)
+                .withField("folderId", folder.id)
                 .getEntity();
         log.info(String.format("Удаление счета %s для папки %s", account.accountId, folder.id));
         JsonPath jsonPath = new Http(URL)

@@ -1,4 +1,4 @@
-package tests.keyCloak;
+package tests.KeyCloak;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;

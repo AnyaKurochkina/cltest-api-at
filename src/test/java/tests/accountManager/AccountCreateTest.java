@@ -1,4 +1,4 @@
-package tests.accountManager;
+package tests.AccountManager;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;

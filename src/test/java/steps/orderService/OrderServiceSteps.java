@@ -10,7 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.InformationSystem;
 import models.orderService.interfaces.IProduct;
 import models.authorizer.Project;
-import models.orderService.ResourcePool;
+import models.orderService.products.ResourcePool;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.junit.Assert;
@@ -182,7 +182,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Получение списка ресурсных пулов для категории {category} и среды {env}")
     public void getResourcesPool(String category, String env) {
         Project project = cacheService.entity(Project.class)
-                .setField("env", env)
+                .withField("env", env)
                 .getEntity();
         JSONObject jsonObject = new Http(URL)
                 .setProjectId(project.id)

@@ -1,7 +1,8 @@
 package tests.orderService;
 
-import models.orderService.*;
 import models.orderService.interfaces.IProduct;
+import models.orderService.products.OpenShiftProject;
+import models.orderService.products.Rhel;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;

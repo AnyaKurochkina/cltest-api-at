@@ -23,6 +23,7 @@ import java.security.cert.X509Certificate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+@Deprecated
 public class HttpOld {
     private final String host;
     private String path;

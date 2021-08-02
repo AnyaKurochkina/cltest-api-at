@@ -64,7 +64,7 @@ public class CacheService {
     public class EntityObject {
         Map<String, Comparable> fields = new HashMap<>();
 
-        public EntityObject setField(String field, Comparable value) {
+        public EntityObject withField(String field, Comparable value) {
             fields.put(field, value);
             return this;
         }

@@ -1,4 +1,4 @@
-package tests.authorizer;
+package tests.Authorizer;
 
 
 import io.qameta.allure.Description;

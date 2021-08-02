@@ -15,8 +15,8 @@ public class AuthorizerSteps extends Steps {
         Folder parentFolder = null;
         if (!parentName.equalsIgnoreCase("vtb")) {
             parentFolder = ((Folder) cacheService.entity(Folder.class)
-                    .setField("name", parentName)
-                    .setField("isDeleted", false)
+                    .withField("name", parentName)
+                    .withField("isDeleted", false)
                     .getEntity());
         }
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/structure/create_folder.json")
@@ -46,9 +46,9 @@ public class AuthorizerSteps extends Steps {
     @Step("Удаление папки типа {folderType} с именем {name}")
     public void deleteFolder(String folderType, String name) {
         Folder folder = cacheService.entity(Folder.class)
-                .setField("type", folderType)
-                .setField("name", name)
-                .setField("isDeleted", false)
+                .withField("type", folderType)
+                .withField("name", name)
+                .withField("isDeleted", false)
                 .getEntity();
 
         new Http(URL)
