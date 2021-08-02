@@ -23,6 +23,7 @@ public class PostgreSQL extends Entity implements IProduct {
     public String postgresql_version;
     public String orderId;
     public String projectId;
+    public String productId;
     @Builder.Default
     public String productName = "PostgreSQL";
     @Builder.Default
@@ -99,6 +100,11 @@ public class PostgreSQL extends Entity implements IProduct {
     @Override
     public String getEnv() {
         return env;
+    }
+
+    @Override
+    public String getProductId() {
+        return productId;
     }
 
     @Override

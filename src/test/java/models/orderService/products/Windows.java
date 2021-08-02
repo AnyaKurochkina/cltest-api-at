@@ -20,6 +20,7 @@ public class Windows extends Entity implements IProduct {
     public String osVersion;
     public String orderId;
     public String projectId;
+    public String productId;
     @Builder.Default
     public String productName = "Windows";
     @Builder.Default
@@ -78,6 +79,11 @@ public class Windows extends Entity implements IProduct {
     @Override
     public String getEnv() {
         return env;
+    }
+
+    @Override
+    public String getProductId() {
+        return productId;
     }
 
     @Override

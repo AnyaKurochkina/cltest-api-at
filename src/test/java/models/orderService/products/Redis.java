@@ -16,11 +16,12 @@ import static org.junit.Assert.assertTrue;
 @Builder
 public class Redis extends Entity implements IProduct {
 
-    String env;
-    String segment;
-    String dataCentre;
-    String platform;
-    String orderId;
+    public String env;
+    public String segment;
+    public String dataCentre;
+    public String platform;
+    public String orderId;
+    public String productId;
     @Builder.Default
     String productName = "Redis";
     @Builder.Default
@@ -51,6 +52,11 @@ public class Redis extends Entity implements IProduct {
     }
 
     @Override
+    public String getProductId() {
+        return productId;
+    }
+
+    @Override
     public void order() {
         final JsonHelper jsonHelper = new JsonHelper();
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
@@ -61,8 +67,11 @@ public class Redis extends Entity implements IProduct {
                 .withField("projectName", project.id)
                 .getEntity();
         projectId = project.id;
+        productId = orderServiceSteps.getProductId(this);
+
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
+                .set("$.order.product_id", productId)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
@@ -81,26 +90,6 @@ public class Redis extends Entity implements IProduct {
 
         status = "CREATED";
         cacheService.saveEntity(this);
-    }
-
-    @Override
-    public void reset() {
-        IProduct.super.reset();
-    }
-
-    @Override
-    public void stopHard() {
-        IProduct.super.stopHard();
-    }
-
-    @Override
-    public void stopSoft() {
-        IProduct.super.stopSoft();
-    }
-
-    @Override
-    public void start() {
-        IProduct.super.start();
     }
 
     @Override

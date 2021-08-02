@@ -21,6 +21,7 @@ public class OpenShiftProject extends Entity implements IProduct {
     public String resourcePoolLabel;
     public String orderId;
     public String projectId;
+    public String productId;
     @Builder.Default
     public List<Role> roles = new ArrayList<>();
     @Builder.Default
@@ -101,6 +102,11 @@ public class OpenShiftProject extends Entity implements IProduct {
     @Override
     public String getEnv() {
         return env;
+    }
+
+    @Override
+    public String getProductId() {
+        return productId;
     }
 
     @Override
