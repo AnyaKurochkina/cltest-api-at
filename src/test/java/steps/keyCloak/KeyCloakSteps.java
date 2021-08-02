@@ -9,7 +9,6 @@ import models.authorizer.User;
 import models.keyCloak.Service;
 import models.keyCloak.ServiceAccountToken;
 import models.keyCloak.UserToken;
-import steps.Steps;
 
 public class KeyCloakSteps {
     private static final String URL = Configurier.getInstance().getAppProp("host_kk");
@@ -52,10 +51,10 @@ public class KeyCloakSteps {
     @Step("Получение ServiceAccountToken")
     public static synchronized String getServiceAccountToken(String projectId) {
         ServiceAccount serviceAccount = cacheService.entity(ServiceAccount.class)
-                .setField("projectId", projectId)
+                .withField("projectId", projectId)
                 .getEntity();
         ServiceAccountToken serviceAccountToken = cacheService.entity(ServiceAccountToken.class)
-                .setField("serviceAccountName", serviceAccount.name)
+                .withField("serviceAccountName", serviceAccount.name)
                 .getEntityWithoutAssert();
         long currentTime  = System.currentTimeMillis() / 1000L;
         if(serviceAccountToken == null){

@@ -20,8 +20,8 @@ public class ProjectSteps extends Steps {
     @Step("Создание проекта в папке {folderName} с названием {projectName}")
     public void createProject(String folderName, String projectName, String env) {
         Folder folder = cacheService.entity(Folder.class)
-                .setField("name", folderName)
-                .setField("isDeleted", false)
+                .withField("name", folderName)
+                .withField("isDeleted", false)
                 .getEntity();
 
         //String infoSystems = jsonHelper.getTestDataFieldValue("structure/projectEnvironmentsDEV.json", env, "information_systems");
@@ -29,7 +29,7 @@ public class ProjectSteps extends Steps {
 
         InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();
         ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
-                .setField("env", env)
+                .withField("env", env)
                 .getEntity();
 
         String prefix = getPrefixEnv(folder.id, informationSystem.id, projectEnvironment.id);
@@ -57,7 +57,7 @@ public class ProjectSteps extends Steps {
     @Step("Удаление проекта с названием {env}")
     public void deleteProject(String env) {
         Project project = cacheService.entity(Project.class)
-                .setField("env", env)
+                .withField("env", env)
                 .getEntity();
 
         new Http(URL)

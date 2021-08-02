@@ -1,4 +1,4 @@
-package models.orderService;
+package models.orderService.products;
 
 import lombok.Builder;
 import models.Entity;

@@ -1,18 +1,18 @@
-package models.orderService;
+package models.orderService.products;
 
 import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
+import models.Entity;
 import models.orderService.interfaces.IProduct;
 import steps.orderService.OrderServiceSteps;
 
 @Log4j2
 @Builder
-public class Nginx extends Entity implements IProduct {
+public class RabbitMq extends Entity implements IProduct {
     String env;
     String segment;
     String dataCentre;
@@ -20,7 +20,7 @@ public class Nginx extends Entity implements IProduct {
     String orderId;
     public String productId;
     @Builder.Default
-    String productName = "Nginx";
+    String productName = "RabbitMQ";
     @Builder.Default
     public String status = "NOT_CREATED";
     @Builder.Default
@@ -32,10 +32,10 @@ public class Nginx extends Entity implements IProduct {
         final JsonHelper jsonHelper = new JsonHelper();
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
-                .setField("env", env)
+                .withField("env", env)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .setField("projectName", project.id)
+                .withField("projectName", project.id)
                 .getEntity();
         projectId = project.id;
         log.info("Отправка запроса на создание заказа для " + productName);
@@ -44,6 +44,7 @@ public class Nginx extends Entity implements IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .send(OrderServiceSteps.URL)
                 .setProjectId(project.id)
@@ -61,16 +62,17 @@ public class Nginx extends Entity implements IProduct {
     }
 
     @Override
+    public String getOrderId() {
+        return orderId;
+    }
+
+    @Override
     public void delete() {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    @Override
-    public String getOrderId() {
-        return orderId;
-    }
 
     @Override
     public String getProjectId() {
@@ -94,11 +96,12 @@ public class Nginx extends Entity implements IProduct {
 
     @Override
     public String toString() {
-        return "Nginx {" +
+        return "RabbitMQ {" +
                 "env='" + env + '\'' +
                 ", segment='" + segment + '\'' +
                 ", dataCentre='" + dataCentre + '\'' +
                 ", platform='" + platform + '\'' +
                 '}';
     }
+
 }

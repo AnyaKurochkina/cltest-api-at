@@ -1,18 +1,18 @@
-package models.orderService;
+package models.orderService.products;
 
 import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
-import models.Entity;
 import models.orderService.interfaces.IProduct;
 import steps.orderService.OrderServiceSteps;
 
 @Log4j2
 @Builder
-public class Rhel extends Entity implements IProduct {
+public class Windows extends Entity implements IProduct {
     public String env;
     public String segment;
     public String dataCentre;
@@ -22,7 +22,7 @@ public class Rhel extends Entity implements IProduct {
     public String projectId;
     public String productId;
     @Builder.Default
-    public String productName = "Rhel";
+    public String productName = "Windows";
     @Builder.Default
     public String status = "NOT_CREATED";
     @Builder.Default
@@ -32,10 +32,10 @@ public class Rhel extends Entity implements IProduct {
     public void order() {
         JsonHelper jsonHelper = new JsonHelper();
         Project project = cacheService.entity(Project.class)
-                .setField("env", env)
+                .withField("env", env)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .setField("projectName", project.id)
+                .withField("projectName", project.id)
                 .getEntity();
         projectId = project.id;
         log.info("Отправка запроса на создание заказа для " + productName);
@@ -62,11 +62,6 @@ public class Rhel extends Entity implements IProduct {
     }
 
     @Override
-    public String getProductId() {
-        return productId;
-    }
-
-    @Override
     public String getOrderId(){
         return orderId;
     }
@@ -87,12 +82,18 @@ public class Rhel extends Entity implements IProduct {
     }
 
     @Override
+    public String getProductId() {
+        return productId;
+    }
+
+    @Override
     public String toString() {
-        return "Rhel {" +
+        return "Windows {" +
                 "env='" + env + '\'' +
                 ", segment='" + segment + '\'' +
                 ", dataCentre='" + dataCentre + '\'' +
                 ", platform='" + platform + '\'' +
+                ", osVersion='" + osVersion + '\'' +
                 '}';
     }
 }

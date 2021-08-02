@@ -31,7 +31,7 @@ public class Suite1 {
        // cs.setEntity(Project.class, new Entity());
         cs.saveEntity(new Project("2"));
         Project p = cs.entity(Project.class)
-                .setField("name", "2")
+                .withField("name", "2")
                 .getEntity();
 
         System.out.println(1);

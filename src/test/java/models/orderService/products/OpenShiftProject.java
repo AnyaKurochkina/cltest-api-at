@@ -1,4 +1,4 @@
-package models.orderService;
+package models.orderService.products;
 
 import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
@@ -35,14 +35,14 @@ public class OpenShiftProject extends Entity implements IProduct {
     public void order() {
         JsonHelper jsonHelper = new JsonHelper();
         Project project = cacheService.entity(Project.class)
-                .setField("env", env)
+                .withField("env", env)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .setField("projectName", project.id)
+                .withField("projectName", project.id)
                 .getEntity();
 
         ResourcePool resourcePool = cacheService.entity(ResourcePool.class)
-                .setField("label", resourcePoolLabel)
+                .withField("label", resourcePoolLabel)
                 .getEntity();
 
         projectId = project.id;

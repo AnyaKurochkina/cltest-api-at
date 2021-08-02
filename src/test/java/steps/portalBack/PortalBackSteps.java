@@ -2,7 +2,6 @@ package steps.portalBack;
 
 import core.helper.Configurier;
 import core.helper.Http;
-import core.helper.ShareData;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import models.authorizer.Folder;
@@ -42,7 +41,7 @@ public class PortalBackSteps extends Steps {
     @Step("Получение ID project env")
     public void getProjectEnv(String envName) {
         Folder folder = cacheService.entity(Folder.class)
-                .setField("type", "default")
+                .withField("type", "default")
                 .getEntity();
 
         InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();

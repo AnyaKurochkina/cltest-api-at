@@ -1,4 +1,4 @@
-package models.orderService;
+package models.orderService.products;
 
 import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
@@ -61,10 +61,10 @@ public class ApacheKafka extends Entity implements IProduct{
         final JsonHelper jsonHelper = new JsonHelper();
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
-                .setField("env", env)
+                .withField("env", env)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .setField("projectName", project.id)
+                .withField("projectName", project.id)
                 .getEntity();
         projectId = project.id;
         log.info("Отправка запроса на создание заказа для " + productName);

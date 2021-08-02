@@ -18,7 +18,7 @@ public class AccessGroupSteps extends Steps {
     public void createAccessGroup(String projectName, String accessName) {
         StringUtils stringUtils = new StringUtils();
         Project project = cacheService.entity(Project.class)
-                .setField("projectName", projectName)
+                .withField("projectName", projectName)
                 .getEntity();
 
         String accessNameBuild = accessName + stringUtils.getRandString(12);
@@ -42,10 +42,10 @@ public class AccessGroupSteps extends Steps {
     public void deleteAccessGroup(String env) {
         StringUtils stringUtils = new StringUtils();
         Project project = cacheService.entity(Project.class)
-                .setField("env", env)
+                .withField("env", env)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .setField("projectName", project.id)
+                .withField("projectName", project.id)
                 .getEntity();
         JsonPath jsonPath = new Http(URL)
                 .delete(String.format("portal/api/v1/projects/%s/access_groups/%s", project.id, accessGroup.name))
