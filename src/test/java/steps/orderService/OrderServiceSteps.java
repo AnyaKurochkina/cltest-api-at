@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.junit.Assert;
 import steps.Steps;
-import stepsOld.StateServiceSteps;
+import steps.stateService.StateServiceSteps;
 import java.util.HashMap;
 import java.util.Map;
 
