@@ -20,6 +20,7 @@ public class Rhel extends Entity implements IProduct {
     public String osVersion;
     public String orderId;
     public String projectId;
+    public String productId;
     @Builder.Default
     public String productName = "Rhel";
     @Builder.Default
@@ -58,6 +59,11 @@ public class Rhel extends Entity implements IProduct {
         status = "CREATED";
         cacheService.saveEntity(this);
 
+    }
+
+    @Override
+    public String getProductId() {
+        return productId;
     }
 
     @Override

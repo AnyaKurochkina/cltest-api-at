@@ -18,6 +18,7 @@ public class RabbitMq extends Entity implements IProduct {
     String dataCentre;
     String platform;
     String orderId;
+    public String productId;
     @Builder.Default
     String productName = "RabbitMQ";
     @Builder.Default
@@ -86,6 +87,11 @@ public class RabbitMq extends Entity implements IProduct {
     @Override
     public String getEnv() {
         return env;
+    }
+
+    @Override
+    public String getProductId() {
+        return productId;
     }
 
     @Override

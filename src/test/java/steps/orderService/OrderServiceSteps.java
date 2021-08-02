@@ -122,7 +122,7 @@ public class OrderServiceSteps extends Steps {
         System.out.println("get resp num 1 " + obj);
     }*/
 
-    public Map<String,String> getFlavorByProduct(IProduct product) {
+    public  String getProductId(IProduct product){
         log.info("Получение id продукта для продукта " + product.getProductName());
         InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();
         String product_id = "";
@@ -136,21 +136,25 @@ public class OrderServiceSteps extends Steps {
         int countOfIteration = total_count/ 100 + 1;
         for (int i = 1; i<=countOfIteration; i++) {
             product_id = new Http(URL)
+                    .setProjectId(product.getProjectId())
                     .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=%s&per_page=100", product.getEnv().toLowerCase(), informationSystem.id, i))
                     .assertStatus(200)
                     .jsonPath()
                     .get(String.format("list.find{it.title.contains('%s') || it.title.contains('%s') || it.title.contains('%s')}.id", product.getProductName().toLowerCase(), product.getProductName().toUpperCase(), product.getProductName()));
             if(product_id != null)
                 log.info("Id продукта = " + product_id);
-                break;
+            break;
         }
+        return product_id;
+    }
 
+    public Map<String,String> getFlavorByProduct(IProduct product) {
+        log.info("Получение флейвора для продукта " + product.getProductName());
         JsonPath jsonPath  = new Http(URL)
-                .get("references/api/v1/pages/?directory__name=flavors&tags=" + product_id)
+                .setProjectId(product.getProjectId())
+                .get("references/api/v1/pages/?directory__name=flavors&tags=" + product.getProductId())
                 .assertStatus(200)
                 .jsonPath();
-
-
         /*JSONArray jsonArray  = new Http(URL)
                 .get("references/api/v1/pages/?directory__name=flavors&tags=" + product_id)
                 .assertStatus(200)

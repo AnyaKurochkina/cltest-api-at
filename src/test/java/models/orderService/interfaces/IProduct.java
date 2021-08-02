@@ -21,6 +21,8 @@ public interface IProduct {
 
     public String getEnv();
 
+    public String getProductId();
+
     public void order();
 
     default void reset() {
