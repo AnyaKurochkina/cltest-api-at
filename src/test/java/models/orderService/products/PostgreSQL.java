@@ -24,6 +24,7 @@ public class PostgreSQL extends Entity implements IProduct {
     public String orderId;
     public String projectId;
     public String productId;
+    public String domain;
     @Builder.Default
     public String productName = "PostgreSQL";
     @Builder.Default
@@ -33,6 +34,7 @@ public class PostgreSQL extends Entity implements IProduct {
 
     @Override
     public void order() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         JsonHelper jsonHelper = new JsonHelper();
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
@@ -41,8 +43,13 @@ public class PostgreSQL extends Entity implements IProduct {
                 .withField("projectName", project.id)
                 .getEntity();
         projectId = project.id;
+        productId = orderServiceSteps.getProductId(this);
+        domain = orderServiceSteps.getDomainBySegment(this, segment);
+
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
+                .set("$.order.product_id", productId)
+                .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
@@ -57,7 +64,6 @@ public class PostgreSQL extends Entity implements IProduct {
                 .jsonPath();
         orderId = array.get("[0].id");
 
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.checkOrderStatus("success", this);
 
         status = "CREATED";

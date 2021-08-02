@@ -3,7 +3,7 @@
 		"project_name": "proj-aydi9thv3w",
 		"product_id": "6662a03d-20ce-4a83-a684-ddec48393516",
 		"attrs": {
-			"domain": "test.vtb.ru",
+			"domain": "corp.dev.vtb",
 			"flavor": {
 				"cpus": 2,
 				"name": "c2m4",

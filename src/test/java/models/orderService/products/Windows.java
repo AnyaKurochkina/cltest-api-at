@@ -21,6 +21,7 @@ public class Windows extends Entity implements IProduct {
     public String orderId;
     public String projectId;
     public String productId;
+    public String domain;
     @Builder.Default
     public String productName = "Windows";
     @Builder.Default
@@ -31,6 +32,7 @@ public class Windows extends Entity implements IProduct {
     @Override
     public void order() {
         JsonHelper jsonHelper = new JsonHelper();
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
@@ -38,8 +40,13 @@ public class Windows extends Entity implements IProduct {
                 .withField("projectName", project.id)
                 .getEntity();
         projectId = project.id;
+        productId = orderServiceSteps.getProductId(this);
+        domain = orderServiceSteps.getDomainBySegment(this, segment);
+
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
+                .set("$.order.product_id", productId)
+                .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
@@ -52,8 +59,6 @@ public class Windows extends Entity implements IProduct {
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
-
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.checkOrderStatus("success", this);
 
         status = "CREATED";

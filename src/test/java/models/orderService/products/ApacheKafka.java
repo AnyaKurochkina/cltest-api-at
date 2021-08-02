@@ -22,8 +22,9 @@ public class ApacheKafka extends Entity implements IProduct{
     String orderId;
     String kafkaVersion;
     public String productId;
+    public String domain;
     @Builder.Default
-    String productName = "Apache_Kafka";
+    String productName = "Apache Kafka";
     @Builder.Default
     public String status = "NOT_CREATED";
     @Builder.Default
@@ -67,14 +68,18 @@ public class ApacheKafka extends Entity implements IProduct{
                 .withField("projectName", project.id)
                 .getEntity();
         projectId = project.id;
+        productId = orderServiceSteps.getProductId(this);
+        domain = orderServiceSteps.getDomainBySegment(this, segment);
+
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
+                .set("$.order.product_id", productId)
+                .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.attrs.kafka_version", kafkaVersion)
-//                .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .send(OrderServiceSteps.URL)
                 .setProjectId(project.id)
@@ -91,29 +96,12 @@ public class ApacheKafka extends Entity implements IProduct{
         cacheService.saveEntity(this);
     }
 
-    @Override
-    public void reset() {
-        IProduct.super.reset();
-    }
-
-    @Override
-    public void stopHard() {
-        IProduct.super.stopHard();
-    }
-
-    @Override
-    public void stopSoft() {
-        IProduct.super.stopSoft();
-    }
-
-    @Override
-    public void start() {
-        IProduct.super.start();
-    }
 
     @Override
     public void delete() {
-        IProduct.super.delete();
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     @Override
