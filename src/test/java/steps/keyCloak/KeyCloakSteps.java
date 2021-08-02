@@ -54,7 +54,9 @@ public class KeyCloakSteps {
         ServiceAccount serviceAccount = cacheService.entity(ServiceAccount.class)
                 .setField("projectId", projectId)
                 .getEntity();
-        ServiceAccountToken serviceAccountToken = cacheService.entity(ServiceAccountToken.class).getEntityWithoutAssert();
+        ServiceAccountToken serviceAccountToken = cacheService.entity(ServiceAccountToken.class)
+                .setField("serviceAccountName", serviceAccount.name)
+                .getEntityWithoutAssert();
         long currentTime  = System.currentTimeMillis() / 1000L;
         if(serviceAccountToken == null){
             serviceAccountToken = ServiceAccountToken.builder()

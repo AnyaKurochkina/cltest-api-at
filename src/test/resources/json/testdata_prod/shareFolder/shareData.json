@@ -44,5 +44,10 @@
         "isDeleted": false,
         "projectName": "proj-hnsmiuaqg2",
         "objectUid": "4087706b-e9b7-48ef-969d-000000000006"
+    },
+    {
+        "objectClassName": "models.authorizer.InformationSystem",
+        "objectUid": "cafa1b9d-5702-459a-bfff-7ee70df2651d",
+        "id": "8e33baf8-e181-457b-9d60-e5dc470fe8fa"
     }
 ]

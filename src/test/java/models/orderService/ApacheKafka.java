@@ -21,6 +21,7 @@ public class ApacheKafka extends Entity implements IProduct{
     String platform;
     String orderId;
     String kafkaVersion;
+    public String productId;
     @Builder.Default
     String productName = "Apache_Kafka";
     @Builder.Default
@@ -48,6 +49,11 @@ public class ApacheKafka extends Entity implements IProduct{
     @Override
     public String getEnv() {
         return env;
+    }
+
+    @Override
+    public String getProductId() {
+        return productId;
     }
 
     @Override
