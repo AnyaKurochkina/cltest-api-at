@@ -19,6 +19,7 @@ public class Nginx extends Entity implements IProduct {
     String platform;
     String orderId;
     public String productId;
+    public String domain;
     @Builder.Default
     String productName = "Nginx";
     @Builder.Default
@@ -38,8 +39,13 @@ public class Nginx extends Entity implements IProduct {
                 .withField("projectName", project.id)
                 .getEntity();
         projectId = project.id;
+        productId = orderServiceSteps.getProductId(this);
+        domain = orderServiceSteps.getDomainBySegment(this, segment);
+
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
+                .set("$.order.product_id", productId)
+                .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)

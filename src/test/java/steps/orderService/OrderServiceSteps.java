@@ -108,22 +108,18 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    /*@Test
-    public void test(){
-        String URL = "https://ift-kong-service.apps.d0-oscp.corp.dev.vtb/";
-        JsonPath jsonPath  = new Http(URL)
-                .setProjectId("proj-xazpppulba")
-                .get("references/api/v1/pages/?directory__name=flavors&tags=" + "c422069e-8f01-4328-b9dc-4a9e5dafd44e")
+    public String getDomainBySegment(IProduct product, String netSegment) {
+        log.info("Получение домена для сегмента сети " + netSegment);
+        return new Http(URL)
+                .setProjectId(product.getProjectId())
+                .get(String.format("order-service/api/v1/domains?net_segment_code=%s&include=total_count&page=1&per_page=25", netSegment))
                 .assertStatus(200)
-                .jsonPath();
+                .jsonPath()
+                .get("list[0].code");
+    }
 
-        System.out.println("get resp " + jsonPath);
-        JSONObject obj = jsonPath.get("[1]");
-        System.out.println("get resp num 1 " + obj);
-    }*/
-
-    public  String getProductId(IProduct product){
-        log.info("Получение id продукта для продукта " + product.getProductName());
+    public String getProductId(IProduct product){
+        log.info("Получение id для продукта " + product.getProductName());
         InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();
         String product_id = "";
         int total_count = new Http(URL)

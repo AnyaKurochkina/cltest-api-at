@@ -22,6 +22,7 @@ public class OpenShiftProject extends Entity implements IProduct {
     public String orderId;
     public String projectId;
     public String productId;
+    public String domain;
     @Builder.Default
     public List<Role> roles = new ArrayList<>();
     @Builder.Default
