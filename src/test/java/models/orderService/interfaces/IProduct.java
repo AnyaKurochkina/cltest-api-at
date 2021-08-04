@@ -9,6 +9,7 @@ import java.util.Map;
 public interface IProduct {
     CacheService cacheService = new CacheService();
 
+    public static String RABBITMQ_USER = "data.find{it.type=='cluster'}.config.users[0]";
     public static String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
     public static String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
     public static String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
@@ -72,6 +73,15 @@ public interface IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore<sizeAfter);
+    }
+
+    default void rabbitmq_create_user() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        String user = "testapiuser";
+        String actionId = orderServiceSteps.executeAction("Создать пользователя RabbitMQ", String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user), this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        String username = (String) orderServiceSteps.getFiledProduct(this, RABBITMQ_USER);
+        assertEquals(user, username);
     }
 
 }
