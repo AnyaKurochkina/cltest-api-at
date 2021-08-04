@@ -1,7 +1,7 @@
 {
 	"order": {
-		"project_name": "proj-aydi9thv3w",
-		"product_id": "f566578f-2f8a-480f-9b1d-dd2663a4bfce",
+		"project_name": "proj-tg7jlitmp1",
+		"product_id": "78388428-6548-4417-a18f-f0c4643d93bb",
 		"attrs": {
 			"domain": "corp.dev.vtb",
 			"flavor": {
@@ -21,6 +21,7 @@
 			"default_nic": {
 				"net_segment": "dev-srv-app"
 			},
+			"cluster_name": "rabbitmq-testapi",
 			"extra_mounts": [
 				{
 					"path": "/app",
@@ -30,11 +31,12 @@
 			],
 			"ad_integration": true,
 			"rabbitmq_version": "3.8.14",
+			"rabbitmq_node_number": 3,
 			"ad_logon_grants": [
 				{
 					"role": "superuser",
 					"groups": [
-						"cloud-d5zorg-test_api"
+						"cloud-s9crux-denisapi"
 					]
 				}
 			],
@@ -42,12 +44,12 @@
 				{
 					"role": "administrator",
 					"groups": [
-						"cloud-d5zorg-test_api"
+						"cloud-s9crux-denisapi"
 					]
 				}
 			]
 		},
 		"count": 1,
-		"label": "RabbitMQ_0001"
+		"label": "RabbitMQ Cluster"
 	}
 }

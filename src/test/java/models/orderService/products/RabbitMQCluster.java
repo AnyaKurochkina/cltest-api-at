@@ -12,7 +12,7 @@ import steps.orderService.OrderServiceSteps;
 
 @Log4j2
 @Builder
-public class RabbitMq extends Entity implements IProduct {
+public class RabbitMQCluster extends Entity implements IProduct {
     String env;
     String segment;
     String dataCentre;
@@ -21,7 +21,7 @@ public class RabbitMq extends Entity implements IProduct {
     public String productId;
     public String domain;
     @Builder.Default
-    String productName = "RabbitMQ";
+    String productName = "RabbitMQ Cluster";
     @Builder.Default
     public String status = "NOT_CREATED";
     @Builder.Default
