@@ -38,6 +38,14 @@ public class OrderTest extends Tests {
                 product.delete();
                 break;
             case "Redis":
+                product.reset_redis_password();
+                product.expand_mount_point();
+                product.reset();
+                product.stopSoft();
+                product.start();
+                product.stopHard();
+                product.delete();
+                break;
             case "PostgreSQL":
                 product.expand_mount_point();
                 product.reset();
@@ -71,7 +79,7 @@ public class OrderTest extends Tests {
 //                Arguments.arguments(Nginx.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
 //                Arguments.arguments(Windows.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("Microsoft Windows Server 2019").build()),
 //                Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("ds0-bank01 - Demo").build()),
-//                Arguments.arguments(Redis.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+//                Arguments.arguments(Redis.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build())//,
 //                Arguments.arguments(ApacheKafka.builder().env("DEV").kafkaVersion("2.13-2.4.1").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build())//
 //                Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("e5b4d171-1cbb-4b93-8c98-79836c11ce67").build()),
 //                Arguments.arguments(Rhel.builder().env("TEST").segment("test-srv-synt").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
