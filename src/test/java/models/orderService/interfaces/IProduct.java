@@ -84,4 +84,11 @@ public interface IProduct {
         assertEquals(user, username);
     }
 
+    default void reset_redis_password() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        String password = "yxjpjk7xvOImb1O9vZZiGUlsItkqLqtbB1VPZHzL6";
+        String actionId = orderServiceSteps.executeAction("Сбросить пароль", String.format("{redis_password: \"%s\"}", password), this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+    }
+
 }
