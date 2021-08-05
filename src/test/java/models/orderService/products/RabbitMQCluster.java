@@ -10,18 +10,21 @@ import models.Entity;
 import models.orderService.interfaces.IProduct;
 import steps.orderService.OrderServiceSteps;
 
+import static org.junit.Assert.assertEquals;
+
 @Log4j2
 @Builder
 public class RabbitMQCluster extends Entity implements IProduct {
-    String env;
-    String segment;
-    String dataCentre;
-    String platform;
-    String orderId;
+    public static String RABBITMQ_USER = "data.find{it.type=='cluster'}.config.users[0]";
+    public String env;
+    public String segment;
+    public String dataCentre;
+    public String platform;
+    public String orderId;
     public String productId;
     public String domain;
     @Builder.Default
-    String productName = "RabbitMQ Cluster";
+    public String productName = "RabbitMQ Cluster";
     @Builder.Default
     public String status = "NOT_CREATED";
     @Builder.Default
@@ -67,9 +70,13 @@ public class RabbitMQCluster extends Entity implements IProduct {
         cacheService.saveEntity(this);
     }
 
-    @Override
-    public String getOrderId() {
-        return orderId;
+    public void rabbitmq_create_user() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        String user = "testapiuser";
+        String actionId = orderServiceSteps.executeAction("Создать пользователя RabbitMQ", String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user), this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        String username = (String) orderServiceSteps.getFiledProduct(this, RABBITMQ_USER);
+        assertEquals(user, username);
     }
 
     @Override
@@ -83,6 +90,11 @@ public class RabbitMQCluster extends Entity implements IProduct {
     @Override
     public String getProjectId() {
         return projectId;
+    }
+
+    @Override
+    public String getOrderId() {
+        return orderId;
     }
 
     @Override
@@ -102,7 +114,7 @@ public class RabbitMQCluster extends Entity implements IProduct {
 
     @Override
     public String toString() {
-        return "RabbitMQ {" +
+        return "RabbitMQ Cluster {" +
                 "env='" + env + '\'' +
                 ", segment='" + segment + '\'' +
                 ", dataCentre='" + dataCentre + '\'' +
