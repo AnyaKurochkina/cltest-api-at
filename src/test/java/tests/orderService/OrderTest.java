@@ -47,6 +47,8 @@ public class OrderTest extends Tests {
                 product.delete();
                 break;
             case "PostgreSQL":
+                ((PostgreSQL) product).create_db("testdb");
+                ((PostgreSQL) product).remove_db();
                 product.expand_mount_point();
                 product.reset();
                 product.stopSoft();
@@ -75,7 +77,7 @@ public class OrderTest extends Tests {
     }
 
     //IFT
-    static Stream<Arguments> dataProviderMethod() {
+    /*static Stream<Arguments> dataProviderMethod() {
         return Stream.of(
                 Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("ds0-bank01 - Demo").build()),
 
@@ -86,14 +88,14 @@ public class OrderTest extends Tests {
                 Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
                 Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
                 Arguments.arguments(RabbitMQCluster.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
-                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("12").build()),
+                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("12").build())//,
                 Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("11").build())
         );
-    }
+    }*/
 
     //PROD
-//    static Stream<Arguments> dataProviderMethod() {
-//        return Stream.of(
+    static Stream<Arguments> dataProviderMethod() {
+        return Stream.of(
 //                Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("ds1-genr01.corp.dev.vtb - DEV-SRV-APP").build()),
 //
 //                Arguments.arguments(Nginx.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
@@ -102,7 +104,7 @@ public class OrderTest extends Tests {
 //                Arguments.arguments(ApacheKafka.builder().env("DEV").kafkaVersion("2.13-2.4.1").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
 //                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
 //                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
-//                Arguments.arguments(RabbitMQCluster.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build())//,
+//                Arguments.arguments(RabbitMQCluster.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
 //                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("12").build()),
 //                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("11").build()),
 //                Arguments.arguments(WildFly.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
@@ -114,9 +116,9 @@ public class OrderTest extends Tests {
 //                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").build()),
 //                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("7.latest").build()),
 //                Arguments.arguments(RabbitMQCluster.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").build()),
-//                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").postgresql_version("12").build()),
+                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").postgresql_version("12").build())//,
 //                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").postgresql_version("11").build()),
-//                Arguments.arguments(WildFly.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").build()),
+//                Arguments.arguments(WildFly.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").build())//,
 //
 //                Arguments.arguments(Nginx.builder().env("TEST").segment("test-srv-synt").dataCentre("5").platform("Nutanix").build()),
 //                Arguments.arguments(Windows.builder().env("TEST").segment("test-srv-synt").dataCentre("5").platform("Nutanix").osVersion("Microsoft Windows Server 2019").build()),
@@ -141,6 +143,6 @@ public class OrderTest extends Tests {
 //                Arguments.arguments(WildFly.builder().env("TEST").segment("test-srv-synt").dataCentre("5").platform("vsphere").osVersion("8.latest").build()),
 //
 //
-//        );
-//    }
+        );
+    }
 }

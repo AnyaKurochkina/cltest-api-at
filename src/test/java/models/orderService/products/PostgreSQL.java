@@ -8,13 +8,21 @@ import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.subModels.PostgreSqlDB;
+import models.subModels.Role;
 import steps.orderService.OrderServiceSteps;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @Log4j2
 @Builder
 public class PostgreSQL extends Entity implements IProduct {
+    public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs[0].db_name";
+    public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
     public String env;
     public String segment;
     public String dataCentre;
@@ -31,6 +39,8 @@ public class PostgreSQL extends Entity implements IProduct {
     public String status = "NOT_CREATED";
     @Builder.Default
     public boolean isDeleted = false;
+    @Builder.Default
+    public List<PostgreSqlDB> database = new ArrayList<>();
 
     @Override
     public void order() {
@@ -86,6 +96,30 @@ public class PostgreSQL extends Entity implements IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore<sizeAfter);
+    }
+
+    public void create_db(String db_name) {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        String actionId = orderServiceSteps.executeAction("Добавить БД", String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", db_name), this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        String db_name_actual = (String) orderServiceSteps.getFiledProduct(this, DB_NAME_PATH);
+        assertEquals("База данных не создалась именем" + db_name, db_name, db_name_actual);
+        database.add(new PostgreSqlDB(db_name, false));
+        log.info("database = " + database);
+        cacheService.saveEntity(this);
+    }
+
+    public void remove_db() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        String db_name = database.get(0).getNameDB();
+        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, DB_SIZE_PATH);
+        String actionId = orderServiceSteps.executeAction("Удалить БД", String.format("{db_name: \"%s\"}", db_name), this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, DB_SIZE_PATH);
+        assertTrue(sizeBefore>sizeAfter);
+        database.get(0).setDeleted(true);
+        log.info("database = " + database);
+        cacheService.saveEntity(this);
     }
 
     @Override
