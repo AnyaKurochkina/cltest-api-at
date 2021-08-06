@@ -144,8 +144,7 @@ public class Http {
                 if (token.length() > 0)
                     http.setRequestProperty("Authorization", token);
                 else {
-                    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
-                    token = "bearer " + keyCloakSteps.getUserToken();
+                    token = "bearer " + KeyCloakSteps.getUserToken();
                     http.setRequestProperty("Authorization", token);
                 }
             }

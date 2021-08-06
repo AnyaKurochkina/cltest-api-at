@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 @DisplayName("Набор для создания продуктов")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
-@Order(650)
+@OrderLabel("tests.orderService.OrderTest")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
 public class OrderTest extends Tests {
 
