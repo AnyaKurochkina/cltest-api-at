@@ -17,7 +17,10 @@ import org.junit.Assert;
 import steps.Steps;
 import steps.stateService.StateServiceSteps;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 @Log4j2
 public class OrderServiceSteps extends Steps {
@@ -41,13 +44,15 @@ public class OrderServiceSteps extends Steps {
             System.out.println("orderStatus = " + orderStatus);
             counter = counter - 1;
         }
-
+        log.info("Ордер статус итоговый " + orderStatus);
         if (!orderStatus.equals(exp_status.toLowerCase())) {
+            log.info("Ордер статус в стейте сервисе " + orderStatus);
             try {
                 stateServiceSteps.GetErrorFromOrch(product.getOrderId());
             } catch (CustomException e) {
                 e.printStackTrace();
             }
+            fail();
         }
     }
 
@@ -213,5 +218,59 @@ public class OrderServiceSteps extends Steps {
         log.info(String.format("getFiledProduct return: %s", s));
         Assert.assertNotNull("По path '" + path + "' не найден объект в response " + jsonPath.prettify(), s);
         return s;
+    }
+
+    @Step("Удаление всех заказов")
+    public void deleteOrders(String env) {
+        Project project = cacheService.entity(Project.class)
+                .withField("env", env)
+                .getEntity();
+        String action = "";
+        List orders = new Http(URL)
+                .setProjectId(project.id)
+                .get(String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=1&per_page=100&f[category]=vm", project.id))
+                .assertStatus(200)
+                .jsonPath()
+                .get("list.findAll{it.status == 'success'}.id");
+
+        System.out.println("list = " + orders);
+
+        for (int i = 0; i < orders.size(); i++) {
+            String order_id = (String) orders.get(i);
+            System.out.println("order_id = " + order_id);
+            String product_name = new Http(URL)
+                    .setProjectId(project.id)
+                    .get(String.format("order-service/api/v1/projects/%s/orders/%s", project.id, order_id))
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get("attrs.product_title");
+
+            System.out.println("product_name = " + product_name);
+
+            if ("postgresql".equals(product_name.toLowerCase()) || "rabbitmq cluster".equals(product_name.toLowerCase()) || "nginx".equals(product_name.toLowerCase()) || "redis".equals(product_name.toLowerCase()) || "apache kafka".equals(product_name.toLowerCase()) || "wildfly".equals(product_name.toLowerCase())) {
+                action = "delete_two_layer";
+            } else {
+                action = "delete_vm";
+            }
+            System.out.println("action = " + action);
+
+            log.info("Получение item_id для " + action);
+            String item_id = new Http(URL)
+                    .setProjectId(project.id)
+                    .get("order-service/api/v1/projects/" + project.id + "/orders/" + order_id)
+                    .jsonPath()
+                    .get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action));
+            log.info("item_id = " + item_id);
+
+            JsonPath response = jsonHelper.getJsonTemplate("/actions/template.json")
+                    .set("$.item_id", item_id)
+                    .send(URL)
+                    .setProjectId(project.id)
+                    .patch(String.format("order-service/api/v1/projects/%s/orders/%s/actions/%s", project.id, order_id, action))
+                    .assertStatus(200)
+                    .jsonPath();
+        }
+
+
     }
 }
