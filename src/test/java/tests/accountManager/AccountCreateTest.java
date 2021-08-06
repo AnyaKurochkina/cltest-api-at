@@ -1,6 +1,7 @@
-package tests.AccountManager;
+package tests.accountManager;
 
 import io.qameta.allure.Description;
+import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import steps.accountManager.AccountSteps;
 import steps.keyCloak.KeyCloakSteps;
@@ -8,7 +9,7 @@ import tests.Tests;
 
 @DisplayName("Набор для создания счета")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(400)
+@OrderLabel("tests.accountManager.AccountCreateTest")
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountCreateTest extends Tests {

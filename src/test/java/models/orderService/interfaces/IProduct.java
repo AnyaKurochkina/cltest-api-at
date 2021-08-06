@@ -13,6 +13,8 @@ public interface IProduct {
     public static String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
     public static String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
     public static String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
+    public static String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.config.topics.any{it.topic_name=='%s'}";
+    public static String KAFKA_CLUSTER_ACL = "data.find{it.type=='cluster'}.config.acls.any{it.topic_name=='%s'}";
 
     public String getOrderId();
 
@@ -26,7 +28,7 @@ public interface IProduct {
 
     public void order();
 
-    default void reset() {
+    default void restart() {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         String actionId = orderServiceSteps.executeAction("Перезагрузить", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);

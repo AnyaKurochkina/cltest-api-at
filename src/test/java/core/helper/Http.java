@@ -1,6 +1,7 @@
 package core.helper;
 
 import io.restassured.path.json.JsonPath;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,6 +24,7 @@ import java.security.cert.X509Certificate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+@Log4j2
 public class Http {
     private final String host;
     private String path;
@@ -121,8 +123,7 @@ public class Http {
     }
 
     public Http setProjectId(String projectId) {
-        KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
-        this.token = "bearer " + keyCloakSteps.getServiceAccountToken(projectId);
+        this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId);
         return this;
     }
 
@@ -150,7 +151,9 @@ public class Http {
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
+            log.debug("URL: {}", (host + path));
             if (body.length() > 0) {
+                log.debug("REQUEST: {}", body);
                 http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
             }
             InputStream is;

@@ -1,10 +1,7 @@
 package core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import core.helper.DataFileHelper;
 import models.Entity;
 import org.json.JSONArray;
@@ -61,10 +58,16 @@ public class CacheService {
         entities.put(e.objectUid, serialize);
     }
 
+    public String toJson(Object e) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        return gsonBuilder.create().toJson(e, e.getClass());
+    }
+
     public class EntityObject {
         Map<String, Comparable> fields = new HashMap<>();
 
-        public EntityObject withField(String field, Comparable value) {
+        public synchronized EntityObject withField(String field, Comparable value) {
             fields.put(field, value);
             return this;
         }

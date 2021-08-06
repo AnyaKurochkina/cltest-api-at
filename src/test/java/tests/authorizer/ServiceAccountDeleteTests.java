@@ -1,6 +1,7 @@
-package tests.Authorizer;
+package tests.authorizer;
 
 import io.qameta.allure.Description;
+import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
 
 @DisplayName("Удаление сервисных аккаунтов")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(99997)
+@OrderLabel("tests.authorizer.ServiceAccountDeleteTests")
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ServiceAccountDeleteTests extends Tests {
