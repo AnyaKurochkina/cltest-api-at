@@ -1,6 +1,7 @@
-package tests.Authorizer;
+package tests.authorizer;
 
 import io.qameta.allure.Description;
+import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
 
 @DisplayName("Набор тестов по удалению групп доступа")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(99997)
+@OrderLabel("tests.authorizer.AccessGroupDeleteTests")
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccessGroupDeleteTests extends Tests {

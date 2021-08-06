@@ -101,7 +101,7 @@ public class OrderServiceSteps extends Steps {
             } catch (JsonPathException e) {
                 log.error("Error get status " + e.getMessage());
             }
-            ;
+
             counter = counter - 1;
         }
         if (!action_status.equals(exp_status.toLowerCase())) {
