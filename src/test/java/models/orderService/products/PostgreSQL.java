@@ -9,7 +9,7 @@ import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.subModels.PostgreSqlDB;
-import models.subModels.Role;
+import models.subModels.PostgreSqlUsers;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -23,6 +23,8 @@ import static org.junit.Assert.assertTrue;
 public class PostgreSQL extends Entity implements IProduct {
     public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs[0].db_name";
     public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
+    public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users[0].user_name";
+    public static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
     public String env;
     public String segment;
     public String dataCentre;
@@ -41,6 +43,8 @@ public class PostgreSQL extends Entity implements IProduct {
     public boolean isDeleted = false;
     @Builder.Default
     public List<PostgreSqlDB> database = new ArrayList<>();
+    @Builder.Default
+    public List<PostgreSqlUsers> users = new ArrayList<>();
 
     @Override
     public void order() {
@@ -98,27 +102,67 @@ public class PostgreSQL extends Entity implements IProduct {
         assertTrue(sizeBefore<sizeAfter);
     }
 
-    public void create_db(String db_name) {
+    public void create_db(String dbName) {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        String actionId = orderServiceSteps.executeAction("Добавить БД", String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", db_name), this);
+        String actionId = orderServiceSteps.executeAction("Добавить БД", String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName), this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
-        String db_name_actual = (String) orderServiceSteps.getFiledProduct(this, DB_NAME_PATH);
-        assertEquals("База данных не создалась именем" + db_name, db_name, db_name_actual);
-        database.add(new PostgreSqlDB(db_name, false));
+        String dbNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_NAME_PATH);
+        assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
+        database.add(new PostgreSqlDB(dbName, false));
         log.info("database = " + database);
         cacheService.saveEntity(this);
     }
 
     public void remove_db() {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        String db_name = database.get(0).getNameDB();
+        String dbName = database.get(0).getNameDB();
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, DB_SIZE_PATH);
-        String actionId = orderServiceSteps.executeAction("Удалить БД", String.format("{db_name: \"%s\"}", db_name), this);
+        String actionId = orderServiceSteps.executeAction("Удалить БД", String.format("{db_name: \"%s\"}", dbName), this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, DB_SIZE_PATH);
         assertTrue(sizeBefore>sizeAfter);
         database.get(0).setDeleted(true);
         log.info("database = " + database);
+        cacheService.saveEntity(this);
+    }
+
+    public void create_dbms_user(String username, String dbRole) {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        String dbName = database.get(0).getNameDB();
+        String actionId = orderServiceSteps.executeAction("Добавить пользователя", String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username), this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        String dbUserNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_USERNAME_PATH);
+        assertEquals("Имя пользователя отличается от создаваемого", String.format("%s_%s", dbName, username), dbUserNameActual);
+        users.add(new PostgreSqlUsers(dbName, dbUserNameActual,false));
+        log.info("users = " + users);
+        cacheService.saveEntity(this);
+    }
+
+    @Override
+    public void reset_password() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
+        String actionId = orderServiceSteps.executeAction("Сбросить пароль", String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password), this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+    }
+
+
+    public void reset_db_owner_password() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
+        String actionId = orderServiceSteps.executeAction("Сбросить пароль", String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password), this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+    }
+
+    public void remove_dbms_user() {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, DB_USERNAME_SIZE_PATH);
+        String actionId = orderServiceSteps.executeAction("Удалить пользователя", String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername()), this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, DB_USERNAME_SIZE_PATH);
+        assertTrue(sizeBefore>sizeAfter);
+        users.get(0).setDeleted(true);
+        log.info("users = " + users);
         cacheService.saveEntity(this);
     }
 

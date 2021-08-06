@@ -48,6 +48,10 @@ public class OrderTest extends Tests {
                 break;
             case "PostgreSQL":
                 ((PostgreSQL) product).create_db("testdb");
+                ((PostgreSQL) product).reset_db_owner_password();
+                ((PostgreSQL) product).create_dbms_user("testuser", "user");
+                product.reset_password();
+                ((PostgreSQL) product).remove_dbms_user();
                 ((PostgreSQL) product).remove_db();
                 product.expand_mount_point();
                 product.reset();
