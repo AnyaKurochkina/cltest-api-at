@@ -19,6 +19,10 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -97,24 +101,36 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
     }
 
     private static ConcurrentSkipListMap<Integer, CountDownLatch> tests = new ConcurrentSkipListMap<>();
+    private static Properties prop = new Properties();
 
     private void forkConcurrentTasks(List<? extends TestTask> tasks, Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> nonConcurrentTasks, Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> concurrentTasksInReverseOrder) {
+        try (InputStream input = new FileInputStream("src/test/resources/config/classOrders.properties")) {
+            prop.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         tasks.sort(Comparator.comparingInt(i -> {
             JupiterTestDescriptor testDescriptor = null;
-            Order o = null;
+            int o = 1;
             try {
                 Field field = i.getClass().getDeclaredField("testDescriptor");
                 field.setAccessible(true);
                 testDescriptor = (JupiterTestDescriptor) field.get(i);
                 if (testDescriptor instanceof ClassTestDescriptor) {
-                    o = ((ClassTestDescriptor) testDescriptor).getTestClass().getAnnotation(Order.class);
+                    //o = ((ClassTestDescriptor) testDescriptor).getTestClass().getAnnotation(Order.class);
+                    String className = ((ClassTestDescriptor) testDescriptor).getTestClass().getName();
+                    String order = prop.getProperty(className);
+                    if (order != null)
+                        o = Integer.parseInt(order);
                 } else if (testDescriptor instanceof MethodBasedTestDescriptor) {
-                    o = ((MethodBasedTestDescriptor) testDescriptor).getTestMethod().getAnnotation(Order.class);
+                    Order order = ((MethodBasedTestDescriptor) testDescriptor).getTestMethod().getAnnotation(Order.class);
+                    if (order != null)
+                        o = order.value();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return o != null ? o.value() : 1;
+            return o;
         }));
 
 
@@ -127,10 +143,15 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 field.setAccessible(true);
                 JupiterTestDescriptor testDescriptor = (JupiterTestDescriptor) field.get(testTask);
                 if (testDescriptor instanceof ClassTestDescriptor) {
-                    Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
+                   /* Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
                     Order order = clz.getAnnotation(Order.class);
                     if (order != null)
-                        ordersCount.put(order.value(), (ordersCount.getOrDefault(order.value(), 0)) + 1);
+                        ordersCount.put(order.value(), (ordersCount.getOrDefault(order.value(), 0)) + 1);*/
+
+                    String className = ((ClassTestDescriptor) testDescriptor).getTestClass().getName();
+                    String order = prop.getProperty(className);
+                    if (order != null)
+                        ordersCount.put(Integer.parseInt(order), (ordersCount.getOrDefault(Integer.parseInt(order), 0)) + 1);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -147,27 +168,28 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
             ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask exclusiveTask = new ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask(testTask);
 
 
-                Integer order = null;
-                AbstractTestDescriptor testDescriptor = null;
-                try {
-                    Field field = testTask.getClass().getDeclaredField("testDescriptor");
-                    field.setAccessible(true);
-                    testDescriptor = (AbstractTestDescriptor) field.get(testTask);
-                    if (testDescriptor instanceof ClassTestDescriptor) {
-                        Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
-                        Order o = clz.getAnnotation(Order.class);
-                        if (o != null) {
-                            order = o.value();
-                            if(tests.lowerEntry(order) != null) {
-                                CountDownLatch c = tests.lowerEntry(order).getValue();
-                                if (c != null)
-                                    c.await();
-                            }
+            String order = null;
+            AbstractTestDescriptor testDescriptor = null;
+            try {
+                Field field = testTask.getClass().getDeclaredField("testDescriptor");
+                field.setAccessible(true);
+                testDescriptor = (AbstractTestDescriptor) field.get(testTask);
+                if (testDescriptor instanceof ClassTestDescriptor) {
+                    //Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
+                    //Order o = clz.getAnnotation(Order.class);
+                    String className = ((ClassTestDescriptor) testDescriptor).getTestClass().getName();
+                    order = prop.getProperty(className);
+                    if (order != null) {
+                        if (tests.lowerEntry(Integer.parseInt(order)) != null) {
+                            CountDownLatch c = tests.lowerEntry(Integer.parseInt(order)).getValue();
+                            if (c != null)
+                                c.await();
                         }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             if (testTask.getExecutionMode() == ExecutionMode.CONCURRENT) {
 
@@ -226,13 +248,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         }
 
         public void compute() {
-
-
-
-
             try {
                 ResourceLock lock = this.testTask.getResourceLock().acquire();
-
                 try {
                     this.testTask.execute();
                 } catch (Throwable var5) {
@@ -252,8 +269,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 }
 
 
-
-
                 Integer order = null;
                 AbstractTestDescriptor testDescriptor = null;
                 try {
@@ -261,10 +276,12 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                     field.setAccessible(true);
                     testDescriptor = (AbstractTestDescriptor) field.get(testTask);
                     if (testDescriptor instanceof ClassTestDescriptor) {
-                        Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
-                        Order o = clz.getAnnotation(Order.class);
+//                        Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
+//                        Order o = clz.getAnnotation(Order.class);
+                        String className = ((ClassTestDescriptor) testDescriptor).getTestClass().getName();
+                        String o = prop.getProperty(className);
                         if (o != null) {
-                            order = o.value();
+                            order = Integer.parseInt(o);
                         }
                     }
                 } catch (Exception e) {

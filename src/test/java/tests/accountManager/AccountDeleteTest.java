@@ -1,6 +1,7 @@
-package tests.AccountManager;
+package tests.accountManager;
 
 import io.qameta.allure.Description;
+import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import steps.accountManager.AccountSteps;
 import steps.keyCloak.KeyCloakSteps;
@@ -8,7 +9,7 @@ import tests.Tests;
 
 @DisplayName("Набор для удаления счета")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(99999)
+@OrderLabel("tests.accountManager.AccountDeleteTest")
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountDeleteTest extends Tests {

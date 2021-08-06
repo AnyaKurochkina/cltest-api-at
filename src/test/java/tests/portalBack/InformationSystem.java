@@ -1,6 +1,7 @@
 package tests.portalBack;
 
 import io.qameta.allure.Description;
+import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import steps.keyCloak.KeyCloakSteps;
 import steps.portalBack.PortalBackSteps;
@@ -10,7 +11,7 @@ import static steps.Steps.titleInformationSystem;
 
 @DisplayName("Набор тестов по информационным ситсемам")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(200)
+@OrderLabel("tests.portalBack.InformationSystem")
 @Tags({@Tag("regress")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class InformationSystem extends Tests {
