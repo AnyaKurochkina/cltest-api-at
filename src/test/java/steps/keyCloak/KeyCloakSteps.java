@@ -4,12 +4,14 @@ import core.CacheService;
 import core.helper.Configurier;
 import core.helper.Http;
 import io.qameta.allure.Step;
+import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
 import models.authorizer.User;
 import models.keyCloak.Service;
 import models.keyCloak.ServiceAccountToken;
 import models.keyCloak.UserToken;
 
+@Log4j2
 public class KeyCloakSteps {
     private static final String URL = Configurier.getInstance().getAppProp("host_kk");
     private static final int TOKEN_LIFETIME_SEC = 300;
@@ -28,6 +30,9 @@ public class KeyCloakSteps {
         else if(currentTime - userToken.time > TOKEN_LIFETIME_SEC) {
             userToken.token = getNewUserToken();
             userToken.time = currentTime;
+        }
+        else {
+            return userToken.token;
         }
         cacheService.saveEntity(userToken);
         return userToken.token;
@@ -68,13 +73,17 @@ public class KeyCloakSteps {
             serviceAccountToken.token = getNewServiceAccountToken(projectId, serviceAccount);
             serviceAccountToken.time = currentTime;
         }
+        else {
+            log.debug("Использован SA токен из кэша {}", serviceAccountToken.serviceAccountName);
+            return serviceAccountToken.token;
+        }
+        log.debug("Использован SA новый токен {}", serviceAccountToken.serviceAccountName);
         cacheService.saveEntity(serviceAccountToken);
         return serviceAccountToken.token;
     }
 
     @Step("Получение нового ServiceAccountToken")
     public static synchronized String getNewServiceAccountToken(String projectId, ServiceAccount serviceAccount) {
-
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()

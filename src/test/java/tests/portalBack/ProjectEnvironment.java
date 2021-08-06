@@ -1,6 +1,7 @@
 package tests.portalBack;
 
 import io.qameta.allure.Description;
+import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
 
 @DisplayName("Получение среды назначения")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Order(400)
+@OrderLabel("tests.portalBack.ProjectEnvironment")
 @Tags({@Tag("regress")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectEnvironment extends Tests {

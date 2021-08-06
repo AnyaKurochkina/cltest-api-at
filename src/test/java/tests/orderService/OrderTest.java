@@ -2,6 +2,7 @@ package tests.orderService;
 
 import models.orderService.interfaces.IProduct;
 import models.orderService.products.*;
+import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
 @DisplayName("Набор для создания продуктов")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
-@Order(650)
+@OrderLabel("tests.orderService.OrderTest")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
 public class OrderTest extends Tests {
 
@@ -30,7 +31,7 @@ public class OrderTest extends Tests {
                 ((OpenShiftProject) product).deleteProject();
                 break;
             case "Windows":
-                product.reset();
+                product.restart();
                 product.stopSoft();
                 product.resize();
                 product.start();
@@ -40,7 +41,7 @@ public class OrderTest extends Tests {
             case "Redis":
                 product.reset_password();
                 product.expand_mount_point();
-                product.reset();
+                product.restart();
                 product.stopSoft();
                 product.start();
                 product.stopHard();
@@ -54,7 +55,7 @@ public class OrderTest extends Tests {
                 ((PostgreSQL) product).remove_dbms_user();
                 ((PostgreSQL) product).remove_db();
                 product.expand_mount_point();
-                product.reset();
+                product.restart();
                 product.stopSoft();
                 product.start();
                 product.stopHard();
@@ -63,7 +64,7 @@ public class OrderTest extends Tests {
             case "RabbitMQCluster":
                 product.expand_mount_point();
                 ((RabbitMQCluster) product).rabbitmq_create_user();
-                product.reset();
+                product.restart();
                 product.stopSoft();
                 product.start();
                 product.stopHard();
@@ -71,7 +72,7 @@ public class OrderTest extends Tests {
                 break;
             default:
                 product.expand_mount_point();
-                product.reset();
+                product.restart();
                 product.stopSoft();
                 product.resize();
                 product.start();
@@ -102,6 +103,8 @@ public class OrderTest extends Tests {
         return Stream.of(
 //                Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("ds1-genr01.corp.dev.vtb - DEV-SRV-APP").build()),
 //
+          //        Arguments.arguments(ApacheKafkaCluster.builder().env("TEST").kafkaVersion("2.13-2.4.1").segment("test-srv-synt").dataCentre("5").platform("vsphere").build()),
+           //     Arguments.arguments(ApacheKafkaCluster.builder().env("TEST").kafkaVersion("2.13-2.4.1").segment("test-srv-synt").dataCentre("5").platform("Nutanix").build())
 //                Arguments.arguments(Nginx.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
 //                Arguments.arguments(Windows.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("Microsoft Windows Server 2019").build()),
 //                Arguments.arguments(Redis.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
