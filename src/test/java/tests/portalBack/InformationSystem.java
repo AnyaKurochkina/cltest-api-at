@@ -14,7 +14,7 @@ import static steps.Steps.titleInformationSystem;
 @OrderLabel("tests.portalBack.InformationSystem")
 @Tags({@Tag("regress")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class InformationSystem extends Tests {
+public class InformationSystem implements Tests {
     PortalBackSteps portalBackSteps = new PortalBackSteps();
 
 

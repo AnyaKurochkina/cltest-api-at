@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @OrderLabel("tests.authorizer.ProjectCreateTests")
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProjectCreateTests extends Tests {
+public class ProjectCreateTests implements Tests {
     ProjectSteps projectSteps = new ProjectSteps();
 
     @ParameterizedTest

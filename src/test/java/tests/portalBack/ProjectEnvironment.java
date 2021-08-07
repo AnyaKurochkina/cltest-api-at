@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @OrderLabel("tests.portalBack.ProjectEnvironment")
 @Tags({@Tag("regress")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProjectEnvironment extends Tests {
+public class ProjectEnvironment implements Tests {
     PortalBackSteps portalBackSteps = new PortalBackSteps();
 
 

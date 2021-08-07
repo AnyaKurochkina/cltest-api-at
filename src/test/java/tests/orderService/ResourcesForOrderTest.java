@@ -2,6 +2,8 @@ package tests.orderService;
 
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extensions;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,7 +19,7 @@ import java.util.stream.Stream;
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.ResourcesForOrderTest")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
-public class ResourcesForOrderTest extends Tests {
+public class ResourcesForOrderTest implements Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @ParameterizedTest

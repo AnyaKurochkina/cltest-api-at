@@ -13,7 +13,7 @@ import tests.Tests;
 @OrderLabel("tests.authorizer.OrganizationTests")
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class OrganizationTests extends Tests {
+public class OrganizationTests implements Tests {
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();
 
 

@@ -55,7 +55,7 @@ public class JsonHelper {
     }
 
 
-        private ConcurrentHashMap<String, ConcurrentHashMap<String, String>> allTests = new ConcurrentHashMap<String, ConcurrentHashMap<String, String>>();
+    private ConcurrentHashMap<String, ConcurrentHashMap<String, String>> allTests = new ConcurrentHashMap<String, ConcurrentHashMap<String, String>>();
     public ConcurrentHashMap<String, String> testValues = new ConcurrentHashMap<String, String>();
     public volatile static ConcurrentHashMap<String, String> shareData = new ConcurrentHashMap<>();
     volatile static ReadWriteLock lock = new ReentrantReadWriteLock();

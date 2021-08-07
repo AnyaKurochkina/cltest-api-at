@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.OrderTest")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
-public class OrderTest extends Tests {
+public class OrderTest implements Tests {
 
     @ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
@@ -39,8 +39,8 @@ public class OrderTest extends Tests {
                 product.delete();
                 break;
             case "Redis":
-                product.reset_password();
-                product.expand_mount_point();
+                ((Redis) product).resetPassword();
+                product.expandMountPoint();
                 product.restart();
                 product.stopSoft();
                 product.start();
@@ -48,13 +48,13 @@ public class OrderTest extends Tests {
                 product.delete();
                 break;
             case "PostgreSQL":
-                ((PostgreSQL) product).create_db("testdb");
-                ((PostgreSQL) product).reset_db_owner_password();
-                ((PostgreSQL) product).create_dbms_user("testuser", "user");
-                product.reset_password();
-                ((PostgreSQL) product).remove_dbms_user();
-                ((PostgreSQL) product).remove_db();
-                product.expand_mount_point();
+                product.expandMountPoint();
+                ((PostgreSQL) product).createDb("testdb");
+                ((PostgreSQL) product).resetDbOwnerPassword();
+                ((PostgreSQL) product).createDbmsUser("testuser", "user");
+                ((PostgreSQL) product).resetPassword();
+                ((PostgreSQL) product).removeDbmsUser();
+                ((PostgreSQL) product).removeDb();
                 product.restart();
                 product.stopSoft();
                 product.start();
@@ -62,8 +62,8 @@ public class OrderTest extends Tests {
                 product.delete();
                 break;
             case "RabbitMQCluster":
-                product.expand_mount_point();
-                ((RabbitMQCluster) product).rabbitmq_create_user();
+                product.expandMountPoint();
+                ((RabbitMQCluster) product).rabbitmqCreateUser();
                 product.restart();
                 product.stopSoft();
                 product.start();
@@ -71,7 +71,7 @@ public class OrderTest extends Tests {
                 product.delete();
                 break;
             default:
-                product.expand_mount_point();
+                product.expandMountPoint();
                 product.restart();
                 product.stopSoft();
                 product.resize();
@@ -82,25 +82,25 @@ public class OrderTest extends Tests {
     }
 
     //IFT
-    /*static Stream<Arguments> dataProviderMethod() {
-        return Stream.of(
-                Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("ds0-bank01 - Demo").build()),
-
-                Arguments.arguments(Nginx.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
-                Arguments.arguments(Windows.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("Microsoft Windows Server 2019").build()),
-                Arguments.arguments(Redis.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
-                Arguments.arguments(ApacheKafka.builder().env("DEV").kafkaVersion("2.13-2.4.1").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
-                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
-                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
-                Arguments.arguments(RabbitMQCluster.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
-                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("12").build())//,
-                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("11").build())
-        );
-    }*/
-
-    //PROD
     static Stream<Arguments> dataProviderMethod() {
         return Stream.of(
+//                Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("ds0-bank01 - Demo").build()),
+//
+//                Arguments.arguments(Nginx.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+//                Arguments.arguments(Windows.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("Microsoft Windows Server 2019").build()),
+//                Arguments.arguments(Redis.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+//                Arguments.arguments(ApacheKafka.builder().env("DEV").kafkaVersion("2.13-2.4.1").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+//                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
+//                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
+//                Arguments.arguments(RabbitMQCluster.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresqlVersion("12").build()),
+                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresqlVersion("11").build())
+        );
+    }
+
+    //PROD
+//    static Stream<Arguments> dataProviderMethod() {
+//        return Stream.of(
 //                Arguments.arguments(OpenShiftProject.builder().env("DEV").resourcePoolLabel("ds1-genr01.corp.dev.vtb - DEV-SRV-APP").build()),
 //
           //        Arguments.arguments(ApacheKafkaCluster.builder().env("TEST").kafkaVersion("2.13-2.4.1").segment("test-srv-synt").dataCentre("5").platform("vsphere").build()),
@@ -111,7 +111,7 @@ public class OrderTest extends Tests {
 //                Arguments.arguments(ApacheKafka.builder().env("DEV").kafkaVersion("2.13-2.4.1").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
 //                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
 //                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("7.latest").build()),
-//                Arguments.arguments(RabbitMQCluster.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build()),
+//                Arguments.arguments(RabbitMQCluster.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").build())//,
 //                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("12").build()),
 //                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").postgresql_version("11").build()),
 //                Arguments.arguments(WildFly.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("Nutanix").osVersion("8.latest").build()),
@@ -123,9 +123,9 @@ public class OrderTest extends Tests {
 //                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").build()),
 //                Arguments.arguments(Rhel.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("7.latest").build()),
 //                Arguments.arguments(RabbitMQCluster.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").build()),
-                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").postgresql_version("12").build())//,
+//                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").postgresql_version("12").build()),
 //                Arguments.arguments(PostgreSQL.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").postgresql_version("11").build()),
-//                Arguments.arguments(WildFly.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").build())//,
+//                Arguments.arguments(WildFly.builder().env("DEV").segment("dev-srv-app").dataCentre("5").platform("OpenStack").osVersion("8.latest").build()),
 //
 //                Arguments.arguments(Nginx.builder().env("TEST").segment("test-srv-synt").dataCentre("5").platform("Nutanix").build()),
 //                Arguments.arguments(Windows.builder().env("TEST").segment("test-srv-synt").dataCentre("5").platform("Nutanix").osVersion("Microsoft Windows Server 2019").build()),
@@ -150,6 +150,6 @@ public class OrderTest extends Tests {
 //                Arguments.arguments(WildFly.builder().env("TEST").segment("test-srv-synt").dataCentre("5").platform("vsphere").osVersion("8.latest").build()),
 //
 //
-        );
-    }
+//        );
+//    }
 }

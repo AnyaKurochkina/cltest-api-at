@@ -1,38 +1,32 @@
 package models.orderService.products;
 
-import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import steps.orderService.OrderServiceSteps;
 
 @Log4j2
-@Builder
-public class Windows extends Entity implements IProduct {
-    public String env;
-    public String segment;
-    public String dataCentre;
-    public String platform;
-    public String osVersion;
-    public String orderId;
-    public String projectId;
-    public String productId;
+@SuperBuilder
+public class Windows extends IProduct {
+    String segment;
+    String dataCentre;
+    String platform;
+    String osVersion;
     public String domain;
     @Builder.Default
-    public String productName = "Windows";
+    String productName = "Windows";
     @Builder.Default
-    public String status = "NOT_CREATED";
+    String status = "NOT_CREATED";
     @Builder.Default
-    public boolean isDeleted = false;
+    boolean isDeleted = false;
 
     @Override
     public void order() {
-        JsonHelper jsonHelper = new JsonHelper();
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        productName = "Windows";
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
@@ -42,7 +36,6 @@ public class Windows extends Entity implements IProduct {
         projectId = project.id;
         productId = orderServiceSteps.getProductId(this);
         domain = orderServiceSteps.getDomainBySegment(this, segment);
-
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
                 .set("$.order.product_id", productId)
@@ -60,35 +53,8 @@ public class Windows extends Entity implements IProduct {
                 .jsonPath();
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
-
         status = "CREATED";
         cacheService.saveEntity(this);
-
-    }
-
-    @Override
-    public String getOrderId(){
-        return orderId;
-    }
-
-    @Override
-    public String getProductName(){
-        return productName;
-    }
-
-    @Override
-    public String getProjectId() {
-        return projectId;
-    }
-
-    @Override
-    public String getEnv() {
-        return env;
-    }
-
-    @Override
-    public String getProductId() {
-        return productId;
     }
 
     @Override
