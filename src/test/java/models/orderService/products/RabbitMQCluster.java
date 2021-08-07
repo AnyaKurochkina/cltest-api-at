@@ -37,7 +37,7 @@ public class RabbitMQCluster extends IProduct {
         productId = orderServiceSteps.getProductId(this);
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath jsonPath = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
+        JsonPath jsonPath = jsonHelper.getJsonTemplate("/orders/rabbitmq_cluster.json")
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
