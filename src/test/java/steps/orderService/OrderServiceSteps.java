@@ -10,7 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.InformationSystem;
 import models.orderService.interfaces.IProduct;
 import models.authorizer.Project;
-import models.orderService.products.ResourcePool;
+import models.orderService.ResourcePool;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.junit.Assert;

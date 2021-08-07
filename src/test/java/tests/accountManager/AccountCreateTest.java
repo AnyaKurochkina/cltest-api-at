@@ -12,7 +12,7 @@ import tests.Tests;
 @OrderLabel("tests.accountManager.AccountCreateTest")
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AccountCreateTest extends Tests {
+public class AccountCreateTest implements Tests {
     AccountSteps accountCreate = new AccountSteps();
 
     @Test

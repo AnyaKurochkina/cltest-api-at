@@ -1,66 +1,30 @@
 package models.orderService.products;
 
-import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import steps.orderService.OrderServiceSteps;
 
 @Log4j2
-@Builder
-public class ApacheKafka extends Entity implements IProduct{
-
-
-    String env;
+@SuperBuilder
+public class ApacheKafka extends IProduct {
     String segment;
     String dataCentre;
     String platform;
-    String orderId;
     String kafkaVersion;
-    public String productId;
-    public String domain;
-    @Builder.Default
-    String productName = "Apache Kafka";
+    String domain;
     @Builder.Default
     public String status = "NOT_CREATED";
     @Builder.Default
     public boolean isDeleted = false;
-    public String projectId;
-
-
-    @Override
-    public String getOrderId() {
-        return orderId;
-    }
-
-    @Override
-    public String getProjectId() {
-        return projectId;
-    }
-
-    @Override
-    public String getProductName() {
-        return productName;
-    }
-
-    @Override
-    public String getEnv() {
-        return env;
-    }
-
-    @Override
-    public String getProductId() {
-        return productId;
-    }
 
     @Override
     public void order() {
-        final JsonHelper jsonHelper = new JsonHelper();
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        productName = "Apache Kafka";
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
@@ -87,26 +51,15 @@ public class ApacheKafka extends Entity implements IProduct{
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
-
-
         orderServiceSteps.checkOrderStatus("success", this);
-
-
         status = "CREATED";
         cacheService.saveEntity(this);
     }
 
-
     @Override
     public void delete() {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
-    }
-
-    @Override
-    public void expand_mount_point() {
-        IProduct.super.expand_mount_point();
     }
 
     @Override

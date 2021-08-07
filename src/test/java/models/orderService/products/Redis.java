@@ -1,10 +1,9 @@
 package models.orderService.products;
 
-import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
@@ -13,54 +12,21 @@ import steps.orderService.OrderServiceSteps;
 import static org.junit.Assert.assertTrue;
 
 @Log4j2
-@Builder
-public class Redis extends Entity implements IProduct {
-
-    public String env;
-    public String segment;
-    public String dataCentre;
-    public String platform;
-    public String orderId;
-    public String productId;
-    public String domain;
+@SuperBuilder
+public class Redis extends IProduct {
+    String segment;
+    String dataCentre;
+    String platform;
+    String domain;
     @Builder.Default
-    String productName = "Redis";
+    String status = "NOT_CREATED";
     @Builder.Default
-    public String status = "NOT_CREATED";
-    @Builder.Default
-    public boolean isDeleted = false;
-    public String projectId;
-
-
-    @Override
-    public String getOrderId() {
-        return orderId;
-    }
-
-    @Override
-    public String getProjectId() {
-        return projectId;
-    }
-
-    @Override
-    public String getProductName() {
-        return productName;
-    }
-
-    @Override
-    public String getEnv() {
-        return env;
-    }
-
-    @Override
-    public String getProductId() {
-        return productId;
-    }
+    boolean isDeleted = false;
+    String projectId;
 
     @Override
     public void order() {
-        final JsonHelper jsonHelper = new JsonHelper();
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        productName = "Redis";
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
@@ -70,7 +36,6 @@ public class Redis extends Entity implements IProduct {
         projectId = project.id;
         productId = orderServiceSteps.getProductId(this);
         domain = orderServiceSteps.getDomainBySegment(this, segment);
-
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
                 .set("$.order.product_id", productId)
@@ -86,26 +51,20 @@ public class Redis extends Entity implements IProduct {
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
-
-
         orderServiceSteps.checkOrderStatus("success", this);
-
-
         status = "CREATED";
         cacheService.saveEntity(this);
     }
 
     @Override
     public void delete() {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     @Override
-    public void expand_mount_point() {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);;
+    public void expandMountPoint() {
+        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         String actionId = orderServiceSteps.executeAction("Расширить", "{\"size\": 10, \"mount\": \"/app/redis/data\"}", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);

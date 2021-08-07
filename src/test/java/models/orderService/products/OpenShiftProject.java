@@ -1,32 +1,25 @@
 package models.orderService.products;
 
-import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
+import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Role;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
-
 import java.util.*;
 
 @Log4j2
-@Builder
-public class OpenShiftProject extends Entity implements IProduct {
-    public String env;
+@SuperBuilder
+public class OpenShiftProject extends IProduct {
     public String resourcePoolLabel;
-    public String orderId;
-    public String projectId;
-    public String productId;
     public String domain;
     @Builder.Default
     public List<Role> roles = new ArrayList<>();
-    @Builder.Default
-    public String productName = "OpenShift project";
     @Builder.Default
     public String status = "NOT_CREATED";
     @Builder.Default
@@ -34,18 +27,16 @@ public class OpenShiftProject extends Entity implements IProduct {
 
     @Override
     public void order() {
-        JsonHelper jsonHelper = new JsonHelper();
+        productName = "OpenShift project";
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
-
         ResourcePool resourcePool = cacheService.entity(ResourcePool.class)
                 .withField("label", resourcePoolLabel)
                 .getEntity();
-
         projectId = project.id;
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = jsonHelper.getJsonTemplate("/orders/openshift_project.json")
@@ -60,16 +51,12 @@ public class OpenShiftProject extends Entity implements IProduct {
                 .jsonPath();
         orderId = array.get("[0].id");
         roles.add(new Role ("edit", accessGroup.name));
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         orderServiceSteps.checkOrderStatus("success", this);
-
         status = "CREATED";
         cacheService.saveEntity(this);
-
     }
 
     public void changeProject() {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
         roles.get(0).setName("view");
         String actionId = orderServiceSteps.executeAction("Изменить проект", data, this);
@@ -80,34 +67,8 @@ public class OpenShiftProject extends Entity implements IProduct {
     }
 
     public void deleteProject() {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         String actionId = orderServiceSteps.executeAction("Удалить проект", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
-    }
-
-    @Override
-    public String getOrderId(){
-        return orderId;
-    }
-
-    @Override
-    public String getProductName(){
-        return productName;
-    }
-
-    @Override
-    public String getProjectId() {
-        return projectId;
-    }
-
-    @Override
-    public String getEnv() {
-        return env;
-    }
-
-    @Override
-    public String getProductId() {
-        return productId;
     }
 
     @Override

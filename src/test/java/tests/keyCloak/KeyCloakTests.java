@@ -12,14 +12,13 @@ import steps.keyCloak.KeyCloakSteps;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags({@Tag("regress")})
 @OrderLabel("tests.keyCloak.KeyCloakTests")
-public class KeyCloakTests extends Tests {
-    KeyCloakSteps keyCloakSteps = new KeyCloakSteps();
+public class KeyCloakTests implements Tests {
 
     @Test
     @DisplayName("Получение токена")
     @Description("Проверка получения токена для доступа к API портала")
     public void getToken() {
-        keyCloakSteps.getUserToken();
+        KeyCloakSteps.getUserToken();
     }
 
 
