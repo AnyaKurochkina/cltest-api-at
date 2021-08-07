@@ -71,6 +71,12 @@ public class Redis extends IProduct {
         assertTrue(sizeBefore<sizeAfter);
     }
 
+    public void resetPassword() {
+        String password = "yxjpjk7xvOImb1O9vZZiGUlsItkqLqtbB1VPZHzL6";
+        String actionId = orderServiceSteps.executeAction("Сбросить пароль", String.format("{redis_password: \"%s\"}", password), this);
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+    }
+
     @Override
     public String toString() {
         return "Redis {" +

@@ -39,7 +39,7 @@ public class OrderTest implements Tests {
                 product.delete();
                 break;
             case "Redis":
-                product.resetPassword();
+                ((Redis) product).resetPassword();
                 product.expandMountPoint();
                 product.restart();
                 product.stopSoft();
@@ -49,12 +49,12 @@ public class OrderTest implements Tests {
                 break;
             case "PostgreSQL":
                 product.expandMountPoint();
-                ((PostgreSQL) product).create_db("testdb");
-                ((PostgreSQL) product).reset_db_owner_password();
-                ((PostgreSQL) product).create_dbms_user("testuser", "user");
-                product.reset_password();
-                ((PostgreSQL) product).remove_dbms_user();
-                ((PostgreSQL) product).remove_db();
+                ((PostgreSQL) product).createDb("testdb");
+                ((PostgreSQL) product).resetDbOwnerPassword();
+                ((PostgreSQL) product).createDbmsUser("testuser", "user");
+                ((PostgreSQL) product).resetPassword();
+                ((PostgreSQL) product).removeDbmsUser();
+                ((PostgreSQL) product).removeDb();
                 product.restart();
                 product.stopSoft();
                 product.start();
