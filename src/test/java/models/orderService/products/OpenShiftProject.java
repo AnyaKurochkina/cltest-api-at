@@ -1,10 +1,7 @@
 package models.orderService.products;
 
 import io.restassured.path.json.JsonPath;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
@@ -16,19 +13,15 @@ import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 import java.util.*;
 
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
-@SuperBuilder
-@NoArgsConstructor
 @Data
 public class OpenShiftProject extends IProduct {
     public String resourcePoolLabel;
     public String domain;
-    @Builder.Default
     public List<Role> roles = new ArrayList<>();
-    @Builder.Default
     public String status = "NOT_CREATED";
-    @Builder.Default
     public boolean isDeleted = false;
 
     @Override

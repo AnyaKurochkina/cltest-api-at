@@ -1,10 +1,7 @@
 package models.orderService.products;
 
 import io.restassured.path.json.JsonPath;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
@@ -14,19 +11,16 @@ import steps.orderService.OrderServiceSteps;
 
 import static org.junit.Assert.assertTrue;
 
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
-@SuperBuilder
-@NoArgsConstructor
 @Data
 public class Redis extends IProduct {
     String segment;
     String dataCentre;
     String platform;
     String domain;
-    @Builder.Default
     String status = "NOT_CREATED";
-    @Builder.Default
     boolean isDeleted = false;
     String projectId;
 

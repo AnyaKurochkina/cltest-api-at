@@ -17,10 +17,9 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
-@SuperBuilder
-@NoArgsConstructor
 @Data
 public class PostgreSQL extends IProduct {
     public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs[0].db_name";
@@ -33,13 +32,9 @@ public class PostgreSQL extends IProduct {
     String osVersion;
     String postgresqlVersion;
     String domain;
-    @Builder.Default
     String status = "NOT_CREATED";
-    @Builder.Default
     boolean isDeleted = false;
-    @Builder.Default
     public List<PostgreSqlDB> database = new ArrayList<>();
-    @Builder.Default
     public List<PostgreSqlUsers> users = new ArrayList<>();
 
     @Override
