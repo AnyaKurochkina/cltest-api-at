@@ -2,6 +2,8 @@ package tests.authorizer;
 
 import io.qameta.allure.Description;
 import org.junit.OrderLabel;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -21,7 +23,7 @@ public class ProjectDeleteTests implements Tests {
     ProjectSteps projectSteps = new ProjectSteps();
 
     @ParameterizedTest
-    @MethodSource("dataFolders")
+    @Source(ProductArgumentsProvider.ENV)
     @Order(2)
     @DisplayName("Удаление проекта")
     @Description("Удаление проекта с сохранением в Shared Memory")
@@ -29,7 +31,5 @@ public class ProjectDeleteTests implements Tests {
         projectSteps.deleteProject(env);
     }
 
-    static Stream<Arguments> dataFolders() {
-        return Stream.of(Arguments.arguments("DEV"), Arguments.arguments("TEST"));
-    }
+
 }

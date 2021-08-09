@@ -2,6 +2,9 @@ package models.orderService.products;
 
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
@@ -11,8 +14,11 @@ import steps.orderService.OrderServiceSteps;
 
 import static org.junit.Assert.assertTrue;
 
+@EqualsAndHashCode(callSuper = true)
 @Log4j2
 @SuperBuilder
+@NoArgsConstructor
+@Data
 public class Redis extends IProduct {
     String segment;
     String dataCentre;
@@ -77,13 +83,4 @@ public class Redis extends IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    @Override
-    public String toString() {
-        return "Redis {" +
-                "env='" + env + '\'' +
-                ", segment='" + segment + '\'' +
-                ", dataCentre='" + dataCentre + '\'' +
-                ", platform='" + platform + '\'' +
-                '}';
-    }
 }

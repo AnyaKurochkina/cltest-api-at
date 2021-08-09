@@ -2,6 +2,9 @@ package models.orderService.products;
 
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
@@ -13,8 +16,11 @@ import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 import java.util.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Log4j2
 @SuperBuilder
+@NoArgsConstructor
+@Data
 public class OpenShiftProject extends IProduct {
     public String resourcePoolLabel;
     public String domain;
@@ -71,11 +77,4 @@ public class OpenShiftProject extends IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    @Override
-    public String toString() {
-        return productName+" {" +
-                "env='" + env + '\'' +
-                ", resourcePoolLable='" + resourcePoolLabel + '\'' +
-                '}';
-    }
 }

@@ -2,6 +2,8 @@ package tests.authorizer;
 
 import io.qameta.allure.Description;
 import org.junit.OrderLabel;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,14 +25,11 @@ public class ProjectCreateTests implements Tests {
     @ParameterizedTest
     @Order(1)
     @DisplayName("Создание проекта")
-    @MethodSource("dataFolders")
+    @Source(ProductArgumentsProvider.ENV)
     @Description("Создание проекта с сохранением в Shared Memory")
     public void createProject(String env) {
         projectSteps.createProject("FOLDER", "PROJECT_"+env, env);
     }
 
-    static Stream<Arguments> dataFolders() {
-        return Stream.of(Arguments.arguments("DEV"), Arguments.arguments("TEST"));
-    }
 
 }

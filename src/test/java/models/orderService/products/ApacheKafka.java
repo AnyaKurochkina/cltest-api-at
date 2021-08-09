@@ -2,6 +2,9 @@ package models.orderService.products;
 
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
@@ -9,8 +12,11 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import steps.orderService.OrderServiceSteps;
 
+@EqualsAndHashCode(callSuper = true)
 @Log4j2
 @SuperBuilder
+@NoArgsConstructor
+@Data
 public class ApacheKafka extends IProduct {
     String segment;
     String dataCentre;
@@ -62,14 +68,4 @@ public class ApacheKafka extends IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    @Override
-    public String toString() {
-        return "Apache_Kafka {" +
-                "env='" + env + '\'' +
-                ", segment='" + segment + '\'' +
-                ", dataCentre='" + dataCentre + '\'' +
-                ", platform='" + platform + '\'' +
-                ", kafka_Version" + kafkaVersion + '\'' +
-                '}';
-    }
 }
