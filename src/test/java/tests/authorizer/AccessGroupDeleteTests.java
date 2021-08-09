@@ -2,6 +2,8 @@ package tests.authorizer;
 
 import io.qameta.allure.Description;
 import org.junit.OrderLabel;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -21,7 +23,7 @@ public class AccessGroupDeleteTests implements Tests {
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
 
     @ParameterizedTest
-    @MethodSource("dataEnv")
+    @Source(ProductArgumentsProvider.ENV)
     @Order(1)
     @DisplayName("Удаление Группы доступа")
     @Description("Удаление Группы доступа")
@@ -29,10 +31,5 @@ public class AccessGroupDeleteTests implements Tests {
         accessGroupSteps.deleteAccessGroup(env);
     }
 
-    static Stream<Arguments> dataEnv() {
-        return Stream.of(Arguments.arguments("DEV"),
-                Arguments.arguments("TEST"))
-                ;
-    }
 
 }

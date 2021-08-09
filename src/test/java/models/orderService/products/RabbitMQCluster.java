@@ -1,7 +1,7 @@
 package models.orderService.products;
 
 import io.restassured.path.json.JsonPath;
-import lombok.Builder;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
@@ -11,17 +11,17 @@ import steps.orderService.OrderServiceSteps;
 
 import static org.junit.Assert.assertEquals;
 
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Log4j2
-@SuperBuilder
+@Data
 public class RabbitMQCluster extends IProduct {
     static String RABBITMQ_USER = "data.find{it.type=='cluster'}.config.users[0]";
     String segment;
     String dataCentre;
     String platform;
     String domain;
-    @Builder.Default
     String status = "NOT_CREATED";
-    @Builder.Default
     boolean isDeleted = false;
 
     @Override
@@ -71,14 +71,5 @@ public class RabbitMQCluster extends IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    @Override
-    public String toString() {
-        return "RabbitMQ Cluster {" +
-                "env='" + env + '\'' +
-                ", segment='" + segment + '\'' +
-                ", dataCentre='" + dataCentre + '\'' +
-                ", platform='" + platform + '\'' +
-                '}';
-    }
 
 }

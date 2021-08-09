@@ -1,7 +1,7 @@
 package models.orderService.products;
 
 import io.restassured.path.json.JsonPath;
-import lombok.Builder;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
@@ -17,8 +17,10 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Log4j2
-@SuperBuilder
+@Data
 public class PostgreSQL extends IProduct {
     public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs[0].db_name";
     public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
@@ -30,13 +32,9 @@ public class PostgreSQL extends IProduct {
     String osVersion;
     String postgresqlVersion;
     String domain;
-    @Builder.Default
     String status = "NOT_CREATED";
-    @Builder.Default
     boolean isDeleted = false;
-    @Builder.Default
     public List<PostgreSqlDB> database = new ArrayList<>();
-    @Builder.Default
     public List<PostgreSqlUsers> users = new ArrayList<>();
 
     @Override
@@ -146,15 +144,4 @@ public class PostgreSQL extends IProduct {
         cacheService.saveEntity(this);
     }
 
-    @Override
-    public String toString() {
-        return "PostgreSQL {" +
-                "env='" + env + '\'' +
-                ", segment='" + segment + '\'' +
-                ", dataCentre='" + dataCentre + '\'' +
-                ", platform='" + platform + '\'' +
-                ", osVersion='" + osVersion + '\'' +
-                ", postgreSQL='" + postgresqlVersion + '\'' +
-                '}';
-    }
 }

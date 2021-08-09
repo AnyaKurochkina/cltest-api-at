@@ -2,6 +2,8 @@ package tests.authorizer;
 
 import io.qameta.allure.Description;
 import org.junit.OrderLabel;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,15 +24,12 @@ public class ServiceAccountDeleteTests implements Tests {
     @ParameterizedTest
     @Order(1)
     @DisplayName("Удаление сервисного аккаунта")
-    @MethodSource("dataEnv")
+    @Source(ProductArgumentsProvider.ENV)
     @Description("Удаление сервисного аккаунта с сохранением в Shared Memory")
     public void createServiceAccount(String env) {
         serviceAccountSteps.deleteServiceAccount("PROJECT_"+env);
     }
 
-    static Stream<Arguments> dataEnv() {
-        return Stream.of(Arguments.arguments("DEV"), Arguments.arguments("TEST"));
-    }
 
 }
 

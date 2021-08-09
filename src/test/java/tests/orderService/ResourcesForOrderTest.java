@@ -1,18 +1,14 @@
 package tests.orderService;
 
 import org.junit.OrderLabel;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.Extensions;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import steps.orderService.OrderServiceSteps;
 import tests.Tests;
-
-import java.util.stream.Stream;
 
 @DisplayName("Тесты на сущности перед заказом продуктов")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -23,16 +19,11 @@ public class ResourcesForOrderTest implements Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @ParameterizedTest
-    @MethodSource("dataProviderMethod")
+    @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Получение ресурсных пулов контейнеров")
     public void getResourcesPool(String env) {
         orderServiceSteps.getResourcesPool("container", env);
     }
 
-    static Stream<Arguments> dataProviderMethod() {
-        return Stream.of(
-                Arguments.arguments("DEV"),
-                Arguments.arguments("TEST"));
-    }
 
 }

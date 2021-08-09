@@ -1,17 +1,14 @@
 package models.orderService.interfaces;
 
 import static org.junit.Assert.*;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.ToString;
 import models.Entity;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.Map;
 
-@SuperBuilder
-@NoArgsConstructor
+@ToString(onlyExplicitlyIncluded = true)
 public abstract class IProduct extends Entity {
     public static String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
     public static String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
@@ -19,7 +16,6 @@ public abstract class IProduct extends Entity {
     public static String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.config.topics.any{it.topic_name=='%s'}";
     public static String KAFKA_CLUSTER_ACL = "data.find{it.type=='cluster'}.config.acls.any{it.topic_name=='%s'}";
 
-    @Builder.Default
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @Getter
@@ -29,6 +25,7 @@ public abstract class IProduct extends Entity {
     @Getter
     protected String productName;
     @Getter
+    @ToString.Include
     protected String env;
     @Getter
     protected String productId;
