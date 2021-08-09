@@ -3,10 +3,12 @@ package steps.authorizer;
 import core.helper.*;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import lombok.extern.log4j.Log4j2;
 import models.authorizer.Folder;
 import models.authorizer.Organization;
 import steps.Steps;
 
+@Log4j2
 public class AuthorizerSteps extends Steps {
     private static final String URL = Configurier.getInstance().getAppProp("host_kong");
 
@@ -71,6 +73,27 @@ public class AuthorizerSteps extends Steps {
                 .title(orgTitle)
                 .build();
         cacheService.saveEntity(organization);
+    }
+
+    @Step("Получение пути до папки/проекта")
+    public String getPathToFolder(String target) {
+        String url;
+        if (target.startsWith("fold")) {
+            url = "authorizer/api/v1/folders/" + target + "/path";
+        } else if (target.startsWith("proj")) {
+            url = "authorizer/api/v1/projects/" + target + "/path";
+        } else {
+            throw new Error("Invalid target: " + target + "\nYour target must start with \"fold\" or \"proj\"");
+        }
+
+        String path = new Http(URL)
+                .get(url)
+                .assertStatus(200)
+                .jsonPath()
+                .get("data.path");
+
+        log.info("Путь до папки/проекта: " + path);
+        return path;
     }
 
 

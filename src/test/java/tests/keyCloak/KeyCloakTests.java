@@ -1,16 +1,15 @@
-package tests.keyCloak;
+package tests.KeyCloak;
 
 import io.qameta.allure.Description;
-import org.jetbrains.annotations.PropertyKey;
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.condition.EnabledIfSystemProperties;
-import tests.Tests;
 import steps.keyCloak.KeyCloakSteps;
+import tests.Tests;
+
 
 @DisplayName("Набор тестов для проверки KeyCloak")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("regress")})
+@Tags({@Tag("regress"), @Tag("teamsity")})
 @OrderLabel("tests.keyCloak.KeyCloakTests")
 public class KeyCloakTests implements Tests {
 
