@@ -2,7 +2,7 @@ package models.orderService.products;
 
 import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
-import lombok.Builder;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -16,19 +16,19 @@ import steps.orderService.OrderServiceSteps;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Log4j2
-@SuperBuilder
+@Data
 public class ApacheKafkaCluster extends IProduct {
     String segment;
     String dataCentre;
     String platform;
     String kafkaVersion;
     String domain;
-    @Builder.Default
     public String status = "NOT_CREATED";
-    @Builder.Default
     public boolean isDeleted = false;
-    @Builder.Default
     public List<KafkaTopic> topics = new ArrayList<>();
 
     @Override
@@ -118,15 +118,4 @@ public class ApacheKafkaCluster extends IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-
-    @Override
-    public String toString() {
-        return "Apache Kafka Cluster {" +
-                "env='" + env + '\'' +
-                ", segment='" + segment + '\'' +
-                ", dataCentre='" + dataCentre + '\'' +
-                ", platform='" + platform + '\'' +
-                ", kafka_Version" + kafkaVersion + '\'' +
-                '}';
-    }
 }

@@ -2,7 +2,7 @@ package models.orderService.products;
 
 import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
-import lombok.Builder;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -11,19 +11,17 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import steps.orderService.OrderServiceSteps;
 
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Log4j2
-@SuperBuilder
+@Data
 public class Nginx extends IProduct {
     String segment;
     String dataCentre;
     String domain;
     String platform;
-    @Builder.Default
     public String status = "NOT_CREATED";
-    @Builder.Default
     public boolean isDeleted = false;
-
-    @Builder.Default
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @Override
@@ -65,13 +63,4 @@ public class Nginx extends IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    @Override
-    public String toString() {
-        return "Nginx {" +
-                "env='" + env + '\'' +
-                ", segment='" + segment + '\'' +
-                ", dataCentre='" + dataCentre + '\'' +
-                ", platform='" + platform + '\'' +
-                '}';
-    }
 }
