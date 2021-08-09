@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 @OrderLabel("tests.authorizer.AccessGroupCreateTests")
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AccessGroupCreateTests extends Tests {
+public class AccessGroupCreateTests implements Tests {
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
 
     @ParameterizedTest

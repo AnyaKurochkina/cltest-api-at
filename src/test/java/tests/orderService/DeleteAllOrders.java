@@ -12,7 +12,7 @@ import tests.Tests;
 @Order(1)
 @Tag("deleteorders")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DeleteAllOrders extends Tests {
+public class DeleteAllOrders implements Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @Test

@@ -5,15 +5,16 @@ import core.vars.TestVars;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-public abstract class Tests {
-    protected TestVars testVars = new TestVars();
+public interface Tests {
+    TestVars testVars = new TestVars();
     @BeforeEach
-    public void beforeScenarios()  {
+    default void beforeScenarios()  {
         LocalThead.setTestVars(testVars);
     }
 
     @AfterEach
-    public void afterScenarios(){
+    default void afterScenarios(){
         LocalThead.setTestVars(null);
     }
+
 }

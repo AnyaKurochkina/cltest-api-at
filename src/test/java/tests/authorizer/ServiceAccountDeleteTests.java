@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 @OrderLabel("tests.authorizer.ServiceAccountDeleteTests")
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ServiceAccountDeleteTests extends Tests {
+public class ServiceAccountDeleteTests implements Tests {
     ServiceAccountSteps serviceAccountSteps = new ServiceAccountSteps();
 
     @ParameterizedTest
