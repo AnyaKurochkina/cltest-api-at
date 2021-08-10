@@ -22,7 +22,7 @@
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
-    "name": "cloud-d2plux-access_groupoe6tnief1903",
+    "name": "cloud-d2plux-access_group95xy54hggnwo",
     "isDeleted": false,
     "projectName": "proj-xazpppulba",
     "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f575"
@@ -30,7 +30,7 @@
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "name": "sa_proj-xazpppulba-3g",
-    "secret": "2e2d725174af277b03e0162ccb1903c7",
+    "secret": "e1ed9dcb845dc3aeffed0f6829aa3cf5",
     "isDeleted": false,
     "projectId": "proj-xazpppulba",
     "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e63"

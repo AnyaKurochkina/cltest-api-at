@@ -1,6 +1,6 @@
 OpenShiftProject:
   - env: "DEV"
-    resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP"
+    resourcePoolLabel: "ds0-bank01 - Demo"
     domain: "corp.dev.vtb"
 
 Rhel:
@@ -43,50 +43,11 @@ RabbitMQCluster:
     domain: "corp.dev.vtb"
     dataCentre: "5"
 
-  - platform: "OpenStack"
-    env: "DEV"
-    segment: "dev-srv-app"
-    domain: "corp.dev.vtb"
-    dataCentre: "5"
-
-  - platform: "Nutanix"
-    env: "TEST"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
-    dataCentre: "5"
-
-  - platform: "vsphere"
-    env: "TEST"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
-    dataCentre: "5"
-
 Windows:
   - platform: "Nutanix"
     env: "DEV"
     segment: "dev-srv-app"
     domain: "corp.dev.vtb"
-    dataCentre: "5"
-    osVersion: "Microsoft Windows Server 2019"
-
-  - platform: "OpenStack"
-    env: "DEV"
-    segment: "dev-srv-app"
-    domain: "corp.dev.vtb"
-    dataCentre: "5"
-    osVersion: "Microsoft Windows Server 2019"
-
-  - platform: "Nutanix"
-    env: "TEST"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
-    dataCentre: "5"
-    osVersion: "Microsoft Windows Server 2019"
-
-  - platform: "vpshere"
-    env: "TEST"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
     dataCentre: "5"
     osVersion: "Microsoft Windows Server 2019"
 
@@ -97,76 +58,11 @@ Nginx:
     domain: "corp.dev.vtb"
     dataCentre: "5"
 
-  - platform: "OpenStack"
-    env: "DEV"
-    segment: "dev-srv-app"
-    domain: "corp.dev.vtb"
-    dataCentre: "5"
-
-  - platform: "Nutanix"
-    env: "TEST"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
-    dataCentre: "5"
-
-  - platform: "vsphere"
-    env: "TEST"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
-    dataCentre: "5"
-
-WildFly:
-  - platform: "Nutanix"
-    env: "DEV"
-    segment: "dev-srv-app"
-    domain: "corp.dev.vtb"
-    osVersion: "8.latest"
-    dataCentre: "5"
-
-  - platform: "OpenStack"
-    env: "DEV"
-    segment: "dev-srv-app"
-    domain: "corp.dev.vtb"
-    osVersion: "8.latest"
-    dataCentre: "5"
-
-  - platform: "Nutanix"
-    env: "TEST"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
-    osVersion: "8.latest"
-    dataCentre: "5"
-
-  - platform: "vsphere"
-    env: "TEST"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
-    osVersion: "8.latest"
-    dataCentre: "5"
-
 Redis:
   - platform: "Nutanix"
     env: "DEV"
     segment: "dev-srv-app"
     domain: "corp.dev.vtb"
-    dataCentre: "5"
-
-  - platform: "OpenStack"
-    env: "DEV"
-    segment: "dev-srv-app"
-    domain: "corp.dev.vtb"
-    dataCentre: "5"
-
-  - platform: "Nutanix"
-    env: "TEST"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
-    dataCentre: "5"
-
-  - platform: "vsphere"
-    env: "TEST"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
     dataCentre: "5"
 
 ApacheKafka:
@@ -175,40 +71,4 @@ ApacheKafka:
     kafkaVersion: "2.13-2.4.1"
     segment: "dev-srv-app"
     domain: "corp.dev.vtb"
-    dataCentre: "5"
-
-  - platform: "OpenStack"
-    env: "DEV"
-    kafkaVersion: "2.13-2.4.1"
-    segment: "dev-srv-app"
-    domain: "corp.dev.vtb"
-    dataCentre: "5"
-
-  - platform: "Nutanix"
-    env: "TEST"
-    kafkaVersion: "2.13-2.4.1"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
-    dataCentre: "5"
-
-  - platform: "vsphere"
-    env: "TEST"
-    kafkaVersion: "2.13-2.4.1"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
-    dataCentre: "5"
-
-ApacheKafkaCluster:
-  - platform: "Nutanix"
-    env: "TEST"
-    kafkaVersion: "2.13-2.4.1"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
-    dataCentre: "5"
-
-  - platform: "vsphere"
-    env: "TEST"
-    kafkaVersion: "2.13-2.4.1"
-    segment: "test-srv-synt"
-    domain: "test.vtb.ru"
     dataCentre: "5"
