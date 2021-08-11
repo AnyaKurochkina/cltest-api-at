@@ -29,8 +29,8 @@
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
-    "name": "sa_proj-xazpppulba-3g",
-    "secret": "e1ed9dcb845dc3aeffed0f6829aa3cf5",
+    "name": "sa_proj-xazpppulba-3s",
+    "secret": "8aa70b8abb9350f4202498237b40ebc1",
     "isDeleted": false,
     "projectId": "proj-xazpppulba",
     "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e63"

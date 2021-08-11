@@ -21,6 +21,7 @@ public class Rhel extends IProduct {
     String domain;
     String status = "NOT_CREATED";
     boolean isDeleted = false;
+    final String jsonTemplatePath = "/tarifficator/cost.json";
 
     @Override
     public void order() {
