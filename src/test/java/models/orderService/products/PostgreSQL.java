@@ -144,4 +144,20 @@ public class PostgreSQL extends IProduct {
         cacheService.saveEntity(this);
     }
 
+    @Override
+    public void runActionsBeforeOtherTests(){
+        expandMountPoint();
+        createDb("testdb");
+        resetDbOwnerPassword();
+        createDbmsUser("testuser", "user");
+        resetPassword();
+    }
+
+    @Override
+    public void runActionsAfterOtherTests(){
+        removeDbmsUser();
+        removeDb();
+        delete();
+    }
+
 }

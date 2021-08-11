@@ -65,9 +65,15 @@ public class OpenShiftProject extends IProduct {
         Assert.assertEquals(orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.roles[0].role"), "view");
     }
 
-    public void deleteProject() {
+    @Override
+    public void delete() {
         String actionId = orderServiceSteps.executeAction("Удалить проект", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
+    }
+
+    @Override
+    public void runActionsBeforeOtherTests(){
+        changeProject();
     }
 
 }

@@ -77,4 +77,13 @@ public class Redis extends IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
+    @Override
+    public void runActionsBeforeOtherTests(){
+        resetPassword();
+        expandMountPoint();
+        restart();
+        stopSoft();
+        start();
+        stopHard();
+    }
 }

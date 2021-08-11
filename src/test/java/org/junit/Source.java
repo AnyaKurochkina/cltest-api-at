@@ -8,5 +8,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @ArgumentsSource(ProductArgumentsProvider.class)
 public @interface Source {
-    String value();
+    int value();
 }

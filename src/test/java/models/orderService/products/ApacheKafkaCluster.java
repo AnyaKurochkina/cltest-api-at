@@ -118,4 +118,21 @@ public class ApacheKafkaCluster extends IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
+    @Override
+    public void runActionsBeforeOtherTests(){
+        updateCerts();
+        createTopic("TopicName");
+        createAcl("*");
+        stopSoft();
+        start();
+        restart();
+        expandMountPoint();
+    }
+
+    @Override
+    public void runActionsAfterOtherTests(){
+        deleteTopic("TopicName");
+        delete();
+    }
+
 }
