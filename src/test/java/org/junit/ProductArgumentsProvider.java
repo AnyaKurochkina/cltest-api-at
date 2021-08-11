@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import models.orderService.interfaces.IProduct;
+import models.orderService.interfaces.IProductMock;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
@@ -13,24 +14,35 @@ import steps.Steps;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Source> {
-    public final static String PRODUCTS = "PRODUCTS";
-    public final static String ENV = "ENV";
+    public final static int PRODUCTS = 0;
+    public final static int ENV = 1;
     private final static List<IProduct> orders = getProductList();
-    private String variableName;
+    private int variableName;
 
     @Override
     public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-        Set<Arguments> list = new HashSet<>();
-        if(variableName.equals(PRODUCTS)) {
-            orders.forEach(entity -> {
-                list.add(Arguments.arguments(entity));
-            });
-        }
-        else if(variableName.equals(ENV)){
-            orders.forEach(entity -> {
+        List<Arguments> list = new ArrayList<>();
+        if (variableName == PRODUCTS) {
+            if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class))
+                orders.forEach(entity -> {
+                    list.add(Arguments.arguments(entity));
+                });
+            else
+                orders.forEach(entity -> {
+                    list.add(Arguments.arguments(new IProductMock(entity.toString())));
+                });
+        } else if (variableName == ENV) {
+            orders.stream()
+                    .filter(distinctByKey(IProduct::getEnv))
+                    .collect(Collectors.toList())
+                    .forEach(entity -> {
                 list.add(Arguments.arguments(entity.getEnv()));
             });
         }
@@ -64,4 +76,10 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         }
         return list;
     }
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
 }

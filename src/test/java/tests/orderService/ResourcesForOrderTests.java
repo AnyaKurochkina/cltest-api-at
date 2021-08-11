@@ -13,9 +13,9 @@ import tests.Tests;
 @DisplayName("Тесты на сущности перед заказом продуктов")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
-@OrderLabel("tests.orderService.ResourcesForOrderTest")
+@OrderLabel("tests.orderService.ResourcesForOrderTests")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
-public class ResourcesForOrderTest implements Tests {
+public class ResourcesForOrderTests implements Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @ParameterizedTest

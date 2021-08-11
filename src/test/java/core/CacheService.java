@@ -14,13 +14,14 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.*;
 
 public class CacheService {
     private Class<?> c;
     private Map<String, Comparable> fields = new HashMap<>();
-    private static final Map<String, String> entities = new HashMap<>();
+    private static final Map<String, String> entities = new ConcurrentHashMap<>();
 
     public CacheService entity(Class<?> c) {
         fields.clear();

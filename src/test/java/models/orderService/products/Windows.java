@@ -59,4 +59,12 @@ public class Windows extends IProduct {
         cacheService.saveEntity(this);
     }
 
+    @Override
+    public void runActionsBeforeOtherTests(){
+        restart();
+        stopSoft();
+        resize();
+        start();
+        stopHard();
+    }
 }

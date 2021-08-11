@@ -32,6 +32,18 @@ public abstract class IProduct extends Entity {
 
     public abstract void order();
 
+    public void runActionsBeforeOtherTests(){
+        expandMountPoint();
+        restart();
+        stopSoft();
+        resize();
+        start();
+        stopHard();
+    }
+    public void runActionsAfterOtherTests() {
+        delete();
+    }
+
     public void restart() {
         String actionId = orderServiceSteps.executeAction("Перезагрузить", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
@@ -73,6 +85,5 @@ public abstract class IProduct extends Entity {
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore<sizeAfter);
     }
-
 
 }
