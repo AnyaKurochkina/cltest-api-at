@@ -71,5 +71,14 @@ public class RabbitMQCluster extends IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
+    @Override
+    public void runActionsBeforeOtherTests(){
+        expandMountPoint();
+        rabbitmqCreateUser();
+        restart();
+        stopSoft();
+        start();
+        stopHard();
+    }
 
 }

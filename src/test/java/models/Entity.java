@@ -7,15 +7,13 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.UUID;
 
-@NoArgsConstructor
-@SuperBuilder
+
 public abstract class Entity {
     public String objectClassName;
     public String objectUid;
 
-    @Builder.Default
+
     protected transient JsonHelper jsonHelper = new JsonHelper();
-    @Builder.Default
     protected transient CacheService cacheService = new CacheService();
 
     public void setObjectParams(String className) {
