@@ -16,7 +16,7 @@ import java.util.Properties;
 public class Configurier {
 
     public static Map<String, String> applicationProperties = new HashMap<>();
-    private static final String RESOURCE_PATH = StringUtils.concatPath("src", "test", "resources");
+    private static final String RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
     private static final String APP_FILE_NAME = "config/application.properties";
     private static final String APP_FILE_PATH = StringUtils.concatPathToFile(RESOURCE_PATH, APP_FILE_NAME);
     private static final String ENV_FILE_NAME = "config/conf.json";
@@ -54,26 +54,13 @@ public class Configurier {
     private String postfix = "";
 
     public boolean loadApplicationPropertiesForSegment() throws CustomException {
-        String propertyPath;
-        String envPropertyPath;
 
-        if (System.getProperty(APP_FILE_NAME) != null) {
-            propertyPath = System.getProperty(APP_FILE_NAME);
-            envPropertyPath = System.getProperty(ENV_FILE_NAME);
-
-            System.out.println("propertyPath =" + propertyPath + "envPropertyPath = " + envPropertyPath);
-
-        } else {
-            String rootPath = System.getProperty("user.dir");
-            propertyPath = StringUtils.concatPath(rootPath, APP_FILE_PATH);
-            envPropertyPath = StringUtils.concatPath(rootPath, ENV_FILE_PATH);
-        }
         Properties properties = new Properties();
 
-        try (FileInputStream fileInputStream = new FileInputStream(propertyPath)) {
+        try (FileInputStream fileInputStream = new FileInputStream(APP_FILE_PATH)) {
             properties.load(fileInputStream);
         } catch (Exception e) {
-            log.error("Can't load properties file: " + propertyPath, e);
+            log.error("Can't load properties file: " + APP_FILE_PATH, e);
             throw new CustomException(e);
         }
         if (properties.isEmpty()) {
@@ -84,12 +71,12 @@ public class Configurier {
 
         if (System.getProperty(ENVIROMENT) != null) {
             postfix = "." + System.getProperty(ENVIROMENT);
-            try (FileInputStream fileInputStream = new FileInputStream(envPropertyPath)) {
+            try (FileInputStream fileInputStream = new FileInputStream(ENV_FILE_PATH)) {
                 ObjectMapper mapper = new ObjectMapper();
                 Map<String, HashMap<String, String>> confProp = mapper.readValue(fileInputStream, Map.class);
                 envProperty.putAll(confProp.get(System.getProperty(ENVIROMENT).toUpperCase()));
             } catch (Exception e) {
-                log.error("Can't load env properties file: " + envPropertyPath, e);
+                log.error("Can't load env properties file: " + ENV_FILE_PATH, e);
                 throw new CustomException(e);
             }
         }
