@@ -8,7 +8,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.tarifficator.CostSteps;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
-@Tag("cost")
+@Tag("cost1")
 public class CostTest implements Tests {
 
     @Test
