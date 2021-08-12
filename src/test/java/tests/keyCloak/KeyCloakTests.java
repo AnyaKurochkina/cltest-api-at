@@ -19,6 +19,4 @@ public class KeyCloakTests implements Tests {
     public void getToken() {
         KeyCloakSteps.getUserToken();
     }
-
-
 }

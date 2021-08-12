@@ -51,4 +51,22 @@ public class CostSteps extends Steps {
 
         System.out.println(response.getString("total_price"));
     }
+
+    @Step("Запрос активного тарифного плана")
+    public void getPrices(String tariffPlanId){
+        JsonPath consumption = new Http(URL)
+                .get("tarifficator/api/v1/tariff_plans/" + tariffPlanId + "?include=tariff_classes")
+                .assertStatus(200)
+                .jsonPath();
+        System.out.println();
+    }
+
+    @Step("Запросить тарифные планы")
+    public String tariffTest(){
+        return new Http(URL)
+                .get("tarifficator/api/v1/tariff_plans?include=total_count&page=1&per_page=10&f[base]=false&f[organization_name]=vtb&sort=status&acc=up&f[status][]=active")
+                .assertStatus(200)
+                .jsonPath()
+                .get("list[0].id");
+    }
 }
