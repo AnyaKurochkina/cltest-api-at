@@ -9,7 +9,7 @@ import tests.Tests;
 
 @DisplayName("Набор тестов для проверки KeyCloak")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("regress"), @Tag("teamsity")})
+@Tags({@Tag("regress"), @Tag("teamcity")})
 @OrderLabel("tests.keyCloak.KeyCloakTests")
 public class KeyCloakTests implements Tests {
 
