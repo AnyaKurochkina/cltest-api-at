@@ -1,21 +1,19 @@
 package steps.tarifficator;
 
-import core.helper.Configurier;
+import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
-import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
-import models.orderService.products.Rhel;
 import org.json.JSONObject;
 import steps.Steps;
 import steps.orderService.OrderServiceSteps;
 
 @Log4j2
 public class CostSteps extends Steps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_kong");
+    private static final String URL = Configure.getInstance().getAppProp("host_kong");
 
     @Step("Получение расхода для папки/проекта")
     public float getConsumptionByPath(String path) {

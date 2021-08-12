@@ -10,7 +10,7 @@ import steps.Steps;
 
 @Log4j2
 public class AuthorizerSteps extends Steps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_kong");
+    private static final String URL = Configure.getInstance().getAppProp("host_kong");
 
     @Step("Создание папки типа {folderType} в родительской папке {parentName} с именем {name}")
     public void createFolder(String folderType, String parentName, String name) {

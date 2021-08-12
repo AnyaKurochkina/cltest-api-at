@@ -7,19 +7,19 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 @Log4j2
-public class Configurier {
+public class Configure {
     private static final String RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
     private static final String CONFIG_PATH = "/config/";
-    private static volatile Configurier instance;
-    private final String enviroment = System.getProperty("env").toLowerCase();
+    private static volatile Configure instance;
+    private final String environment = System.getProperty("env").toLowerCase();
     private static final Properties properties = new Properties();
 
-    private Configurier() {}
+    private Configure() {}
 
-    public static Configurier getInstance() {
+    public static Configure getInstance() {
         if (instance == null)
-            synchronized (Configurier.class) {
-                instance = new Configurier();
+            synchronized (Configure.class) {
+                instance = new Configure();
                 try {
                     instance.loadApplicationPropertiesForSegment();
                 } catch (CustomException e) {
@@ -36,7 +36,7 @@ public class Configurier {
             log.error("Can't load properties file: " + e);
             throw new CustomException(e);
         }
-        try (FileInputStream fileInputStream = new FileInputStream(RESOURCE_PATH + CONFIG_PATH + enviroment + ".properties")) {
+        try (FileInputStream fileInputStream = new FileInputStream(RESOURCE_PATH + CONFIG_PATH + environment + ".properties")) {
             properties.load(fileInputStream);
         } catch (Exception e) {
             log.error("Can't load enviroment properties file : "+ e);

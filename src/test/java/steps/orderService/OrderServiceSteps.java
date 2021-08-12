@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @Log4j2
 public class OrderServiceSteps extends Steps {
-    public static final String URL = Configurier.getInstance().getAppProp("host_kong");
+    public static final String URL = Configure.getInstance().getAppProp("host_kong");
 
     public void checkOrderStatus(String exp_status, IProduct product) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();

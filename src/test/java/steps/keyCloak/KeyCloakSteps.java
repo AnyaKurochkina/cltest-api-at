@@ -1,7 +1,7 @@
 package steps.keyCloak;
 
 import core.CacheService;
-import core.helper.Configurier;
+import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
@@ -13,7 +13,7 @@ import models.keyCloak.UserToken;
 
 @Log4j2
 public class KeyCloakSteps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_kk");
+    private static final String URL = Configure.getInstance().getAppProp("host_kk");
     private static final int TOKEN_LIFETIME_SEC = 300;
 
     @Step("Получение UserToken")
