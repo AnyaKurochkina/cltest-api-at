@@ -65,11 +65,11 @@ Rhel:
     osVersion: "7.latest"
 
   - platform: "Nutanix"
-      env: "DEV"
-      segment: "dev-srv-app"
-      domain: "corp.dev.vtb"
-      dataCentre: "5"
-      osVersion: "8.latest"
+    env: "DEV"
+    segment: "dev-srv-app"
+    domain: "corp.dev.vtb"
+    dataCentre: "5"
+    osVersion: "8.latest"
 
   - platform: "OpenStack"
     env: "DEV"
