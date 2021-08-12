@@ -12,7 +12,7 @@ import steps.Steps;
 
 @Log4j2
 public class AccessGroupSteps extends Steps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_kong");
+    private static final String URL = Configurier.getAppProp("host_kong");
 
     @Step("Создание группы доступа в проекте {projectName} с названием {accessName}")
     public void createAccessGroup(String projectName, String accessName) {

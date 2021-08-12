@@ -13,7 +13,7 @@ import steps.Steps;
 
 @Log4j2
 public class AccountSteps extends Steps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_kong");
+    private static final String URL = Configurier.getAppProp("host_kong");
 
 
     @Step("Создание счета для папки {folderName}")

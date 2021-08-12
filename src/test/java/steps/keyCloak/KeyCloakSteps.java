@@ -13,7 +13,7 @@ import models.keyCloak.UserToken;
 
 @Log4j2
 public class KeyCloakSteps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_kk");
+    private static final String URL = Configurier.getAppProp("host_kk");
     private static final int TOKEN_LIFETIME_SEC = 300;
 
     @Step("Получение UserToken")
