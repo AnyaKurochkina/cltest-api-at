@@ -46,6 +46,22 @@
         "objectUid": "4087706b-e9b7-48ef-969d-000000000006"
     },
     {
+        "productId": "c422069e-8f01-4328-b9dc-4a9e5dafd44e",
+        "orderId": "750647a7-d68f-42c5-b3df-118343296ba1",
+        "objectUid": "62203ebd-72fe-4178-a2d1-3ffb419bde79",
+        "env": "DEV",
+        "platform": "Nutanix",
+        "productName": "Rhel",
+        "objectClassName": "models.orderService.products.Rhel",
+        "osVersion": "8.latest",
+        "isDeleted": false,
+        "segment": "dev-srv-app",
+        "domain": "corp.dev.vtb",
+        "projectId": "proj-ti717c4xdp",
+        "dataCentre": "5",
+        "status": "CREATED"
+    },
+    {
         "objectClassName": "models.authorizer.InformationSystem",
         "objectUid": "cafa1b9d-5702-459a-bfff-7ee70df2651d",
         "id": "8e33baf8-e181-457b-9d60-e5dc470fe8fa"

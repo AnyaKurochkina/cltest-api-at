@@ -17,6 +17,7 @@ public abstract class IProduct extends Entity {
     public static String KAFKA_CLUSTER_ACL = "data.find{it.type=='cluster'}.config.acls.any{it.topic_name=='%s'}";
 
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+    protected transient String jsonTemplate;
 
     @Getter
     protected String orderId;
@@ -42,6 +43,10 @@ public abstract class IProduct extends Entity {
     }
     public void runActionsAfterOtherTests() {
         delete();
+    }
+
+    public String getJsonTemplate() {
+        return jsonTemplate;
     }
 
     public void restart() {
