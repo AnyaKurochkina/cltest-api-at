@@ -14,8 +14,7 @@ public class CostTest implements Tests {
     @Test
     public void getCost(){
         CostSteps costSteps = new CostSteps();
-        costSteps.getCost(
-                "dev-srv-app", "5", "Nutanix", "8.latest",
-                "DEV", "Rhel", "corp.dev.vtb");
+        String tariffPlanId = costSteps.tariffTest();
+        costSteps.getPrices(tariffPlanId);
     }
 }

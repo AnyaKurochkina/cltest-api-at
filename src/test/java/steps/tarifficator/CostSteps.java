@@ -40,8 +40,6 @@ public class CostSteps extends Steps {
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
-//        Rhel rhel = cacheService.entity(Rhel.class).getEntity();
-//        String productId = orderServiceSteps.getProductId(rhel);
         log.info("Отправка запроса на получение стоимости заказа для " + productName);
         JsonPath response = jsonHelper.getJsonTemplate("/tarifficator/cost.json")
                 .set("$.params.domain", domain)
@@ -58,5 +56,23 @@ public class CostSteps extends Steps {
                 .jsonPath();
 
         System.out.println();
+    }
+
+    @Step("Запрос активного тарифного плана")
+    public void getPrices(String tariffPlanId){
+        JsonPath consumption = new Http(URL)
+                .get("tarifficator/api/v1/tariff_plans/" + tariffPlanId + "?include=tariff_classes")
+                .assertStatus(200)
+                .jsonPath();
+        System.out.println();
+    }
+
+    @Step("Запросить тарифные планы")
+    public String tariffTest(){
+        return new Http(URL)
+                .get("tarifficator/api/v1/tariff_plans?include=total_count&page=1&per_page=10&f[base]=false&f[organization_name]=vtb&sort=status&acc=up&f[status][]=active")
+                .assertStatus(200)
+                .jsonPath()
+                .get("list[0].id");
     }
 }
