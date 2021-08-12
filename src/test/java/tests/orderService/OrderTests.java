@@ -25,7 +25,7 @@ public class OrderTests implements Tests {
     @Mock
     public void order(IProduct product) {
         product.order();
-        product.runActionsBeforeOtherTests();
+        //product.runActionsBeforeOtherTests();
     }
 
 

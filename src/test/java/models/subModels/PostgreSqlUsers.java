@@ -9,6 +9,5 @@ import lombok.Data;
 public class PostgreSqlUsers {
     String nameDB;
     String username;
-    @Builder.Default
     public boolean isDeleted = false;
 }

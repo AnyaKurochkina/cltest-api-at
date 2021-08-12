@@ -187,15 +187,9 @@ public class JsonHelper {
         }
     }
 
-    public void getAllTestDataValues(String filename, String TestID) {
-        if (allTests.size() == 0) {
-            loadTest(filename);
-        }
-
-        if (allTests.containsKey(TestID)) {
-
-            testValues.putAll(allTests.get(TestID));
-        }
+    public JSONObject getJsonObjectFromFile(String filename, String key) {
+        JSONObject jsonObject = getJsonFromFile(filename);
+        return (JSONObject) jsonObject.query(key);
     }
 
     public JSONObject getJsonFromFile(String file) {

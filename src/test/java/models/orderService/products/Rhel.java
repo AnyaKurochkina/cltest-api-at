@@ -21,11 +21,11 @@ public class Rhel extends IProduct {
     String domain;
     String status = "NOT_CREATED";
     boolean isDeleted = false;
-    final String jsonTemplatePath = "/tarifficator/cost.json";
+    final String jsonTemplate = "/orders/rhel.json";
+    final String productName = "Rhel";
 
     @Override
     public void order() {
-        productName = "Rhel";
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
@@ -36,7 +36,7 @@ public class Rhel extends IProduct {
         productId = orderServiceSteps.getProductId(this);
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
+        JsonPath array = jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
