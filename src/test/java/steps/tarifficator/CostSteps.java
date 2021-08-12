@@ -15,7 +15,7 @@ import steps.orderService.OrderServiceSteps;
 
 @Log4j2
 public class CostSteps extends Steps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_kong");
+    private static final String URL = Configurier.getAppProp("host_kong");
 
     @Step("Получение расхода для папки/проекта")
     public float getConsumptionByPath(String path) {

@@ -9,7 +9,7 @@ import models.authorizer.ServiceAccount;
 import steps.Steps;
 
 public class ServiceAccountSteps extends Steps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_kong");
+    private static final String URL = Configurier.getAppProp("host_kong");
 
 
     @Step("Создание сервисного аккаунта в проекте {projectName}")

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ProjectSteps extends Steps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_kong");
+    private static final String URL = Configurier.getAppProp("host_kong");
 
     @Step("Создание проекта в папке {folderName} с названием {projectName}")
     public void createProject(String folderName, String projectName, String env) {

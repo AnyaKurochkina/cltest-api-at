@@ -79,7 +79,7 @@ public class JsonHelper {
 
     private void loadTest(String filename) {
 
-        String datafolder = Configurier.getInstance().getAppProp("data.folder");
+        String datafolder = Configurier.getAppProp("data.folder");
         readFileFromPath(filename, (new File(datafolder)).getAbsolutePath()); //читаем файл с тестовыми данными
         HashMap<String, String> tmp = new HashMap<String, String>(TestVars.getLastJsonData());
         for (Map.Entry<String, String> entry : tmp.entrySet()) {
@@ -120,7 +120,7 @@ public class JsonHelper {
     }
 
     private void loadAllTests() {
-        String datafolder = Configurier.getInstance().getAppProp("data.folder");
+        String datafolder = Configurier.getAppProp("data.folder");
         readFileFromPath("testdata.json", (new File(datafolder)).getAbsolutePath());
         HashMap<String, String> tmp = new HashMap<String, String>(TestVars.getLastJsonData());
         for (Map.Entry<String, String> entry : tmp.entrySet()) {

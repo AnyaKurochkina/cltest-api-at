@@ -15,7 +15,7 @@ import java.util.List;
 
 @Log4j2
 public class StateServiceSteps extends Steps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_ss");
+    private static final String URL = Configurier.getAppProp("host_ss");
 
     public void GetErrorFromOrch(String order_id) throws JsonPathException, CustomException {
         List<String> traceback = null;

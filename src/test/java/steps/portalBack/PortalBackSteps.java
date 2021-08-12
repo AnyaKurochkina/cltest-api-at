@@ -11,7 +11,7 @@ import models.authorizer.ProjectEnvironment;
 import steps.Steps;
 
 public class PortalBackSteps extends Steps {
-    private static final String URL = Configurier.getInstance().getAppProp("host_kong");
+    private static final String URL = Configurier.getAppProp("host_kong");
     @Step("Получение информационных систем")
     public void getInfoSys(String sysName) {
         Organization organization = cacheService.entity(Organization.class).getEntity();
