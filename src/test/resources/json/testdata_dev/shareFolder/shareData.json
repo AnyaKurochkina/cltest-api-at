@@ -16,23 +16,23 @@
     "isDeleted": false,
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
-    "id": "proj-tg7jlitmp1",
-    "projectName": "PROJECT_DEV",
+    "id": "proj-0p1rtz9mq9",
+    "projectName": "sdfsdf",
     "env": "DEV"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
-    "name": "cloud-s9crux-denisapi",
+    "name": "cloud-stcrux-dfg",
     "isDeleted": false,
-    "projectName": "proj-tg7jlitmp1",
+    "projectName": "proj-0p1rtz9mq9",
     "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f575"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
-    "name": "sa_proj-tg7jlitmp1-e8",
-    "secret": "fbc361a23eb4e2b1a65b28e5eca79d05",
+    "name": "sa_proj-0p1rtz9mq9-ej",
+    "secret": "5a1d2c7b4a345ac1b0e1a346d1f1ad30",
     "isDeleted": false,
-    "projectId": "proj-tg7jlitmp1",
+    "projectId": "proj-0p1rtz9mq9",
     "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e63"
   },
   {

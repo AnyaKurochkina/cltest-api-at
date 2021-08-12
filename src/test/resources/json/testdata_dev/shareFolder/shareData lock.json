@@ -3,7 +3,7 @@
     "objectClassName": "models.keyCloak.Service",
     "objectUid": "4087706b-e9b7-48ef-969d-000000000001",
     "clientId": "cloud_autotest",
-    "clientSecret": "8c1f5278-f237-48ed-b439-1363bc21eb2b"
+    "clientSecret": "1b365e15669fc8315245f844c84c4970"
   },
   {
     "objectClassName": "models.authorizer.User",
@@ -16,28 +16,28 @@
     "isDeleted": false,
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
-    "id": "proj-xazpppulba",
+    "id": "proj-tg7jlitmp1",
     "projectName": "PROJECT_DEV",
     "env": "DEV"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
-    "name": "cloud-d2plux-access_group95xy54hggnwo",
+    "name": "cloud-s9crux-denisapi",
     "isDeleted": false,
-    "projectName": "proj-xazpppulba",
+    "projectName": "proj-tg7jlitmp1",
     "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f575"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
-    "name": "sa_proj-xazpppulba-3g",
-    "secret": "e1ed9dcb845dc3aeffed0f6829aa3cf5",
+    "name": "sa_proj-tg7jlitmp1-e8",
+    "secret": "fbc361a23eb4e2b1a65b28e5eca79d05",
     "isDeleted": false,
-    "projectId": "proj-xazpppulba",
+    "projectId": "proj-tg7jlitmp1",
     "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e63"
   },
   {
     "objectClassName": "models.authorizer.InformationSystem",
     "objectUid": "cafa1b9d-5702-459a-bfff-7ee70df2651d",
-    "id": "9cef3ede-fd3f-407f-bbed-9767e700036e"
+    "id": "c9fd31c7-25a5-45ca-863c-18425d1ae927"
   }
 ]

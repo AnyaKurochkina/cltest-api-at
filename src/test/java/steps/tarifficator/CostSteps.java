@@ -56,5 +56,7 @@ public class CostSteps extends Steps {
                 .post("tarifficator/api/v1/cost")
                 .assertStatus(200)
                 .jsonPath();
+
+        System.out.println();
     }
 }
