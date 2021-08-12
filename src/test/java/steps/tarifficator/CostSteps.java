@@ -9,6 +9,7 @@ import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.orderService.products.Rhel;
+import org.json.JSONObject;
 import steps.Steps;
 import steps.orderService.OrderServiceSteps;
 
@@ -28,35 +29,26 @@ public class CostSteps extends Steps {
         return consumption * 24 * 60;
     }
 
-    @Step("Получение предварительной стоимости продукта Rhel с параметрами: {segment}, {dataCentre}, {platform}, {osVersion}, {env}, {productName}, {domain}")
-    public void getCost(
-                        String segment, String dataCentre, String platform,
-                        String osVersion, String env, String productName,
-                        String domain) {
+    @Step("Получение предварительной стоимости продукта {product}")
+    public void getCost(IProduct product) {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
-                .withField("env", env)
+                .withField("env", product.getEnv())
                 .getEntity();
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
-//        Rhel rhel = cacheService.entity(Rhel.class).getEntity();
-//        String productId = orderServiceSteps.getProductId(rhel);
-        log.info("Отправка запроса на получение стоимости заказа для " + productName);
-        JsonPath response = jsonHelper.getJsonTemplate("/tarifficator/cost.json")
-                .set("$.params.domain", domain)
-                .set("$.params.default_nic.net_segment", segment)
-                .set("$.params.data_center", dataCentre)
-                .set("$.params.platform", platform)
-                .set("$.params.os_version", osVersion)
-                .set("$.params.ad_logon_grants[0].groups[0]", accessGroup.name)
-                .set("$.product_id", "c422069e-8f01-4328-b9dc-4a9e5dafd44e")
-                .send(OrderServiceSteps.URL)
+        String productId = orderServiceSteps.getProductId(product);
+        log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
+        JSONObject template = jsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
+        JSONObject attrs = jsonHelper.getJsonObjectFromFile(product.getJsonTemplate(), "/order/attrs");
+        template.put("params", attrs);
+        template.put("project_name", project.id);
+        template.put("product_id", productId);
+
+        JsonPath response = new Http(OrderServiceSteps.URL)
                 .setProjectId(project.id)
-                .post("tarifficator/api/v1/cost")
+                .post("tarifficator/api/v1/cost", template)
                 .assertStatus(200)
                 .jsonPath();
 
-        System.out.println();
+        System.out.println(response.getString("total_price"));
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 import core.helper.DataFileHelper;
 import models.Entity;
+import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -53,11 +54,14 @@ public class CacheService {
     public <T extends Entity> T getEntityWithoutAssert() {
         for (String shareDataElement : entities.values()) {
             JsonObject jsonObject = JsonParser.parseString(shareDataElement).getAsJsonObject();
-            String className = jsonObject.get("objectClassName").getAsString();
-            if (c.getName().equals(className)) {
+            String classNameJson = jsonObject.get("objectClassName").getAsString();
+            String className = c.getName();
+            if(c.equals(IProduct.class))
+                className = "models.orderService.products.";
+            if (classNameJson.startsWith(className)) {
                 Class<T> act = null;
                 try {
-                    act = (Class<T>) Class.forName(className);
+                    act = (Class<T>) Class.forName(classNameJson);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
