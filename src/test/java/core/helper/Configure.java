@@ -1,19 +1,28 @@
 package core.helper;
 
 import lombok.extern.log4j.Log4j2;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
 @Log4j2
 public class Configure {
-    private static final String RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
-    private static final String env = System.getProperty("env").toLowerCase();
-    private static final Properties properties = new Properties();
+    private static Properties properties;
 
     static {
-        loadProperties(RESOURCE_PATH + "/config/application.properties");
-        loadProperties(RESOURCE_PATH + "/config/" + env + ".properties");
+        try {
+            if(System.getProperty("env") == null){
+                throw new Exception("Не задан параметр env");
+            }
+            String env = System.getProperty("env").toLowerCase();
+            String RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
+            properties = new Properties();
+            loadProperties(RESOURCE_PATH + "/config/application.properties");
+            loadProperties(RESOURCE_PATH + "/config/" + env + ".properties");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void loadProperties(String file) {
