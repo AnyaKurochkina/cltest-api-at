@@ -7,9 +7,12 @@ import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import steps.Steps;
 import steps.orderService.OrderServiceSteps;
+
+import java.util.HashMap;
 
 @Log4j2
 public class CostSteps extends Steps {
@@ -52,10 +55,16 @@ public class CostSteps extends Steps {
 
     @Step("Запрос активного тарифного плана")
     public void getPrices(String tariffPlanId){
-        JsonPath consumption = new Http(URL)
+        JSONArray consumption = new Http(URL)
                 .get("tarifficator/api/v1/tariff_plans/" + tariffPlanId + "?include=tariff_classes")
                 .assertStatus(200)
-                .jsonPath();
+                .toJson()
+                .getJSONArray("tariff_classes");
+
+        HashMap<String, Double> priceList = new HashMap();
+        for(Object object : consumption){
+            priceList.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
+        }
         System.out.println();
     }
 
