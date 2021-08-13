@@ -1,6 +1,6 @@
 package steps.accountManager;
 
-import core.helper.Configure;
+import core.helper.Configurier;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -13,7 +13,7 @@ import steps.Steps;
 
 @Log4j2
 public class AccountSteps extends Steps {
-    private static final String URL = Configure.getInstance().getAppProp("host_kong");
+    private static final String URL = Configurier.getAppProp("host_kong");
 
 
     @Step("Создание счета для папки {folderName}")
@@ -26,15 +26,12 @@ public class AccountSteps extends Steps {
         String accountId = jsonHelper.getJsonTemplate("/accountmanager/accountTemplate.json")
                 .set("$.parent_id", getAccountIdByContext(folder.parentId))
                 .set("$.name", String.format("%s (%s)", folderName, folder.id))
+                .set("$.folder_uid", folder.id)
                 .send(URL)
                 .post("accountmanager/api/v1/organizations/vtb/accounts")
                 .assertStatus(200)
                 .jsonPath()
                 .get("account.account_id");
-
-        new Http(URL)
-                .post("accountmanager/api/v1/folders/" + folder.id + "/accounts/" + accountId)
-                .assertStatus(200);
 
         Account account = Account.builder()
                 .accountId(accountId)

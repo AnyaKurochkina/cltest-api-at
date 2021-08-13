@@ -7,4 +7,4 @@ develop - рабочая ветка с актуальными доработка
 и выставить запуск по тегам, например regress
 
 Пример для maven Например:
-test -Denv=IFT -Dgroups=teamsity
+test -Denv=IFT -Dgroups=teamcity

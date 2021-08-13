@@ -1,6 +1,6 @@
 package steps.authorizer;
 
-import core.helper.Configure;
+import core.helper.Configurier;
 import core.helper.Http;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
@@ -12,7 +12,7 @@ import steps.Steps;
 
 @Log4j2
 public class AccessGroupSteps extends Steps {
-    private static final String URL = Configure.getInstance().getAppProp("host_kong");
+    private static final String URL = Configurier.getAppProp("host_kong");
 
     @Step("Создание группы доступа в проекте {projectName} с названием {accessName}")
     public void createAccessGroup(String projectName, String accessName) {

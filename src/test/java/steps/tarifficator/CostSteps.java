@@ -1,6 +1,6 @@
 package steps.tarifficator;
 
-import core.helper.Configure;
+import core.helper.Configurier;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 @Log4j2
 public class CostSteps extends Steps {
-    private static final String URL = Configure.getInstance().getAppProp("host_kong");
+    private static final String URL = Configurier.getAppProp("host_kong");
 
     @Step("Получение расхода для папки/проекта")
     public float getConsumptionByPath(String path) {
