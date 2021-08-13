@@ -16,6 +16,7 @@ public class Configure {
                 throw new Exception("Не задан параметр env");
             }
             String env = System.getProperty("env").toLowerCase();
+            log.info("ENV = " + env);
             String RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
             loadProperties(RESOURCE_PATH + "/config/application.properties");
