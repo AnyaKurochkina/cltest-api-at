@@ -14,7 +14,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 import org.json.simple.JSONValue;
-import org.json.simple.parser.JSONParser;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -26,6 +25,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static junit.framework.TestCase.fail;
 import static steps.Steps.dataFolder;
+import static steps.Steps.dataJson;
 
 @Log4j2
 @Data
@@ -79,7 +79,7 @@ public class JsonHelper {
 
     private void loadTest(String filename) {
 
-        String datafolder = Configurier.getAppProp("data.folder");
+        String datafolder = Configure.getAppProp("data.folder");
         readFileFromPath(filename, (new File(datafolder)).getAbsolutePath()); //читаем файл с тестовыми данными
         HashMap<String, String> tmp = new HashMap<String, String>(TestVars.getLastJsonData());
         for (Map.Entry<String, String> entry : tmp.entrySet()) {
@@ -120,7 +120,7 @@ public class JsonHelper {
     }
 
     private void loadAllTests() {
-        String datafolder = Configurier.getAppProp("data.folder");
+        String datafolder = Configure.getAppProp("data.folder");
         readFileFromPath("testdata.json", (new File(datafolder)).getAbsolutePath());
         HashMap<String, String> tmp = new HashMap<String, String>(TestVars.getLastJsonData());
         for (Map.Entry<String, String> entry : tmp.entrySet()) {
@@ -179,7 +179,7 @@ public class JsonHelper {
 
     public String getStringFromFile(String s) {
         try {
-            File file = new File(dataFolder + s);
+            File file = new File(dataJson + s);
             return FileUtils.readFileToString(file, "UTF-8");
         } catch (Exception ex) {
             ex.printStackTrace();

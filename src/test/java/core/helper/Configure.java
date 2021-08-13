@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 @Log4j2
-public class Configurier {
+public class Configure {
     private static Properties properties;
 
     static {
@@ -29,7 +29,7 @@ public class Configurier {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             properties.load(fileInputStream);
         } catch (Exception e) {
-            log.error("Can't load enviroment properties file : " + e.getMessage());
+            log.error("Can't load environment properties file : " + e.getMessage());
         }
     }
 
