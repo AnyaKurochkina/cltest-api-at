@@ -1,21 +1,22 @@
 package steps.tarifficator;
 
-import core.helper.Configurier;
+import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
-import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
-import models.orderService.products.Rhel;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import steps.Steps;
 import steps.orderService.OrderServiceSteps;
 
+import java.util.HashMap;
+
 @Log4j2
 public class CostSteps extends Steps {
-    private static final String URL = Configurier.getAppProp("host_kong");
+    private static final String URL = Configure.getAppProp("host_kong");
 
     @Step("Получение расхода для папки/проекта")
     public float getConsumptionByPath(String path) {
@@ -54,11 +55,17 @@ public class CostSteps extends Steps {
 
     @Step("Запрос активного тарифного плана")
     public void getPrices(String tariffPlanId){
-        JsonPath consumption = new Http(URL)
+        JSONArray consumption = new Http(URL)
                 .get("tarifficator/api/v1/tariff_plans/" + tariffPlanId + "?include=tariff_classes")
                 .assertStatus(200)
-                .jsonPath();
-        System.out.println();
+                .toJson()
+                .getJSONArray("tariff_classes");
+
+        HashMap<String, Double> priceList = new HashMap();
+        for(Object object : consumption){
+            priceList.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
+        }
+        System.out.println(priceList);
     }
 
     @Step("Запросить тарифные планы")

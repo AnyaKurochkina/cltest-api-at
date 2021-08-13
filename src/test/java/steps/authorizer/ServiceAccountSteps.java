@@ -1,6 +1,6 @@
 package steps.authorizer;
 
-import core.helper.Configurier;
+import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -9,7 +9,7 @@ import models.authorizer.ServiceAccount;
 import steps.Steps;
 
 public class ServiceAccountSteps extends Steps {
-    private static final String URL = Configurier.getAppProp("host_kong");
+    private static final String URL = Configure.getAppProp("host_kong");
 
 
     @Step("Создание сервисного аккаунта в проекте {projectName}")

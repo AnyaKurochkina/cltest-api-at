@@ -1,6 +1,6 @@
 package steps.authorizer;
 
-import core.helper.Configurier;
+import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ProjectSteps extends Steps {
-    private static final String URL = Configurier.getAppProp("host_kong");
+    private static final String URL = Configure.getAppProp("host_kong");
 
     @Step("Создание проекта в папке {folderName} с названием {projectName}")
     public void createProject(String folderName, String projectName, String env) {
