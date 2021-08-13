@@ -26,15 +26,12 @@ public class AccountSteps extends Steps {
         String accountId = jsonHelper.getJsonTemplate("/accountmanager/accountTemplate.json")
                 .set("$.parent_id", getAccountIdByContext(folder.parentId))
                 .set("$.name", String.format("%s (%s)", folderName, folder.id))
+                .set("$.folder_uid", folder.id)
                 .send(URL)
                 .post("accountmanager/api/v1/organizations/vtb/accounts")
                 .assertStatus(200)
                 .jsonPath()
                 .get("account.account_id");
-
-        new Http(URL)
-                .post("accountmanager/api/v1/folders/" + folder.id + "/accounts/" + accountId)
-                .assertStatus(200);
 
         Account account = Account.builder()
                 .accountId(accountId)
