@@ -25,6 +25,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static junit.framework.TestCase.fail;
 import static steps.Steps.dataFolder;
+import static steps.Steps.dataJson;
 
 @Log4j2
 @Data
@@ -178,7 +179,7 @@ public class JsonHelper {
 
     public String getStringFromFile(String s) {
         try {
-            File file = new File(dataFolder + s);
+            File file = new File(dataJson + s);
             return FileUtils.readFileToString(file, "UTF-8");
         } catch (Exception ex) {
             ex.printStackTrace();
