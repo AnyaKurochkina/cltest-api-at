@@ -23,9 +23,9 @@ public class AccessGroupDeleteTests implements Tests {
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
 
     @ParameterizedTest
-    @Source(ProductArgumentsProvider.ENV)
     @Order(1)
     @DisplayName("Удаление Группы доступа")
+    @Source(ProductArgumentsProvider.ENV)
     @Description("Удаление Группы доступа")
     public void deleteAccessGroup(String env) {
         accessGroupSteps.deleteAccessGroup(env);
