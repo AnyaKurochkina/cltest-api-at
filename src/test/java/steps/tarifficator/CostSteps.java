@@ -1,6 +1,6 @@
 package steps.tarifficator;
 
-import core.helper.Configurier;
+import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 @Log4j2
 public class CostSteps extends Steps {
-    private static final String URL = Configurier.getAppProp("host_kong");
+    private static final String URL = Configure.getAppProp("host_kong");
 
     @Step("Получение расхода для папки/проекта")
     public float getConsumptionByPath(String path) {
@@ -65,7 +65,7 @@ public class CostSteps extends Steps {
         for(Object object : consumption){
             priceList.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
         }
-        System.out.println();
+        System.out.println(priceList);
     }
 
     @Step("Запросить тарифные планы")

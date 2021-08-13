@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 @Log4j2
-public class Configurier {
+public class Configure {
     private static final String RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
     private static final String env = System.getProperty("env").toLowerCase();
     private static final Properties properties = new Properties();
