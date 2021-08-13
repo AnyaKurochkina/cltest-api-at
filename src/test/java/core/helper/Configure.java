@@ -20,7 +20,7 @@ public class Configure {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             properties.load(fileInputStream);
         } catch (Exception e) {
-            log.error("Can't load enviroment properties file : " + e.getMessage());
+            log.error("Can't load environment properties file : " + e.getMessage());
         }
     }
 
