@@ -2,6 +2,8 @@ package tests.authorizer;
 
 import io.qameta.allure.Description;
 import org.junit.OrderLabel;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,16 +24,12 @@ public class AccessGroupCreateTests implements Tests {
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
 
     @ParameterizedTest
-    @MethodSource("dataEnv")
     @Order(1)
     @DisplayName("Создание Группы доступа")
+    @Source(ProductArgumentsProvider.ENV)
     @Description("Создание Группы доступа с сохранением в Shared Memory")
     public void createBusinessBlock(String env) {
         accessGroupSteps.createAccessGroup("PROJECT_"+env, "access_group");
-    }
-
-    static Stream<Arguments> dataEnv() {
-        return Stream.of(Arguments.arguments("DEV"), Arguments.arguments("TEST"));
     }
 
 }
