@@ -1,10 +1,6 @@
 package core.utils;
 
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.function.BooleanSupplier;
 
 
 /**
@@ -24,7 +20,7 @@ public class Waiting {
      *
      * @param timeout Время ожидания.
      */
-    public final static void sleep(int timeout) {
+    public static void sleep(int timeout) {
         try {
             Thread.sleep(timeout);
         } catch (InterruptedException e) {
