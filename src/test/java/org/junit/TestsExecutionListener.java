@@ -8,7 +8,7 @@ import steps.Steps;
 public class TestsExecutionListener implements TestExecutionListener {
 
     public void testPlanExecutionStarted(TestPlan testPlan) {
-        CacheService.loadEntities(Steps.dataFolder + "/shareFolder/shareData.json");
+        CacheService.loadEntities(Steps.dataFolder + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json");
     }
 
     public void testPlanExecutionFinished(TestPlan testPlan) {

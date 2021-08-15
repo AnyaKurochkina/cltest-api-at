@@ -1,6 +1,5 @@
 package core.helper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
@@ -10,13 +9,9 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
-import org.json.simple.JSONValue;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
