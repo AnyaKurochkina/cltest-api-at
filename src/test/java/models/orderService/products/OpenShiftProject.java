@@ -9,6 +9,7 @@ import models.authorizer.Project;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Role;
+import org.json.JSONObject;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 import java.util.*;
@@ -22,11 +23,12 @@ public class OpenShiftProject extends IProduct {
     public String domain;
     public List<Role> roles = new ArrayList<>();
     public String status = "NOT_CREATED";
+    final String jsonTemplate = "/orders/openshift_project.json";
+    final String productName = "OpenShift project";
     public boolean isDeleted = false;
 
     @Override
     public void order() {
-        productName = "OpenShift project";
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
@@ -38,7 +40,7 @@ public class OpenShiftProject extends IProduct {
                 .getEntity();
         projectId = project.id;
         log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = jsonHelper.getJsonTemplate("/orders/openshift_project.json")
+        JsonPath array = jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.attrs.resource_pool_id", resourcePool.id)
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
@@ -53,6 +55,11 @@ public class OpenShiftProject extends IProduct {
         orderServiceSteps.checkOrderStatus("success", this);
         status = "CREATED";
         cacheService.saveEntity(this);
+    }
+
+    @Override
+    public JSONObject getJsonParametrizedTemplate() {
+        return null;
     }
 
     public void changeProject() {

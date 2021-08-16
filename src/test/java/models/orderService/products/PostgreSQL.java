@@ -1,5 +1,6 @@
 package models.orderService.products;
 
+import core.helper.Http;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -9,6 +10,7 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.subModels.PostgreSqlDB;
 import models.subModels.PostgreSqlUsers;
+import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -34,23 +36,41 @@ public class PostgreSQL extends IProduct {
     String domain;
     String status = "NOT_CREATED";
     boolean isDeleted = false;
+    final String jsonTemplate = "/orders/postgresql.json";
+    final String productName = "PostgreSQL";
     public List<PostgreSqlDB> database = new ArrayList<>();
     public List<PostgreSqlUsers> users = new ArrayList<>();
 
     @Override
     public void order() {
-        productName = "PostgreSQL";
+        Project project = cacheService.entity(Project.class)
+                .withField("env", env)
+                .getEntity();
+        projectId = project.id;
+        productId = orderServiceSteps.getProductId(this);
+        domain = orderServiceSteps.getDomainBySegment(this, segment);
+        log.info("Отправка запроса на создание заказа для " + productName);
+        JsonPath array = new Http(OrderServiceSteps.URL)
+                .setProjectId(project.id)
+                .post("order-service/api/v1/projects/" + project.id + "/orders",
+                        getJsonParametrizedTemplate())
+                .assertStatus(201)
+                .jsonPath();
+        orderId = array.get("[0].id");
+        orderServiceSteps.checkOrderStatus("success", this);
+        status = "CREATED";
+        cacheService.saveEntity(this);
+    }
+
+    @Override
+    public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
-        projectId = project.id;
-        productId = orderServiceSteps.getProductId(this);
-        domain = orderServiceSteps.getDomainBySegment(this, segment);
-        log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = jsonHelper.getJsonTemplate("/orders/" + productName.toLowerCase() + ".json")
+        return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
@@ -60,15 +80,7 @@ public class PostgreSQL extends IProduct {
                 .set("$.order.attrs.postgresql_version", postgresqlVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
-                .send(OrderServiceSteps.URL)
-                .setProjectId(project.id)
-                .post("order-service/api/v1/projects/" + project.id + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = array.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        status = "CREATED";
-        cacheService.saveEntity(this);
+                .build();
     }
 
     @Override
@@ -83,7 +95,7 @@ public class PostgreSQL extends IProduct {
         String actionId = orderServiceSteps.executeAction("Расширить", "{\"size\": 10, \"mount\": \"/pg_data\"}", this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
-        assertTrue(sizeBefore<sizeAfter);
+        assertTrue(sizeBefore < sizeAfter);
     }
 
     public void createDb(String dbName) {
@@ -102,7 +114,7 @@ public class PostgreSQL extends IProduct {
         String actionId = orderServiceSteps.executeAction("Удалить БД", String.format("{db_name: \"%s\"}", dbName), this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, DB_SIZE_PATH);
-        assertTrue(sizeBefore>sizeAfter);
+        assertTrue(sizeBefore > sizeAfter);
         database.get(0).setDeleted(true);
         log.info("database = " + database);
         cacheService.saveEntity(this);
@@ -114,7 +126,7 @@ public class PostgreSQL extends IProduct {
         orderServiceSteps.checkActionStatus("success", this, actionId);
         String dbUserNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_USERNAME_PATH);
         assertEquals("Имя пользователя отличается от создаваемого", String.format("%s_%s", dbName, username), dbUserNameActual);
-        users.add(new PostgreSqlUsers(dbName, dbUserNameActual,false));
+        users.add(new PostgreSqlUsers(dbName, dbUserNameActual, false));
         log.info("users = " + users);
         cacheService.saveEntity(this);
     }
@@ -138,14 +150,14 @@ public class PostgreSQL extends IProduct {
         String actionId = orderServiceSteps.executeAction("Удалить пользователя", String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername()), this);
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, DB_USERNAME_SIZE_PATH);
-        assertTrue(sizeBefore>sizeAfter);
+        assertTrue(sizeBefore > sizeAfter);
         users.get(0).setDeleted(true);
         log.info("users = " + users);
         cacheService.saveEntity(this);
     }
 
     @Override
-    public void runActionsBeforeOtherTests(){
+    public void runActionsBeforeOtherTests() {
         expandMountPoint();
         createDb("testdb");
         resetDbOwnerPassword();
@@ -154,7 +166,7 @@ public class PostgreSQL extends IProduct {
     }
 
     @Override
-    public void runActionsAfterOtherTests(){
+    public void runActionsAfterOtherTests() {
         removeDbmsUser();
         removeDb();
         delete();
