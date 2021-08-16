@@ -10,15 +10,8 @@ import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
-
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import static junit.framework.TestCase.fail;
-import static steps.Steps.dataFolder;
 import static steps.Steps.dataJson;
 
 @Log4j2
@@ -49,10 +42,10 @@ public class JsonHelper {
     }
 
 
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, String>> allTests = new ConcurrentHashMap<>();
-    public ConcurrentHashMap<String, String> testValues = new ConcurrentHashMap<>();
-    public volatile static ConcurrentHashMap<String, String> shareData = new ConcurrentHashMap<>();
-    volatile static ReadWriteLock lock = new ReentrantReadWriteLock();
+ //   private ConcurrentHashMap<String, ConcurrentHashMap<String, String>> allTests = new ConcurrentHashMap<>();
+ //   public ConcurrentHashMap<String, String> testValues = new ConcurrentHashMap<>();
+//    public volatile static ConcurrentHashMap<String, String> shareData = new ConcurrentHashMap<>();
+//    volatile static ReadWriteLock lock = new ReentrantReadWriteLock();
 
 
 //    public void putFromJsonToShare(String file) {
@@ -70,22 +63,22 @@ public class JsonHelper {
 //        }
 //    }
 
-    public void writeJsonFileFromHashMap(String filePath) {
-        JSONObject jsonObject = new JSONObject();
-        for (Map.Entry<String, String> entry : shareData.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            jsonObject.put(key, value);
-        }
-        try {
-            lock.writeLock().lock();
-            DataFileHelper.write(filePath, jsonObject.toString());
-            lock.writeLock().unlock();
-        } catch (Exception ex) {
-            lock.writeLock().unlock();
-            ex.printStackTrace();
-        }
-    }
+//    public void writeJsonFileFromHashMap(String filePath) {
+//        JSONObject jsonObject = new JSONObject();
+//        for (Map.Entry<String, String> entry : shareData.entrySet()) {
+//            String key = entry.getKey();
+//            String value = entry.getValue();
+//            jsonObject.put(key, value);
+//        }
+//        try {
+//            lock.writeLock().lock();
+//            DataFileHelper.write(filePath, jsonObject.toString());
+//            lock.writeLock().unlock();
+//        } catch (Exception ex) {
+//            lock.writeLock().unlock();
+//            ex.printStackTrace();
+//        }
+//    }
 
     public String getStringFromFile(String s) {
         try {
@@ -97,10 +90,10 @@ public class JsonHelper {
         }
     }
 
-    public JSONObject getJsonObjectFromFile(String filename, String key) {
-        JSONObject jsonObject = getJsonFromFile(filename);
-        return (JSONObject) jsonObject.query(key);
-    }
+//    public JSONObject getJsonObjectFromFile(String filename, String key) {
+//        JSONObject jsonObject = getJsonFromFile(filename);
+//        return (JSONObject) jsonObject.query(key);
+//    }
 
     public JSONObject getJsonFromFile(String file) {
         try {

@@ -11,7 +11,7 @@ import steps.portalBack.PortalBackSteps;
 
 @DisplayName("Набор тестов по добавлению пользователя в группы доступа")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@OrderLabel("tests.authorizer.AccessGroupAddUsersTests")
+@OrderLabel("tests.portalBack.AccessGroupAddUsersTests")
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccessGroupAddUsersTests {

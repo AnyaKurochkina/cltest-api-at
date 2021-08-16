@@ -1,6 +1,7 @@
 package tests.tarifficator;
 
 import models.orderService.interfaces.IProduct;
+import org.junit.Assert;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -16,17 +17,17 @@ import tests.Tests;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
-@OrderLabel("tests.tarifficator.CostTest")
+@OrderLabel("tests.tarifficator.CostOrderTest")
 @Tags({@Tag("regress"), @Tag("cost")})
-public class CostTest implements Tests {
+public class CostOrderTest implements Tests {
     CostSteps costSteps = new CostSteps();
 
     @ParameterizedTest
-    @DisplayName("Проверка предбиллинга для продуктов")
+    @DisplayName("Проверка стоимости заказа")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    public void getCost(IProduct product){
-        costSteps.getCurrentCost(product);
-        String tariffPlanId = costSteps.tariffTest();
-        costSteps.getPrices(tariffPlanId);
+    public void getCost(IProduct product) {
+        double preBillingCost = costSteps.getCurrentCost(product);
+        double cost = costSteps.getPreBillingCost(product);
+        Assert.assertEquals("Стоимость предбиллинга отличается от стоимости продукта " + product, preBillingCost, cost, 0.0);
     }
 }

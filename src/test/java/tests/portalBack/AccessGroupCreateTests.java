@@ -12,7 +12,7 @@ import tests.Tests;
 
 @DisplayName("Набор тестов по группам доступа")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@OrderLabel("tests.authorizer.AccessGroupCreateTests")
+@OrderLabel("tests.portalBack.AccessGroupCreateTests")
 @Tag("regress")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccessGroupCreateTests implements Tests {

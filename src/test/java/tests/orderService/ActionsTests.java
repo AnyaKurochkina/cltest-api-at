@@ -1,7 +1,6 @@
 package tests.orderService;
 
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.IProductMock;
 import org.junit.Mock;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
@@ -16,21 +15,20 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 
-@DisplayName("Набор для проверки экшенов #2")
+@DisplayName("Набор для проверки экшенов #1")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
-@OrderLabel("tests.orderService.OrderDeleteTests")
+@OrderLabel("tests.orderService.ActionsTests")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
-public class OrderDeleteTests implements Tests {
+public class ActionsTests implements Tests {
 
     @ParameterizedTest
-    @DisplayName("Проверка actions продуктов #2")
+    @DisplayName("Проверка actions продуктов #1")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @Mock
-    public void orderDelete(IProduct product) {
-        product.runActionsAfterOtherTests();
+    public void runActions(IProduct product) {
+        product.runActionsBeforeOtherTests();
     }
 
 
 }
-
