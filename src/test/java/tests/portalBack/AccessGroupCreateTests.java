@@ -1,4 +1,4 @@
-package tests.authorizer;
+package tests.portalBack;
 
 import io.qameta.allure.Description;
 import org.junit.OrderLabel;
@@ -6,14 +6,9 @@ import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
-import steps.authorizer.AccessGroupSteps;
-import steps.keyCloak.KeyCloakSteps;
+import steps.portalBack.AccessGroupSteps;
 import tests.Tests;
-
-import java.util.stream.Stream;
 
 @DisplayName("Набор тестов по группам доступа")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -28,7 +23,7 @@ public class AccessGroupCreateTests implements Tests {
     @DisplayName("Создание Группы доступа")
     @Source(ProductArgumentsProvider.ENV)
     @Description("Создание Группы доступа с сохранением в Shared Memory")
-    public void createBusinessBlock(String env) {
+    public void createAccessGroup(String env) {
         accessGroupSteps.createAccessGroup("PROJECT_"+env, "access_group");
     }
 

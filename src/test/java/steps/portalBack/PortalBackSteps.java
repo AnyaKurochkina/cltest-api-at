@@ -4,10 +4,7 @@ import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import models.authorizer.Folder;
-import models.authorizer.InformationSystem;
-import models.authorizer.Organization;
-import models.authorizer.ProjectEnvironment;
+import models.authorizer.*;
 import steps.Steps;
 
 public class PortalBackSteps extends Steps {
@@ -68,6 +65,19 @@ public class PortalBackSteps extends Steps {
                 break;
             }
         }
+    }
+
+    @Step("Получение пользователя из LDAP")
+    public String getUsers(String env, String username) {
+        Project project = cacheService.entity(Project.class)
+                .withField("env", env)
+                .getEntity();
+        return  new Http(URL)
+                .get(String.format("portal/api/v1/users?q=%s&project_name=%s", username, project.id))
+                .assertStatus(200)
+                .jsonPath()
+                .get("[0].unique_name");
+
     }
 
 }

@@ -22,7 +22,8 @@
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
-    "name": "cloud-stcrux-dfg",
+    "name": "cloud-stcrux-ggwp",
+    "user": "CN=Михайлов Денис Сергеевич (4043473),OU=Dev Users,OU=DEV_MSK,DC=corp,DC=dev,DC=vtb",
     "isDeleted": false,
     "projectName": "proj-0p1rtz9mq9",
     "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f575"

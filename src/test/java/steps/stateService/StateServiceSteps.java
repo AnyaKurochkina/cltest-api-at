@@ -41,6 +41,6 @@ public class StateServiceSteps extends Steps {
         } catch (Exception e) {
             System.err.println(e);
         }
-        throw new CustomException("Error with VM");
+        throw new CustomException("Error with order, order_id = " + order_id);
     }
 }
