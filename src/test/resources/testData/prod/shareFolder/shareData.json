@@ -34,6 +34,7 @@
     {
         "objectClassName": "models.authorizer.AccessGroup",
         "name": "cloud-d5zorg-proj-ti717c4xdp",
+        "user": "",
         "isDeleted": false,
         "projectName": "proj-ti717c4xdp",
         "objectUid": "4087706b-e9b7-48ef-969d-000000000005"
@@ -41,6 +42,7 @@
     {
         "objectClassName": "models.authorizer.AccessGroup",
         "name": "cloud-ifzorg-proj-hnsmiuaqg2",
+        "user": "",
         "isDeleted": false,
         "projectName": "proj-hnsmiuaqg2",
         "objectUid": "4087706b-e9b7-48ef-969d-000000000006"
