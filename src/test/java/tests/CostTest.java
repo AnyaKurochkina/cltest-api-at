@@ -11,10 +11,13 @@ import steps.tarifficator.CostSteps;
 @Tag("cost1")
 public class CostTest implements Tests {
 
+
+
     @Test
     public void getCost(){
         CostSteps costSteps = new CostSteps();
         String tariffPlanId = costSteps.tariffTest();
         costSteps.getPrices(tariffPlanId);
+
     }
 }

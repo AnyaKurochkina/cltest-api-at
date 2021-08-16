@@ -1,5 +1,6 @@
 package models.orderService.products;
 
+import core.helper.Http;
 import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
@@ -10,6 +11,7 @@ import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.subModels.KafkaTopic;
+import org.json.JSONObject;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
@@ -29,23 +31,41 @@ public class ApacheKafkaCluster extends IProduct {
     String domain;
     public String status = "NOT_CREATED";
     public boolean isDeleted = false;
+    final String jsonTemplate = "/orders/apache_kafka_cluster.json";
+    final String productName = "Apache Kafka Cluster";
     public List<KafkaTopic> topics = new ArrayList<>();
 
     @Override
     public void order() {
-        productName = "Apache Kafka Cluster";
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
-                .getEntity();
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
                 .getEntity();
         projectId = project.id;
         productId = orderServiceSteps.getProductId(this);
         domain = orderServiceSteps.getDomainBySegment(this, segment);
 
         log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath jsonPath = jsonHelper.getJsonTemplate("/orders/apache_kafka_cluster.json")
+        JsonPath jsonPath = new Http(OrderServiceSteps.URL)
+                .setProjectId(project.id)
+                .post("order-service/api/v1/projects/" + project.id + "/orders",
+                        getJsonParametrizedTemplate())
+                .assertStatus(201)
+                .jsonPath();
+        orderId = jsonPath.get("[0].id");
+        orderServiceSteps.checkOrderStatus("success", this);
+        status = "CREATED";
+        cacheService.saveEntity(this);
+    }
+
+    @Override
+    public JSONObject getJsonParametrizedTemplate() {
+        Project project = cacheService.entity(Project.class)
+                .withField("env", env)
+                .getEntity();
+        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
+                .withField("projectName", project.id)
+                .getEntity();
+        return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
@@ -54,15 +74,7 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.project_name", project.id)
-                .send(OrderServiceSteps.URL)
-                .setProjectId(project.id)
-                .post("order-service/api/v1/projects/" + project.id + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = jsonPath.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        status = "CREATED";
-        cacheService.saveEntity(this);
+                .build();
     }
 
     @Override
