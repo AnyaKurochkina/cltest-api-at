@@ -39,7 +39,7 @@ public class CostSteps extends Steps {
         String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = jsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
-        JSONObject attrs = jsonHelper.getJsonObjectFromFile(product.getJsonTemplate(), "/order/attrs");
+        JSONObject attrs = (JSONObject) product.getJsonParametrizedTemplate().query("/order/attrs");
         template.put("params", attrs);
         template.put("project_name", project.id);
         template.put("product_id", productId);
@@ -53,8 +53,8 @@ public class CostSteps extends Steps {
         System.out.println(response.getString("total_price"));
     }
 
-    @Step("Запрос активного тарифного плана")
-    public void getPrices(String tariffPlanId){
+    @Step("Запрос цен по ID тарифного плана")
+    public HashMap<String, Double> getPrices(String tariffPlanId){
         JSONArray consumption = new Http(URL)
                 .get("tarifficator/api/v1/tariff_plans/" + tariffPlanId + "?include=tariff_classes")
                 .assertStatus(200)
@@ -66,9 +66,10 @@ public class CostSteps extends Steps {
             priceList.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
         }
         System.out.println(priceList);
+        return priceList;
     }
 
-    @Step("Запросить тарифные планы")
+    @Step("Получение ID активного тарифного плана")
     public String tariffTest(){
         return new Http(URL)
                 .get("tarifficator/api/v1/tariff_plans?include=total_count&page=1&per_page=10&f[base]=false&f[organization_name]=vtb&sort=status&acc=up&f[status][]=active")

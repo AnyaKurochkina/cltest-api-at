@@ -2,12 +2,19 @@ package models.orderService.interfaces;
 
 import core.utils.Waiting;
 import lombok.AllArgsConstructor;
+import org.json.JSONObject;
 
 @AllArgsConstructor
 public class IProductMock extends IProduct {
     public void order(){
         Waiting.sleep(1000);
     }
+
+    @Override
+    public JSONObject getJsonParametrizedTemplate() {
+        return null;
+    }
+
     public void restart(){}
     public void stopHard(){}
     public void stopSoft(){}

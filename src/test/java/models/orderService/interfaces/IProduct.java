@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import lombok.Getter;
 import lombok.ToString;
 import models.Entity;
+import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.Map;
@@ -32,6 +33,8 @@ public abstract class IProduct extends Entity {
     protected String productId;
 
     public abstract void order();
+
+    public abstract JSONObject getJsonParametrizedTemplate();
 
     public void runActionsBeforeOtherTests(){
         expandMountPoint();
