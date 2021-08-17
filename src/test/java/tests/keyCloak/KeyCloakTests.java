@@ -1,4 +1,4 @@
-package tests.KeyCloak;
+package tests.keyCloak;
 
 import io.qameta.allure.Description;
 import org.junit.OrderLabel;
