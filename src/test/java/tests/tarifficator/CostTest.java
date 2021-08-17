@@ -2,6 +2,7 @@ package tests.tarifficator;
 
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
+import org.json.JSONArray;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -17,10 +18,12 @@ import tests.Tests;
 
 import java.util.HashMap;
 
+import java.util.HashMap;
+
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.tarifficator.CostTest")
-@Tags({@Tag("regress"), @Tag("cost"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("cost")})
 public class CostTest implements Tests {
     CostSteps costSteps = new CostSteps();
 
@@ -28,6 +31,15 @@ public class CostTest implements Tests {
     @DisplayName("Проверка предбиллинга для продуктов")
     @Source(ProductArgumentsProvider.PRODUCTS)
     public void getCost(IProduct product){
+        costSteps.getCurrentCost(product);
+        String tariffPlanId = costSteps.tariffTest();
+        costSteps.getPrices(tariffPlanId);
+    }
+
+    @ParameterizedTest
+    @DisplayName("Проверка предбиллинга для продуктов")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    public void compareTariffs(IProduct product){
         //Получаем ID активного тарифного плана
         String tariffPlanId = costSteps.getActiveTariffId();
         //Получаем прайс активного тарифного плана
@@ -37,4 +49,6 @@ public class CostTest implements Tests {
         //Сравниваем цены из предбиллинга с тарифами из активного тарифного плана
         costSteps.compareTariffs(activeTariffPlanPrice, preBillingData);
     }
+    
+
 }

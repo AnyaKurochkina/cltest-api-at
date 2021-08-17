@@ -23,6 +23,7 @@
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-d2plux-access_group95xy54hggnwo",
+    "user": "",
     "isDeleted": false,
     "projectName": "proj-xazpppulba",
     "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f575"

@@ -1,0 +1,33 @@
+package tests.tarifficator;
+
+import models.orderService.interfaces.IProduct;
+import org.junit.Assert;
+import org.junit.OrderLabel;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.params.ParameterizedTest;
+import steps.tarifficator.CostSteps;
+import tests.Tests;
+
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@Execution(ExecutionMode.CONCURRENT)
+@OrderLabel("tests.tarifficator.CostOrderTest")
+@Tags({@Tag("regress"), @Tag("cost")})
+public class CostOrderTest implements Tests {
+    CostSteps costSteps = new CostSteps();
+
+    @ParameterizedTest
+    @DisplayName("Проверка стоимости заказа")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    public void getCost(IProduct product) {
+        double preBillingCost = costSteps.getCurrentCost(product);
+        double cost = costSteps.getPreBillingCost(product);
+        Assert.assertEquals("Стоимость предбиллинга отличается от стоимости продукта " + product, preBillingCost, cost, 0.0);
+    }
+}

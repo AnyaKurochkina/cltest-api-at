@@ -21,14 +21,24 @@ public class CostSteps extends Steps {
     private static final String URL = Configure.getAppProp("host_kong");
 
     @Step("Получение расхода для папки/проекта")
-    public float getConsumptionByPath(String path) {
-        float consumption = new Http(URL)
+    public double getConsumptionByPath(String path) {
+        double consumption = new Http(URL)
                 .get("calculator/orders/cost/?folder__startswith=" + path)
                 .assertStatus(200)
                 .jsonPath()
-                .get("cost");
-
+                .getDouble("cost");
         log.info("Расход для папки/проекта: " + consumption);
+        return consumption * 24 * 60;
+    }
+
+    @Step("Получение текущего расхода для заказа")
+    public double getPreBillingCost(IProduct product) {
+        double consumption = new Http(URL)
+                .get("calculator/orders/cost/?uuid__in=" + product.getProjectId())
+                .assertStatus(200)
+                .jsonPath()
+                .getDouble("cost");
+        log.debug("Расход для заказа: " + consumption);
         return consumption * 24 * 60;
     }
 
