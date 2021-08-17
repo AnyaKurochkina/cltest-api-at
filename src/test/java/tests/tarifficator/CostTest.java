@@ -28,16 +28,7 @@ public class CostTest implements Tests {
     CostSteps costSteps = new CostSteps();
 
     @ParameterizedTest
-    @DisplayName("Проверка предбиллинга для продуктов")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    public void getCost(IProduct product){
-        costSteps.getCurrentCost(product);
-        String tariffPlanId = costSteps.tariffTest();
-        costSteps.getPrices(tariffPlanId);
-    }
-
-    @ParameterizedTest
-    @DisplayName("Проверка предбиллинга для продуктов")
+    @DisplayName("Сравнение услуг продуктов предбиллинга с услугами продуктов активного тарифного плана")
     @Source(ProductArgumentsProvider.PRODUCTS)
     public void compareTariffs(IProduct product){
         //Получаем ID активного тарифного плана
@@ -49,6 +40,4 @@ public class CostTest implements Tests {
         //Сравниваем цены из предбиллинга с тарифами из активного тарифного плана
         costSteps.compareTariffs(activeTariffPlanPrice, preBillingData);
     }
-    
-
 }
