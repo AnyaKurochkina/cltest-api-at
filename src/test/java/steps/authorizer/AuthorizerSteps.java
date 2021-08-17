@@ -5,6 +5,7 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Folder;
+import models.authorizer.InformationSystem;
 import models.authorizer.Organization;
 import steps.Steps;
 
@@ -21,9 +22,13 @@ public class AuthorizerSteps extends Steps {
                     .withField("isDeleted", false)
                     .getEntity());
         }
+
+        InformationSystem informationSystem = cacheService.entity(InformationSystem.class)
+                .getEntity();
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/structure/create_folder.json")
                 .set("$.folder.kind", folderType)
                 .set("$.folder.title", name)
+                .set("$.folder.information_system_ids", new String[] {informationSystem.id})
                 .send(URL)
                 .post(parentName.equalsIgnoreCase("vtb")
                         ? "authorizer/api/v1/organizations/vtb/folders"
