@@ -33,6 +33,31 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
+    public double getCurrentCost(IProduct product) {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        Project project = cacheService.entity(Project.class)
+                .withField("env", product.getEnv())
+                .getEntity();
+        String productId = orderServiceSteps.getProductId(product);
+        log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
+        JSONObject template = jsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
+        JSONObject attrs = (JSONObject) product.getJsonParametrizedTemplate().query("/order/attrs");
+        template.put("params", attrs);
+        template.put("project_name", project.id);
+        template.put("product_id", productId);
+
+        JsonPath response = new Http(OrderServiceSteps.URL)
+                .setProjectId(project.id)
+                .post("tarifficator/api/v1/cost", template)
+                .assertStatus(200)
+                .jsonPath();
+
+        //TODO: Добавить проверки
+
+        return response.getDouble("total_price");
+    }
+
+    @Step("Получение предварительной стоимости продукта {product}")
     public JSONArray getCost(IProduct product) {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
