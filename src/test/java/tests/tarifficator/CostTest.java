@@ -1,6 +1,7 @@
 package tests.tarifficator;
 
 import models.orderService.interfaces.IProduct;
+import org.json.JSONArray;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -14,6 +15,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import steps.tarifficator.CostSteps;
 import tests.Tests;
 
+import java.util.HashMap;
+
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.tarifficator.CostTest")
@@ -25,6 +28,13 @@ public class CostTest implements Tests {
     @DisplayName("Проверка предбиллинга для продуктов")
     @Source(ProductArgumentsProvider.PRODUCTS)
     public void getCost(IProduct product){
-        costSteps.getCost(product);
+        //Получаем ID активного тарифного плана
+        String tariffPlanId = costSteps.getActiveTariffId();
+        //Получаем прайс активного тарифного плана
+        HashMap<String, Double> activeTariffPlanPrice = costSteps.getPrices(tariffPlanId);
+        //Получаем цены услуг из предбиллинга
+        JSONArray preBillingData = costSteps.getCost(product);
+        //Сравниваем цены из предбиллинга с тарифами из активного тарифного плана
+        costSteps.compareTariffs(activeTariffPlanPrice, preBillingData);
     }
 }
