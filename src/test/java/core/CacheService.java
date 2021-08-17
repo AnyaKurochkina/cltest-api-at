@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.Assert;
 import org.junit.jupiter.api.parallel.ResourceLock;
+
 import java.io.FileInputStream;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -56,9 +57,15 @@ public class CacheService {
             JsonObject jsonObject = JsonParser.parseString(shareDataElement).getAsJsonObject();
             String classNameJson = jsonObject.get("objectClassName").getAsString();
             String className = c.getName();
-            if(c.equals(IProduct.class))
+            if (c.equals(IProduct.class))
                 className = "models.orderService.products.";
-            if (classNameJson.startsWith(className)) {
+            boolean isClass;
+            if (classNameJson.endsWith(".")) {
+                isClass = classNameJson.startsWith(className);
+            } else {
+                isClass = classNameJson.equals(className);
+            }
+            if (isClass) {
                 Class<T> act = null;
                 try {
                     act = (Class<T>) Class.forName(classNameJson);

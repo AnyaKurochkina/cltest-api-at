@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 @DisplayName("Удаление сервисных аккаунтов")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.authorizer.ServiceAccountDeleteTests")
-@Tag("regress")
+@Tags({@Tag("regress"), @Tag("orgStructure")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ServiceAccountDeleteTests implements Tests {
     ServiceAccountSteps serviceAccountSteps = new ServiceAccountSteps();

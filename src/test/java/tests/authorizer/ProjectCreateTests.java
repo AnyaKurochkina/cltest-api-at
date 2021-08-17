@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @DisplayName("Набор тестов по проектам")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.authorizer.ProjectCreateTests")
-@Tag("regress")
+@Tags({@Tag("regress"), @Tag("orgStructure")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectCreateTests implements Tests {
     ProjectSteps projectSteps = new ProjectSteps();
