@@ -25,7 +25,7 @@ public class ActionsTests implements Tests {
     @ParameterizedTest
     @DisplayName("Проверка actions продуктов #1")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @Mock
+    //@Mock
     public void runActions(IProduct product) {
         product.runActionsBeforeOtherTests();
     }

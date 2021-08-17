@@ -17,6 +17,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.tarifficator.CostTest")
+@DisplayName("Набор тестов для проверки предбиллинга продуктов")
 @Tags({@Tag("regress"), @Tag("cost")})
 public class CostTest implements Tests {
     CostSteps costSteps = new CostSteps();

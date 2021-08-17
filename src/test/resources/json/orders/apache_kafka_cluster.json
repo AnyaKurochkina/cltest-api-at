@@ -38,7 +38,6 @@
 			]
 		},
 		"count": 1,
-		"label": "Apache Kafka Cluster",
-		"graph_version": "1.0.67"
+		"label": "Apache Kafka Cluster"
 	}
 }

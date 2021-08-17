@@ -26,7 +26,7 @@ public class OrderDeleteTests implements Tests {
     @ParameterizedTest
     @DisplayName("Проверка actions продуктов #2")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @Mock
+    //@Mock
     public void orderDelete(IProduct product) {
         product.runActionsAfterOtherTests();
     }
