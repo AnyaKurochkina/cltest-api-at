@@ -39,7 +39,6 @@
 			]
 		},
 		"count": 1,
-		"label": "RHEL_0001",
-		"graph_version": "1.0.98"
+		"label": "RHEL_0001"
 	}
 }

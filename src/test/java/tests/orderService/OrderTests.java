@@ -22,7 +22,7 @@ public class OrderTests implements Tests {
     @ParameterizedTest
     @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @Mock
+    //@Mock
     public void order(IProduct product) {
         product.order();
     }
