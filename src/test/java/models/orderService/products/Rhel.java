@@ -20,6 +20,7 @@ public class Rhel extends IProduct {
     String dataCentre;
     String platform;
     String osVersion;
+    String role = "superuser";
     String domain;
     String status = "NOT_CREATED";
     boolean isDeleted = false;
@@ -32,6 +33,10 @@ public class Rhel extends IProduct {
 
     @Override
     public void order() {
+        switch (env){
+            case ("TEST"):
+                role = "user";
+        }
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
@@ -66,6 +71,7 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.os_version", osVersion)
+                .set("$.order.attrs.ad_logon_grants[0].role", role)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .build();
