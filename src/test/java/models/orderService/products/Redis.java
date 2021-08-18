@@ -9,6 +9,7 @@ import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONObject;
+import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
 import static org.junit.Assert.assertTrue;
@@ -24,9 +25,6 @@ public class Redis extends IProduct {
     String domain;
     String status = "NOT_CREATED";
     boolean isDeleted = false;
-    final String jsonTemplate = "/orders/redis.json";
-    final String productName = "Redis";
-    String projectId;
 
     @Override
     public void order() {
@@ -46,6 +44,12 @@ public class Redis extends IProduct {
         orderServiceSteps.checkOrderStatus("success", this);
         status = "CREATED";
         cacheService.saveEntity(this);
+    }
+
+    @Override
+    public void init() {
+        jsonTemplate = "/orders/redis.json";
+        productName = "Redis";
     }
 
     @Override
@@ -69,14 +73,14 @@ public class Redis extends IProduct {
 
     @Override
     public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
+        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     @Override
     public void expandMountPoint() {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
-        String actionId = orderServiceSteps.executeAction("Расширить", "{\"size\": 10, \"mount\": \"/app/redis/data\"}", this);
+        String actionId = orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/redis/data\"}"));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore<sizeAfter);
@@ -84,17 +88,49 @@ public class Redis extends IProduct {
 
     public void resetPassword() {
         String password = "yxjpjk7xvOImb1O9vZZiGUlsItkqLqtbB1VPZHzL6";
-        String actionId = orderServiceSteps.executeAction("Сбросить пароль", String.format("{redis_password: \"%s\"}", password), this);
+        String actionId = orderServiceSteps.executeAction("Сбросить пароль", this, new JSONObject(String.format("{redis_password: \"%s\"}", password)));
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     @Override
     public void runActionsBeforeOtherTests(){
-        resetPassword();
-        expandMountPoint();
-        restart();
-        stopSoft();
-        start();
-        stopHard();
+        boolean x = true;
+        try {
+            expandMountPoint();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            resetPassword();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            restart();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            stopSoft();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            start();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            stopHard();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        Assert.assertTrue(x);
     }
 }

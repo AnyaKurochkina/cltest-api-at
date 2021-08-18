@@ -16,6 +16,8 @@ import org.json.JSONArray;
 import org.junit.Assert;
 import steps.Steps;
 import steps.stateService.StateServiceSteps;
+import steps.tarifficator.CostSteps;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,27 +58,38 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    @Step("Выполнить действие - {action}")
-    public String executeAction(String action, IProduct product) {
-        Map<String, String> map = getItemIdByOrderId(action, product);
-        log.info("Отправка запроса на выполнение действия - " + action);
-        return jsonHelper.getJsonTemplate("/actions/template.json")
-                .set("$.item_id", map.get("item_id"))
-                .send(URL)
-                .setProjectId(product.getProjectId())
-                .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"))
-                .assertStatus(200)
-                .jsonPath()
-                .get("action_id");
-    }
+//    @Step("Выполнить действие - {action}")
+//    public String executeAction(String action, IProduct product) {
+//        CostSteps costSteps = new CostSteps();
+//        Map<String, String> map = getItemIdByOrderId(action, product);
+//        log.info("Отправка запроса на выполнение действия - " + action);
+//
+//        //TODO: Возможно стоит сделать более детальную проверку на значение
+//        costSteps.getCostAction(map.get("name"), map.get("item_id"), product, null);
+//
+//        return jsonHelper.getJsonTemplate("/actions/template.json")
+//                .set("$.item_id", map.get("item_id"))
+//                .send(URL)
+//                .setProjectId(product.getProjectId())
+//                .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"))
+//                .assertStatus(200)
+//                .jsonPath()
+//                .get("action_id");
+//    }
 
     @Step("Выполнить действие с блоком data - {action}")
-    public String executeAction(String action, String dataString, IProduct product) {
+    public String executeAction(String action, IProduct product, JSONObject jsonData) {
+        CostSteps costSteps = new CostSteps();
         Map<String,String> map = getItemIdByOrderId(action, product);
         log.info("Отправка запроса на выполнение действия - " + action);
+
+        //TODO: Возможно стоит сделать более детальную проверку на значение
+        //costSteps.getCostAction(map.get("name"), map.get("item_id"), product, jsonData);
+
+//TODO: обработать кейс если экшен не найден
         return jsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", map.get("item_id"))
-                .set("$.order.data", new JSONObject(dataString))
+                .set("$.order.data", jsonData)
                 .send(URL)
                 .setProjectId(product.getProjectId())
                 .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"))
@@ -97,6 +110,7 @@ public class OrderServiceSteps extends Steps {
                 action_status = new Http(URL)
                         .setProjectId(product.getProjectId())
                         .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id)
+                        .assertStatus(200)
                         .jsonPath().get("status");
             } catch (JsonPathException e) {
                 log.error("Error get status " + e.getMessage());

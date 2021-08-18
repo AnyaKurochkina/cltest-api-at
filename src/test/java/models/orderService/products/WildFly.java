@@ -13,6 +13,8 @@ import models.orderService.interfaces.IProduct;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
 
+import static org.junit.Assert.assertTrue;
+
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
@@ -24,8 +26,6 @@ public class WildFly extends IProduct {
     String osVersion;
     String domain;
     String status = "NOT_CREATED";
-    final String jsonTemplate = "/orders/wildfly.json";
-    final String productName = "WildFly";
     boolean isDeleted = false;
 
     @Override
@@ -47,6 +47,12 @@ public class WildFly extends IProduct {
         orderServiceSteps.checkOrderStatus("success", this);
         status = "CREATED";
         cacheService.saveEntity(this);
+    }
+
+    @Override
+    public void init() {
+        jsonTemplate = "/orders/wildfly.json";
+        productName = "WildFly";
     }
 
     @Override
@@ -72,8 +78,17 @@ public class WildFly extends IProduct {
 
     @Override
     public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
+        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
+    }
+
+    @Override
+    public void expandMountPoint() {
+        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
+        String actionId = orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/app\"}"));
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
+        assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
 
 }

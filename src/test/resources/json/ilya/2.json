@@ -1,45 +1,26 @@
 {
-  "order": {
+  "include": "price_info",
+  "is_action": true,
+  "params": {
+    "item_id": "ce6071de-1859-4b55-8bde-a4f3be00503b",
+    "action_name": "stop_vm_hard",
+    "id": "88a96301-0395-498e-aa44-bd217483bb3f",
     "project_name": "proj-xazpppulba",
-    "product_id": "c422069e-8f01-4328-b9dc-4a9e5dafd44e",
-    "attrs": {
-      "domain": "corp.dev.vtb",
-      "flavor": {
-        "cpus": 2,
-        "name": "c2m4",
-        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
-        "memory": 4
-      },
-      "platform": "Nutanix",
-      "boot_disk": {
-        "size": 30
-      },
-      "extra_nics": [],
-      "on_support": false,
-      "os_version": "8.4",
-      "data_center": "5",
-      "default_nic": {
-        "net_segment": "dev-srv-app"
-      },
-      "extra_mounts": [
-        {
-          "path": "/app",
-          "size": 10,
-          "file_system": "xfs"
-        }
-      ],
-      "ad_integration": true,
-      "ad_logon_grants": [
-        {
-          "role": "superuser",
-          "groups": [
-            "cloud-d2plux-access_group95xy54hggnwo"
-          ]
-        }
-      ]
-    },
-    "count": 1,
-    "label": "RHEL",
-    "graph_version": "1.0.106"
+    "order": {
+      "data": {
+        "quota": {
+          "memory": 2,
+          "cpu": 1
+        },
+        "roles": [
+          {
+            "role": "view",
+            "groups": [
+              "cloud-d2plux-access_group95xy54hggnwo"
+            ]
+          }
+        ]
+      }
+    }
   }
 }

@@ -1,5 +1,6 @@
 package models.orderService.products;
 
+import core.helper.Http;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -23,8 +24,6 @@ public class OpenShiftProject extends IProduct {
     public String domain;
     public List<Role> roles = new ArrayList<>();
     public String status = "NOT_CREATED";
-    final String jsonTemplate = "/orders/openshift_project.json";
-    final String productName = "OpenShift project";
     public boolean isDeleted = false;
 
     @Override
@@ -35,19 +34,11 @@ public class OpenShiftProject extends IProduct {
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
-        ResourcePool resourcePool = cacheService.entity(ResourcePool.class)
-                .withField("label", resourcePoolLabel)
-                .getEntity();
         projectId = project.id;
         log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = jsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.order.attrs.resource_pool_id", resourcePool.id)
-                .set("$.order.attrs.roles[0].groups[0]", accessGroup.name)
-                .set("$.order.project_name", project.id)
-                .set("$.order.attrs.user_mark", "openshift"+ new Random().nextInt())
-                .send(OrderServiceSteps.URL)
+        JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(project.id)
-                .post("order-service/api/v1/projects/" + project.id + "/orders")
+                .post("order-service/api/v1/projects/" + project.id + "/orders", getJsonParametrizedTemplate())
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
@@ -58,14 +49,35 @@ public class OpenShiftProject extends IProduct {
     }
 
     @Override
+    public void init() {
+        jsonTemplate = "/orders/openshift_project.json";
+        productName = "OpenShift project";
+    }
+
+    @Override
     public JSONObject getJsonParametrizedTemplate() {
-        return null;
+        Project project = cacheService.entity(Project.class)
+                .withField("env", env)
+                .getEntity();
+        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
+                .withField("projectName", project.id)
+                .getEntity();
+        ResourcePool resourcePool = cacheService.entity(ResourcePool.class)
+                .withField("label", resourcePoolLabel)
+                .getEntity();
+
+        return jsonHelper.getJsonTemplate(jsonTemplate)
+                .set("$.order.attrs.resource_pool_id", resourcePool.id)
+                .set("$.order.attrs.roles[0].groups[0]", accessGroup.name)
+                .set("$.order.project_name", project.id)
+                .set("$.order.attrs.user_mark", "openshift"+ new Random().nextInt())
+                .build();
     }
 
     public void changeProject() {
         String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
         roles.get(0).setName("view");
-        String actionId = orderServiceSteps.executeAction("Изменить проект", data, this);
+        String actionId = orderServiceSteps.executeAction("Изменить проект", this, new JSONObject(data));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         cacheService.saveEntity(this);
         Assert.assertEquals(orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.memory"), 2);
@@ -74,7 +86,7 @@ public class OpenShiftProject extends IProduct {
 
     @Override
     public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить проект", this);
+        String actionId = orderServiceSteps.executeAction("Удалить проект", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 

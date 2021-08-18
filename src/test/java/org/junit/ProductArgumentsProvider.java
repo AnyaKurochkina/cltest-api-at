@@ -65,7 +65,10 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                 try {
                     Class<?> c = Class.forName("models.orderService.products." + e.getKey());
                     for (Object orderObj : e.getValue()) {
-                        list.add((IProduct) objectMapper.convertValue(orderObj, c));
+                        IProduct product = (IProduct) objectMapper.convertValue(orderObj, c);
+                        product.init();
+                        list.add(product);
+
                     }
                 } catch (ClassNotFoundException classNotFoundException) {
                     classNotFoundException.printStackTrace();

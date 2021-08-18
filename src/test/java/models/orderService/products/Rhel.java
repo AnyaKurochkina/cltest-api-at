@@ -23,8 +23,12 @@ public class Rhel extends IProduct {
     String domain;
     String status = "NOT_CREATED";
     boolean isDeleted = false;
-    final String jsonTemplate = "/orders/rhel.json";
-    final String productName = "Rhel";
+
+    @Override
+    public void init() {
+        jsonTemplate = "/orders/rhel.json";
+        productName = "Rhel";
+    }
 
     @Override
     public void order() {

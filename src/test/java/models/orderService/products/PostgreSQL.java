@@ -11,6 +11,7 @@ import models.orderService.interfaces.IProduct;
 import models.subModels.PostgreSqlDB;
 import models.subModels.PostgreSqlUsers;
 import org.json.JSONObject;
+import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -36,8 +37,6 @@ public class PostgreSQL extends IProduct {
     String domain;
     String status = "NOT_CREATED";
     boolean isDeleted = false;
-    final String jsonTemplate = "/orders/postgresql.json";
-    final String productName = "PostgreSQL";
     public List<PostgreSqlDB> database = new ArrayList<>();
     public List<PostgreSqlUsers> users = new ArrayList<>();
 
@@ -63,6 +62,12 @@ public class PostgreSQL extends IProduct {
     }
 
     @Override
+    public void init() {
+        jsonTemplate = "/orders/postgresql.json";
+        productName = "PostgreSQL";
+    }
+
+    @Override
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
@@ -85,21 +90,21 @@ public class PostgreSQL extends IProduct {
 
     @Override
     public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
+        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     @Override
     public void expandMountPoint() {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
-        String actionId = orderServiceSteps.executeAction("Расширить", "{\"size\": 10, \"mount\": \"/pg_data\"}", this);
+        String actionId = orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/pg_data\"}"));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore < sizeAfter);
     }
 
     public void createDb(String dbName) {
-        String actionId = orderServiceSteps.executeAction("Добавить БД", String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName), this);
+        String actionId = orderServiceSteps.executeAction("Добавить БД", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         String dbNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_NAME_PATH);
         assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
@@ -111,7 +116,7 @@ public class PostgreSQL extends IProduct {
     public void removeDb() {
         String dbName = database.get(0).getNameDB();
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, DB_SIZE_PATH);
-        String actionId = orderServiceSteps.executeAction("Удалить БД", String.format("{db_name: \"%s\"}", dbName), this);
+        String actionId = orderServiceSteps.executeAction("Удалить БД", this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, DB_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
@@ -122,7 +127,7 @@ public class PostgreSQL extends IProduct {
 
     public void createDbmsUser(String username, String dbRole) {
         String dbName = database.get(0).getNameDB();
-        String actionId = orderServiceSteps.executeAction("Добавить пользователя", String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username), this);
+        String actionId = orderServiceSteps.executeAction("Добавить пользователя", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         String dbUserNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_USERNAME_PATH);
         assertEquals("Имя пользователя отличается от создаваемого", String.format("%s_%s", dbName, username), dbUserNameActual);
@@ -134,20 +139,20 @@ public class PostgreSQL extends IProduct {
 
     public void resetPassword() {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        String actionId = orderServiceSteps.executeAction("Сбросить пароль", String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password), this);
+        String actionId = orderServiceSteps.executeAction("Сбросить пароль", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
 
     public void resetDbOwnerPassword() {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        String actionId = orderServiceSteps.executeAction("Сбросить пароль", String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password), this);
+        String actionId = orderServiceSteps.executeAction("Сбросить пароль", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password)));
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     public void removeDbmsUser() {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, DB_USERNAME_SIZE_PATH);
-        String actionId = orderServiceSteps.executeAction("Удалить пользователя", String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername()), this);
+        String actionId = orderServiceSteps.executeAction("Удалить пользователя", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, DB_USERNAME_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
@@ -158,18 +163,77 @@ public class PostgreSQL extends IProduct {
 
     @Override
     public void runActionsBeforeOtherTests() {
-        expandMountPoint();
-        createDb("testdb");
-        resetDbOwnerPassword();
-        createDbmsUser("testuser", "user");
-        resetPassword();
+        boolean x = true;
+        try {
+            expandMountPoint();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            createDb("testdb");
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            resetDbOwnerPassword();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            createDbmsUser("testuser", "user");
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            resetPassword();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            restart();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            removeDbmsUser();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            removeDb();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            stopSoft();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            start();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            stopHard();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        Assert.assertTrue(x);
     }
-
-    @Override
-    public void runActionsAfterOtherTests() {
-        removeDbmsUser();
-        removeDb();
-        delete();
-    }
-
 }
+
+
+
+

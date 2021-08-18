@@ -27,7 +27,7 @@ public class ActionsTests implements Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     //@Mock
     public void runActions(IProduct product) {
-        product.runActionsBeforeOtherTests();
+            product.runActionsBeforeOtherTests();
     }
 
 

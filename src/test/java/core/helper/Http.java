@@ -162,6 +162,7 @@ public class Http {
             responseMessage = new HttpResponse(IOUtils.toString(is, StandardCharsets.UTF_8));
             responseMessage.status = http.getResponseCode();
             http.disconnect();
+            log.debug("RESPONSE: {}", responseMessage);
         } catch (Exception e) {
             e.printStackTrace();
             fail(e.getMessage());
