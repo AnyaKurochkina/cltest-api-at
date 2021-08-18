@@ -25,12 +25,12 @@ public class AccessGroupSteps extends Steps {
                 .withField("projectName", projectName)
                 .getEntity();
 
-        String accessNameBuild = accessName + stringUtils.getRandString(12);
+        String accessNameBuild = accessName + stringUtils.getRandString(11);
         String groupName = jsonHelper.getJsonTemplate("/accessGroup/accessGroup.json")
                 .set("$.access_group.name", accessNameBuild)
                 .set("$.access_group.project_name", project.id)
                 .send(URL)
-                .setProjectId(project.id)
+                //.setProjectId(project.id)
                 .post(String.format("portal/api/v1/projects/%s/access_groups", project.id))
                 .assertStatus(201)
                 .jsonPath()
@@ -80,6 +80,7 @@ public class AccessGroupSteps extends Steps {
                 .jsonPath();
 
         accessGroup.user = username;
+        cacheService.saveEntity(accessGroup);
     }
 
     @Step("Добавление пользователя в группу доступа для проекта среды {env}")

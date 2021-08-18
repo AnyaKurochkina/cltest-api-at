@@ -1,7 +1,7 @@
-#OpenShiftProject:
-#  - env: "DEV"
-#    resourcePoolLabel: "ds0-bank01 - Demo"
-#    domain: "corp.dev.vtb"
+OpenShiftProject:
+  - env: "DEV"
+    resourcePoolLabel: "ds0-bank01 - Demo"
+    domain: "corp.dev.vtb"
 
 Rhel:
   - platform: "Nutanix"
@@ -27,20 +27,12 @@ PostgreSQL:
     domain: "corp.dev.vtb"
     dataCentre: "5"
 
+#RabbitMQCluster:
 #  - platform: "Nutanix"
-#    postgresqlVersion: "11"
-#    env: "TEST"
-#    osVersion: "8.latest"
+#    env: "DEV"
 #    segment: "dev-srv-app"
 #    domain: "corp.dev.vtb"
 #    dataCentre: "5"
-
-RabbitMQCluster:
-  - platform: "Nutanix"
-    env: "DEV"
-    segment: "dev-srv-app"
-    domain: "corp.dev.vtb"
-    dataCentre: "5"
 
 WildFly:
   - platform: "Nutanix"
@@ -58,6 +50,13 @@ WildFly:
     dataCentre: "5"
 
 Windows:
+#  - platform: "Nutanix"
+#    env: "DEV"
+#    segment: "dev-srv-app"
+#    domain: "corp.dev.vtb"
+#    dataCentre: "5"
+#    osVersion: "Microsoft Windows Server 2016"
+
   - platform: "Nutanix"
     env: "DEV"
     segment: "dev-srv-app"

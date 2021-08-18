@@ -24,8 +24,6 @@ public class Nginx extends IProduct {
     String platform;
     public String status = "NOT_CREATED";
     public boolean isDeleted = false;
-    final String jsonTemplate = "/orders/nginx.json";
-    final String productName = "Nginx";
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @Override
@@ -50,6 +48,12 @@ public class Nginx extends IProduct {
     }
 
     @Override
+    public void init() {
+        jsonTemplate = "/orders/nginx.json";
+        productName = "Nginx";
+    }
+
+    @Override
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
@@ -70,7 +74,7 @@ public class Nginx extends IProduct {
 
     @Override
     public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
+        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 

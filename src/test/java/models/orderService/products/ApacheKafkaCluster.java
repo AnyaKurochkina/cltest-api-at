@@ -31,8 +31,6 @@ public class ApacheKafkaCluster extends IProduct {
     String domain;
     public String status = "NOT_CREATED";
     public boolean isDeleted = false;
-    final String jsonTemplate = "/orders/apache_kafka_cluster.json";
-    final String productName = "Apache Kafka Cluster";
     public List<KafkaTopic> topics = new ArrayList<>();
 
     @Override
@@ -58,6 +56,12 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     @Override
+    public void init() {
+        jsonTemplate = "/orders/apache_kafka_cluster.json";
+        productName = "Apache Kafka Cluster";
+    }
+
+    @Override
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
@@ -79,30 +83,30 @@ public class ApacheKafkaCluster extends IProduct {
 
     @Override
     public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
+        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     @Override
     public void restart() {
-        String actionId = orderServiceSteps.executeAction("Перезагрузить кластер Kafka", this);
+        String actionId = orderServiceSteps.executeAction("Перезагрузить кластер Kafka", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     @Override
     public void stopSoft() {
-        String actionId = orderServiceSteps.executeAction("Выключить кластер Kafka", this);
+        String actionId = orderServiceSteps.executeAction("Выключить кластер Kafka", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     public void updateCerts() {
-        String actionId = orderServiceSteps.executeAction("Обновить сертификаты", "{\"dumb\":\"empty\"}", this);
+        String actionId = orderServiceSteps.executeAction("Обновить сертификаты", this, new JSONObject("{\"dumb\":\"empty\"}"));
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     public void createTopic(String name) {
         KafkaTopic topic = new KafkaTopic("delete", 1, 1, 1, 1800000, name);
-        String actionId = orderServiceSteps.executeAction("Создать Topic Kafka", cacheService.toJson(topic), this);
+        String actionId = orderServiceSteps.executeAction("Создать Topic Kafka", this, new JSONObject(cacheService.toJson(topic)));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         topics.add(topic);
@@ -110,7 +114,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void deleteTopic(String name) {
-        String actionId = orderServiceSteps.executeAction("Удалить Topic Kafka", "{\"topic_name\": \"" + name + "\"}", this);
+        String actionId = orderServiceSteps.executeAction("Удалить Topic Kafka", this, new JSONObject("{\"topic_name\": \"" + name + "\"}"));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         Assert.assertFalse((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         topics.removeIf(topic -> topic.getTopicName().equals(name));
@@ -118,7 +122,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void createAcl(String topicNameRegex) {
-        String actionId = orderServiceSteps.executeAction("Создать ACL Kafka", "{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}", this);
+        String actionId = orderServiceSteps.executeAction("Создать ACL Kafka", this, new JSONObject("{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}"));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         cacheService.saveEntity(this);
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_ACL, topicNameRegex)));
@@ -126,25 +130,63 @@ public class ApacheKafkaCluster extends IProduct {
 
     @Override
     public void start() {
-        String actionId = orderServiceSteps.executeAction("Включить кластер Kafka", this);
+        String actionId = orderServiceSteps.executeAction("Включить кластер Kafka", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     @Override
     public void runActionsBeforeOtherTests(){
-        updateCerts();
-        createTopic("TopicName");
-        createAcl("*");
-        stopSoft();
-        start();
-        restart();
-        expandMountPoint();
+        boolean x = true;
+        try {
+            updateCerts();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            createTopic("TopicName");
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            createAcl("*");
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            deleteTopic("TopicName");
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            stopSoft();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            start();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            restart();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            expandMountPoint();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        Assert.assertTrue(x);
     }
 
-    @Override
-    public void runActionsAfterOtherTests(){
-        deleteTopic("TopicName");
-        delete();
-    }
 
 }

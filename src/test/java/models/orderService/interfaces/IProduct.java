@@ -1,10 +1,12 @@
 package models.orderService.interfaces;
 
 import static org.junit.Assert.*;
+
 import lombok.Getter;
 import lombok.ToString;
 import models.Entity;
 import org.json.JSONObject;
+import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.Map;
@@ -34,16 +36,51 @@ public abstract class IProduct extends Entity {
 
     public abstract void order();
 
+    public abstract void init();
+
     public abstract JSONObject getJsonParametrizedTemplate();
 
-    public void runActionsBeforeOtherTests(){
-        expandMountPoint();
-        restart();
-        stopSoft();
-        resize();
-        start();
-        stopHard();
+    public void runActionsBeforeOtherTests() {
+        boolean x = true;
+        try {
+            expandMountPoint();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            restart();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            stopSoft();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            resize();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            start();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            stopHard();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        Assert.assertTrue(x);
     }
+
     public void runActionsAfterOtherTests() {
         delete();
     }
@@ -53,32 +90,33 @@ public abstract class IProduct extends Entity {
     }
 
     public void restart() {
-        String actionId = orderServiceSteps.executeAction("Перезагрузить", this);
+        String actionId = orderServiceSteps.executeAction("Перезагрузить", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
+
     public void stopHard() {
-        String actionId = orderServiceSteps.executeAction("Выключить принудительно", this);
+        String actionId = orderServiceSteps.executeAction("Выключить принудительно", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     public void stopSoft() {
-        String actionId = orderServiceSteps.executeAction("Выключить", this);
+        String actionId = orderServiceSteps.executeAction("Выключить", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     public void start() {
-        String actionId = orderServiceSteps.executeAction("Включить", this);
+        String actionId = orderServiceSteps.executeAction("Включить", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить", this);
+        String actionId = orderServiceSteps.executeAction("Удалить", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
     public void resize() {
         Map<String, String> map = orderServiceSteps.getFlavorByProduct(this);
-        String actionId = orderServiceSteps.executeAction("Изменить конфигурацию", map.get("flavor"), this);
+        String actionId = orderServiceSteps.executeAction("Изменить конфигурацию", this, new JSONObject(map.get("flavor")));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int cpusAfter = (Integer) orderServiceSteps.getFiledProduct(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getFiledProduct(this, MEMORY);
@@ -88,10 +126,10 @@ public abstract class IProduct extends Entity {
 
     public void expandMountPoint() {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
-        String actionId = orderServiceSteps.executeAction("Расширить", "{\"size\": 10, \"mount\": \"/app\"}", this);
+        String actionId = orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
-        assertTrue(sizeBefore<sizeAfter);
+        assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
 
 }

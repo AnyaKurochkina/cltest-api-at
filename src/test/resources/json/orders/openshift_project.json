@@ -1,23 +1,27 @@
 {
   "order": {
-    "project_name": "proj-xn1jqdw75z",
+    "project_name": "proj-xazpppulba",
     "product_id": "10000003-1111-2222-b9dc-4a9e5dafd44e",
     "attrs": {
       "quota": {
         "cpu": 1,
-        "memory": 1
+        "memory": 1,
+        "storage": {
+          "sc-nfs-netapp-q": 0
+        }
       },
       "roles": [
         {
           "role": "edit",
           "groups": [
-            "cloud-d5plux-vtb4050213"
+            "cloud-d2plux-access-groupc3uvw11s"
           ]
         }
       ],
-      "user_mark": "namename",
+      "user_mark": "7777",
       "resource_pool_id": "e5b4d171-1cbb-4b93-8c98-79836c11ce67"
     },
-    "count": 1
+    "count": 1,
+    "label": "OpenShift project"
   }
 }

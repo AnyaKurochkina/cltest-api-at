@@ -22,8 +22,6 @@ public class ApacheKafka extends IProduct {
     String kafkaVersion;
     String domain;
     public String status = "NOT_CREATED";
-    final String jsonTemplate = "/orders/apache_kafka.json";
-    final String productName = "Apache Kafka";
     public boolean isDeleted = false;
 
     @Override
@@ -49,6 +47,12 @@ public class ApacheKafka extends IProduct {
     }
 
     @Override
+    public void init() {
+        jsonTemplate = "/orders/apache_kafka.json";
+        productName = "Apache Kafka";
+    }
+
+    @Override
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
@@ -71,7 +75,7 @@ public class ApacheKafka extends IProduct {
 
     @Override
     public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
+        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 

@@ -19,7 +19,7 @@ import tests.Tests;
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.tarifficator.CostOrderTest")
 @DisplayName("Набор тестов для проверки стоимости заказа")
-@Tags({@Tag("regress"), @Tag("cost")})
+@Tags({@Tag("regress"), @Tag("cost"), @Tag("orders")})
 public class CostOrderTest implements Tests {
     CostSteps costSteps = new CostSteps();
 
@@ -29,6 +29,7 @@ public class CostOrderTest implements Tests {
     public void getCost(IProduct product) {
         double preBillingCost = costSteps.getCurrentCost(product);
         double cost = costSteps.getPreBillingCost(product);
+        //TODO: cost может быть null нужно ждать
         Assert.assertEquals("Стоимость предбиллинга отличается от стоимости продукта " + product, preBillingCost, cost, 0.0);
     }
 }

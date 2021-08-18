@@ -12,7 +12,8 @@ public class JsonTemplate {
     }
 
     public JsonTemplate set(String s, Object o, Predicate... p) {
-        JsonPath.parse(template).set(s, o, p);
+        if(o != null)
+            JsonPath.parse(template).set(s, o, p);
         return this;
     }
 

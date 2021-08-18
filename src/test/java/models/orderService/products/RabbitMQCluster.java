@@ -9,6 +9,7 @@ import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONObject;
+import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
 import static org.junit.Assert.assertEquals;
@@ -24,8 +25,6 @@ public class RabbitMQCluster extends IProduct {
     String platform;
     String domain;
     String status = "NOT_CREATED";
-    final String jsonTemplate = "/orders/rabbitmq_cluster.json";
-    final String productName = "RabbitMQ Cluster";
     boolean isDeleted = false;
 
     @Override
@@ -50,6 +49,12 @@ public class RabbitMQCluster extends IProduct {
     }
 
     @Override
+    public void init() {
+        jsonTemplate = "/orders/rabbitmq_cluster.json";
+        productName = "RabbitMQ Cluster";
+    }
+
+    @Override
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
@@ -71,7 +76,7 @@ public class RabbitMQCluster extends IProduct {
 
     public void rabbitmqCreateUser() {
         String user = "testapiuser";
-        String actionId = orderServiceSteps.executeAction("Создать пользователя RabbitMQ", String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user), this);
+        String actionId = orderServiceSteps.executeAction("Создать пользователя RabbitMQ", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         String username = (String) orderServiceSteps.getFiledProduct(this, RABBITMQ_USER);
         assertEquals(user, username);
@@ -79,18 +84,51 @@ public class RabbitMQCluster extends IProduct {
 
     @Override
     public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this);
+        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
+    //TODO: надо переделать связку экшен + продукт и нормально оборачивать
     @Override
-    public void runActionsBeforeOtherTests(){
-        expandMountPoint();
-        rabbitmqCreateUser();
-        restart();
-        stopSoft();
-        start();
-        stopHard();
+    public void runActionsBeforeOtherTests() {
+        boolean x = true;
+        try {
+            expandMountPoint();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            rabbitmqCreateUser();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            restart();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            stopSoft();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            start();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            stopHard();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        Assert.assertTrue(x);
     }
 
 }

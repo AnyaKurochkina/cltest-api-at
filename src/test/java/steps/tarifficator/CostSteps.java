@@ -34,7 +34,7 @@ public class CostSteps extends Steps {
     @Step("Получение текущего расхода для заказа")
     public double getPreBillingCost(IProduct product) {
         double consumption = new Http(URL)
-                .get("calculator/orders/cost/?uuid__in=" + product.getProjectId())
+                .get("calculator/orders/cost/?uuid__in=" + product.getOrderId())
                 .assertStatus(200)
                 .jsonPath()
                 .getDouble("cost");
@@ -64,7 +64,7 @@ public class CostSteps extends Steps {
 
         //TODO: Добавить проверки
 
-        return response.getDouble("total_price");
+        return response.getDouble("total_price") * 24 * 60;
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
@@ -87,6 +87,28 @@ public class CostSteps extends Steps {
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("items");
+    }
+
+    @Step("Получение предварительной стоимости action {action} продукта {product}")
+    public double getCostAction(String action, String itemId, IProduct product, JSONObject data) {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        Project project = cacheService.entity(Project.class)
+                .withField("env", product.getEnv())
+                .getEntity();
+        String productId = orderServiceSteps.getProductId(product);
+        log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
+        return jsonHelper.getJsonTemplate("/tarifficator/costAction.json")
+                .set("project_name", project.id)
+                .set("item_id", itemId)
+                .set("action_name", action)
+                .set("id", productId)
+                .set("$.params.order.data", data)
+                .send(OrderServiceSteps.URL)
+                .setProjectId(project.id)
+                .post("tarifficator/api/v1/cost")
+                .assertStatus(200)
+                .jsonPath()
+                .getDouble("total_price");
     }
 
     @Step("Сравниение тарифов заказываемого продукта с тарфиным планом")

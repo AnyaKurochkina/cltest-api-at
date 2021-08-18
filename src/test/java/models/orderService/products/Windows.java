@@ -9,7 +9,10 @@ import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONObject;
+import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
+
+import static org.junit.Assert.assertTrue;
 
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -20,11 +23,10 @@ public class Windows extends IProduct {
     String dataCentre;
     String platform;
     String osVersion;
-    final String jsonTemplate = "/orders/windows.json";
     public String domain;
-    String productName = "Windows";
     String status = "NOT_CREATED";
     boolean isDeleted = false;
+    private static String ADD_DISK = "data.find{it.type=='vm'}.config.extra_disks.any{it.path=='%s'}";
 
     @Override
     public void order() {
@@ -47,6 +49,12 @@ public class Windows extends IProduct {
     }
 
     @Override
+    public void init() {
+        jsonTemplate = "/orders/windows.json";
+        productName = "Windows";
+    }
+
+    @Override
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
@@ -66,12 +74,51 @@ public class Windows extends IProduct {
                 .build();
     }
 
+    private void addDisk() {
+        String actionId = orderServiceSteps.executeAction("Добавить диск", this, new JSONObject("{path: \"I\", size: 10, file_system: \"ntfs\"}"));
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(ADD_DISK, "I")));
+    }
+
     @Override
-    public void runActionsBeforeOtherTests(){
-        restart();
-        stopSoft();
-        resize();
-        start();
-        stopHard();
+    public void runActionsBeforeOtherTests() {
+        boolean x = true;
+        try {
+            addDisk();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            restart();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            stopSoft();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            resize();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            start();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        try {
+            stopHard();
+        } catch (Exception e) {
+            x = false;
+            e.printStackTrace();
+        }
+        Assert.assertTrue(x);
     }
 }
