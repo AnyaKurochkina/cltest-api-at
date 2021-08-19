@@ -24,6 +24,7 @@ public class RabbitMQCluster extends IProduct {
     String dataCentre;
     String platform;
     String domain;
+    String role = "administrator";
     String status = "NOT_CREATED";
     boolean isDeleted = false;
 
@@ -62,6 +63,14 @@ public class RabbitMQCluster extends IProduct {
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
+        switch (env){
+            case ("TEST"):
+                role = "manager";
+                break;
+            case ("DEV"):
+                role = "administrator";
+                break;
+        }
         return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
@@ -69,6 +78,7 @@ public class RabbitMQCluster extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.web_console_grants[0].role", role)
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .build();

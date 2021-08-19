@@ -50,8 +50,8 @@ public class Windows extends IProduct {
 
     @Override
     public void init() {
-        jsonTemplate = "/orders/windows.json";
-        productName = "Windows";
+        jsonTemplate = "/orders/windows_server.json";
+        productName ="Windows server";
     }
 
     @Override

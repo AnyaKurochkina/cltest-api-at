@@ -28,15 +28,18 @@ public class Rhel extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/rhel.json";
-        productName = "Rhel";
+        switch (env) {
+            case ("DEV"):
+                productName ="Rhel";
+                break;
+            case ("TEST"):
+                productName ="RHEL General Application" ;
+                break;
+        }
     }
 
     @Override
     public void order() {
-        switch (env){
-            case ("TEST"):
-                role = "user";
-        }
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
@@ -58,6 +61,14 @@ public class Rhel extends IProduct {
 
     @Override
     public JSONObject getJsonParametrizedTemplate() {
+        switch (env){
+            case ("TEST"):
+                role = "user";
+                break;
+            case ("DEV"):
+                role = "superuser";
+                break;
+        }
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
