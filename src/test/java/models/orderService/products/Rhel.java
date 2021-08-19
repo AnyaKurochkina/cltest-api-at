@@ -27,7 +27,8 @@ public class Rhel extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/rhel.json";
-        productName = "Rhel";
+        if(productName == null)
+            productName = "Rhel";
     }
 
     @Override
@@ -68,6 +69,7 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+               .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 }

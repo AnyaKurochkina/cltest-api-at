@@ -23,6 +23,7 @@ public class Redis extends IProduct {
     String dataCentre;
     String platform;
     String domain;
+    String osVersion;
     String status = "NOT_CREATED";
     boolean isDeleted = false;
 
@@ -49,7 +50,8 @@ public class Redis extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/redis.json";
-        productName = "Redis";
+        if(productName == null)
+            productName = "Redis";
     }
 
     @Override
@@ -68,6 +70,8 @@ public class Redis extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
+                .set("$.order.attrs.os_version", osVersion)
                 .build();
     }
 
@@ -97,37 +101,37 @@ public class Redis extends IProduct {
         boolean x = true;
         try {
             expandMountPoint();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             resetPassword();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             restart();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             stopSoft();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             start();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             stopHard();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }

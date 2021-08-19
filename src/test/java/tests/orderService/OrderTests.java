@@ -25,7 +25,7 @@ public class OrderTests implements Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     //@Mock
     public void order(IProduct product) {
-        Waiting.sleep((int) ((Math.random() * (30000)) + 0));
+        Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.order();
     }
 

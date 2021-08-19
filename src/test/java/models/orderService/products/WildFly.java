@@ -52,7 +52,8 @@ public class WildFly extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/wildfly.json";
-        productName = "WildFly";
+        if(productName == null)
+            productName = "WildFly";
     }
 
     @Override
@@ -73,6 +74,7 @@ public class WildFly extends IProduct {
                 .set("$.order.attrs.access_group[0]", accessGroup.name)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 

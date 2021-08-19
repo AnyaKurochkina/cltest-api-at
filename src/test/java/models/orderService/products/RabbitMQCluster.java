@@ -51,7 +51,8 @@ public class RabbitMQCluster extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/rabbitmq_cluster.json";
-        productName = "RabbitMQ Cluster";
+        if(productName == null)
+            productName = "RabbitMQ Cluster";
     }
 
     @Override
@@ -71,6 +72,7 @@ public class RabbitMQCluster extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 
@@ -94,37 +96,37 @@ public class RabbitMQCluster extends IProduct {
         boolean x = true;
         try {
             expandMountPoint();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             rabbitmqCreateUser();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             restart();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             stopSoft();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             start();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             stopHard();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }

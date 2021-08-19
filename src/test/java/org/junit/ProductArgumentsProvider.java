@@ -59,16 +59,18 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.findAndRegisterModules();
         try {
-            Map<String, List> products = mapper.readValue(new File(Steps.dataFolder + "/products.yaml"), Map.class);
+            Map<String, List<Map>> products = mapper.readValue(new File(Steps.dataFolder + "/products.yaml"), Map.class);
             final ObjectMapper objectMapper = new ObjectMapper();
-            for (Map.Entry<String, List> e : products.entrySet()) {
+            for (Map.Entry<String, List<Map>> e : products.entrySet()) {
                 try {
                     Class<?> c = Class.forName("models.orderService.products." + e.getKey());
-                    for (Object orderObj : e.getValue()) {
+                    List listProduct = findListInMapByKey("options", e.getValue());
+                    if(listProduct == null)
+                        continue;
+                    for (Object orderObj : listProduct) {
                         IProduct product = (IProduct) objectMapper.convertValue(orderObj, c);
                         product.init();
                         list.add(product);
-
                     }
                 } catch (ClassNotFoundException classNotFoundException) {
                     classNotFoundException.printStackTrace();
@@ -83,6 +85,17 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
+    public static List findListInMapByKey(String key, List<Map> list) {
+        for(Map m : list){
+            if(m.containsKey(key)){
+                return (List) m.get(key);
+            }
+        }
+        System.out.println("Невалидный products.yaml");
+        System.exit(1);
+        return null;
     }
 
 }

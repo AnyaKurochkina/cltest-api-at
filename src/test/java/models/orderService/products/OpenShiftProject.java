@@ -21,7 +21,7 @@ import java.util.*;
 @Data
 public class OpenShiftProject extends IProduct {
     public String resourcePoolLabel;
-    public String domain;
+    //public String domain;
     public List<Role> roles = new ArrayList<>();
     public String status = "NOT_CREATED";
     public boolean isDeleted = false;
@@ -51,7 +51,8 @@ public class OpenShiftProject extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/openshift_project.json";
-        productName = "OpenShift project";
+        if(productName == null)
+            productName = "OpenShift project";
     }
 
     @Override
