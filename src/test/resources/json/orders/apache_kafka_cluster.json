@@ -11,7 +11,7 @@
 				"memory": 4
 			},
 			"platform": "vSphere",
-			"os_version": "7.latest",
+			"os_version": "7.9",
 			"data_center": "5",
 			"default_nic": {
 				"net_segment": "dev-srv-app"
