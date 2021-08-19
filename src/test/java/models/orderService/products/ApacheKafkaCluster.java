@@ -58,7 +58,8 @@ public class ApacheKafkaCluster extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/apache_kafka_cluster.json";
-        productName = "Apache Kafka Cluster";
+        if(productName == null)
+            productName = "Apache Kafka Cluster";
     }
 
     @Override
@@ -75,9 +76,10 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
+                //.set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 
@@ -139,49 +141,49 @@ public class ApacheKafkaCluster extends IProduct {
         boolean x = true;
         try {
             updateCerts();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             createTopic("TopicName");
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             createAcl("*");
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             deleteTopic("TopicName");
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             stopSoft();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             start();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             restart();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             expandMountPoint();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }

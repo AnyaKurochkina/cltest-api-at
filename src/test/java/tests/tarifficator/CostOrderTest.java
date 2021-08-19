@@ -1,13 +1,11 @@
 package tests.tarifficator;
 
 import models.orderService.interfaces.IProduct;
-import org.junit.Assert;
-import org.junit.OrderLabel;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
+import org.junit.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -32,4 +30,5 @@ public class CostOrderTest implements Tests {
         //TODO: cost может быть null нужно ждать
         Assert.assertEquals("Стоимость предбиллинга отличается от стоимости продукта " + product, preBillingCost, cost, 0.0);
     }
+
 }

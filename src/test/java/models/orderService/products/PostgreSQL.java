@@ -64,7 +64,8 @@ public class PostgreSQL extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/postgresql.json";
-        productName = "PostgreSQL";
+        if(productName == null)
+            productName = "PostgreSQL";
     }
 
     @Override
@@ -85,6 +86,7 @@ public class PostgreSQL extends IProduct {
                 .set("$.order.attrs.postgresql_version", postgresqlVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 
@@ -166,67 +168,67 @@ public class PostgreSQL extends IProduct {
         boolean x = true;
         try {
             expandMountPoint();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             createDb("testdb");
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             resetDbOwnerPassword();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             createDbmsUser("testuser", "user");
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             resetPassword();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             restart();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             removeDbmsUser();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             removeDb();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             stopSoft();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             start();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             stopHard();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }

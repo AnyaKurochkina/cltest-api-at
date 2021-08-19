@@ -20,7 +20,6 @@ public class Rhel extends IProduct {
     String dataCentre;
     String platform;
     String osVersion;
-    String role = "superuser";
     String domain;
     String status = "NOT_CREATED";
     boolean isDeleted = false;
@@ -28,14 +27,8 @@ public class Rhel extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/rhel.json";
-        switch (env) {
-            case ("DEV"):
-                productName ="Rhel";
-                break;
-            case ("TEST"):
-                productName ="RHEL General Application" ;
-                break;
-        }
+        if(productName == null)
+            productName = "Rhel";
     }
 
     @Override
@@ -61,14 +54,6 @@ public class Rhel extends IProduct {
 
     @Override
     public JSONObject getJsonParametrizedTemplate() {
-        switch (env){
-            case ("TEST"):
-                role = "user";
-                break;
-            case ("DEV"):
-                role = "superuser";
-                break;
-        }
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
@@ -82,9 +67,9 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].role", role)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+               .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 }

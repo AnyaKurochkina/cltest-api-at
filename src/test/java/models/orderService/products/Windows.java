@@ -50,8 +50,9 @@ public class Windows extends IProduct {
 
     @Override
     public void init() {
-        jsonTemplate = "/orders/windows_server.json";
-        productName ="Windows server";
+        jsonTemplate = "/orders/windows.json";
+        if(productName == null)
+            productName = "Windows";
     }
 
     @Override
@@ -71,6 +72,7 @@ public class Windows extends IProduct {
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 
@@ -85,37 +87,37 @@ public class Windows extends IProduct {
         boolean x = true;
         try {
             addDisk();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             restart();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             stopSoft();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             resize();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             start();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             stopHard();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }

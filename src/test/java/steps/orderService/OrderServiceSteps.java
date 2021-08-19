@@ -37,12 +37,22 @@ public class OrderServiceSteps extends Steps {
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
             Waiting.sleep(30000);
 
-            orderStatus = new Http(URL)
+
+//            orderStatus = new Http(URL)
+//                    .setProjectId(product.getProjectId())
+//                    .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
+//                    .assertStatus(200)
+//                    .jsonPath()
+//                    .get("status");
+            Http.HttpResponse res = new Http(URL)
                     .setProjectId(product.getProjectId())
-                    .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
-                    .assertStatus(200)
-                    .jsonPath()
-                    .get("status");
+                    .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId());
+
+            if(res.status() == 504)
+                break;
+            Assert.assertEquals("Статус ответа не равен ожидаемому", 200, res.status());
+            orderStatus = res.jsonPath().get("status");
+
             System.out.println("orderStatus = " + orderStatus);
             counter = counter - 1;
         }
@@ -81,7 +91,7 @@ public class OrderServiceSteps extends Steps {
     public String executeAction(String action, IProduct product, JSONObject jsonData) {
         CostSteps costSteps = new CostSteps();
         Map<String,String> map = getItemIdByOrderId(action, product);
-        log.info("Отправка запроса на выполнение действия - " + action);
+        log.info("Отправка запроса на выполнение действия - " + action + "для продукта - "+product.toString());
 
         //TODO: Возможно стоит сделать более детальную проверку на значение
         //costSteps.getCostAction(map.get("name"), map.get("item_id"), product, jsonData);
@@ -107,11 +117,24 @@ public class OrderServiceSteps extends Steps {
         while ((action_status.equals("pending") || action_status.equals("")) && counter > 0) {
             Waiting.sleep(30000);
             try {
-                action_status = new Http(URL)
+//                action_status = new Http(URL)
+//                        .setProjectId(product.getProjectId())
+//                        .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id)
+//                        .assertStatus(200)
+//                        .jsonPath().get("status");
+
+
+                Http.HttpResponse res = new Http(URL)
                         .setProjectId(product.getProjectId())
-                        .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id)
-                        .assertStatus(200)
-                        .jsonPath().get("status");
+                        .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id);
+
+                if(res.status() == 504)
+                    break;
+                Assert.assertEquals("Статус ответа не равен ожидаемому", 200, res.status());
+                action_status = res.jsonPath().get("status");
+
+
+
             } catch (JsonPathException e) {
                 log.error("Error get status " + e.getMessage());
             }

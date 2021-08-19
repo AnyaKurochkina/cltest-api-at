@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 @ToString(onlyExplicitlyIncluded = true)
@@ -40,41 +42,52 @@ public abstract class IProduct extends Entity {
 
     public abstract JSONObject getJsonParametrizedTemplate();
 
+
+//    protected void callAction(String func) {
+//        Method method = null;
+//        try {
+//            method = this.getClass().getMethod(func);
+//            method.invoke(this);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     public void runActionsBeforeOtherTests() {
         boolean x = true;
         try {
             expandMountPoint();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             restart();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             stopSoft();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             resize();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             start();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }
         try {
             stopHard();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             x = false;
             e.printStackTrace();
         }

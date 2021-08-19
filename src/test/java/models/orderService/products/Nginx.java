@@ -22,6 +22,7 @@ public class Nginx extends IProduct {
     String dataCentre;
     String domain;
     String platform;
+    String osVersion;
     public String status = "NOT_CREATED";
     public boolean isDeleted = false;
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
@@ -50,7 +51,8 @@ public class Nginx extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/nginx.json";
-        productName = "Nginx";
+        if(productName == null)
+            productName = "Nginx";
     }
 
     @Override
@@ -69,6 +71,8 @@ public class Nginx extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.os_version", osVersion)
+                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 

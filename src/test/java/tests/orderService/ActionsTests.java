@@ -1,5 +1,6 @@
 package tests.orderService;
 
+import core.utils.Waiting;
 import models.orderService.interfaces.IProduct;
 import org.junit.Mock;
 import org.junit.OrderLabel;
@@ -27,7 +28,8 @@ public class ActionsTests implements Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     //@Mock
     public void runActions(IProduct product) {
-            product.runActionsBeforeOtherTests();
+        Waiting.sleep((int) ((Math.random() * (60000)) + 0));
+        product.runActionsBeforeOtherTests();
     }
 
 

@@ -1,5 +1,6 @@
 package tests.orderService;
 
+import core.utils.Waiting;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.IProductMock;
 import org.junit.Mock;
@@ -28,6 +29,7 @@ public class OrderDeleteTests implements Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     //@Mock
     public void orderDelete(IProduct product) {
+        Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.runActionsAfterOtherTests();
     }
 
