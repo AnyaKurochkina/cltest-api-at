@@ -21,6 +21,14 @@
         <junit.version>5.8.0-M1</junit.version>
     </properties>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus.corp.dev.vtb</id>
+            <name>plugins-release</name>
+            <url>http://nexus.corp.dev.vtb/repository/maven-public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -129,6 +137,18 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>ru.vtb.tests.tms</groupId>
+                <artifactId>test-it-maven-plugin</artifactId>
+                <version>1.17</version>
+                <configuration>
+                    <apiToken>TXdRMHJ4R2FPTVBwem1IOUdx</apiToken>
+                    <projectId>23</projectId>
+                    <infrastructureFailReasonExceptions>
+                        <exception>ConnectionClosedException</exception>
+                    </infrastructureFailReasonExceptions>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
