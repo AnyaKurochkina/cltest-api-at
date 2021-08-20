@@ -155,7 +155,7 @@ public class OrderServiceSteps extends Steps {
                     .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=%s&per_page=100", product.getEnv().toLowerCase(), informationSystem.id, i))
                     .assertStatus(200)
                     .jsonPath()
-                    .get(String.format("list.find{it.title.contains('%s') || it.title.contains('%s') || it.title.contains('%s')}.id", product.getProductName().toLowerCase(), product.getProductName().toUpperCase(), product.getProductName()));
+                    .get(String.format("list.find{it.title == '%s' || it.title == '%s' || it.title == '%s'}.id", product.getProductName().toLowerCase(), product.getProductName().toUpperCase(), product.getProductName()));
             if(product_id != null)
                 log.info("Id продукта = " + product_id);
             break;
@@ -236,10 +236,10 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Удаление всех заказов")
     public void deleteOrders(String env) {
+        String action_title = "";
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
-        String action = "";
         List orders = new Http(URL)
                 .setProjectId(project.id)
                 .get(String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=1&per_page=100&f[category]=vm", project.id))
@@ -252,29 +252,31 @@ public class OrderServiceSteps extends Steps {
         for (int i = 0; i < orders.size(); i++) {
             String order_id = (String) orders.get(i);
             System.out.println("order_id = " + order_id);
-            String product_name = new Http(URL)
+            String productName = new Http(URL)
                     .setProjectId(project.id)
                     .get(String.format("order-service/api/v1/projects/%s/orders/%s", project.id, order_id))
                     .assertStatus(200)
                     .jsonPath()
                     .get("attrs.product_title");
-
-            System.out.println("product_name = " + product_name);
-
-            if ("postgresql".equals(product_name.toLowerCase()) || "rabbitmq cluster".equals(product_name.toLowerCase()) || "nginx".equals(product_name.toLowerCase()) || "redis".equals(product_name.toLowerCase()) || "apache kafka".equals(product_name.toLowerCase()) || "wildfly".equals(product_name.toLowerCase())) {
-                action = "delete_two_layer";
-            } else {
-                action = "delete_vm";
+            log.info("productName = " + productName);
+            switch (productName){
+                case ("Apache Kafka Cluster"):
+                    action_title = "Удалить рекурсивно";
+                    break;
+                default:
+                    action_title = "Удалить";
             }
-            System.out.println("action = " + action);
 
-            log.info("Получение item_id для " + action);
-            String item_id = new Http(URL)
+
+            log.info("Получение item_id для " + action_title);
+            JsonPath jsonPath = new Http(URL)
                     .setProjectId(project.id)
                     .get("order-service/api/v1/projects/" + project.id + "/orders/" + order_id)
-                    .jsonPath()
-                    .get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action));
+                    .jsonPath();
+            String item_id = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action_title));
+            String action = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action_title, action_title));
             log.info("item_id = " + item_id);
+            log.info("action = " + action);
 
             JsonPath response = jsonHelper.getJsonTemplate("/actions/template.json")
                     .set("$.item_id", item_id)
