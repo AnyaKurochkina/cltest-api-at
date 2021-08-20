@@ -2,7 +2,6 @@ package tests.tarifficator;
 
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
-import org.json.JSONArray;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -15,8 +14,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.tarifficator.CostSteps;
 import tests.Tests;
-
-import java.util.HashMap;
 
 import java.util.HashMap;
 
