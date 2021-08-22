@@ -48,7 +48,8 @@ public class ApacheKafka extends IProduct {
 
     public ApacheKafka() {
         jsonTemplate = "/orders/apache_kafka.json";
-        productName = "Apache Kafka";
+        if(productName == null)
+            productName = "Apache Kafka";
     }
 
     @Override
