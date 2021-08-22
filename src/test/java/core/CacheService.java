@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.io.FileInputStream;
@@ -101,7 +102,7 @@ public class CacheService {
 
     public <T extends Entity> T getEntity() {
         Entity e = getEntityWithoutAssert();
-        Assert.assertNotNull("Невозможно получить " + c.getName() + " с параметрами: " + new JSONObject(fields).toString(), e);
+        Assume.assumeNotNull("Невозможно получить " + c.getName() + " с параметрами: " + new JSONObject(fields).toString(), e);
         return (T) e;
     }
 

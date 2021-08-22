@@ -10,8 +10,6 @@ public class IProductMock extends IProduct {
         Waiting.sleep(1000);
     }
     @Override
-    public void init() {}
-    @Override
     public JSONObject getJsonParametrizedTemplate() {
         return null;
     }

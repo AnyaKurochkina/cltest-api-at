@@ -10,7 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 import tests.Tests;
 
-@DisplayName("Тесты на сущности перед заказом продуктов")
+@DisplayName("Получение ресурсных пулов контейнеров")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.ResourcesForOrderTests")

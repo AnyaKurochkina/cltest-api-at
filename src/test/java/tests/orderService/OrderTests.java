@@ -13,7 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 
-@DisplayName("Набор для создания продуктов")
+@DisplayName("Заказ продуктов")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.OrderTests")
@@ -21,9 +21,9 @@ import tests.Tests;
 public class OrderTests implements Tests {
 
     @ParameterizedTest
-    @DisplayName("Заказ продуктов с разной комбинацией среды, сегмента, дата-центра и платформы")
+    @DisplayName("Заказ продуктов")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    //@Mock
+//    @Mock
     public void order(IProduct product) {
         Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.order();

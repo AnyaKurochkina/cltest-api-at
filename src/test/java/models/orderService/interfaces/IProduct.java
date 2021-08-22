@@ -2,15 +2,23 @@ package models.orderService.interfaces;
 
 import static org.junit.Assert.*;
 
+import core.exception.CustomException;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.ToString;
 import models.Entity;
 import org.json.JSONObject;
+import org.junit.Action;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @ToString(onlyExplicitlyIncluded = true)
@@ -23,8 +31,14 @@ public abstract class IProduct extends Entity {
 
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
     protected transient String jsonTemplate;
+    @Setter
+    protected transient List<String> actions;
 
+    @Setter
     @Getter
+    private ProductStatus status = ProductStatus.NOT_CREATED;
+    @Getter
+    @ToString.Include
     protected String orderId;
     @Getter
     protected String projectId;
@@ -38,98 +52,88 @@ public abstract class IProduct extends Entity {
 
     public abstract void order();
 
-    public abstract void init();
-
     public abstract JSONObject getJsonParametrizedTemplate();
 
 
-//    protected void callAction(String func) {
-//        Method method = null;
-//        try {
-//            method = this.getClass().getMethod(func);
-//            method.invoke(this);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private boolean invokeAction(String action) throws Throwable {
+        boolean invoke = false;
+        for (Method method : this.getClass().getMethods()) {
+            if (method.isAnnotationPresent(Action.class)) {
+                if (method.getAnnotation(Action.class).value().equals(action)) {
+                    method.invoke(this, action);
+                    invoke = true;
+                }
+            }
+        }
+        return invoke;
+    }
 
+    @SneakyThrows
     public void runActionsBeforeOtherTests() {
-        boolean x = true;
-        try {
-            expandMountPoint();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
+        Throwable error = null;
+        for (String action : actions) {
+            try {
+                if (!invokeAction(action))
+                    throw new CustomException("Action '" + action + "' не найден у продукта " + getProductName());
+            } catch (Throwable e) {
+                e.printStackTrace();
+                error = e;
+            }
         }
-        try {
-            restart();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            stopSoft();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            resize();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            start();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            stopHard();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
-        }
-        Assert.assertTrue(x);
+        if (error != null)
+            throw error;
     }
 
     public void runActionsAfterOtherTests() {
-        delete();
+        String value = "";
+        try {
+            value = this.getClass().getMethod("delete", String.class).getAnnotation(Action.class).value();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        delete(value);
     }
 
     public String getJsonTemplate() {
         return jsonTemplate;
     }
 
-    public void restart() {
-        String actionId = orderServiceSteps.executeAction("Перезагрузить", this, null);
+    @Action("Перезагрузить")
+    public void restart(String action) {
+        String actionId = orderServiceSteps.executeAction(action, this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    public void stopHard() {
-        String actionId = orderServiceSteps.executeAction("Выключить принудительно", this, null);
+    @Action("Выключить принудительно")
+    public void stopHard(String action) {
+        String actionId = orderServiceSteps.executeAction(action, this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    public void stopSoft() {
-        String actionId = orderServiceSteps.executeAction("Выключить", this, null);
+    @Action("Выключить")
+    public void stopSoft(String action) {
+        String actionId = orderServiceSteps.executeAction(action, this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    public void start() {
-        String actionId = orderServiceSteps.executeAction("Включить", this, null);
+    @Action("Включить")
+    public void start(String action) {
+        String actionId = orderServiceSteps.executeAction(action, this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить", this, null);
+    @Action("Удалить")
+    public void delete(String action) {
+        String actionId = orderServiceSteps.executeAction(action, this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
+        setStatus(ProductStatus.DELETED);
+        cacheService.saveEntity(this);
     }
 
-    public void resize() {
+    @Action("Изменить конфигурацию")
+    public void resize(String action) {
         Map<String, String> map = orderServiceSteps.getFlavorByProduct(this);
-        String actionId = orderServiceSteps.executeAction("Изменить конфигурацию", this, new JSONObject(map.get("flavor")));
+        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(map.get("flavor")));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int cpusAfter = (Integer) orderServiceSteps.getFiledProduct(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getFiledProduct(this, MEMORY);
@@ -137,9 +141,10 @@ public abstract class IProduct extends Entity {
         assertEquals(Integer.parseInt(map.get("memory")), memoryAfter);
     }
 
-    public void expandMountPoint() {
+    @Action("Расширить")
+    public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
-        String actionId = orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));
+        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);

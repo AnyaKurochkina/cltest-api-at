@@ -9,18 +9,20 @@ import java.util.Properties;
 @Log4j2
 public class Configure {
     private static Properties properties;
+    public static String RESOURCE_PATH;
+    public static String ENV;
 
     static {
         try {
             if(System.getProperty("env") == null){
                 throw new Exception("Не задан параметр env");
             }
-            String env = System.getProperty("env").toLowerCase();
-            log.info("ENV = " + env);
-            String RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
+            ENV = System.getProperty("env").toLowerCase();
+            log.info("ENV = " + ENV);
+            RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
             loadProperties(RESOURCE_PATH + "/config/application.properties");
-            loadProperties(RESOURCE_PATH + "/config/" + env + ".properties");
+            loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
         } catch (Exception e) {
             e.printStackTrace();
         }

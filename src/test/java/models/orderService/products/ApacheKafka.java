@@ -8,7 +8,9 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.orderService.interfaces.ProductStatus;
 import org.json.JSONObject;
+import org.junit.Action;
 import steps.orderService.OrderServiceSteps;
 
 @ToString(callSuper = true)
@@ -21,8 +23,6 @@ public class ApacheKafka extends IProduct {
     String platform;
     String kafkaVersion;
     String domain;
-    public String status = "NOT_CREATED";
-    public boolean isDeleted = false;
 
     @Override
     public void order() {
@@ -42,15 +42,13 @@ public class ApacheKafka extends IProduct {
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
-        status = "CREATED";
+        setStatus(ProductStatus.CREATED);
         cacheService.saveEntity(this);
     }
 
-    @Override
-    public void init() {
+    public ApacheKafka() {
         jsonTemplate = "/orders/apache_kafka.json";
-        if(productName == null)
-            productName = "Apache Kafka";
+        productName = "Apache Kafka";
     }
 
     @Override
@@ -75,9 +73,9 @@ public class ApacheKafka extends IProduct {
     }
 
     @Override
-    public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+    @Action("Удалить рекурсивно")
+    public void delete(String action) {
+        super.delete(action);
     }
 
 

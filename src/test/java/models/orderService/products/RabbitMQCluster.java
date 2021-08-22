@@ -8,7 +8,9 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.orderService.interfaces.ProductStatus;
 import org.json.JSONObject;
+import org.junit.Action;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
@@ -25,8 +27,6 @@ public class RabbitMQCluster extends IProduct {
     String platform;
     String domain;
     String role = "administrator";
-    String status = "NOT_CREATED";
-    boolean isDeleted = false;
 
     @Override
     public void order() {
@@ -45,15 +45,13 @@ public class RabbitMQCluster extends IProduct {
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
-        status = "CREATED";
+        setStatus(ProductStatus.CREATED);
         cacheService.saveEntity(this);
     }
 
-    @Override
-    public void init() {
+    public RabbitMQCluster() {
         jsonTemplate = "/orders/rabbitmq_cluster.json";
-        if(productName == null)
-            productName = "RabbitMQ Cluster";
+        productName = "RabbitMQ Cluster";
     }
 
     @Override
@@ -86,61 +84,20 @@ public class RabbitMQCluster extends IProduct {
                 .build();
     }
 
-    public void rabbitmqCreateUser() {
+    @Action("Создать пользователя RabbitMQ")
+    public void rabbitmqCreateUser(String action) {
         String user = "testapiuser";
-        String actionId = orderServiceSteps.executeAction("Создать пользователя RabbitMQ", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
+        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         String username = (String) orderServiceSteps.getFiledProduct(this, RABBITMQ_USER);
         assertEquals(user, username);
     }
 
     @Override
-    public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+    @Action("Удалить рекурсивно")
+    public void delete(String action) {
+        super.delete(action);
     }
 
-    //TODO: надо переделать связку экшен + продукт и нормально оборачивать
-    @Override
-    public void runActionsBeforeOtherTests() {
-        boolean x = true;
-        try {
-            expandMountPoint();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            rabbitmqCreateUser();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            restart();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            stopSoft();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            start();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            stopHard();
-        } catch (Throwable e) {
-            x = false;
-            e.printStackTrace();
-        }
-        Assert.assertTrue(x);
-    }
 
 }

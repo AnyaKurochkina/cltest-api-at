@@ -40,7 +40,7 @@
 			"wildfly_version": "23.0.2.Final",
 			"ad_logon_grants": [
 				{
-					"role": "superuser",
+					"role": "user",
 					"groups": [
 						"cloud-dmcrux-testgroup100"
 					]

@@ -1,86 +1,86 @@
 OpenShiftProject:
   - actions:
-      ['Перезагрузить', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Расширить', 'Выключить принудительно']
+      ['Изменить проект']
   - options:
       - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP" }
-      - { env: "TEST", resourcePoolLabel: "ss1-genr01.test.vtb.ru - TEST-SRV-SYNT" }
+#      - { env: "TEST", resourcePoolLabel: "ss1-genr01.test.vtb.ru - TEST-SRV-SYNT" }
 
 Rhel:
   - actions:
-      ['Перезагрузить', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Расширить', 'Выключить принудительно']
+      ['Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно']
   - options:
       - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
+      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
 
-PostgreSQL:
-  - actions:
-      ['Перезагрузить', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Расширить', 'Выключить принудительно']
-  - options:
-      - { platform: "Nutanix", postgresqlVersion: "12", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "OpenStack", postgresqlVersion: "12", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", postgresqlVersion: "12", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", postgresqlVersion: "11", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", postgresqlVersion: "12", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-
-RabbitMQCluster:
-  - actions:
-      ['Перезагрузить', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Расширить', 'Выключить принудительно']
-  - options:
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }
-      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }
-
-Windows:
-  - actions:
-      ['Перезагрузить', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Расширить', 'Выключить принудительно']
-  - options:
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
-      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
-      - { platform: "vpshere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
-
-Nginx:
-  - actions:
-      ['Перезагрузить', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Расширить', 'Выключить принудительно']
-  - options:
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4"}
-      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-
-WildFly:
-  - actions:
-      ['Перезагрузить', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Расширить', 'Выключить принудительно']
-  - options:
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-
-Redis:
-  - actions:
-      ['Перезагрузить', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Расширить', 'Выключить принудительно']
-  - options:
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }
-      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }
-
-ApacheKafka:
-  - actions:
-      ['Перезагрузить', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Расширить', 'Выключить принудительно']
-  - options:
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
-
-ApacheKafkaCluster:
-  - actions:
-      ['Перезагрузить', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Расширить', 'Выключить принудительно']
-  - options:
-      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
-      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
-
+#PostgreSQL:
+#  - actions:
+#      ['Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Выключить принудительно']
+#  - options:
+#      - { platform: "Nutanix", postgresqlVersion: "12", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "OpenStack", postgresqlVersion: "12", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", postgresqlVersion: "12", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", postgresqlVersion: "11", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", postgresqlVersion: "12", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#
+#RabbitMQCluster:
+#  - actions:
+#      ['Расширить', 'Создать пользователя RabbitMQ', 'Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно']
+#  - options:
+#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+#      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }
+#      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }
+#
+#Windows:
+#  - actions:
+#      ['Добавить диск', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно']
+#  - options:
+#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
+#      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
+#      - { platform: "vpshere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
+#
+#Nginx:
+#  - actions:
+#      ['Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно']
+#  - options:
+#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4"}
+#      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#
+#WildFly:
+#  - actions:
+#      ['Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно']
+#  - options:
+#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#
+#Redis:
+#  - actions:
+#      ['Расширить', 'Сбросить пароль', 'Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно']
+#  - options:
+#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }
+#      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }
+#
+#ApacheKafka:
+#  - actions:
+#      ['Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно']
+#  - options:
+#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
+#
+#ApacheKafkaCluster:
+#  - actions:
+#      ['Обновить сертификаты', 'Создать Topic Kafka', 'Создать ACL Kafka', 'Удалить Topic Kafka', 'Выключить кластер Kafka', 'Включить кластер Kafka', 'Перезагрузить кластер Kafka', 'Расширить']
+#  - options:
+#      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
+#      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
+#

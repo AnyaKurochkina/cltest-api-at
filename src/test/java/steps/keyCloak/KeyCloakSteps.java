@@ -72,10 +72,10 @@ public class KeyCloakSteps {
             serviceAccountToken.token = getNewServiceAccountToken(projectId, serviceAccount);
             serviceAccountToken.time = currentTime;
         } else {
-            log.debug("Использован SA токен из кэша {}", serviceAccountToken.serviceAccountName);
+//            log.debug("Использован SA токен из кэша {}", serviceAccountToken.serviceAccountName);
             return serviceAccountToken.token;
         }
-        log.debug("Использован SA новый токен {}", serviceAccountToken.serviceAccountName);
+//        log.debug("Использован SA новый токен {}", serviceAccountToken.serviceAccountName);
         cacheService.saveEntity(serviceAccountToken);
         return serviceAccountToken.token;
     }

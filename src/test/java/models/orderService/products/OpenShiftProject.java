@@ -3,14 +3,15 @@ package models.orderService.products;
 import core.helper.Http;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
+import models.orderService.interfaces.ProductStatus;
 import models.subModels.Role;
 import org.json.JSONObject;
+import org.junit.Action;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 import java.util.*;
@@ -21,10 +22,7 @@ import java.util.*;
 @Data
 public class OpenShiftProject extends IProduct {
     public String resourcePoolLabel;
-    //public String domain;
     public List<Role> roles = new ArrayList<>();
-    public String status = "NOT_CREATED";
-    public boolean isDeleted = false;
 
     @Override
     public void order() {
@@ -44,15 +42,13 @@ public class OpenShiftProject extends IProduct {
         orderId = array.get("[0].id");
         roles.add(new Role ("edit", accessGroup.name));
         orderServiceSteps.checkOrderStatus("success", this);
-        status = "CREATED";
+        setStatus(ProductStatus.CREATED);
         cacheService.saveEntity(this);
     }
 
-    @Override
-    public void init() {
+    public OpenShiftProject() {
         jsonTemplate = "/orders/openshift_project.json";
-        if(productName == null)
-            productName = "OpenShift project";
+        productName = "OpenShift project";
     }
 
     @Override
@@ -74,11 +70,11 @@ public class OpenShiftProject extends IProduct {
                 .set("$.order.attrs.user_mark", "openshift"+ new Random().nextInt())
                 .build();
     }
-
-    public void changeProject() {
-        String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
+    @Action("Изменить проект")
+    public void changeProject(String action) {
+        String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 0}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
         roles.get(0).setName("view");
-        String actionId = orderServiceSteps.executeAction("Изменить проект", this, new JSONObject(data));
+        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(data));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         cacheService.saveEntity(this);
         Assert.assertEquals(orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.memory"), 2);
@@ -86,14 +82,10 @@ public class OpenShiftProject extends IProduct {
     }
 
     @Override
-    public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить проект", this, null);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+    @Action("Удалить проект")
+    public void delete(String action) {
+        super.delete(action);
     }
 
-    @Override
-    public void runActionsBeforeOtherTests(){
-        changeProject();
-    }
 
 }
