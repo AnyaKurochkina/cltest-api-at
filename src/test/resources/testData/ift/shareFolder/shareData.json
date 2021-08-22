@@ -10,5 +10,35 @@
     "objectUid": "4087706b-e9b7-48ef-969d-000000000002",
     "username": "portal_admin_at",
     "password": "portal_admin_at"
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "isDeleted": false,
+    "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
+    "id": "proj-xazpppulba",
+    "projectName": "PROJECT_DEV",
+    "env": "DEV"
+  },
+  {
+    "objectClassName": "models.authorizer.AccessGroup",
+    "name": "cloud-d2plux-access_group95xy54hggnwo",
+    "user": "",
+    "isDeleted": false,
+    "projectName": "proj-xazpppulba",
+    "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f575"
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "name": "sa_proj-xazpppulba-4c",
+    "secret": "fe59d63715acaef33cbbcda160619f3e",
+    "isDeleted": false,
+    "projectId": "proj-xazpppulba",
+    "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e63"
+  },
+  {
+    "objectClassName": "models.authorizer.InformationSystem",
+    "objectUid": "cafa1b9d-5702-459a-bfff-7ee70df2651d",
+    "id": "9cef3ede-fd3f-407f-bbed-9767e700036e"
   }
 ]

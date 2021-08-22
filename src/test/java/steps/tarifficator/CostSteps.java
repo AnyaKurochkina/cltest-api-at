@@ -125,69 +125,17 @@ public class CostSteps extends Steps {
         HashMap<String, Double> priceListOff = new HashMap();
         HashMap<String, Double> priceListReboot = new HashMap();
         //Наполняем прайс для состояния ON
-        JSONArray statusOnData = ((JSONObject) (items.get(0))).getJSONObject("resources_statuses").getJSONArray("on");
-        for (Object object : statusOnData) {
-            priceListOn.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
-        }
+        generatePriceForState(priceListOn, items, "on");
         //Наполняем прайс для состояния OFF
-        JSONArray statusOffData = ((JSONObject) (items.get(0))).getJSONObject("resources_statuses").getJSONArray("off");
-        for (Object object : statusOffData) {
-            priceListOff.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
-        }
+        generatePriceForState(priceListOff, items, "off");
         //Наполняем прайс для состояния REBOOT
-        JSONArray statusRebootData = ((JSONObject) (items.get(0))).getJSONObject("resources_statuses").getJSONArray("reboot");
-        for (Object object : statusRebootData) {
-            priceListReboot.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
-        }
-
+        generatePriceForState(priceListReboot, items, "reboot");
         //Сравниваем цены в прайсе ON с активным тарифным планом
-        for (Map.Entry<String, Double> entry : priceListOn.entrySet()) {
-            String preBillingServiceName = entry.getKey();
-            for (Map.Entry<String, Double> entry2 : activeTariffPlanPrice.entrySet()) {
-                String tariffPLanServiceName = entry2.getKey();
-                if (preBillingServiceName.equals(tariffPLanServiceName)) {
-                    Assertions.assertEquals(priceListOn.get(preBillingServiceName), activeTariffPlanPrice.get(tariffPLanServiceName),
-                            "Цена услуги: " + preBillingServiceName + " в предбиллинге: " + priceListReboot.get(preBillingServiceName)
-                                    + " Не соответствует цене услуги: " + tariffPLanServiceName + " в тарифном плане: " + activeTariffPlanPrice.get(tariffPLanServiceName));
-                    log.info(
-                            "Цена услуги: " + preBillingServiceName + " в предбиллинге: " + priceListReboot.get(preBillingServiceName)
-                                    + " Соответствует цене услуги: " + tariffPLanServiceName + " в тарифном плане: " + activeTariffPlanPrice.get(tariffPLanServiceName));
-                }
-            }
-        }
-
+        comparePrices(priceListOn, activeTariffPlanPrice);
         //Сравниваем цены в прайсе OFF с активным тарифным планом
-        for (Map.Entry<String, Double> entry : priceListOff.entrySet()) {
-            String preBillingServiceName = entry.getKey();
-            for (Map.Entry<String, Double> entry2 : activeTariffPlanPrice.entrySet()) {
-                String tariffPLanServiceName = entry2.getKey();
-                if (preBillingServiceName.equals(tariffPLanServiceName)) {
-                    Assertions.assertEquals(priceListOff.get(preBillingServiceName), activeTariffPlanPrice.get(tariffPLanServiceName),
-                            "Цена услуги: " + preBillingServiceName + " в предбиллинге: " + priceListReboot.get(preBillingServiceName)
-                                    + " Не соответствует цене услуги: " + tariffPLanServiceName + " в тарифном плане: " + activeTariffPlanPrice.get(tariffPLanServiceName));
-                    log.info(
-                            "Цена услуги: " + preBillingServiceName + " в предбиллинге: " + priceListReboot.get(preBillingServiceName)
-                                    + " Соответствует цене услуги: " + tariffPLanServiceName + " в тарифном плане: " + activeTariffPlanPrice.get(tariffPLanServiceName));
-                }
-            }
-        }
-
+        comparePrices(priceListOff, activeTariffPlanPrice);
         //Сравниваем цены в прайсе REBOOT с активным тарифным планом
-        for (Map.Entry<String, Double> entry : priceListReboot.entrySet()) {
-            String preBillingServiceName = entry.getKey();
-            for (Map.Entry<String, Double> entry2 : activeTariffPlanPrice.entrySet()) {
-                String tariffPLanServiceName = entry2.getKey();
-                if (preBillingServiceName.equals(tariffPLanServiceName)) {
-                    Assertions.assertEquals(priceListReboot.get(preBillingServiceName), activeTariffPlanPrice.get(tariffPLanServiceName),
-                            "Цена услуги: " + preBillingServiceName + " в предбиллинге: " + priceListReboot.get(preBillingServiceName)
-                                    + " Не соответствует цене услуги: " + tariffPLanServiceName + " в тарифном плане: " + activeTariffPlanPrice.get(tariffPLanServiceName));
-                    log.info(
-                            "Цена услуги: " + preBillingServiceName + " в предбиллинге: " + priceListReboot.get(preBillingServiceName)
-                                    + " Соответствует цене услуги: " + tariffPLanServiceName + " в тарифном плане: " + activeTariffPlanPrice.get(tariffPLanServiceName));
-                }
-            }
-        }
-        System.out.println();
+        comparePrices(priceListReboot, activeTariffPlanPrice);
     }
 
     @Step("Запрос цен по ID тарифного плана")
@@ -213,5 +161,29 @@ public class CostSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .get("list[0].id");
+    }
+
+    public void generatePriceForState(HashMap<String, Double> priceListWithState, JSONArray items, String state){
+        JSONArray statusOnData = ((JSONObject) (items.get(0))).getJSONObject("resources_statuses").getJSONArray(state);
+        for (Object object : statusOnData) {
+            priceListWithState.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
+        }
+    }
+
+    public void comparePrices(HashMap<String, Double> priceListWithState, HashMap<String, Double> activeTariffPlanPrice ){
+        for (Map.Entry<String, Double> entry : priceListWithState.entrySet()) {
+            String preBillingServiceName = entry.getKey();
+            for (Map.Entry<String, Double> entry2 : activeTariffPlanPrice.entrySet()) {
+                String tariffPLanServiceName = entry2.getKey();
+                if (preBillingServiceName.equals(tariffPLanServiceName)) {
+                    Assertions.assertEquals(priceListWithState.get(preBillingServiceName), activeTariffPlanPrice.get(tariffPLanServiceName),
+                            "Цена услуги: "+  preBillingServiceName + " в предбиллинге: " + priceListWithState.get(preBillingServiceName)
+                                    + " Не соответствует цене услуги: " + tariffPLanServiceName + " в тарифном плане: " + activeTariffPlanPrice.get(tariffPLanServiceName));
+                    log.info(
+                            "Цена услуги: " + preBillingServiceName + " в предбиллинге: " + priceListWithState.get(preBillingServiceName)
+                                    + " Соответствует цене услуги: " + tariffPLanServiceName + " в тарифном плане: " + activeTariffPlanPrice.get(tariffPLanServiceName));
+                }
+            }
+        }
     }
 }
