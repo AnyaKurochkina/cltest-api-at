@@ -16,8 +16,10 @@ public class DeleteAllOrders implements Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @Test
+    @Tag("deleteall")
     @DisplayName("Удаление всех успешных заказов из проекта")
     public void DeleteOrders()  {
         orderServiceSteps.deleteOrders("DEV");
+        orderServiceSteps.deleteOrders("TEST");
     }
 }

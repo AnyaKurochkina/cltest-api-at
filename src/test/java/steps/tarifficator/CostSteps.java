@@ -2,6 +2,7 @@ package steps.tarifficator;
 
 import core.helper.Configure;
 import core.helper.Http;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
@@ -10,6 +11,7 @@ import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Timeout;
 import steps.Steps;
 import steps.orderService.OrderServiceSteps;
 
@@ -32,12 +34,17 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение текущего расхода для заказа")
+    @Timeout(60)
     public double getPreBillingCost(IProduct product) {
-        double consumption = new Http(URL)
-                .get("calculator/orders/cost/?uuid__in=" + product.getOrderId())
-                .assertStatus(200)
-                .jsonPath()
-                .getDouble("cost");
+        Float consumption;
+        do {
+            consumption = new Http(URL)
+                    .get("calculator/orders/cost/?uuid__in=" + product.getOrderId())
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get("cost");
+            Waiting.sleep(10000);
+        } while (consumption == null);
         log.debug("Расход для заказа: " + consumption);
         return consumption * 24 * 60;
     }

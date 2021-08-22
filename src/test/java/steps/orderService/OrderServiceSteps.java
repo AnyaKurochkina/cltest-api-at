@@ -11,9 +11,11 @@ import models.authorizer.InformationSystem;
 import models.orderService.interfaces.IProduct;
 import models.authorizer.Project;
 import models.orderService.ResourcePool;
+import models.orderService.interfaces.ProductStatus;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.junit.Assert;
+import org.junit.Assume;
 import steps.Steps;
 import steps.stateService.StateServiceSteps;
 import steps.tarifficator.CostSteps;
@@ -37,24 +39,36 @@ public class OrderServiceSteps extends Steps {
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
             Waiting.sleep(30000);
 
-            orderStatus = new Http(URL)
+
+//            orderStatus = new Http(URL)
+//                    .setProjectId(product.getProjectId())
+//                    .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
+//                    .assertStatus(200)
+//                    .jsonPath()
+//                    .get("status");
+
+            Http.HttpResponse res = new Http(URL)
                     .setProjectId(product.getProjectId())
-                    .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
-                    .assertStatus(200)
-                    .jsonPath()
-                    .get("status");
+                    .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId());
+
+            if(res.status() == 504)
+                continue;
+            Assert.assertEquals("Статус ответа не равен ожидаемому", 200, res.status());
+            orderStatus = res.jsonPath().get("status");
+
             System.out.println("orderStatus = " + orderStatus);
             counter = counter - 1;
         }
         log.info("Ордер статус итоговый " + orderStatus);
         if (!orderStatus.equals(exp_status.toLowerCase())) {
-            log.info("Ордер статус в стейте сервисе " + orderStatus);
+            String error = "";
             try {
-                stateServiceSteps.GetErrorFromOrch(product.getOrderId());
-            } catch (CustomException e) {
+                error = stateServiceSteps.GetErrorFromOrch(product);
+            } catch (Throwable e) {
                 e.printStackTrace();
+                log.error("Ошибка в GetErrorFromOrch " + e);
             }
-            fail();
+            Assert.fail(String.format("Ошибка заказа продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product.toString(), orderStatus, error));
         }
     }
 
@@ -77,11 +91,11 @@ public class OrderServiceSteps extends Steps {
 //                .get("action_id");
 //    }
 
-    @Step("Выполнить действие с блоком data - {action}")
+    @Step("Выполнение action \"{action}\"")
     public String executeAction(String action, IProduct product, JSONObject jsonData) {
         CostSteps costSteps = new CostSteps();
         Map<String,String> map = getItemIdByOrderId(action, product);
-        log.info("Отправка запроса на выполнение действия - " + action);
+        log.info("Отправка запроса на выполнение действия - " + action + " для продукта - "+product.toString());
 
         //TODO: Возможно стоит сделать более детальную проверку на значение
         //costSteps.getCostAction(map.get("name"), map.get("item_id"), product, jsonData);
@@ -98,32 +112,47 @@ public class OrderServiceSteps extends Steps {
                 .get("action_id");
     }
 
-    @Step("Статус выполнения последнего действия - {exp_status}")
+    @Step("Ожидание успешного выполнения action")
     public void checkActionStatus(String exp_status, IProduct product, String action_id) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
-        String action_status = "";
+        String actionStatus = "";
         int counter = 20;
         log.info("Проверка статуса выполнения действия");
-        while ((action_status.equals("pending") || action_status.equals("")) && counter > 0) {
+        while ((actionStatus.equals("pending") || actionStatus.equals("")) && counter > 0) {
             Waiting.sleep(30000);
             try {
-                action_status = new Http(URL)
+
+//                action_status = new Http(URL)
+//                        .setProjectId(product.getProjectId())
+//                        .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id)
+//                        .assertStatus(200)
+//                        .jsonPath().get("status");
+
+                Http.HttpResponse res = new Http(URL)
                         .setProjectId(product.getProjectId())
-                        .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id)
-                        .assertStatus(200)
-                        .jsonPath().get("status");
+                        .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id);
+
+                if(res.status() == 504)
+                    continue;
+                Assert.assertEquals("Статус ответа не равен ожидаемому", 200, res.status());
+                actionStatus = res.jsonPath().get("status");
+
+
+
             } catch (JsonPathException e) {
                 log.error("Error get status " + e.getMessage());
             }
 
             counter = counter - 1;
         }
-        if (!action_status.equals(exp_status.toLowerCase())) {
+        if (!actionStatus.equals(exp_status.toLowerCase())) {
+            String error = "";
             try {
-                stateServiceSteps.GetErrorFromOrch(product.getOrderId());
-            } catch (CustomException e) {
+                error = stateServiceSteps.GetErrorFromOrch(product);
+            } catch (Throwable e) {
                 e.printStackTrace();
             }
+            Assert.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product.toString(), actionStatus, error));
         }
     }
 
@@ -250,41 +279,45 @@ public class OrderServiceSteps extends Steps {
         System.out.println("list = " + orders);
 
         for (int i = 0; i < orders.size(); i++) {
-            String order_id = (String) orders.get(i);
-            System.out.println("order_id = " + order_id);
-            String productName = new Http(URL)
-                    .setProjectId(project.id)
-                    .get(String.format("order-service/api/v1/projects/%s/orders/%s", project.id, order_id))
-                    .assertStatus(200)
-                    .jsonPath()
-                    .get("attrs.product_title");
-            log.info("productName = " + productName);
-            switch (productName){
-                case ("Apache Kafka Cluster"):
-                    action_title = "Удалить рекурсивно";
-                    break;
-                default:
-                    action_title = "Удалить";
+            try {
+                String order_id = (String) orders.get(i);
+                System.out.println("order_id = " + order_id);
+                String productName = new Http(URL)
+                        .setProjectId(project.id)
+                        .get(String.format("order-service/api/v1/projects/%s/orders/%s", project.id, order_id))
+                        .assertStatus(200)
+                        .jsonPath()
+                        .get("attrs.product_title");
+                log.info("productName = " + productName);
+                switch (productName) {
+                    case ("Apache Kafka Cluster"):
+                        action_title = "Удалить рекурсивно";
+                        break;
+                    default:
+                        action_title = "Удалить";
+                }
+
+
+                log.info("Получение item_id для " + action_title);
+                JsonPath jsonPath = new Http(URL)
+                        .setProjectId(project.id)
+                        .get("order-service/api/v1/projects/" + project.id + "/orders/" + order_id)
+                        .jsonPath();
+                String item_id = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action_title));
+                String action = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action_title, action_title));
+                log.info("item_id = " + item_id);
+                log.info("action = " + action);
+
+                JsonPath response = jsonHelper.getJsonTemplate("/actions/template.json")
+                        .set("$.item_id", item_id)
+                        .send(URL)
+                        .setProjectId(project.id)
+                        .patch(String.format("order-service/api/v1/projects/%s/orders/%s/actions/%s", project.id, order_id, action))
+                        .assertStatus(200)
+                        .jsonPath();
+            } catch (Throwable e){
+                e.printStackTrace();
             }
-
-
-            log.info("Получение item_id для " + action_title);
-            JsonPath jsonPath = new Http(URL)
-                    .setProjectId(project.id)
-                    .get("order-service/api/v1/projects/" + project.id + "/orders/" + order_id)
-                    .jsonPath();
-            String item_id = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action_title));
-            String action = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action_title, action_title));
-            log.info("item_id = " + item_id);
-            log.info("action = " + action);
-
-            JsonPath response = jsonHelper.getJsonTemplate("/actions/template.json")
-                    .set("$.item_id", item_id)
-                    .send(URL)
-                    .setProjectId(project.id)
-                    .patch(String.format("order-service/api/v1/projects/%s/orders/%s/actions/%s", project.id, order_id, action))
-                    .assertStatus(200)
-                    .jsonPath();
         }
 
 

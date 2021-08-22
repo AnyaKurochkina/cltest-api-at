@@ -1,10 +1,9 @@
 package tests.orderService;
 
+import core.utils.Waiting;
 import models.orderService.interfaces.IProduct;
-import org.junit.Mock;
-import org.junit.OrderLabel;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
+import models.orderService.interfaces.ProductStatus;
+import org.junit.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -15,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 
-@DisplayName("Набор для проверки экшенов #1")
+@DisplayName("Проверка actions у заказанных продуктов")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.ActionsTests")
@@ -23,11 +22,13 @@ import tests.Tests;
 public class ActionsTests implements Tests {
 
     @ParameterizedTest
-    @DisplayName("Проверка actions продуктов #1")
+    @DisplayName("Проверка actions у заказанных продуктов")
     @Source(ProductArgumentsProvider.PRODUCTS)
     //@Mock
     public void runActions(IProduct product) {
-            product.runActionsBeforeOtherTests();
+        Assume.assumeTrue("Продукт "+ product.toString() + " не был заказан",product.getStatus() == ProductStatus.CREATED);
+        Waiting.sleep((int) ((Math.random() * (60000)) + 0));
+        product.runActionsBeforeOtherTests();
     }
 
 

@@ -1,5 +1,6 @@
 package models.orderService.products;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import core.helper.Http;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
@@ -8,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.orderService.interfaces.ProductStatus;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
 
@@ -20,22 +22,11 @@ public class Rhel extends IProduct {
     String dataCentre;
     String platform;
     String osVersion;
-    String role = "superuser";
     String domain;
-    String status = "NOT_CREATED";
-    boolean isDeleted = false;
 
-    @Override
-    public void init() {
+    public Rhel() {
         jsonTemplate = "/orders/rhel.json";
-        switch (env) {
-            case ("DEV"):
-                productName ="Rhel";
-                break;
-            case ("TEST"):
-                productName ="RHEL General Application" ;
-                break;
-        }
+        productName ="Rhel";
     }
 
     @Override
@@ -55,20 +46,12 @@ public class Rhel extends IProduct {
                 .jsonPath();
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
-        status = "CREATED";
+        setStatus(ProductStatus.CREATED);
         cacheService.saveEntity(this);
     }
 
     @Override
     public JSONObject getJsonParametrizedTemplate() {
-        switch (env){
-            case ("TEST"):
-                role = "user";
-                break;
-            case ("DEV"):
-                role = "superuser";
-                break;
-        }
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
@@ -82,9 +65,9 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].role", role)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+               .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 }

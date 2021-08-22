@@ -1,10 +1,12 @@
 package core.helper;
 
+import io.qameta.allure.Allure;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.Assert;
 import steps.keyCloak.KeyCloakSteps;
 
 
@@ -21,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
 
+import static core.helper.JsonHelper.stringPrettyFormat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -37,9 +40,15 @@ public class Http {
     static {
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-                public X509Certificate[] getAcceptedIssuers() { return null; }
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {}
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
             }};
             SSLContext sc = null;
             sc = SSLContext.getInstance("SSL");
@@ -139,7 +148,7 @@ public class Http {
             HttpURLConnection http = (HttpURLConnection) connection;
             http.setRequestProperty("Content-Type", contentType);
             http.setRequestProperty("Accept", "application/json, text/plain, */*");
-            if(isUsedToken) {
+            if (isUsedToken) {
                 if (token.length() > 0)
                     http.setRequestProperty("Authorization", token);
                 else {
@@ -162,23 +171,30 @@ public class Http {
             responseMessage = new HttpResponse(IOUtils.toString(is, StandardCharsets.UTF_8));
             responseMessage.status = http.getResponseCode();
             http.disconnect();
-            log.debug("RESPONSE: {}", responseMessage);
+            if (responseMessage.response.length() > 10000)
+                log.debug("RESPONSE: {} ...", responseMessage.response.substring(0, 10000));
+            else
+                log.debug("RESPONSE: {}", responseMessage.response);
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assert.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s", (host + path), e.getMessage()));
         }
         return responseMessage;
     }
 
     public class HttpResponse {
         int status;
-        String response;
+        String response = "";
 
         public HttpResponse(String response) {
             this.response = response;
         }
 
         public HttpResponse assertStatus(int s) {
+            if (s != status) {
+                Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
+                Allure.addAttachment("RESPONSE", stringPrettyFormat(response));
+            }
             assertEquals(String.format("\nResponse: %s\nRequest: %s\n%s\n", response, host + path, body), s, status);
             return this;
         }
@@ -189,7 +205,7 @@ public class Http {
 
         public JSONObject toJson() {
             try {
-                return (JSONObject) new JSONObject(response);
+                return (JSONObject) new JSONObject(toString());
             } catch (Exception e) {
                 throw new Error(e.getMessage());
             }
@@ -197,7 +213,7 @@ public class Http {
 
         public JSONArray toJsonArray() {
             try {
-                return (JSONArray) new JSONArray(response);
+                return (JSONArray) new JSONArray(toString());
             } catch (Exception e) {
                 throw new Error(e.getMessage());
             }
@@ -205,7 +221,7 @@ public class Http {
 
         public JsonPath jsonPath() {
             try {
-                return new JsonPath(response);
+                return new JsonPath(toString());
             } catch (Exception e) {
                 throw new Error(e.getMessage());
             }

@@ -10,7 +10,9 @@ import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.orderService.interfaces.ProductStatus;
 import org.json.JSONObject;
+import org.junit.Action;
 import steps.orderService.OrderServiceSteps;
 
 @ToString(callSuper = true)
@@ -22,9 +24,7 @@ public class Nginx extends IProduct {
     String dataCentre;
     String domain;
     String platform;
-    public String status = "NOT_CREATED";
-    public boolean isDeleted = false;
-    protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+    String osVersion;
 
     @Override
     public void order() {
@@ -43,12 +43,11 @@ public class Nginx extends IProduct {
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
-        status = "CREATED";
+        setStatus(ProductStatus.CREATED);
         cacheService.saveEntity(this);
     }
 
-    @Override
-    public void init() {
+    public Nginx() {
         jsonTemplate = "/orders/nginx.json";
         productName = "Nginx";
     }
@@ -69,13 +68,15 @@ public class Nginx extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.os_version", osVersion)
+                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 
     @Override
-    public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+    @Action("Удалить рекурсивно")
+    public void delete(String action) {
+        super.delete(action);
     }
 
 }

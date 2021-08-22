@@ -9,6 +9,8 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.*;
 import java.util.*;
@@ -102,6 +104,19 @@ public class JsonHelper {
             ex.printStackTrace();
             throw new Error(ex.getMessage());
         }
+    }
+
+    public static String stringPrettyFormat(String text) {
+        try {
+            text = new JSONObject(text).toString(4);
+        } catch (JSONException ex) {
+            try {
+                text = new JSONArray(text).toString(4);
+            } catch (JSONException ex1) {
+                return text;
+            }
+        }
+        return text;
     }
 
     public JsonTemplate getJsonTemplate(String file) {

@@ -16,7 +16,7 @@
 			},
 			"extra_nics": [],
 			"on_support": false,
-			"os_version": "8.latest",
+			"os_version": "8.4",
 			"data_center": "5",
 			"default_nic": {
 				"net_segment": "dev-srv-app"
@@ -40,7 +40,7 @@
 			"wildfly_version": "23.0.2.Final",
 			"ad_logon_grants": [
 				{
-					"role": "superuser",
+					"role": "user",
 					"groups": [
 						"cloud-dmcrux-testgroup100"
 					]

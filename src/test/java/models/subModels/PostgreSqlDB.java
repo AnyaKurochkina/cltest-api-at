@@ -8,6 +8,5 @@ import lombok.Data;
 @Data
 public class PostgreSqlDB {
     String nameDB;
-    @Builder.Default
     public boolean isDeleted = false;
 }

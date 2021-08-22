@@ -8,7 +8,9 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.orderService.interfaces.ProductStatus;
 import org.json.JSONObject;
+import org.junit.Action;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
@@ -23,8 +25,7 @@ public class Redis extends IProduct {
     String dataCentre;
     String platform;
     String domain;
-    String status = "NOT_CREATED";
-    boolean isDeleted = false;
+    String osVersion;
 
     @Override
     public void order() {
@@ -42,12 +43,11 @@ public class Redis extends IProduct {
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
-        status = "CREATED";
+        setStatus(ProductStatus.CREATED);
         cacheService.saveEntity(this);
     }
 
-    @Override
-    public void init() {
+    public Redis() {
         jsonTemplate = "/orders/redis.json";
         productName = "Redis";
     }
@@ -68,17 +68,23 @@ public class Redis extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
+                .set("$.order.attrs.os_version", osVersion)
                 .build();
     }
 
     @Override
-    public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
+    @Action("Удалить рекурсивно")
+    public void delete(String action) {
+        String actionId = orderServiceSteps.executeAction(action, this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
+        setStatus(ProductStatus.DELETED);
+        cacheService.saveEntity(this);
     }
 
     @Override
-    public void expandMountPoint() {
+    @Action("Расширить")
+    public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         String actionId = orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/redis/data\"}"));
         orderServiceSteps.checkActionStatus("success", this, actionId);
@@ -86,51 +92,11 @@ public class Redis extends IProduct {
         assertTrue(sizeBefore<sizeAfter);
     }
 
-    public void resetPassword() {
+    @Action("Сбросить пароль")
+    public void resetPassword(String action) {
         String password = "yxjpjk7xvOImb1O9vZZiGUlsItkqLqtbB1VPZHzL6";
-        String actionId = orderServiceSteps.executeAction("Сбросить пароль", this, new JSONObject(String.format("{redis_password: \"%s\"}", password)));
+        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{redis_password: \"%s\"}", password)));
         orderServiceSteps.checkActionStatus("success", this, actionId);
     }
 
-    @Override
-    public void runActionsBeforeOtherTests(){
-        boolean x = true;
-        try {
-            expandMountPoint();
-        } catch (Exception e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            resetPassword();
-        } catch (Exception e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            restart();
-        } catch (Exception e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            stopSoft();
-        } catch (Exception e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            start();
-        } catch (Exception e) {
-            x = false;
-            e.printStackTrace();
-        }
-        try {
-            stopHard();
-        } catch (Exception e) {
-            x = false;
-            e.printStackTrace();
-        }
-        Assert.assertTrue(x);
-    }
 }

@@ -10,7 +10,9 @@ import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.orderService.interfaces.ProductStatus;
 import org.json.JSONObject;
+import org.junit.Action;
 import steps.orderService.OrderServiceSteps;
 
 import static org.junit.Assert.assertTrue;
@@ -25,8 +27,6 @@ public class WildFly extends IProduct {
     String platform;
     String osVersion;
     String domain;
-    String status = "NOT_CREATED";
-    boolean isDeleted = false;
 
     @Override
     public void order() {
@@ -45,14 +45,14 @@ public class WildFly extends IProduct {
                 .jsonPath();
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
-        status = "CREATED";
+        setStatus(ProductStatus.CREATED);
         cacheService.saveEntity(this);
     }
 
-    @Override
-    public void init() {
+    public WildFly() {
         jsonTemplate = "/orders/wildfly.json";
-        productName = "WildFly";
+        if(productName == null)
+            productName = "WildFly";
     }
 
     @Override
@@ -73,19 +73,24 @@ public class WildFly extends IProduct {
                 .set("$.order.attrs.access_group[0]", accessGroup.name)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 
     @Override
-    public void delete() {
-        String actionId = orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
+    @Action("Удалить рекурсивно")
+    public void delete(String action) {
+        String actionId = orderServiceSteps.executeAction(action, this, null);
         orderServiceSteps.checkActionStatus("success", this, actionId);
+        setStatus(ProductStatus.DELETED);
+        cacheService.saveEntity(this);
     }
 
     @Override
-    public void expandMountPoint() {
+    @Action("Расширить")
+    public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
-        String actionId = orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/app\"}"));
+        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app/app\"}"));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
