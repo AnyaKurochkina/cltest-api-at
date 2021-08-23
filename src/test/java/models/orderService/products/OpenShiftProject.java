@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.junit.Action;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
+
 import java.util.*;
 
 @ToString(callSuper = true)
@@ -40,7 +41,7 @@ public class OpenShiftProject extends IProduct {
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
-        roles.add(new Role ("edit", accessGroup.name));
+        roles.add(new Role("edit", accessGroup.name));
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
         cacheService.saveEntity(this);
@@ -67,9 +68,10 @@ public class OpenShiftProject extends IProduct {
                 .set("$.order.attrs.resource_pool_id", resourcePool.id)
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.user_mark", "openshift"+ new Random().nextInt())
+                .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
                 .build();
     }
+
     @Action("Изменить проект")
     public void changeProject(String action) {
         String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 0}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
@@ -77,8 +79,18 @@ public class OpenShiftProject extends IProduct {
         String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(data));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         cacheService.saveEntity(this);
-        Assert.assertEquals(orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.memory"), 2);
-        Assert.assertEquals(orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.roles[0].role"), "view");
+        Assert.assertEquals("Память не изменилась", 2, orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.memory"));
+        Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.roles[0].role"));
+    }
+
+    @Action("Изменить квоту СХД")
+    public void updateProject(String action) {
+        String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 1}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
+        roles.get(0).setName("view");
+        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(data));
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        cacheService.saveEntity(this);
+        Assert.assertEquals("СХД не изменился на 1", 1, orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"));
     }
 
     @Override
