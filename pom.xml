@@ -142,7 +142,7 @@
                 <artifactId>test-it-maven-plugin</artifactId>
                 <version>1.17</version>
                 <configuration>
-                    <apiToken>TXdRMHJ4R2FPTVBwem1IOUdx</apiToken>
+                    <apiToken>Rkp0SjVqMVZlNEhnS2dtOEF3</apiToken>
                     <projectId>23</projectId>
                     <infrastructureFailReasonExceptions>
                         <exception>ConnectionClosedException</exception>

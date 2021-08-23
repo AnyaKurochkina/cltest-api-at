@@ -1,6 +1,8 @@
 package tests.orderService;
 
 import core.utils.Waiting;
+import io.qameta.allure.Owner;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import org.junit.*;
@@ -22,6 +24,8 @@ import tests.Tests;
 public class ActionsTests implements Tests {
 
     @ParameterizedTest
+    @TmsLink("3")
+    @Owner(value = "Ермаков Роман")
     @DisplayName("Проверка actions у заказанных продуктов")
     @Source(ProductArgumentsProvider.PRODUCTS)
     //@Mock
