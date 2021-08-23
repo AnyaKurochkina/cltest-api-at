@@ -142,6 +142,7 @@
                 <artifactId>test-it-maven-plugin</artifactId>
                 <version>1.17</version>
                 <configuration>
+                    <namespace>API</namespace>
                     <apiToken>Rkp0SjVqMVZlNEhnS2dtOEF3</apiToken>
                     <projectId>23</projectId>
                     <infrastructureFailReasonExceptions>

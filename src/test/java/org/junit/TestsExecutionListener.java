@@ -19,7 +19,7 @@ public class TestsExecutionListener implements TestExecutionListener {
     @SneakyThrows
     public void testPlanExecutionFinished(TestPlan testPlan) {
         CacheService.saveEntities(Steps.dataFolder + "/shareFolder/logData.json");
-        FileWriter fooWriter = new FileWriter(RESOURCE_PATH + "/environment.properties", false);
+        FileWriter fooWriter = new FileWriter("target/allure-results/environment.properties", false);
         fooWriter.write("ENV=" + ENV);
         fooWriter.close();
     }
