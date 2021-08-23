@@ -4,10 +4,7 @@ import core.utils.Waiting;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import org.junit.*;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,10 +23,8 @@ public class ActionsTests implements Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     //@Mock
     public void runActions(IProduct product) {
-        Assume.assumeTrue("Продукт "+ product.toString() + " не был заказан",product.getStatus() == ProductStatus.CREATED);
+        Assumptions.assumeTrue(product.getStatus() == ProductStatus.CREATED, "Продукт "+ product.toString() + " не был заказан");
         Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.runActionsBeforeOtherTests();
     }
-
-
 }

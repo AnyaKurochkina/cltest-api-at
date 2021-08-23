@@ -18,6 +18,5 @@ public class CostTest implements Tests {
         CostSteps costSteps = new CostSteps();
         String tariffPlanId = costSteps.getActiveTariffId();
         costSteps.getPrices(tariffPlanId);
-
     }
 }
