@@ -17,7 +17,6 @@ import static steps.Steps.titleInformationSystem;
 public class InformationSystem implements Tests {
     PortalBackSteps portalBackSteps = new PortalBackSteps();
 
-
     @Order(1)
     @Test
     @DisplayName("Получение информационной системы")
@@ -25,5 +24,4 @@ public class InformationSystem implements Tests {
     public void getInformationSystem() {
         portalBackSteps.getInfoSys(titleInformationSystem);
     }
-
 }

@@ -1,0 +1,87 @@
+OpenShiftProject:
+  - env: "DEV"
+    resourcePoolLabel: "ds0-bank01 - Demo"
+    domain: "corp.dev.vtb"
+
+Rhel:
+  - platform: "Nutanix"
+    env: "DEV"
+    segment: "dev-srv-app"
+    domain: "corp.dev.vtb"
+    dataCentre: "5"
+    osVersion: "8.4"
+
+  - platform: "Nutanix"
+    env: "DEV"
+    segment: "dev-srv-app"
+    domain: "corp.dev.vtb"
+    dataCentre: "5"
+    osVersion: "7.9"
+
+PostgreSQL:
+  - platform: "Nutanix"
+    postgresqlVersion: "12"
+    env: "DEV"
+    osVersion: "8.4"
+    segment: "dev-srv-app"
+    domain: "corp.dev.vtb"
+    dataCentre: "5"
+
+#RabbitMQCluster:
+#  - platform: "Nutanix"
+#    env: "DEV"
+#    segment: "dev-srv-app"
+#    domain: "corp.dev.vtb"
+#    dataCentre: "5"
+
+WildFly:
+  - platform: "Nutanix"
+    env: "DEV"
+    segment: "dev-srv-app"
+    domain: "corp.dev.vtb"
+    osVersion: "8.4"
+    dataCentre: "5"
+
+  - platform: "Nutanix"
+    env: "DEV"
+    segment: "dev-srv-app"
+    domain: "corp.dev.vtb"
+    osVersion: "7.9"
+    dataCentre: "5"
+
+Windows:
+#  - platform: "Nutanix"
+#    env: "DEV"
+#    segment: "dev-srv-app"
+#    domain: "corp.dev.vtb"
+#    dataCentre: "5"
+#    osVersion: "Microsoft Windows Server 2016"
+
+  - platform: "Nutanix"
+    env: "DEV"
+    segment: "dev-srv-app"
+    domain: "corp.dev.vtb"
+    dataCentre: "5"
+    osVersion: "Microsoft Windows Server 2019"
+
+Nginx:
+  - platform: "Nutanix"
+    env: "DEV"
+    segment: "dev-srv-app"
+    domain: "corp.dev.vtb"
+    dataCentre: "5"
+
+Redis:
+  - platform: "Nutanix"
+    env: "DEV"
+    segment: "dev-srv-app"
+    domain: "corp.dev.vtb"
+    dataCentre: "5"
+
+ApacheKafka:
+  - platform: "Nutanix"
+    env: "DEV"
+    kafkaVersion: "2.13-2.4.1"
+    segment: "dev-srv-app"
+    domain: "corp.dev.vtb"
+    dataCentre: "5"

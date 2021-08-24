@@ -55,11 +55,13 @@ public class PortalBackSteps extends Steps {
                     .assertStatus(200)
                     .jsonPath();
 
-            String id = jsonPathInCycle.get(String.format("list.find{it.environment_type.startsWith('%s')}.id", envName));
+            String id = jsonPathInCycle.get(String.format("list.find{it.name.equals('%s')}.id", envName));
+            String environmentType = jsonPathInCycle.get(String.format("list.find{it.name.equals('%s')}.environment_type", envName));
             if(id != null){
                 ProjectEnvironment projectEnvironment = ProjectEnvironment.builder()
                         .id(id)
                         .env(envName)
+                        .envType(environmentType)
                         .build();
                 cacheService.saveEntity(projectEnvironment);
                 break;
