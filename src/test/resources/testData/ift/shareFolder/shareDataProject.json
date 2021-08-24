@@ -15,6 +15,31 @@
     "objectClassName": "models.authorizer.Project",
     "isDeleted": false,
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
+    "id": "proj-ie2s5l0ycr",
+    "projectName": "PROJECT_TEST",
+    "env": "TEST"
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "name": "sa_proj-ie2s5l0ycr-4d",
+    "secret": "3e747bdfd4c07dbde85e0bda902a0860",
+    "isDeleted": false,
+    "projectId": "proj-ie2s5l0ycr",
+    "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e64"
+  },
+  {
+    "objectClassName": "models.authorizer.AccessGroup",
+    "name": "cloud-ifplux-test-acces-group",
+    "user": "",
+    "isDeleted": false,
+    "projectName": "proj-ie2s5l0ycr",
+    "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f576"
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "isDeleted": false,
+    "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
     "id": "proj-xazpppulba",
     "projectName": "PROJECT_DEV",
@@ -30,8 +55,8 @@
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
-    "name": "sa_proj-xazpppulba-3u",
-    "secret": "0e8e3ac1b93fd4b1d357b142452c674f",
+    "name": "sa_proj-xazpppulba-4c",
+    "secret": "fe59d63715acaef33cbbcda160619f3e",
     "isDeleted": false,
     "projectId": "proj-xazpppulba",
     "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e63"

@@ -16,7 +16,7 @@ public class KeyCloakSteps {
     private static final String URL = Configure.getAppProp("host_kk");
     private static final int TOKEN_LIFETIME_SEC = 300;
 
-    @Step("Получение UserToken")
+    //@Step("Получение UserToken")
     public static synchronized String getUserToken() {
         CacheService cacheService = new CacheService();
         UserToken userToken = cacheService.entity(UserToken.class).getEntityWithoutAssert();
@@ -52,7 +52,7 @@ public class KeyCloakSteps {
                 .get("access_token");
     }
 
-    @Step("Получение ServiceAccountToken")
+//    @Step("Получение ServiceAccountToken")
     public static synchronized String getServiceAccountToken(String projectId) {
         CacheService cacheService = new CacheService();
         ServiceAccount serviceAccount = cacheService.entity(ServiceAccount.class)

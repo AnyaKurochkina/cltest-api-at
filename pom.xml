@@ -143,7 +143,7 @@
                 <version>1.17</version>
                 <configuration>
                     <namespace>API</namespace>
-                    <apiToken>TXdRMHJ4R2FPTVBwem1IOUdx</apiToken>
+                    <apiToken>Rkp0SjVqMVZlNEhnS2dtOEF3</apiToken>
                     <projectId>23</projectId>
                     <infrastructureFailReasonExceptions>
                         <exception>ConnectionClosedException</exception>

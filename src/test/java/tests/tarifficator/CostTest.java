@@ -28,7 +28,7 @@ public class CostTest implements Tests {
     @ParameterizedTest
     @DisplayName("Сравнение услуг продуктов предбиллинга с услугами продуктов активного тарифного плана")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    public void compareTariffs(IProduct product){
+    public void compareTariffs(IProduct product, String tmsId){
         //Получаем ID активного тарифного плана
         String tariffPlanId = costSteps.getActiveTariffId();
         //Получаем прайс активного тарифного плана

@@ -1,6 +1,9 @@
 package tests.orderService;
 
 import core.utils.Waiting;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Owner;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.IProductMock;
 import models.orderService.interfaces.ProductStatus;
@@ -22,11 +25,14 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
 public class OrderDeleteTests implements Tests {
 
-    @ParameterizedTest
+
+    @Owner(value = "Ермаков Роман")
+    @ParameterizedTest(name = "{0}")
     @DisplayName("Удаление заказанных продуктов")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    //@Mock
-    public void orderDelete(IProduct product) {
+//    @Mock
+    public void orderDelete(IProduct product, String tmsId) {
+        Allure.tms("4." + tmsId, "");
         Assume.assumeTrue("Продукт "+ product.toString() + " не был заказан",product.getStatus() == ProductStatus.CREATED);
         Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.runActionsAfterOtherTests();
