@@ -1,8 +1,8 @@
-#OpenShiftProject:
-#  - actions:
-#      ['Изменить проект']
-#  - options:
-#      - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP" }
+OpenShiftProject:
+  - actions:
+      ['Изменить проект']
+  - options:
+      - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP" }
 #      - { env: "TEST", resourcePoolLabel: "ss1-genr01.test.vtb.ru - TEST-SRV-SYNT" }
 
 Rhel:
@@ -12,7 +12,7 @@ Rhel:
       - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
+      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
 #      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
 
 PostgreSQL:
@@ -29,7 +29,7 @@ RabbitMQCluster:
   - actions:
       ['Расширить', 'Создать пользователя RabbitMQ', 'Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно']
   - options:
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 #      - { platform: "Nutanix", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }
 #      - { platform: "vsphere", env: "TEST", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }

@@ -1,5 +1,6 @@
 package tests.orderService;
 
+import io.qameta.allure.Allure;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -18,10 +19,11 @@ import tests.Tests;
 public class ResourcesForOrderTests implements Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Получение ресурсных пулов контейнеров")
-    public void getResourcesPool(String env) {
+    public void getResourcesPool(String env, String tmsId) {
+        Allure.tms("5." + tmsId, "");
         orderServiceSteps.getResourcesPool("container", env);
     }
 

@@ -22,7 +22,7 @@ public class AccessGroupDeleteUsersTests {
     @DisplayName("Удаление пользователя из группы доступа")
     @Source(ProductArgumentsProvider.ENV)
     @Description("Удаление пользователя")
-    public void deleteUsers(String env) throws UnsupportedEncodingException {
+    public void deleteUsers(String env, String tmsId) throws UnsupportedEncodingException {
         accessGroupSteps.deleteUsersFromGroup(env);
     }
 }

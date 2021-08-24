@@ -207,6 +207,7 @@ public class OrderServiceSteps extends Steps {
         Map<String, String> map = new HashMap<>();
         map.put("item_id", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action)));
         map.put("name", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action)));
+        Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), map.get("item_id"));
         return map;
     }
 

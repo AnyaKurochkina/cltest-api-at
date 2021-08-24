@@ -22,7 +22,7 @@ public class AccessGroupAddUsersTests {
     @DisplayName("Добавление пользователя в группу доступа")
     @Source(ProductArgumentsProvider.ENV)
     @Description("Добавление пользователя")
-    public void addUsers(String env) {
+    public void addUsers(String env, String tmsId) {
         accessGroupSteps.addUsersToGroup(env, portalBackSteps.getUsers(env, "VTB4043473"));
     }
 }
