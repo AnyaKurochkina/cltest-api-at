@@ -140,7 +140,7 @@ public class ApacheKafkaCluster extends IProduct {
 
     @Action("Создать ACL Kafka")
     public void createAclTest(String action) {
-        createAcl("Создать ACL Kafka", action);
+        createAcl("TopicName", action);
     }
 
     @Override

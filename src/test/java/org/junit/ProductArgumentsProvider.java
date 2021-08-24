@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -27,24 +29,31 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
     private int variableName;
 
     @Override
-    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+    public Stream provideArguments(ExtensionContext context) {
         List<Arguments> list = new ArrayList<>();
         if (variableName == PRODUCTS) {
-            if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class))
+            if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
+                AtomicReference<Integer> i = new AtomicReference<>(1);
                 orders.forEach(entity -> {
-                    list.add(Arguments.arguments(entity));
+                    list.add(Arguments.of(entity, String.valueOf(i)));
+                    i.getAndSet(i.get() + 1);
                 });
-            else
+            } else {
+                AtomicInteger i = new AtomicInteger(1);
                 orders.forEach(entity -> {
-                    list.add(Arguments.arguments(new IProductMock(entity.toString())));
+                    list.add(Arguments.of(new IProductMock(entity.toString()), String.valueOf(i.get())));
+                    i.getAndIncrement();
                 });
+            }
         } else if (variableName == ENV) {
+            AtomicInteger i = new AtomicInteger(1);
             orders.stream()
                     .filter(distinctByKey(IProduct::getEnv))
                     .collect(Collectors.toList())
                     .forEach(entity -> {
-                list.add(Arguments.arguments(entity.getEnv()));
-            });
+                        list.add(Arguments.arguments(entity.getEnv(), String.valueOf(i.get())));
+                        i.getAndIncrement();
+                    });
         }
         return list.stream();
     }
@@ -66,11 +75,11 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                     Class<?> c = Class.forName("models.orderService.products." + e.getKey());
                     List<String> listAction = findListInMapByKey("actions", e.getValue());
                     List listProduct = findListInMapByKey("options", e.getValue());
-                    if(listProduct == null)
+                    if (listProduct == null)
                         continue;
                     for (Object orderObj : listProduct) {
                         IProduct product = (IProduct) objectMapper.convertValue(orderObj, c);
-                        if(listAction != null)
+                        if (listAction != null)
                             product.setActions(listAction);
                         list.add(product);
                     }
@@ -90,8 +99,8 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
     }
 
     public static List findListInMapByKey(String key, List<Map> list) {
-        for(Map m : list){
-            if(m.containsKey(key)){
+        for (Map m : list) {
+            if (m.containsKey(key)) {
                 return (List) m.get(key);
             }
         }

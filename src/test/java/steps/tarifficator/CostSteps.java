@@ -102,13 +102,12 @@ public class CostSteps extends Steps {
         Project project = cacheService.entity(Project.class)
                 .withField("env", product.getEnv())
                 .getEntity();
-        String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         return jsonHelper.getJsonTemplate("/tarifficator/costAction.json")
-                .set("project_name", project.id)
-                .set("item_id", itemId)
-                .set("action_name", action)
-                .set("id", productId)
+                .set("$.params.project_name", project.id)
+                .set("$.params.item_id", itemId)
+                .set("$.params.action_name", action)
+                .set("$.params.id", product.getOrderId())
                 .set("$.params.order.data", data)
                 .send(OrderServiceSteps.URL)
                 .setProjectId(project.id)

@@ -1,6 +1,9 @@
 package tests.orderService;
 
 import core.utils.Waiting;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Owner;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.IProduct;
 import org.junit.Mock;
 import org.junit.OrderLabel;
@@ -20,15 +23,16 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
 public class OrderTests implements Tests {
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @DisplayName("Заказ продуктов")
+    @Owner(value = "Ермаков Роман")
     @Source(ProductArgumentsProvider.PRODUCTS)
 //    @Mock
-    public void order(IProduct product) {
+    public void order(IProduct product, String tmsId) {
+        Allure.tms("2." + tmsId, "");
         Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.order();
     }
-
 
 
 }

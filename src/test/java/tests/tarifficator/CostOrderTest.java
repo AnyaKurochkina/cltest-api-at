@@ -24,7 +24,7 @@ public class CostOrderTest implements Tests {
     @ParameterizedTest
     @DisplayName("Проверка стоимости заказа")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    public void getCost(IProduct product) {
+    public void getCost(IProduct product, String tmsId) {
         double preBillingCost = costSteps.getCurrentCost(product);
         double cost = costSteps.getPreBillingCost(product);
         //TODO: cost может быть null нужно ждать

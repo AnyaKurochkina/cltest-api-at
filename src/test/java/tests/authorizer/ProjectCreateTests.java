@@ -27,7 +27,7 @@ public class ProjectCreateTests implements Tests {
     @DisplayName("Создание проекта")
     @Source(ProductArgumentsProvider.ENV)
     @Description("Создание проекта с сохранением в Shared Memory")
-    public void createProject(String env) {
+    public void createProject(String env, String tmsId) {
         projectSteps.createProject("FOLDER", "PROJECT_"+env, env);
     }
 

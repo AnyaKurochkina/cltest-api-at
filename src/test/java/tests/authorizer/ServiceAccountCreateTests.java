@@ -28,7 +28,7 @@ public class ServiceAccountCreateTests implements Tests {
     @DisplayName("Создание сервисного аккаунта")
     @Source(ProductArgumentsProvider.ENV)
     @Description("Создание сервисного аккаунта с сохранением в Shared Memory")
-    public void createServiceAccount(String env) {
+    public void createServiceAccount(String env, String tmsId) {
         serviceAccountSteps.createServiceAccount("PROJECT_"+env);
     }
 

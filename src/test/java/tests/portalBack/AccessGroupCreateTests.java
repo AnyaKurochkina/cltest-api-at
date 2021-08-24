@@ -23,7 +23,7 @@ public class AccessGroupCreateTests implements Tests {
     @DisplayName("Создание Группы доступа")
     @Source(ProductArgumentsProvider.ENV)
     @Description("Создание Группы доступа с сохранением в Shared Memory")
-    public void createAccessGroup(String env) {
+    public void createAccessGroup(String env, String tmsId) {
         accessGroupSteps.createAccessGroup("PROJECT_"+env, "access-group");
     }
 

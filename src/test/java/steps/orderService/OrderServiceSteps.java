@@ -70,33 +70,16 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-//    @Step("Выполнить действие - {action}")
-//    public String executeAction(String action, IProduct product) {
-//        CostSteps costSteps = new CostSteps();
-//        Map<String, String> map = getItemIdByOrderId(action, product);
-//        log.info("Отправка запроса на выполнение действия - " + action);
-//
-//        //TODO: Возможно стоит сделать более детальную проверку на значение
-//        costSteps.getCostAction(map.get("name"), map.get("item_id"), product, null);
-//
-//        return jsonHelper.getJsonTemplate("/actions/template.json")
-//                .set("$.item_id", map.get("item_id"))
-//                .send(URL)
-//                .setProjectId(product.getProjectId())
-//                .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"))
-//                .assertStatus(200)
-//                .jsonPath()
-//                .get("action_id");
-//    }
 
     @Step("Выполнение action \"{action}\"")
     public String executeAction(String action, IProduct product, JSONObject jsonData) {
         CostSteps costSteps = new CostSteps();
         Map<String,String> map = getItemIdByOrderId(action, product);
-        log.info("Отправка запроса на выполнение действия - " + action + " для продукта - "+product.toString());
+        log.info("Отправка запроса на выполнение действия '" + action + "' для продукта "+product.toString());
 
         //TODO: Возможно стоит сделать более детальную проверку на значение
-        //costSteps.getCostAction(map.get("name"), map.get("item_id"), product, jsonData);
+        double cost = costSteps.getCostAction(map.get("name"), map.get("item_id"), product, jsonData);
+        Assert.assertTrue("Стоимость после action отрицательная", cost >= 0);
 
 //TODO: обработать кейс если экшен не найден
         return jsonHelper.getJsonTemplate("/actions/template.json")
@@ -223,6 +206,7 @@ public class OrderServiceSteps extends Steps {
         Map<String, String> map = new HashMap<>();
         map.put("item_id", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action)));
         map.put("name", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action)));
+        Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), map.get("item_id"));
         return map;
     }
 
