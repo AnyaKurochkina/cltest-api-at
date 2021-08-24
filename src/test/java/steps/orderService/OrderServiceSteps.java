@@ -1,30 +1,28 @@
 package steps.orderService;
 
-import core.exception.CustomException;
-import core.helper.*;
+import core.helper.Configure;
+import core.helper.Http;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.InformationSystem;
-import models.orderService.interfaces.IProduct;
 import models.authorizer.Project;
+import models.authorizer.ProjectEnvironment;
 import models.orderService.ResourcePool;
-import models.orderService.interfaces.ProductStatus;
-import org.json.JSONObject;
+import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.Assume;
 import steps.Steps;
 import steps.stateService.StateServiceSteps;
 import steps.tarifficator.CostSteps;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.fail;
 
 @Log4j2
 public class OrderServiceSteps extends Steps {
@@ -56,7 +54,7 @@ public class OrderServiceSteps extends Steps {
             Assert.assertEquals("Статус ответа не равен ожидаемому", 200, res.status());
             orderStatus = res.jsonPath().get("status");
 
-            System.out.println("orderStatus = " + orderStatus);
+            log.info("orderStatus = " + orderStatus);
             counter = counter - 1;
         }
         log.info("Ордер статус итоговый " + orderStatus);
@@ -170,9 +168,10 @@ public class OrderServiceSteps extends Steps {
         log.info("Получение id для продукта " + product.getProductName());
         InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();
         String product_id = "";
+        ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class).withField("env", product.getEnv()).getEntity();
         int total_count = new Http(URL)
                 .setProjectId(product.getProjectId())
-                .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=1&per_page=100", product.getEnv().toLowerCase(), informationSystem.id))
+                .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=1&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id))
                 .assertStatus(200)
                 .jsonPath()
                 .get("meta.total_count");
@@ -181,7 +180,7 @@ public class OrderServiceSteps extends Steps {
         for (int i = 1; i<=countOfIteration; i++) {
             product_id = new Http(URL)
                     .setProjectId(product.getProjectId())
-                    .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=%s&per_page=100", product.getEnv().toLowerCase(), informationSystem.id, i))
+                    .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=%s&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id, i))
                     .assertStatus(200)
                     .jsonPath()
                     .get(String.format("list.find{it.title == '%s' || it.title == '%s' || it.title == '%s'}.id", product.getProductName().toLowerCase(), product.getProductName().toUpperCase(), product.getProductName()));

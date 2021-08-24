@@ -2,6 +2,8 @@ package tests.portalBack;
 
 import io.qameta.allure.Description;
 import org.junit.OrderLabel;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -20,17 +22,12 @@ import java.util.stream.Stream;
 public class ProjectEnvironment implements Tests {
     PortalBackSteps portalBackSteps = new PortalBackSteps();
 
-
     @Order(1)
     @ParameterizedTest
-    @MethodSource("dataProjectEnv")
+    @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Получение среды назначения")
     @Description("Получение среды назначения с сохранением в Shared Memory")
     public void getProjectEnv(String env) {
         portalBackSteps.getProjectEnv(env);
-    }
-
-    static Stream<Arguments> dataProjectEnv() {
-        return Stream.of(Arguments.arguments("DEV"), Arguments.arguments("TEST"));
     }
 }

@@ -1,5 +1,17 @@
 [
   {
+    "objectClassName": "models.authorizer.ProjectEnvironment",
+    "objectUid": "4087706b-e9b7-48ef-969d-000000000012",
+    "env": "DSO",
+    "envType": "DEV"
+  },
+  {
+    "objectClassName": "models.authorizer.ProjectEnvironment",
+    "objectUid": "4087706b-e9b7-48ef-969d-000000000013",
+    "env": "IFT",
+    "envType": "TEST"
+  },
+  {
     "objectClassName": "models.keyCloak.Service",
     "objectUid": "4087706b-e9b7-48ef-969d-000000000001",
     "clientId": "cloud_autotest",
@@ -15,10 +27,35 @@
     "objectClassName": "models.authorizer.Project",
     "isDeleted": false,
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
+    "id": "proj-ie2s5l0ycr",
+    "projectName": "PROJECT_TEST",
+    "env": "IFT"
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "name": "sa_proj-ie2s5l0ycr-4d",
+    "secret": "3e747bdfd4c07dbde85e0bda902a0860",
+    "isDeleted": false,
+    "projectId": "proj-ie2s5l0ycr",
+    "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e64"
+  },
+  {
+    "objectClassName": "models.authorizer.AccessGroup",
+    "name": "cloud-ifplux-test-acces-group",
+    "user": "",
+    "isDeleted": false,
+    "projectName": "proj-ie2s5l0ycr",
+    "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f576"
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "isDeleted": false,
+    "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
     "id": "proj-xazpppulba",
     "projectName": "PROJECT_DEV",
-    "env": "DEV"
+    "env": "DSO"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
