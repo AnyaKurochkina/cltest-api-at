@@ -142,10 +142,11 @@ public class Http {
 
     private HttpResponse request() {
         HttpResponse responseMessage = null;
+        HttpURLConnection http = null;
         try {
             URL url = new URL(host + path);
             URLConnection connection = url.openConnection();
-            HttpURLConnection http = (HttpURLConnection) connection;
+            http = (HttpURLConnection) connection;
             http.setRequestProperty("Content-Type", contentType);
             http.setRequestProperty("Accept", "application/json, text/plain, */*");
             if (isUsedToken) {
@@ -168,8 +169,8 @@ public class Http {
                 is = http.getErrorStream();
             else
                 is = http.getInputStream();
-            responseMessage = new HttpResponse(IOUtils.toString(is, StandardCharsets.UTF_8));
             responseMessage.status = http.getResponseCode();
+            responseMessage = new HttpResponse(IOUtils.toString(is, StandardCharsets.UTF_8));
             http.disconnect();
             if (responseMessage.response.length() > 10000)
                 log.debug("RESPONSE: {} ...", responseMessage.response.substring(0, 10000));
@@ -177,7 +178,7 @@ public class Http {
                 log.debug("RESPONSE: {}", responseMessage.response);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s", (host + path), e.getMessage()));
+            Assert.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), responseMessage.status));
         }
         return responseMessage;
     }
