@@ -19,7 +19,7 @@ public class DeleteAllOrders implements Tests {
     @Tag("deleteall")
     @DisplayName("Удаление всех успешных заказов из проекта")
     public void DeleteOrders()  {
-        orderServiceSteps.deleteOrders("DEV");
-        orderServiceSteps.deleteOrders("TEST");
+        orderServiceSteps.deleteOrders("LT");
+        //orderServiceSteps.deleteOrders("TEST");
     }
 }

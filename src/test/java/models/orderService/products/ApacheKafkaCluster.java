@@ -1,12 +1,9 @@
 package models.orderService.products;
 
 import core.helper.Http;
-import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
@@ -135,12 +132,24 @@ public class ApacheKafkaCluster extends IProduct {
         String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}"));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         cacheService.saveEntity(this);
-        Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_ACL, topicNameRegex)));
+        Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)));
+    }
+
+    public void createAclTransaction(String transactionRegex, String action) {
+        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\""+ transactionRegex +"\"}"));
+        orderServiceSteps.checkActionStatus("success", this, actionId);
+        cacheService.saveEntity(this);
+        Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)));
     }
 
     @Action("Создать ACL Kafka")
     public void createAclTest(String action) {
-        createAcl("TopicName", action);
+        createAcl("*", action);
+    }
+
+    @Action("Создание ACL на транзакцию Kafka")
+    public void createAclTransactionTest(String action) {
+        createAclTransaction("*", action);
     }
 
     @Override

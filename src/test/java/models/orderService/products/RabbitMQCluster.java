@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
+import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import org.json.JSONObject;
@@ -59,10 +60,13 @@ public class RabbitMQCluster extends IProduct {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
+        ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
+                .withField("env", env)
+                .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
-        switch (env){
+        switch (projectEnvironment.envType){
             case ("TEST"):
                 role = "manager";
                 break;
