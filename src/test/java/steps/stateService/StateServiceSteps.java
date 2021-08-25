@@ -27,23 +27,23 @@ public class StateServiceSteps extends Steps {
             log.error(e.getMessage());
         }
 //        log.error(String.valueOf(traceback));
-        try {
-            // Возьмите файл
-            File file = new File(folder_logs + "/" + product.getOrderId() + ".txt");
-            //Создайте новый файл
-            // Убедитесь, что он не существует
-            if (file.createNewFile())
-                System.out.println("File created");
-            else
-                System.out.println("File already exists");
-
-            FileWriter writer = new FileWriter(file);
-            writer.write(String.valueOf(traceback));
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("Ошибка в GetErrorFromOrch " + e);
-        }
+//        try {
+//            // Возьмите файл
+//            File file = new File(folder_logs + "/" + product.getOrderId() + ".txt");
+//            //Создайте новый файл
+//            // Убедитесь, что он не существует
+//            if (file.createNewFile())
+//                System.out.println("File created");
+//            else
+//                System.out.println("File already exists");
+//
+//            FileWriter writer = new FileWriter(file);
+//            writer.write(String.valueOf(traceback));
+//            writer.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("Ошибка в GetErrorFromOrch " + e);
+//        }
         return String.valueOf(traceback);
     }
 }

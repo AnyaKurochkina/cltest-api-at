@@ -45,7 +45,7 @@ public class OrderServiceSteps extends Steps {
 //                    .jsonPath()
 //                    .get("status");
 
-            Http.HttpResponse res = new Http(URL)
+            Http res = new Http(URL)
                     .setProjectId(product.getProjectId())
                     .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId());
 
@@ -109,7 +109,7 @@ public class OrderServiceSteps extends Steps {
 //                        .assertStatus(200)
 //                        .jsonPath().get("status");
 
-                Http.HttpResponse res = new Http(URL)
+                Http res = new Http(URL)
                         .setProjectId(product.getProjectId())
                         .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id);
 

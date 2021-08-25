@@ -47,8 +47,8 @@ Windows:
 #      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
 #      - { platform: "Nutanix", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
-#      - { platform: "vpshere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
-      - { platform: "vpshere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
+#      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
+      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
 
 Nginx:
   - actions:
@@ -90,7 +90,7 @@ Redis:
 #
 ApacheKafkaCluster:
   - actions:
-      ['Обновить сертификаты', 'Создать Topic Kafka', 'Создать ACL Kafka', 'Удалить Topic Kafka', 'Выключить кластер Kafka', 'Включить кластер Kafka', 'Перезагрузить кластер Kafka', 'Расширить']
+      ['Обновить сертификаты', 'Создать Topic Kafka', 'Создать ACL Kafka', 'Создание ACL на транзакцию Kafka', 'Удалить Topic Kafka', 'Выключить кластер Kafka', 'Включить кластер Kafka', 'Перезагрузить кластер Kafka', 'Расширить']
   - options:
 #      - { platform: "Nutanix", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
 #      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
