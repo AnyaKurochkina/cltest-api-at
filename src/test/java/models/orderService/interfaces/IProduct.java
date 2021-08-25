@@ -27,7 +27,8 @@ public abstract class IProduct extends Entity {
     public static String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
     public static String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
     public static String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.config.topics.any{it.topic_name=='%s'}";
-    public static String KAFKA_CLUSTER_ACL = "data.find{it.type=='cluster'}.config.acls.any{it.topic_name=='%s'}";
+    public static String KAFKA_CLUSTER_ACL_TOPICS = "data.find{it.type=='cluster'}.config.acls.any{it.topic_name=='%s'}";
+    public static String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.config.transaction_acls.any{it.transaction_id=='%s'}";
 
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
     protected transient String jsonTemplate;
@@ -74,7 +75,7 @@ public abstract class IProduct extends Entity {
         for (String action : actions) {
             try {
                 if (!invokeAction(action))
-                    throw new CustomException("Action '" + action + "' не найден у продукта " + getProductName());
+                    fail("Action '" + action + "' не найден у продукта " + getProductName());
             } catch (Throwable e) {
                 e.printStackTrace();
                 error = e;

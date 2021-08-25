@@ -51,8 +51,7 @@ public class WildFly extends IProduct {
 
     public WildFly() {
         jsonTemplate = "/orders/wildfly.json";
-        if(productName == null)
-            productName = "WildFly";
+        productName = "WildFly";
     }
 
     @Override
