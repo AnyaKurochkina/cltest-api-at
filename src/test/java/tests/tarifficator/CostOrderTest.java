@@ -26,7 +26,6 @@ public class CostOrderTest implements Tests {
         double preBillingCost = costSteps.getCurrentCost(product);
         double cost = costSteps.getPreBillingCost(product);
         //TODO: cost может быть null нужно ждать
-        Assert.assertEquals("Стоимость предбиллинга отличается от стоимости продукта " + product, preBillingCost, cost, 0.00001);
+        Assertions.assertEquals(preBillingCost, cost, 0.00001, "Стоимость предбиллинга отличается от стоимости продукта " + product);
     }
-
 }
