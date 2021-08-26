@@ -18,14 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@ToString(callSuper = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
 public class ApacheKafkaCluster extends IProduct {
+    @ToString.Include
     String segment;
     String dataCentre;
+    @ToString.Include
     String platform;
+    @ToString.Include
     String kafkaVersion;
     String domain;
     public List<KafkaTopic> topics = new ArrayList<>();

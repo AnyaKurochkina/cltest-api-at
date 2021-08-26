@@ -25,9 +25,9 @@ public class ActionsTests implements Tests {
     @Owner(value = "Ермаков Роман")
     @DisplayName("Проверка actions у заказанных продуктов")
     @Source(ProductArgumentsProvider.PRODUCTS)
-//    @Mock
     public void runActions(IProduct product, String tmsId) {
         Allure.tms("3." + tmsId, "");
+        product.toStringProductStep();
         Assumptions.assumeTrue(product.getStatus() == ProductStatus.CREATED, "Продукт "+ product.toString() + " не был заказан");
         Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.runActionsBeforeOtherTests();

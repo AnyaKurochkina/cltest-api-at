@@ -13,14 +13,17 @@ import org.json.JSONObject;
 import org.junit.Action;
 import steps.orderService.OrderServiceSteps;
 
-@ToString(callSuper = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
 public class ApacheKafka extends IProduct {
+    @ToString.Include
     String segment;
     String dataCentre;
+    @ToString.Include
     String platform;
+    @ToString.Include
     String kafkaVersion;
     String domain;
 
@@ -48,8 +51,7 @@ public class ApacheKafka extends IProduct {
 
     public ApacheKafka() {
         jsonTemplate = "/orders/apache_kafka.json";
-        if(productName == null)
-            productName = "Apache Kafka";
+        productName = "Apache Kafka";
     }
 
     @Override
