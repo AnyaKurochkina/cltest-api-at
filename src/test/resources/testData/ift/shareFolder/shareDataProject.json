@@ -1,12 +1,6 @@
 [
   {
     "objectClassName": "models.authorizer.ProjectEnvironment",
-    "objectUid": "4087706b-e9b7-48ef-969d-000000000012",
-    "env": "DSO",
-    "envType": "DEV"
-  },
-  {
-    "objectClassName": "models.authorizer.ProjectEnvironment",
     "objectUid": "4087706b-e9b7-48ef-969d-000000000013",
     "env": "IFT",
     "envType": "TEST"

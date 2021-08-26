@@ -44,7 +44,7 @@ public class AccountCreateTest implements Tests {
     @DisplayName("Перевод денег со счета организации на счет папки Бизнес блок")
     @Description("Перевод денег со счета организации на счет папки Бизнес блок")
     public void transferMoneyFromAccountToBusinessBlock() {
-        accountCreate.transferMoneyFromOrganizationToFolder("ВТБ", "BUSINESS_FOLDER", "1000.00");
+        accountCreate.transferMoneyFromOrganizationToFolder("ВТБ", "BUSINESS_FOLDER", "10000.00");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class AccountCreateTest implements Tests {
     @DisplayName("Перевод денег со счета папки Бизнес блок на счет папки Департамент")
     @Description("Перевод денег со счета папки Бизнес блок на счет папки Департамент")
     public void transferMoneyFromAccountToDepartment() {
-        accountCreate.transferMoneyFromFolderToFolder("BUSINESS_FOLDER", "DEPARTMENT_FOLDER", "1000.00");
+        accountCreate.transferMoneyFromFolderToFolder("BUSINESS_FOLDER", "DEPARTMENT_FOLDER", "10000.00");
     }
 
     @Test
@@ -60,7 +60,7 @@ public class AccountCreateTest implements Tests {
     @DisplayName("Перевод денег со счета папки Департамент на счет папки")
     @Description("Перевод денег со счета папки Департамент на счет папки")
     public void transferMoneyFromAccountToFolder() {
-        accountCreate.transferMoneyFromFolderToFolder("DEPARTMENT_FOLDER","FOLDER", "1000.00");
+        accountCreate.transferMoneyFromFolderToFolder("DEPARTMENT_FOLDER","FOLDER", "10000.00");
     }
 
 }
