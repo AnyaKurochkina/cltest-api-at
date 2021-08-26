@@ -17,11 +17,12 @@ import steps.orderService.OrderServiceSteps;
 
 import java.util.*;
 
-@ToString(callSuper = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
 public class OpenShiftProject extends IProduct {
+    @ToString.Include
     public String resourcePoolLabel;
     public List<Role> roles = new ArrayList<>();
 

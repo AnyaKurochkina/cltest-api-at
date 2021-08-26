@@ -1,13 +1,20 @@
 package models.orderService.interfaces;
 
+import static io.qameta.allure.Allure.getLifecycle;
 import static org.junit.Assert.*;
 
 import core.exception.CustomException;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureLifecycle;
+import io.qameta.allure.Step;
+import io.qameta.allure.model.Parameter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import models.Entity;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.json.JSONObject;
 import org.junit.Action;
 import org.junit.Assert;
@@ -17,7 +24,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +48,6 @@ public abstract class IProduct extends Entity {
     @Getter
     private ProductStatus status = ProductStatus.NOT_CREATED;
     @Getter
-    @ToString.Include
     protected String orderId;
     @Getter
     protected String projectId;
@@ -67,6 +75,11 @@ public abstract class IProduct extends Entity {
             }
         }
         return invoke;
+    }
+
+
+    protected String toStringAllFiled() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
     @SneakyThrows
@@ -151,4 +164,26 @@ public abstract class IProduct extends Entity {
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
 
+    @Step
+    @SneakyThrows
+    public void toStringProductStep() {
+        AllureLifecycle allureLifecycle = getLifecycle();
+        String id = allureLifecycle.getCurrentTestCaseOrStep().get();
+        List<Parameter> list = new ArrayList<>();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(getClass().getSuperclass().getDeclaredFields()));
+        fieldList.addAll(Arrays.asList(getClass().getDeclaredFields()));
+        for (Field field : fieldList) {
+            if (Modifier.isStatic(field.getModifiers()))
+                continue;
+            field.setAccessible(true);
+            if (field.get(this) != null) {
+                Parameter parameter = new Parameter();
+                parameter.setName(field.getName());
+                parameter.setValue(field.get(this).toString());
+                list.add(parameter);
+            }
+        }
+        allureLifecycle.updateStep(id, s -> s.setName("Получен продукт " + getProductName() + " с параметрами"));
+        allureLifecycle.updateStep(id, s -> s.setParameters(list));
+    }
 }

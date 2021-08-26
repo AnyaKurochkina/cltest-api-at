@@ -1,9 +1,7 @@
 package tests.orderService;
 
 import core.utils.Waiting;
-import io.qameta.allure.Allure;
-import io.qameta.allure.Owner;
-import io.qameta.allure.TmsLink;
+import io.qameta.allure.*;
 import models.orderService.interfaces.IProduct;
 import org.junit.Mock;
 import org.junit.OrderLabel;
@@ -30,9 +28,9 @@ public class OrderTests implements Tests {
 //    @Mock
     public void order(IProduct product, String tmsId) {
         Allure.tms("2." + tmsId, "");
+        product.toStringProductStep();
         Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.order();
     }
-
 
 }

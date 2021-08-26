@@ -22,7 +22,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@ToString(callSuper = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
@@ -31,10 +31,13 @@ public class PostgreSQL extends IProduct {
     public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
     public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users[0].user_name";
     public static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
+    @ToString.Include
     String segment;
     String dataCentre;
+    @ToString.Include
     String platform;
     String osVersion;
+    @ToString.Include
     String postgresqlVersion;
     String domain;
     public List<PostgreSqlDB> database = new ArrayList<>();
