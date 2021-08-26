@@ -33,6 +33,7 @@ public class OrderDeleteTests implements Tests {
 //    @Mock
     public void orderDelete(IProduct product, String tmsId) {
         Allure.tms("4." + tmsId, "");
+        product.toStringProductStep();
         Assume.assumeTrue("Продукт "+ product.toString() + " не был заказан",product.getStatus() == ProductStatus.CREATED);
         Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.runActionsAfterOtherTests();

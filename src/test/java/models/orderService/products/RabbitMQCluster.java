@@ -17,14 +17,16 @@ import steps.orderService.OrderServiceSteps;
 
 import static org.junit.Assert.assertEquals;
 
-@ToString(callSuper = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
 public class RabbitMQCluster extends IProduct {
     static String RABBITMQ_USER = "data.find{it.type=='cluster'}.config.users[0]";
+    @ToString.Include
     String segment;
     String dataCentre;
+    @ToString.Include
     String platform;
     String domain;
     String role = "administrator";
