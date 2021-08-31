@@ -5,10 +5,12 @@ import core.helper.Http;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -82,7 +84,7 @@ public class CostSteps extends Steps {
         Project project = cacheService.entity(Project.class)
                 .withField("env", product.getEnv())
                 .getEntity();
-        String productId = orderServiceSteps.getProductId(product);
+        String productId =  orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = jsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.getJsonParametrizedTemplate().query("/order/attrs");
