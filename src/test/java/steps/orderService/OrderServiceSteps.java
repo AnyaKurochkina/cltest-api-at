@@ -270,7 +270,7 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath()
                 .get("list.findAll{it.status == 'success'}.id");
 
-        System.out.println("list = " + orders);
+        log.info("list = " + orders);
 
         for (int i = 0; i < orders.size(); i++) {
             try {
