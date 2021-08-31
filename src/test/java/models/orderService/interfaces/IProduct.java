@@ -77,11 +77,6 @@ public abstract class IProduct extends Entity {
         return invoke;
     }
 
-
-    protected String toStringAllFiled() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    }
-
     @SneakyThrows
     public void runActionsBeforeOtherTests() {
         Throwable error = null;

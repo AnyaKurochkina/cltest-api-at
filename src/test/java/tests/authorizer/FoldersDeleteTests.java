@@ -10,7 +10,7 @@ import tests.Tests;
 @DisplayName("Набор тестов для удаления Орг структуры")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.authorizer.FoldersDeleteTests")
-@Tags({@Tag("regress"), @Tag("orgStructure")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FoldersDeleteTests implements Tests {
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();

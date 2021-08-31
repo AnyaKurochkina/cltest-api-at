@@ -11,11 +11,6 @@
     "username": "portal_admin_at",
     "password": "portal_admin_at"
   },
-
-
-
-
-
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "objectUid": "4087706b-e9b7-48ef-969d-000000000011",
