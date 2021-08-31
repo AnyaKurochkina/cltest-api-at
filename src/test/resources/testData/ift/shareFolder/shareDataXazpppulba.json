@@ -14,8 +14,8 @@
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "objectUid": "4087706b-e9b7-48ef-969d-000000000011",
-    "secret": "2e2d725174af277b03e0162ccb1903c7",
-    "name": "sa_proj-xazpppulba-3g",
+    "secret": "7aa54ccd13a0e46c62e6ad7ac082416c",
+    "name": "sa_proj-xazpppulba-4x",
     "projectId": "proj-xazpppulba"
   },
   {
@@ -25,7 +25,7 @@
     "objectUid": "4087706b-e9b7-48ef-969d-000000000013",
     "id": "proj-xazpppulba",
     "projectName": "PROJECT_DEV",
-    "env": "DEV"
+    "env": "DSO"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
@@ -33,5 +33,11 @@
     "isDeleted": false,
     "projectName": "proj-xazpppulba",
     "objectUid": "4087706b-e9b7-48ef-969d-000000000016"
+  },
+  {
+    "objectClassName": "models.authorizer.ProjectEnvironment",
+    "objectUid": "4087706b-e9b7-48ef-969d-000000000077",
+    "env": "DSO",
+    "envType": "DEV"
   }
 ]
