@@ -21,7 +21,7 @@ import java.util.HashMap;
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.tarifficator.CostTest")
 @DisplayName("Набор тестов для проверки предбиллинга продуктов")
-@Tags({@Tag("regress"), @Tag("cost")})
+@Tags({@Tag("regress"), @Tag("cost1"), @Tag("rhel")})
 public class CostTest implements Tests {
     CostSteps costSteps = new CostSteps();
 

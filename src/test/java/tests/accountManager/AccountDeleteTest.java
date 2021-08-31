@@ -10,7 +10,7 @@ import tests.Tests;
 @DisplayName("Набор для удаления счета")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.accountManager.AccountDeleteTest")
-@Tags({@Tag("regress"), @Tag("orgStructure")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountDeleteTest implements Tests {
     AccountSteps accountSteps = new AccountSteps();

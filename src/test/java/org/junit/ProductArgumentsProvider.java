@@ -3,6 +3,7 @@ package org.junit;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.IProductMock;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -22,6 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Log4j2
 public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Source> {
     public final static int PRODUCTS = 0;
     public final static int ENV = 1;
@@ -68,7 +70,11 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.findAndRegisterModules();
         try {
-            Map<String, List<Map>> products = mapper.readValue(new File(Steps.dataFolder + "/products.yaml"), Map.class);
+            Map<String, List<Map>> products = mapper.readValue(new File(Steps.dataFolder +
+                    ((System.getProperty("products") != null) ?
+                            "/" + System.getProperty("products") :
+                            "/products") + ".yaml"),
+                    Map.class);
             final ObjectMapper objectMapper = new ObjectMapper();
             for (Map.Entry<String, List<Map>> e : products.entrySet()) {
                 try {
@@ -104,7 +110,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                 return (List) m.get(key);
             }
         }
-        System.out.println("Невалидный products.yaml");
+        log.info("Невалидный products.yaml");
         System.exit(1);
         return null;
     }

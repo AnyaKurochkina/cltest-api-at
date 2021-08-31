@@ -8,7 +8,7 @@
   {
     "objectClassName": "models.authorizer.User",
     "objectUid": "4087706b-e9b7-48ef-969d-000000000002",
-    "username": "portal_admin_a",
+    "username": "portal_admin_at",
     "password": "portal_admin_at"
   },
   {
@@ -16,29 +16,35 @@
     "isDeleted": false,
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
-    "id": "proj-0p1rtz9mq9",
-    "projectName": "sdfsdf",
-    "env": "DEV"
+    "id": "proj-3d1jt57gm3",
+    "projectName": "DSO_AUTOTEST",
+    "env": "DSO"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
-    "name": "cloud-stcrux-ggwp",
-    "user": "CN=Михайлов Денис Сергеевич (4043473),OU=Dev Users,OU=DEV_MSK,DC=corp,DC=dev,DC=vtb",
+    "name": "cloud-d0crux-dso-group",
+    "user": "",
     "isDeleted": false,
-    "projectName": "proj-0p1rtz9mq9",
+    "projectName": "proj-3d1jt57gm3",
     "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f575"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
-    "name": "sa_proj-0p1rtz9mq9-ej",
-    "secret": "5a1d2c7b4a345ac1b0e1a346d1f1ad30",
+    "name": "sa_proj-3d1jt57gm3-ez",
+    "secret": "c83a5f3a35ec9bb29c0a409414fde2bf",
     "isDeleted": false,
-    "projectId": "proj-0p1rtz9mq9",
+    "projectId": "proj-3d1jt57gm3",
     "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e63"
   },
   {
     "objectClassName": "models.authorizer.InformationSystem",
     "objectUid": "cafa1b9d-5702-459a-bfff-7ee70df2651d",
     "id": "c9fd31c7-25a5-45ca-863c-18425d1ae927"
+  },
+  {
+    "objectClassName": "models.authorizer.ProjectEnvironment",
+    "objectUid": "4087706b-e9b7-48ef-969d-000000000135",
+    "env": "DSO",
+    "envType": "DEV"
   }
 ]
