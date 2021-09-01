@@ -4,7 +4,11 @@ import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import models.authorizer.*;
+import models.authorizer.Folder;
+import models.authorizer.InformationSystem;
+import models.authorizer.Organization;
+import models.authorizer.Project;
+import models.authorizer.ProjectEnvironment;
 import steps.Steps;
 
 public class PortalBackSteps extends Steps {

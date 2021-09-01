@@ -1,10 +1,10 @@
 package models.orderService.interfaces;
 
 import static io.qameta.allure.Allure.getLifecycle;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import core.exception.CustomException;
-import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
@@ -13,16 +13,16 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import models.Entity;
+import models.subModels.Flavor;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.json.JSONObject;
 import org.junit.Action;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
+import steps.references.ReferencesStep;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -40,6 +40,7 @@ public abstract class IProduct extends Entity {
     public static String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.config.transaction_acls.any{it.transaction_id=='%s'}";
 
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+    protected transient ReferencesStep referencesStep = new ReferencesStep();
     protected transient String jsonTemplate;
     @Setter
     protected transient List<String> actions;
@@ -146,13 +147,15 @@ public abstract class IProduct extends Entity {
 
     @Action("Изменить конфигурацию")
     public void resize(String action) {
-        Map<String, String> map = orderServiceSteps.getFlavorByProduct(this);
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(map.get("flavor")));
+        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
+        Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
+        Flavor flavor = list.get(list.size() - 1);
+        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(flavor.toString()));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int cpusAfter = (Integer) orderServiceSteps.getFiledProduct(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getFiledProduct(this, MEMORY);
-        assertEquals(Integer.parseInt(map.get("cpus")), cpusAfter);
-        assertEquals(Integer.parseInt(map.get("memory")), memoryAfter);
+        assertEquals(flavor.data.cpus, cpusAfter);
+        assertEquals(flavor.data.memory, memoryAfter);
     }
 
     @Action("Расширить")

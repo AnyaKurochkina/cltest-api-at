@@ -21,7 +21,6 @@ import steps.tarifficator.CostSteps;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 @Log4j2
@@ -31,7 +30,7 @@ public class OrderServiceSteps extends Steps {
     public void checkOrderStatus(String exp_status, IProduct product) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
         String orderStatus = "";
-        int counter = 40;
+        int counter = 50;
 
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
@@ -49,8 +48,8 @@ public class OrderServiceSteps extends Steps {
                     .setProjectId(product.getProjectId())
                     .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId());
 
-            if(res.status() == 504)
-                continue;
+//            if(res.status() == 504)
+//                continue;
             Assert.assertEquals("Статус ответа не равен ожидаемому", 200, res.status());
             orderStatus = res.jsonPath().get("status");
 
@@ -113,8 +112,8 @@ public class OrderServiceSteps extends Steps {
                         .setProjectId(product.getProjectId())
                         .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id);
 
-                if(res.status() == 504)
-                    continue;
+//                if(res.status() == 504)
+//                    continue;
                 Assert.assertEquals("Статус ответа не равен ожидаемому", 200, res.status());
                 actionStatus = res.jsonPath().get("status");
 
@@ -174,27 +173,27 @@ public class OrderServiceSteps extends Steps {
         return product_id;
     }
 
-    public Map<String,String> getFlavorByProduct(IProduct product) {
-        log.info("Получение флейвора для продукта " + product.getProductName());
-        JsonPath jsonPath  = new Http(URL)
-                .setProjectId(product.getProjectId())
-                .get("references/api/v1/pages/?directory__name=flavors&tags=" + product.getProductId())
-                .assertStatus(200)
-                .jsonPath();
-        /*JSONArray jsonArray  = new Http(URL)
-                .get("references/api/v1/pages/?directory__name=flavors&tags=" + product_id)
-                .assertStatus(200)
-                .toJsonArray();
-
-        int i = jsonArray.get()*/
-
-        String flavor = String.format("{\"flavor\":{\"cpus\":%s,\"name\":\"%s\",\"uuid\":\"%s\",\"memory\":%s}}", jsonPath.get("[1].data.cpus"), jsonPath.get("[1].name"), jsonPath.get("[1].id"), jsonPath.get("[1].data.memory"));
-        Map<String,String> map = new HashMap<>();
-        map.put("cpus", Integer.toString(jsonPath.get("[1].data.cpus")));
-        map.put("memory", Integer.toString(jsonPath.get("[1].data.memory")));
-        map.put("flavor", flavor);
-        return map;
-    }
+//    public Map<String,String> getFlavorByProduct(IProduct product) {
+//        log.info("Получение флейвора для продукта " + product.getProductName());
+//        JsonPath jsonPath  = new Http(URL)
+//                .setProjectId(product.getProjectId())
+//                .get("references/api/v1/pages/?directory__name=flavors&tags=" + product.getProductId())
+//                .assertStatus(200)
+//                .jsonPath();
+//        /*JSONArray jsonArray  = new Http(URL)
+//                .get("references/api/v1/pages/?directory__name=flavors&tags=" + product_id)
+//                .assertStatus(200)
+//                .toJsonArray();
+//
+//        int i = jsonArray.get()*/
+//
+//        String flavor = String.format("{\"flavor\":{\"cpus\":%s,\"name\":\"%s\",\"uuid\":\"%s\",\"memory\":%s}}", jsonPath.get("[1].data.cpus"), jsonPath.get("[1].name"), jsonPath.get("[1].id"), jsonPath.get("[1].data.memory"));
+//        Map<String,String> map = new HashMap<>();
+//        map.put("cpus", Integer.toString(jsonPath.get("[1].data.cpus")));
+//        map.put("memory", Integer.toString(jsonPath.get("[1].data.memory")));
+//        map.put("flavor", flavor);
+//        return map;
+//    }
 
     public Map<String, String> getItemIdByOrderId(String action, IProduct product) {
         log.info("Получение item_id для " + action);
@@ -254,7 +253,7 @@ public class OrderServiceSteps extends Steps {
                 .getEntity();
         List orders = new Http(URL)
                 .setProjectId(project.id)
-                .get(String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=1&per_page=100&f[category]=vm", project.id))
+                .get(String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=1&per_page=100&f[status][]=success", project.id))
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.findAll{it.status == 'success'}.id");
@@ -272,22 +271,22 @@ public class OrderServiceSteps extends Steps {
                         .jsonPath()
                         .get("attrs.product_title");
                 log.info("productName = " + productName);
-                switch (productName) {
-                    case ("Apache Kafka Cluster"):
-                        action_title = "Удалить рекурсивно";
-                        break;
-                    default:
-                        action_title = "Удалить";
-                }
-
+//                switch (productName) {
+//                    case ("Apache Kafka Cluster"):
+//                        action_title = "Удалить";
+//                        break;
+//                    default:
+//                        action_title = "Удалить рекурсивно";
+//                }
+                action_title = "Удалить";
 
                 log.info("Получение item_id для " + action_title);
                 JsonPath jsonPath = new Http(URL)
                         .setProjectId(project.id)
                         .get("order-service/api/v1/projects/" + project.id + "/orders/" + order_id)
                         .jsonPath();
-                String item_id = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action_title));
-                String action = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action_title, action_title));
+                String item_id = jsonPath.get(String.format("data.find{it.actions.find{it.title.startsWith('%s')}}.item_id", action_title));
+                String action = jsonPath.get(String.format("data.find{it.actions.find{it.title.startsWith('%s')}}.actions.find{it.title.contains('%s')}.name", action_title, action_title));
                 log.info("item_id = " + item_id);
                 log.info("action = " + action);
 

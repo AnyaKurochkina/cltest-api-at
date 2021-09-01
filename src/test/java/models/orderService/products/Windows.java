@@ -2,19 +2,21 @@ package models.orderService.products;
 
 import core.helper.Http;
 import io.restassured.path.json.JsonPath;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
+import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.Action;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
-import static org.junit.Assert.assertTrue;
+import java.util.List;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(callSuper = true)
@@ -29,6 +31,7 @@ public class Windows extends IProduct {
     @ToString.Include
     String osVersion;
     public String domain;
+    Flavor flavor;
     private static String ADD_DISK = "data.find{it.type=='vm'}.config.extra_disks.any{it.path=='%s'}";
 
     @Override
@@ -64,6 +67,8 @@ public class Windows extends IProduct {
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
+        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
+        flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
@@ -71,6 +76,7 @@ public class Windows extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.os_version", osVersion)
+                .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))

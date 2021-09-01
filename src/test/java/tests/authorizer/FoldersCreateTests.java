@@ -4,7 +4,6 @@ import io.qameta.allure.Description;
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import steps.authorizer.AuthorizerSteps;
-import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
 @DisplayName("Набор тестов для создания Орг структуры")

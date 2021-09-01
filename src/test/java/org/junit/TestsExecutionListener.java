@@ -7,8 +7,7 @@ import core.CacheService;
 import steps.Steps;
 
 import java.io.FileWriter;
-
-import static core.helper.Configure.*;
+import static core.helper.Configure.ENV;
 
 public class TestsExecutionListener implements TestExecutionListener {
 

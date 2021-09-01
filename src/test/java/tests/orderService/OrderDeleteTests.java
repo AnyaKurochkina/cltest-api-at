@@ -1,9 +1,8 @@
 package tests.orderService;
 
-import core.utils.Waiting;
+
 import io.qameta.allure.Allure;
 import io.qameta.allure.Owner;
-import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.IProductMock;
 import models.orderService.interfaces.ProductStatus;
@@ -35,7 +34,6 @@ public class OrderDeleteTests implements Tests {
         Allure.tms("4." + tmsId, "");
         product.toStringProductStep();
         Assume.assumeTrue("Продукт "+ product.toString() + " не был заказан",product.getStatus() == ProductStatus.CREATED);
-        Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.runActionsAfterOtherTests();
     }
 
