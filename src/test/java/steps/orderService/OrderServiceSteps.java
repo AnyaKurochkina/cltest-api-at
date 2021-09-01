@@ -6,6 +6,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.InformationSystem;
 import models.authorizer.Project;
@@ -15,6 +16,7 @@ import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 import steps.stateService.StateServiceSteps;
 import steps.tarifficator.CostSteps;
@@ -69,19 +71,24 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-
+    @SneakyThrows
     @Step("Выполнение action \"{action}\"")
     public String executeAction(String action, IProduct product, JSONObject jsonData) {
         CostSteps costSteps = new CostSteps();
         Map<String,String> map = getItemIdByOrderId(action, product);
         log.info("Отправка запроса на выполнение действия '" + action + "' для продукта "+product.toString());
+        Throwable costStackTrace =null;
 
         //TODO: Возможно стоит сделать более детальную проверку на значение
-        double cost = costSteps.getCostAction(map.get("name"), map.get("item_id"), product, jsonData);
-        Assert.assertTrue("Стоимость после action отрицательная", cost >= 0);
+        try {
+            double cost = costSteps.getCostAction(map.get("name"), map.get("item_id"), product, jsonData);
+            Assert.assertTrue("Стоимость после action отрицательная", cost >= 0);
+        } catch (Throwable tre) {
+            costStackTrace = tre;
+        }
 
 //TODO: обработать кейс если экшен не найден
-        return jsonHelper.getJsonTemplate("/actions/template.json")
+        String actionId = jsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", map.get("item_id"))
                 .set("$.order.data", jsonData)
                 .send(URL)
@@ -90,6 +97,12 @@ public class OrderServiceSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .get("action_id");
+
+        if (costStackTrace != null){
+            throw costStackTrace;
+        }
+
+        return actionId;
     }
 
     @Step("Ожидание успешного выполнения action")
@@ -170,6 +183,7 @@ public class OrderServiceSteps extends Steps {
                 log.info("Id продукта = " + product_id);
             break;
         }
+        Assertions.assertNotNull(product_id, String.format("ID продукта: %s, не найден", product.getProductName()));
         return product_id;
     }
 
@@ -258,7 +272,7 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath()
                 .get("list.findAll{it.status == 'success'}.id");
 
-        System.out.println("list = " + orders);
+        log.info("list = " + orders);
 
         for (int i = 0; i < orders.size(); i++) {
             try {

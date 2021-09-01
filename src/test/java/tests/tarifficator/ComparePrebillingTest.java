@@ -19,10 +19,10 @@ import java.util.HashMap;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
-@OrderLabel("tests.tarifficator.CostTest")
+@OrderLabel("tests.tarifficator.ComparePrebillingTest")
 @DisplayName("Набор тестов для проверки предбиллинга продуктов")
-@Tags({@Tag("regress"), @Tag("cost")})
-public class CostTest implements Tests {
+@Tags({@Tag("regress"), @Tag("cost1"), @Tag("rhel")})
+public class ComparePrebillingTest implements Tests {
     CostSteps costSteps = new CostSteps();
 
     @ParameterizedTest

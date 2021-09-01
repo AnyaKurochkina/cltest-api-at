@@ -1,0 +1,5 @@
+Rhel:
+  - actions:
+      [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+  - options:
+      - { platform: "VMware vSphere", env: "IFT", segment: "test-srv-synt", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }

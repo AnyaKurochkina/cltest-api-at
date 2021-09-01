@@ -10,7 +10,7 @@ import tests.Tests;
 @DisplayName("Набор тестов по организации")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.authorizer.OrganizationTests")
-@Tags({@Tag("regress"), @Tag("orgStructure")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class OrganizationTests implements Tests {
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();

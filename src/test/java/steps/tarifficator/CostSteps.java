@@ -5,22 +5,77 @@ import core.helper.Http;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.orderService.interfaces.ProductStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Timeout;
 import steps.Steps;
 import steps.orderService.OrderServiceSteps;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
 public class CostSteps extends Steps {
     private static final String URL = Configure.getAppProp("host_kong");
+//deprovisioned, damaged, pending ,changing
+    @Step("Получение продуктов со статусом success")
+    public List<String> getSuccessProducts(String env) {
+        Project project = cacheService.entity(Project.class)
+                .withField("env", env)
+                .getEntity();
+        List<String> idOfAllSuccessProductsOnOnePage;
+        List<String> idOfAllSuccessProducts = new ArrayList<>();
+        int i = 0;
+        do {
+            i++;
+            idOfAllSuccessProductsOnOnePage = new Http(URL)
+                    .setProjectId(project.id)
+                    .get(String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=" +
+                            i + "&per_page=20&f[category]=vm&f" +
+                            "[status][]=changing&f" +
+                            "[status][]=damaged&f" +
+                            "[status][]=pending&f" +
+                            "[status][]=deprovisioned", project.id))
+                    .assertStatus(200)
+                    .jsonPath()
+                    .getList("list.id");
+            idOfAllSuccessProducts.addAll(idOfAllSuccessProductsOnOnePage);
+        } while (idOfAllSuccessProductsOnOnePage.size() != 0);
+        log.info("Список ID проектов со статусом success " + idOfAllSuccessProducts);
+        log.info("Кол-во не успешных заказов " + idOfAllSuccessProducts.size());
+        return idOfAllSuccessProducts;
+    }
+
+    @Step("Получение суммы расхода для продуктов")
+    public Float getConsumptionSumOfProducts(List<String> productsId) {
+        Float consumptionOfOneProduct;
+        float consumption = 0F;
+        for (String product : productsId) {
+            consumptionOfOneProduct = new Http(URL)
+                    .get("calculator/orders/cost/?uuid__in=" + product)
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get("cost");
+            if (consumptionOfOneProduct != null) {
+                consumption += consumptionOfOneProduct;
+            }
+            log.info("Стоимость продукта : " + consumptionOfOneProduct);
+        }
+        consumption = consumption * 24 * 60;
+        log.debug("Сумма расходов по всем продуктам: " + consumption);
+        return consumption;
+    }
 
     @Step("Получение расхода для папки/проекта")
     public double getConsumptionByPath(String path) {
@@ -34,8 +89,8 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение текущего расхода для заказа")
-    @Timeout(60)
     public double getPreBillingCost(IProduct product) {
+        Assumptions.assumeTrue(product.getStatus() == ProductStatus.CREATED, "Продукт " + product + " не был заказан");
         Float consumption;
         do {
             consumption = new Http(URL)
@@ -162,21 +217,21 @@ public class CostSteps extends Steps {
                 .get("list[0].id");
     }
 
-    public void generatePriceForState(HashMap<String, Double> priceListWithState, JSONArray items, String state){
+    public void generatePriceForState(HashMap<String, Double> priceListWithState, JSONArray items, String state) {
         JSONArray statusOnData = ((JSONObject) (items.get(0))).getJSONObject("resources_statuses").getJSONArray(state);
         for (Object object : statusOnData) {
             priceListWithState.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
         }
     }
 
-    public void comparePrices(HashMap<String, Double> priceListWithState, HashMap<String, Double> activeTariffPlanPrice ){
+    public void comparePrices(HashMap<String, Double> priceListWithState, HashMap<String, Double> activeTariffPlanPrice) {
         for (Map.Entry<String, Double> entry : priceListWithState.entrySet()) {
             String preBillingServiceName = entry.getKey();
             for (Map.Entry<String, Double> entry2 : activeTariffPlanPrice.entrySet()) {
                 String tariffPLanServiceName = entry2.getKey();
                 if (preBillingServiceName.equals(tariffPLanServiceName)) {
                     Assertions.assertEquals(priceListWithState.get(preBillingServiceName), activeTariffPlanPrice.get(tariffPLanServiceName),
-                            "Цена услуги: "+  preBillingServiceName + " в предбиллинге: " + priceListWithState.get(preBillingServiceName)
+                            "Цена услуги: " + preBillingServiceName + " в предбиллинге: " + priceListWithState.get(preBillingServiceName)
                                     + " Не соответствует цене услуги: " + tariffPLanServiceName + " в тарифном плане: " + activeTariffPlanPrice.get(tariffPLanServiceName));
                     log.info(
                             "Цена услуги: " + preBillingServiceName + " в предбиллинге: " + priceListWithState.get(preBillingServiceName)

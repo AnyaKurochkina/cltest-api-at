@@ -12,7 +12,7 @@ import tests.Tests;
 @DisplayName("Удаление проектов")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.authorizer.ProjectDeleteTests")
-@Tags({@Tag("regress"), @Tag("orgStructure")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectDeleteTests implements Tests {
     ProjectSteps projectSteps = new ProjectSteps();

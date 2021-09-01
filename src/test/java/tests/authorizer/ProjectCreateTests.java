@@ -12,7 +12,7 @@ import tests.Tests;
 @DisplayName("Набор тестов по проектам")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.authorizer.ProjectCreateTests")
-@Tags({@Tag("regress"), @Tag("orgStructure")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectCreateTests implements Tests {
     ProjectSteps projectSteps = new ProjectSteps();
