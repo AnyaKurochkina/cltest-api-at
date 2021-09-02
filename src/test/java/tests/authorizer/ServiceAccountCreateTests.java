@@ -12,7 +12,7 @@ import tests.Tests;
 @DisplayName("Набор тестов по сервисным аккаунтам")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.authorizer.ServiceAccountCreateTests")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ServiceAccountCreateTests implements Tests {
     ServiceAccountSteps serviceAccountSteps = new ServiceAccountSteps();

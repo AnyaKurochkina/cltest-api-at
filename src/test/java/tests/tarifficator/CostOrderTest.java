@@ -14,7 +14,7 @@ import tests.Tests;
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.tarifficator.CostOrderTest")
 @DisplayName("Набор тестов для проверки стоимости заказа")
-@Tags({@Tag("regress"), @Tag("cost"), @Tag("orders"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("cost"), @Tag("orders"), @Tag("smoke")})
 public class CostOrderTest implements Tests {
     CostSteps costSteps = new CostSteps();
 

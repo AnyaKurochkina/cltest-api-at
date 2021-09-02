@@ -12,7 +12,7 @@ import tests.Tests;
 @DisplayName("Удаление сервисных аккаунтов")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.authorizer.ServiceAccountDeleteTests")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ServiceAccountDeleteTests implements Tests {
     ServiceAccountSteps serviceAccountSteps = new ServiceAccountSteps();
