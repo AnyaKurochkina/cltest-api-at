@@ -41,7 +41,7 @@ public class OrderTests implements Tests {
     public void orderSmoke(IProduct product, String tmsId) {
         Allure.tms("2." + tmsId, "");
         product.toStringProductStep();
-        Waiting.sleep((int) ((Math.random() * (60000)) + 0));
+        //Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.order();
     }
 }
