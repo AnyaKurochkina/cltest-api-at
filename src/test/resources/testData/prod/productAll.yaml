@@ -52,7 +52,7 @@ RabbitMQCluster:
 
 Windows:
   - actions:
-      ['Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно']
+      [ 'Добавить диск', 'Расширить диск', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
   - options:
       - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }

@@ -24,19 +24,19 @@
 #      [ 'Расширить', 'Создать пользователя RabbitMQ', 'Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно' ]
 #  - options:
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-#
-#Windows:
-#  - actions:
-#      [ 'Добавить диск', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
-#  - options:
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2019" }
+
+Windows:
+  - actions:
+      [ 'Добавить диск', 'Расширить диск', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+  - options:
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2019" }
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2016" }
 #
-Nginx:
-  - actions:
-      [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
-  - options:
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+#Nginx:
+#  - actions:
+#      [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+#  - options:
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 #
 #WildFly:
