@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @DisplayName("Удаление проектов")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.authorizer.ProjectDeleteTests")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectDeleteTests implements Tests {
     ProjectSteps projectSteps = new ProjectSteps();

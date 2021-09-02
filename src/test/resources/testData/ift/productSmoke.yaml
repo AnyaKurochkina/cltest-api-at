@@ -1,0 +1,5 @@
+Nginx:
+  - actions:
+      [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+  - options:
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }

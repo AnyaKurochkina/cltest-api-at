@@ -13,7 +13,7 @@ import java.io.UnsupportedEncodingException;
 @DisplayName("Набор тестов по удалению пользователя из группы доступа")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.portalBack.AccessGroupDeleteUsersTests")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccessGroupDeleteUsersTests {
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();

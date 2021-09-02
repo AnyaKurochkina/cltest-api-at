@@ -28,25 +28,28 @@ import java.util.Map;
 @Log4j2
 public class CostSteps extends Steps {
     private static final String URL = Configure.getAppProp("host_kong");
-//deprovisioned, damaged, pending ,changing
+
+    //deprovisioned, damaged, pending ,changing
+
     @Step("Получение продуктов со статусом success")
-    public List<String> getSuccessProducts(String env) {
+    public List<String> getProductsWithStatus(String env, String ...statuses) {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .getEntity();
         List<String> idOfAllSuccessProductsOnOnePage;
         List<String> idOfAllSuccessProducts = new ArrayList<>();
         int i = 0;
+        StringBuffer statusParams = new StringBuffer();
+        for (String status : statuses){
+            statusParams.append("[status][]=").append(status).append("&f");
+        }
         do {
             i++;
             idOfAllSuccessProductsOnOnePage = new Http(URL)
                     .setProjectId(project.id)
                     .get(String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=" +
-                            i + "&per_page=20&f[category]=vm&f" +
-                            "[status][]=changing&f" +
-                            "[status][]=damaged&f" +
-                            "[status][]=pending&f" +
-                            "[status][]=deprovisioned", project.id))
+                            i + "&per_page=20&f" +
+                            statusParams, project.id))
                     .assertStatus(200)
                     .jsonPath()
                     .getList("list.id");

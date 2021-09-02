@@ -12,7 +12,7 @@ import tests.Tests;
 @DisplayName("Набор тестов по удалению групп доступа")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.portalBack.AccessGroupDeleteTests")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccessGroupDeleteTests implements Tests {
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();

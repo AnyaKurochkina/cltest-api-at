@@ -18,9 +18,9 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.OrderTests")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("prod"), @Tag("rhel")})
 public class OrderTests implements Tests {
 
+    @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
     @ParameterizedTest(name = "{0}")
     @DisplayName("Заказ продуктов")
     @Owner(value = "Ермаков Роман")
@@ -33,4 +33,16 @@ public class OrderTests implements Tests {
         product.order();
     }
 
+    @Tag("smoke")
+    @ParameterizedTest(name = "{0}")
+    @DisplayName("Заказ продуктов")
+    @Owner(value = "Ермаков Роман")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @Mock
+    public void orderSmoke(IProduct product, String tmsId) {
+        Allure.tms("2." + tmsId, "");
+        product.toStringProductStep();
+        Waiting.sleep((int) ((Math.random() * (60000)) + 0));
+        product.order();
+    }
 }

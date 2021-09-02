@@ -12,7 +12,7 @@ import static steps.Steps.titleInformationSystem;
 @DisplayName("Набор тестов по информационным ситсемам")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.portalBack.InformationSystem")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class InformationSystem implements Tests {
     PortalBackSteps portalBackSteps = new PortalBackSteps();
