@@ -10,7 +10,7 @@ import tests.Tests;
 @DisplayName("Набор для создания счета")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.accountManager.AccountCreateTest")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountCreateTest implements Tests {
     AccountSteps accountCreate = new AccountSteps();

@@ -15,7 +15,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.ResourcesForOrderTests")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("prod"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("prod"), @Tag("smoke")})
 public class ResourcesForOrderTests implements Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 

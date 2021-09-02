@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @DisplayName("Получение среды назначения")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.portalBack.ProjectEnvironment")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectEnvironment implements Tests {
     PortalBackSteps portalBackSteps = new PortalBackSteps();
