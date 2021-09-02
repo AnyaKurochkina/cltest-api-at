@@ -1,7 +1,6 @@
 package tests.keyCloak;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Link;
 import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;

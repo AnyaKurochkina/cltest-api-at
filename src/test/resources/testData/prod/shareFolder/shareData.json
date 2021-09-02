@@ -29,7 +29,7 @@
         "objectUid": "4087706b-e9b7-48ef-969d-000000000004",
         "id": "proj-hnsmiuaqg2",
         "projectName": "PROJECT_TEST",
-        "env": "TEST"
+        "env": "IFT"
     },
     {
         "objectClassName": "models.authorizer.AccessGroup",

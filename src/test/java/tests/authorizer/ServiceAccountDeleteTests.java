@@ -6,12 +6,8 @@ import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import steps.authorizer.ServiceAccountSteps;
 import tests.Tests;
-
-import java.util.stream.Stream;
 
 @DisplayName("Удаление сервисных аккаунтов")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

@@ -2,78 +2,52 @@ OpenShiftProject:
   - actions:
       [ 'Изменить проект', 'Изменить квоту СХД' ]
   - options:
-#      - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
+      - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
       - { env: "DSO", resourcePoolLabel: "d0-oscp.corp.dev.vtb - VTB-DSO" }
-#      - { env: "IFT", resourcePoolLabel: "ds0-bank01 - Demo" }
-#
+
 Rhel:
   - actions:
       [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
   - options:
       - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-#      - { platform: "OpenStack", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
-#      - { platform: "vsphere", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
-#
-#PostgreSQL:
-#  - actions:
-#      [ 'Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Выключить принудительно' ]
-#  - options:
-#      - { platform: "Nutanix", postgresqlVersion: "12", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "OpenStack", postgresqlVersion: "12", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", postgresqlVersion: "12", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", postgresqlVersion: "11", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "vsphere", postgresqlVersion: "12", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+
+PostgreSQL:
+  - actions:
+      [ 'Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Выключить принудительно' ]
+  - options:
+      - { platform: "Nutanix", postgresqlVersion: "11", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", postgresqlVersion: "12", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+
 RabbitMQCluster:
   - actions:
       [ 'Расширить', 'Создать пользователя RabbitMQ', 'Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно' ]
   - options:
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-#      - { platform: "OpenStack", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "Nutanix", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-#      - { platform: "vsphere", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-#
-#Windows:
-#  - actions:
-#      [ 'Добавить диск', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
-#  - options:
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
-#      - { platform: "OpenStack", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
-#      - { platform: "Nutanix", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
-#      - { platform: "vpshere", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "Microsoft Windows Server 2019" }
-#
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+
+Windows:
+  - actions:
+      [ 'Добавить диск', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+  - options:
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2019" }
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2016" }
+
 Nginx:
   - actions:
       [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
   - options:
       - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-#      - { platform: "OpenStack", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "vsphere", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-#
-#WildFly:
-#  - actions:
-#      [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
-#  - options:
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "OpenStack", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "vsphere", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+WildFly:
+  - actions:
+      [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+  - options:
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+
 Redis:
   - actions:
       [ 'Расширить', 'Сбросить пароль', 'Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно' ]
   - options:
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-#      - { platform: "OpenStack", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-#      - { platform: "vsphere", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-#
-#ApacheKafkaCluster:
-#  - actions:
-#      [ 'Обновить сертификаты', 'Создать Topic Kafka', 'Создать ACL Kafka', 'Удалить Topic Kafka', 'Выключить кластер Kafka', 'Включить кластер Kafka', 'Перезагрузить кластер Kafka', 'Расширить' ]
-#  - options:
-#      - { platform: "Nutanix", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
-#      - { platform: "vsphere", env: "IFT", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1" }
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+

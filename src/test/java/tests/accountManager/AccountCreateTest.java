@@ -2,9 +2,15 @@ package tests.accountManager;
 
 import io.qameta.allure.Description;
 import org.junit.OrderLabel;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import steps.accountManager.AccountSteps;
-import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
 @DisplayName("Набор для создания счета")

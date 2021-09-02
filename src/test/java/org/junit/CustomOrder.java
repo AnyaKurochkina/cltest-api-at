@@ -2,16 +2,10 @@ package org.junit;
 
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.ClassOrdererContext;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
-import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
-import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Properties;
 

@@ -1,17 +1,20 @@
 package models.orderService.products;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import core.helper.Http;
 import io.restassured.path.json.JsonPath;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
+import models.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
+
+import java.util.List;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(callSuper = true)
@@ -26,10 +29,11 @@ public class Rhel extends IProduct {
     @ToString.Include
     String osVersion;
     String domain;
+    Flavor flavor;
 
     public Rhel() {
         jsonTemplate = "/orders/rhel.json";
-        productName ="Rhel";
+        productName = "Rhel";
     }
 
     @Override
@@ -61,16 +65,19 @@ public class Rhel extends IProduct {
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
-       return jsonHelper.getJsonTemplate(jsonTemplate)
+        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
+        flavor = flavorList.get(0);
+        return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
-               .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
+                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
                 .build();
     }
 }

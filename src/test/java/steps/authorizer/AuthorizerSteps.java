@@ -1,6 +1,7 @@
 package steps.authorizer;
 
-import core.helper.*;
+import core.helper.Configure;
+import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
