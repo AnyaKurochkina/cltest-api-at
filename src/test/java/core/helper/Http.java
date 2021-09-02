@@ -199,7 +199,7 @@ public class Http {
     }
 
     public Http assertStatus(int s) {
-        if (s != status) {
+        if (s != status || (path.endsWith("/orders") && method.equals("POST"))) {
             Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
             Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
         }
@@ -213,7 +213,7 @@ public class Http {
 
     public JSONObject toJson() {
         try {
-            return (JSONObject) new JSONObject(toString());
+            return new JSONObject(toString());
         } catch (Exception e) {
             throw new Error(e.getMessage());
         }
@@ -221,7 +221,7 @@ public class Http {
 
     public JSONArray toJsonArray() {
         try {
-            return (JSONArray) new JSONArray(toString());
+            return new JSONArray(toString());
         } catch (Exception e) {
             throw new Error(e.getMessage());
         }
