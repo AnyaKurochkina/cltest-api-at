@@ -2,18 +2,21 @@ package models.orderService.products;
 
 import core.helper.Http;
 import io.restassured.path.json.JsonPath;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
+import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.Action;
-import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,6 +33,7 @@ public class RabbitMQCluster extends IProduct {
     String platform;
     String domain;
     String role = "administrator";
+    Flavor flavor;
 
     @Override
     public void order() {
@@ -76,6 +80,8 @@ public class RabbitMQCluster extends IProduct {
                 role = "administrator";
                 break;
         }
+        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
+        flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
@@ -84,6 +90,7 @@ public class RabbitMQCluster extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.attrs.web_console_grants[0].role", role)
+                .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))

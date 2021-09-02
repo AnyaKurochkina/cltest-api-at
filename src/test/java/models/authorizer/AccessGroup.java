@@ -1,6 +1,6 @@
 package models.authorizer;
 
-import lombok.*;
+import lombok.Builder;
 import models.Entity;
 
 @Builder

@@ -1,9 +1,7 @@
 package tests.orderService;
 
-import core.utils.Waiting;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Owner;
-import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import org.junit.*;
@@ -29,7 +27,6 @@ public class ActionsTests implements Tests {
         Allure.tms("3." + tmsId, "");
         product.toStringProductStep();
         Assumptions.assumeTrue(product.getStatus() == ProductStatus.CREATED, "Продукт "+ product.toString() + " не был заказан");
-        Waiting.sleep((int) ((Math.random() * (60000)) + 0));
         product.runActionsBeforeOtherTests();
     }
 }

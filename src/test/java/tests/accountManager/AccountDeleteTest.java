@@ -4,7 +4,6 @@ import io.qameta.allure.Description;
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import steps.accountManager.AccountSteps;
-import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
 @DisplayName("Набор для удаления счета")

@@ -10,7 +10,11 @@ import org.junit.Assert;
 import steps.keyCloak.KeyCloakSteps;
 
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -21,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.Semaphore;
 
 
 import static core.helper.JsonHelper.stringPrettyFormat;
@@ -36,6 +41,7 @@ public class Http {
     private String token = "";
     private String contentType = "application/json";
     private boolean isUsedToken = true;
+    private static final Semaphore SEMAPHORE = new Semaphore(5, true);
 
     int status;
     String responseMessage = "";
@@ -147,6 +153,8 @@ public class Http {
         HttpURLConnection http = null;
         try {
             URL url = new URL(host + path);
+            if(path.endsWith("/cost") || path.contains("order-service"))
+                SEMAPHORE.acquire();
             URLConnection connection = url.openConnection();
             http = (HttpURLConnection) connection;
             http.setRequestProperty("Content-Type", contentType);
@@ -177,6 +185,8 @@ public class Http {
             else
                 responseMessage = IOUtils.toString(is, StandardCharsets.UTF_8);
             http.disconnect();
+            if(path.endsWith("/cost") || path.contains("order-service"))
+                SEMAPHORE.release();
             if (responseMessage.length() > 10000)
                 log.debug("RESPONSE: {} ...", responseMessage.substring(0, 10000));
             else
@@ -189,7 +199,7 @@ public class Http {
     }
 
     public Http assertStatus(int s) {
-        if (s != status) {
+        if (s != status || (path.endsWith("/orders") && method.equals("POST"))) {
             Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
             Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
         }
@@ -203,7 +213,7 @@ public class Http {
 
     public JSONObject toJson() {
         try {
-            return (JSONObject) new JSONObject(toString());
+            return new JSONObject(toString());
         } catch (Exception e) {
             throw new Error(e.getMessage());
         }
@@ -211,7 +221,7 @@ public class Http {
 
     public JSONArray toJsonArray() {
         try {
-            return (JSONArray) new JSONArray(toString());
+            return new JSONArray(toString());
         } catch (Exception e) {
             throw new Error(e.getMessage());
         }

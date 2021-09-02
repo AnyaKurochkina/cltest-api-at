@@ -2,6 +2,7 @@
 	"order": {
 		"project_name": "proj-tg7jlitmp1",
 		"product_id": "78388428-6548-4417-a18f-f0c4643d93bb",
+		"label": "RabbitMQ Cluster",
 		"attrs": {
 			"domain": "corp.dev.vtb",
 			"flavor": {
@@ -31,7 +32,7 @@
 			],
 			"ad_integration": true,
 			"rabbitmq_version": "3.8.14",
-			"rabbitmq_node_number": 3,
+			"rabbitmq_node_number": 1,
 			"ad_logon_grants": [
 				{
 					"role": "superuser",

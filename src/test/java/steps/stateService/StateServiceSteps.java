@@ -8,8 +8,6 @@ import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import steps.Steps;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.util.List;
 
 @Log4j2
