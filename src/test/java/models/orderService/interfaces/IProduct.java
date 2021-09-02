@@ -145,7 +145,7 @@ public abstract class IProduct extends Entity {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
         Flavor flavor = list.get(list.size() - 1);
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(flavor.toString()));
+        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
         orderServiceSteps.checkActionStatus("success", this, actionId);
         int cpusAfter = (Integer) orderServiceSteps.getFiledProduct(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getFiledProduct(this, MEMORY);
