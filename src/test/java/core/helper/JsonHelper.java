@@ -45,45 +45,6 @@ public class JsonHelper {
         });
     }
 
-
- //   private ConcurrentHashMap<String, ConcurrentHashMap<String, String>> allTests = new ConcurrentHashMap<>();
- //   public ConcurrentHashMap<String, String> testValues = new ConcurrentHashMap<>();
-//    public volatile static ConcurrentHashMap<String, String> shareData = new ConcurrentHashMap<>();
-//    volatile static ReadWriteLock lock = new ReentrantReadWriteLock();
-
-
-//    public void putFromJsonToShare(String file) {
-//        try {
-//            lock.readLock().lock();
-//            if (Files.exists(Paths.get(dataFolder + file))) {
-//                FileInputStream fileInputStream = new FileInputStream(dataFolder + file);
-//                Map result = new ObjectMapper().readValue(fileInputStream, HashMap.class);
-//                shareData.putAll(result);
-//            }
-//            lock.readLock().unlock();
-//        } catch (Exception ex) {
-//            lock.readLock().unlock();
-//            ex.printStackTrace();
-//        }
-//    }
-
-//    public void writeJsonFileFromHashMap(String filePath) {
-//        JSONObject jsonObject = new JSONObject();
-//        for (Map.Entry<String, String> entry : shareData.entrySet()) {
-//            String key = entry.getKey();
-//            String value = entry.getValue();
-//            jsonObject.put(key, value);
-//        }
-//        try {
-//            lock.writeLock().lock();
-//            DataFileHelper.write(filePath, jsonObject.toString());
-//            lock.writeLock().unlock();
-//        } catch (Exception ex) {
-//            lock.writeLock().unlock();
-//            ex.printStackTrace();
-//        }
-//    }
-
     public String getStringFromFile(String s) {
         try {
             File file = new File(dataJson + s);
@@ -93,11 +54,6 @@ public class JsonHelper {
             throw new Error(ex.getMessage());
         }
     }
-
-//    public JSONObject getJsonObjectFromFile(String filename, String key) {
-//        JSONObject jsonObject = getJsonFromFile(filename);
-//        return (JSONObject) jsonObject.query(key);
-//    }
 
     public JSONObject getJsonFromFile(String file) {
         try {
