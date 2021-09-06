@@ -1,12 +1,12 @@
 package steps.orderService;
 
+import core.exception.DeferredException;
 import core.helper.Configure;
 import core.helper.Http;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.InformationSystem;
 import models.authorizer.Project;
@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
+import steps.calculator.CalcCostSteps;
 import steps.stateService.StateServiceSteps;
 import steps.tarifficator.CostSteps;
 
@@ -71,42 +72,67 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    @SneakyThrows
+
     @Step("Выполнение action \"{action}\"")
-    public String executeAction(String action, IProduct product, JSONObject jsonData) {
+    public void executeAction(String action, IProduct product, JSONObject jsonData) {
         CostSteps costSteps = new CostSteps();
-        Map<String,String> map = getItemIdByOrderId(action, product);
-        log.info("Отправка запроса на выполнение действия '" + action + "' для продукта "+product.toString());
-        Throwable costStackTrace =null;
-
+        CalcCostSteps calcCostSteps = new CalcCostSteps();
+        Map<String, String> map = getItemIdByOrderId(action, product);
+        log.info("Отправка запроса на выполнение действия '" + action + "' для продукта " + product.toString());
+        DeferredException exception = new DeferredException();
         //TODO: Возможно стоит сделать более детальную проверку на значение
+        Float costPreBilling = null;
         try {
-            double cost = costSteps.getCostAction(map.get("name"), map.get("item_id"), product, jsonData);
-            Assert.assertTrue("Стоимость после action отрицательная", cost >= 0);
-        } catch (Throwable tre) {
-            costStackTrace = tre;
+            costPreBilling = costSteps.getCostAction(map.get("name"), map.get("item_id"), product, jsonData);
+            Assert.assertTrue("Стоимость после action отрицательная", costPreBilling >= 0);
+        } catch (Throwable e) {
+            exception.addException(e, product.getOrderId());
         }
 
+        String actionId = null;
+        try {
 //TODO: обработать кейс если экшен не найден
-        String actionId = jsonHelper.getJsonTemplate("/actions/template.json")
-                .set("$.item_id", map.get("item_id"))
-                .set("$.order.data", jsonData)
-                .send(URL)
-                .setProjectId(product.getProjectId())
-                .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"))
-                .assertStatus(200)
-                .jsonPath()
-                .get("action_id");
-
-        if (costStackTrace != null){
-            throw costStackTrace;
+            actionId = jsonHelper.getJsonTemplate("/actions/template.json")
+                    .set("$.item_id", map.get("item_id"))
+                    .set("$.order.data", jsonData)
+                    .send(URL)
+                    .setProjectId(product.getProjectId())
+                    .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"))
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get("action_id");
+        } catch (Throwable e) {
+            exception.addException(e, product.getOrderId());
         }
+        try {
+            checkActionStatusMethod("success", product, actionId);
+        } catch (Throwable e) {
+            exception.addException(e, product.getOrderId());
+        }
+        try {
+            if(costPreBilling != null) {
+                Float cost = null;
+                for (int i = 0; i < 10; i++) {
+                    Waiting.sleep(20000);
+                    cost = calcCostSteps.getCostByUid(product);
+                    if (cost == null)
+                        continue;
+                    if (Float.compare(cost, costPreBilling) <= 0.00001)
+                        continue;
+                    break;
+                }
+                Assert.assertNotNull("Стоимость списания равна null", cost);
+                Assert.assertEquals("Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action, costPreBilling, cost, 0.00001);
+            }
 
-        return actionId;
+        } catch (Throwable e) {
+            exception.addException(e, product.getOrderId());
+        }
+        exception.trowExceptionIfNotEmpty();
     }
 
     @Step("Ожидание успешного выполнения action")
-    public void checkActionStatus(String exp_status, IProduct product, String action_id) {
+    public void checkActionStatusMethod(String exp_status, IProduct product, String action_id) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
         String actionStatus = "";
         int counter = 20;
@@ -129,7 +155,6 @@ public class OrderServiceSteps extends Steps {
 //                    continue;
                 Assert.assertEquals("Статус ответа не равен ожидаемому", 200, res.status());
                 actionStatus = res.jsonPath().get("status");
-
 
 
             } catch (JsonPathException e) {
@@ -159,7 +184,7 @@ public class OrderServiceSteps extends Steps {
                 .get("list[0].code");
     }
 
-    public String getProductId(IProduct product){
+    public String getProductId(IProduct product) {
         log.info("Получение id для продукта " + product.getProductName());
         InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();
         String product_id = "";
@@ -171,15 +196,15 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath()
                 .get("meta.total_count");
 
-        int countOfIteration = total_count/ 100 + 1;
-        for (int i = 1; i<=countOfIteration; i++) {
+        int countOfIteration = total_count / 100 + 1;
+        for (int i = 1; i <= countOfIteration; i++) {
             product_id = new Http(URL)
                     .setProjectId(product.getProjectId())
                     .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=%s&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id, i))
                     .assertStatus(200)
                     .jsonPath()
                     .get(String.format("list.find{it.title == '%s' || it.title == '%s' || it.title == '%s'}.id", product.getProductName().toLowerCase(), product.getProductName().toUpperCase(), product.getProductName()));
-            if(product_id != null)
+            if (product_id != null)
                 log.info("Id продукта = " + product_id);
             break;
         }
@@ -221,7 +246,7 @@ public class OrderServiceSteps extends Steps {
         map.put("item_id", jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.item_id", action)));
         map.put("name", jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.actions.find{it.title=='%s'}.name", action, action)));
 
-        if(map.get("item_id") == null){
+        if (map.get("item_id") == null) {
             map.put("item_id", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action)));
             map.put("name", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action)));
         }
@@ -241,7 +266,7 @@ public class OrderServiceSteps extends Steps {
                 .assertStatus(200)
                 .toJson();
         JSONArray jsonArray = (JSONArray) jsonObject.get("list");
-        for(Object object : jsonArray){
+        for (Object object : jsonArray) {
             JSONObject j = (JSONObject) object;
             ResourcePool resourcePool = ResourcePool.builder()
                     .id(j.getString("id"))
@@ -318,7 +343,7 @@ public class OrderServiceSteps extends Steps {
                         .patch(String.format("order-service/api/v1/projects/%s/orders/%s/actions/%s", project.id, order_id, action))
                         .assertStatus(200)
                         .jsonPath();
-            } catch (Throwable e){
+            } catch (Throwable e) {
                 e.printStackTrace();
             }
         }

@@ -33,6 +33,7 @@ public class Windows extends IProduct {
     public String domain;
     Flavor flavor;
     private static String ADD_DISK = "data.find{it.type=='vm'}.config.extra_disks.any{it.path=='%s'}";
+    private static String DISK_SIZE = "data.find{it.type=='vm'}.config.extra_disks.find{it.path=='%s'}.size";
 
     @Override
     public void order() {
@@ -84,10 +85,16 @@ public class Windows extends IProduct {
     }
 
     @Action("Добавить диск")
-    private void addDisk(String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 10, file_system: \"ntfs\"}"));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+    public void addDisk(String action) {
+        orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 10, file_system: \"ntfs\"}"));
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(ADD_DISK, "I")));
+    }
+
+    @Override
+    @Action("Расширить диск")
+    public void expandMountPoint(String action) {
+        orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 1}"));
+        Assert.assertEquals(11, (int) orderServiceSteps.getFiledProduct(this, String.format(DISK_SIZE, "I")));
     }
 
 }

@@ -100,8 +100,7 @@ public class RabbitMQCluster extends IProduct {
     @Action("Создать пользователя RabbitMQ")
     public void rabbitmqCreateUser(String action) {
         String user = "testapiuser";
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
         String username = (String) orderServiceSteps.getFiledProduct(this, RABBITMQ_USER);
         assertEquals(user, username);
     }
