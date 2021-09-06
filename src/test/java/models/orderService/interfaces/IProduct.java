@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import core.exception.DeferredException;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
@@ -12,13 +13,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.subModels.Flavor;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.json.JSONObject;
 import org.junit.Action;
 import org.junit.Assert;
+import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
 
@@ -28,9 +29,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @ToString(onlyExplicitlyIncluded = true)
+@Log4j2
 public abstract class IProduct extends Entity {
     public static String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
     public static String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
@@ -80,18 +81,16 @@ public abstract class IProduct extends Entity {
 
     @SneakyThrows
     public void runActionsBeforeOtherTests() {
-        Throwable error = null;
+        DeferredException exception = new DeferredException();
         for (String action : actions) {
             try {
                 if (!invokeAction(action))
-                    fail("Action '" + action + "' не найден у продукта " + getProductName());
+                    fail("Action '" + action + "' не найден у продукта " + getProductName() + " с id " + getOrderId());
             } catch (Throwable e) {
-                e.printStackTrace();
-                error = e;
+                exception.addException(e, getOrderId());
             }
         }
-        if (error != null)
-            throw error;
+        exception.trowExceptionIfNotEmpty();
     }
 
     public void runActionsAfterOtherTests() {
@@ -110,34 +109,31 @@ public abstract class IProduct extends Entity {
 
     @Action("Перезагрузить")
     public void restart(String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, null);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, null);
     }
 
     @Action("Выключить принудительно")
     public void stopHard(String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, null);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, null);
     }
 
     @Action("Выключить")
     public void stopSoft(String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, null);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, null);
     }
 
     @Action("Включить")
     public void start(String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, null);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, null);
     }
 
     @Action("Удалить")
     public void delete(String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, null);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        CalcCostSteps calcCostSteps = new CalcCostSteps();
+        orderServiceSteps.executeAction(action, this, null);
         setStatus(ProductStatus.DELETED);
         cacheService.saveEntity(this);
+        Assert.assertEquals("Стоимость после удаления заказа больше 0.0", 0.0F, calcCostSteps.getCostByUid(this), 0.0F);
     }
 
     @Action("Изменить конфигурацию")
@@ -145,8 +141,7 @@ public abstract class IProduct extends Entity {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
         Flavor flavor = list.get(list.size() - 1);
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
         int cpusAfter = (Integer) orderServiceSteps.getFiledProduct(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getFiledProduct(this, MEMORY);
         assertEquals(flavor.data.cpus, cpusAfter);
@@ -156,8 +151,7 @@ public abstract class IProduct extends Entity {
     @Action("Расширить")
     public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
