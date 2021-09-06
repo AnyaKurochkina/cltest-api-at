@@ -79,8 +79,7 @@ public class Redis extends IProduct {
     @Override
     @Action("Удалить рекурсивно")
     public void delete(String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, null);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, null);
         setStatus(ProductStatus.DELETED);
         cacheService.saveEntity(this);
     }
@@ -89,8 +88,7 @@ public class Redis extends IProduct {
     @Action("Расширить")
     public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
-        String actionId = orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/redis/data\"}"));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/redis/data\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore<sizeAfter);
     }
@@ -98,8 +96,7 @@ public class Redis extends IProduct {
     @Action("Сбросить пароль")
     public void resetPassword(String action) {
         String password = "yxjpjk7xvOImb1O9vZZiGUlsItkqLqtbB1VPZHzL6";
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{redis_password: \"%s\"}", password)));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{redis_password: \"%s\"}", password)));
     }
 
 }

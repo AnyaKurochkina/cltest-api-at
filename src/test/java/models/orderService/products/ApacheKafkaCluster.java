@@ -107,14 +107,12 @@ public class ApacheKafkaCluster extends IProduct {
 
     @Action("Обновить сертификаты")
     public void updateCerts(String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
     }
 
     public void createTopic(String name, String action) {
         KafkaTopic topic = new KafkaTopic("delete", 1, 1, 1, 1800000, name);
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(cacheService.toJson(topic)));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject(cacheService.toJson(topic)));
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         topics.add(topic);
         cacheService.saveEntity(this);
@@ -126,8 +124,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void deleteTopic(String name, String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"topic_name\": \"" + name + "\"}"));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"topic_name\": \"" + name + "\"}"));
         Assert.assertFalse((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         topics.removeIf(topic -> topic.getTopicName().equals(name));
         cacheService.saveEntity(this);
@@ -139,15 +136,13 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void createAcl(String topicNameRegex, String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}"));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}"));
         cacheService.saveEntity(this);
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)));
     }
 
     public void createAclTransaction(String transactionRegex, String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\""+ transactionRegex +"\"}"));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\""+ transactionRegex +"\"}"));
         cacheService.saveEntity(this);
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)));
     }

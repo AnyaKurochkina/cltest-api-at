@@ -106,15 +106,13 @@ public class PostgreSQL extends IProduct {
     @Action("Расширить")
     public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/pg_data\"}"));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/pg_data\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore < sizeAfter);
     }
 
     public void createDb(String dbName, String action) {
-        String actionId = orderServiceSteps.executeAction("Добавить БД", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction("Добавить БД", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
         String dbNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_NAME_PATH);
         assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
         database.add(new PostgreSqlDB(dbName, false));
@@ -131,8 +129,7 @@ public class PostgreSQL extends IProduct {
     public void removeDb(String action) {
         String dbName = database.get(0).getNameDB();
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, DB_SIZE_PATH);
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, DB_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
         database.get(0).setDeleted(true);
@@ -142,8 +139,7 @@ public class PostgreSQL extends IProduct {
 
     public void createDbmsUser(String username, String dbRole, String action) {
         String dbName = database.get(0).getNameDB();
-        String actionId = orderServiceSteps.executeAction("Добавить пользователя", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction("Добавить пользователя", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
         String dbUserNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_USERNAME_PATH);
         assertEquals("Имя пользователя отличается от создаваемого", String.format("%s_%s", dbName, username), dbUserNameActual);
         users.add(new PostgreSqlUsers(dbName, dbUserNameActual, false));
@@ -159,22 +155,19 @@ public class PostgreSQL extends IProduct {
     @Action("Сбросить пароль")
     public void resetPassword(String action) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
     }
 
     @Action("Сбросить пароль")
     public void resetDbOwnerPassword(String action) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password)));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password)));
     }
 
     @Action("Удалить пользователя")
     public void removeDbmsUser(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, DB_USERNAME_SIZE_PATH);
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, DB_USERNAME_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
         users.get(0).setDeleted(true);

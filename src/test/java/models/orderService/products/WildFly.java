@@ -88,18 +88,14 @@ public class WildFly extends IProduct {
     @Override
     @Action("Удалить рекурсивно")
     public void delete(String action) {
-        String actionId = orderServiceSteps.executeAction(action, this, null);
-        orderServiceSteps.checkActionStatus("success", this, actionId);
-        setStatus(ProductStatus.DELETED);
-        cacheService.saveEntity(this);
+        super.delete(action);
     }
 
     @Override
     @Action("Расширить")
     public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
-        String actionId = orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app/app\"}"));
-        orderServiceSteps.checkActionStatus("success", this, actionId);
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app/app\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }

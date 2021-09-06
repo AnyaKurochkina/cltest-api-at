@@ -41,7 +41,7 @@ public class Http {
     private String token = "";
     private String contentType = "application/json";
     private boolean isUsedToken = true;
-    private static final Semaphore SEMAPHORE = new Semaphore(5, true);
+    private static final Semaphore SEMAPHORE = new Semaphore(4, true);
 
     int status;
     String responseMessage = "";

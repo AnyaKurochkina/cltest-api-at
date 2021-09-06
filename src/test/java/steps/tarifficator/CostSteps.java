@@ -78,7 +78,7 @@ public class CostSteps extends Steps {
             }
             log.info("Стоимость продукта : " + consumptionOfOneProduct);
         }
-        consumption = consumption * 24 * 60;
+        consumption = consumption;
         log.debug("Сумма расходов по всем продуктам: " + consumption);
         return consumption;
     }
@@ -91,7 +91,7 @@ public class CostSteps extends Steps {
                 .jsonPath()
                 .getDouble("cost");
         log.info("Расход для папки/проекта: " + consumption);
-        return consumption * 24 * 60;
+        return consumption;
     }
 
     @Step("Получение текущего расхода для заказа")
@@ -107,7 +107,7 @@ public class CostSteps extends Steps {
             Waiting.sleep(10000);
         } while (consumption == null);
         log.debug("Расход для заказа: " + consumption);
-        return consumption * 24 * 60;
+        return consumption;
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
@@ -158,7 +158,7 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение предварительной стоимости action {action} продукта {product}")
-    public double getCostAction(String action, String itemId, IProduct product, JSONObject data) {
+    public Float getCostAction(String action, String itemId, IProduct product, JSONObject data) {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
                 .withField("env", product.getEnv())
@@ -175,7 +175,7 @@ public class CostSteps extends Steps {
                 .post("tarifficator/api/v1/cost")
                 .assertStatus(200)
                 .jsonPath()
-                .getDouble("total_price");
+                .get("total_price");
     }
 
     @Step("Сравниение тарифов заказываемого продукта с тарфиным планом")
