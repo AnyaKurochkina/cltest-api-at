@@ -107,7 +107,7 @@ ApacheKafka:
 
 ApacheKafkaCluster:
   - actions:
-      ['Обновить сертификаты', 'Создать Topic Kafka', 'Создать ACL Kafka', 'Создание ACL на транзакцию Kafka', 'Удалить Topic Kafka', 'Выключить кластер Kafka', 'Включить кластер Kafka', 'Перезагрузить кластер Kafka', 'Расширить']
+      ['Обновить сертификаты', 'Создать Topic Kafka', 'Пакетное создание Topic-ов Kafka', 'Пакетное удаление Topic-ов Kafka', 'Создать ACL Kafka', 'Создание ACL на транзакцию Kafka', 'Удалить Topic Kafka', 'Выключить кластер Kafka', 'Включить кластер Kafka', 'Перезагрузить кластер Kafka', 'Расширить']
   - options:
       - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }
       - { platform: "Nutanix", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5" }
