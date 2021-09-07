@@ -10,4 +10,6 @@ public class AccessGroup extends Entity {
     public String user;
     @Builder.Default
     public boolean isDeleted = false;
+    @Builder.Default
+    public boolean isForOrders = false;
 }

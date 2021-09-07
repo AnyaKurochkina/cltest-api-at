@@ -186,9 +186,13 @@ public class OrderServiceSteps extends Steps {
 
     public String getProductId(IProduct product) {
         log.info("Получение id для продукта " + product.getProductName());
-        InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();
+        InformationSystem informationSystem = cacheService.entity(InformationSystem.class)
+                .forOrders()
+                .getEntity();
         String product_id = "";
-        ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class).withField("env", product.getEnv()).getEntity();
+        ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
+                .forOrders()
+                .withField("env", product.getEnv()).getEntity();
         int total_count = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=1&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id))
@@ -259,6 +263,7 @@ public class OrderServiceSteps extends Steps {
     public void getResourcesPool(String category, String env) {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders()
                 .getEntity();
         JSONObject jsonObject = new Http(URL)
                 .setProjectId(project.id)
@@ -296,6 +301,7 @@ public class OrderServiceSteps extends Steps {
         String action_title = "";
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders()
                 .getEntity();
         List orders = new Http(URL)
                 .setProjectId(project.id)

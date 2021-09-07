@@ -8,4 +8,6 @@ public class ProjectEnvironment extends Entity {
     public String id;
     public String envType;
     public String env;
+    @Builder.Default
+    public boolean isForOrders = false;
 }

@@ -52,6 +52,11 @@ public class CacheService {
         return this;
     }
 
+    public CacheService forOrders() {
+        fields.put("isForOrders", true);
+        return this;
+    }
+
     @ResourceLock(value = "entities", mode = READ)
     public <T extends Entity> T getEntityWithoutAssert() {
         for (String shareDataElement : entities.values()) {

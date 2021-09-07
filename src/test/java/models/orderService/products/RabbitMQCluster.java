@@ -39,6 +39,7 @@ public class RabbitMQCluster extends IProduct {
     public void order() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders()
                 .getEntity();
         projectId = project.id;
         productId = orderServiceSteps.getProductId(this);
@@ -65,12 +66,15 @@ public class RabbitMQCluster extends IProduct {
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders()
                 .getEntity();
         ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
                 .withField("env", env)
+                .forOrders()
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
+                .forOrders()
                 .getEntity();
         switch (projectEnvironment.envType){
             case ("TEST"):

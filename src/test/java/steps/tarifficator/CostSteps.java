@@ -35,6 +35,7 @@ public class CostSteps extends Steps {
     public List<String> getProductsWithStatus(String env, String ...statuses) {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders()
                 .getEntity();
         List<String> idOfAllSuccessProductsOnOnePage;
         List<String> idOfAllSuccessProducts = new ArrayList<>();
@@ -115,6 +116,7 @@ public class CostSteps extends Steps {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
                 .withField("env", product.getEnv())
+                .forOrders()
                 .getEntity();
         String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
@@ -140,6 +142,7 @@ public class CostSteps extends Steps {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
                 .withField("env", product.getEnv())
+                .forOrders()
                 .getEntity();
         String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
@@ -162,6 +165,7 @@ public class CostSteps extends Steps {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
                 .withField("env", product.getEnv())
+                .forOrders()
                 .getEntity();
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         return jsonHelper.getJsonTemplate("/tarifficator/costAction.json")

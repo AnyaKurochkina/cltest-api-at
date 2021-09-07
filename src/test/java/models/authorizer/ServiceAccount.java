@@ -12,4 +12,6 @@ public class ServiceAccount extends Entity {
     public String secret;
     public String name;
     public List<String> roles;
+    @Builder.Default
+    public boolean isForOrders = false;
 }

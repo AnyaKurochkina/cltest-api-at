@@ -10,7 +10,6 @@ import models.authorizer.Folder;
 import models.authorizer.Organization;
 import steps.Steps;
 
-
 @Log4j2
 public class AccountSteps extends Steps {
     private static final String URL = Configure.getAppProp("host_kong");
