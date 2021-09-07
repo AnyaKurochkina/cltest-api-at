@@ -1,5 +1,7 @@
 package models.orderService.products;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import core.helper.Http;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
@@ -12,12 +14,15 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import models.subModels.KafkaTopic;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Action;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -118,9 +123,39 @@ public class ApacheKafkaCluster extends IProduct {
         cacheService.saveEntity(this);
     }
 
+    public void createTopic(List<String> names, String action) {
+        List<KafkaTopic> kafkaTopics = new ArrayList<>();
+        for(String name : names)
+            kafkaTopics.add(new KafkaTopic("delete", 1, 1, 1, 1800000, name));
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"topics\": " + cacheService.toJson(kafkaTopics) + "}"));
+        for(String name : names)
+            Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
+        topics.addAll(kafkaTopics);
+        cacheService.saveEntity(this);
+    }
+
     @Action("Создать Topic Kafka")
     public void createTopicTest(String action) {
         createTopic("TopicName", action);
+    }
+
+    @Action("Пакетное создание Topic-ов Kafka")
+    public void createTopicsTest(String action) {
+        createTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), action);
+    }
+
+    @Action("Пакетное удаление Topic-ов Kafka")
+    public void deleteTopicsTest(String action) {
+        deleteTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), action);
+    }
+
+    public void deleteTopic(List<String> names, String action) {
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"topics\": " + cacheService.toJson(names) + "}"));
+        for(String name : names)
+            Assert.assertFalse((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
+        for(String name : names)
+            topics.removeIf(topic -> topic.getTopicName().equals(name));
+        cacheService.saveEntity(this);
     }
 
     public void deleteTopic(String name, String action) {
