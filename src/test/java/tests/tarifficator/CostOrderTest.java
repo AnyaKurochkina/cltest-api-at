@@ -1,5 +1,6 @@
 package tests.tarifficator;
 
+import core.utils.Waiting;
 import models.orderService.interfaces.IProduct;
 import org.junit.*;
 import org.junit.jupiter.api.*;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
+import steps.calculator.CalcCostSteps;
 import steps.tarifficator.CostSteps;
 import tests.Tests;
 
@@ -14,18 +16,22 @@ import tests.Tests;
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.tarifficator.CostOrderTest")
 @DisplayName("Набор тестов для проверки стоимости заказа")
-@Tags({@Tag("regress"), @Tag("cost"), @Tag("orders"), @Tag("smoke")})
+@Tags({@Tag("regress"),@Tag("prod"), @Tag("orders")})
 public class CostOrderTest implements Tests {
     CostSteps costSteps = new CostSteps();
 
     @ParameterizedTest
     @DisplayName("Проверка стоимости заказа")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @Timeout(60)
     public void getCost(IProduct product, String tmsId) {
-        double preBillingCost = costSteps.getCurrentCost(product);
-        double cost = costSteps.getPreBillingCost(product);
-        //TODO: cost может быть null нужно ждать
-        Assertions.assertEquals(preBillingCost, cost, 0.00001, "Стоимость предбиллинга отличается от стоимости продукта " + product);
+        Float preBillingCost = costSteps.getPreBillingCost(product);
+        Float currentCost = costSteps.getCurrentCost(product);
+        for (int i = 0; i < 10; i++) {
+            Waiting.sleep(20000);
+            if (Float.compare(currentCost, preBillingCost) > 0.00001)
+                continue;
+            break;
+        }
+        Assertions.assertEquals(preBillingCost, currentCost, 0.00001, "Стоимость предбиллинга отличается от стоимости продукта " + product);
     }
 }

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Timeout;
@@ -61,23 +62,29 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение текущего расхода для заказа")
-    public double getPreBillingCost(IProduct product) {
+    public Float getPreBillingCost(IProduct product) {
         Assumptions.assumeTrue(product.getStatus() == ProductStatus.CREATED, "Продукт " + product + " не был заказан");
-        Float consumption;
-        do {
+        Float consumption = null;
+        for (int i = 0; i < 10; i++) {
+            Waiting.sleep(20000);
             consumption = new Http(URL)
+                    .setProjectId(product.getProjectId())
                     .get("calculator/orders/cost/?uuid__in=" + product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()
                     .get("cost");
-            Waiting.sleep(10000);
-        } while (consumption == null);
+            if (consumption == null) {
+                continue;
+            }
+            break;
+        }
+        Assert.assertNotNull("Расход заказа равна null", consumption);
         log.debug("Расход для заказа: " + consumption);
         return consumption;
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
-    public double getCurrentCost(IProduct product) {
+    public Float getCurrentCost(IProduct product) {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
                 .withField("env", product.getEnv())
@@ -99,7 +106,7 @@ public class CostSteps extends Steps {
 
         //TODO: Добавить проверки
 
-        return response.getDouble("total_price");
+        return response.get("total_price");
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
