@@ -52,8 +52,8 @@ public class CacheService {
         return this;
     }
 
-    public CacheService forOrders() {
-        fields.put("isForOrders", true);
+    public CacheService forOrders(boolean isForOrders) {
+        fields.put("isForOrders", isForOrders);
         return this;
     }
 

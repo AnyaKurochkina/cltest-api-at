@@ -23,6 +23,7 @@ public class AccessGroupSteps extends Steps {
         StringUtils stringUtils = new StringUtils();
         Project project = cacheService.entity(Project.class)
                 .withField("projectName", projectName)
+                .forOrders(false)
                 .getEntity();
 
         String accessNameBuild = accessName + stringUtils.getRandString(11);
@@ -48,6 +49,7 @@ public class AccessGroupSteps extends Steps {
     public void deleteAccessGroup(String env) {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(false)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
@@ -67,6 +69,7 @@ public class AccessGroupSteps extends Steps {
     public void addUsersToGroup(String env, String username) {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(false)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
@@ -87,6 +90,7 @@ public class AccessGroupSteps extends Steps {
     public void deleteUsersFromGroup(String env) throws UnsupportedEncodingException {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(false)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)

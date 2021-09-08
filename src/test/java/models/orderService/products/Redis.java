@@ -34,7 +34,7 @@ public class Redis extends IProduct {
     public void order() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
-                .forOrders()
+                .forOrders(true)
                 .getEntity();
         projectId = project.id;
         productId = orderServiceSteps.getProductId(this);
@@ -60,11 +60,10 @@ public class Redis extends IProduct {
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
-                .forOrders()
+                .forOrders(true)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
-                .forOrders()
                 .getEntity();
         return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)

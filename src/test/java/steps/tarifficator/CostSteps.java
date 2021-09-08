@@ -29,41 +29,6 @@ import java.util.Map;
 public class CostSteps extends Steps {
     private static final String URL = Configure.getAppProp("host_kong");
 
-    //deprovisioned, damaged, pending ,changing
-
-    @Step("Получение продуктов со статусом success")
-    public List<String> getProductsWithStatus(String env, String ...statuses) {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders()
-                .getEntity();
-        List<String> idOfAllSuccessProductsOnOnePage;
-        List<String> idOfAllSuccessProducts = new ArrayList<>();
-        int i = 0;
-        StringBuffer statusParams = new StringBuffer();
-        for (String status : statuses){
-            statusParams.append("[status][]=").append(status).append("&f");
-        }
-        statusParams.delete(statusParams.length()-2, statusParams.length());
-        do {
-            i++;
-            String endPoint = String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=" +
-                    i + "&per_page=20&f" +
-                    statusParams,
-                    project.id);
-            idOfAllSuccessProductsOnOnePage = new Http(URL)
-                    .setProjectId(project.id)
-                    .get(endPoint)
-                    .assertStatus(200)
-                    .jsonPath()
-                    .getList("list.id");
-            idOfAllSuccessProducts.addAll(idOfAllSuccessProductsOnOnePage);
-        } while (idOfAllSuccessProductsOnOnePage.size() != 0);
-        log.info("Список ID проектов со статусом success " + idOfAllSuccessProducts);
-        log.info("Кол-во продуктов " + idOfAllSuccessProducts.size());
-        return idOfAllSuccessProducts;
-    }
-
     @Step("Получение суммы расхода для продуктов")
     public Float getConsumptionSumOfProducts(List<String> productsId) {
         Float consumptionOfOneProduct;
@@ -116,7 +81,7 @@ public class CostSteps extends Steps {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
                 .withField("env", product.getEnv())
-                .forOrders()
+                .forOrders(true)
                 .getEntity();
         String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
@@ -134,7 +99,7 @@ public class CostSteps extends Steps {
 
         //TODO: Добавить проверки
 
-        return response.getDouble("total_price") * 24 * 60;
+        return response.getDouble("total_price");
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
@@ -142,7 +107,7 @@ public class CostSteps extends Steps {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
                 .withField("env", product.getEnv())
-                .forOrders()
+                .forOrders(true)
                 .getEntity();
         String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
@@ -165,7 +130,7 @@ public class CostSteps extends Steps {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
                 .withField("env", product.getEnv())
-                .forOrders()
+                .forOrders(true)
                 .getEntity();
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         return jsonHelper.getJsonTemplate("/tarifficator/costAction.json")
