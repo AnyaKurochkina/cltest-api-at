@@ -99,7 +99,7 @@ public class OrderServiceSteps extends Steps {
                     project.id);
             //удалить &f если параметры statuses пустые, так как эндпоинт с &f не работает
             if (statuses.length == 0) {
-                statusParams.delete(endPoint.length() - 2, statusParams.length());
+                endPoint = endPoint.substring(0, endPoint.length() - 2);
             }
             idOfAllSuccessProductsOnOnePage = new Http(URL)
                     .setProjectId(project.id)
