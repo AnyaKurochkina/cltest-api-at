@@ -158,7 +158,7 @@ public class OrderServiceSteps extends Steps {
                     cost = calcCostSteps.getCostByUid(product);
                     if (cost == null)
                         continue;
-                    if (Float.compare(cost, costPreBilling) <= 0.00001)
+                    if (Float.compare(cost, costPreBilling) > 0.00001)
                         continue;
                     break;
                 }
