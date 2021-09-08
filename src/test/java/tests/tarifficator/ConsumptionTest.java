@@ -10,6 +10,7 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.authorizer.AuthorizerSteps;
+import steps.orderService.OrderServiceSteps;
 import steps.tarifficator.CostSteps;
 import tests.Tests;
 
@@ -24,8 +25,9 @@ public class ConsumptionTest implements Tests {
     @ParameterizedTest
     @Source(ProductArgumentsProvider.ENV)
     public void getCost(String env){
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         CostSteps costSteps = new CostSteps();
-        List<String> allSuccessProducts = costSteps.getProductsWithStatus(env,
+        List<String> allSuccessProducts = orderServiceSteps.getProductsWithStatus(env,
                 "damaged", "deprovisioned", "pending", "changing", "success");
         Float sumOfConsumptionOfAllProducts = costSteps.getConsumptionSumOfProducts(allSuccessProducts);
         AuthorizerSteps authorizerSteps = new AuthorizerSteps();

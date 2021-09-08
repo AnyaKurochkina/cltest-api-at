@@ -15,7 +15,8 @@ public class PortalBackSteps extends Steps {
     private static final String URL = Configure.getAppProp("host_kong");
     @Step("Получение информационных систем")
     public void getInfoSys(String sysName) {
-        Organization organization = cacheService.entity(Organization.class).getEntity();
+        Organization organization = cacheService.entity(Organization.class)
+                .getEntity();
         JsonPath jsonPath = new Http(URL)
                 .get(String.format("portal/api/v1/organizations/%s/information_systems?page=1&per_page=100&include=total_count", organization.name))
                 .assertStatus(200)
@@ -45,7 +46,9 @@ public class PortalBackSteps extends Steps {
                 .withField("type", "default")
                 .getEntity();
 
-        InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();
+        InformationSystem informationSystem = cacheService.entity(InformationSystem.class)
+                .forOrders(false)
+                .getEntity();
 
         JsonPath jsonPath = new Http(URL)
                 .get(String.format("portal/api/v1/folders/%s/information_systems/%s/project_environments?page=1&per_page=100&include=total_count", folder.id, informationSystem.id))
@@ -77,6 +80,7 @@ public class PortalBackSteps extends Steps {
     public String getUsers(String env, String username) {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(false)
                 .getEntity();
         return  new Http(URL)
                 .get(String.format("portal/api/v1/users?q=%s&project_name=%s", username, project.id))

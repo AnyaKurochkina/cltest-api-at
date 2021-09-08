@@ -46,6 +46,7 @@ public class ApacheKafkaCluster extends IProduct {
     public void order() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(true)
                 .getEntity();
         projectId = project.id;
         productId = orderServiceSteps.getProductId(this);
@@ -73,9 +74,7 @@ public class ApacheKafkaCluster extends IProduct {
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
-                .getEntity();
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
+                .forOrders(true)
                 .getEntity();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);

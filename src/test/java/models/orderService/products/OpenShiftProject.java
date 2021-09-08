@@ -34,6 +34,7 @@ public class OpenShiftProject extends IProduct {
     public void order() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(true)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
@@ -61,6 +62,7 @@ public class OpenShiftProject extends IProduct {
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(true)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)

@@ -12,4 +12,6 @@ public class Project extends Entity {
     public String env;
     @Builder.Default
     public boolean isDeleted = false;
+    @Builder.Default
+    public boolean isForOrders = false;
 }

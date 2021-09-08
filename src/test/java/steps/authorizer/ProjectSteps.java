@@ -27,9 +27,12 @@ public class ProjectSteps extends Steps {
         //String infoSystems = jsonHelper.getTestDataFieldValue("structure/projectEnvironmentsDEV.json", env, "information_systems");
         //String projectEnvId = jsonHelper.getTestDataFieldValue("structure/projectEnvironmentsDEV.json", env, "project_environment_id");
 
-        InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();
+        InformationSystem informationSystem = cacheService.entity(InformationSystem.class)
+                .forOrders(false)
+                .getEntity();
         ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
                 .withField("env", env)
+                .forOrders(false)
                 .getEntity();
 
         String prefix = getPrefixEnv(folder.id, informationSystem.id, projectEnvironment.id);
@@ -58,6 +61,7 @@ public class ProjectSteps extends Steps {
     public void deleteProject(String env) {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(false)
                 .getEntity();
 
         new Http(URL)

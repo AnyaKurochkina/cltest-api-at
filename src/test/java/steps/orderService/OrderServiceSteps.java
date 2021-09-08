@@ -22,6 +22,7 @@ import steps.calculator.CalcCostSteps;
 import steps.stateService.StateServiceSteps;
 import steps.tarifficator.CostSteps;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,46 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
+    //deprovisioned, damaged, pending ,changing, success
+    @Step("Получение продуктов со статусом success")
+    public List<String> getProductsWithStatus(String env, String... statuses) {
+        Project project = cacheService.entity(Project.class)
+                .withField("env", env)
+                .forOrders(true)
+                .getEntity();
+        List<String> idOfAllSuccessProductsOnOnePage;
+        List<String> idOfAllSuccessProducts = new ArrayList<>();
+        int i = 0;
+        StringBuffer statusParams = new StringBuffer();
+        for (String status : statuses) {
+            statusParams.append("[status][]=").append(status).append("&f");
+        }
+        //удалить &f если параметры statuses не пустые, так как эндпоинт с &f не работает
+        if (statuses.length > 0) {
+            statusParams.delete(statusParams.length() - 2, statusParams.length());
+        }
+        do {
+            i++;
+            String endPoint = String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=" +
+                            i + "&per_page=20&f" +
+                            statusParams,
+                    project.id);
+            //удалить &f если параметры statuses пустые, так как эндпоинт с &f не работает
+            if (statuses.length == 0) {
+                statusParams.delete(endPoint.length() - 2, statusParams.length());
+            }
+            idOfAllSuccessProductsOnOnePage = new Http(URL)
+                    .setProjectId(project.id)
+                    .get(endPoint)
+                    .assertStatus(200)
+                    .jsonPath()
+                    .getList("list.id");
+            idOfAllSuccessProducts.addAll(idOfAllSuccessProductsOnOnePage);
+        } while (idOfAllSuccessProductsOnOnePage.size() != 0);
+        log.info("Список ID проектов со статусом success " + idOfAllSuccessProducts);
+        log.info("Кол-во продуктов " + idOfAllSuccessProducts.size());
+        return idOfAllSuccessProducts;
+    }
 
     @Step("Выполнение action \"{action}\"")
     public void executeAction(String action, IProduct product, JSONObject jsonData) {
@@ -110,7 +151,7 @@ public class OrderServiceSteps extends Steps {
             exception.addException(e, product.getOrderId());
         }
         try {
-            if(costPreBilling != null) {
+            if (costPreBilling != null) {
                 Float cost = null;
                 for (int i = 0; i < 10; i++) {
                     Waiting.sleep(20000);
@@ -186,9 +227,13 @@ public class OrderServiceSteps extends Steps {
 
     public String getProductId(IProduct product) {
         log.info("Получение id для продукта " + product.getProductName());
-        InformationSystem informationSystem = cacheService.entity(InformationSystem.class).getEntity();
+        InformationSystem informationSystem = cacheService.entity(InformationSystem.class)
+                .forOrders(true)
+                .getEntity();
         String product_id = "";
-        ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class).withField("env", product.getEnv()).getEntity();
+        ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
+                .forOrders(true)
+                .withField("env", product.getEnv()).getEntity();
         int total_count = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=1&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id))
@@ -259,6 +304,7 @@ public class OrderServiceSteps extends Steps {
     public void getResourcesPool(String category, String env) {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(true)
                 .getEntity();
         JSONObject jsonObject = new Http(URL)
                 .setProjectId(project.id)
@@ -296,6 +342,7 @@ public class OrderServiceSteps extends Steps {
         String action_title = "";
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(true)
                 .getEntity();
         List orders = new Http(URL)
                 .setProjectId(project.id)

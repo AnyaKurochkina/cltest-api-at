@@ -25,6 +25,7 @@ public class AuthorizerSteps extends Steps {
         }
 
         InformationSystem informationSystem = cacheService.entity(InformationSystem.class)
+                .forOrders(false)
                 .getEntity();
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/structure/create_folder.json")
                 .set("$.folder.kind", folderType)

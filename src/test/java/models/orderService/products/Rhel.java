@@ -40,6 +40,7 @@ public class Rhel extends IProduct {
     public void order() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(true)
                 .getEntity();
         projectId = project.id;
         productId = orderServiceSteps.getProductId(this);
@@ -61,6 +62,7 @@ public class Rhel extends IProduct {
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
+                .forOrders(true)
                 .getEntity();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)

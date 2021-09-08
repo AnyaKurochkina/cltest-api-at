@@ -16,6 +16,7 @@ public class ServiceAccountSteps extends Steps {
     public void createServiceAccount(String projectName) {
         Project project = cacheService.entity(Project.class)
                 .withField("projectName", projectName)
+                .forOrders(false)
                 .getEntity();
 
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/authorizer/service_accounts.json")
@@ -37,6 +38,7 @@ public class ServiceAccountSteps extends Steps {
     public void deleteServiceAccount(String projectName) {
         Project project = cacheService.entity(Project.class)
                 .withField("projectName", projectName)
+                .forOrders(false)
                 .getEntity();
         ServiceAccount serviceAccount = cacheService.entity(ServiceAccount.class)
                 .withField("projectId", project.id)
