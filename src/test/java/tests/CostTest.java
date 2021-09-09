@@ -16,6 +16,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import steps.Steps;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
@@ -40,21 +41,39 @@ public class CostTest implements Tests {
     }
 
 
+//    @ParameterizedTest
+//    @Order(1)
+//    @DisplayName("Создание проекта")
+//    @Source(ProductArgumentsProvider.ENV)
+//    @Description("Создание проекта с сохранением в Shared Memory")
+//    public void createProject(String env, String tmsId) {
+//
+//
+//        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+//        List<String> list = orderServiceSteps.getProductsWithStatus(env, "damaged", "changing", "pending", "success");
+//
+//
+//        for (String id : list){
+//            System.out.println(id);
+//        }
+//    }
+
+
     @ParameterizedTest
     @Order(1)
-    @DisplayName("Создание проекта")
-    @Source(ProductArgumentsProvider.ENV)
-    @Description("Создание проекта с сохранением в Shared Memory")
-    public void createProject(String env, String tmsId) {
-
-
+    @ValueSource(strings = {"proj-ti717c4xdp", "proj-hnsmiuaqg2"})
+    public void createProject(String proj) {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        List<String> list = orderServiceSteps.getProductsWithStatus(env, "damaged", "changing", "pending", "success");
-
+        List<String> list = orderServiceSteps.getProductsWithStatus(proj, "damaged", "changing", "pending");
         for (String id : list){
             System.out.println(id);
         }
     }
+
+
+
+
+
 
 //    @Tag("test")
 //    @ParameterizedTest
