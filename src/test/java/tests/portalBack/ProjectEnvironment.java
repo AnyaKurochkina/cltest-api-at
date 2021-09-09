@@ -1,6 +1,7 @@
 package tests.portalBack;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -23,6 +24,7 @@ public class ProjectEnvironment implements Tests {
     PortalBackSteps portalBackSteps = new PortalBackSteps();
 
     @Order(1)
+    @TmsLink("15")
     @ParameterizedTest
     @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Получение среды назначения")

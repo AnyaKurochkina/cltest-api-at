@@ -11,7 +11,7 @@
     </Appenders>
 
     <Loggers>
-        <Root level="error" additivity="false">
+        <Root level="debug" additivity="false">
             <AppenderRef ref="console"/>
             <AppenderRef ref="LogFile" />
         </Root>

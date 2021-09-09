@@ -37,7 +37,7 @@ public class OrderTests implements Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
 //    @Mock
     public void orderSmoke(IProduct product, String tmsId) {
-        Allure.tms("2." + tmsId, "");
+        Allure.tms("18." + tmsId, "");
         product.toStringProductStep();
         product.order();
     }

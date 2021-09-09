@@ -1,6 +1,7 @@
 package tests.accountManager;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -25,6 +26,7 @@ public class AccountCreateTest implements Tests {
 
     @Test
     @Order(1)
+    @TmsLink("2")
     @DisplayName("Создание счета для папки Бизнес блок")
     @Description("Создание счета папки Бизнес блок с сохранением в Shared Memory")
     public void createAccountBusinessBlock() {
@@ -33,6 +35,7 @@ public class AccountCreateTest implements Tests {
 
     @Test
     @Order(2)
+    @TmsLink("3")
     @DisplayName("Создание счета для папки Департамент")
     @Description("Создание счета папки Департамент с сохранением в Shared Memory")
     public void createAccountDepartment() {
@@ -41,6 +44,7 @@ public class AccountCreateTest implements Tests {
 
     @Test
     @Order(3)
+    @TmsLink("4")
     @DisplayName("Создание счета для папки")
     @Description("Создание счета папки с сохранением в Shared Memory")
     public void createAccount() {
@@ -49,6 +53,7 @@ public class AccountCreateTest implements Tests {
 
     @Test
     @Order(4)
+    @TmsLink("5")
     @DisplayName("Перевод денег со счета организации на счет папки Бизнес блок")
     @Description("Перевод денег со счета организации на счет папки Бизнес блок")
     public void transferMoneyFromAccountToBusinessBlock() {
@@ -57,6 +62,7 @@ public class AccountCreateTest implements Tests {
 
     @Test
     @Order(5)
+    @TmsLink("6")
     @DisplayName("Перевод денег со счета папки Бизнес блок на счет папки Департамент")
     @Description("Перевод денег со счета папки Бизнес блок на счет папки Департамент")
     public void transferMoneyFromAccountToDepartment() {
@@ -65,6 +71,7 @@ public class AccountCreateTest implements Tests {
 
     @Test
     @Order(6)
+    @TmsLink("7")
     @DisplayName("Перевод денег со счета папки Департамент на счет папки")
     @Description("Перевод денег со счета папки Департамент на счет папки")
     public void transferMoneyFromAccountToFolder() {

@@ -1,6 +1,7 @@
 package tests.authorizer;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import steps.authorizer.AuthorizerSteps;
@@ -16,6 +17,7 @@ public class FoldersCreateTests implements Tests {
 
     @Test
     @Order(1)
+    @TmsLink("8")
     @DisplayName("Создание Бизнес-блока")
     @Description("Создание Бизнес-блока с сохранением в Shared Memory")
     public void createBusinessBlock() {
@@ -24,6 +26,7 @@ public class FoldersCreateTests implements Tests {
 
     @Test
     @Order(2)
+    @TmsLink("9")
     @DisplayName("Создание Департамента")
     @Description("Создание Департамента с сохранением в Shared Memory")
     public void createDepartmentBlock() {
@@ -32,6 +35,7 @@ public class FoldersCreateTests implements Tests {
 
     @Test
     @Order(3)
+    @TmsLink("10")
     @DisplayName("Создание Папки")
     @Description("Создание Папки с сохранением в Shared Memory")
     public void createFolder() {

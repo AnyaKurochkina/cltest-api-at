@@ -8,11 +8,13 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.InformationSystem;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -83,7 +85,7 @@ public class OrderServiceSteps extends Steps {
         List<String> idOfAllSuccessProductsOnOnePage;
         List<String> idOfAllSuccessProducts = new ArrayList<>();
         int i = 0;
-        StringBuffer statusParams = new StringBuffer();
+        StringBuilder statusParams = new StringBuilder();
         for (String status : statuses) {
             statusParams.append("[status][]=").append(status).append("&f");
         }
@@ -256,35 +258,14 @@ public class OrderServiceSteps extends Steps {
                     .assertStatus(200)
                     .jsonPath()
                     .get(String.format("list.find{it.title == '%s' || it.title == '%s' || it.title == '%s'}.id", product.getProductName().toLowerCase(), product.getProductName().toUpperCase(), product.getProductName()));
-            if (product_id != null)
+            if (product_id != null) {
                 log.info("Id продукта = " + product_id);
-            break;
+                break;
+            }
         }
         Assertions.assertNotNull(product_id, String.format("ID продукта: %s, не найден", product.getProductName()));
         return product_id;
     }
-
-//    public Map<String,String> getFlavorByProduct(IProduct product) {
-//        log.info("Получение флейвора для продукта " + product.getProductName());
-//        JsonPath jsonPath  = new Http(URL)
-//                .setProjectId(product.getProjectId())
-//                .get("references/api/v1/pages/?directory__name=flavors&tags=" + product.getProductId())
-//                .assertStatus(200)
-//                .jsonPath();
-//        /*JSONArray jsonArray  = new Http(URL)
-//                .get("references/api/v1/pages/?directory__name=flavors&tags=" + product_id)
-//                .assertStatus(200)
-//                .toJsonArray();
-//
-//        int i = jsonArray.get()*/
-//
-//        String flavor = String.format("{\"flavor\":{\"cpus\":%s,\"name\":\"%s\",\"uuid\":\"%s\",\"memory\":%s}}", jsonPath.get("[1].data.cpus"), jsonPath.get("[1].name"), jsonPath.get("[1].id"), jsonPath.get("[1].data.memory"));
-//        Map<String,String> map = new HashMap<>();
-//        map.put("cpus", Integer.toString(jsonPath.get("[1].data.cpus")));
-//        map.put("memory", Integer.toString(jsonPath.get("[1].data.memory")));
-//        map.put("flavor", flavor);
-//        return map;
-//    }
 
     public Map<String, String> getItemIdByOrderId(String action, IProduct product) {
         log.info("Получение item_id для " + action);
@@ -330,8 +311,8 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    public Comparable getFiledProduct(IProduct product, String path) {
-        Comparable s;
+    public <T extends Comparable<T>> Comparable<T> getFiledProduct(@NotNull IProduct product, String path) {
+        Comparable<T> s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(URL)
                 .setProjectId(product.getProjectId())
@@ -346,12 +327,12 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Удаление всех заказов")
     public void deleteOrders(String env) {
-        String action_title = "";
+        String action_title;
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
-        List orders = new Http(URL)
+        List<String> orders = new Http(URL)
                 .setProjectId(project.id)
                 .get(String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=1&per_page=100&f[status][]=success", project.id))
                 .assertStatus(200)
@@ -360,30 +341,25 @@ public class OrderServiceSteps extends Steps {
 
         log.info("list = " + orders);
 
-        for (int i = 0; i < orders.size(); i++) {
+        for (String order : orders) {
             try {
-                String order_id = (String) orders.get(i);
-                System.out.println("order_id = " + order_id);
+                System.out.println("order_id = " + order);
                 String productName = new Http(URL)
                         .setProjectId(project.id)
-                        .get(String.format("order-service/api/v1/projects/%s/orders/%s", project.id, order_id))
+                        .get(String.format("order-service/api/v1/projects/%s/orders/%s", project.id, order))
                         .assertStatus(200)
                         .jsonPath()
                         .get("attrs.product_title");
                 log.info("productName = " + productName);
-//                switch (productName) {
-//                    case ("Apache Kafka Cluster"):
-//                        action_title = "Удалить";
-//                        break;
-//                    default:
-//                        action_title = "Удалить рекурсивно";
-//                }
-                action_title = "Удалить";
-
+                if ("Apache Kafka Cluster".equals(productName)) {
+                    action_title = "Удалить";
+                } else {
+                    action_title = "Удалить рекурсивно";
+                }
                 log.info("Получение item_id для " + action_title);
                 JsonPath jsonPath = new Http(URL)
                         .setProjectId(project.id)
-                        .get("order-service/api/v1/projects/" + project.id + "/orders/" + order_id)
+                        .get("order-service/api/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
                 String item_id = jsonPath.get(String.format("data.find{it.actions.find{it.title.startsWith('%s')}}.item_id", action_title));
                 String action = jsonPath.get(String.format("data.find{it.actions.find{it.title.startsWith('%s')}}.actions.find{it.title.contains('%s')}.name", action_title, action_title));
@@ -394,14 +370,12 @@ public class OrderServiceSteps extends Steps {
                         .set("$.item_id", item_id)
                         .send(URL)
                         .setProjectId(project.id)
-                        .patch(String.format("order-service/api/v1/projects/%s/orders/%s/actions/%s", project.id, order_id, action))
+                        .patch(String.format("order-service/api/v1/projects/%s/orders/%s/actions/%s", project.id, order, action))
                         .assertStatus(200)
                         .jsonPath();
             } catch (Throwable e) {
                 e.printStackTrace();
             }
         }
-
-
     }
 }

@@ -1,6 +1,7 @@
 package tests.authorizer;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -19,6 +20,7 @@ public class ServiceAccountCreateTests implements Tests {
 
     @ParameterizedTest
     @Order(1)
+    @TmsLink("16")
     @DisplayName("Создание сервисного аккаунта")
     @Source(ProductArgumentsProvider.ENV)
     @Description("Создание сервисного аккаунта с сохранением в Shared Memory")

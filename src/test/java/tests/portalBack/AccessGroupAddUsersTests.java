@@ -1,6 +1,7 @@
 package tests.portalBack;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -19,6 +20,7 @@ public class AccessGroupAddUsersTests {
     PortalBackSteps portalBackSteps = new PortalBackSteps();
     @ParameterizedTest
     @Order(1)
+    @TmsLink("12")
     @DisplayName("Добавление пользователя в группу доступа")
     @Source(ProductArgumentsProvider.ENV)
     @Description("Добавление пользователя")
