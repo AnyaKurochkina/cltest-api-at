@@ -1,6 +1,7 @@
 package tests.portalBack;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import steps.keyCloak.KeyCloakSteps;
@@ -17,8 +18,9 @@ import static steps.Steps.titleInformationSystem;
 public class InformationSystem implements Tests {
     PortalBackSteps portalBackSteps = new PortalBackSteps();
 
-    @Order(1)
     @Test
+    @Order(1)
+    @TmsLink("14")
     @DisplayName("Получение информационной системы")
     @Description("Получение информационной системы с сохранением в Shared Memory")
     public void getInformationSystem() {

@@ -24,7 +24,7 @@ public class ActionsTests implements Tests {
     @DisplayName("Проверка actions у заказанных продуктов")
     @Source(ProductArgumentsProvider.PRODUCTS)
     public void runActions(IProduct product, String tmsId) {
-        Allure.tms("3." + tmsId, "");
+        Allure.tms("19." + tmsId, "");
         product.toStringProductStep();
         Assumptions.assumeTrue(product.getStatus() == ProductStatus.CREATED, "Продукт "+ product.toString() + " не был заказан");
         product.runActionsBeforeOtherTests();

@@ -1,6 +1,7 @@
 package tests.accountManager;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import steps.accountManager.AccountSteps;
@@ -16,6 +17,7 @@ public class AccountDeleteTest implements Tests {
 
     @Test
     @Order(1)
+    @TmsLink("27")
     @DisplayName("Удаление счета для папки")
     @Description("Удаление счета папки")
     public void DeleteAccount() {
@@ -24,6 +26,7 @@ public class AccountDeleteTest implements Tests {
 
     @Test
     @Order(2)
+    @TmsLink("28")
     @DisplayName("Удаление счета для папки Department")
     @Description("Удаление счета папки Департамент")
     public void DeleteAccountDepartment() {
@@ -32,6 +35,7 @@ public class AccountDeleteTest implements Tests {
 
     @Test
     @Order(3)
+    @TmsLink("29")
     @DisplayName("Удаление счета для папки Business block")
     @Description("Удаление счета папки Бизнес блок")
     public void DeleteAccountBusinessBlock() {

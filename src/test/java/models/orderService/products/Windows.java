@@ -96,7 +96,6 @@ public class Windows extends IProduct {
     @Action("Расширить диск")
     public void expandMountPoint(String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 1}"));
-        Assert.assertEquals(11, (int) orderServiceSteps.getFiledProduct(this, String.format(DISK_SIZE, "I")));
+        Assert.assertEquals(11, orderServiceSteps.getFiledProduct(this, String.format(DISK_SIZE, "I")));
     }
-
 }

@@ -1,6 +1,7 @@
 package tests.authorizer;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -19,6 +20,7 @@ public class ProjectCreateTests implements Tests {
 
     @ParameterizedTest
     @Order(1)
+    @TmsLink("11")
     @DisplayName("Создание проекта")
     @Source(ProductArgumentsProvider.ENV)
     @Description("Создание проекта с сохранением в Shared Memory")
