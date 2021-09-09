@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import steps.Steps;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
@@ -17,6 +20,7 @@ import steps.tarifficator.CostSteps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
@@ -30,6 +34,20 @@ public class CostTest implements Tests {
         CostSteps costSteps = new CostSteps();
         String tariffPlanId = costSteps.getActiveTariffId();
         costSteps.getPrices(tariffPlanId);
+    }
+
+
+
+    @Tag("test")
+    @ParameterizedTest
+    @MethodSource("provideStringsForIsBlank")
+    void isBlank_ShouldReturnTrueForNullOrBlankStrings(String input, boolean expected) {
+        System.out.println(input);
+    }
+
+
+    private static Stream<Arguments> provideStringsForIsBlank() {
+        return null;
     }
 
 //    @Test

@@ -48,7 +48,7 @@ public class OrderServiceSteps extends Steps {
 //                    .jsonPath()
 //                    .get("status");
 
-            Http res = new Http(URL)
+            Http.Response res = new Http(URL)
                     .setProjectId(product.getProjectId())
                     .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId());
 
@@ -114,12 +114,24 @@ public class OrderServiceSteps extends Steps {
         return idOfAllSuccessProducts;
     }
 
+    @Step("Отправка action \"{action}\"")
+    public Http.Response sendAction(String action, IProduct product, JSONObject jsonData) {
+        Map<String, String> map = getItemIdByOrderId(action, product);
+        return jsonHelper.getJsonTemplate("/actions/template.json")
+                .set("$.item_id", map.get("item_id"))
+                .set("$.order.data", jsonData)
+                .send(URL)
+                .setProjectId(product.getProjectId())
+                .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"));
+    }
+
+
     @Step("Выполнение action \"{action}\"")
     public void executeAction(String action, IProduct product, JSONObject jsonData) {
         CostSteps costSteps = new CostSteps();
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         Map<String, String> map = getItemIdByOrderId(action, product);
-        log.info("Отправка запроса на выполнение действия '" + action + "' для продукта " + product.toString());
+        log.info("Отправка запроса на выполнение действия '" + action + "' для продукта " + product);
         DeferredException exception = new DeferredException();
         //TODO: Возможно стоит сделать более детальную проверку на значение
         Float costPreBilling = null;
@@ -133,12 +145,7 @@ public class OrderServiceSteps extends Steps {
         String actionId = null;
         try {
 //TODO: обработать кейс если экшен не найден
-            actionId = jsonHelper.getJsonTemplate("/actions/template.json")
-                    .set("$.item_id", map.get("item_id"))
-                    .set("$.order.data", jsonData)
-                    .send(URL)
-                    .setProjectId(product.getProjectId())
-                    .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"))
+            actionId = sendAction(action, product, jsonData)
                     .assertStatus(200)
                     .jsonPath()
                     .get("action_id");
@@ -188,7 +195,7 @@ public class OrderServiceSteps extends Steps {
 //                        .assertStatus(200)
 //                        .jsonPath().get("status");
 
-                Http res = new Http(URL)
+                Http.Response res = new Http(URL)
                         .setProjectId(product.getProjectId())
                         .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/history/" + action_id);
 
