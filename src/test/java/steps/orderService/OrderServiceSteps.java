@@ -75,13 +75,10 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
+
     //deprovisioned, damaged, pending ,changing, success
     @Step("Получение продуктов со статусом success")
-    public List<String> getProductsWithStatus(String env, String... statuses) {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
+    public List<String> getProductsWithStatus(String projectId, String... statuses) {
         List<String> idOfAllSuccessProductsOnOnePage;
         List<String> idOfAllSuccessProducts = new ArrayList<>();
         int i = 0;
@@ -98,13 +95,13 @@ public class OrderServiceSteps extends Steps {
             String endPoint = String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=" +
                             i + "&per_page=20&f" +
                             statusParams,
-                    project.id);
+                    projectId);
             //удалить &f если параметры statuses пустые, так как эндпоинт с &f не работает
             if (statuses.length == 0) {
                 endPoint = endPoint.substring(0, endPoint.length() - 2);
             }
             idOfAllSuccessProductsOnOnePage = new Http(URL)
-                    .setProjectId(project.id)
+                    .setProjectId(projectId)
                     .get(endPoint)
                     .assertStatus(200)
                     .jsonPath()

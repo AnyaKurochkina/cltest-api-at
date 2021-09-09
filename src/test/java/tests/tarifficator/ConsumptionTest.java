@@ -1,7 +1,9 @@
 package tests.tarifficator;
 
+import core.CacheService;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
+import models.authorizer.Project;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -29,7 +31,12 @@ public class ConsumptionTest implements Tests {
     public void getCost(String env){
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         CostSteps costSteps = new CostSteps();
-        List<String> allSuccessProducts = orderServiceSteps.getProductsWithStatus(env,
+        CacheService cacheService = new CacheService();
+        Project project = cacheService.entity(Project.class)
+                .withField("env", env)
+                .forOrders(true)
+                .getEntity();
+        List<String> allSuccessProducts = orderServiceSteps.getProductsWithStatus(project.id,
                 "damaged", "deprovisioned", "pending", "changing", "success");
         Float sumOfConsumptionOfAllProducts = costSteps.getConsumptionSumOfProducts(allSuccessProducts);
         AuthorizerSteps authorizerSteps = new AuthorizerSteps();
