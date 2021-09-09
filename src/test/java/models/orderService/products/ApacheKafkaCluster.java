@@ -42,6 +42,8 @@ public class ApacheKafkaCluster extends IProduct {
     public List<KafkaTopic> topics = new ArrayList<>();
     Flavor flavor;
 
+    public static final String KAFKA_CREATE_TOPIC = "Создать Topic Kafka";
+
     @Override
     public void order() {
         Project project = cacheService.entity(Project.class)
@@ -114,11 +116,10 @@ public class ApacheKafkaCluster extends IProduct {
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
     }
 
-    public void createTopic(String name, String action) {
-        KafkaTopic topic = new KafkaTopic("delete", 1, 1, 1, 1800000, name);
-        orderServiceSteps.executeAction(action, this, new JSONObject(cacheService.toJson(topic)));
-        Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
-        topics.add(topic);
+    public void createTopic(KafkaTopic kafkaTopic) {
+        orderServiceSteps.executeAction(KAFKA_CREATE_TOPIC, this, new JSONObject(cacheService.toJson(kafkaTopic)));
+        Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, kafkaTopic.getTopicName())));
+        topics.add(kafkaTopic);
         cacheService.saveEntity(this);
     }
 
@@ -133,9 +134,10 @@ public class ApacheKafkaCluster extends IProduct {
         cacheService.saveEntity(this);
     }
 
-    @Action("Создать Topic Kafka")
+
+    @Action(KAFKA_CREATE_TOPIC)
     public void createTopicTest(String action) {
-        createTopic("TopicName", action);
+        createTopic(new KafkaTopic("delete", 1, 1, 1, 1800000, "TopicName"));
     }
 
     @Action("Пакетное создание Topic-ов Kafka")

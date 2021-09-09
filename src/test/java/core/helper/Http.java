@@ -43,9 +43,6 @@ public class Http {
     private boolean isUsedToken = true;
     private static final Semaphore SEMAPHORE = new Semaphore(4, true);
 
-    int status;
-    String responseMessage = "";
-
     static {
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
@@ -90,30 +87,30 @@ public class Http {
         this.body = body.toString();
     }
 
-    public Http get(String path) {
+    public Response get(String path) {
         this.method = "GET";
         this.path = path;
         return request();
     }
 
-    public Http get(String path, String body) {
+    public Response get(String path, String body) {
         this.body = body;
         return get(path);
     }
 
-    public Http delete(String path) {
+    public Response delete(String path) {
         this.method = "DELETE";
         this.path = path;
         return request();
     }
 
-    public Http patch(String path) {
+    public Response patch(String path) {
         this.method = "PATCH";
         this.path = path;
         return request();
     }
 
-    public Http patch(String path, JSONObject body) {
+    public Response patch(String path, JSONObject body) {
         this.body = body.toString();
         return patch(path);
     }
@@ -123,17 +120,17 @@ public class Http {
         return this;
     }
 
-    public Http post(String path, JSONObject body) {
+    public Response post(String path, JSONObject body) {
         this.body = body.toString();
         return post(path);
     }
 
-    public Http post(String path, String body) {
+    public Response post(String path, String body) {
         this.body = body;
         return post(path);
     }
 
-    public Http post(String path) {
+    public Response post(String path) {
         this.method = "POST";
         this.path = path;
         return request();
@@ -149,8 +146,10 @@ public class Http {
         return this;
     }
 
-    private Http request() {
+    private Response request() {
         HttpURLConnection http = null;
+        String responseMessage = null;
+        int status = 0;
         try {
             URL url = new URL(host + path);
             if(path.endsWith("/cost") || path.contains("order-service"))
@@ -195,48 +194,59 @@ public class Http {
             e.printStackTrace();
             Assert.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
         }
-        return this;
+        return new Response(status, responseMessage);
     }
 
-    public Http assertStatus(int s) {
-        if (s != status || (path.endsWith("/orders") && method.equals("POST"))) {
-            Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
-            Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
+    public class Response {
+        int status;
+        String responseMessage;
+
+        public Response(int status, String responseMessage) {
+            this.status = status;
+            this.responseMessage = responseMessage;
         }
-        assertEquals(String.format("\nResponse: %s\nRequest: %s\n%s\n", responseMessage, host + path, body), s, status);
-        return this;
-    }
 
-    public int status() {
-        return status;
-    }
-
-    public JSONObject toJson() {
-        try {
-            return new JSONObject(toString());
-        } catch (Exception e) {
-            throw new Error(e.getMessage());
+        public Response assertStatus(int s) {
+            if (s != status || (path.endsWith("/orders") && method.equals("POST"))) {
+                Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
+                Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
+            }
+            assertEquals(String.format("\nResponse: %s\nRequest: %s\n%s\n", responseMessage, host + path, body), s, status);
+            return this;
         }
-    }
 
-    public JSONArray toJsonArray() {
-        try {
-            return new JSONArray(toString());
-        } catch (Exception e) {
-            throw new Error(e.getMessage());
+        public int status() {
+            return status;
         }
-    }
 
-    public JsonPath jsonPath() {
-        try {
-            return new JsonPath(toString());
-        } catch (Exception e) {
-            throw new Error(e.getMessage());
+        public JSONObject toJson() {
+            try {
+                return new JSONObject(toString());
+            } catch (Exception e) {
+                throw new Error(e.getMessage());
+            }
         }
-    }
 
-    public String toString() {
-        return responseMessage;
+        public JSONArray toJsonArray() {
+            try {
+                return new JSONArray(toString());
+            } catch (Exception e) {
+                throw new Error(e.getMessage());
+            }
+        }
+
+        public JsonPath jsonPath() {
+            try {
+                return new JsonPath(toString());
+            } catch (Exception e) {
+                throw new Error(e.getMessage());
+            }
+        }
+
+        public String toString() {
+            return responseMessage;
+        }
+
     }
 
 
