@@ -1,5 +1,6 @@
 package tests.tarifficator;
 
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.junit.OrderLabel;
@@ -27,6 +28,7 @@ public class ComparePrebillingTest implements Tests {
 
     @ParameterizedTest
     @DisplayName("Сравнение услуг продуктов предбиллинга с услугами продуктов активного тарифного плана")
+    @TmsLink("30")
     @Source(ProductArgumentsProvider.PRODUCTS)
     public void compareTariffs(IProduct product, String tmsId){
         //Получаем ID активного тарифного плана

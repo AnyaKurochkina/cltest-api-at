@@ -1,5 +1,6 @@
 package tests.tarifficator;
 
+import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -23,6 +24,7 @@ import java.util.List;
 public class ConsumptionTest implements Tests {
 
     @ParameterizedTest
+    @TmsLink("31")
     @Source(ProductArgumentsProvider.ENV)
     public void getCost(String env){
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();

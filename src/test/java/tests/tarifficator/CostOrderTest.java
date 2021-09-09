@@ -1,6 +1,7 @@
 package tests.tarifficator;
 
 import core.utils.Waiting;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.IProduct;
 import org.junit.*;
 import org.junit.jupiter.api.*;
@@ -21,6 +22,7 @@ public class CostOrderTest implements Tests {
     CostSteps costSteps = new CostSteps();
 
     @ParameterizedTest
+    @TmsLink("32")
     @DisplayName("Проверка стоимости заказа")
     @Source(ProductArgumentsProvider.PRODUCTS)
     public void getCost(IProduct product, String tmsId) {

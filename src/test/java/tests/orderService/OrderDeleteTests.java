@@ -28,7 +28,7 @@ public class OrderDeleteTests implements Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
 //    @Mock
     public void orderDelete(IProduct product, String tmsId) {
-        Allure.tms("4." + tmsId, "");
+        Allure.tms("19." + tmsId, "");
         product.toStringProductStep();
         Assumptions.assumeTrue(product.getStatus() == ProductStatus.CREATED, "Продукт "+ product.toString() + " не был заказан");
         product.runActionsAfterOtherTests();

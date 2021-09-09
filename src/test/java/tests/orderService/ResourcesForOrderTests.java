@@ -23,7 +23,7 @@ public class ResourcesForOrderTests implements Tests {
     @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Получение ресурсных пулов контейнеров")
     public void getResourcesPool(String env, String tmsId) {
-        Allure.tms("5." + tmsId, "");
+        Allure.tms("17." + tmsId, "");
         orderServiceSteps.getResourcesPool("container", env);
     }
 

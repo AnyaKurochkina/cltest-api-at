@@ -1,6 +1,7 @@
 package tests.portalBack;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -19,6 +20,7 @@ public class AccessGroupDeleteTests implements Tests {
 
     @ParameterizedTest
     @Order(1)
+    @TmsLink("20")
     @DisplayName("Удаление Группы доступа")
     @Source(ProductArgumentsProvider.ENV)
     @Description("Удаление Группы доступа")

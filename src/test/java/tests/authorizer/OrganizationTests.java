@@ -2,6 +2,7 @@ package tests.authorizer;
 
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import steps.authorizer.AuthorizerSteps;
@@ -16,8 +17,9 @@ public class OrganizationTests implements Tests {
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();
 
 
-    @Order(1)
     @Test
+    @Order(1)
+    @TmsLink("1")
     @DisplayName("Получение организации")
     @Description("Получение организации с сохранением в Shared Memory")
     public void createProject() {

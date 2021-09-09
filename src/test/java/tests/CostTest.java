@@ -2,12 +2,15 @@ package tests;
 
 import core.CacheService;
 import core.helper.Http;
+import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
+import models.authorizer.Project;
 import models.subModels.KafkaTopic;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,31 +27,46 @@ import java.util.stream.Stream;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
-@Tag("cost1")
+@Tag("cost2")
 public class CostTest implements Tests {
-
 
 
     @Test
     public void getCost(){
-        CostSteps costSteps = new CostSteps();
-        String tariffPlanId = costSteps.getActiveTariffId();
-        costSteps.getPrices(tariffPlanId);
+//        CostSteps costSteps = new CostSteps();
+//        String tariffPlanId = costSteps.getActiveTariffId();
+//        costSteps.getPrices(tariffPlanId);
+        System.out.println(1);
     }
 
 
-
-    @Tag("test")
     @ParameterizedTest
-    @MethodSource("provideStringsForIsBlank")
-    void isBlank_ShouldReturnTrueForNullOrBlankStrings(String input, boolean expected) {
-        System.out.println(input);
-    }
+    @Order(1)
+    @DisplayName("Создание проекта")
+    @Source(ProductArgumentsProvider.ENV)
+    @Description("Создание проекта с сохранением в Shared Memory")
+    public void createProject(String env, String tmsId) {
 
 
-    private static Stream<Arguments> provideStringsForIsBlank() {
-        return null;
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        List<String> list = orderServiceSteps.getProductsWithStatus(env, "damaged", "changing", "pending", "success");
+
+        for (String id : list){
+            System.out.println(id);
+        }
     }
+
+//    @Tag("test")
+//    @ParameterizedTest
+//    @MethodSource("provideStringsForIsBlank")
+//    void isBlank_ShouldReturnTrueForNullOrBlankStrings(String input, boolean expected) {
+//        System.out.println(input);
+//    }
+//
+//
+//    private static Stream<Arguments> provideStringsForIsBlank() {
+//        return null;
+//    }
 
 //    @Test
 //    @Tag("test")

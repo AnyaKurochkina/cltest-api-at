@@ -1,6 +1,7 @@
 package tests.authorizer;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -20,6 +21,7 @@ public class ProjectDeleteTests implements Tests {
     @ParameterizedTest
     @Source(ProductArgumentsProvider.ENV)
     @Order(2)
+    @TmsLink("23")
     @DisplayName("Удаление проекта")
     @Description("Удаление проекта с сохранением в Shared Memory")
     public void deleteDepartmentBlock(String env) {
