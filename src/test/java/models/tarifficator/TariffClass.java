@@ -1,12 +1,16 @@
 package models.tarifficator;
 
-import java.util.List;
+import lombok.Data;
 
+import java.util.List;
+import java.util.Map;
+
+@Data
 public class TariffClass {
     String environmentType;
     String provider;
     List <String> providerPath;
-    Object calculationEntity;
+    Map<String, String> calculationEntity;
     String calculationEntityFieldName;
     String createdAt;
     String id;

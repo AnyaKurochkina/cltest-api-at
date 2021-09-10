@@ -41,7 +41,7 @@ public class CacheService {
         entities.put(e.objectUid, serialize);
     }
 
-    public String toJson(Object e) {
+    public static String toJson(Object e) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         return gsonBuilder.create().toJson(e, e.getClass());
