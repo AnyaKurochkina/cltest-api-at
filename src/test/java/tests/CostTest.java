@@ -2,33 +2,89 @@ package tests;
 
 import core.CacheService;
 import core.helper.Http;
+import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
+import models.authorizer.Project;
 import models.subModels.KafkaTopic;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import steps.Steps;
-import steps.authorizer.AuthorizerSteps;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.tarifficator.CostSteps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@Execution(ExecutionMode.CONCURRENT)
-@Tag("cost1")
+@Tag("cost2")
 public class CostTest implements Tests {
-    
+
+
     @Test
     public void getCost(){
-        AuthorizerSteps authorizerSteps = new AuthorizerSteps();
-        authorizerSteps.getAllProjectFromFolder("fold-456ks80urq");
+//        CostSteps costSteps = new CostSteps();
+//        String tariffPlanId = costSteps.getActiveTariffId();
+//        costSteps.getPrices(tariffPlanId);
+        System.out.println(1);
     }
+
+
+//    @ParameterizedTest
+//    @Order(1)
+//    @DisplayName("Создание проекта")
+//    @Source(ProductArgumentsProvider.ENV)
+//    @Description("Создание проекта с сохранением в Shared Memory")
+//    public void createProject(String env, String tmsId) {
+//
+//
+//        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+//        List<String> list = orderServiceSteps.getProductsWithStatus(env, "damaged", "changing", "pending", "success");
+//
+//
+//        for (String id : list){
+//            System.out.println(id);
+//        }
+//    }
+
+
+    @ParameterizedTest
+    @Order(1)
+    @ValueSource(strings = {"proj-ti717c4xdp", "proj-hnsmiuaqg2"})
+    public void createProject(String proj) {
+        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+        List<String> list = orderServiceSteps.getProductsWithStatus(proj, "damaged", "changing", "pending");
+        for (String id : list){
+            System.out.println(id);
+        }
+    }
+
+
+
+
+
+
+//    @Tag("test")
+//    @ParameterizedTest
+//    @MethodSource("provideStringsForIsBlank")
+//    void isBlank_ShouldReturnTrueForNullOrBlankStrings(String input, boolean expected) {
+//        System.out.println(input);
+//    }
+//
+//
+//    private static Stream<Arguments> provideStringsForIsBlank() {
+//        return null;
+//    }
 
 //    @Test
 //    @Tag("test")

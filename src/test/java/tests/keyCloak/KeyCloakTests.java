@@ -15,7 +15,7 @@ import tests.Tests;
 public class KeyCloakTests implements Tests {
 
     @Test
-    @TmsLink("1")
+    @TmsLink("33")
     //@Link(type="manual", value = "271850")
     @DisplayName("Получение токена")
     @Description("Проверка получения токена для доступа к API портала")
