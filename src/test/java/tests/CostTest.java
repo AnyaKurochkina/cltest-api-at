@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@Execution(ExecutionMode.CONCURRENT)
 @Tag("cost2")
 public class CostTest implements Tests {
 
