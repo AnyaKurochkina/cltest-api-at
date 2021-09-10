@@ -65,27 +65,39 @@ public abstract class IProduct extends Entity {
 
     public abstract JSONObject getJsonParametrizedTemplate();
 
-
+    /**
+     * @param action экшен
+     * @return - возвращаем статус вызова экшена
+     * @throws Throwable необходим для метода invoke (java.lang.reflect.Method)
+     */
     private boolean invokeAction(String action) throws Throwable {
         boolean invoke = false;
+        //Перебираем методы класса
         for (Method method : this.getClass().getMethods()) {
-            if (method.isAnnotationPresent(Action.class)) {
-                if (method.getAnnotation(Action.class).value().equals(action)) {
-                    method.invoke(this, action);
-                    invoke = true;
-                }
+            /* Если аннотиация @Action присутствует над методом и ее знаечение соответсвтует названию экшена,
+            то вызываем его и изменяем состояние вызова в true */
+            if (method.isAnnotationPresent(Action.class)
+                    && method.getAnnotation(Action.class).value().equals(action)) {
+                method.invoke(this, action);
+                invoke = true;
             }
         }
         return invoke;
     }
 
+    /**
+     * Вызываем экшены кроме удаления в цикле, если экшен не выполнился или выполнился с ошибкой,
+     * то сохраняем его ошибку и после прохождения всех экшенов отображаем её
+     */
     @SneakyThrows
     public void runActionsBeforeOtherTests() {
+        //Инициализация отложенного исключения
         DeferredException exception = new DeferredException();
         for (String action : actions) {
             try {
-                if (!invokeAction(action))
+                if (!invokeAction(action)) {
                     fail("Action '" + action + "' не найден у продукта " + getProductName() + " с id " + getOrderId());
+                }
             } catch (Throwable e) {
                 exception.addException(e, getOrderId());
             }
@@ -93,6 +105,9 @@ public abstract class IProduct extends Entity {
         exception.trowExceptionIfNotEmpty();
     }
 
+    /**
+     * Выполнение экшенов "Удаление заказа"
+     */
     public void runActionsAfterOtherTests() {
         String value = "";
         try {

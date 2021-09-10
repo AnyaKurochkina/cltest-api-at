@@ -11,6 +11,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.Steps;
+import steps.authorizer.AuthorizerSteps;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.tarifficator.CostSteps;
@@ -22,14 +23,11 @@ import java.util.List;
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("cost1")
 public class CostTest implements Tests {
-
-
-
+    
     @Test
     public void getCost(){
-        CostSteps costSteps = new CostSteps();
-        String tariffPlanId = costSteps.getActiveTariffId();
-        costSteps.getPrices(tariffPlanId);
+        AuthorizerSteps authorizerSteps = new AuthorizerSteps();
+        authorizerSteps.getAllProjectFromFolder("fold-456ks80urq");
     }
 
 //    @Test

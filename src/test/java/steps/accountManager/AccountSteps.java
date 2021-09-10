@@ -14,14 +14,19 @@ import steps.Steps;
 public class AccountSteps extends Steps {
     private static final String URL = Configure.getAppProp("host_kong");
 
+    /**
+     *
+     * @param folderName имя папки
+     */
 
     @Step("Создание счета для папки {folderName}")
     public void createAccount(String folderName) {
         log.info("Изменение базового шаблона запроса при создании счета папки с типом: " + folderName);
+        //Плучение папки по её имени
         Folder folder = cacheService.entity(Folder.class)
                 .withField("name", folderName)
                 .getEntity();
-
+        //Запрос на создание счета для папки с получением account ID
         String accountId = jsonHelper.getJsonTemplate("/accountmanager/accountTemplate.json")
                 .set("$.parent_id", getAccountIdByContext(folder.parentId))
                 .set("$.name", String.format("%s (%s)", folderName, folder.id))
@@ -31,14 +36,13 @@ public class AccountSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .get("account.account_id");
-
+        //Получение счёта по его account ID
         Account account = Account.builder()
                 .accountId(accountId)
                 .folderId(folder.id)
                 .build();
-
+        //Сохранение счёта
         cacheService.saveEntity(account);
-
     }
 
     @Step("Перевод со счета организации {sourceContext} на счет папки {targetContext} суммы {amount}")
@@ -97,23 +101,31 @@ public class AccountSteps extends Steps {
         return account_id;
     }
 
+    /**
+     *
+     * @param folderName имя папки
+     */
     @Step("Удаление счета для папки {folderName}")
     public void deleteAccount(String folderName) {
+        //Получение
         Organization organization = cacheService.entity(Organization.class).getEntity();
+        //Получение папки по ее имени
         Folder folder = cacheService.entity(Folder.class)
                 .withField("name", folderName)
                 .getEntity();
+        //Получение счета по ID папки
         Account account = cacheService.entity(Account.class)
                 .withField("folderId", folder.id)
                 .getEntity();
         log.info(String.format("Удаление счета %s для папки %s", account.accountId, folder.id));
+        //Запрос на удаление
         JsonPath jsonPath = new Http(URL)
                 .delete(String.format("accountmanager/api/v1/organizations/%s/accounts/%s?force_unlink=1", organization.name, account.accountId))
                 .assertStatus(200)
                 .jsonPath();
-
+        //Выставление флага "Счёт удалён"
         account.isDeleted = true;
+        //Сохранение счёта
         cacheService.saveEntity(account);
-
     }
 }

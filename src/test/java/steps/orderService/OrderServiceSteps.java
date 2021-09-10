@@ -227,15 +227,24 @@ public class OrderServiceSteps extends Steps {
                 .get("list[0].code");
     }
 
+    /**
+     *
+     * @param product объект продукт наследуемый от абстрактного класса IProduct
+     * @return - возвращаем ID проудкта
+     */
     public String getProductId(IProduct product) {
         log.info("Получение id для продукта " + product.getProductName());
+        //Получение информационной сисетмы
         InformationSystem informationSystem = cacheService.entity(InformationSystem.class)
                 .forOrders(true)
                 .getEntity();
         String product_id = "";
+        //Получение среды проекта
         ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
                 .forOrders(true)
-                .withField("env", product.getEnv()).getEntity();
+                .withField("env", product.getEnv())
+                .getEntity();
+        //Выполнение запроса
         int total_count = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=1&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id))
