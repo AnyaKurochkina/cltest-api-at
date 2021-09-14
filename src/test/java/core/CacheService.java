@@ -6,6 +6,7 @@ import com.google.gson.*;
 import core.helper.DataFileHelper;
 import models.Entity;
 import models.orderService.interfaces.IProduct;
+import models.tarifficator.TariffPlan;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -48,6 +49,12 @@ public class CacheService {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         return gsonBuilder.create().toJson(e, e.getClass());
+    }
+
+    public static Gson getCustomGson()  {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        return gsonBuilder.create();
     }
 
     public CacheService withField(String field, Comparable<?> value) {
@@ -103,6 +110,9 @@ public class CacheService {
                                 matchAll = false;
                         if (f instanceof Float)
                             if (jsonElement.getAsFloat() != (Float) filter.getValue())
+                                matchAll = false;
+                        if (f instanceof Enum)
+                            if (!jsonElement.getAsString().equals(filter.getValue().toString()))
                                 matchAll = false;
                     } else matchAll = false;
                 }
