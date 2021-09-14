@@ -36,18 +36,11 @@ public class WildFly extends IProduct {
 
     @Override
     public void order() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        projectId = project.id;
-        productId = orderServiceSteps.getProductId(this);
-        domain = orderServiceSteps.getDomainBySegment(this, segment);
+        JSONObject template = getJsonParametrizedTemplate();
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
-                .setProjectId(project.id)
-                .post("order-service/api/v1/projects/" + project.id + "/orders",
-                        getJsonParametrizedTemplate())
+                .setProjectId(projectId)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
@@ -70,6 +63,10 @@ public class WildFly extends IProduct {
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
+        if(productId == null) {
+            projectId = project.id;
+            productId = orderServiceSteps.getProductId(this);
+        }
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)

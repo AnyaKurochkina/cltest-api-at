@@ -1,5 +1,7 @@
 package steps.orderService;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import core.exception.DeferredException;
 import core.helper.Configure;
 import core.helper.Http;
@@ -14,6 +16,7 @@ import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
+import models.subModels.Flavor;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,6 +27,7 @@ import steps.calculator.CalcCostSteps;
 import steps.stateService.StateServiceSteps;
 import steps.tarifficator.CostSteps;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -291,19 +295,17 @@ public class OrderServiceSteps extends Steps {
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
-        JSONObject jsonObject = new Http(URL)
+        String jsonArray = new Http(URL)
                 .setProjectId(project.id)
                 .get(String.format("order-service/api/v1/products/resource_pools?category=%s&project_name=%s", category, project.id))
                 .assertStatus(200)
-                .toJson();
-        JSONArray jsonArray = (JSONArray) jsonObject.get("list");
-        for (Object object : jsonArray) {
-            JSONObject j = (JSONObject) object;
-            ResourcePool resourcePool = ResourcePool.builder()
-                    .id(j.getString("id"))
-                    .label(j.getString("label"))
-                    .projectId(project.id)
-                    .build();
+                .toJson()
+                .getJSONArray("list")
+                .toString();
+        Type type = new TypeToken<List<ResourcePool>>() {}.getType();
+        List<ResourcePool> list = new Gson().fromJson(jsonArray, type);
+        for(ResourcePool resourcePool : list) {
+            resourcePool.projectId = project.id;
             cacheService.saveEntity(resourcePool);
         }
     }

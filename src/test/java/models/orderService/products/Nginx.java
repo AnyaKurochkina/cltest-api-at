@@ -34,18 +34,12 @@ public class Nginx extends IProduct {
 
     @Override
     public void order() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        projectId = project.id;
-        productId = orderServiceSteps.getProductId(this);
+        JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = new Http(OrderServiceSteps.URL)
-                .setProjectId(project.id)
-                .post("order-service/api/v1/projects/" + project.id + "/orders",
-                        getJsonParametrizedTemplate())
+                .setProjectId(projectId)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
@@ -65,6 +59,10 @@ public class Nginx extends IProduct {
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
+        if(productId == null) {
+            projectId = project.id;
+            productId = orderServiceSteps.getProductId(this);
+        }
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();

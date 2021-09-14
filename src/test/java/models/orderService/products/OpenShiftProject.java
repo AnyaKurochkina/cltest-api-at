@@ -32,18 +32,14 @@ public class OpenShiftProject extends IProduct {
 
     @Override
     public void order() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
+        JSONObject template = getJsonParametrizedTemplate();
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
+                .withField("projectName", projectId)
                 .getEntity();
-        projectId = project.id;
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
-                .setProjectId(project.id)
-                .post("order-service/api/v1/projects/" + project.id + "/orders", getJsonParametrizedTemplate())
+                .setProjectId(projectId)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
@@ -64,6 +60,10 @@ public class OpenShiftProject extends IProduct {
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
+        if(productId == null) {
+            projectId = project.id;
+            productId = orderServiceSteps.getProductId(this);
+        }
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
@@ -72,7 +72,7 @@ public class OpenShiftProject extends IProduct {
                 .getEntity();
 
         return jsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.order.attrs.resource_pool_id", resourcePool.id)
+                .set("$.order.attrs.resource_pool",  new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())

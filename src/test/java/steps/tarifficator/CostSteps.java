@@ -212,7 +212,7 @@ public class CostSteps extends Steps {
             for (Map.Entry<String, Double> entry2 : activeTariffPlanPrice.entrySet()) {
                 String tariffPLanServiceName = entry2.getKey();
                 if (preBillingServiceName.equals(tariffPLanServiceName)) {
-                    Assertions.assertEquals(priceListWithState.get(preBillingServiceName), activeTariffPlanPrice.get(tariffPLanServiceName),
+                    Assertions.assertEquals(priceListWithState.get(preBillingServiceName), activeTariffPlanPrice.get(tariffPLanServiceName), 0.00000001,
                             "Цена услуги: " + preBillingServiceName + " в предбиллинге: " + priceListWithState.get(preBillingServiceName)
                                     + " Не соответствует цене услуги: " + tariffPLanServiceName + " в тарифном плане: " + activeTariffPlanPrice.get(tariffPLanServiceName));
                     log.info(

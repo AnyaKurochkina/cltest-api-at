@@ -19,7 +19,10 @@
         }
       ],
       "user_mark": "7777",
-      "resource_pool_id": "e5b4d171-1cbb-4b93-8c98-79836c11ce67"
+      "resource_pool": {
+        "id": "e5b4d171-1cbb-4b93-8c98-79836c11ce67",
+        "name": "ds0-bank01"
+      }
     },
     "count": 1,
     "label": "OpenShift project"
