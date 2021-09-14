@@ -28,7 +28,7 @@ public class CostOrderTest implements Tests {
     public void getCost(IProduct product, String tmsId) {
         Float preBillingCost = costSteps.getPreBillingCost(product);
         Float currentCost = costSteps.getCurrentCost(product);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 15; i++) {
             Waiting.sleep(20000);
             if (Float.compare(currentCost, preBillingCost) > 0.00001)
                 continue;

@@ -65,7 +65,7 @@ public class CostSteps extends Steps {
     public Float getPreBillingCost(IProduct product) {
         Assumptions.assumeTrue(product.getStatus() == ProductStatus.CREATED, "Продукт " + product + " не был заказан");
         Float consumption = null;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 15; i++) {
             Waiting.sleep(20000);
             consumption = new Http(URL)
                     .setProjectId(product.getProjectId())
@@ -74,6 +74,9 @@ public class CostSteps extends Steps {
                     .jsonPath()
                     .get("cost");
             if (consumption == null) {
+                continue;
+            }
+            if (consumption == 0.0f) {
                 continue;
             }
             break;
