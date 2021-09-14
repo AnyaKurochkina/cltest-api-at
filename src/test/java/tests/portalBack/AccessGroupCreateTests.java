@@ -28,5 +28,4 @@ public class AccessGroupCreateTests implements Tests {
     public void createAccessGroup(String env, String tmsId) {
         accessGroupSteps.createAccessGroup("PROJECT_"+env, "access-group");
     }
-
 }

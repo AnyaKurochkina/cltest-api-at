@@ -3,7 +3,9 @@ import core.CacheService;
 import core.helper.JsonHelper;
 import java.util.UUID;
 
-
+/**
+ * Наследники данного класса получают возможность взаимодействовать с CacheService.class
+ */
 public abstract class Entity {
     public String objectClassName;
     public String objectUid;

@@ -1,22 +1,90 @@
 package steps.tarifficator;
 
+import com.google.gson.reflect.TypeToken;
+import core.CacheService;
 import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import models.tarifficator.TariffPlan;
+import org.json.JSONArray;
 import steps.Steps;
+
+import java.lang.reflect.Type;
+import java.util.*;
 
 @Log4j2
 public class TariffPlanSteps extends Steps {
     public static final String URL = Configure.getAppProp("host_kong") + "tarifficator/api/v1/";
 
+    /**
+     * Отправка запроса на создание ТП
+     *
+     * @param tariffPlan объект класса {@code TariffPlan}, где заполнены поля {@code oldTariffPlanId, title, base}
+     * @return созданный ТП
+     */
     @Step("Создание тарифного плана {tariffPlan}")
-    public TariffPlan createTariffPlan(TariffPlan tariffPlan){
+    public TariffPlan createTariffPlan(TariffPlan tariffPlan) {
         String object = new Http(URL)
                 .post("tariff_plans", tariffPlan.serialize())
                 .assertStatus(201)
                 .toString();
         return TariffPlan.deserialize(object);
     }
+
+    /**
+     * Получение списка ТП с указанными параметрами
+     *
+     * @param urlParameters строка GET параметров, по которым осуществится выборка, например {@code "f[base]=true&f[status][]=active"}
+     * @return список тарифных планов соответствующих urlParameters
+     */
+    @Step("Получение списка тарифных планов c параметрами '{parameters}'")
+    public List<TariffPlan> getTariffPlanList(String urlParameters) {
+        Type type = new TypeToken<List<TariffPlan>>() {
+        }.getType();
+        List<Object> allResponseList = new ArrayList<>();
+        List<Object> responseList;
+        int i = 1;
+        do {
+            responseList = new Http(URL)
+                    .get(String.format("tariff_plans?page=%d&per_page=100&%s", i, urlParameters))
+                    .assertStatus(200)
+                    .jsonPath()
+                    .getList("list");
+            allResponseList.addAll(responseList);
+            i++;
+        } while (responseList.size() > 0);
+        return CacheService.getCustomGson().fromJson(new JSONArray(allResponseList).toString(), type);
+    }
+
+    /**
+     * Отправка запроса на получение ТП
+     *
+     * @param tariffPlanId {@code id} тарифного плана
+     * @return запрашиваемый ТП
+     */
+    @Step("Получение тарифного плана {tariffPlanId}")
+    public TariffPlan getTariffPlan(String tariffPlanId) {
+        String object = new Http(URL)
+                .get(String.format("tariff_plans/%s?include=tariff_classes", tariffPlanId))
+                .assertStatus(200)
+                .toString();
+        return TariffPlan.deserialize(object);
+    }
+
+    /**
+     * Отправка запроса на редактирование ТП
+     *
+     * @param tariffPlan {@code id} тарифный план содержащий только обновляемые поля
+     * @return обновленный ТП
+     */
+    @Step("Редактирование тарифного плана {tariffPlan}")
+    public TariffPlan editTariffPlan(TariffPlan tariffPlan) {
+        String object = new Http(URL)
+                .patch(String.format("tariff_plans/%s", tariffPlan.getId()), tariffPlan.serialize())
+                .assertStatus(200)
+                .toString();
+        return TariffPlan.deserialize(object);
+    }
+
 }

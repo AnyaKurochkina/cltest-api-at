@@ -34,11 +34,13 @@ public class ApacheKafka extends IProduct {
 
     @Override
     public void order() {
+        //Получение проекта по его среде
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
         projectId = project.id;
+        //Получение ID продукта
         productId = orderServiceSteps.getProductId(this);
         domain = orderServiceSteps.getDomainBySegment(this, segment);
 

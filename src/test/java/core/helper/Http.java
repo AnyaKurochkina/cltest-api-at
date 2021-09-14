@@ -197,6 +197,12 @@ public class Http {
         return new Response(status, responseMessage);
     }
 
+    public static class StatusResponseException extends RuntimeException {
+        public StatusResponseException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
+
     public class Response {
         int status;
         String responseMessage;
@@ -207,11 +213,12 @@ public class Http {
         }
 
         public Response assertStatus(int s) {
-            if (s != status || (path.endsWith("/orders") && method.equals("POST"))) {
+            if (s != status() || (path.endsWith("/orders") && method.equals("POST"))) {
                 Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
                 Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
             }
-            assertEquals(String.format("\nResponse: %s\nRequest: %s\n%s\n", responseMessage, host + path, body), s, status);
+            if(s != status())
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nResponse: %s\nRequest: %s\n%s\n",s, status(), responseMessage, host + path, body));
             return this;
         }
 
