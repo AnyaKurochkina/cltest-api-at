@@ -61,8 +61,15 @@ public abstract class IProduct extends Entity {
     @Getter
     protected String productId;
 
+    /**
+     * Заказ продукта, реализуется в каждом продукте по своему
+     */
     public abstract void order();
 
+    /**
+     * Метод для выбора json шаблона заказа
+     * @return возвращает готовый параметризованный json
+     */
     public abstract JSONObject getJsonParametrizedTemplate();
 
     /**

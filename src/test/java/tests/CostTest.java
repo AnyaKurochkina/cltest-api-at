@@ -33,6 +33,7 @@ public class CostTest implements Tests {
 
     @Test
     public void getCost(){
+
 //        CostSteps costSteps = new CostSteps();
 //        String tariffPlanId = costSteps.getActiveTariffId();
 //        costSteps.getPrices(tariffPlanId);
