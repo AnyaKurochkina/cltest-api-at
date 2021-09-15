@@ -27,7 +27,7 @@ public class AccountSteps extends Steps {
                 .set("$.name", String.format("%s (%s)", folderName, folder.id))
                 .set("$.folder_uid", folder.id)
                 .send(URL)
-                .post("accountManager/api/v1/organizations/vtb/accounts")
+                .post("accountmanager/api/v1/organizations/vtb/accounts")
                 .assertStatus(200)
                 .jsonPath()
                 .get("account.account_id");
@@ -71,7 +71,7 @@ public class AccountSteps extends Steps {
                 .set("$.amount", amount)
                 .set("$.reason", "Перевод в рамках тестирования на сумму " + amount)
                 .send(URL)
-                .post("accountManager/api/v1/organizations/vtb/accounts/transfers")
+                .post("accountmanager/api/v1/organizations/vtb/accounts/transfers")
                 .assertStatus(200);
     }
 
@@ -80,14 +80,14 @@ public class AccountSteps extends Steps {
         log.info("Получение account_id для контекста - " + context);
         String account_id = null;
         int total_count = new Http(URL)
-                .get("accountManager/api/v1/organizations/vtb/accounts")
+                .get("accountmanager/api/v1/organizations/vtb/accounts")
                 .assertStatus(200)
                 .jsonPath()
                 .get("meta.total_count");
         int countOfIteration = total_count/ 100 + 1;
         for (int i = 1; i<=countOfIteration; i++) {
             account_id = new Http(URL)
-                    .get("accountManager/api/v1/organizations/vtb/accounts?page="+i+"&per_page=100")
+                    .get("accountmanager/api/v1/organizations/vtb/accounts?page="+i+"&per_page=100")
                     .assertStatus(200)
                     .jsonPath()
                     .get(String.format("list.find{it.name.contains('%s') || it.name.contains('%s')}.account_id", context.toUpperCase(), context.toLowerCase()));
@@ -108,7 +108,7 @@ public class AccountSteps extends Steps {
                 .getEntity();
         log.info(String.format("Удаление счета %s для папки %s", account.accountId, folder.id));
         JsonPath jsonPath = new Http(URL)
-                .delete(String.format("accountManager/api/v1/organizations/%s/accounts/%s?force_unlink=1", organization.name, account.accountId))
+                .delete(String.format("accountmanager/api/v1/organizations/%s/accounts/%s?force_unlink=1", organization.name, account.accountId))
                 .assertStatus(200)
                 .jsonPath();
 

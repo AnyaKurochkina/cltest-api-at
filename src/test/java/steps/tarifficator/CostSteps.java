@@ -62,7 +62,7 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение текущего расхода для заказа")
-    public Float getPreBillingCost(IProduct product) {
+    public Float getCurrentCost(IProduct product) {
         Assumptions.assumeTrue(product.getStatus() == ProductStatus.CREATED, "Продукт " + product + " не был заказан");
         Float consumption = null;
         for (int i = 0; i < 15; i++) {
@@ -87,7 +87,7 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
-    public Float getCurrentCost(IProduct product) {
+    public Float getPreBillingCost(IProduct product) {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = cacheService.entity(Project.class)
                 .withField("env", product.getEnv())
