@@ -1,5 +1,6 @@
 package core;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 import core.helper.DataFileHelper;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.io.FileInputStream;
@@ -19,12 +21,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.*;
 
 public class CacheService {
     private Class<?> c;
-    private Map<String, Comparable> fields = new HashMap<>();
+    private final Map<String, Comparable<?>> fields = new HashMap<>();
     private static final Map<String, String> entities = new ConcurrentHashMap<>();
 
     public CacheService entity(Class<?> c) {
@@ -48,14 +51,13 @@ public class CacheService {
         return gsonBuilder.create().toJson(e, e.getClass());
     }
 
-
     public static Gson getCustomGson()  {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         return gsonBuilder.create();
     }
 
-    public CacheService withField(String field, Comparable value) {
+    public CacheService withField(String field, Comparable<?> value) {
         fields.put(field, value);
         return this;
     }
@@ -65,6 +67,11 @@ public class CacheService {
         return this;
     }
 
+    /**
+     *
+     * @param <T> Любой класс который наследуется от Entity
+     * @return - возвращаем
+     */
     @ResourceLock(value = "entities", mode = READ)
     public <T extends Entity> T getEntityWithoutAssert() {
         for (String shareDataElement : entities.values()) {
@@ -80,18 +87,18 @@ public class CacheService {
                 isClass = classNameJson.equals(className);
             }
             if (isClass) {
-                Class<T> act = null;
+                Class<?> act = null;
                 try {
-                    act = (Class<T>) Class.forName(classNameJson);
+                    act = Class.forName(classNameJson);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Entity e = new Gson().fromJson(shareDataElement, (Type) act);
+                T e = new Gson().fromJson(shareDataElement, (Type) act);
                 boolean matchAll = true;
-                for (Map.Entry<String, Comparable> filter : fields.entrySet()) {
+                for (Map.Entry<String, Comparable<?>> filter : fields.entrySet()) {
                     JsonElement jsonElement = jsonObject.get(filter.getKey());
                     if (jsonElement != null) {
-                        Comparable f = filter.getValue();
+                        Comparable<?> f = filter.getValue();
                         if (f instanceof String)
                             if (!jsonElement.getAsString().equals(filter.getValue()))
                                 matchAll = false;
@@ -110,16 +117,16 @@ public class CacheService {
                     } else matchAll = false;
                 }
                 if (matchAll)
-                    return (T) e;
+                    return e;
             }
         }
         return null;
     }
 
     public <T extends Entity> T getEntity() {
-        Entity e = getEntityWithoutAssert();
+        T e = getEntityWithoutAssert();
         Assume.assumeNotNull("Невозможно получить " + c.getName() + " с параметрами: " + new JSONObject(fields).toString(), e);
-        return (T) e;
+        return e;
     }
 
     @ResourceLock(value = "entities", mode = READ_WRITE)
@@ -141,10 +148,10 @@ public class CacheService {
         try {
             if (Files.exists(Paths.get(file))) {
                 FileInputStream fileInputStream = new FileInputStream(file);
-                List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(fileInputStream, List.class);
-                listEntities.forEach(v -> {
-                    entities.put((String) v.get("objectUid"), new JSONObject(v).toString());
-                });
+                List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(fileInputStream, new TypeReference<List<LinkedHashMap<String, Object>>>() {});
+                listEntities.forEach(v ->
+                        entities.put((String) v.get("objectUid"), new JSONObject(v).toString())
+                );
             }
         } catch (Exception e) {
             e.printStackTrace();

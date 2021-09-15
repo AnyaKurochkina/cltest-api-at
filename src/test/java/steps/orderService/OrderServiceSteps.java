@@ -10,12 +10,12 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.authorizer.InformationSystem;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
+import models.subModels.Item;
 import models.subModels.Flavor;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -119,13 +119,13 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Отправка action \"{action}\"")
     public Http.Response sendAction(String action, IProduct product, JSONObject jsonData) {
-        Map<String, String> map = getItemIdByOrderId(action, product);
+        Item item = getItemIdByOrderIdAndActionTitle(action, product);
         return jsonHelper.getJsonTemplate("/actions/template.json")
-                .set("$.item_id", map.get("item_id"))
+                .set("$.item_id", item.id)
                 .set("$.order.data", jsonData)
                 .send(URL)
                 .setProjectId(product.getProjectId())
-                .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + map.get("name"));
+                .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + item.name);
     }
 
 
@@ -133,13 +133,13 @@ public class OrderServiceSteps extends Steps {
     public void executeAction(String action, IProduct product, JSONObject jsonData) {
         CostSteps costSteps = new CostSteps();
         CalcCostSteps calcCostSteps = new CalcCostSteps();
-        Map<String, String> map = getItemIdByOrderId(action, product);
+        Item item = getItemIdByOrderIdAndActionTitle(action, product);
         log.info("Отправка запроса на выполнение действия '" + action + "' для продукта " + product);
         DeferredException exception = new DeferredException();
         //TODO: Возможно стоит сделать более детальную проверку на значение
         Float costPreBilling = null;
         try {
-            costPreBilling = costSteps.getCostAction(map.get("name"), map.get("item_id"), product, jsonData);
+            costPreBilling = costSteps.getCostAction(item.name, item.id, product, jsonData);
             Assert.assertTrue("Стоимость после action отрицательная", costPreBilling >= 0);
         } catch (Throwable e) {
             exception.addException(e, product.getOrderId());
@@ -147,7 +147,6 @@ public class OrderServiceSteps extends Steps {
 
         String actionId = null;
         try {
-//TODO: обработать кейс если экшен не найден
             actionId = sendAction(action, product, jsonData)
                     .assertStatus(200)
                     .jsonPath()
@@ -235,15 +234,23 @@ public class OrderServiceSteps extends Steps {
                 .get("list[0].code");
     }
 
+    /**
+     * @param product объект продукт наследуемый от абстрактного класса IProduct
+     * @return - возвращаем ID проудкта
+     */
     public String getProductId(IProduct product) {
         log.info("Получение id для продукта " + product.getProductName());
+        //Получение информационной сисетмы
         InformationSystem informationSystem = cacheService.entity(InformationSystem.class)
                 .forOrders(true)
                 .getEntity();
         String product_id = "";
+        //Получение среды проекта
         ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
                 .forOrders(true)
-                .withField("env", product.getEnv()).getEntity();
+                .withField("env", product.getEnv())
+                .getEntity();
+        //Выполнение запроса
         int total_count = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=1&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id))
@@ -268,25 +275,30 @@ public class OrderServiceSteps extends Steps {
         return product_id;
     }
 
-    public Map<String, String> getItemIdByOrderId(String action, IProduct product) {
+    /**
+     * @param action  экшен
+     * @param product продукт
+     * @return - возвращаем ID айтема
+     */
+    public Item getItemIdByOrderIdAndActionTitle(String action, IProduct product) {
         log.info("Получение item_id для " + action);
+        //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .jsonPath();
 
-        Map<String, String> map = new HashMap<>();
-
-        map.put("item_id", jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.item_id", action)));
-        map.put("name", jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.actions.find{it.title=='%s'}.name", action, action)));
-
-        if (map.get("item_id") == null) {
-            map.put("item_id", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action)));
-            map.put("name", jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action)));
+        Item item = new Item();
+        item.id = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.item_id", action));
+        item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.actions.find{it.title=='%s'}.name", action, action));
+        //Достаем item ID и item name и сохраняем в объект Item
+        if (item.id == null) {
+            item.id = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action));
+            item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action));
         }
 
-        Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), map.get("item_id"));
-        return map;
+        Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), item.id);
+        return item;
     }
 
     @Step("Получение списка ресурсных пулов для категории {category} и среды {env}")
@@ -350,7 +362,7 @@ public class OrderServiceSteps extends Steps {
                         .jsonPath()
                         .get("attrs.product_title");
                 log.info("productName = " + productName);
-                if ("Apache Kafka Cluster".equals(productName)) {
+                if ("Apache Kafka Cluster" .equals(productName)) {
                     action_title = "Удалить";
                 } else {
                     action_title = "Удалить рекурсивно";
