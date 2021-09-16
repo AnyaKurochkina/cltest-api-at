@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Tag("cost2")
-public class CostTest implements Tests {
+public class CostTest extends Tests {
 
 
     @Test

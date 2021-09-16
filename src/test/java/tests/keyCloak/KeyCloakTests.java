@@ -12,7 +12,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags({@Tag("regress"), @Tag("teamcity")})
 @OrderLabel("tests.keyCloak.KeyCloakTests")
-public class KeyCloakTests implements Tests {
+public class KeyCloakTests extends Tests {
 
     @Test
     @TmsLink("33")

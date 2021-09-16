@@ -18,10 +18,10 @@ import tests.Tests;
 @OrderLabel("tests.tarifficator.CostOrderTest")
 @DisplayName("Набор тестов для проверки стоимости заказа")
 @Tags({@Tag("regress"),@Tag("prod"), @Tag("orders")})
-public class CostOrderTest implements Tests {
+public class CostOrderTest extends Tests {
     CostSteps costSteps = new CostSteps();
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @TmsLink("32")
     @DisplayName("Проверка стоимости заказа")
     @Source(ProductArgumentsProvider.PRODUCTS)

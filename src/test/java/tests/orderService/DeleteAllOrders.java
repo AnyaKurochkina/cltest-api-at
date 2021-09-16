@@ -16,10 +16,10 @@ import tests.Tests;
 @Order(1)
 @Tag("deleteorders")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DeleteAllOrders implements Tests {
+public class DeleteAllOrders extends Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @Tag("deleteAll")
     @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Удаление всех успешных заказов из проекта")

@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import steps.orderService.OrderServiceSteps;
+import tests.Tests;
 
 import java.util.stream.Stream;
 
@@ -20,13 +21,13 @@ import java.util.stream.Stream;
 @Tags({@Tag("regress"), @Tag("negative")})
 @OrderLabel("tests.orderService.ApacheKafkaClusterNegativeTests")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ApacheKafkaClusterNegativeTests {
+public class ApacheKafkaClusterNegativeTests extends Tests {
     CacheService cacheService = new CacheService();
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @Order(1)
     @DisplayName("Негативные тесты создания топика")
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @MethodSource("provideKafkaTopicNegative")
     public void negativeCreateKafkaTopic(String tmsId, KafkaTopic kafkaTopic) {
         Allure.tms("40." + tmsId, "");

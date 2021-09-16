@@ -8,6 +8,7 @@ import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.portalBack.AccessGroupSteps;
+import tests.Tests;
 
 import java.io.UnsupportedEncodingException;
 
@@ -16,9 +17,9 @@ import java.io.UnsupportedEncodingException;
 @OrderLabel("tests.portalBack.AccessGroupDeleteUsersTests")
 @Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AccessGroupDeleteUsersTests {
+public class AccessGroupDeleteUsersTests extends Tests {
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @Order(1)
     @TmsLink("21")
     @DisplayName("Удаление пользователя из группы доступа")

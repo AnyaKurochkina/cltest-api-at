@@ -23,10 +23,10 @@ import java.util.HashMap;
 @OrderLabel("tests.tarifficator.ComparePrebillingTest")
 @DisplayName("Набор тестов для проверки предбиллинга продуктов")
 @Tags({@Tag("regress"), @Tag("cost2"), @Tag("smoke")})
-public class ComparePrebillingTest implements Tests {
+public class ComparePrebillingTest extends Tests {
     CostSteps costSteps = new CostSteps();
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @DisplayName("Сравнение услуг продуктов предбиллинга с услугами продуктов активного тарифного плана")
     @TmsLink("30")
     @Source(ProductArgumentsProvider.PRODUCTS)

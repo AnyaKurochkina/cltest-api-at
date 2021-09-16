@@ -15,10 +15,10 @@ import tests.Tests;
 @OrderLabel("tests.authorizer.ProjectCreateTests")
 @Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProjectCreateTests implements Tests {
+public class ProjectCreateTests extends Tests {
     ProjectSteps projectSteps = new ProjectSteps();
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @Order(1)
     @TmsLink("11")
     @DisplayName("Создание проекта")

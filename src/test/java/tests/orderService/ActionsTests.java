@@ -17,7 +17,7 @@ import tests.Tests;
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.ActionsTests")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod"), @Tag("smoke")})
-public class ActionsTests implements Tests {
+public class ActionsTests extends Tests {
 
     @ParameterizedTest(name = "{0}")
     @Owner(value = "Ермаков Роман")

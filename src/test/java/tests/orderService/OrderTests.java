@@ -16,7 +16,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.OrderTests")
-public class OrderTests implements Tests {
+public class OrderTests extends Tests {
 
     @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
     @ParameterizedTest(name = "{0}")

@@ -27,10 +27,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.Semaphore;
 
-
 import static core.helper.JsonHelper.stringPrettyFormat;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static tests.Tests.putLog;
 
 @Log4j2
 public class Http {
@@ -149,6 +148,7 @@ public class Http {
     private Response request() {
         HttpURLConnection http = null;
         String responseMessage = null;
+        StringBuilder sbLog = new StringBuilder();
         int status = 0;
         try {
             URL url = new URL(host + path);
@@ -168,9 +168,9 @@ public class Http {
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
-            log.debug("URL: {}", (host + path));
+            sbLog.append(String.format("URL: %s\n", (host + path)));
             if (body.length() > 0) {
-                log.debug("REQUEST: {}", body);
+                sbLog.append(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
                 http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
             }
             InputStream is;
@@ -187,9 +187,23 @@ public class Http {
             if(path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
             if (responseMessage.length() > 10000)
-                log.debug("RESPONSE: {} ...", responseMessage.substring(0, 10000));
+                sbLog.append(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
             else
-                log.debug("RESPONSE: {}", responseMessage);
+                sbLog.append(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
+            log.debug(sbLog.toString());
+//            AllureLifecycle allureLifecycle = getLifecycle();
+//            Attachment attachment = new Attachment().setSource(sbLog.toString()).setName(String.valueOf(new Date()));
+//            allureLifecycle.getCurrentTestCaseOrStep().ifPresent(id -> allureLifecycle.updateStep(id, s -> s.getAttachments().add(attachment)));
+//            Allure.getLifecycle().updateTestCase((t) -> {
+//                StatusDetails  statusDetails = t.getStatusDetails();
+//                if(statusDetails == null)
+//                    statusDetails = new StatusDetails();
+//                String message = statusDetails.getMessage();
+//                if(message == null)
+//                    message = "";
+//                t.setStatusDetails( statusDetails.setMessage(message + sbLog));
+//            });
+            putLog(sbLog.toString());
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));

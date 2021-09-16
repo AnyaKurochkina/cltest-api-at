@@ -94,7 +94,7 @@ public class RabbitMQCluster extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
+                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", "test").getEntity()).envType.contains("TEST"))
                 .build();
     }
 

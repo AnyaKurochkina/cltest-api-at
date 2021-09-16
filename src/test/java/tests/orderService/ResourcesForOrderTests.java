@@ -16,7 +16,7 @@ import tests.Tests;
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.ResourcesForOrderTests")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod"), @Tag("smoke")})
-public class ResourcesForOrderTests implements Tests {
+public class ResourcesForOrderTests extends Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @ParameterizedTest(name = "{0}")

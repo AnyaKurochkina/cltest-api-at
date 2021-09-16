@@ -12,7 +12,7 @@ import tests.Tests;
 @OrderLabel("tests.authorizer.FoldersCreateTests")
 @Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class FoldersCreateTests implements Tests {
+public class FoldersCreateTests extends Tests {
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();
 
     @Test

@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
+import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
@@ -77,7 +78,7 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
+                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", "test").getEntity()).envType.contains("TEST"))
                 .build();
     }
 }

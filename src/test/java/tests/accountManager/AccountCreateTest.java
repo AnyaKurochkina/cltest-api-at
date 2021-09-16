@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @OrderLabel("tests.accountManager.AccountCreateTest")
 @Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AccountCreateTest implements Tests {
+public class AccountCreateTest extends Tests {
     AccountSteps accountCreate = new AccountSteps();
 
     @Test
