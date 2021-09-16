@@ -23,9 +23,9 @@ import java.util.List;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("consumption")
-public class ConsumptionTest implements Tests {
+public class ConsumptionTest extends Tests {
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @TmsLink("31")
     @Source(ProductArgumentsProvider.ENV)
     public void getCost(String env){

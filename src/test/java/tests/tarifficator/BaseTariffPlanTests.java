@@ -8,6 +8,8 @@ import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
 import org.junit.jupiter.api.*;
 import steps.tarifficator.TariffPlanSteps;
+import tests.Tests;
+
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @DisplayName("Базовые тарифные планы")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class BaseTariffPlanTests {
+public class BaseTariffPlanTests extends Tests {
     TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
     CacheService cacheService = new CacheService();
 

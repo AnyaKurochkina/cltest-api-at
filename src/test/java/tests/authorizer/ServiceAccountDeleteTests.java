@@ -15,10 +15,10 @@ import tests.Tests;
 @OrderLabel("tests.authorizer.ServiceAccountDeleteTests")
 @Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ServiceAccountDeleteTests implements Tests {
+public class ServiceAccountDeleteTests extends Tests {
     ServiceAccountSteps serviceAccountSteps = new ServiceAccountSteps();
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @Order(1)
     @TmsLink("22")
     @DisplayName("Удаление сервисного аккаунта")

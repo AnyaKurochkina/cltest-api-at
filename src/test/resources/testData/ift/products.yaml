@@ -1,10 +1,10 @@
-#OpenShiftProject:
-#  - actions:
-#      [ 'Изменить проект', 'Изменить квоту СХД' ]
-#  - options:
-#      - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
-#      - { env: "DSO", resourcePoolLabel: "d0-oscp.corp.dev.vtb - VTB-DSO" }
-#
+OpenShiftProject:
+  - actions:
+      [ 'Изменить проект', 'Изменить квоту СХД' ]
+  - options:
+      - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
+      - { env: "DSO", resourcePoolLabel: "d0-oscp.corp.dev.vtb - VTB-DSO" }
+
 #Rhel:
 #  - actions:
 #      [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
@@ -24,12 +24,12 @@
 #      [ 'Расширить', 'Создать пользователя RabbitMQ', 'Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно' ]
 #  - options:
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-
-Windows:
-  - actions:
-      [ 'Добавить диск', 'Расширить диск', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
-  - options:
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2019" }
+#
+#Windows:
+#  - actions:
+#      [ 'Добавить диск', 'Расширить диск', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+#  - options:
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2019" }
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2016" }
 #
 #Nginx:
@@ -51,4 +51,3 @@ Windows:
 #      [ 'Расширить', 'Сбросить пароль', 'Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно' ]
 #  - options:
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-#

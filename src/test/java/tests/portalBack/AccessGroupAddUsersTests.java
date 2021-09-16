@@ -9,16 +9,17 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.portalBack.AccessGroupSteps;
 import steps.portalBack.PortalBackSteps;
+import tests.Tests;
 
 @DisplayName("Набор тестов по добавлению пользователя в группы доступа")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @OrderLabel("tests.portalBack.AccessGroupAddUsersTests")
 @Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AccessGroupAddUsersTests {
+public class AccessGroupAddUsersTests extends Tests {
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
     PortalBackSteps portalBackSteps = new PortalBackSteps();
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @Order(1)
     @TmsLink("12")
     @DisplayName("Добавление пользователя в группу доступа")

@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
+import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
@@ -41,19 +42,12 @@ public class ApacheKafkaCluster extends IProduct {
 
     @Override
     public void order() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        projectId = project.id;
-        productId = orderServiceSteps.getProductId(this);
+        JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);
-
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = new Http(OrderServiceSteps.URL)
-                .setProjectId(project.id)
-                .post("order-service/api/v1/projects/" + project.id + "/orders",
-                        getJsonParametrizedTemplate())
+                .setProjectId(projectId)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
@@ -73,6 +67,10 @@ public class ApacheKafkaCluster extends IProduct {
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
+        if(productId == null) {
+            projectId = project.id;
+            productId = orderServiceSteps.getProductId(this);
+        }
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -85,7 +83,7 @@ public class ApacheKafkaCluster extends IProduct {
                 //.set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
+                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", "test").getEntity()).envType.contains("TEST"))
                 .build();
     }
 

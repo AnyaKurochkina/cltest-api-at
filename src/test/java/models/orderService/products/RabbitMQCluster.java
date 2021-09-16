@@ -37,18 +37,12 @@ public class RabbitMQCluster extends IProduct {
 
     @Override
     public void order() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        projectId = project.id;
-        productId = orderServiceSteps.getProductId(this);
+        JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = new Http(OrderServiceSteps.URL)
-                .setProjectId(project.id)
-                .post("order-service/api/v1/projects/" + project.id + "/orders",
-                        getJsonParametrizedTemplate())
+                .setProjectId(projectId)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
@@ -68,6 +62,10 @@ public class RabbitMQCluster extends IProduct {
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
+        if(productId == null) {
+            projectId = project.id;
+            productId = orderServiceSteps.getProductId(this);
+        }
         ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
                 .withField("env", env)
                 .forOrders(true)
@@ -96,7 +94,7 @@ public class RabbitMQCluster extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", env.toUpperCase().contains("TEST"))
+                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", "test").getEntity()).envType.contains("TEST"))
                 .build();
     }
 

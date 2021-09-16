@@ -16,10 +16,10 @@ import tests.Tests;
 @OrderLabel("tests.portalBack.AccessGroupCreateTests")
 @Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AccessGroupCreateTests implements Tests {
+public class AccessGroupCreateTests extends Tests {
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @Order(1)
     @TmsLink("13")
     @DisplayName("Создание Группы доступа")

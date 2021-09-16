@@ -15,10 +15,10 @@ import tests.Tests;
 @OrderLabel("tests.authorizer.ServiceAccountCreateTests")
 @Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ServiceAccountCreateTests implements Tests {
+public class ServiceAccountCreateTests extends Tests {
     ServiceAccountSteps serviceAccountSteps = new ServiceAccountSteps();
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @Order(1)
     @TmsLink("16")
     @DisplayName("Создание сервисного аккаунта")

@@ -15,10 +15,10 @@ import tests.Tests;
 @OrderLabel("tests.portalBack.AccessGroupDeleteTests")
 @Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AccessGroupDeleteTests implements Tests {
+public class AccessGroupDeleteTests extends Tests {
     AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @Order(1)
     @TmsLink("20")
     @DisplayName("Удаление Группы доступа")

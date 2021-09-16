@@ -17,13 +17,13 @@ public class TariffPlan extends Entity {
     Date beginDate;
     Date createdAt;
     Date endDate;
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     String id;
     String oldTariffPlanId;
     String organizationName;
     TariffPlanStatus status;
     List<TariffClass> tariffClasses;
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     String title;
     Boolean updateOrders;
     Date updatedAt;

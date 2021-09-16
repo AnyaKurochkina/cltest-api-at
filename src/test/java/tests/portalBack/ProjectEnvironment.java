@@ -20,12 +20,12 @@ import java.util.stream.Stream;
 @OrderLabel("tests.portalBack.ProjectEnvironment")
 @Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProjectEnvironment implements Tests {
+public class ProjectEnvironment extends Tests {
     PortalBackSteps portalBackSteps = new PortalBackSteps();
 
     @Order(1)
     @TmsLink("15")
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Получение среды назначения")
     @Description("Получение среды назначения с сохранением в Shared Memory")

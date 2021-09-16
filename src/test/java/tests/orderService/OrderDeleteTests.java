@@ -19,7 +19,7 @@ import tests.Tests;
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.OrderDeleteTests")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod"), @Tag("smoke")})
-public class OrderDeleteTests implements Tests {
+public class OrderDeleteTests extends Tests {
 
 
     @Owner(value = "Ермаков Роман")
