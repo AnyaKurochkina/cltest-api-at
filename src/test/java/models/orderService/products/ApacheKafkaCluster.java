@@ -1,5 +1,6 @@
 package models.orderService.products;
 
+import core.CacheService;
 import core.helper.Http;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
@@ -110,7 +111,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void createTopic(KafkaTopic kafkaTopic) {
-        orderServiceSteps.executeAction(KAFKA_CREATE_TOPIC, this, new JSONObject(cacheService.toJson(kafkaTopic)));
+        orderServiceSteps.executeAction(KAFKA_CREATE_TOPIC, this, new JSONObject(CacheService.toJson(kafkaTopic)));
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, kafkaTopic.getTopicName())));
         topics.add(kafkaTopic);
         cacheService.saveEntity(this);
@@ -120,7 +121,7 @@ public class ApacheKafkaCluster extends IProduct {
         List<KafkaTopic> kafkaTopics = new ArrayList<>();
         for(String name : names)
             kafkaTopics.add(new KafkaTopic("delete", 1, 1, 1, 1800000, name));
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"topics\": " + cacheService.toJson(kafkaTopics) + "}"));
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"topics\": " + CacheService.toJson(kafkaTopics) + "}"));
         for(String name : names)
             Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         topics.addAll(kafkaTopics);
@@ -144,7 +145,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void deleteTopic(List<String> names, String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"topics\": " + cacheService.toJson(names) + "}"));
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"topics\": " + CacheService.toJson(names) + "}"));
         for(String name : names)
             Assert.assertFalse((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         for(String name : names)
