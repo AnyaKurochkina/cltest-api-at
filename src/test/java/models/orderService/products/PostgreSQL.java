@@ -12,7 +12,7 @@ import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
-import models.subModels.PostgreSqlDB;
+import models.subModels.Db;
 import models.subModels.PostgreSqlUsers;
 import org.json.JSONObject;
 import org.junit.Action;
@@ -42,7 +42,7 @@ public class PostgreSQL extends IProduct {
     @ToString.Include
     String postgresqlVersion;
     String domain;
-    public List<PostgreSqlDB> database = new ArrayList<>();
+    public List<Db> database = new ArrayList<>();
     public List<PostgreSqlUsers> users = new ArrayList<>();
     Flavor flavor;
 
@@ -93,7 +93,7 @@ public class PostgreSQL extends IProduct {
                 .set("$.order.attrs.postgresql_version", postgresqlVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", "test").getEntity()).envType.contains("TEST"))
+                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
                 .build();
     }
 
@@ -113,10 +113,10 @@ public class PostgreSQL extends IProduct {
     }
 
     public void createDb(String dbName, String action) {
-        orderServiceSteps.executeAction("Добавить БД", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
         String dbNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_NAME_PATH);
         assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
-        database.add(new PostgreSqlDB(dbName, false));
+        database.add(new Db(dbName, false));
         log.info("database = " + database);
         cacheService.saveEntity(this);
     }

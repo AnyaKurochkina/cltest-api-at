@@ -5,7 +5,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class PostgreSqlDB {
+public class Db {
     String nameDB;
     public boolean isDeleted = false;
 }
