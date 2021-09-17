@@ -3,11 +3,11 @@ package models.orderService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import models.Entity;
+import models.EntityOld;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class ResourcePool extends Entity {
+public class ResourcePool extends EntityOld {
     public String id;
     @Getter
     public String label;

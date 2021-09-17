@@ -2,7 +2,7 @@ package models.tarifficator;
 
 import core.CacheService;
 import lombok.*;
-import models.Entity;
+import models.EntityOld;
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class TariffPlan extends Entity {
+public class TariffPlan extends EntityOld {
     Boolean base;
     String baseTariffPlanId;
     Date beginDate;

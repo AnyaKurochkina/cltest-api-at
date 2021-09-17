@@ -1,10 +1,10 @@
 package models.authorizer;
 
 import lombok.Builder;
-import models.Entity;
+import models.EntityOld;
 
 @Builder
-public class Folder extends Entity {
+public class Folder extends EntityOld {
     public String id;
     public String type;
     public String name;

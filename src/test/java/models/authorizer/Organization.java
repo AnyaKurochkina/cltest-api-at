@@ -1,10 +1,10 @@
 package models.authorizer;
 
 import lombok.Builder;
-import models.Entity;
+import models.EntityOld;
 
 @Builder
-public class Organization extends Entity {
+public class Organization extends EntityOld {
     public String title;
     public String name;
     @Builder.Default

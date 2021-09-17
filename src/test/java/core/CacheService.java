@@ -4,15 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 import core.helper.DataFileHelper;
-import models.Entity;
+import models.EntityOld;
 import models.orderService.interfaces.IProduct;
-import models.tarifficator.TariffPlan;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.junit.Assert;
 import org.junit.Assume;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.io.FileInputStream;
@@ -21,7 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.*;
 
@@ -37,7 +33,7 @@ public class CacheService {
     }
 
     @ResourceLock(value = "entities", mode = READ_WRITE)
-    public void saveEntity(Entity e) {
+    public void saveEntity(EntityOld e) {
         Class<?> c = e.getClass();
         if (e.objectUid == null)
             e.setObjectParams(c.getName());
@@ -73,7 +69,7 @@ public class CacheService {
      * @return - возвращаем
      */
     @ResourceLock(value = "entities", mode = READ)
-    public <T extends Entity> T getEntityWithoutAssert() {
+    public <T extends EntityOld> T getEntityWithoutAssert() {
         for (String shareDataElement : entities.values()) {
             JsonObject jsonObject = JsonParser.parseString(shareDataElement).getAsJsonObject();
             String classNameJson = jsonObject.get("objectClassName").getAsString();
@@ -123,7 +119,7 @@ public class CacheService {
         return null;
     }
 
-    public <T extends Entity> T getEntity() {
+    public <T extends EntityOld> T getEntity() {
         T e = getEntityWithoutAssert();
         Assume.assumeNotNull("Невозможно получить " + c.getName() + " с параметрами: " + new JSONObject(fields).toString(), e);
         return e;

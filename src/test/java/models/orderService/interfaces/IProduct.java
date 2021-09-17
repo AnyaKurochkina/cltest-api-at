@@ -14,7 +14,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
+import models.EntityOld;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.Action;
@@ -32,7 +32,7 @@ import java.util.List;
 
 @ToString(onlyExplicitlyIncluded = true)
 @Log4j2
-public abstract class IProduct extends Entity {
+public abstract class IProduct extends EntityOld {
     public static String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
     public static String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
     public static String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";

@@ -1,21 +1,9 @@
 package models;
-import core.CacheService;
-import core.helper.JsonHelper;
-import java.util.UUID;
 
-/**
- * Наследники данного класса получают возможность взаимодействовать с CacheService.class
- */
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 public abstract class Entity {
-    public String objectClassName;
-    public String objectUid;
-
-
-    protected transient JsonHelper jsonHelper = new JsonHelper();
-    protected transient CacheService cacheService = new CacheService();
-
-    public void setObjectParams(String className) {
-        this.objectClassName = className;
-        this.objectUid = UUID.randomUUID().toString();
-    }
+    public abstract void create();
+    public abstract void delete();
 }
