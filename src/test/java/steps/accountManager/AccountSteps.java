@@ -27,7 +27,7 @@ public class AccountSteps extends Steps {
                 .withField("name", folderName)
                 .getEntity();
         //Запрос на создание счета для папки с получением account ID
-        String accountId = jsonHelper.getJsonTemplate("/accountmanager/accountTemplate.json")
+        String accountId = jsonHelper.getJsonTemplate("/accountManager/accountTemplate.json")
                 .set("$.parent_id", getAccountIdByContext(folder.parentId))
                 .set("$.name", String.format("%s (%s)", folderName, folder.id))
                 .set("$.folder_uid", folder.id)
