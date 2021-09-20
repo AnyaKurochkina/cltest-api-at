@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import core.CacheService;
 import core.exception.DeferredException;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
@@ -14,6 +15,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.EntityOld;
 import models.subModels.Flavor;
 import org.json.JSONObject;
@@ -32,7 +34,7 @@ import java.util.List;
 
 @ToString(onlyExplicitlyIncluded = true)
 @Log4j2
-public abstract class IProduct extends EntityOld {
+public abstract class IProduct extends Entity {
     public static String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
     public static String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
     public static String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
@@ -42,6 +44,7 @@ public abstract class IProduct extends EntityOld {
 
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
     protected transient ReferencesStep referencesStep = new ReferencesStep();
+    protected transient CacheService cacheService = new CacheService();
     protected transient String jsonTemplate;
     @Setter
     protected transient List<String> actions;
@@ -154,7 +157,6 @@ public abstract class IProduct extends EntityOld {
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         orderServiceSteps.executeAction(action, this, null);
         setStatus(ProductStatus.DELETED);
-        cacheService.saveEntity(this);
         Assert.assertEquals("Стоимость после удаления заказа больше 0.0", 0.0F, calcCostSteps.getCostByUid(this), 0.0F);
     }
 

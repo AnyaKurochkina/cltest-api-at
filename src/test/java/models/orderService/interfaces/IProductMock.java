@@ -2,6 +2,7 @@ package models.orderService.interfaces;
 
 import core.utils.Waiting;
 import lombok.AllArgsConstructor;
+import models.Entity;
 import org.json.JSONObject;
 
 @AllArgsConstructor
@@ -18,6 +19,12 @@ public class IProductMock extends IProduct {
     public void stopHard(){}
     public void stopSoft(){}
     public void start(){}
+
+    @Override
+    public Entity create() {
+        return null;
+    }
+
     public void delete(){}
     public void resize() {}
     public void expandMountPoint() {}

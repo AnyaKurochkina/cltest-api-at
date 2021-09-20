@@ -1,12 +1,20 @@
 package tests.tarifficator;
 
 import core.CacheService;
-import core.helper.Http;
+import core.helper.IEntity;
+import core.helper.ObjectPoolEntity;
+import core.helper.ObjectPoolService;
+import core.helper.EntityUse;
 import core.utils.AssertUtils;
 import io.qameta.allure.TmsLink;
+import models.orderService.interfaces.IProduct;
+import models.orderService.products.ProductStatus;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
 import steps.tarifficator.TariffPlanSteps;
 import tests.Tests;
 
@@ -45,7 +53,7 @@ public class BaseTariffPlanTests extends Tests {
                 () -> assertEquals(tariffName, tariffPlan.getTitle()),
                 () -> assertEquals(activeTariff.getTariffClasses().size(), tariffPlan.getTariffClasses().size()),
                 () -> AssertUtils.AssertDate(currentDate, tariffPlan.getCreatedAt(), 300));
-        cacheService.saveEntity(tariffPlan);
+//        cacheService.saveEntity(tariffPlan);
     }
 
     @Test
@@ -53,16 +61,16 @@ public class BaseTariffPlanTests extends Tests {
     @Order(2)
     @DisplayName("Создание тарифного плана с существующим именем")
     public void duplicateNameBaseTariffPlan() {
-        TariffPlan tariffPlan = cacheService.entity(TariffPlan.class)
-                .withField("status", TariffPlanStatus.draft)
-                .getEntity();
-        assertThrows(
-                Http.StatusResponseException.class,
-                () -> tariffPlanSteps.createTariffPlan(TariffPlan.builder()
-                        .title(tariffPlan.getTitle())
-                        .base(true)
-                        .oldTariffPlanId(tariffPlan.getOldTariffPlanId())
-                        .build()));
+//        TariffPlan tariffPlan = cacheService.entity(TariffPlan.class)
+//                .withField("status", TariffPlanStatus.draft)
+//                .getEntity();
+//        assertThrows(
+//                Http.StatusResponseException.class,
+//                () -> tariffPlanSteps.createTariffPlan(TariffPlan.builder()
+//                        .title(tariffPlan.getTitle())
+//                        .base(true)
+//                        .oldTariffPlanId(tariffPlan.getOldTariffPlanId())
+//                        .build()));
     }
 
     @Test
@@ -70,24 +78,74 @@ public class BaseTariffPlanTests extends Tests {
     @Order(3)
     @DisplayName("Изменение имени тарифного плана в статусе черновик")
     public void renameBaseTariffPlan() {
-        TariffPlan tariffPlan = cacheService.entity(TariffPlan.class)
-                .withField("status", TariffPlanStatus.draft)
-                .getEntity();
-        String tariffName = "_RENAME " + tariffPlan.getTitle();
-        TariffPlan updateTariff = TariffPlan.builder()
-                .id(tariffPlan.getId())
-                .title(tariffName)
-                .build();
-        tariffPlanSteps.editTariffPlan(updateTariff);
-        updateTariff = tariffPlanSteps.getTariffPlan(updateTariff.getId());
-        assertEquals(tariffName, updateTariff.getTitle());
+//        TariffPlan tariffPlan = cacheService.entity(TariffPlan.class)
+//                .withField("status", TariffPlanStatus.draft)
+//                .getEntity();
+//        String tariffName = "_RENAME " + tariffPlan.getTitle();
+//        TariffPlan updateTariff = TariffPlan.builder()
+//                .id(tariffPlan.getId())
+//                .title(tariffName)
+//                .build();
+//        tariffPlanSteps.editTariffPlan(updateTariff);
+//        updateTariff = tariffPlanSteps.getTariffPlan(updateTariff.getId());
+//        assertEquals(tariffName, updateTariff.getTitle());
     }
+
+    @Order(4)
+    @Tag("tariffPlans")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "{0}")
+    @EntityUse(c = TariffPlan.class, to = ProductStatus.Num.deprovisioned)
+    public void test2(IProduct product, String tmsId) {
+        IEntity entity = ObjectPoolService.create(product, true);
+        product = entity.get();
+        product.runActionsBeforeOtherTests();
+        entity.set(product);
+        entity.release();
+    }
+
 
     @Test
     @TmsLink("37")
     @Order(4)
-    @Tag("tariffPlans")
+//    @Tag("tariffPlans")
+    @EntityUse(c = TariffPlan.class, from = TariffPlanStatus.Num.draft, to = TariffPlanStatus.Num.planned)
     public void test() {
 
+//        String json = "{\n" +
+//                "   \"http://http://url.com/\": {\n" +
+//                "      \"id\": \"http://http://url.com//\"\n" +
+//                "   },\n" +
+//                "   \"http://url2.co/\": {\n" +
+//                "      \"id\": \"http://url2.com//\",\n" +
+//                "      \"shares\": 16\n" +
+//                "   }\n" +
+//                "   ,\n" +
+//                "   \"http://url3.com/\": {\n" +
+//                "      \"id\": \"http://url3.com//\",\n" +
+//                "      \"shares\": 16\n" +
+//                "   }\n" +
+//                "}";
+//        JSONObject jsonObject = new JSONObject(json);
+//        Iterator<String> keys = jsonObject.keys();
+//        while(keys.hasNext()) {
+//            String key = keys.next();
+//            if (jsonObject.get(key) instanceof JSONObject) {
+//                System.out.println(jsonObject.get(key));
+//            }
+//        }
+        
+        
+        ObjectPoolService objectPoolService = new ObjectPoolService();
+
+        TariffPlan tariffPlan = TariffPlan.builder().build();
+        IEntity entity = objectPoolService.create(tariffPlan, true);
+        tariffPlan = entity.get();
+        entity.release();
+
+        TariffPlan tariffPlan2 = TariffPlan.builder().build();
+        IEntity entity2 = objectPoolService.create(tariffPlan2, false);
+
+        System.out.println(1);
     }
 }

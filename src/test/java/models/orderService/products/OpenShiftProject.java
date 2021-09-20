@@ -1,17 +1,21 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import core.helper.IEntity;
+import core.helper.ObjectPoolService;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Role;
+import models.tarifficator.TariffPlan;
 import org.json.JSONObject;
 import org.junit.Action;
 import org.junit.Assert;
@@ -33,9 +37,10 @@ public class OpenShiftProject extends IProduct {
     @Override
     public void order() {
         JSONObject template = getJsonParametrizedTemplate();
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", projectId)
-                .getEntity();
+        AccessGroup accessGroup = ObjectPoolService.create(AccessGroup.builder()
+                        .projectName(projectId)
+                        .build())
+                .get();
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
@@ -46,7 +51,7 @@ public class OpenShiftProject extends IProduct {
         roles.add(new Role("edit", accessGroup.name));
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
+//        cacheService.saveEntity(this);
     }
 
     public OpenShiftProject() {
@@ -56,23 +61,28 @@ public class OpenShiftProject extends IProduct {
 
     @Override
     public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        if(productId == null) {
+        Project project = ObjectPoolService.create(Project.builder()
+                        .env(env)
+                        .isForOrders(true)
+                        .build())
+                .get();
+        if (productId == null) {
             projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
-        ResourcePool resourcePool = cacheService.entity(ResourcePool.class)
-                .withField("label", resourcePoolLabel)
-                .getEntity();
+
+        AccessGroup accessGroup = ObjectPoolService.create(AccessGroup.builder()
+                        .projectName(project.id)
+                        .build())
+                .get();
+
+        ResourcePool resourcePool = ObjectPoolService.create(ResourcePool.builder()
+                        .label(resourcePoolLabel)
+                        .build())
+                .get();
 
         return jsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.order.attrs.resource_pool",  new JSONObject(resourcePool.toString()))
+                .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
@@ -84,7 +94,7 @@ public class OpenShiftProject extends IProduct {
         String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 0}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
         roles.get(0).setName("view");
         orderServiceSteps.executeAction(action, this, new JSONObject(data));
-        cacheService.saveEntity(this);
+//        cacheService.saveEntity(this);
         Assert.assertEquals("Память не изменилась", 2, orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.memory"));
         Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.roles[0].role"));
     }
@@ -94,7 +104,7 @@ public class OpenShiftProject extends IProduct {
         String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 1}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
         roles.get(0).setName("view");
         orderServiceSteps.executeAction(action, this, new JSONObject(data));
-        cacheService.saveEntity(this);
+//        cacheService.saveEntity(this);
         Assert.assertEquals("СХД не изменился на 1", 1, orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"));
     }
 
@@ -105,4 +115,14 @@ public class OpenShiftProject extends IProduct {
     }
 
 
+    @Override
+    public Entity create() {
+        order();
+        return this;
+    }
+
+    @Override
+    public void delete() {
+
+    }
 }

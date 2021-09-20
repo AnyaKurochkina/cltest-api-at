@@ -1,14 +1,14 @@
-ClickHouse:
-  - actions:
-      [ 'Актуализировать конфигурацию', 'Расширить', 'Добавить БД', 'Добавить пользователя']
-  - options:
-      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-
-#OpenShiftProject:
+#ClickHouse:
 #  - actions:
-#      [ 'Изменить проект', 'Изменить квоту СХД' ]
+#      [ 'Актуализировать конфигурацию', 'Расширить', 'Добавить БД', 'Добавить пользователя']
 #  - options:
-#      - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
+#      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+
+OpenShiftProject:
+  - actions:
+      [ 'Изменить проект', 'Изменить квоту СХД' ]
+  - options:
+      - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
 #      - { env: "DSO", resourcePoolLabel: "d0-oscp.corp.dev.vtb - VTB-DSO" }
 #
 #Rhel:

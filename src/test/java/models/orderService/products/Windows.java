@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -97,5 +98,15 @@ public class Windows extends IProduct {
     public void expandMountPoint(String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 1}"));
         Assert.assertEquals(11, orderServiceSteps.getFiledProduct(this, String.format(DISK_SIZE, "I")));
+    }
+
+    @Override
+    public Entity create() {
+        return null;
+    }
+
+    @Override
+    public void delete() {
+
     }
 }

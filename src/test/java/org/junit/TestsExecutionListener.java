@@ -1,6 +1,8 @@
 package org.junit;
 
 
+import core.helper.Configure;
+import core.helper.ObjectPoolService;
 import io.qameta.allure.TmsLink;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -35,12 +37,14 @@ public class TestsExecutionListener implements TestExecutionListener {
             }
         }
         log.info("tmsLink max {}", Math.round(Collections.max(values)));
-        CacheService.loadEntities(Steps.dataFolder + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json");
+        ObjectPoolService.loadEntities(Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json");
+//        CacheService.loadEntities(Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json");
     }
 
     @SneakyThrows
     public void testPlanExecutionFinished(TestPlan testPlan) {
-        CacheService.saveEntities(Steps.dataFolder + "/shareFolder/logData.json");
+        ObjectPoolService.saveEntities(Configure.getAppProp("data.folder") + "/shareFolder/logData.json");
+
         FileWriter fooWriter = new FileWriter("target/allure-results/environment.properties", false);
         fooWriter.write("ENV=" + ENV);
         fooWriter.close();

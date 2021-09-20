@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
@@ -88,4 +89,13 @@ public class ApacheKafka extends IProduct {
     }
 
 
+    @Override
+    public Entity create() {
+        return null;
+    }
+
+    @Override
+    public void delete() {
+
+    }
 }

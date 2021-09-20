@@ -33,12 +33,12 @@ public class CacheService {
     }
 
     @ResourceLock(value = "entities", mode = READ_WRITE)
-    public void saveEntity(EntityOld e) {
-        Class<?> c = e.getClass();
-        if (e.objectUid == null)
-            e.setObjectParams(c.getName());
-        String serialize = new Gson().toJson(e, c);
-        entities.put(e.objectUid, serialize);
+    public void saveEntity(Object e) {
+//        Class<?> c = e.getClass();
+//        if (e.objectUid == null)
+//            e.setObjectParams(c.getName());
+//        String serialize = new Gson().toJson(e, c);
+//        entities.put(e.objectUid, serialize);
     }
 
     public static String toJson(Object e) {
@@ -69,7 +69,7 @@ public class CacheService {
      * @return - возвращаем
      */
     @ResourceLock(value = "entities", mode = READ)
-    public <T extends EntityOld> T getEntityWithoutAssert() {
+    public <T> T getEntityWithoutAssert() {
         for (String shareDataElement : entities.values()) {
             JsonObject jsonObject = JsonParser.parseString(shareDataElement).getAsJsonObject();
             String classNameJson = jsonObject.get("objectClassName").getAsString();
@@ -119,10 +119,10 @@ public class CacheService {
         return null;
     }
 
-    public <T extends EntityOld> T getEntity() {
-        T e = getEntityWithoutAssert();
-        Assume.assumeNotNull("Невозможно получить " + c.getName() + " с параметрами: " + new JSONObject(fields).toString(), e);
-        return e;
+    public <T> T getEntity() {
+//        T e = getEntityWithoutAssert();
+//        Assume.assumeNotNull("Невозможно получить " + c.getName() + " с параметрами: " + new JSONObject(fields).toString(), e);
+        return null;
     }
 
     @ResourceLock(value = "entities", mode = READ_WRITE)

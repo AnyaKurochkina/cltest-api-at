@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -101,4 +102,13 @@ public class Redis extends IProduct {
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{redis_password: \"%s\"}", password)));
     }
 
+    @Override
+    public Entity create() {
+        return null;
+    }
+
+    @Override
+    public void delete() {
+
+    }
 }
