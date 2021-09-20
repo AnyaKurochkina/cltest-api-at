@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import models.Entity;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.lang.reflect.Type;
 import java.util.Iterator;
@@ -14,6 +15,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
+import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
 public class ObjectPoolEntity implements IEntity {
     private String entity;
@@ -26,6 +30,7 @@ public class ObjectPoolEntity implements IEntity {
     }
 
     @SneakyThrows
+    @ResourceLock(value = "entity", mode = READ)
     public boolean equalsEntity(Object o) {
         if (this == o)
             return true;
@@ -46,11 +51,15 @@ public class ObjectPoolEntity implements IEntity {
     }
 
     @Override
+    @ResourceLock(value = "entity", mode = READ)
     public <T extends Entity> T get() {
-        return ObjectPoolService.fromJson(entity, c);
+        T e = ObjectPoolService.fromJson(entity, c);
+        e.objectPoolEntity = this;
+        return e;
     }
 
     @Override
+    @ResourceLock(value = "entity", mode = READ_WRITE)
     public void set(Entity entity) {
         this.entity = ObjectPoolService.toJson(entity);
     }

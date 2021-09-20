@@ -1,6 +1,8 @@
 package models;
 
 import core.helper.JsonHelper;
+import core.helper.ObjectPoolEntity;
+import core.helper.ObjectPoolService;
 
 import java.util.Map;
 import java.util.UUID;
@@ -15,6 +17,7 @@ public abstract class Entity {
     public abstract void delete();
 //    public abstract void reset();
     protected transient JsonHelper jsonHelper = new JsonHelper();
+    public transient ObjectPoolEntity objectPoolEntity;
 
 //    public abstract void initDefaultFields();
 }

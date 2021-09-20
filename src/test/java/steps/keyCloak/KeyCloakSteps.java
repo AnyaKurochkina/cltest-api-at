@@ -3,6 +3,7 @@ package steps.keyCloak;
 import core.CacheService;
 import core.helper.Configure;
 import core.helper.Http;
+import core.helper.ObjectPoolService;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
@@ -17,11 +18,10 @@ public class KeyCloakSteps {
     private static final int TOKEN_LIFETIME_SEC = 300;
 
     /**
-     *
      * @return возвращаем токен
      */
     public static synchronized String getUserToken() {
-        CacheService cacheService = new CacheService();
+//        CacheService cacheService = new CacheService();
         //Получаем токен из памяти без проверки на Null
         UserToken userToken = cacheService.entity(UserToken.class).getEntityWithoutAssert();
         //Получаем текущее время
@@ -37,7 +37,7 @@ public class KeyCloakSteps {
         } else if (currentTime - userToken.time > TOKEN_LIFETIME_SEC) {
             userToken.token = getNewUserToken();
             userToken.time = currentTime;
-        //Если он не Null и время его существования не превышено, то просто возвращаем токен из памяти
+            //Если он не Null и время его существования не превышено, то просто возвращаем токен из памяти
         } else {
             return userToken.token;
         }
@@ -47,12 +47,11 @@ public class KeyCloakSteps {
     }
 
     /**
-     *
      * @return - возвращаем токен
      */
     @Step("Получение нового UserToken")
     public static synchronized String getNewUserToken() {
-        CacheService cacheService = new CacheService();
+//        CacheService cacheService = new CacheService();
         //Получение сервис из памяти
         Service service = cacheService.entity(Service.class).getEntity();
         //Получение пользователя из памяти
@@ -69,15 +68,16 @@ public class KeyCloakSteps {
                 .get("access_token");
     }
 
-//    @Step("Получение ServiceAccountToken")
+    //    @Step("Получение ServiceAccountToken")
     public static synchronized String getServiceAccountToken(String projectId) {
-        CacheService cacheService = new CacheService();
-        ServiceAccount serviceAccount = cacheService.entity(ServiceAccount.class)
-                .withField("projectId", projectId)
-                .getEntity();
-        ServiceAccountToken serviceAccountToken = cacheService.entity(ServiceAccountToken.class)
-                .withField("serviceAccountName", serviceAccount.name)
-                .getEntityWithoutAssert();
+        ServiceAccount serviceAccount = ObjectPoolService.create(ServiceAccount.builder()
+                        .projectId(projectId)
+                        .build())
+                .get();
+        ServiceAccountToken serviceAccountToken = ObjectPoolService.create(ServiceAccountToken.builder()
+                        .serviceAccountName(serviceAccount.name)
+                        .build())
+                .get();
         long currentTime = System.currentTimeMillis() / 1000L;
         if (serviceAccountToken == null) {
             serviceAccountToken = ServiceAccountToken.builder()
