@@ -89,8 +89,13 @@ public class OpenShiftProject extends IProduct {
         Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.roles[0].role"));
     }
 
+
     @Action("Изменить квоту СХД")
     public void updateProject(String action) {
+        if (!hasShdQuote()){
+            log.info("У продукта нет квоты СХД");
+            return;
+        }
         String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 1}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
         roles.get(0).setName("view");
         orderServiceSteps.executeAction(action, this, new JSONObject(data));
@@ -104,5 +109,20 @@ public class OpenShiftProject extends IProduct {
         super.delete(action);
     }
 
+    private boolean hasShdQuote(){
+        Project project = cacheService.entity(Project.class)
+                .withField("env", env)
+                .forOrders(true)
+                .getEntity();
+        String jsonArray = new Http(OrderServiceSteps.URL)
+                .setProjectId(project.id)
+                .get(String.format("order-service/api/v1/products/resource_pools?category=container&project_name=%s&quota[storage][sc-nfs-netapp-q]=1",
+                        project.id))
+                .assertStatus(200)
+                .toJson()
+                .getJSONArray("list")
+                .toString();
+        return jsonArray.contains(resourcePoolLabel);
+    }
 
 }
