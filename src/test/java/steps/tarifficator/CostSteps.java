@@ -2,6 +2,7 @@ package steps.tarifficator;
 
 import core.helper.Configure;
 import core.helper.Http;
+import core.helper.ObjectPoolService;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -137,11 +138,10 @@ public class CostSteps extends Steps {
 
     @Step("Получение предварительной стоимости action {action} продукта {product}")
     public Float getCostAction(String action, String itemId, IProduct product, JSONObject data) {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        Project project = cacheService.entity(Project.class)
-                .withField("env", product.getEnv())
-                .forOrders(true)
-                .getEntity();
+        Project project = ObjectPoolService.create(Project.builder()
+                        .env(product.getEnv())
+                        .isForOrders(true)
+                        .build());
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         return jsonHelper.getJsonTemplate("/tarifficator/costAction.json")
                 .set("$.params.project_name", project.id)

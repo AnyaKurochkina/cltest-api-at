@@ -7,14 +7,12 @@ import java.util.List;
 
 @Builder
 public class ServiceAccount extends Entity {
-    @Builder.Default
-    public boolean isDeleted = false;
+    public Boolean isDeleted;
     public String projectId;
     public String secret;
     public String name;
     public List<String> roles;
-    @Builder.Default
-    public boolean isForOrders = false;
+    public Boolean isForOrders;
 
     @Override
     public Entity create() {

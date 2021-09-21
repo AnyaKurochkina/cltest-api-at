@@ -17,7 +17,7 @@ public class DeferredException {
     public void addException(Throwable e, String msg) {
         if (e instanceof InvocationTargetException)
             e = e.getCause();
-        if(e.getMessage().startsWith("[1]"))
+        if(e.toString().startsWith("[1]"))
             errorStackTrace.append(e.getMessage()).append("\n");
         else {
             countError++;

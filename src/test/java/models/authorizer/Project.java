@@ -11,10 +11,8 @@ public class Project extends Entity {
     public String informationSystem;
     public String projectName;
     public String env;
-    @Builder.Default
-    public boolean isDeleted = false;
-    @Builder.Default
-    public boolean isForOrders = false;
+    public Boolean isDeleted;
+    public Boolean isForOrders;
 
     @Override
     public Entity create() {

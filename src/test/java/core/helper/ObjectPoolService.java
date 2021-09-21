@@ -24,28 +24,38 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ObjectPoolService {
     private static final Map<String, ObjectPoolEntity> entities = new ConcurrentHashMap<>();
 
-    public static IEntity create(Entity e, boolean exclusiveAccess){
+    public static <T extends Entity> T create(Entity e, boolean exclusiveAccess){
         for(ObjectPoolEntity objectPoolEntity : entities.values()) {
             if(objectPoolEntity.equalsEntity(e)){
                 if(exclusiveAccess)
                     objectPoolEntity.lock();
-                return objectPoolEntity;
+                return objectPoolEntity.get();
             }
         }
         ObjectPoolEntity objectPoolEntity = writeEntityToMap(e.create());
         if(exclusiveAccess)
             objectPoolEntity.lock();
-        return objectPoolEntity;
+        return objectPoolEntity.get();
     }
 
-    public static IEntity create(Entity e){
+    public static <T extends Entity> T create(Entity e){
         return create(e,false);
+    }
+
+    public static void saveEntity(Entity entity){
+        getObjectPoolEntity(entity).set(entity);
+    }
+
+    public static IEntity getObjectPoolEntity(Entity entity){
+        return entities.get(entity.uuid);
     }
 
     private static ObjectPoolEntity writeEntityToMap(Entity entity){
         entity.objectClassName = entity.getClass().getName();
+        String uuid = UUID.randomUUID().toString();
+        entity.uuid = uuid;
         ObjectPoolEntity objectPoolEntity = new ObjectPoolEntity(entity);
-        entities.put(UUID.randomUUID().toString(),  objectPoolEntity);
+        entities.put(uuid,  objectPoolEntity);
         return objectPoolEntity;
     }
 

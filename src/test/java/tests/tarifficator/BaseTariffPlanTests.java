@@ -96,12 +96,14 @@ public class BaseTariffPlanTests extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "{0}")
     @EntityUse(c = TariffPlan.class, to = ProductStatus.Num.deprovisioned)
-    public void test2(IProduct product, String tmsId) {
-        IEntity entity = ObjectPoolService.create(product, true);
-        product = entity.get();
-        product.runActionsBeforeOtherTests();
-        entity.set(product);
-        entity.release();
+    public void test2(IProduct p, String tmsId) throws Exception {
+
+        try(IProduct product = p.createObjectExclusiveAccess()){
+            product.runActionsAfterOtherTests();
+        }
+
+
+
     }
 
 
@@ -110,7 +112,7 @@ public class BaseTariffPlanTests extends Tests {
     @Order(4)
 //    @Tag("tariffPlans")
     @EntityUse(c = TariffPlan.class, from = TariffPlanStatus.Num.draft, to = TariffPlanStatus.Num.planned)
-    public void test() {
+    public void test() throws Exception {
 
 //        String json = "{\n" +
 //                "   \"http://http://url.com/\": {\n" +
@@ -134,17 +136,26 @@ public class BaseTariffPlanTests extends Tests {
 //                System.out.println(jsonObject.get(key));
 //            }
 //        }
-        
-        
-        ObjectPoolService objectPoolService = new ObjectPoolService();
 
-        TariffPlan tariffPlan = TariffPlan.builder().build();
-        IEntity entity = objectPoolService.create(tariffPlan, true);
-        tariffPlan = entity.get();
-        entity.release();
 
-        TariffPlan tariffPlan2 = TariffPlan.builder().build();
-        IEntity entity2 = objectPoolService.create(tariffPlan2, false);
+        TariffPlan tariffPlan1 = TariffPlan.builder()
+                .base(true)
+                .build()
+                .createObject();
+        System.out.println(tariffPlan1.getId());
+
+        try (TariffPlan tariffPlan2 = TariffPlan.builder()
+                .base(false)
+                .build()
+                .createObjectExclusiveAccess())
+        {
+            System.out.println(tariffPlan2.getId());
+        }
+
+
+
+//        TariffPlan tariffPlan2 = TariffPlan.builder().build();
+//        IEntity entity2 = objectPoolService.create(tariffPlan2, false);
 
         System.out.println(1);
     }

@@ -1,11 +1,11 @@
 package models.orderService.products;
 
 import core.helper.Http;
-import core.helper.IEntity;
 import core.helper.ObjectPoolService;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -15,7 +15,6 @@ import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Role;
-import models.tarifficator.TariffPlan;
 import org.json.JSONObject;
 import org.junit.Action;
 import org.junit.Assert;
@@ -39,8 +38,7 @@ public class OpenShiftProject extends IProduct {
         JSONObject template = getJsonParametrizedTemplate();
         AccessGroup accessGroup = ObjectPoolService.create(AccessGroup.builder()
                         .projectName(projectId)
-                        .build())
-                .get();
+                        .build());
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
@@ -51,7 +49,7 @@ public class OpenShiftProject extends IProduct {
         roles.add(new Role("edit", accessGroup.name));
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-//        cacheService.saveEntity(this);
+//        save();
     }
 
     public OpenShiftProject() {
@@ -59,13 +57,13 @@ public class OpenShiftProject extends IProduct {
         productName = "OpenShift project";
     }
 
+    @SneakyThrows
     @Override
     public JSONObject getJsonParametrizedTemplate() {
         Project project = ObjectPoolService.create(Project.builder()
                         .env(env)
                         .isForOrders(true)
-                        .build())
-                .get();
+                        .build());
         if (productId == null) {
             projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
@@ -73,13 +71,11 @@ public class OpenShiftProject extends IProduct {
 
         AccessGroup accessGroup = ObjectPoolService.create(AccessGroup.builder()
                         .projectName(project.id)
-                        .build())
-                .get();
+                        .build());
 
-        ResourcePool resourcePool = ObjectPoolService.create(ResourcePool.builder()
-                        .label(resourcePoolLabel)
-                        .build())
-                .get();
+        List<ResourcePool> resourcePoolList = orderServiceSteps.getResourcesPoolList("container", project.id);
+        ResourcePool resourcePool = resourcePoolList.stream().
+                filter(r -> r.getLabel().equals(resourcePoolLabel)).findFirst().orElseThrow(NoSuchFieldException::new);
 
         return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
@@ -94,7 +90,7 @@ public class OpenShiftProject extends IProduct {
         String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 0}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
         roles.get(0).setName("view");
         orderServiceSteps.executeAction(action, this, new JSONObject(data));
-//        cacheService.saveEntity(this);
+        save();
         Assert.assertEquals("Память не изменилась", 2, orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.memory"));
         Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.roles[0].role"));
     }
@@ -104,7 +100,7 @@ public class OpenShiftProject extends IProduct {
         String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 1}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
         roles.get(0).setName("view");
         orderServiceSteps.executeAction(action, this, new JSONObject(data));
-//        cacheService.saveEntity(this);
+        save();
         Assert.assertEquals("СХД не изменился на 1", 1, orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"));
     }
 

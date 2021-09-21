@@ -5,11 +5,13 @@ import com.google.gson.reflect.TypeToken;
 import core.exception.DeferredException;
 import core.helper.Configure;
 import core.helper.Http;
+import core.helper.ObjectPoolService;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
+import models.authorizer.AccessGroup;
 import models.authorizer.InformationSystem;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -241,16 +243,20 @@ public class OrderServiceSteps extends Steps {
     public String getProductId(IProduct product) {
         log.info("Получение id для продукта " + product.getProductName());
         //Получение информационной сисетмы
-        InformationSystem informationSystem = cacheService.entity(InformationSystem.class)
-                .forOrders(true)
-                .getEntity();
+        InformationSystem informationSystem = ObjectPoolService.create(InformationSystem.builder()
+                        .isForOrders(true)
+                        .build());
+
         String product_id = "";
         //Получение среды проекта
-        ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
-                .forOrders(true)
-                .withField("env", product.getEnv())
-                .getEntity();
+
+        ProjectEnvironment projectEnvironment = ObjectPoolService.create(ProjectEnvironment.builder()
+                        .isForOrders(true)
+                        .env(product.getEnv())
+                        .build());
+
         //Выполнение запроса
+        //TODO: оптимизировать
         int total_count = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=1&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id))
@@ -302,24 +308,16 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Получение списка ресурсных пулов для категории {category} и среды {env}")
-    public void getResourcesPool(String category, String env) {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
+    public List<ResourcePool> getResourcesPoolList(String category, String projectId) {
         String jsonArray = new Http(URL)
-                .setProjectId(project.id)
-                .get(String.format("order-service/api/v1/products/resource_pools?category=%s&project_name=%s", category, project.id))
+                .setProjectId(projectId)
+                .get(String.format("order-service/api/v1/products/resource_pools?category=%s&project_name=%s", category, projectId))
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("list")
                 .toString();
         Type type = new TypeToken<List<ResourcePool>>() {}.getType();
-        List<ResourcePool> list = new Gson().fromJson(jsonArray, type);
-        for(ResourcePool resourcePool : list) {
-            resourcePool.projectId = project.id;
-            cacheService.saveEntity(resourcePool);
-        }
+        return new Gson().fromJson(jsonArray, type);
     }
 
     public <T extends Comparable<T>> Comparable<T> getFiledProduct(@NotNull IProduct product, String path) {

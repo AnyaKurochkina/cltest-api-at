@@ -47,7 +47,7 @@ public abstract class IProduct extends Entity {
     protected transient CacheService cacheService = new CacheService();
     protected transient String jsonTemplate;
     @Setter
-    protected transient List<String> actions;
+    protected List<String> actions;
 
     @Setter
     @Getter

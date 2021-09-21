@@ -24,7 +24,7 @@ public class ResourcesForOrderTests extends Tests {
     @DisplayName("Получение ресурсных пулов контейнеров")
     public void getResourcesPool(String env, String tmsId) {
         Allure.tms("17." + tmsId, "");
-        orderServiceSteps.getResourcesPool("container", env);
+//        orderServiceSteps.getResourcesPoolList("container", env);
     }
 
 

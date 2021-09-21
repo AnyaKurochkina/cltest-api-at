@@ -3,13 +3,10 @@ package core.helper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import lombok.Getter;
 import lombok.SneakyThrows;
-import lombok.ToString;
 import models.Entity;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
-import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -53,9 +50,7 @@ public class ObjectPoolEntity implements IEntity {
     @Override
     @ResourceLock(value = "entity", mode = READ)
     public <T extends Entity> T get() {
-        T e = ObjectPoolService.fromJson(entity, c);
-        e.objectPoolEntity = this;
-        return e;
+        return ObjectPoolService.fromJson(entity, c);
     }
 
     @Override
@@ -70,7 +65,8 @@ public class ObjectPoolEntity implements IEntity {
 
     @Override
     public void release() {
-        lock.unlock();
+        if(lock.tryLock())
+            lock.unlock();
     }
 
     @Override

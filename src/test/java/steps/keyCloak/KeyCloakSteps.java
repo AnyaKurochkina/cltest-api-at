@@ -17,45 +17,18 @@ public class KeyCloakSteps {
     private static final String URL = Configure.getAppProp("host_kk");
     private static final int TOKEN_LIFETIME_SEC = 300;
 
-    /**
-     * @return возвращаем токен
-     */
-    public static synchronized String getUserToken() {
-//        CacheService cacheService = new CacheService();
-        //Получаем токен из памяти без проверки на Null
-        UserToken userToken = cacheService.entity(UserToken.class).getEntityWithoutAssert();
-        //Получаем текущее время
-        long currentTime = System.currentTimeMillis() / 1000L;
-        //Создаем токен, если в памяти он null
-        if (userToken == null) {
-            userToken = UserToken.builder()
-                    .token(getNewUserToken())
-                    .time(currentTime)
-                    .build();
-        /* Если он не null то проверяем время существования токена,
-         если оно превышает 5 мин., то создаем новый */
-        } else if (currentTime - userToken.time > TOKEN_LIFETIME_SEC) {
-            userToken.token = getNewUserToken();
-            userToken.time = currentTime;
-            //Если он не Null и время его существования не превышено, то просто возвращаем токен из памяти
-        } else {
-            return userToken.token;
-        }
-        //Сохраняем токен
-        cacheService.saveEntity(userToken);
-        return userToken.token;
-    }
 
     /**
      * @return - возвращаем токен
      */
     @Step("Получение нового UserToken")
     public static synchronized String getNewUserToken() {
-//        CacheService cacheService = new CacheService();
         //Получение сервис из памяти
-        Service service = cacheService.entity(Service.class).getEntity();
+        Service service = ObjectPoolService.create(Service.builder()
+                        .build());
         //Получение пользователя из памяти
-        User user = cacheService.entity(User.class).getEntity();
+        User user = ObjectPoolService.create(User.builder()
+                        .build());
         //Отправка запроса на получение токена
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
@@ -68,37 +41,43 @@ public class KeyCloakSteps {
                 .get("access_token");
     }
 
+    /**
+     * @return возвращаем токен
+     */
+    public static synchronized String getUserToken() {
+        UserToken userToken = ObjectPoolService.create(UserToken.builder()
+                        .build());
+        long currentTime = System.currentTimeMillis() / 1000L;
+
+        if (currentTime - userToken.time > TOKEN_LIFETIME_SEC) {
+            userToken.token = getNewUserToken();
+            userToken.time = currentTime;
+            //Если он не Null и время его существования не превышено, то просто возвращаем токен из памяти
+        }
+        //Сохраняем токен
+        userToken.save();
+        return userToken.token;
+    }
+
     //    @Step("Получение ServiceAccountToken")
     public static synchronized String getServiceAccountToken(String projectId) {
         ServiceAccount serviceAccount = ObjectPoolService.create(ServiceAccount.builder()
                         .projectId(projectId)
-                        .build())
-                .get();
+                        .build());
         ServiceAccountToken serviceAccountToken = ObjectPoolService.create(ServiceAccountToken.builder()
                         .serviceAccountName(serviceAccount.name)
-                        .build())
-                .get();
+                        .build());
         long currentTime = System.currentTimeMillis() / 1000L;
-        if (serviceAccountToken == null) {
-            serviceAccountToken = ServiceAccountToken.builder()
-                    .token(getNewServiceAccountToken(projectId, serviceAccount))
-                    .serviceAccountName(serviceAccount.name)
-                    .time(currentTime)
-                    .build();
-        } else if (currentTime - serviceAccountToken.time > TOKEN_LIFETIME_SEC) {
-            serviceAccountToken.token = getNewServiceAccountToken(projectId, serviceAccount);
+        if (currentTime - serviceAccountToken.time > TOKEN_LIFETIME_SEC) {
+            serviceAccountToken.token = getNewServiceAccountToken(serviceAccount);
             serviceAccountToken.time = currentTime;
-        } else {
-//            log.debug("Использован SA токен из кэша {}", serviceAccountToken.serviceAccountName);
-            return serviceAccountToken.token;
         }
-//        log.debug("Использован SA новый токен {}", serviceAccountToken.serviceAccountName);
-        cacheService.saveEntity(serviceAccountToken);
+        serviceAccountToken.save();
         return serviceAccountToken.token;
     }
 
     @Step("Получение нового ServiceAccountToken")
-    public static synchronized String getNewServiceAccountToken(String projectId, ServiceAccount serviceAccount) {
+    public static synchronized String getNewServiceAccountToken(ServiceAccount serviceAccount) {
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()
