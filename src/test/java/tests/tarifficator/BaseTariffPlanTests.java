@@ -6,6 +6,7 @@ import core.helper.ObjectPoolEntity;
 import core.helper.ObjectPoolService;
 import core.helper.EntityUse;
 import core.utils.AssertUtils;
+import io.qameta.allure.Description;
 import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.IProduct;
 import models.orderService.products.ProductStatus;
@@ -91,19 +92,28 @@ public class BaseTariffPlanTests extends Tests {
 //        assertEquals(tariffName, updateTariff.getTitle());
     }
 
+    @Order(3)
+    @Tag("tariffPlans")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "{0}")
+    @EntityUse(c = TariffPlan.class, to = ProductStatus.Num.deprovisioned)
+    @DisplayName("Изменение проектов")
+    public void test3(IProduct p, String tmsId) throws Throwable {
+        try(IProduct product = p.createObjectExclusiveAccess()){
+            product.invokeAction("Изменить проект");
+        }
+    }
+
     @Order(4)
     @Tag("tariffPlans")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "{0}")
     @EntityUse(c = TariffPlan.class, to = ProductStatus.Num.deprovisioned)
-    public void test2(IProduct p, String tmsId) throws Exception {
-
+    @DisplayName("Удаление продуктов")
+    public void test2(IProduct p, String tmsId) throws Throwable {
         try(IProduct product = p.createObjectExclusiveAccess()){
-            product.runActionsAfterOtherTests();
+            product.invokeAction("Удалить проект");
         }
-
-
-
     }
 
 

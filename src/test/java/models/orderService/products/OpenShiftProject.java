@@ -31,7 +31,7 @@ import java.util.Random;
 public class OpenShiftProject extends IProduct {
     @ToString.Include
     public String resourcePoolLabel;
-    public List<Role> roles = new ArrayList<>();
+    public List<Role> roles;
 
     @Override
     public void order() {
@@ -46,6 +46,7 @@ public class OpenShiftProject extends IProduct {
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
+        roles = new ArrayList<>();
         roles.add(new Role("edit", accessGroup.name));
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);

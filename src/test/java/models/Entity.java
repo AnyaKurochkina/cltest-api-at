@@ -37,10 +37,8 @@ public abstract class Entity implements AutoCloseable {
         return createObject(false);
     }
 
-    @SuppressWarnings("unchecked")
     private <T extends Entity> T createObject(boolean exclusiveAccess){
-        ObjectPoolService.create(this, exclusiveAccess);
-        return (T) this;
+        return ObjectPoolService.create(this, exclusiveAccess);
     }
 
     public <T extends Entity> T createObjectExclusiveAccess() throws Exception{

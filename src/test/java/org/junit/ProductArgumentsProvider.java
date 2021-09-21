@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import core.helper.ObjectPoolService;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.IProductMock;
@@ -40,7 +41,8 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
             if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
                 AtomicReference<Integer> i = new AtomicReference<>(1);
                 orders.forEach(entity -> {
-                    list.add(Arguments.of(entity, String.valueOf(i)));
+                    Class<?> c = entity.getClass();
+                    list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c), String.valueOf(i)));
                     i.getAndSet(i.get() + 1);
                 });
             } else {

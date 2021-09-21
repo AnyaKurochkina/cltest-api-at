@@ -51,7 +51,7 @@ public abstract class IProduct extends Entity {
 
     @Setter
     @Getter
-    private ProductStatus status = ProductStatus.NOT_CREATED;
+    private ProductStatus status;
     @Getter
     protected String orderId;
     @Getter
@@ -80,7 +80,7 @@ public abstract class IProduct extends Entity {
      * @return - возвращаем статус вызова экшена
      * @throws Throwable необходим для метода invoke (java.lang.reflect.Method)
      */
-    private boolean invokeAction(String action) throws Throwable {
+    public boolean invokeAction(String action) throws Throwable {
         boolean invoke = false;
         //Перебираем методы класса
         for (Method method : this.getClass().getMethods()) {
