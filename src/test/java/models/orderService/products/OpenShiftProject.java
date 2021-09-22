@@ -109,15 +109,12 @@ public class OpenShiftProject extends IProduct {
         super.delete(action);
     }
 
+    //Проверка на наличие СХД у продукта
     private boolean hasShdQuote(){
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
         String jsonArray = new Http(OrderServiceSteps.URL)
-                .setProjectId(project.id)
+                .setProjectId(getProjectId())
                 .get(String.format("order-service/api/v1/products/resource_pools?category=container&project_name=%s&quota[storage][sc-nfs-netapp-q]=1",
-                        project.id))
+                        getProjectId()))
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("list")
