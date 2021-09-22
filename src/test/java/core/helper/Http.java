@@ -191,18 +191,6 @@ public class Http {
             else
                 sbLog.append(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
             log.debug(sbLog.toString());
-//            AllureLifecycle allureLifecycle = getLifecycle();
-//            Attachment attachment = new Attachment().setSource(sbLog.toString()).setName(String.valueOf(new Date()));
-//            allureLifecycle.getCurrentTestCaseOrStep().ifPresent(id -> allureLifecycle.updateStep(id, s -> s.getAttachments().add(attachment)));
-//            Allure.getLifecycle().updateTestCase((t) -> {
-//                StatusDetails  statusDetails = t.getStatusDetails();
-//                if(statusDetails == null)
-//                    statusDetails = new StatusDetails();
-//                String message = statusDetails.getMessage();
-//                if(message == null)
-//                    message = "";
-//                t.setStatusDetails( statusDetails.setMessage(message + sbLog));
-//            });
             putLog(sbLog.toString());
         } catch (Exception e) {
             e.printStackTrace();

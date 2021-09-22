@@ -12,10 +12,12 @@ import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
+import models.subModels.DbUser;
 import models.subModels.Flavor;
 import models.subModels.Db;
 import org.json.JSONObject;
 import org.junit.Action;
+import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -37,10 +39,14 @@ public class ClickHouse extends IProduct {
     String osVersion;
     String domain;
     public List<Db> database = new ArrayList<>();
+    public List<DbUser> users = new ArrayList<>();
+
     public static final String REFRESH_VM_CONFIG = "Актуализировать конфигурацию";
     public static final String CLICKHOUSE_CREATE_DB = "Добавить БД";
+    public static final String CLICKHOUSE_CREATE_DBMS_USER = "Добавить пользователя";
 
-    public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs[0].db_name";
+    public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs.any{it.db_name=='%s'}";
+    public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users.any{it.user_name=='%s'}";
 
     @Override
     public void order() {
@@ -75,11 +81,23 @@ public class ClickHouse extends IProduct {
 
     public void createDb(String dbName, String action) {
         Db db = new Db(dbName, false);
-        orderServiceSteps.executeAction(action, this, new JSONObject(CacheService.toJson(db)));
-        String dbNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_NAME_PATH);
-        assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
+        orderServiceSteps.executeAction(action, this, new JSONObject(new JSONObject(String.format("{\"db_name\":\"%s\"}", dbName))));
+        Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(DB_NAME_PATH, dbName)));
         database.add(db);
         cacheService.saveEntity(this);
+    }
+
+    public void createDbmsUser(String username, String password, String action) {
+        String dbName = database.get(0).getNameDB();
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName, username, password)));
+        Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(DB_USERNAME_PATH, username)));
+        users.add(new DbUser(dbName, username, false));
+        cacheService.saveEntity(this);
+    }
+
+    @Action(CLICKHOUSE_CREATE_DBMS_USER)
+    public void createDbmsUserTest(String action) {
+        createDbmsUser("testUser_1", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
     }
 
     @Override
