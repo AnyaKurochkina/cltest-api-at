@@ -167,7 +167,7 @@ public class OrderServiceSteps extends Steps {
                     cost = calcCostSteps.getCostByUid(product);
                     if (cost == null)
                         continue;
-                    if (Float.compare(cost, costPreBilling) > 0.00001)
+                    if (Math.abs(cost - costPreBilling) > 0.00001)
                         continue;
                     break;
                 }
@@ -372,9 +372,9 @@ public class OrderServiceSteps extends Steps {
                         .get("attrs.product_title");
                 log.info("productName = " + productName);
                 if ("Apache Kafka Cluster" .equals(productName)) {
-                    action_title = "Удалить";
-                } else {
                     action_title = "Удалить рекурсивно";
+                } else {
+                    action_title = "Удалить";
                 }
                 log.info("Получение item_id для " + action_title);
                 JsonPath jsonPath = new Http(URL)
