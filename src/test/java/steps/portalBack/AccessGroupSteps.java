@@ -18,9 +18,15 @@ import java.nio.charset.StandardCharsets;
 public class AccessGroupSteps extends Steps {
     private static final String URL = Configure.getAppProp("host_kong");
 
+    /**
+     * Метод создает группу доступа в определенном проекте
+     * @param projectName ID проекта
+     * @param accessName имя создаваемой группы доступа
+     */
     @Step("Создание группы доступа в проекте {projectName} с названием {accessName}")
     public void createAccessGroup(String projectName, String accessName) {
         StringUtils stringUtils = new StringUtils();
+        //Получаем проект из памяти по его ID
         Project project = cacheService.entity(Project.class)
                 .withField("projectName", projectName)
                 .forOrders(false)
@@ -64,17 +70,24 @@ public class AccessGroupSteps extends Steps {
         cacheService.saveEntity(accessGroup);
     }
 
-
+    /**
+     * Метод добавляет пользователя в группу доступа
+     * @param env
+     * @param username
+     */
     @Step("Добавление пользователя в группу доступа для проекта среды {env}")
     public void addUsersToGroup(String env, String username) {
+        //Получение проекта из памяти
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .forOrders(false)
                 .getEntity();
+        //Плучение группы доступа из памяти
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
         String[] arr = new String[] {username};
+        //Отправка запроса на добавление пользователя в группу доступа
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/accessGroup/users.json")
                 .set("$.users", arr)
                 .send(URL)
