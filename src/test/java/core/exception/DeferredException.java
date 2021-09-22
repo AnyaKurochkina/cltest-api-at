@@ -5,6 +5,8 @@ import io.qameta.allure.model.Status;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.stream.Stream;
 
 import static io.qameta.allure.Allure.getLifecycle;
@@ -15,13 +17,18 @@ public class DeferredException {
     int countError = 0;
 
     public void addException(Throwable e, String msg) {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss ");
+        String time = formatter.format(new Date(System.currentTimeMillis()));
         if (e instanceof InvocationTargetException)
             e = e.getCause();
-        if(e.getMessage().startsWith("[1]"))
+        String error = e.getMessage();
+        if(error == null)
+            error = e.toString();
+        if(e.toString().startsWith("[1]"))
             errorStackTrace.append(e.getMessage()).append("\n");
         else {
             countError++;
-            errorStackTrace.append(String.format("[%d] %s\n %s\n", countError, e, msg));
+            errorStackTrace.append(String.format("[%d] %s %s\n %s\n", countError, time, e, msg));
             Stream.of(e.getStackTrace()).map(StackTraceElement::toString).limit(10).forEach(s -> {
                 errorStackTrace.append("\t at ").append(s).append("\n");
             });
