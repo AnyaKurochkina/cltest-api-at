@@ -18,10 +18,10 @@ public class DeferredException {
         if (e instanceof InvocationTargetException)
             e = e.getCause();
         if(e.getMessage().startsWith("[1]"))
-            errorStackTrace = new StringBuilder(e.getMessage());
+            errorStackTrace.append(e.getMessage()).append("\n");
         else {
             countError++;
-            errorStackTrace.append(String.format("[%d] %s\n %s\n", countError, e.toString(), msg));
+            errorStackTrace.append(String.format("[%d] %s\n %s\n", countError, e, msg));
             Stream.of(e.getStackTrace()).map(StackTraceElement::toString).limit(10).forEach(s -> {
                 errorStackTrace.append("\t at ").append(s).append("\n");
             });

@@ -13,7 +13,7 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import models.subModels.Db;
-import models.subModels.PostgreSqlUsers;
+import models.subModels.DbUser;
 import org.json.JSONObject;
 import org.junit.Action;
 import steps.orderService.OrderServiceSteps;
@@ -43,7 +43,7 @@ public class PostgreSQL extends IProduct {
     String postgresqlVersion;
     String domain;
     public List<Db> database = new ArrayList<>();
-    public List<PostgreSqlUsers> users = new ArrayList<>();
+    public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
 
     @Override
@@ -140,10 +140,10 @@ public class PostgreSQL extends IProduct {
 
     public void createDbmsUser(String username, String dbRole, String action) {
         String dbName = database.get(0).getNameDB();
-        orderServiceSteps.executeAction("Добавить пользователя", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
         String dbUserNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_USERNAME_PATH);
         assertEquals("Имя пользователя отличается от создаваемого", String.format("%s_%s", dbName, username), dbUserNameActual);
-        users.add(new PostgreSqlUsers(dbName, dbUserNameActual, false));
+        users.add(new DbUser(dbName, dbUserNameActual, false));
         log.info("users = " + users);
         cacheService.saveEntity(this);
     }
