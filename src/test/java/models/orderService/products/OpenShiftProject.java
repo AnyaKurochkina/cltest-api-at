@@ -89,8 +89,13 @@ public class OpenShiftProject extends IProduct {
         Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.roles[0].role"));
     }
 
+
     @Action("Изменить квоту СХД")
     public void updateProject(String action) {
+        if (!hasShdQuote()){
+            log.info("У продукта нет квоты СХД");
+            return;
+        }
         String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 1}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
         roles.get(0).setName("view");
         orderServiceSteps.executeAction(action, this, new JSONObject(data));
@@ -104,5 +109,17 @@ public class OpenShiftProject extends IProduct {
         super.delete(action);
     }
 
+    //Проверка на наличие СХД у продукта
+    private boolean hasShdQuote(){
+        String jsonArray = new Http(OrderServiceSteps.URL)
+                .setProjectId(getProjectId())
+                .get(String.format("order-service/api/v1/products/resource_pools?category=container&project_name=%s&quota[storage][sc-nfs-netapp-q]=1",
+                        getProjectId()))
+                .assertStatus(200)
+                .toJson()
+                .getJSONArray("list")
+                .toString();
+        return jsonArray.contains(resourcePoolLabel);
+    }
 
 }

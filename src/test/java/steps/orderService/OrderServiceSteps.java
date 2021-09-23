@@ -301,12 +301,19 @@ public class OrderServiceSteps extends Steps {
         return item;
     }
 
+    /**
+     * Метод получает ресурсные пулы и сохраняет их
+     * @param category категория, например: container
+     * @param env имя среды
+     */
     @Step("Получение списка ресурсных пулов для категории {category} и среды {env}")
     public void getResourcesPool(String category, String env) {
+        //Получение проекта из памяти
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
+        //Отправка запроса на получение ресурсных пулов с параметрами: категория и ID проекта полученного ранее
         String jsonArray = new Http(URL)
                 .setProjectId(project.id)
                 .get(String.format("order-service/api/v1/products/resource_pools?category=%s&project_name=%s", category, project.id))
@@ -314,8 +321,10 @@ public class OrderServiceSteps extends Steps {
                 .toJson()
                 .getJSONArray("list")
                 .toString();
+        //Преобразование json ответа в список обектов (ресурсных пулов)
         Type type = new TypeToken<List<ResourcePool>>() {}.getType();
         List<ResourcePool> list = new Gson().fromJson(jsonArray, type);
+        //Сохранение ресурсных пулов в память
         for(ResourcePool resourcePool : list) {
             resourcePool.projectId = project.id;
             cacheService.saveEntity(resourcePool);
