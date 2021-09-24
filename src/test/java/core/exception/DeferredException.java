@@ -25,7 +25,7 @@ public class DeferredException {
         if(error == null)
             error = e.toString();
         if(e.toString().startsWith("[1]"))
-            errorStackTrace.append(e.getMessage()).append("\n");
+            errorStackTrace.append(error).append("\n");
         else {
             countError++;
             errorStackTrace.append(String.format("[%d] %s %s\n %s\n", countError, time, e, msg));
