@@ -2,6 +2,7 @@ package models.orderService.products;
 
 import core.helper.Http;
 import core.helper.ObjectPoolService;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,6 +35,7 @@ public class OpenShiftProject extends IProduct {
     public List<Role> roles;
 
     @Override
+    @Step("Заказ продукта")
     public void order() {
         JSONObject template = getJsonParametrizedTemplate();
         AccessGroup accessGroup = ObjectPoolService.create(AccessGroup.builder()

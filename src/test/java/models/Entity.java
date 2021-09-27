@@ -1,11 +1,13 @@
 package models;
 
+import core.exception.CustomException;
 import core.helper.IEntity;
 import core.helper.JsonHelper;
 import core.helper.ObjectPoolEntity;
 import core.helper.ObjectPoolService;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 
 import java.util.Map;
 import java.util.UUID;
@@ -27,9 +29,11 @@ public abstract class Entity implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         IEntity iEntity = ObjectPoolService.getObjectPoolEntity(this);
+        System.out.println(this + " ПреРелиз");
         iEntity.release();
+        System.out.println(this + " ПостРелиз");
     }
 
 
@@ -41,7 +45,7 @@ public abstract class Entity implements AutoCloseable {
         return ObjectPoolService.create(this, exclusiveAccess);
     }
 
-    public <T extends Entity> T createObjectExclusiveAccess() throws Exception{
+    public <T extends Entity> T createObjectExclusiveAccess() {
         return createObject(true);
     }
 

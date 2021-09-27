@@ -8,6 +8,8 @@ import models.Entity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.junit.Assume;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.io.FileInputStream;
 import java.lang.reflect.Type;
@@ -20,42 +22,61 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-
 public class ObjectPoolService {
     private static final Map<String, ObjectPoolEntity> entities = new ConcurrentHashMap<>();
 
-    public static <T extends Entity> T create(Entity e, boolean exclusiveAccess){
-        for(ObjectPoolEntity objectPoolEntity : entities.values()) {
-            if(objectPoolEntity.equalsEntity(e)){
-                if(exclusiveAccess)
-                    objectPoolEntity.lock();
-                return objectPoolEntity.get();
+    public static <T extends Entity> T create(Entity e, boolean exclusiveAccess) {
+        ObjectPoolEntity objectPoolEntity = createObjectPoolEntity(e);
+        Assume.assumeFalse("Object is failed" ,objectPoolEntity.isFailed());
+        System.out.println(e + "ПреЛок");
+        objectPoolEntity.lock();
+        System.out.println(e + " ПостЛок");
+        if (!objectPoolEntity.isCreated()) {
+            try {
+                objectPoolEntity.get().create().save();
+            } catch (Throwable throwable){
+                objectPoolEntity.setFailed(true);
+                objectPoolEntity.release();
+                throw throwable;
             }
+            objectPoolEntity.setCreated(true);
         }
-        ObjectPoolEntity objectPoolEntity = writeEntityToMap(e.create());
-        if(exclusiveAccess)
-            objectPoolEntity.lock();
+        if (!exclusiveAccess) {
+            System.out.println(e + " ПреРелизНО");
+            objectPoolEntity.release();
+            System.out.println(e + " ПостРелизНО");
+        }
         return objectPoolEntity.get();
     }
 
-    public static <T extends Entity> T create(Entity e){
-        return create(e,false);
+    public static synchronized ObjectPoolEntity createObjectPoolEntity(Entity e) {
+        for (ObjectPoolEntity objectPoolEntity : entities.values()) {
+            if (objectPoolEntity.equalsEntity(e)) {
+                return objectPoolEntity;
+            }
+        }
+        return writeEntityToMap(e);
     }
 
-    public static void saveEntity(Entity entity){
+
+    public static <T extends Entity> T create(Entity e) {
+        return create(e, false);
+    }
+
+    public static void saveEntity(Entity entity) {
         getObjectPoolEntity(entity).set(entity);
     }
 
-    public static IEntity getObjectPoolEntity(Entity entity){
+    public static IEntity getObjectPoolEntity(Entity entity) {
         return entities.get(entity.uuid);
     }
 
-    private static ObjectPoolEntity writeEntityToMap(Entity entity){
+    private static ObjectPoolEntity writeEntityToMap(Entity entity) {
         entity.objectClassName = entity.getClass().getName();
         String uuid = UUID.randomUUID().toString();
         entity.uuid = uuid;
         ObjectPoolEntity objectPoolEntity = new ObjectPoolEntity(entity);
-        entities.put(uuid,  objectPoolEntity);
+        entities.put(uuid, objectPoolEntity);
         return objectPoolEntity;
     }
 
@@ -63,7 +84,7 @@ public class ObjectPoolService {
         try {
             JSONArray array = new JSONArray();
             JSONParser parser = new JSONParser();
-            for(ObjectPoolEntity objectPoolEntity : entities.values()) {
+            for (ObjectPoolEntity objectPoolEntity : entities.values()) {
                 array.put(parser.parse(objectPoolEntity.toString()));
             }
             DataFileHelper.write(file, array.toString(4));
@@ -72,11 +93,11 @@ public class ObjectPoolService {
         }
     }
 
-    public static String toJson(Object entity){
+    public static String toJson(Object entity) {
         return new Gson().toJson(entity, entity.getClass());
     }
 
-    public static  <T extends Entity> T fromJson(String json, Class<?> classOfT) {
+    public static <T extends Entity> T fromJson(String json, Class<?> classOfT) {
         return new Gson().fromJson(json, (Type) classOfT);
     }
 
@@ -84,9 +105,12 @@ public class ObjectPoolService {
         try {
             if (Files.exists(Paths.get(file))) {
                 FileInputStream fileInputStream = new FileInputStream(file);
-                List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(fileInputStream, new TypeReference<List<LinkedHashMap<String, Object>>>() {});
-                listEntities.forEach(v ->
-                            writeEntityToMap(fromJson(new JSONObject(v).toString(), getClassByName(v.get("objectClassName").toString())))
+                List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(fileInputStream, new TypeReference<List<LinkedHashMap<String, Object>>>() {
+                });
+                listEntities.forEach(v -> {
+                            ObjectPoolEntity objectPoolEntity = writeEntityToMap(fromJson(new JSONObject(v).toString(), getClassByName(v.get("objectClassName").toString())));
+                            objectPoolEntity.setCreated(true);
+                        }
                 );
             }
         } catch (Exception e) {
@@ -103,8 +127,6 @@ public class ObjectPoolService {
         }
         return act;
     }
-
-
 
 
 }

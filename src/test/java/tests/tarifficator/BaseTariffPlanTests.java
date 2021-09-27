@@ -1,6 +1,7 @@
 package tests.tarifficator;
 
 import core.CacheService;
+import core.exception.CustomException;
 import core.helper.IEntity;
 import core.helper.ObjectPoolEntity;
 import core.helper.ObjectPoolService;
@@ -92,29 +93,29 @@ public class BaseTariffPlanTests extends Tests {
 //        assertEquals(tariffName, updateTariff.getTitle());
     }
 
-    @Order(3)
-    @Tag("tariffPlans")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "{0}")
-    @EntityUse(c = TariffPlan.class, to = ProductStatus.Num.deprovisioned)
-    @DisplayName("Изменение проектов")
-    public void test3(IProduct p, String tmsId) throws Throwable {
-        try(IProduct product = p.createObjectExclusiveAccess()){
-            product.invokeAction("Изменить проект");
-        }
-    }
-
-    @Order(4)
-    @Tag("tariffPlans")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "{0}")
-    @EntityUse(c = TariffPlan.class, to = ProductStatus.Num.deprovisioned)
-    @DisplayName("Удаление продуктов")
-    public void test2(IProduct p, String tmsId) throws Throwable {
-        try(IProduct product = p.createObjectExclusiveAccess()){
-            product.invokeAction("Удалить проект");
-        }
-    }
+//    @Order(3)
+//    @Tag("tariffPlans")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "{0}")
+//    @EntityUse(c = TariffPlan.class, from = ProductStatus.Num.success)
+//    @DisplayName("Изменение проектов")
+//    public void test3(IProduct p, String tmsId) {
+//        try(IProduct product = p.createObjectExclusiveAccess()){
+//            product.invokeAction("Изменить проект");
+//        }
+//    }
+//
+//    @Order(4)
+//    @Tag("tariffPlans")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "{0}")
+//    @EntityUse(c = TariffPlan.class, from = ProductStatus.Num.success, to = ProductStatus.Num.deprovisioned)
+//    @DisplayName("Удаление продуктов")
+//    public void test2(IProduct p, String tmsId) {
+//        try(IProduct product = p.createObjectExclusiveAccess()){
+//            product.invokeAction("Удалить проект");
+//        }
+//    }
 
 
     @Test

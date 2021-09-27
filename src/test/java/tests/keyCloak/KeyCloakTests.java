@@ -17,6 +17,7 @@ public class KeyCloakTests extends Tests {
     @Test
     @TmsLink("33")
     //@Link(type="manual", value = "271850")
+//    @Tag("tariffPlans")
     @DisplayName("Получение токена")
     @Description("Проверка получения токена для доступа к API портала")
     public void getToken() {

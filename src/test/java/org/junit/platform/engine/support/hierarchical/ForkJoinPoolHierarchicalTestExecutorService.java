@@ -6,6 +6,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 
+import lombok.SneakyThrows;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 import org.junit.jupiter.api.Order;
@@ -90,15 +91,49 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
     }
 
 
+//    private static final ConcurrentHashMap<String, JupiterTestDescriptor> mapTests = new ConcurrentHashMap<>();
+//    private static int isTake = 0;
 
 
-
-
-
-    private static ConcurrentHashMap<String, TestTask> mapTests = new ConcurrentHashMap<>();
-    private static int isTake = 0;
+//    public static void addNode(JupiterTestDescriptor testDescriptor) {
+//        try {
+//            if (testDescriptor.getChildren().size() > 0) {
+//                testDescriptor.getChildren().forEach(t -> {
+//                    try {
+//                        addNode((JupiterTestDescriptor) t);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                });
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        if (testDescriptor instanceof MethodBasedTestDescriptor) {
+//            mapTests.put(testDescriptor.getUniqueId().toString(), testDescriptor);
+//        }
+//    }
 
     public void invokeAll(List<? extends TestTask> tasks) {
+
+//        if (mapTests.isEmpty()) {
+//            tasks.forEach(testTask -> {
+//                Field field = null;
+//                try {
+//                    field = testTask.getClass().getDeclaredField("testDescriptor");
+//                    field.setAccessible(true);
+//                    JupiterTestDescriptor testDescriptor = (JupiterTestDescriptor) field.get(testTask);
+//                    addNode(testDescriptor);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//
+//
+//        }
+
+
+        System.out.println(1);
 //        ArrayList<TestTask> tasks = new ArrayList<>();
 //        if(mapTests.containsKey("0")) {
 //            tasks.add(mapTests.get("0"));
@@ -143,8 +178,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         }
     }
 
-    private static ConcurrentSkipListMap<Integer, CountDownLatch> tests = new ConcurrentSkipListMap<>();
-    private static Properties prop = new Properties();
+//    private static ConcurrentSkipListMap<Integer, CountDownLatch> tests = new ConcurrentSkipListMap<>();
+//    private static Properties prop = new Properties();
 
     private void forkConcurrentTasks(List<? extends TestTask> tasks, Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> nonConcurrentTasks, Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> concurrentTasksInReverseOrder) {
 //        try (InputStream input = new FileInputStream("src/test/resources/config/classOrders.properties")) {
@@ -204,7 +239,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 //        ordersCount.forEach((k, v) -> {
 //            tests.put(k, new CountDownLatch(v));
 //        });
-
 
 
         Iterator var4 = tasks.iterator();

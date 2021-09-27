@@ -3,6 +3,8 @@ package core.helper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import models.Entity;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -18,6 +20,12 @@ import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
 public class ObjectPoolEntity implements IEntity {
     private String entity;
+    @Getter
+    @Setter
+    private boolean created = false;
+    @Getter
+    @Setter
+    private boolean failed = false;
     private final Class<? extends Entity> c;
     private final Lock lock = new ReentrantLock();
 
@@ -63,9 +71,12 @@ public class ObjectPoolEntity implements IEntity {
         lock.lock();
     }
 
+//    public boolean isLock(){
+//        return lock.tryLock();
+//    }
+
     @Override
     public void release() {
-        if(lock.tryLock())
             lock.unlock();
     }
 

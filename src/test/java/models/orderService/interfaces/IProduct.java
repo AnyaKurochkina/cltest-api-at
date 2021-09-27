@@ -80,7 +80,8 @@ public abstract class IProduct extends Entity {
      * @return - возвращаем статус вызова экшена
      * @throws Throwable необходим для метода invoke (java.lang.reflect.Method)
      */
-    public boolean invokeAction(String action) throws Throwable {
+    @SneakyThrows
+    public boolean invokeAction(String action) {
         boolean invoke = false;
         //Перебираем методы класса
         for (Method method : this.getClass().getMethods()) {
