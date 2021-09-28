@@ -15,15 +15,13 @@ import java.io.FileInputStream;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 
 public class ObjectPoolService {
     private static final Map<String, ObjectPoolEntity> entities = new ConcurrentHashMap<>();
+    public static final List<String> deleteMethods = Collections.synchronizedList(new ArrayList<>());
 
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess) {
         ObjectPoolEntity objectPoolEntity = createObjectPoolEntity(e);
@@ -33,6 +31,8 @@ public class ObjectPoolService {
         Assume.assumeFalse("Object is failed" ,objectPoolEntity.isFailed());
         if (!objectPoolEntity.isCreated()) {
             try {
+                if(!deleteMethods.contains(e.getClass().getName()))
+                    deleteMethods.add(e.getClass().getName());
                 objectPoolEntity.get().create().save();
             } catch (Throwable throwable){
                 objectPoolEntity.setFailed(true);
