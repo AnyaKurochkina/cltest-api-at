@@ -129,6 +129,11 @@ public abstract class IProduct extends Entity {
         return jsonTemplate;
     }
 
+    @Action("Обновить сертификаты")
+    public void updateCerts(String action) {
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
+    }
+
     @Action("Перезагрузить")
     public void restart(String action) {
         orderServiceSteps.executeAction(action, this, null);
