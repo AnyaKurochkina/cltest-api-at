@@ -1,0 +1,44 @@
+{
+  "order": {
+    "project_name": "proj-frybyv41jh",
+    "product_id": "d99d31d2-c0ef-4b08-8be0-824d07696090",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 4,
+        "name": "c4m16",
+        "uuid": "cbdbf550-bf10-4526-8115-59b564d151c4",
+        "memory": 16
+      },
+      "platform": "OpenStack",
+      "boot_disk": {
+        "size": 30
+      },
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "8.4",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "extra_mounts": [
+        {
+          "path": "/app",
+          "size": 50,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_integration": true,
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-d5zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "Podman"
+  }
+}
