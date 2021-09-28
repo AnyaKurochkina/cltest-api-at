@@ -66,7 +66,7 @@ public class OrderServiceSteps extends Steps {
             log.info("orderStatus = " + orderStatus);
             counter = counter - 1;
         }
-        log.info("Ордер статус итоговый " + orderStatus);
+        log.info("Итоговый статус заказа " + orderStatus);
         if (!orderStatus.equals(exp_status.toLowerCase())) {
             String error = "";
             try {
@@ -79,9 +79,14 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-
-    //deprovisioned, damaged, pending ,changing, success
-    @Step("Получение продуктов со статусом success")
+    /**
+     * Метод получает ID всех продуктов со статусом/статусами
+     * @param projectId ID проекта
+     * @param statuses статусы по которым нуно получить продукты
+     * Возможные статусы: deprovisioned, damaged, pending ,changing, success
+     * @return возвращает список ID продуктов
+     */
+    @Step("Получение продуктов со статусом")
     public List<String> getProductsWithStatus(String projectId, String... statuses) {
         List<String> idOfAllSuccessProductsOnOnePage;
         List<String> idOfAllSuccessProducts = new ArrayList<>();
@@ -128,11 +133,17 @@ public class OrderServiceSteps extends Steps {
                 .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + item.name);
     }
 
-
+    /**
+     * Метод выполняет экшен по его имени
+     * @param action имя экшена
+     * @param product объект продукта
+     * @param jsonData параметр дата в запросе, к примеру: "order":{"data":{}}}
+     */
     @Step("Выполнение action \"{action}\"")
     public void executeAction(String action, IProduct product, JSONObject jsonData) {
         CostSteps costSteps = new CostSteps();
         CalcCostSteps calcCostSteps = new CalcCostSteps();
+        //Получение item'ов для экшена
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         log.info("Отправка запроса на выполнение действия '" + action + "' для продукта " + product);
         DeferredException exception = new DeferredException();
@@ -289,7 +300,9 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath();
 
         Item item = new Item();
+        //Получаем все item ID по русскоязычному имени экшена он же title, например: "Удалить рекурсивно"
         item.id = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.item_id", action));
+        //Получаем все item name по русскоязычному имени экшена он же title, например: "Удалить рекурсивно"
         item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.actions.find{it.title=='%s'}.name", action, action));
         //Достаем item ID и item name и сохраняем в объект Item
         if (item.id == null) {

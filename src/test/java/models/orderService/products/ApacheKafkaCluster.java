@@ -105,11 +105,6 @@ public class ApacheKafkaCluster extends IProduct {
         super.stopSoft(action);
     }
 
-    @Action("Обновить сертификаты")
-    public void updateCerts(String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
-    }
-
     public void createTopic(KafkaTopic kafkaTopic) {
         orderServiceSteps.executeAction(KAFKA_CREATE_TOPIC, this, new JSONObject(CacheService.toJson(kafkaTopic)));
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(KAFKA_CLUSTER_TOPIC, kafkaTopic.getTopicName())));

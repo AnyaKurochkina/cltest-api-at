@@ -1,5 +1,0 @@
-Nginx:
-  - actions:
-      ['Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно']
-  - options:
-      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
