@@ -6,11 +6,8 @@ import java.lang.annotation.*;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(EntityUses.class)
-public @interface EntityUse {
-    Class<? extends Entity> c();
-    int from() default 0;
-    int to() default 0;
+public @interface Deleted {
+    Class<? extends Entity> value();
 }
 
 

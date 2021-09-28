@@ -27,10 +27,10 @@ public class ObjectPoolService {
 
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess) {
         ObjectPoolEntity objectPoolEntity = createObjectPoolEntity(e);
-        Assume.assumeFalse("Object is failed" ,objectPoolEntity.isFailed());
         System.out.println(e + "ПреЛок");
         objectPoolEntity.lock();
         System.out.println(e + " ПостЛок");
+        Assume.assumeFalse("Object is failed" ,objectPoolEntity.isFailed());
         if (!objectPoolEntity.isCreated()) {
             try {
                 objectPoolEntity.get().create().save();

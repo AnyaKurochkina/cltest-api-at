@@ -1,5 +1,6 @@
 package tests.orderService;
 
+import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -18,7 +19,6 @@ import tests.Tests;
 //@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tag("tariffPlans")
 @Execution(ExecutionMode.CONCURRENT)
-@Order(1)
 public class OpenShiftTests extends Tests {
 //    @Order(1)
     @TmsLink("40")
@@ -43,15 +43,27 @@ public class OpenShiftTests extends Tests {
         }
     }
 
-//    @Order(3)
-//    @TmsLink("42")
-//    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @Story("Удаление проекта")
-//    @ParameterizedTest(name = "Удаление проекта {0}")
-//    public void delete(IProduct p, String tmsId) {
+    @Order(3)
+    @TmsLink("42")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @Story("Удаление проекта")
+    @Execution(ExecutionMode.CONCURRENT)
+    @ParameterizedTest(name = "Удаление проекта {0}")
+    @Deleted(IProduct.class)
+    public void delete(IProduct p, String tmsId) {
+        try (IProduct product = p.createObjectExclusiveAccess()) {
+            product.invokeAction("Удалить проект");
+        }
+    }
+
+    @Order(4)
+    @TmsLink("43")
+    @Test
+    @DisplayName("Простой тест")
+    public void test() {
 //        try (IProduct product = p.createObjectExclusiveAccess()) {
-//            product.invokeAction("Удалить проект");
+//            product.invokeAction("Изменить проект");
 //        }
-//    }
+    }
 
 }

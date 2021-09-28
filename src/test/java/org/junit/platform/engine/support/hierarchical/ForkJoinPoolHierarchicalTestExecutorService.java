@@ -6,6 +6,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 
+import core.helper.Deleted;
 import lombok.SneakyThrows;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
@@ -18,6 +19,7 @@ import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
@@ -31,6 +33,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 @API(
@@ -92,7 +95,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 
     private static final ConcurrentHashMap<String, JupiterTestDescriptor> mapTests = new ConcurrentHashMap<>();
-//    private static int isTake = 0;
+    private static final ConcurrentHashMap<String, TestTask> deleteTests = new ConcurrentHashMap<>();
+    final AtomicBoolean del = new AtomicBoolean(false);
 
 
     public static void addNode(JupiterTestDescriptor testDescriptor) {
@@ -113,27 +117,64 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
             mapTests.put(testDescriptor.getUniqueId().toString(), testDescriptor);
         }
     }
+    public void invokeAll2() {
+        invokeAll(new ArrayList<>(deleteTests.values()));
+    }
 
-    public void invokeAll(List<? extends TestTask> tasks) {
+    public void invokeAll(List<? extends TestTask> tasks2) {
 
-        if (mapTests.isEmpty()) {
-            tasks.forEach(testTask -> {
+        ArrayList<TestTask> tasks = new ArrayList<>(tasks2);
+
+
+        if(!del.get()) {
+            Iterator var1 = tasks.iterator();
+            while (var1.hasNext()) {
+                TestTask testTask = (TestTask) var1.next();
                 Field field = null;
                 try {
                     field = testTask.getClass().getDeclaredField("testDescriptor");
                     field.setAccessible(true);
                     JupiterTestDescriptor testDescriptor = (JupiterTestDescriptor) field.get(testTask);
-                    addNode(testDescriptor);
+                    if (mapTests.isEmpty()) {
+                        addNode(testDescriptor);
+                    }
+                    if (testDescriptor instanceof MethodBasedTestDescriptor) {
+                        Deleted deleted = ((MethodBasedTestDescriptor) testDescriptor).getTestMethod().getAnnotation(Deleted.class);
+                        if (deleted != null) {
+                            deleteTests.put(testTask.toString(), testTask);
+                            System.out.println("!!!!!!!!!!!!!!! " + testTask);
+                            var1.remove();
+                            mapTests.remove(testDescriptor.getUniqueId().toString());
+                        }
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            });
-
-
+            }
         }
 
+//        tasks.forEach(testTask -> {
+//            Field field = null;
+//            try {
+//                field = testTask.getClass().getDeclaredField("testDescriptor");
+//                field.setAccessible(true);
+//                JupiterTestDescriptor testDescriptor = (JupiterTestDescriptor) field.get(testTask);
+//
+//                if (testDescriptor instanceof MethodBasedTestDescriptor) {
+//                    mapTests.remove(testDescriptor.getUniqueId().toString());
+//                }
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//
+//        if(mapTests.isEmpty()) {
+//            tasks.addAll(deleteTests.values());
+//        }
 
-        System.out.println(1);
+        System.out.println(tasks2.size());
 //        ArrayList<TestTask> tasks = new ArrayList<>();
 //        if(mapTests.containsKey("0")) {
 //            tasks.add(mapTests.get("0"));
@@ -319,7 +360,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         }
     }
 
-    static class ExclusiveTask extends RecursiveAction {
+    class ExclusiveTask extends RecursiveAction {
         private final TestTask testTask;
 
         ExclusiveTask(TestTask testTask) {
@@ -346,6 +387,28 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 if (lock != null) {
                     lock.close();
                 }
+
+
+                Field field = null;
+                try {
+                    field = testTask.getClass().getDeclaredField("testDescriptor");
+                    field.setAccessible(true);
+                    AbstractTestDescriptor testDescriptor = (AbstractTestDescriptor) field.get(testTask);
+
+                    if (testDescriptor instanceof MethodBasedTestDescriptor) {
+                        mapTests.remove(testDescriptor.getUniqueId().toString());
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+                if (mapTests.isEmpty() && !del.get()) {
+                    del.set(true);
+                    invokeAll2();
+                }
+
 
 
 //                Integer order = null;

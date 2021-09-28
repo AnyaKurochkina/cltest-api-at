@@ -1,22 +1,12 @@
 package tests.tarifficator;
 
 import core.CacheService;
-import core.exception.CustomException;
-import core.helper.IEntity;
-import core.helper.ObjectPoolEntity;
-import core.helper.ObjectPoolService;
-import core.helper.EntityUse;
+import core.helper.Deleted;
 import core.utils.AssertUtils;
-import io.qameta.allure.Description;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.IProduct;
-import models.orderService.products.ProductStatus;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
 import steps.tarifficator.TariffPlanSteps;
 import tests.Tests;
 
@@ -122,7 +112,6 @@ public class BaseTariffPlanTests extends Tests {
     @TmsLink("37")
     @Order(4)
 //    @Tag("tariffPlans")
-    @EntityUse(c = TariffPlan.class, from = TariffPlanStatus.Num.draft, to = TariffPlanStatus.Num.planned)
     public void test() throws Exception {
 
 //        String json = "{\n" +

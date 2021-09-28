@@ -21,25 +21,4 @@ import org.junit.runner.manipulation.Ordering;
 //@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class DeleteResources {
 
-    @Order(3)
-    @TmsLink("42")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @Story("Удаление проекта")
-    @Execution(ExecutionMode.CONCURRENT)
-    @ParameterizedTest(name = "Удаление проекта {0}")
-    public void delete(IProduct p, String tmsId) {
-        try (IProduct product = p.createObjectExclusiveAccess()) {
-            product.invokeAction("Удалить проект");
-        }
-    }
-
-    @Order(4)
-    @TmsLink("43")
-    @Test
-    @DisplayName("Простой тест")
-    public void test() {
-//        try (IProduct product = p.createObjectExclusiveAccess()) {
-//            product.invokeAction("Изменить проект");
-//        }
-    }
 }
