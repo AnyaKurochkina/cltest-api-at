@@ -89,13 +89,13 @@ public class Windows extends IProduct {
     @Action("Добавить диск")
     public void addDisk(String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 10, file_system: \"ntfs\"}"));
-        Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(ADD_DISK, "I")));
+        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK, "I")));
     }
 
     @Override
     @Action("Расширить диск")
     public void expandMountPoint(String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 1}"));
-        Assert.assertEquals(11, orderServiceSteps.getFiledProduct(this, String.format(DISK_SIZE, "I")));
+        Assert.assertEquals(11, orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, "I")));
     }
 }

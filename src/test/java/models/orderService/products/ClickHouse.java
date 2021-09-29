@@ -1,6 +1,5 @@
 package models.orderService.products;
 
-import core.CacheService;
 import core.helper.Http;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
@@ -69,6 +68,11 @@ public class ClickHouse extends IProduct {
         productName = "ClickHouse";
     }
 
+    @Action("Удалить рекурсивно")
+    public void delete(String action) {
+        super.delete(action);
+    }
+
     @Action(REFRESH_VM_CONFIG)
     public void refreshVmConfig(String action) {
         orderServiceSteps.executeAction(action, this, null);
@@ -81,13 +85,13 @@ public class ClickHouse extends IProduct {
 
     @Action(CLICKHOUSE_CREATE_DBMS_USER)
     public void createDbmsUserTest(String action) {
-        createDbmsUser("testUser_1", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
+        createDbmsUser("testuser_1", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
     }
 
     public void createDb(String dbName, String action) {
         Db db = new Db(dbName, false);
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"db_name\":\"%s\"}", dbName)));
-        Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(DB_NAME_PATH, dbName)));
+        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.add(db);
         cacheService.saveEntity(this);
     }
@@ -95,7 +99,7 @@ public class ClickHouse extends IProduct {
     public void createDbmsUser(String username, String password, String action) {
         String dbName = database.get(0).getNameDB();
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName, username, password)));
-        Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(DB_USERNAME_PATH, username)));
+        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)));
         users.add(new DbUser(dbName, username, false));
         cacheService.saveEntity(this);
     }
