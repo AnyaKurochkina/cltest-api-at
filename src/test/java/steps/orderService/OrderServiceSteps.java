@@ -344,7 +344,7 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    public <T extends Comparable<T>> Comparable<T> getFiledProduct(@NotNull IProduct product, String path) {
+    public <T extends Comparable<T>> Comparable<T> getProductsField(@NotNull IProduct product, String path) {
         Comparable<T> s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(URL)

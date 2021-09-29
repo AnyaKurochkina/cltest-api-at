@@ -1,5 +1,6 @@
-Nginx:
+OpenShiftProject:
   - actions:
-      [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+      [ 'Изменить проект' ]
   - options:
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+      - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
+      - { env: "DSO", resourcePoolLabel: "d0-oscp.corp.dev.vtb - VTB-DSO" }
