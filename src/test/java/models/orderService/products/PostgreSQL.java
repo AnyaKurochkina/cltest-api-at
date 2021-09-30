@@ -142,7 +142,7 @@ public class PostgreSQL extends IProduct {
         String dbName = database.get(0).getNameDB();
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
         String dbUserNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_USERNAME_PATH);
-        assertEquals("Имя пользователя отличается от создаваемого", String.format("%s_%s", dbName, username), dbUserNameActual);
+        assertEquals("Имя пользователя отличается от создаваемого", username, dbUserNameActual);
         users.add(new DbUser(dbName, dbUserNameActual, false));
         log.info("users = " + users);
         cacheService.saveEntity(this);
@@ -150,7 +150,7 @@ public class PostgreSQL extends IProduct {
 
     @Action("Добавить пользователя")
     public void createDbmsUserTest(String action) {
-        createDbmsUser("testuser", "user", action);
+        createDbmsUser("testdb_testchelik", "user", action);
     }
 
     @Action("Сбросить пароль")

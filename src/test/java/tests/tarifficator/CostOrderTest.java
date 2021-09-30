@@ -34,6 +34,7 @@ public class CostOrderTest extends Tests {
                 continue;
             break;
         }
+
         Assertions.assertEquals(preBillingCost, currentCost, 0.00001, "Стоимость предбиллинга отличается от стоимости продукта " + product);
     }
 }
