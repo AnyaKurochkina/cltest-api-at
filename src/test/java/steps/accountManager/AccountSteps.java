@@ -18,7 +18,6 @@ public class AccountSteps extends Steps {
      *
      * @param folderName имя папки
      */
-
     @Step("Создание счета для папки {folderName}")
     public void createAccount(String folderName) {
         log.info("Изменение базового шаблона запроса при создании счета папки с типом: " + folderName);
@@ -41,7 +40,7 @@ public class AccountSteps extends Steps {
                 .accountId(accountId)
                 .folderId(folder.id)
                 .build();
-        //Сохранение счёта
+        //Сохранение счёта в память
         cacheService.saveEntity(account);
     }
 

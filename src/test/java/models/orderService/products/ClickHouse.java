@@ -41,7 +41,7 @@ public class ClickHouse extends IProduct {
     public List<Db> database = new ArrayList<>();
     public List<DbUser> users = new ArrayList<>();
 
-    public static final String REFRESH_VM_CONFIG = "Актуализировать конфигурацию";
+    public static final String REFRESH_VM_CONFIG = "Проверить конфигурацию";
     public static final String CLICKHOUSE_CREATE_DB = "Добавить БД";
     public static final String CLICKHOUSE_CREATE_DBMS_USER = "Добавить пользователя";
 
@@ -79,9 +79,14 @@ public class ClickHouse extends IProduct {
         createDb("db_1", action);
     }
 
+    @Action(CLICKHOUSE_CREATE_DBMS_USER)
+    public void createDbmsUserTest(String action) {
+        createDbmsUser("testUser_1", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
+    }
+
     public void createDb(String dbName, String action) {
         Db db = new Db(dbName, false);
-        orderServiceSteps.executeAction(action, this, new JSONObject(new JSONObject(String.format("{\"db_name\":\"%s\"}", dbName))));
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"db_name\":\"%s\"}", dbName)));
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(DB_NAME_PATH, dbName)));
         database.add(db);
         cacheService.saveEntity(this);
@@ -93,11 +98,6 @@ public class ClickHouse extends IProduct {
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(DB_USERNAME_PATH, username)));
         users.add(new DbUser(dbName, username, false));
         cacheService.saveEntity(this);
-    }
-
-    @Action(CLICKHOUSE_CREATE_DBMS_USER)
-    public void createDbmsUserTest(String action) {
-        createDbmsUser("testUser_1", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
     }
 
     @Override
