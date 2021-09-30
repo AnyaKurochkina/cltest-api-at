@@ -106,15 +106,15 @@ public class PostgreSQL extends IProduct {
     @Override
     @Action("Расширить")
     public void expandMountPoint(String action) {
-        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
+        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/pg_data\"}"));
-        int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
+        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore < sizeAfter);
     }
 
     public void createDb(String dbName, String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
-        String dbNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_NAME_PATH);
+        String dbNameActual = (String) orderServiceSteps.getProductsField(this, DB_NAME_PATH);
         assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
         database.add(new Db(dbName, false));
         log.info("database = " + database);
@@ -129,9 +129,9 @@ public class PostgreSQL extends IProduct {
     @Action("Удалить БД")
     public void removeDb(String action) {
         String dbName = database.get(0).getNameDB();
-        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, DB_SIZE_PATH);
+        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
-        int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, DB_SIZE_PATH);
+        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
         database.get(0).setDeleted(true);
         log.info("database = " + database);
@@ -167,9 +167,9 @@ public class PostgreSQL extends IProduct {
 
     @Action("Удалить пользователя")
     public void removeDbmsUser(String action) {
-        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, DB_USERNAME_SIZE_PATH);
+        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
-        int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, DB_USERNAME_SIZE_PATH);
+        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
         users.get(0).setDeleted(true);
         log.info("users = " + users);

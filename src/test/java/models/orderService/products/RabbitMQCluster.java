@@ -102,7 +102,7 @@ public class RabbitMQCluster extends IProduct {
     public void rabbitmqCreateUser(String action) {
         String user = "testapiuser";
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
-        String username = (String) orderServiceSteps.getFiledProduct(this, RABBITMQ_USER);
+        String username = (String) orderServiceSteps.getProductsField(this, RABBITMQ_USER);
         assertEquals(user, username);
     }
 

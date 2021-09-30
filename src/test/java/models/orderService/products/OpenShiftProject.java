@@ -60,7 +60,7 @@ public class OpenShiftProject extends IProduct {
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
-        if(productId == null) {
+        if (productId == null) {
             projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
@@ -72,7 +72,7 @@ public class OpenShiftProject extends IProduct {
                 .getEntity();
 
         return jsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.order.attrs.resource_pool",  new JSONObject(resourcePool.toString()))
+                .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
@@ -81,26 +81,19 @@ public class OpenShiftProject extends IProduct {
 
     @Action("Изменить проект")
     public void changeProject(String action) {
-        String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 0}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
+        String shdQuoteValue;
+        shdQuoteValue = hasShdQuote() ? "1" : "0";
+        String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": %s}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}",
+                shdQuoteValue,
+                roles.get(0).getGroupId());
         roles.get(0).setName("view");
         orderServiceSteps.executeAction(action, this, new JSONObject(data));
         cacheService.saveEntity(this);
-        Assert.assertEquals("Память не изменилась", 2, orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.memory"));
-        Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.roles[0].role"));
-    }
-
-
-    @Action("Изменить квоту СХД")
-    public void updateProject(String action) {
-        if (!hasShdQuote()){
-            log.info("У продукта нет квоты СХД");
-            return;
+        Assert.assertEquals("Память не изменилась", 2, orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.memory"));
+        Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.roles[0].role"));
+        if (shdQuoteValue.equals("1")){
+            Assert.assertEquals("СХД не изменился на 1", 1, orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"));
         }
-        String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 1}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
-        roles.get(0).setName("view");
-        orderServiceSteps.executeAction(action, this, new JSONObject(data));
-        cacheService.saveEntity(this);
-        Assert.assertEquals("СХД не изменился на 1", 1, orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"));
     }
 
     @Override
@@ -110,7 +103,7 @@ public class OpenShiftProject extends IProduct {
     }
 
     //Проверка на наличие СХД у продукта
-    private boolean hasShdQuote(){
+    private boolean hasShdQuote() {
         String jsonArray = new Http(OrderServiceSteps.URL)
                 .setProjectId(getProjectId())
                 .get(String.format("order-service/api/v1/products/resource_pools?category=container&project_name=%s&quota[storage][sc-nfs-netapp-q]=1",
