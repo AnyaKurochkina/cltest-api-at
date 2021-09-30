@@ -141,7 +141,7 @@ public class PostgreSQL extends IProduct {
     public void createDbmsUser(String username, String dbRole, String action) {
         String dbName = database.get(0).getNameDB();
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
-        String dbUserNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_USERNAME_PATH);
+        String dbUserNameActual = (String) orderServiceSteps.getProductsField(this, DB_USERNAME_PATH);
         assertEquals("Имя пользователя отличается от создаваемого", username, dbUserNameActual);
         users.add(new DbUser(dbName, dbUserNameActual, false));
         log.info("users = " + users);
