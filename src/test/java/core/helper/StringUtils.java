@@ -2,6 +2,8 @@ package core.helper;
 
 import lombok.extern.log4j.Log4j2;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Log4j2
 public final class StringUtils {
@@ -16,6 +18,13 @@ public final class StringUtils {
             result.append(symb.charAt(position));
         }
         return result.toString();
+    }
+
+    public static String findByRegex(String regex, String text) {
+        Matcher matcher = Pattern.compile(regex).matcher(text);
+        if(matcher.find())
+            return matcher.group(1);
+        return null;
     }
 
 }

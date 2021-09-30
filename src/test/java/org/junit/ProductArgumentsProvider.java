@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import core.helper.ObjectPoolService;
+import io.qameta.allure.Allure;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.IProductMock;
@@ -39,17 +40,13 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         List<Arguments> list = new ArrayList<>();
         if (variableName == PRODUCTS) {
             if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
-                AtomicReference<Integer> i = new AtomicReference<>(1);
                 orders.forEach(entity -> {
                     Class<?> c = entity.getClass();
-                    list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c), String.valueOf(i)));
-                    i.getAndSet(i.get() + 1);
+                    list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
                 });
             } else {
-                AtomicInteger i = new AtomicInteger(1);
                 orders.forEach(entity -> {
-                    list.add(Arguments.of(new IProductMock(entity.toString()), String.valueOf(i.get())));
-                    i.getAndIncrement();
+                    list.add(Arguments.of(new IProductMock(entity.toString())));
                 });
             }
         } else if (variableName == ENV) {
@@ -58,8 +55,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                     .filter(distinctByKey(IProduct::getEnv))
                     .collect(Collectors.toList())
                     .forEach(entity -> {
-                        list.add(Arguments.arguments(entity.getEnv(), String.valueOf(i.get())));
-                        i.getAndIncrement();
+                        list.add(Arguments.arguments(entity.getEnv(), String.valueOf(i.getAndIncrement())));
                     });
         }
         return list.stream();

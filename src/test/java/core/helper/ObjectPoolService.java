@@ -21,18 +21,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ObjectPoolService {
     private static final Map<String, ObjectPoolEntity> entities = new ConcurrentHashMap<>();
-    public static final List<String> deleteMethods = Collections.synchronizedList(new ArrayList<>());
+    public static final List<String> deleteClassesName = Collections.synchronizedList(new ArrayList<>());
 
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess) {
         ObjectPoolEntity objectPoolEntity = createObjectPoolEntity(e);
         System.out.println(e + "ПреЛок");
         objectPoolEntity.lock();
         System.out.println(e + " ПостЛок");
-        Assume.assumeFalse("Object is failed" ,objectPoolEntity.isFailed());
+        if(objectPoolEntity.isFailed()) {
+            objectPoolEntity.release();
+            Assume.assumeFalse("Object is failed", objectPoolEntity.isFailed());
+        }
         if (!objectPoolEntity.isCreated()) {
             try {
-                if(!deleteMethods.contains(e.getClass().getName()))
-                    deleteMethods.add(e.getClass().getName());
+                if(!deleteClassesName.contains(e.getClass().getName()))
+                    deleteClassesName.add(e.getClass().getName());
                 objectPoolEntity.get().create().save();
             } catch (Throwable throwable){
                 objectPoolEntity.setFailed(true);

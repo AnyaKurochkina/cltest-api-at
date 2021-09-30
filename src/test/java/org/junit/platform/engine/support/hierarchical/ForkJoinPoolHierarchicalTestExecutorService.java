@@ -7,11 +7,9 @@ package org.junit.platform.engine.support.hierarchical;
 
 
 import core.helper.Deleted;
-import lombok.SneakyThrows;
+import core.helper.ObjectPoolService;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.platform.commons.JUnitException;
@@ -19,14 +17,9 @@ import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -34,6 +27,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 @API(
@@ -95,9 +89,10 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 
     private static final ConcurrentHashMap<String, JupiterTestDescriptor> mapTests = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<String, TestTask> deleteTests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<TestTask, String> deleteTests = new ConcurrentHashMap<>();
+    //    private static final List<TestTask> deleteTests = Collections.synchronizedList(new ArrayList<>());
     final AtomicBoolean del = new AtomicBoolean(false);
-
+    final AtomicInteger inc = new AtomicInteger(0);
 
     public static void addNode(JupiterTestDescriptor testDescriptor) {
         try {
@@ -117,16 +112,35 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
             mapTests.put(testDescriptor.getUniqueId().toString(), testDescriptor);
         }
     }
-    public void invokeAll2() {
-        invokeAll(new ArrayList<>(deleteTests.values()));
-    }
 
+    public List<TestTask> invokeDeleteTest() {
+        int i = inc.getAndIncrement();
+        List<TestTask> list = new ArrayList<>();
+        if (ObjectPoolService.deleteClassesName.size() > i) {
+            Iterator it = deleteTests.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<TestTask, String> pair = (Map.Entry) it.next();
+                if (pair.getValue().equals(ObjectPoolService.deleteClassesName.get(i))) {
+                    list.add(pair.getKey());
+                    it.remove();
+                }
+            }
+            return list;
+        }
+        else if(!deleteTests.isEmpty()) {
+            list = new ArrayList<>(deleteTests.keySet());
+            deleteTests.clear();
+        }
+        return list;
+    }
+    public void invokeAllRef(List<? extends TestTask> tasks2) {
+        invokeAll(tasks2);
+    }
     public void invokeAll(List<? extends TestTask> tasks2) {
 
         ArrayList<TestTask> tasks = new ArrayList<>(tasks2);
 
-
-        if(!del.get()) {
+        if (!del.get()) {
             Iterator var1 = tasks.iterator();
             while (var1.hasNext()) {
                 TestTask testTask = (TestTask) var1.next();
@@ -141,7 +155,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                     if (testDescriptor instanceof MethodBasedTestDescriptor) {
                         Deleted deleted = ((MethodBasedTestDescriptor) testDescriptor).getTestMethod().getAnnotation(Deleted.class);
                         if (deleted != null) {
-                            deleteTests.put(testTask.toString(), testTask);
+                            deleteTests.put(testTask, deleted.value().getName());
                             System.out.println("!!!!!!!!!!!!!!! " + testTask);
                             var1.remove();
                             mapTests.remove(testDescriptor.getUniqueId().toString());
@@ -152,6 +166,9 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                     e.printStackTrace();
                 }
             }
+        }
+        if (mapTests.isEmpty() && deleteTests.size() > 0) {
+            tasks.addAll(invokeDeleteTest());
         }
 
 //        tasks.forEach(testTask -> {
@@ -404,11 +421,12 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 }
 
 
-                if (mapTests.isEmpty() && !del.get()) {
+                if (mapTests.isEmpty() && !deleteTests.isEmpty()) {
                     del.set(true);
-                    invokeAll2();
+                    List<TestTask> list = invokeDeleteTest();
+                    if(!list.isEmpty())
+                        invokeAllRef(list);
                 }
-
 
 
 //                Integer order = null;
