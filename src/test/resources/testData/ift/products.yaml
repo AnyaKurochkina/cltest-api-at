@@ -1,6 +1,6 @@
 OpenShiftProject:
   - actions:
-      [ 'Изменить проект', 'Изменить квоту СХД' ]
+      [ 'Изменить проект']
   - options:
       - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
       - { env: "DSO", resourcePoolLabel: "d0-oscp.corp.dev.vtb - VTB-DSO" }
