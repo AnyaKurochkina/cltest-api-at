@@ -3,9 +3,11 @@ package tests;
 
 import io.qameta.allure.Allure;
 import io.qameta.allure.Attachment;
+import org.junit.CustomDisplayNameGenerator;
 import org.junit.TmsLinkExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extensions;
 
@@ -15,6 +17,7 @@ import java.util.Date;
 import static core.helper.JsonHelper.stringPrettyFormat;
 
 @ExtendWith(TmsLinkExtension.class)
+@DisplayNameGeneration(CustomDisplayNameGenerator.class)
 public class Tests {
     private static final ThreadLocal<StringBuilder> testLog = new ThreadLocal<>();
 

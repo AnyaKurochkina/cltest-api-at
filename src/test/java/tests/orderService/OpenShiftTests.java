@@ -10,8 +10,6 @@ import models.orderService.products.OpenShiftProject;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
@@ -21,7 +19,6 @@ import tests.Tests;
 public class OpenShiftTests extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @Story("Создание проекта")
     @TmsLink("40")
     @ParameterizedTest(name = "Создание проекта {0}")
     public void create(OpenShiftProject p) {
@@ -30,7 +27,6 @@ public class OpenShiftTests extends Tests {
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @Story("Изменение проекта")
     @TmsLink("41")
     @ParameterizedTest(name = "Изменение проекта {0}")
     public void change(OpenShiftProject p) {
@@ -41,7 +37,6 @@ public class OpenShiftTests extends Tests {
 
     @TmsLink("42")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @Story("Удаление проекта")
     @ParameterizedTest(name = "Удаление проекта {0}")
     @Deleted(OpenShiftProject.class)
     public void delete(OpenShiftProject p) {
@@ -52,7 +47,7 @@ public class OpenShiftTests extends Tests {
 
     @TmsLink("43")
     @Test
-    @DisplayName("Простой тест")
+    @Story("Простой тест")
     public void test() {
     }
 
