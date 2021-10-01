@@ -27,7 +27,7 @@ public class OrganizationTariffPlansTests extends Tests {
     CacheService cacheService = new CacheService();
 
     @Test
-    @TmsLink("340")
+    @TmsLink("38")
     @Order(1)
     @DisplayName("Создание тарифного плана на базе активного")
     public void createOrganizationTariffPlanFromActive() {
@@ -58,7 +58,7 @@ public class OrganizationTariffPlansTests extends Tests {
     }
 
     @Test
-    @TmsLink("360")
+    @TmsLink("39")
     @Order(2)
     @DisplayName("Изменение имени тарифного плана в статусе черновик")
     public void renameBaseTariffPlan() {
