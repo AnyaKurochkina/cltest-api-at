@@ -5,12 +5,14 @@ import core.CacheService;
 import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
+import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import models.tarifficator.TariffPlan;
 import org.json.JSONArray;
 import steps.Steps;
 
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Log4j2
@@ -86,5 +88,19 @@ public class TariffPlanSteps extends Steps {
                 .toString();
         return TariffPlan.deserialize(object);
     }
+
+//    @Step("Редактирование статуса тарифного плана {tariffPlan}")
+//    public String editTariffPlansStatus(TariffPlan tariffPlan) {
+//        LocalDateTime.now();
+//
+//        JsonPath jsonPath =  jsonHelper.getJsonTemplate("/accessGroup/changeStatusTariffPlan.json")
+//                .set("$.status", "planned")
+//                .set("$.begin_date", "2021-09-30T18:27:00+03:00")
+//                .send(URL)
+//                .patch(String.format("tariff_plans/%s", tariffPlan.getId()))
+//                .assertStatus(200)
+//                .jsonPath();
+//        return jsonPath.getString("status");
+//    }
 
 }
