@@ -144,6 +144,8 @@
                 <configuration>
                     <namespace>API</namespace>
                     <apiToken>Rkp0SjVqMVZlNEhnS2dtOEF3</apiToken>
+                    <testRunName>IFT 0.20</testRunName>
+                    <debug>true</debug>
                     <projectId>23</projectId>
                     <infrastructureFailReasonExceptions>
                         <exception>ConnectionClosedException</exception>

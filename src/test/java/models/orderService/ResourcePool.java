@@ -9,7 +9,8 @@ import models.Entity;
 import models.EntityOld;
 import models.authorizer.Project;
 import steps.orderService.OrderServiceSteps;
-
+//py -m pip install testit-allure-adaptor
+// py -m pip install --upgrade certifi
 @EqualsAndHashCode(callSuper = false)
 @Data
 @Builder

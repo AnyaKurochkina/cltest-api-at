@@ -32,7 +32,7 @@ public class Redis extends IProduct {
     @ToString.Include
     String osVersion;
 
-    @Override
+//    @Override
     public void order() {
         JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);

@@ -243,17 +243,10 @@ public class OrderServiceSteps extends Steps {
     public String getProductId(IProduct product) {
         log.info("Получение id для продукта " + product.getProductName());
         //Получение информационной сисетмы
-        InformationSystem informationSystem = ObjectPoolService.create(InformationSystem.builder()
-                        .isForOrders(true)
-                        .build());
-
+        InformationSystem informationSystem = InformationSystem.builder().isForOrders(true).build().createObject();
         String product_id = "";
         //Получение среды проекта
-
-        ProjectEnvironment projectEnvironment = ObjectPoolService.create(ProjectEnvironment.builder()
-                        .isForOrders(true)
-                        .env(product.getEnv())
-                        .build());
+        ProjectEnvironment projectEnvironment = ProjectEnvironment.builder().isForOrders(true).env(product.getEnv()).build().createObject();
 
         //Выполнение запроса
         //TODO: оптимизировать

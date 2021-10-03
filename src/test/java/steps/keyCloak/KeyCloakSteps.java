@@ -24,11 +24,9 @@ public class KeyCloakSteps {
     @Step("Получение нового UserToken")
     public static synchronized String getNewUserToken() {
         //Получение сервис из памяти
-        Service service = ObjectPoolService.create(Service.builder()
-                        .build());
+        Service service = Service.builder().build().createObject();
         //Получение пользователя из памяти
-        User user = ObjectPoolService.create(User.builder()
-                        .build());
+        User user = User.builder().build().createObject();
         //Отправка запроса на получение токена
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
@@ -45,8 +43,7 @@ public class KeyCloakSteps {
      * @return возвращаем токен
      */
     public static synchronized String getUserToken() {
-        UserToken userToken = ObjectPoolService.create(UserToken.builder()
-                        .build());
+        UserToken userToken = UserToken.builder().build().createObject();
         long currentTime = System.currentTimeMillis() / 1000L;
 
         if (currentTime - userToken.time > TOKEN_LIFETIME_SEC) {
@@ -61,19 +58,15 @@ public class KeyCloakSteps {
 
     //    @Step("Получение ServiceAccountToken")
     public static synchronized String getServiceAccountToken(String projectId) {
-        ServiceAccount serviceAccount = ObjectPoolService.create(ServiceAccount.builder()
-                        .projectId(projectId)
-                        .build());
-        ServiceAccountToken serviceAccountToken = ObjectPoolService.create(ServiceAccountToken.builder()
-                        .serviceAccountName(serviceAccount.name)
-                        .build());
+        ServiceAccount serviceAccount = ServiceAccount.builder().projectId(projectId).build().createObject();
+        ServiceAccountToken saToken = ServiceAccountToken.builder().serviceAccountName(serviceAccount.name).build().createObject();
         long currentTime = System.currentTimeMillis() / 1000L;
-        if (currentTime - serviceAccountToken.time > TOKEN_LIFETIME_SEC) {
-            serviceAccountToken.token = getNewServiceAccountToken(serviceAccount);
-            serviceAccountToken.time = currentTime;
+        if (currentTime - saToken.time > TOKEN_LIFETIME_SEC) {
+            saToken.token = getNewServiceAccountToken(serviceAccount);
+            saToken.time = currentTime;
         }
-        serviceAccountToken.save();
-        return serviceAccountToken.token;
+        saToken.save();
+        return saToken.token;
     }
 
     @Step("Получение нового ServiceAccountToken")

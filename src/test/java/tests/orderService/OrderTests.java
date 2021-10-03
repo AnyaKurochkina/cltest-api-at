@@ -18,7 +18,7 @@ import tests.Tests;
 @OrderLabel("tests.orderService.OrderTests")
 public class OrderTests extends Tests {
 
-    @Tags({@Tag("regress"), @Tag("orders"), @Tag("prod")})
+    @Tags({@Tag("regress"), @Tag("orders2"), @Tag("prod")})
     @ParameterizedTest(name = "{0}")
     @DisplayName("Заказ продуктов")
     @Owner(value = "Ермаков Роман")
@@ -27,7 +27,7 @@ public class OrderTests extends Tests {
     public void order(IProduct product, String tmsId) {
         Allure.tms("2." + tmsId, "");
         product.toStringProductStep();
-        product.order();
+//        product.order();
     }
 
     @Tag("smoke")
@@ -39,6 +39,6 @@ public class OrderTests extends Tests {
     public void orderSmoke(IProduct product, String tmsId) {
         Allure.tms("18." + tmsId, "");
         product.toStringProductStep();
-        product.order();
+//        product.order();
     }
 }

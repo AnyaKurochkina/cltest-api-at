@@ -36,7 +36,7 @@ public class WildFly extends IProduct {
     String domain;
     Flavor flavor;
 
-    @Override
+//    @Override
     public void order() {
         JSONObject template = getJsonParametrizedTemplate();
         log.info("Отправка запроса на создание заказа для " + productName);

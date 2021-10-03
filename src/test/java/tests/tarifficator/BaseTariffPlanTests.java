@@ -155,7 +155,7 @@ public class BaseTariffPlanTests extends Tests {
 
 
 //        TariffPlan tariffPlan2 = TariffPlan.builder().build();
-//        IEntity entity2 = objectPoolService.create(tariffPlan2, false);
+//        IEntity entity2 = otariffPlan2, false);
 
         System.out.println(1);
     }

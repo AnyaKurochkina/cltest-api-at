@@ -38,7 +38,6 @@ public class TestsExecutionListener implements TestExecutionListener {
         }
         log.info("tmsLink max {}", Math.round(Collections.max(values)));
         ObjectPoolService.loadEntities(Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json");
-//        CacheService.loadEntities(Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json");
     }
 
     @SneakyThrows
@@ -48,6 +47,9 @@ public class TestsExecutionListener implements TestExecutionListener {
         FileWriter fooWriter = new FileWriter("target/allure-results/environment.properties", false);
         fooWriter.write("ENV=" + ENV);
         fooWriter.close();
+
+        ObjectPoolService.deleteAllResources();
+
     }
 
 

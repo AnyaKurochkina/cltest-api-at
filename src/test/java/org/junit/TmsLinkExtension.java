@@ -1,9 +1,11 @@
 package org.junit;
 
 import core.helper.StringUtils;
+import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.model.Link;
+import io.qameta.allure.model.Status;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
@@ -17,6 +19,7 @@ public class TmsLinkExtension implements InvocationInterceptor {
     @Override
     public void interceptTestTemplateMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
                                             ExtensionContext extensionContext) throws Throwable {
+        Allure.story(extensionContext.getParent().orElseThrow(Exception::new).getDisplayName());
         invocation.proceed();
         if (invocationContext.getExecutable().isAnnotationPresent(TmsLink.class)) {
             String id = invocationContext.getExecutable().getAnnotation(TmsLink.class).value();
@@ -28,6 +31,8 @@ public class TmsLinkExtension implements InvocationInterceptor {
             link.setUrl("");
             allureLifecycle.getCurrentTestCase().ifPresent(i ->
                     allureLifecycle.updateTestCase(i, s -> s.setLinks(Collections.singletonList(link))));
+            allureLifecycle.getCurrentTestCase().ifPresent(i ->
+                    allureLifecycle.updateTestCase(i, s -> s.setName(extensionContext.getDisplayName().replaceAll("super=\\w+\\(", "("))));
         }
     }
 }

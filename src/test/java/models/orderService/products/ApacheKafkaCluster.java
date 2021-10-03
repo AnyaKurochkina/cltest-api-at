@@ -42,7 +42,7 @@ public class ApacheKafkaCluster extends IProduct {
 
     public static final String KAFKA_CREATE_TOPIC = "Создать Topic Kafka";
 
-    @Override
+//    @Override
     public void order() {
         JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);

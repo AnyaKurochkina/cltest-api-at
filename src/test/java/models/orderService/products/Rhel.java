@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,10 +16,9 @@ import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
-
 import java.util.List;
 
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
@@ -39,7 +39,7 @@ public class Rhel extends IProduct {
     }
 
     @Override
-    public void order() {
+    public Entity create() {
         JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
@@ -51,22 +51,18 @@ public class Rhel extends IProduct {
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
+        save();
+        return this;
     }
 
     @Override
     public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
+        Project project = Project.builder().env(env).isForOrders(true).build().createObject();
         if(productId == null) {
             projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
+        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -79,17 +75,13 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
-                .build();
+                .set("$.order.attrs.on_support", ((ProjectEnvironment)(ProjectEnvironment.builder().env(project.env).build().createObject()))
+                        .envType.contains("TEST")).build();
     }
 
-    @Override
-    public Entity create() {
-        return null;
-    }
 
     @Override
-    public void delete() {
-
+    protected void delete() {
+        delete("Удалить");
     }
 }

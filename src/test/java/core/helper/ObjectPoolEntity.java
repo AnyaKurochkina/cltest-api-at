@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
-public class ObjectPoolEntity implements IEntity {
+public class ObjectPoolEntity {
     private String entity;
     @Getter
     @Setter
@@ -26,11 +26,15 @@ public class ObjectPoolEntity implements IEntity {
     @Getter
     @Setter
     private boolean failed = false;
-    private final Class<? extends Entity> c;
+    @Getter
+    @Setter
+    private boolean mock = false;
+    @Getter
+    public final Class<? extends Entity> clazz;
     private final Lock lock = new ReentrantLock();
 
     public ObjectPoolEntity(Entity entity) {
-        this.c = entity.getClass();
+        this.clazz = entity.getClass();
         this.entity = ObjectPoolService.toJson(entity);
     }
 
@@ -39,7 +43,7 @@ public class ObjectPoolEntity implements IEntity {
     public boolean equalsEntity(Object o) {
         if (this == o)
             return true;
-        if (o == null || c != o.getClass())
+        if (o == null || clazz != o.getClass())
             return false;
         ObjectMapper mapper = new ObjectMapper();
         String that = new Gson().toJson(o, o.getClass());
@@ -55,13 +59,11 @@ public class ObjectPoolEntity implements IEntity {
         return Objects.equals(jsonNodeThis, jsonNodeThat);
     }
 
-    @Override
     @ResourceLock(value = "entity", mode = READ)
     public <T extends Entity> T get() {
-        return ObjectPoolService.fromJson(entity, c);
+        return ObjectPoolService.fromJson(entity, clazz);
     }
 
-    @Override
     @ResourceLock(value = "entity", mode = READ_WRITE)
     public void set(Entity entity) {
         this.entity = ObjectPoolService.toJson(entity);
@@ -71,11 +73,6 @@ public class ObjectPoolEntity implements IEntity {
         lock.lock();
     }
 
-//    public boolean isLock(){
-//        return lock.tryLock();
-//    }
-
-    @Override
     public void release() {
             lock.unlock();
     }

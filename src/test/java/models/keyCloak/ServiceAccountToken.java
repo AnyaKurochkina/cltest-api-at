@@ -15,9 +15,7 @@ public class ServiceAccountToken extends Entity {
 
     @Override
     public Entity create() {
-        ServiceAccount serviceAccount = ObjectPoolService.create(ServiceAccount.builder()
-                        .name(serviceAccountName)
-                        .build());
+        ServiceAccount serviceAccount = ServiceAccount.builder().name(serviceAccountName).build().createObject();
         token = KeyCloakSteps.getNewServiceAccountToken(serviceAccount);
         time = System.currentTimeMillis() / 1000L;
         return this;

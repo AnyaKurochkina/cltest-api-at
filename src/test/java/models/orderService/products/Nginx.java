@@ -34,7 +34,7 @@ public class Nginx extends IProduct {
     String osVersion;
     Flavor flavor;
 
-    @Override
+//    @Override
     public void order() {
         JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);

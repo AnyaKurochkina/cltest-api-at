@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.Assume;
-import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.io.FileInputStream;
 import java.lang.reflect.Type;
@@ -28,16 +27,16 @@ public class ObjectPoolService {
         System.out.println(e + "ПреЛок");
         objectPoolEntity.lock();
         System.out.println(e + " ПостЛок");
-        if(objectPoolEntity.isFailed()) {
+        if (objectPoolEntity.isFailed()) {
             objectPoolEntity.release();
             Assume.assumeFalse("Object is failed", objectPoolEntity.isFailed());
         }
         if (!objectPoolEntity.isCreated()) {
             try {
-                if(!deleteClassesName.contains(e.getClass().getName()))
-                    deleteClassesName.add(e.getClass().getName());
-                objectPoolEntity.get().create().save();
-            } catch (Throwable throwable){
+                if (!deleteClassesName.contains(e.getClass().getName()))
+                    deleteClassesName.add(0, e.getClass().getName());
+                e.create().save();
+            } catch (Throwable throwable) {
                 objectPoolEntity.setFailed(true);
                 objectPoolEntity.release();
                 throw throwable;
@@ -70,17 +69,42 @@ public class ObjectPoolService {
         getObjectPoolEntity(entity).set(entity);
     }
 
-    public static IEntity getObjectPoolEntity(Entity entity) {
+    public static ObjectPoolEntity getObjectPoolEntity(Entity entity) {
+        if(entity.uuid == null)
+            System.out.println(entity.objectClassName);
         return entities.get(entity.uuid);
     }
 
     private static ObjectPoolEntity writeEntityToMap(Entity entity) {
         entity.objectClassName = entity.getClass().getName();
-        String uuid = UUID.randomUUID().toString();
-        entity.uuid = uuid;
+        entity.uuid = UUID.randomUUID().toString();
         ObjectPoolEntity objectPoolEntity = new ObjectPoolEntity(entity);
-        entities.put(uuid, objectPoolEntity);
+        entities.put(entity.uuid, objectPoolEntity);
         return objectPoolEntity;
+    }
+
+    public static void deleteAllResources() {
+        List<Thread> threadList = new ArrayList<>();
+        for (String className : deleteClassesName) {
+            for (Map.Entry<String, ObjectPoolEntity> e : entities.entrySet()) {
+                ObjectPoolEntity objectPoolEntity = e.getValue();
+                if (!objectPoolEntity.isCreated())
+                    continue;
+                if (objectPoolEntity.getClazz().getName().equals(className)) {
+                    Entity entity = objectPoolEntity.get();
+                    Thread thread = new Thread(entity::deleteObject);
+                    threadList.add(thread);
+                    thread.start();
+                }
+            }
+            threadList.forEach(thread -> {
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 
     public static void saveEntities(String file) {
@@ -113,6 +137,7 @@ public class ObjectPoolService {
                 listEntities.forEach(v -> {
                             ObjectPoolEntity objectPoolEntity = writeEntityToMap(fromJson(new JSONObject(v).toString(), getClassByName(v.get("objectClassName").toString())));
                             objectPoolEntity.setCreated(true);
+                            objectPoolEntity.setMock(true);
                         }
                 );
             }

@@ -36,7 +36,7 @@ public class RabbitMQCluster extends IProduct {
     String role = "administrator";
     Flavor flavor;
 
-    @Override
+//    @Override
     public void order() {
         JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);

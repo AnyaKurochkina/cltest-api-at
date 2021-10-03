@@ -1,6 +1,9 @@
 package org.junit;
 
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Story;
+import io.qameta.allure.model.Status;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
 
@@ -15,7 +18,7 @@ public class CustomDisplayNameGenerator extends DisplayNameGenerator.Standard {
         else if (testMethod.isAnnotationPresent(ParameterizedTest.class)) {
             String nameParametrized = testMethod.getAnnotation(ParameterizedTest.class).name();
             nameParametrized = nameParametrized.substring(0, nameParametrized.indexOf('{'));
-            if(nameParametrized.length() > 0)
+            if (nameParametrized.length() > 0)
                 name = nameParametrized;
         }
         return name;

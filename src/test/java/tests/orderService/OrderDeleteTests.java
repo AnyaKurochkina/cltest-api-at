@@ -18,7 +18,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @OrderLabel("tests.orderService.OrderDeleteTests")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("prod"), @Tag("smoke")})
+@Tags({@Tag("regress"), @Tag("orders2"), @Tag("prod"), @Tag("smoke")})
 public class OrderDeleteTests extends Tests {
 
 

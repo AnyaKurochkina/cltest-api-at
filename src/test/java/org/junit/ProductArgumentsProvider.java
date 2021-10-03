@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import core.helper.ObjectPoolService;
 import io.qameta.allure.Allure;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.IProductMock;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -17,6 +18,9 @@ import steps.Steps;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.TypeVariable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +44,20 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         List<Arguments> list = new ArrayList<>();
         if (variableName == PRODUCTS) {
             if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
+                Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
+                Class<?> clazz = null;
+                for(Class<?> m : params){
+                    if(Entity.class.isAssignableFrom(m)){
+                        clazz = m;
+                        break;
+                    }
+
+                }
+                Class<?> finalClazz = clazz;
                 orders.forEach(entity -> {
                     Class<?> c = entity.getClass();
-                    list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
+                    if(finalClazz.isInstance(entity))
+                        list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
                 });
             } else {
                 orders.forEach(entity -> {
@@ -60,6 +75,8 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         }
         return list.stream();
     }
+
+
 
     @Override
     public void accept(Source variableSource) {

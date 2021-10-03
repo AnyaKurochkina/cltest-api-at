@@ -1,10 +1,5 @@
 package models.orderService.interfaces;
 
-import static io.qameta.allure.Allure.getLifecycle;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import core.CacheService;
 import core.exception.DeferredException;
 import io.qameta.allure.AllureLifecycle;
@@ -16,7 +11,6 @@ import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.EntityOld;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.Action;
@@ -31,6 +25,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static io.qameta.allure.Allure.getLifecycle;
+import static org.junit.Assert.*;
 
 @ToString(onlyExplicitlyIncluded = true, includeFieldNames = false)
 @Log4j2
@@ -64,11 +61,13 @@ public abstract class IProduct extends Entity {
     @Getter
     protected String productId;
 
-    /**
-     * Заказ продукта, реализуется в каждом продукте по своему
-     */
-    public abstract void order();
+    @Override
+    @Step("Заказ продукта")
+    public abstract Entity create();
 
+    @Override
+    @Step("Удаление продукта")
+    protected abstract void delete();
     /**
      * Метод для выбора json шаблона заказа
      * @return возвращает готовый параметризованный json
@@ -173,7 +172,6 @@ public abstract class IProduct extends Entity {
         assertEquals(flavor.data.memory, memoryAfter);
     }
 
-    @Action("Расширить")
     public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));

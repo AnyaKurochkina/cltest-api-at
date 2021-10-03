@@ -10,14 +10,14 @@ OpenShiftProject:
   - options:
       - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
       - { env: "DSO", resourcePoolLabel: "d0-oscp.corp.dev.vtb - VTB-DSO" }
-#
-#Rhel:
-#  - actions:
-#      [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
-#  - options:
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+
+Rhel:
+  - actions:
+      [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+  - options:
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-#
+
 #PostgreSQL:
 #  - actions:
 #      [ 'Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Выключить принудительно' ]

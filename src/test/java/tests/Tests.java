@@ -8,6 +8,7 @@ import org.junit.TmsLinkExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extensions;
 
@@ -39,8 +40,10 @@ public class Tests {
         Allure.addAttachment("LOG", testLog.get().toString());
     }
     public static void putLog(String msg){
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss ");
-        testLog.get().append(formatter.format(new Date(System.currentTimeMillis()))).append(msg);
+        if(testLog.get() != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss ");
+            testLog.get().append(formatter.format(new Date(System.currentTimeMillis()))).append(msg);
+        }
     }
 
 }
