@@ -14,14 +14,16 @@ public class Configure {
 
     static {
         try {
-            if(System.getProperty("env") == null){
-                throw new Exception("Не задан параметр env");
-            }
-            ENV = System.getProperty("env").toLowerCase();
-            log.info("ENV = " + ENV);
             RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
             loadProperties(RESOURCE_PATH + "/config/application.properties");
+            if (System.getProperty("env") == null) {
+                if (getAppProp("env") == null) {
+                    throw new Exception("Не задан параметр env");
+                } else ENV = getAppProp("env").toLowerCase();
+            } else
+                ENV = System.getProperty("env").toLowerCase();
+            log.info("ENV = " + ENV);
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
         } catch (Exception e) {
             e.printStackTrace();

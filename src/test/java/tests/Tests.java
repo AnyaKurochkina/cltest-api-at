@@ -1,6 +1,7 @@
 package tests;
 
 
+//import core.helper.DisableTestCondition;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Attachment;
 import org.junit.CustomDisplayNameGenerator;
@@ -18,6 +19,7 @@ import java.util.Date;
 import static core.helper.JsonHelper.stringPrettyFormat;
 
 @ExtendWith(TmsLinkExtension.class)
+//@ExtendWith(DisableTestCondition.class)
 @DisplayNameGeneration(CustomDisplayNameGenerator.class)
 public class Tests {
     private static final ThreadLocal<StringBuilder> testLog = new ThreadLocal<>();

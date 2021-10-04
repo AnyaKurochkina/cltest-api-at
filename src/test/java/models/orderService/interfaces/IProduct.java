@@ -15,6 +15,7 @@ import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.Action;
 import org.junit.Assert;
+import org.junit.Assume;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
@@ -53,9 +54,9 @@ public abstract class IProduct extends Entity {
     @Setter
     protected List<String> actions;
 
-    @Setter
     @Getter
     private ProductStatus status;
+
     @Getter
     protected String orderId;
     @Getter
@@ -67,7 +68,6 @@ public abstract class IProduct extends Entity {
     protected String env;
     @Getter
     protected String productId;
-
     /**
      * Метод для выбора json шаблона заказа
      * @return возвращает готовый параметризованный json
@@ -132,6 +132,11 @@ public abstract class IProduct extends Entity {
         return jsonTemplate;
     }
 
+    public void setStatus(ProductStatus status) {
+        this.status = status;
+        save();
+    }
+
     @Action("Перезагрузить")
     public void restart(String action) {
         orderServiceSteps.executeAction(action, this, null);
@@ -140,16 +145,23 @@ public abstract class IProduct extends Entity {
     @Action("Выключить принудительно")
     public void stopHard(String action) {
         orderServiceSteps.executeAction(action, this, null);
+        setStatus(ProductStatus.STOPPED);
     }
 
     @Action("Выключить")
     public void stopSoft(String action) {
         orderServiceSteps.executeAction(action, this, null);
+        setStatus(ProductStatus.STOPPED);
     }
 
     @Action("Включить")
     public void start(String action) {
         orderServiceSteps.executeAction(action, this, null);
+        setStatus(ProductStatus.CREATED);
+    }
+
+    public void checkPreconditionStatusProduct(ProductStatus status){
+        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
     }
 
     @Action("Удалить")

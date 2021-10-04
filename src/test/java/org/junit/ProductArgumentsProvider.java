@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import core.helper.ObjectPoolService;
 import io.qameta.allure.Allure;
+import io.qameta.allure.AllureLifecycle;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.orderService.interfaces.IProduct;
@@ -22,6 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,6 +33,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static io.qameta.allure.Allure.getLifecycle;
 
 @Log4j2
 public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Source> {
@@ -46,8 +50,8 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
             if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
                 Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
                 Class<?> clazz = null;
-                for(Class<?> m : params){
-                    if(Entity.class.isAssignableFrom(m)){
+                for (Class<?> m : params) {
+                    if (Entity.class.isAssignableFrom(m)) {
                         clazz = m;
                         break;
                     }
@@ -56,7 +60,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                 Class<?> finalClazz = clazz;
                 orders.forEach(entity -> {
                     Class<?> c = entity.getClass();
-                    if(finalClazz.isInstance(entity))
+                    if (finalClazz.isInstance(entity))
                         list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
                 });
             } else {
@@ -77,23 +81,26 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
     }
 
 
-
     @Override
     public void accept(Source variableSource) {
         this.variableName = variableSource.value();
     }
 
-    public static List<IProduct> getProductList() {
-        List<IProduct> list = new ArrayList<>();
+    public static Map<String, List<Map>> getProductListMap() throws IOException {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.findAndRegisterModules();
+        return mapper.readValue(new File(Steps.dataFolder +
+                        ((System.getProperty("products") != null) ?
+                                "/" + System.getProperty("products") :
+                                "/products") + ".yaml"),
+                new TypeReference<Map<String, List<Map>>>() {
+                });
+    }
+
+    public static List<IProduct> getProductList() {
+        List<IProduct> list = new ArrayList<>();
         try {
-            Map<String, List<Map>> products = mapper.readValue(new File(Steps.dataFolder +
-                            ((System.getProperty("products") != null) ?
-                                    "/" + System.getProperty("products") :
-                                    "/products") + ".yaml"),
-                    new TypeReference<Map<String, List<Map>>>() {
-                    });
+            Map<String, List<Map>> products = getProductListMap();
             final ObjectMapper objectMapper = new ObjectMapper();
             for (Map.Entry<String, List<Map>> e : products.entrySet()) {
                 try {
