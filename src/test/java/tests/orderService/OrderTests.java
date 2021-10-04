@@ -26,7 +26,6 @@ public class OrderTests extends Tests {
 //    @Mock
     public void order(IProduct product, String tmsId) {
         Allure.tms("2." + tmsId, "");
-        product.toStringProductStep();
 //        product.order();
     }
 
@@ -38,7 +37,6 @@ public class OrderTests extends Tests {
 //    @Mock
     public void orderSmoke(IProduct product, String tmsId) {
         Allure.tms("18." + tmsId, "");
-        product.toStringProductStep();
 //        product.order();
     }
 }

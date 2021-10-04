@@ -144,7 +144,7 @@
                 <configuration>
                     <namespace>API</namespace>
                     <apiToken>Rkp0SjVqMVZlNEhnS2dtOEF3</apiToken>
-                    <testRunName>IFT 0.20</testRunName>
+                    <testRunName>Test new platform for API tests</testRunName>
                     <debug>true</debug>
                     <projectId>23</projectId>
                     <infrastructureFailReasonExceptions>

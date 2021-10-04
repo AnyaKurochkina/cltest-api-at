@@ -32,12 +32,19 @@ import static org.junit.Assert.*;
 @ToString(onlyExplicitlyIncluded = true, includeFieldNames = false)
 @Log4j2
 public abstract class IProduct extends Entity {
-    public static String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
-    public static String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
-    public static String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
-    public static String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.config.topics.any{it.topic_name=='%s'}";
-    public static String KAFKA_CLUSTER_ACL_TOPICS = "data.find{it.type=='cluster'}.config.acls.any{it.topic_name=='%s'}";
-    public static String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.config.transaction_acls.any{it.transaction_id=='%s'}";
+    public static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
+    public static final String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
+    public static final String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
+    public static final String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.config.topics.any{it.topic_name=='%s'}";
+    public static final String KAFKA_CLUSTER_ACL_TOPICS = "data.find{it.type=='cluster'}.config.acls.any{it.topic_name=='%s'}";
+    public static final String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.config.transaction_acls.any{it.transaction_id=='%s'}";
+
+    public static final String EXPAND_MOUNT_POINT = "Расширить";
+    public static final String RESTART = "Перезагрузить";
+    public static final String STOP_SOFT = "Выключить";
+    public static final String START = "Включить";
+    public static final String STOP_HARD = "Выключить принудительно";
+    public static final String RESIZE = "Изменить конфигурацию";
 
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
     protected transient ReferencesStep referencesStep = new ReferencesStep();
@@ -61,13 +68,6 @@ public abstract class IProduct extends Entity {
     @Getter
     protected String productId;
 
-    @Override
-    @Step("Заказ продукта")
-    public abstract Entity create();
-
-    @Override
-    @Step("Удаление продукта")
-    protected abstract void delete();
     /**
      * Метод для выбора json шаблона заказа
      * @return возвращает готовый параметризованный json
@@ -179,26 +179,4 @@ public abstract class IProduct extends Entity {
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
 
-    @Step
-    @SneakyThrows
-    public void toStringProductStep() {
-        AllureLifecycle allureLifecycle = getLifecycle();
-        String id = allureLifecycle.getCurrentTestCaseOrStep().get();
-        List<Parameter> list = new ArrayList<>();
-        List<Field> fieldList = new ArrayList<>(Arrays.asList(getClass().getSuperclass().getDeclaredFields()));
-        fieldList.addAll(Arrays.asList(getClass().getDeclaredFields()));
-        for (Field field : fieldList) {
-            if (Modifier.isStatic(field.getModifiers()))
-                continue;
-            field.setAccessible(true);
-            if (field.get(this) != null) {
-                Parameter parameter = new Parameter();
-                parameter.setName(field.getName());
-                parameter.setValue(field.get(this).toString());
-                list.add(parameter);
-            }
-        }
-        allureLifecycle.updateStep(id, s -> s.setName("Получен продукт " + getProductName() + " с параметрами"));
-        allureLifecycle.updateStep(id, s -> s.setParameters(list));
-    }
 }

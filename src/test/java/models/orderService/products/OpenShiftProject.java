@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,6 +31,7 @@ public class OpenShiftProject extends IProduct {
     @ToString.Include
     public String resourcePoolLabel;
     public List<Role> roles;
+    public static final String CHANGE_PROJECT = "Изменить проект";
 
     public OpenShiftProject() {
         jsonTemplate = "/orders/openshift_project.json";
@@ -37,6 +39,7 @@ public class OpenShiftProject extends IProduct {
     }
 
     @Override
+    @Step("Заказ продукта")
     public Entity create() {
         JSONObject template = getJsonParametrizedTemplate();
         AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
@@ -84,17 +87,8 @@ public class OpenShiftProject extends IProduct {
         Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.roles[0].role"));
     }
 
-//    @Action("Изменить квоту СХД")
-//    public void updateProject(String action) {
-//        String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 1}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
-//        roles.get(0).setName("view");
-//        orderServiceSteps.executeAction(action, this, new JSONObject(data));
-//        save();
-//        Assert.assertEquals("СХД не изменился на 1", 1, orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"));
-//    }
-
-
     @Override
+    @Step("Удаление продукта")
     protected void delete() {
         super.delete("Удалить проект");
     }

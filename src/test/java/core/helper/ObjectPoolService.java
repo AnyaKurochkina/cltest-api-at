@@ -4,6 +4,10 @@ package core.helper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import io.qameta.allure.AllureLifecycle;
+import io.qameta.allure.Step;
+import io.qameta.allure.model.Parameter;
+import lombok.SneakyThrows;
 import models.Entity;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,11 +15,15 @@ import org.json.simple.parser.JSONParser;
 import org.junit.Assume;
 
 import java.io.FileInputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static io.qameta.allure.Allure.getLifecycle;
 
 
 public class ObjectPoolService {
@@ -48,7 +56,9 @@ public class ObjectPoolService {
             objectPoolEntity.release();
             System.out.println(e + " ПостРелизНО");
         }
-        return objectPoolEntity.get();
+        T entity = objectPoolEntity.get();
+        toStringProductStep(entity);
+        return entity;
     }
 
     public static synchronized ObjectPoolEntity createObjectPoolEntity(Entity e) {
@@ -70,8 +80,6 @@ public class ObjectPoolService {
     }
 
     public static ObjectPoolEntity getObjectPoolEntity(Entity entity) {
-        if(entity.uuid == null)
-            System.out.println(entity.objectClassName);
         return entities.get(entity.uuid);
     }
 
@@ -154,6 +162,29 @@ public class ObjectPoolService {
             e.printStackTrace();
         }
         return act;
+    }
+
+    @Step
+    @SneakyThrows
+    private static void toStringProductStep(Entity entity) {
+        AllureLifecycle allureLifecycle = getLifecycle();
+        String id = allureLifecycle.getCurrentTestCaseOrStep().orElseThrow(Exception::new);
+        List<Parameter> list = new ArrayList<>();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(entity.getClass().getSuperclass().getDeclaredFields()));
+        fieldList.addAll(Arrays.asList(entity.getClass().getDeclaredFields()));
+        for (Field field : fieldList) {
+            if (Modifier.isStatic(field.getModifiers()))
+                continue;
+            field.setAccessible(true);
+            if (field.get(entity) != null) {
+                Parameter parameter = new Parameter();
+                parameter.setName(field.getName());
+                parameter.setValue(field.get(entity).toString());
+                list.add(parameter);
+            }
+        }
+        allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
+        allureLifecycle.updateStep(id, s -> s.setParameters(list));
     }
 
 

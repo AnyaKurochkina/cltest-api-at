@@ -3,21 +3,22 @@ package tests.orderService;
 import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import io.qameta.allure.TmsLink;
 import models.orderService.products.OpenShiftProject;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
+import static models.orderService.products.OpenShiftProject.CHANGE_PROJECT;
+
 @Epic("Продукты")
 @Feature("OpenShift")
-@Tag("orders")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("openshift")})
 public class OpenShiftTests extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @TmsLink("40")
     @ParameterizedTest(name = "Создание проекта {0}")
     void create(OpenShiftProject product) {
         OpenShiftProject openShift = product.createObjectExclusiveAccess();
@@ -25,24 +26,13 @@ public class OpenShiftTests extends Tests {
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @TmsLink("41")
     @ParameterizedTest(name = "Изменение проекта {0}")
     void change(OpenShiftProject product) {
         try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {
-            openShift.changeProject("Изменить проект");
+            openShift.changeProject(CHANGE_PROJECT);
         }
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @TmsLink("42")
-    @ParameterizedTest(name = "Изменение проекта {0}")
-    void changeQuotas(OpenShiftProject product) {
-        try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {
-            openShift.changeProject("Изменить проект");
-        }
-    }
-
-    @TmsLink("43")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удаление проекта {0}")
     @Deleted(OpenShiftProject.class)
@@ -51,11 +41,4 @@ public class OpenShiftTests extends Tests {
             openShift.deleteObject();
         }
     }
-
-//    @TmsLink("43")
-//    @Test
-//    @DisplayName("Простой тест")
-//    public void test() {
-//    }
-
 }

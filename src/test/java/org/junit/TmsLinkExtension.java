@@ -5,7 +5,7 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.model.Link;
-import io.qameta.allure.model.Status;
+import java.util.zip.CRC32;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
@@ -34,5 +34,14 @@ public class TmsLinkExtension implements InvocationInterceptor {
             allureLifecycle.getCurrentTestCase().ifPresent(i ->
                     allureLifecycle.updateTestCase(i, s -> s.setName(extensionContext.getDisplayName().replaceAll("super=\\w+\\(", "("))));
         }
+    }
+
+    @Override
+    public void interceptAfterEachMethod(InvocationInterceptor.Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
+                                          ExtensionContext extensionContext) throws Throwable {
+        invocation.proceed();
+        CRC32 crc = new CRC32();
+        crc.update(extensionContext.getUniqueId().getBytes());
+        Allure.tms(Long.toHexString(crc.getValue()), "");
     }
 }

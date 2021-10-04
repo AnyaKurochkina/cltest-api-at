@@ -23,7 +23,7 @@ public class Tests {
     private static final ThreadLocal<StringBuilder> testLog = new ThreadLocal<>();
 
     @BeforeEach
-    public void beforeScenarios()  {
+    public void beforeScenarios(){
         testLog.remove();
         testLog.set(new StringBuilder());
     }

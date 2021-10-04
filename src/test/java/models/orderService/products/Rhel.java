@@ -33,12 +33,14 @@ public class Rhel extends IProduct {
     String domain;
     Flavor flavor;
 
+
     public Rhel() {
         jsonTemplate = "/orders/rhel.json";
         productName = "Rhel";
     }
 
     @Override
+    @Step("Заказ продукта")
     public Entity create() {
         JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);
@@ -81,6 +83,7 @@ public class Rhel extends IProduct {
 
 
     @Override
+    @Step("Удаление продукта")
     protected void delete() {
         delete("Удалить");
     }
