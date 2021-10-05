@@ -34,6 +34,7 @@ public class RabbitMQCluster extends IProduct {
     String domain;
     String role = "administrator";
     Flavor flavor;
+    String osVersion;
 
     @Override
     public void order() {
@@ -94,6 +95,7 @@ public class RabbitMQCluster extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
                 .build();
     }
