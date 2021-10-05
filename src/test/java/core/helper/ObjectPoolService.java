@@ -10,6 +10,7 @@ import io.qameta.allure.model.Parameter;
 import lombok.SneakyThrows;
 import models.Entity;
 import models.keyCloak.UserToken;
+import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -28,7 +29,7 @@ import static io.qameta.allure.Allure.getLifecycle;
 
 
 public class ObjectPoolService {
-    private static final Map<String, ObjectPoolEntity> entities = new ConcurrentHashMap<>();
+    private static final Map<String, ObjectPoolEntity> entities = Collections.synchronizedMap(new LinkedHashMap<>());
     public static final List<String> deleteClassesName = Collections.synchronizedList(new ArrayList<>());
 
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess) {
@@ -98,19 +99,21 @@ public class ObjectPoolService {
 
     public static void deleteAllResources() {
         List<Thread> threadList = new ArrayList<>();
-        for (String className : deleteClassesName) {
-            if(className.endsWith("UserToken") || className.endsWith("ServiceAccountToken"))
-                continue;
-            for (Map.Entry<String, ObjectPoolEntity> e : entities.entrySet()) {
-                ObjectPoolEntity objectPoolEntity = e.getValue();
+        List<String> reverseOrderedKeys = new ArrayList<>(entities.keySet());
+        Collections.reverse(reverseOrderedKeys);
+            for (String key : reverseOrderedKeys) {
+                ObjectPoolEntity objectPoolEntity = entities.get(key);
+                if(objectPoolEntity.getClazz().getName().endsWith("UserToken") || objectPoolEntity.getClazz().getName().endsWith("ServiceAccountToken"))
+                    continue;
                 if (!objectPoolEntity.isCreated())
                     continue;
-                if (objectPoolEntity.getClazz().getName().equals(className)) {
                     Entity entity = objectPoolEntity.get();
-                    Thread thread = new Thread(entity::deleteObject);
-                    threadList.add(thread);
-                    thread.start();
-                }
+                    if(entity instanceof IProduct) {
+                        Thread thread = new Thread(entity::deleteObject);
+                        threadList.add(thread);
+                        thread.start();
+                    }
+                    else entity.deleteObject();
             }
             threadList.forEach(thread -> {
                 try {
@@ -118,9 +121,8 @@ public class ObjectPoolService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println(className);
+                System.out.println(1);
             });
-        }
     }
 
     public static void saveEntities(String file) {
