@@ -195,8 +195,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     @Override
-    public Entity create() {
-        return null;
+    public void create() {
     }
 
     @Override

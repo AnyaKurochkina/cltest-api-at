@@ -15,8 +15,8 @@ public class ServiceAccount extends Entity {
     public Boolean isForOrders;
 
     @Override
-    public Entity create() {
-        return null;
+    public void create() {
+
     }
 
     @Override

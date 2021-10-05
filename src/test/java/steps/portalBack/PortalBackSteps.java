@@ -51,14 +51,14 @@ public class PortalBackSteps extends Steps {
                 .getEntity();
 
         JsonPath jsonPath = new Http(URL)
-                .get(String.format("portal/api/v1/folders/%s/information_systems/%s/project_environments?page=1&per_page=100&include=total_count", folder.id, informationSystem.id))
+                .get(String.format("portal/api/v1/folders/%s/information_systems/%s/project_environments?page=1&per_page=100&include=total_count", folder.getName(), informationSystem.id))
                 .assertStatus(200)
                 .jsonPath();
 
         int countOfIteration = (int)jsonPath.get("meta.total_count")/ 100 + 1;
         for (int i = 1; i <=countOfIteration; i++){
             JsonPath jsonPathInCycle = new Http(URL)
-                    .get(String.format("portal/api/v1/folders/%s/information_systems/%s/project_environments?page=%s&per_page=100&include=total_count", folder.id, informationSystem.id, i))
+                    .get(String.format("portal/api/v1/folders/%s/information_systems/%s/project_environments?page=%s&per_page=100&include=total_count", folder.getName(), informationSystem.id, i))
                     .assertStatus(200)
                     .jsonPath();
 

@@ -102,8 +102,7 @@ public class WildFly extends IProduct {
     }
 
     @Override
-    public Entity create() {
-        return null;
+    public void create() {
     }
 
     @Override

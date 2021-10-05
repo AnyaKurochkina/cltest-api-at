@@ -14,11 +14,10 @@ public class ServiceAccountToken extends Entity {
     public Long time;
 
     @Override
-    public Entity create() {
+    public void create() {
         ServiceAccount serviceAccount = ServiceAccount.builder().name(serviceAccountName).build().createObject();
         token = KeyCloakSteps.getNewServiceAccountToken(serviceAccount);
         time = System.currentTimeMillis() / 1000L;
-        return this;
     }
 
 }

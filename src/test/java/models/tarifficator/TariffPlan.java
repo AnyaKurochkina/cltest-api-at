@@ -44,7 +44,7 @@ public class TariffPlan extends Entity {
     }
 
     @Override
-    public Entity create() {
+    public void create() {
         if(title == null)
             title = "AT " + new Date();
         if(base == null)
@@ -53,7 +53,6 @@ public class TariffPlan extends Entity {
             TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
             oldTariffPlanId = activeTariff.getId();
         }
-        return tariffPlanSteps.createTariffPlan(this);
     }
 
     @Override

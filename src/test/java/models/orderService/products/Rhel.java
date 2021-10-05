@@ -41,7 +41,7 @@ public class Rhel extends IProduct {
 
     @Override
     @Step("Заказ продукта")
-    public Entity create() {
+    public void create() {
         JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
@@ -53,7 +53,7 @@ public class Rhel extends IProduct {
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        return this;
+//        return this;
     }
 
     @Override

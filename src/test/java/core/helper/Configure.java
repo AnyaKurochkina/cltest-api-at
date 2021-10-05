@@ -1,6 +1,7 @@
 package core.helper;
 
 import lombok.extern.log4j.Log4j2;
+import steps.authorizer.AuthorizerSteps;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +12,8 @@ public class Configure {
     private static Properties properties;
     public static String RESOURCE_PATH;
     public static String ENV;
+
+    public static String AuthorizerURL;
 
     static {
         try {
@@ -25,6 +28,10 @@ public class Configure {
                 ENV = System.getProperty("env").toLowerCase();
             log.info("ENV = " + ENV);
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
+
+            String kongURL = getAppProp("host_kong");
+            AuthorizerURL = kongURL + "authorizer/api/v1/";
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -13,8 +13,7 @@ public class AccessGroup extends Entity {
     public Boolean isForOrders;
 
     @Override
-    public Entity create() {
-        return null;
+    public void create() {
     }
 
 }

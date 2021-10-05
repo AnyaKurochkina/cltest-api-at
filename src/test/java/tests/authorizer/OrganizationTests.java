@@ -23,7 +23,7 @@ public class OrganizationTests extends Tests {
     @DisplayName("Получение организации")
     @Description("Получение организации с сохранением в Shared Memory")
     public void createProject() {
-        authorizerSteps.getOrgName("ВТБ");
+        authorizerSteps.getOrganizationByTitle("ВТБ");
     }
 
 }

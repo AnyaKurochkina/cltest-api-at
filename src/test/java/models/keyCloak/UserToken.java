@@ -13,10 +13,9 @@ public class UserToken extends Entity {
     public Long time;
 
     @Override
-    public Entity create() {
+    public void create() {
         token = KeyCloakSteps.getNewUserToken();
         time = System.currentTimeMillis() / 1000L;
-        return this;
     }
 
 }

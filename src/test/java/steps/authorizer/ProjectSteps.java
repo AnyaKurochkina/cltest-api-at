@@ -41,7 +41,7 @@ public class ProjectSteps extends Steps {
                 .forOrders(false)
                 .getEntity();
         //Получение рандомного префикса среды из доступных
-        String prefix = getPrefixEnv(folder.id, informationSystem.id, projectEnvironment.id);
+        String prefix = getPrefixEnv(folder.getName(), informationSystem.id, projectEnvironment.id);
         //Отправление запроса на создание проекта с получение его ID
         String projectId = jsonHelper.getJsonTemplate("/structure/create_project.json")
                 .set("$.project.title", projectName)
@@ -49,7 +49,7 @@ public class ProjectSteps extends Steps {
                 .set("$.project.project_environment_id", projectEnvironment.id)
                 .set("$.project.environment_prefix_id", prefix)
                 .send(URL)
-                .post(String.format("authorizer/api/v1/folders/%s/projects", folder.id))
+                .post(String.format("authorizer/api/v1/folders/%s/projects", folder.getName()))
                 .assertStatus(201)
                 .jsonPath()
                 .get("data.name");

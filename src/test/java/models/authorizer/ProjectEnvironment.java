@@ -12,7 +12,6 @@ public class ProjectEnvironment extends Entity {
     public Boolean isForOrders;
 
     @Override
-    public Entity create() {
-        return null;
+    public void create() {
     }
 }

@@ -7,6 +7,7 @@ import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
 import lombok.SneakyThrows;
+import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -20,7 +21,12 @@ public abstract class Entity implements AutoCloseable {
 
     public String objectClassName;
 
-    public abstract Entity create();
+    public void init(){
+
+    }
+//    public abstract JSONObject toJson();
+//    public abstract Entity toEntity();
+    public abstract void create();
 
     protected void delete() {
     }

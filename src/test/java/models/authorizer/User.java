@@ -10,8 +10,7 @@ public class User extends Entity {
     public String password;
 
     @Override
-    public Entity create() {
-        return null;
+    public void create() {
     }
 
     @Override

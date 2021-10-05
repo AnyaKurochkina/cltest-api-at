@@ -9,6 +9,7 @@ import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
 import lombok.SneakyThrows;
 import models.Entity;
+import models.keyCloak.UserToken;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -43,7 +44,9 @@ public class ObjectPoolService {
             try {
                 if (!deleteClassesName.contains(e.getClass().getName()))
                     deleteClassesName.add(0, e.getClass().getName());
-                e.create().save();
+                e.init();
+                e.create();
+                e.save();
             } catch (Throwable throwable) {
                 objectPoolEntity.setFailed(true);
                 objectPoolEntity.release();
@@ -80,6 +83,8 @@ public class ObjectPoolService {
     }
 
     public static ObjectPoolEntity getObjectPoolEntity(Entity entity) {
+//        if(entity.uuid == null)
+//            System.out.println(1);
         return entities.get(entity.uuid);
     }
 
@@ -94,6 +99,8 @@ public class ObjectPoolService {
     public static void deleteAllResources() {
         List<Thread> threadList = new ArrayList<>();
         for (String className : deleteClassesName) {
+            if(className.endsWith("UserToken") || className.endsWith("ServiceAccountToken"))
+                continue;
             for (Map.Entry<String, ObjectPoolEntity> e : entities.entrySet()) {
                 ObjectPoolEntity objectPoolEntity = e.getValue();
                 if (!objectPoolEntity.isCreated())
@@ -111,6 +118,7 @@ public class ObjectPoolService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                System.out.println(className);
             });
         }
     }
@@ -168,7 +176,9 @@ public class ObjectPoolService {
     @SneakyThrows
     private static void toStringProductStep(Entity entity) {
         AllureLifecycle allureLifecycle = getLifecycle();
-        String id = allureLifecycle.getCurrentTestCaseOrStep().orElseThrow(Exception::new);
+        String id = allureLifecycle.getCurrentTestCaseOrStep().orElse(null);
+        if(id == null)
+            return;
         List<Parameter> list = new ArrayList<>();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(entity.getClass().getSuperclass().getDeclaredFields()));
         fieldList.addAll(Arrays.asList(entity.getClass().getDeclaredFields()));

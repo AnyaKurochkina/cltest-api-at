@@ -19,7 +19,6 @@ import static models.orderService.interfaces.IProduct.*;
 @Epic("Продукты")
 @Feature("Rhel")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("rhel")})
-
 public class RhelTests extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -94,11 +93,4 @@ public class RhelTests extends Tests {
             rhel.deleteObject();
         }
     }
-
-//    @TmsLink("47")
-//    @Test
-//    @Story("Простой тест 2")
-//    public void test() {
-//    }
-
 }

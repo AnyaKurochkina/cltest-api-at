@@ -40,7 +40,7 @@ public class OpenShiftProject extends IProduct {
 
     @Override
     @Step("Заказ продукта")
-    public Entity create() {
+    public void create() {
         JSONObject template = getJsonParametrizedTemplate();
         AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
         log.info("Отправка запроса на создание заказа для " + productName);
@@ -55,7 +55,6 @@ public class OpenShiftProject extends IProduct {
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
         save();
-        return this;
     }
 
     @SneakyThrows

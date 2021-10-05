@@ -21,8 +21,7 @@ public class IProductMock extends IProduct {
     public void start(){}
 
     @Override
-    public Entity create() {
-        return null;
+    public void create() {
     }
 
     public void delete(){}
