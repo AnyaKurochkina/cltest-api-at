@@ -1,6 +1,6 @@
 OpenShiftProject:
   - actions:
-      ['Изменить проект', 'Изменить квоту СХД']
+      ['Изменить проект']
   - options:
       - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP" }
       - { env: "DEV", resourcePoolLabel: "ds1-lpad01.corp.dev.vtb - DEV-SRV-APP" }
@@ -29,7 +29,7 @@ Podman:
 
 WildFly:
   - actions:
-      [ 'Обновить сертификаты', 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+      [ 'Обновить сертификаты WildFly', 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
   - options:
       - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
