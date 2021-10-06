@@ -17,7 +17,7 @@ public class ProjectCreateTests extends Tests {
 
     @Order(1)
     @Test
-    @Story("Создание проекта")
+    @DisplayName("Создание проекта")
     void createProject() {
         Project.builder().isForOrders(false).build().createObject();
     }

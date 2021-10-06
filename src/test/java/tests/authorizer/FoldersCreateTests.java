@@ -1,5 +1,6 @@
 package tests.authorizer;
 
+import core.helper.Deleted;
 import io.qameta.allure.*;
 import models.authorizer.Folder;
 import models.authorizer.Organization;
@@ -16,23 +17,47 @@ public class FoldersCreateTests extends Tests {
 
     @Test
     @Order(1)
-    @Story("Создание бизнес-блока")
+    @DisplayName("Создание бизнес-блока")
     void createBusinessBlock() {
         Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject();
     }
 
     @Test
     @Order(2)
-    @Story("Создание Департамента")
+    @DisplayName("Создание Департамента")
     void createDepartmentBlock() {
         Folder.builder().kind(Folder.DEPARTMENT).build().createObject();
     }
 
     @Test
     @Order(3)
-    @Story("Создание Папки")
+    @DisplayName("Создание Папки")
     void createFolder() {
         Folder.builder().kind(Folder.DEFAULT).build().createObject();
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Удаление Папки")
+    @Deleted(Folder.class)
+    public void deleteFolder() {
+        Folder.builder().name("FOR_DELETE").kind(Folder.DEFAULT).build().createObject().deleteObject();
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Удаление Департамента")
+    @Deleted(Folder.class)
+    public void deleteDepartmentBlock() {
+        Folder.builder().name("FOR_DELETE").kind(Folder.DEPARTMENT).build().createObject().deleteObject();
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Удаление Бизнес-блока")
+    @Deleted(Folder.class)
+    public void deleteBusinessBlock() {
+        Folder.builder().name("FOR_DELETE").kind(Folder.BUSINESS_BLOCK).build().createObject().deleteObject();
     }
 
 }
