@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
+import models.authorizer.ProjectEnvironment;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
@@ -18,6 +19,7 @@ import models.subModels.Role;
 import org.json.JSONObject;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,7 @@ public class OpenShiftProject extends IProduct {
     @SneakyThrows
     @Override
     public JSONObject getJsonParametrizedTemplate() {
-        Project project = Project.builder().env(env).isForOrders(true).build().createObject();
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
         if (productId == null) {
             projectId = project.id;
             productId = orderServiceSteps.getProductId(this);

@@ -3,6 +3,7 @@ package models.authorizer;
 import core.helper.Configure;
 import core.helper.Http;
 import core.random.string.RandomStringGenerator;
+import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
 import models.Entity;
@@ -66,6 +67,7 @@ public class Folder extends Entity {
     }
 
     @Override
+    @Step("Создание папки")
     public void create() {
         String url = kind.equals(BUSINESS_BLOCK) ? "organizations/vtb/folders" : String.format("folders/%s/folders", parentId);
         name = new Http(Configure.AuthorizerURL)
@@ -76,6 +78,7 @@ public class Folder extends Entity {
     }
 
     @Override
+    @Step("Удаление папки")
     protected void delete() {
         new Http(Configure.AuthorizerURL)
                 .delete("folders/" + name)

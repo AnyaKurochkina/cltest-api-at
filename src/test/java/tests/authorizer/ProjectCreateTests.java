@@ -1,7 +1,7 @@
 package tests.authorizer;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.TmsLink;
+import io.qameta.allure.*;
+import models.authorizer.Project;
 import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -10,22 +10,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import steps.authorizer.ProjectSteps;
 import tests.Tests;
 
-@DisplayName("Набор тестов по проектам")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@OrderLabel("tests.authorizer.ProjectCreateTests")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Epic("Организационная структура")
+@Feature("Проекты")
+@Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
 public class ProjectCreateTests extends Tests {
-    ProjectSteps projectSteps = new ProjectSteps();
 
-    @ParameterizedTest(name = "{0}")
     @Order(1)
-    @TmsLink("11")
-    @DisplayName("Создание проекта")
-    @Source(ProductArgumentsProvider.ENV)
-    @Description("Создание проекта с сохранением в Shared Memory")
-    public void createProject(String env, String tmsId) {
-        projectSteps.createProject("FOLDER", "PROJECT_"+env, env);
+    @Test
+    @Story("Создание проекта")
+    void createProject() {
+        Project.builder().isForOrders(false).build().createObject();
     }
 
 

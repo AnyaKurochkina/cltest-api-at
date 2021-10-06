@@ -26,9 +26,9 @@ public class ObjectPoolEntity {
     @Getter
     @Setter
     private boolean failed = false;
-    @Getter
-    @Setter
-    private boolean mock = false;
+//    @Getter
+//    @Setter
+//    private boolean mock = false;
     @Getter
     public final Class<? extends Entity> clazz;
     private final Lock lock = new ReentrantLock();

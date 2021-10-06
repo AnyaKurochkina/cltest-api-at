@@ -245,8 +245,10 @@ public class OrderServiceSteps extends Steps {
         //Получение информационной сисетмы
         InformationSystem informationSystem = InformationSystem.builder().isForOrders(true).build().createObject();
         String product_id = "";
+
         //Получение среды проекта
-        ProjectEnvironment projectEnvironment = ProjectEnvironment.builder().isForOrders(true).env(product.getEnv()).build().createObject();
+        ProjectEnvironment projectEnvironment = ((Project) Project.builder().projectName(product.getProjectId())
+                .build().createObject()).getProjectEnvironment();
 
         //Выполнение запроса
         //TODO: оптимизировать

@@ -11,28 +11,27 @@ import tests.Tests;
 @Epic("Организационная структура")
 @Feature("Папки")
 @Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
-//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FoldersCreateTests extends Tests {
-//    AuthorizerSteps authorizerSteps = new AuthorizerSteps();
 
     @Test
-//    @Order(1)
+    @Order(1)
     @Story("Создание бизнес-блока")
-    public void createBusinessBlock() {
+    void createBusinessBlock() {
         Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject();
     }
 
     @Test
-//    @Order(2)
+    @Order(2)
     @Story("Создание Департамента")
-    public void createDepartmentBlock() {
+    void createDepartmentBlock() {
         Folder.builder().kind(Folder.DEPARTMENT).build().createObject();
     }
 
     @Test
-//    @Order(3)
+    @Order(3)
     @Story("Создание Папки")
-    public void createFolder() {
+    void createFolder() {
         Folder.builder().kind(Folder.DEFAULT).build().createObject();
     }
 

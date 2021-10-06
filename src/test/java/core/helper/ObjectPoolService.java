@@ -31,6 +31,7 @@ import static io.qameta.allure.Allure.getLifecycle;
 public class ObjectPoolService {
     private static final Map<String, ObjectPoolEntity> entities = Collections.synchronizedMap(new LinkedHashMap<>());
     public static final List<String> deleteClassesName = Collections.synchronizedList(new ArrayList<>());
+    public static final List<String> createdEntities = Collections.synchronizedList(new ArrayList<>());
 
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess) {
         ObjectPoolEntity objectPoolEntity = createObjectPoolEntity(e);
@@ -43,11 +44,12 @@ public class ObjectPoolService {
         }
         if (!objectPoolEntity.isCreated()) {
             try {
-                if (!deleteClassesName.contains(e.getClass().getName()))
-                    deleteClassesName.add(0, e.getClass().getName());
                 e.init();
                 e.create();
                 e.save();
+                createdEntities.add(e.uuid);
+                if (!deleteClassesName.contains(e.getClass().getName()))
+                    deleteClassesName.add(0, e.getClass().getName());
             } catch (Throwable throwable) {
                 objectPoolEntity.setFailed(true);
                 objectPoolEntity.release();
@@ -98,31 +100,37 @@ public class ObjectPoolService {
     }
 
     public static void deleteAllResources() {
+        System.out.println("deleteAllResources");
         List<Thread> threadList = new ArrayList<>();
-        List<String> reverseOrderedKeys = new ArrayList<>(entities.keySet());
-        Collections.reverse(reverseOrderedKeys);
-            for (String key : reverseOrderedKeys) {
-                ObjectPoolEntity objectPoolEntity = entities.get(key);
-                if(objectPoolEntity.getClazz().getName().endsWith("UserToken") || objectPoolEntity.getClazz().getName().endsWith("ServiceAccountToken"))
-                    continue;
-                if (!objectPoolEntity.isCreated())
-                    continue;
-                    Entity entity = objectPoolEntity.get();
-                    if(entity instanceof IProduct) {
-                        Thread thread = new Thread(entity::deleteObject);
-                        threadList.add(thread);
-                        thread.start();
-                    }
-                    else entity.deleteObject();
-            }
-            threadList.forEach(thread -> {
+        Collections.reverse(createdEntities);
+        for (String key : createdEntities) {
+            ObjectPoolEntity objectPoolEntity = entities.get(key);
+            if (objectPoolEntity.getClazz().getName().endsWith("UserToken") || objectPoolEntity.getClazz().getName().endsWith("ServiceAccountToken"))
+                continue;
+            if (!objectPoolEntity.isCreated())
+                continue;
+//            if (objectPoolEntity.isMock())
+//                continue;
+            Entity entity = objectPoolEntity.get();
+            if (entity instanceof IProduct) {
+                Thread thread = new Thread(entity::deleteObject);
+                threadList.add(thread);
+                thread.start();
+            } else {
                 try {
-                    thread.join();
-                } catch (InterruptedException e) {
+                    entity.deleteObject();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                System.out.println(1);
-            });
+            }
+        }
+        threadList.forEach(thread -> {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public static void saveEntities(String file) {
@@ -155,7 +163,7 @@ public class ObjectPoolService {
                 listEntities.forEach(v -> {
                             ObjectPoolEntity objectPoolEntity = writeEntityToMap(fromJson(new JSONObject(v).toString(), getClassByName(v.get("objectClassName").toString())));
                             objectPoolEntity.setCreated(true);
-                            objectPoolEntity.setMock(true);
+//                            objectPoolEntity.setMock(true);
                         }
                 );
             }
@@ -179,7 +187,7 @@ public class ObjectPoolService {
     private static void toStringProductStep(Entity entity) {
         AllureLifecycle allureLifecycle = getLifecycle();
         String id = allureLifecycle.getCurrentTestCaseOrStep().orElse(null);
-        if(id == null)
+        if (id == null)
             return;
         List<Parameter> list = new ArrayList<>();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(entity.getClass().getSuperclass().getDeclaredFields()));

@@ -4,6 +4,7 @@ import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import lombok.SneakyThrows;
 import models.authorizer.Folder;
 import models.authorizer.InformationSystem;
 import models.authorizer.Organization;
@@ -40,40 +41,30 @@ public class PortalBackSteps extends Steps {
         }
     }
 
+    @SneakyThrows
     @Step("Получение ID project env")
-    public void getProjectEnv(String envName) {
-        Folder folder = cacheService.entity(Folder.class)
-                .withField("type", "default")
-                .getEntity();
-
-        InformationSystem informationSystem = cacheService.entity(InformationSystem.class)
-                .forOrders(false)
-                .getEntity();
+    public ProjectEnvironment getProjectEnvironment(String envName, String informationSystemId) {
+        String folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
 
         JsonPath jsonPath = new Http(URL)
-                .get(String.format("portal/api/v1/folders/%s/information_systems/%s/project_environments?page=1&per_page=100&include=total_count", folder.getName(), informationSystem.id))
+                .get(String.format("portal/api/v1/folders/%s/information_systems/%s/project_environments?page=1&per_page=100&include=total_count", folderName, informationSystemId))
                 .assertStatus(200)
                 .jsonPath();
 
         int countOfIteration = (int)jsonPath.get("meta.total_count")/ 100 + 1;
         for (int i = 1; i <=countOfIteration; i++){
             JsonPath jsonPathInCycle = new Http(URL)
-                    .get(String.format("portal/api/v1/folders/%s/information_systems/%s/project_environments?page=%s&per_page=100&include=total_count", folder.getName(), informationSystem.id, i))
+                    .get(String.format("portal/api/v1/folders/%s/information_systems/%s/project_environments?page=%s&per_page=100&include=total_count", folderName, informationSystemId, i))
                     .assertStatus(200)
                     .jsonPath();
 
             String id = jsonPathInCycle.get(String.format("list.find{it.name.equals('%s')}.id", envName));
             String environmentType = jsonPathInCycle.get(String.format("list.find{it.name.equals('%s')}.environment_type", envName));
             if(id != null){
-                ProjectEnvironment projectEnvironment = ProjectEnvironment.builder()
-                        .id(id)
-                        .env(envName)
-                        .envType(environmentType)
-                        .build();
-                cacheService.saveEntity(projectEnvironment);
-                break;
+                return new ProjectEnvironment(id, environmentType, envName);
             }
         }
+        throw new Exception("Не найден ProjectEnvironment с именем " + envName);
     }
 
     @Step("Получение пользователя из LDAP")

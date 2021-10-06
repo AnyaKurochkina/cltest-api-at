@@ -58,7 +58,7 @@ public class Rhel extends IProduct {
 
     @Override
     public JSONObject getJsonParametrizedTemplate() {
-        Project project = Project.builder().env(env).isForOrders(true).build().createObject();
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
         if(productId == null) {
             projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
@@ -76,8 +76,7 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", ((ProjectEnvironment)(ProjectEnvironment.builder().env(project.env).build().createObject()))
-                        .envType.contains("TEST")).build();
+                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST")).build();
     }
 
 

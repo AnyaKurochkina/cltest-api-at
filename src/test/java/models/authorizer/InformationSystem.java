@@ -9,7 +9,7 @@ import models.EntityOld;
 @Getter
 public class InformationSystem extends Entity {
     public String id;
-    public Boolean isForOrders = false;
+    public Boolean isForOrders;
 
     @Override
     public void create() {

@@ -59,7 +59,7 @@ public class ProjectSteps extends Steps {
                 .projectName(projectName)
                 .id(projectId)
                 .informationSystem(informationSystem.id)
-                .env(env)
+//                .env(env)
                 .build();
         //Сохранение проекта
         cacheService.saveEntity(project);
@@ -81,7 +81,6 @@ public class ProjectSteps extends Steps {
                 .delete("authorizer/api/v1/projects/" + project.id)
                 .assertStatus(204);
         //Сохранение флага "Проект удалён"
-        project.isDeleted = true;
         //Сохранение текущего состояния проекта
         cacheService.saveEntity(project);
     }
