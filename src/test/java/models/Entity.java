@@ -49,6 +49,8 @@ public abstract class Entity implements AutoCloseable {
 
     public void deleteObject() {
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
+//        if(objectPoolEntity == null)
+//            System.out.println(1);
         objectPoolEntity.setCreated(false);
         delete();
     }

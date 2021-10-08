@@ -16,6 +16,13 @@ public class Organization extends Entity {
     public String name;
 
     @Override
+    public void init() {
+        if(title == null)
+            title = "ВТБ";
+    }
+
+    @Override
+    @Step("Получение организации")
     public void create() {
         name = new Http(AuthorizerSteps.URL)
                 .get("authorizer/api/v1/organizations?page=1&per_page=25")

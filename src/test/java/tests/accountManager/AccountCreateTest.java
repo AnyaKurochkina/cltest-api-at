@@ -1,81 +1,60 @@
 package tests.accountManager;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.TmsLink;
-import org.junit.OrderLabel;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestMethodOrder;
-import steps.accountManager.AccountSteps;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import models.accountManager.Account;
+import models.authorizer.Folder;
+import org.junit.jupiter.api.*;
 import tests.Tests;
 
-import java.time.LocalDateTime;
-
-@DisplayName("Набор для создания счета")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@OrderLabel("tests.accountManager.AccountCreateTest")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Epic("Финансы")
+@Feature("Счета")
+@Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
 public class AccountCreateTest extends Tests {
-    AccountSteps accountCreate = new AccountSteps();
 
-    @Test
     @Order(1)
-    @TmsLink("2")
+    @Test
     @DisplayName("Создание счета для папки Бизнес блок")
-    @Description("Создание счета папки Бизнес блок с сохранением в Shared Memory")
     public void createAccountBusinessBlock() {
-        accountCreate.createAccount("BUSINESS_FOLDER");
+        Folder folder = Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject();
+        Account.builder().folder(folder).build().createObject();
     }
 
     @Test
     @Order(2)
-    @TmsLink("3")
     @DisplayName("Создание счета для папки Департамент")
-    @Description("Создание счета папки Департамент с сохранением в Shared Memory")
     public void createAccountDepartment() {
-        accountCreate.createAccount("DEPARTMENT_FOLDER");
+        Folder folder = Folder.builder().kind(Folder.DEPARTMENT).build().createObject();
+        Account.builder().folder(folder).build().createObject();
     }
 
     @Test
     @Order(3)
-    @TmsLink("4")
     @DisplayName("Создание счета для папки")
-    @Description("Создание счета папки с сохранением в Shared Memory")
     public void createAccount() {
-        accountCreate.createAccount("FOLDER");
+        Folder folder = Folder.builder().kind(Folder.DEFAULT).build().createObject();
+        Account.builder().folder(folder).build().createObject();
     }
 
-    @Test
-    @Order(4)
-    @TmsLink("5")
-    @DisplayName("Перевод денег со счета организации на счет папки Бизнес блок")
-    @Description("Перевод денег со счета организации на счет папки Бизнес блок")
-    public void transferMoneyFromAccountToBusinessBlock() {
-        accountCreate.transferMoneyFromOrganizationToFolder("ВТБ", "BUSINESS_FOLDER", "10000.00");
-    }
-
-    @Test
-    @Order(5)
-    @TmsLink("6")
-    @DisplayName("Перевод денег со счета папки Бизнес блок на счет папки Департамент")
-    @Description("Перевод денег со счета папки Бизнес блок на счет папки Департамент")
-    public void transferMoneyFromAccountToDepartment() {
-        accountCreate.transferMoneyFromFolderToFolder("BUSINESS_FOLDER", "DEPARTMENT_FOLDER", "10000.00");
-    }
-
-    @Test
-    @Order(6)
-    @TmsLink("7")
-    @DisplayName("Перевод денег со счета папки Департамент на счет папки")
-    @Description("Перевод денег со счета папки Департамент на счет папки")
-    public void transferMoneyFromAccountToFolder() {
-        accountCreate.transferMoneyFromFolderToFolder("DEPARTMENT_FOLDER","FOLDER", "10000.00");
-    }
+//    @Test
+//    @Order(4)
+//    @DisplayName("Перевод денег со счета организации на счет папки Бизнес блок")
+//    public void transferMoneyFromAccountToBusinessBlock() {
+//        accountCreate.transferMoneyFromOrganizationToFolder("ВТБ", "BUSINESS_FOLDER", "10000.00");
+//    }
+//
+//    @Test
+//    @Order(5)
+//    @DisplayName("Перевод денег со счета папки Бизнес блок на счет папки Департамент")
+//    public void transferMoneyFromAccountToDepartment() {
+//        accountCreate.transferMoneyFromFolderToFolder("BUSINESS_FOLDER", "DEPARTMENT_FOLDER", "10000.00");
+//    }
+//
+//    @Test
+//    @Order(6)
+//    @Description("Перевод денег со счета папки Департамент на счет папки")
+//    public void transferMoneyFromAccountToFolder() {
+//        accountCreate.transferMoneyFromFolderToFolder("DEPARTMENT_FOLDER","FOLDER", "10000.00");
+//    }
 
 }

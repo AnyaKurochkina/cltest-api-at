@@ -19,16 +19,16 @@ public class Folder extends Entity {
     public String name;
     public String kind;
     public String title;
+    public String parentId;
     public List<String> informationSystemIds;
 
     @Builder.Default
     transient AuthorizerSteps authorizerSteps = new AuthorizerSteps();
-    transient public String parentId;
     transient static final public String BUSINESS_BLOCK = "business_block";
     transient static final public String DEPARTMENT = "department";
     transient static final public String DEFAULT = "default";
 
-    //    @Override
+    @Override
     public void init() {
         switch (kind) {
             case BUSINESS_BLOCK:

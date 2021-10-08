@@ -22,6 +22,7 @@ public class Project extends Entity {
     transient String prefix;
     transient String folderName;
 
+
     public void init() {
         if(informationSystem == null){
             informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();

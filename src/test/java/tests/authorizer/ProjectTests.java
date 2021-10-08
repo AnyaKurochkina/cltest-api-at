@@ -1,5 +1,6 @@
 package tests.authorizer;
 
+import core.helper.Deleted;
 import io.qameta.allure.*;
 import models.authorizer.Project;
 import org.junit.OrderLabel;
@@ -13,7 +14,7 @@ import tests.Tests;
 @Epic("Организационная структура")
 @Feature("Проекты")
 @Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
-public class ProjectCreateTests extends Tests {
+public class ProjectTests extends Tests {
 
     @Order(1)
     @Test
@@ -22,5 +23,12 @@ public class ProjectCreateTests extends Tests {
         Project.builder().isForOrders(false).build().createObject();
     }
 
+    @Order(2)
+    @Test
+    @DisplayName("Удаление проекта")
+    @Deleted(Project.class)
+    void deleteProject() {
+        Project.builder().isForOrders(false).build().createObject().deleteObject();
+    }
 
 }

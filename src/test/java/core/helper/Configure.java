@@ -14,6 +14,7 @@ public class Configure {
     public static String ENV;
 
     public static String AuthorizerURL;
+    public static String AccountManagerURL;
 
     static {
         try {
@@ -31,6 +32,7 @@ public class Configure {
 
             String kongURL = getAppProp("host_kong");
             AuthorizerURL = kongURL + "authorizer/api/v1/";
+            AccountManagerURL = kongURL + "accountmanager/api/v1/";
 
         } catch (Exception e) {
             e.printStackTrace();

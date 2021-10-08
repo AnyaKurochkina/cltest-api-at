@@ -13,7 +13,7 @@ import tests.Tests;
 @Feature("Папки")
 @Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class FoldersCreateTests extends Tests {
+public class FoldersTests extends Tests {
 
     @Test
     @Order(1)
@@ -44,6 +44,7 @@ public class FoldersCreateTests extends Tests {
         Folder.builder().name("FOR_DELETE").kind(Folder.DEFAULT).build().createObject().deleteObject();
     }
 
+    //todo: fix delete
     @Test
     @Order(5)
     @DisplayName("Удаление Департамента")
@@ -52,6 +53,7 @@ public class FoldersCreateTests extends Tests {
         Folder.builder().name("FOR_DELETE").kind(Folder.DEPARTMENT).build().createObject().deleteObject();
     }
 
+    //todo: fix delete
     @Test
     @Order(6)
     @DisplayName("Удаление Бизнес-блока")

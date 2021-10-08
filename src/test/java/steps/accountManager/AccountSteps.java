@@ -124,7 +124,7 @@ public class AccountSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath();
         //Выставление флага "Счёт удалён"
-        account.isDeleted = true;
+//        account.isDeleted = true;
         //Сохранение счёта
         cacheService.saveEntity(account);
     }
