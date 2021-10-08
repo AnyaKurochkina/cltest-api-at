@@ -6,6 +6,8 @@ import models.authorizer.Folder;
 import models.authorizer.Organization;
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.authorizer.AuthorizerSteps;
 import tests.Tests;
 
@@ -13,11 +15,12 @@ import tests.Tests;
 @Feature("Папки")
 @Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Execution(ExecutionMode.SAME_THREAD)
 public class FoldersTests extends Tests {
 
     @Test
     @Order(1)
-    @DisplayName("Создание бизнес-блока")
+    @DisplayName("Создание Бизнес-блока")
     void createBusinessBlock() {
         Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject();
     }

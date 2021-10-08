@@ -60,6 +60,7 @@ public class Account extends Entity {
     }
 
     @Override
+    @Step("Удаление счета")
     protected void delete() {
         new Http(Configure.AccountManagerURL)
                 .delete(String.format("organizations/%s/accounts/%s?force_unlink=1", organization, accountId))

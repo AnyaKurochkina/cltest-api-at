@@ -7,6 +7,8 @@ import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.authorizer.ProjectSteps;
 import tests.Tests;
@@ -14,6 +16,7 @@ import tests.Tests;
 @Epic("Организационная структура")
 @Feature("Проекты")
 @Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
+@Execution(ExecutionMode.SAME_THREAD)
 public class ProjectTests extends Tests {
 
     @Order(1)
