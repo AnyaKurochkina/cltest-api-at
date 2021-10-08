@@ -182,19 +182,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
     }
 
     public List<TestTask> invokeDeleteTest() {
-        int i = inc.getAndIncrement();
         List<TestTask> list = new ArrayList<>();
-        if (ObjectPoolService.deleteClassesName.size() > i) {
-            Iterator it = deleteTests.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<TestTask, String> pair = (Map.Entry) it.next();
-                if (pair.getValue().equals(ObjectPoolService.deleteClassesName.get(i))) {
-                    list.add(pair.getKey());
-                    it.remove();
-                }
-            }
-            return list;
-        } else if (!deleteTests.isEmpty()) {
+        if (!deleteTests.isEmpty()) {
             list = new ArrayList<>(deleteTests.keySet());
             deleteTests.clear();
         }
@@ -304,6 +293,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
             }
         }
         if (mapTests.isEmpty() && deleteTests.size() > 0) {
+            ObjectPoolService.deleteAllResources();
             tasks.addAll(invokeDeleteTest());
         }
 
@@ -558,11 +548,10 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 }
 
 
-                if (mapTests.isEmpty() && !deleteTests.isEmpty()) {
+                if (mapTests.isEmpty() && !del.get()) {
                     del.set(true);
-                    List<TestTask> list = invokeDeleteTest();
-                    if (!list.isEmpty())
-                        invokeAllRef(list);
+                    ObjectPoolService.deleteAllResources();
+                    invokeAllRef(invokeDeleteTest());
                 }
 
 

@@ -48,8 +48,6 @@ public class TestsExecutionListener implements TestExecutionListener {
         fooWriter.write("ENV=" + ENV);
         fooWriter.close();
 
-        ObjectPoolService.deleteAllResources();
-
     }
 
 

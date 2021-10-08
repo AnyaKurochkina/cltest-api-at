@@ -38,11 +38,11 @@ public class ObjectPoolService {
         System.out.println(e + "ПреЛок");
         objectPoolEntity.lock();
         System.out.println(e + " ПостЛок");
-        if (objectPoolEntity.isFailed()) {
+        if (objectPoolEntity.getStatus() == ObjectStatus.FAILED) {
             objectPoolEntity.release();
-            Assume.assumeFalse("Object is failed", objectPoolEntity.isFailed());
+            Assume.assumeFalse("Object is failed", objectPoolEntity.getStatus() == ObjectStatus.FAILED);
         }
-        if (!objectPoolEntity.isCreated()) {
+        if (objectPoolEntity.getStatus() == ObjectStatus.NOT_CREATED) {
             try {
                 e.init();
                 e.create();
@@ -51,11 +51,11 @@ public class ObjectPoolService {
                 if (!deleteClassesName.contains(e.getClass().getName()))
                     deleteClassesName.add(0, e.getClass().getName());
             } catch (Throwable throwable) {
-                objectPoolEntity.setFailed(true);
+                objectPoolEntity.setStatus(ObjectStatus.FAILED);
                 objectPoolEntity.release();
                 throw throwable;
             }
-            objectPoolEntity.setCreated(true);
+            objectPoolEntity.setStatus(ObjectStatus.CREATED);
         }
         if (!exclusiveAccess) {
             System.out.println(e + " ПреРелизНО");
@@ -107,19 +107,27 @@ public class ObjectPoolService {
             ObjectPoolEntity objectPoolEntity = entities.get(key);
             if (objectPoolEntity.getClazz().getName().endsWith("UserToken") || objectPoolEntity.getClazz().getName().endsWith("ServiceAccountToken"))
                 continue;
-            if (!objectPoolEntity.isCreated())
+            if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
                 continue;
 //            if (objectPoolEntity.isMock())
 //                continue;
             Entity entity = objectPoolEntity.get();
             if (entity instanceof IProduct) {
-                Thread thread = new Thread(entity::deleteObject);
+                Thread thread = new Thread(() -> {
+                    try {
+                        entity.deleteObject();
+                    } catch (Exception e) {
+                        objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
+                        e.printStackTrace();
+                    }
+                });
                 threadList.add(thread);
                 thread.start();
             } else {
                 try {
                     entity.deleteObject();
                 } catch (Exception e) {
+                    objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
                     e.printStackTrace();
                 }
             }
@@ -162,7 +170,7 @@ public class ObjectPoolService {
                 });
                 listEntities.forEach(v -> {
                             ObjectPoolEntity objectPoolEntity = writeEntityToMap(fromJson(new JSONObject(v).toString(), getClassByName(v.get("objectClassName").toString())));
-                            objectPoolEntity.setCreated(true);
+                            objectPoolEntity.setStatus(ObjectStatus.CREATED);
 //                            objectPoolEntity.setMock(true);
                         }
                 );

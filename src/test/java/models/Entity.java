@@ -3,6 +3,7 @@ package models;
 import core.helper.JsonHelper;
 import core.helper.ObjectPoolEntity;
 import core.helper.ObjectPoolService;
+import core.helper.ObjectStatus;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
@@ -49,11 +50,12 @@ public abstract class Entity implements AutoCloseable {
 
     public void deleteObject() {
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
-//        if(objectPoolEntity == null)
-//            System.out.println(1);
-        objectPoolEntity.setCreated(false);
+        if(objectPoolEntity.getStatus() == ObjectStatus.DELETED)
+            return;
         delete();
+        objectPoolEntity.setStatus(ObjectStatus.DELETED);
     }
+
 
     public <T extends Entity> T createObject() {
         return createObject(false);

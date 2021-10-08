@@ -22,10 +22,10 @@ public class ObjectPoolEntity {
     private String entity;
     @Getter
     @Setter
-    private boolean created = false;
-    @Getter
-    @Setter
-    private boolean failed = false;
+    private ObjectStatus status = ObjectStatus.NOT_CREATED;
+//    @Getter
+//    @Setter
+//    private boolean failed = false;
 //    @Getter
 //    @Setter
 //    private boolean mock = false;

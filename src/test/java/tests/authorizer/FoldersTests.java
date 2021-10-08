@@ -1,14 +1,12 @@
 package tests.authorizer;
 
 import core.helper.Deleted;
-import io.qameta.allure.*;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import models.authorizer.Folder;
-import models.authorizer.Organization;
-import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import steps.authorizer.AuthorizerSteps;
 import tests.Tests;
 
 @Epic("Организационная структура")
@@ -44,25 +42,23 @@ public class FoldersTests extends Tests {
     @DisplayName("Удаление Папки")
     @Deleted(Folder.class)
     public void deleteFolder() {
-        Folder.builder().name("FOR_DELETE").kind(Folder.DEFAULT).build().createObject().deleteObject();
+        Folder.builder().kind(Folder.DEFAULT).build().createObject().deleteObject();
     }
 
-    //todo: fix delete
     @Test
     @Order(5)
     @DisplayName("Удаление Департамента")
     @Deleted(Folder.class)
     public void deleteDepartmentBlock() {
-        Folder.builder().name("FOR_DELETE").kind(Folder.DEPARTMENT).build().createObject().deleteObject();
+        Folder.builder().kind(Folder.DEPARTMENT).build().createObject().deleteObject();
     }
 
-    //todo: fix delete
     @Test
     @Order(6)
     @DisplayName("Удаление Бизнес-блока")
     @Deleted(Folder.class)
     public void deleteBusinessBlock() {
-        Folder.builder().name("FOR_DELETE").kind(Folder.BUSINESS_BLOCK).build().createObject().deleteObject();
+        Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject().deleteObject();
     }
 
 }
