@@ -76,7 +76,7 @@ public class ApacheKafka extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.platform", platform)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.project_name", project.id)
                 .build();

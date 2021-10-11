@@ -1,34 +1,35 @@
 package tests.authorizer;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.TmsLink;
-import org.junit.OrderLabel;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import models.authorizer.AccessGroup;
+import models.authorizer.ServiceAccount;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.authorizer.ServiceAccountSteps;
 import tests.Tests;
 
-@DisplayName("Набор тестов по сервисным аккаунтам")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@OrderLabel("tests.authorizer.ServiceAccountCreateTests")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
+@Epic("Управление")
+@Feature("Сервисные аккаунты")
+@Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Execution(ExecutionMode.SAME_THREAD)
 public class ServiceAccountCreateTests extends Tests {
-    ServiceAccountSteps serviceAccountSteps = new ServiceAccountSteps();
 
-    @ParameterizedTest(name = "{0}")
+    @Test
     @Order(1)
-    @TmsLink("16")
     @DisplayName("Создание сервисного аккаунта")
-    @Source(ProductArgumentsProvider.ENV)
-    @Description("Создание сервисного аккаунта с сохранением в Shared Memory")
-    public void createServiceAccount(String env, String tmsId) {
-        serviceAccountSteps.createServiceAccount("PROJECT_"+env);
+    public void createServiceAccount() {
+        ServiceAccount.builder().isForOrders(false).build().createObject();
     }
 
-
+    @Test
+    @Order(2)
+    @DisplayName("Удаление сервисного аккаунта")
+    public void deleteServiceAccount() {
+        ServiceAccount.builder().isForOrders(false).build().createObject();
+    }
 
 }
 

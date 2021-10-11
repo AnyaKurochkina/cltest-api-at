@@ -15,6 +15,7 @@ public class Configure {
 
     public static String AuthorizerURL;
     public static String AccountManagerURL;
+    public static String PortalBackURL;
 
     static {
         try {
@@ -33,6 +34,7 @@ public class Configure {
             String kongURL = getAppProp("host_kong");
             AuthorizerURL = kongURL + "authorizer/api/v1/";
             AccountManagerURL = kongURL + "accountmanager/api/v1/";
+            PortalBackURL = kongURL + "portal/api/v1/";
 
         } catch (Exception e) {
             e.printStackTrace();

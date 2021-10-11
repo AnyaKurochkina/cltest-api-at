@@ -90,10 +90,10 @@ public class RabbitMQCluster extends IProduct {
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.attrs.web_console_grants[0].role", role)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .build();

@@ -7,9 +7,11 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.accountManager.Account;
 import models.authorizer.Folder;
+import models.authorizer.Organization;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import steps.accountManager.AccountSteps;
 import tests.Tests;
 
 @Epic("Финансы")
@@ -18,6 +20,7 @@ import tests.Tests;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class AccountTest extends Tests {
+    AccountSteps accountSteps = new AccountSteps();
 
     @Order(1)
     @Test
@@ -43,29 +46,20 @@ public class AccountTest extends Tests {
         Account.builder().folder(folder).build().createObject();
     }
 
-//    @Test
-//    @Order(4)
-//    @DisplayName("Перевод денег со счета организации на счет папки Бизнес блок")
-//    public void transferMoneyFromAccountToBusinessBlock() {
-//        accountCreate.transferMoneyFromOrganizationToFolder("ВТБ", "BUSINESS_FOLDER", "10000.00");
-//    }
-//
-//    @Test
-//    @Order(5)
-//    @DisplayName("Перевод денег со счета папки Бизнес блок на счет папки Департамент")
-//    public void transferMoneyFromAccountToDepartment() {
-//        accountCreate.transferMoneyFromFolderToFolder("BUSINESS_FOLDER", "DEPARTMENT_FOLDER", "10000.00");
-//    }
-//
-//    @Test
-//    @Order(6)
-//    @Description("Перевод денег со счета папки Департамент на счет папки")
-//    public void transferMoneyFromAccountToFolder() {
-//        accountCreate.transferMoneyFromFolderToFolder("DEPARTMENT_FOLDER","FOLDER", "10000.00");
-//    }
+    @Test
+    @Order(4)
+    @DisplayName("Перевод средств между организацией и любой другой папкой")
+    void transferMoneyFromAccountOrganizationToBusinessBlock() {
+        Organization organization = Organization.builder().build().createObject();
+        String accountFrom = accountSteps.getAccountIdByContext(organization.getName());
+        Folder folderTo = Folder.builder().build().createObject();
+        String accountTo = ((Account) Account.builder().folder(folderTo).build().createObject()).getAccountId();
+        accountSteps.transferMoney(accountFrom, accountTo, "10000.00", "Перевод в рамках тестирования");
+        accountSteps.transferMoney(accountTo, accountFrom, "10000.00", "Перевод в рамках тестирования");
+    }
 
     @Test
-    @Order(7)
+    @Order(5)
     @Deleted(Account.class)
     @DisplayName("Удаление счета для папки")
     public void DeleteAccount() {
@@ -74,7 +68,7 @@ public class AccountTest extends Tests {
     }
 
     @Test
-    @Order(8)
+    @Order(6)
     @Deleted(Account.class)
     @DisplayName("Удаление счета для папки Department")
     public void DeleteAccountDepartment() {
@@ -83,9 +77,9 @@ public class AccountTest extends Tests {
     }
 
     @Test
-    @Order(9)
+    @Order(7)
     @Deleted(Account.class)
-    @DisplayName("Удаление счета для папки Business block")
+    @DisplayName("Удаление счета для папки Business Block")
     public void DeleteAccountBusinessBlock() {
         Folder folder = Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject();
         Account.builder().folder(folder).build().createObject().deleteObject();

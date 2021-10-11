@@ -45,12 +45,24 @@ public class AccountSteps extends Steps {
         cacheService.saveEntity(account);
     }
 
-    @Step("Перевод со счета организации {sourceContext} на счет папки {targetContext} суммы {amount}")
-    public void transferMoneyFromOrganizationToFolder(String org, String targetContext, String amount) {
-        Organization organization = cacheService.entity(Organization.class)
-                .withField("title", org)
-                .getEntity();
-        transferMoneyFromAccountToFolder(organization.name, targetContext, amount);
+//    @Step("Перевод со счета организации {sourceContext} на счет папки {targetContext} суммы {amount}")
+//    public void transferMoneyFromOrganizationToFolder(String org, String targetContext, String amount) {
+//        Organization organization = cacheService.entity(Organization.class)
+//                .withField("title", org)
+//                .getEntity();
+//        transferMoneyFromAccountToFolder(organization.name, targetContext, amount);
+//    }
+
+    @Step("Перевод со счета {from} на счет {to} суммы {amount} c комментарием {comment}")
+    public void transferMoney(String from, String to, String amount, String reason) {
+        jsonHelper.getJsonTemplate("/accountManager/transaction.json")
+                .set("$.from_account_id", from)
+                .set("$.to_account_id", to)
+                .set("$.amount", amount)
+                .set("$.reason", reason)
+                .send(URL)
+                .post("accountmanager/api/v1/organizations/vtb/accounts/transfers")
+                .assertStatus(200);
     }
 
     @Step("Перевод со счета {sourceContext} на счет папки {targetContext} проекта {amount}")

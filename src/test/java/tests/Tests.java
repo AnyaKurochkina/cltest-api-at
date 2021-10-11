@@ -1,6 +1,12 @@
 package tests;
 
+import core.helper.Configure;
+import core.helper.DataFileHelper;
 import io.qameta.allure.Allure;
+import io.qameta.allure.AllureLifecycle;
+import io.qameta.allure.model.Attachment;
+import io.qameta.allure.model.Status;
+import lombok.SneakyThrows;
 import org.junit.CustomDisplayNameGenerator;
 import org.junit.TmsLinkExtension;
 import org.junit.jupiter.api.AfterEach;
@@ -8,36 +14,42 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
+
+import static io.qameta.allure.Allure.getLifecycle;
 
 @ExtendWith(TmsLinkExtension.class)
 @DisplayNameGeneration(CustomDisplayNameGenerator.class)
 public class Tests {
-    private static final ThreadLocal<StringBuilder> testLog = new ThreadLocal<>();
+//    private static final ThreadLocal<StringBuilder> testLog = new ThreadLocal<>();
+//    private static final ThreadLocal<Map<String, StringBuilder>> testLogMap = new ThreadLocal<>();
 
-    @BeforeEach
-    public void beforeScenarios(){
-        testLog.remove();
-        testLog.set(new StringBuilder());
+//    @BeforeEach
+//    public void beforeScenarios(){
+//        testLogMap.remove();
+//        testLogMap.set(new HashMap<>());
+//    }
+
+    public static void putAttachLog(String text) {
+        String stepId = getLifecycle().getCurrentTestCaseOrStep().orElse(null);
+        if (stepId == null)
+            return;
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss ");
+        String source = stepId + "-attachment.txt";
+        DataFileHelper.appendToFile(Configure.getAppProp("allure.results") + source,
+                formatter.format(new Date(System.currentTimeMillis())) + text);
+        Attachment attachment = new Attachment().setSource(source).setName("log-step.log");
+        getLifecycle().updateStep(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
     }
 
-    @AfterEach
-    public void afterScenarios(){
-        attachment();
-    }
-    public void tmsLink(String id, String subId){
+    //    @AfterEach
+//    public void afterScenarios(){
+//    }
+    public void tmsLink(String id, String subId) {
         Allure.tms(id + "." + subId, "");
-    }
-
-    private void attachment(){
-        Allure.addAttachment("LOG", testLog.get().toString());
-    }
-    public static void putLog(String msg){
-        if(testLog.get() != null) {
-            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss ");
-            testLog.get().append(formatter.format(new Date(System.currentTimeMillis()))).append(msg);
-        }
     }
 
 }

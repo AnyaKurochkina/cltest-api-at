@@ -1,6 +1,7 @@
 package core.helper;
 
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -26,11 +27,19 @@ public class DataFileHelper {
      * Добавление текста в конец файла
      *
      * @param fileName имя файла в корне проекта или полный путь к файлу + именем
-     * @param newText текст для добавления в файл
-     * @throws IOException - в случае ошибок ввода вывода
+     * @param text текст для добавления в файл
      */
-    public static void appendToFile(String fileName, String newText) throws IOException {
-        Files.write(Paths.get(fileName), newText.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+    public static void appendToFile(String fileName, String text) {
+        try {
+            Files.createDirectories(Paths.get(fileName).getParent());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName), StandardCharsets.UTF_8, StandardOpenOption.APPEND,StandardOpenOption.CREATE)) {
+            writer.write(text);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

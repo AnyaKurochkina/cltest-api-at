@@ -68,17 +68,12 @@ public class PortalBackSteps extends Steps {
     }
 
     @Step("Получение пользователя из LDAP")
-    public String getUsers(String env, String username) {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(false)
-                .getEntity();
+    public String getUsers(Project project, String username) {
         return  new Http(URL)
-                .get(String.format("portal/api/v1/users?q=%s&project_name=%s", username, project.id))
+                .get(String.format("portal/api/v1/users?q=%s&project_name=%s", username, project.getId()))
                 .assertStatus(200)
                 .jsonPath()
                 .get("[0].unique_name");
-
     }
 
 }

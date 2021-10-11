@@ -2,6 +2,7 @@ package models.authorizer;
 
 import core.helper.Configure;
 import core.helper.Http;
+import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,6 +37,9 @@ public class Project extends Entity {
         if(prefix == null){
             ProjectSteps projectSteps = new ProjectSteps();
             prefix = projectSteps.getPrefixEnv(folderName, informationSystem, projectEnvironment.getId());
+        }
+        if(projectName == null){
+            projectName = new RandomStringGenerator().generateByRegex("project [0-9a-zA-Z]{5,15}");
         }
     }
     public JSONObject toJson() {

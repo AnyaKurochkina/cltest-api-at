@@ -5,6 +5,7 @@ import core.helper.Http;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
@@ -37,69 +38,51 @@ public class AccessGroupSteps extends Steps {
                 .jsonPath()
                 .get("name");
 
-        models.authorizer.AccessGroup accessGroup = models.authorizer.AccessGroup.builder()
-                .name(groupName)
-                .projectName(project.id)
-                .user(null)
-                .build();
-        cacheService.saveEntity(accessGroup);
+//        models.authorizer.AccessGroup accessGroup = models.authorizer.AccessGroup.builder()
+//                .name(groupName)
+//                .projectName(project.id)
+//                .user(null)
+//                .build();
+//        cacheService.saveEntity(accessGroup);
     }
 
-    @Step("Удаление группы доступа в проекте {projectName}")
-    public void deleteAccessGroup(String env) {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(false)
-                .getEntity();
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
-        JsonPath jsonPath = new Http(URL)
-                .setProjectId(project.id)
-                .delete(String.format("portal/api/v1/projects/%s/access_groups/%s", project.id, accessGroup.name))
-                .assertStatus(204)
-                .jsonPath();
-
-        accessGroup.isDeleted = true;
-        cacheService.saveEntity(accessGroup);
-    }
+//    @Step("Удаление группы доступа в проекте {projectName}")
+//    public void deleteAccessGroup(String env) {
+//        Project project = cacheService.entity(Project.class)
+//                .withField("env", env)
+//                .forOrders(false)
+//                .getEntity();
+//        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
+//                .withField("projectName", project.id)
+//                .getEntity();
+//        JsonPath jsonPath = new Http(URL)
+//                .setProjectId(project.id)
+//                .delete(String.format("portal/api/v1/projects/%s/access_groups/%s", project.id, accessGroup.name))
+//                .assertStatus(204)
+//                .jsonPath();
+//
+////        accessGroup.isDeleted = true;
+//        cacheService.saveEntity(accessGroup);
+//    }
 
 
     @Step("Добавление пользователя в группу доступа для проекта среды {env}")
-    public void addUsersToGroup(String env, String username) {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(false)
-                .getEntity();
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
-        String[] arr = new String[] {username};
-        JsonPath jsonPath = jsonHelper.getJsonTemplate("/accessGroup/users.json")
+    public void addUsersToGroup(AccessGroup group, String username) {
+        String[] arr = new String[]{username};
+        jsonHelper.getJsonTemplate("/accessGroup/users.json")
                 .set("$.users", arr)
                 .send(URL)
-                .post(String.format("portal/api/v1/projects/%s/access_groups/%s/group_users", project.id, accessGroup.name))
-                .assertStatus(201)
-                .jsonPath();
-
-        accessGroup.user = username;
-        cacheService.saveEntity(accessGroup);
+                .post(String.format("portal/api/v1/projects/%s/access_groups/%s/group_users", group.getProjectName(), group.getName()))
+                .assertStatus(201);
+        group.addUser(username);
     }
 
+    @SneakyThrows
     @Step("Добавление пользователя в группу доступа для проекта среды {env}")
-    public void deleteUsersFromGroup(String env) throws UnsupportedEncodingException {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(false)
-                .getEntity();
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
-        JsonPath jsonPath = new Http(URL)
-                .delete(String.format("portal/api/v1/projects/%s/access_groups/%s/group_users?unique_name=%s", project.id, accessGroup.name, URLEncoder.encode(accessGroup.user, String.valueOf(StandardCharsets.UTF_8))))
-                .assertStatus(204)
-                .jsonPath();
-
-        accessGroup.user = null;
+    public void removeUserFromGroup(AccessGroup group, String user) {
+        new Http(URL)
+                .delete(String.format("portal/api/v1/projects/%s/access_groups/%s/group_users?unique_name=%s", group.getProjectName(), group.getName(), URLEncoder.encode(user, String.valueOf(StandardCharsets.UTF_8))))
+                .assertStatus(204);
+        group.removeUser(user);
     }
 }

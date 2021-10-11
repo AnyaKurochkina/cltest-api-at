@@ -29,7 +29,8 @@ import java.util.concurrent.Semaphore;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
 import static org.junit.Assert.fail;
-import static tests.Tests.putLog;
+import static tests.Tests.putAttachLog;
+//import static tests.Tests.putLog;
 
 @Log4j2
 public class Http {
@@ -203,7 +204,7 @@ public class Http {
 //                    message = "";
 //                t.setStatusDetails( statusDetails.setMessage(message + sbLog));
 //            });
-            putLog(sbLog.toString());
+            putAttachLog(sbLog.toString());
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));

@@ -1,9 +1,7 @@
 package steps.keyCloak;
 
-import core.CacheService;
 import core.helper.Configure;
 import core.helper.Http;
-import core.helper.ObjectPoolService;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
@@ -58,7 +56,7 @@ public class KeyCloakSteps {
 
     //    @Step("Получение ServiceAccountToken")
     public static synchronized String getServiceAccountToken(String projectId) {
-        ServiceAccount serviceAccount = ServiceAccount.builder().projectId(projectId).build().createObject();
+        ServiceAccount serviceAccount = ServiceAccount.builder().projectName(projectId).build().createObject();
         ServiceAccountToken saToken = ServiceAccountToken.builder().serviceAccountName(serviceAccount.name).build().createObject();
         long currentTime = System.currentTimeMillis() / 1000L;
         if (currentTime - saToken.time > TOKEN_LIFETIME_SEC) {

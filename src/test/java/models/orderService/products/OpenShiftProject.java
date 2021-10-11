@@ -53,7 +53,7 @@ public class OpenShiftProject extends IProduct {
                 .jsonPath();
         orderId = array.get("[0].id");
         roles = new ArrayList<>();
-        roles.add(new Role("edit", accessGroup.name));
+        roles.add(new Role("edit", accessGroup.getName()));
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
         save();
@@ -73,7 +73,7 @@ public class OpenShiftProject extends IProduct {
                 filter(r -> r.getLabel().equals(resourcePoolLabel)).findFirst().orElseThrow(NoSuchFieldException::new);
         return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
-                .set("$.order.attrs.roles[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.roles[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
                 .build();

@@ -67,8 +67,12 @@ public class ObjectPoolService {
         return entity;
     }
 
+    private static final List<ObjectPoolEntity> listObject = new ArrayList<>();
     public static synchronized ObjectPoolEntity createObjectPoolEntity(Entity e) {
-        for (ObjectPoolEntity objectPoolEntity : entities.values()) {
+        listObject.clear();
+        listObject.addAll(entities.values());
+        Collections.shuffle(listObject);
+        for (ObjectPoolEntity objectPoolEntity : listObject) {
             if (objectPoolEntity.equalsEntity(e)) {
                 return objectPoolEntity;
             }
