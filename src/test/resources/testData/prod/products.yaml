@@ -139,14 +139,14 @@ ClickHouse:
 #
 Ubuntu:
   - actions:
-      ['Перезагрузить по питанию', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+      ['Расширить', 'Перезагрузить по питанию', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
   - options:
       - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
 
 Astra:
   - actions:
-      ['Перезагрузить по питанию', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+      ['Расширить', 'Перезагрузить по питанию', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
   - options:
       - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
