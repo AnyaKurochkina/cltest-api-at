@@ -34,7 +34,7 @@ public class Astra extends IProduct {
 
     public Astra() {
         jsonTemplate = "/orders/astra_general_application.json";
-        productName = "Astra General Application (OS only)";
+        productName = "Astra Linux (DEV only)";
     }
 
     @Override

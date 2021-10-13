@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(callSuper = true)
@@ -42,10 +43,14 @@ public class ClickHouse extends IProduct {
 
     public static final String REFRESH_VM_CONFIG = "Проверить конфигурацию";
     public static final String CLICKHOUSE_CREATE_DB = "Добавить БД";
+    public static final String CLICKHOUSE_DELETE_DB = "Удалить БД";
     public static final String CLICKHOUSE_CREATE_DBMS_USER = "Добавить пользователя";
+    public static final String CLICKHOUSE_DELETE_DBMS_USER = "Удалить пользователя";
 
     public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs.any{it.db_name=='%s'}";
+    public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
     public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users.any{it.user_name=='%s'}";
+    public static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
 
     @Override
     public void order() {
@@ -78,6 +83,34 @@ public class ClickHouse extends IProduct {
         orderServiceSteps.executeAction(action, this, null);
     }
 
+    @Action(CLICKHOUSE_DELETE_DB)
+    private void deleteDb(String action) {
+        String dbName = database.get(0).getNameDB();
+        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
+        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
+        assertTrue(sizeBefore > sizeAfter);
+        database.get(0).setDeleted(true);
+        cacheService.saveEntity(this);
+    }
+
+    @Action("Сбросить пароль")
+    public void resetPassword(String action) {
+        String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
+    }
+
+    @Action(CLICKHOUSE_DELETE_DBMS_USER)
+    private void deleteDbmsUser(String action) {
+        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
+        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
+        assertTrue(sizeBefore > sizeAfter);
+        users.get(0).setDeleted(true);
+        log.info("users = " + users);
+        cacheService.saveEntity(this);
+    }
+
     @Action(CLICKHOUSE_CREATE_DB)
     public void createDbTest(String action) {
         createDb("db_1", action);
@@ -85,7 +118,7 @@ public class ClickHouse extends IProduct {
 
     @Action(CLICKHOUSE_CREATE_DBMS_USER)
     public void createDbmsUserTest(String action) {
-        createDbmsUser("testuser_1", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
+        createDbmsUser("testuser", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
     }
 
     public void createDb(String dbName, String action) {

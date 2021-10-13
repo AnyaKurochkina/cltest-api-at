@@ -34,7 +34,7 @@ public class Ubuntu extends IProduct {
 
     public Ubuntu() {
         jsonTemplate = "/orders/ubuntu_general_application.json";
-        productName = "Ubuntu General Application (OS only)";
+        productName = "Ubuntu Linux (DEV only)";
     }
 
     @Override

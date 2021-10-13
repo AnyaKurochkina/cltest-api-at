@@ -31,7 +31,7 @@
       "ad_integration": true,
       "ad_logon_grants": [
         {
-          "role": "user",
+          "role": "superuser",
           "groups": [
             "cloud-d5zorg-dev-group"
           ]
@@ -39,6 +39,6 @@
       ]
     },
     "count": 1,
-    "label": "Ubuntu General Application (OS only)"
+    "label": "Ubuntu Linux (DEV only)"
   }
 }
