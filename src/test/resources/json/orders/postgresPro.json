@@ -1,0 +1,48 @@
+{
+  "order": {
+    "project_name": "proj-frybyv41jh",
+    "product_id": "0da09981-c1ac-45b6-ba3b-7bfe52fd45bc",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "platform": "OpenStack",
+      "boot_disk": {
+        "size": 30
+      },
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "2.12",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "extra_mounts": [
+        {
+          "path": "/pg_data",
+          "size": 50,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_integration": true,
+      "postgrespro_config": {
+        "max_connections": 100
+      },
+      "postgrespro_version": "13",
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-d5zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "PostgresPro"
+  }
+}
