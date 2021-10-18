@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
+import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
@@ -21,7 +22,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
-public class Ubuntu extends IProduct {
+
+public class Elasticsearch extends IProduct {
     @ToString.Include
     String segment;
     String dataCentre;
@@ -29,12 +31,16 @@ public class Ubuntu extends IProduct {
     String platform;
     @ToString.Include
     String osVersion;
+    @ToString.Include
+    String elasticsearchVersion;
     String domain;
-    Flavor flavor;
+    Flavor flavorData;
+    Flavor flavorMaster;
+    Flavor flavorKibana;
 
-    public Ubuntu() {
-        jsonTemplate = "/orders/ubuntu_general_application.json";
-        productName = "Ubuntu Linux (DEV only)";
+    public Elasticsearch() {
+        jsonTemplate = "/orders/elasticsearch.json";
+        productName = "Elasticsearch";
     }
 
     @Override
@@ -59,31 +65,35 @@ public class Ubuntu extends IProduct {
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
-        if (productId == null) {
+        if(productId == null) {
             projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
         AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
                 .withField("projectName", project.id)
                 .getEntity();
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
+        flavorData = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_data:DEV").get(0);
+        flavorMaster = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_master:DEV").get(0);
+        flavorKibana = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_kibana:DEV").get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
-                .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
+                .set("$.order.attrs.flavor_data", new JSONObject(flavorData.toString()))
+                .set("$.order.attrs.flavor_master", new JSONObject(flavorMaster.toString()))
+                .set("$.order.attrs.flavor_kibana", new JSONObject(flavorKibana.toString()))
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
                 .build();
     }
 
     @Override
-    @Action("Перезагрузить по питанию")
-    public void restart(String action) {
-        super.restart(action);
+    @Action("Удалить кластер EK Xpack")
+    public void delete(String action) {
+        super.delete(action);
     }
 }

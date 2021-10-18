@@ -30,4 +30,19 @@ public class ReferencesStep {
 
         return list.stream().sorted(Comparator.comparing(Flavor::getCpus).thenComparing(Flavor::getMemory)).collect(Collectors.toList());
     }
+
+    @Step("Получение списка flavors по page_filter {pageFilter}")
+    public List<Flavor> getFlavorsByPageFilterLinkedList(IProduct product, String pageFilter) {
+        String jsonArray = new Http(URL)
+                .setProjectId(product.getProjectId())
+                .get("references/api/v1/pages/?page_filter=" + pageFilter)
+                .assertStatus(200)
+                .toString();
+
+        Type type = new TypeToken<List<Flavor>>() {
+        }.getType();
+        List<Flavor> list = new Gson().fromJson(jsonArray, type);
+
+        return list.stream().sorted(Comparator.comparing(Flavor::getCpus).thenComparing(Flavor::getMemory)).collect(Collectors.toList());
+    }
 }

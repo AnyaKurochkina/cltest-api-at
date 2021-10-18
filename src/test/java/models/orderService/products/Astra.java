@@ -21,7 +21,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
-public class Ubuntu extends IProduct {
+public class Astra extends IProduct {
     @ToString.Include
     String segment;
     String dataCentre;
@@ -32,9 +32,9 @@ public class Ubuntu extends IProduct {
     String domain;
     Flavor flavor;
 
-    public Ubuntu() {
-        jsonTemplate = "/orders/ubuntu_general_application.json";
-        productName = "Ubuntu Linux (DEV only)";
+    public Astra() {
+        jsonTemplate = "/orders/astra_general_application.json";
+        productName = "Astra Linux (DEV only)";
     }
 
     @Override

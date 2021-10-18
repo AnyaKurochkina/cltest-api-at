@@ -1,7 +1,7 @@
 {
   "order": {
     "project_name": "proj-frybyv41jh",
-    "product_id": "9d87b2b4-4145-401a-b1b1-edac6bb0c5e4",
+    "product_id": "c0aa15f7-5854-4c93-8c0f-1fcc9566f783",
     "attrs": {
       "domain": "corp.dev.vtb",
       "flavor": {
@@ -16,7 +16,7 @@
       },
       "extra_nics": [],
       "on_support": false,
-      "os_version": "20.04",
+      "os_version": "2.12",
       "data_center": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
@@ -39,6 +39,6 @@
       ]
     },
     "count": 1,
-    "label": "Ubuntu Linux (DEV only)"
+    "label": "Astra Linux (DEV only)"
   }
 }

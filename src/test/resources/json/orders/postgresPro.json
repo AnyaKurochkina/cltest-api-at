@@ -1,7 +1,7 @@
 {
   "order": {
     "project_name": "proj-frybyv41jh",
-    "product_id": "9d87b2b4-4145-401a-b1b1-edac6bb0c5e4",
+    "product_id": "0da09981-c1ac-45b6-ba3b-7bfe52fd45bc",
     "attrs": {
       "domain": "corp.dev.vtb",
       "flavor": {
@@ -16,19 +16,23 @@
       },
       "extra_nics": [],
       "on_support": false,
-      "os_version": "20.04",
+      "os_version": "2.12",
       "data_center": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },
       "extra_mounts": [
         {
-          "path": "/app",
-          "size": 10,
+          "path": "/pg_data",
+          "size": 50,
           "file_system": "xfs"
         }
       ],
       "ad_integration": true,
+      "postgrespro_config": {
+        "max_connections": 100
+      },
+      "postgrespro_version": "13",
       "ad_logon_grants": [
         {
           "role": "superuser",
@@ -39,6 +43,6 @@
       ]
     },
     "count": 1,
-    "label": "Ubuntu Linux (DEV only)"
+    "label": "PostgresPro"
   }
 }
