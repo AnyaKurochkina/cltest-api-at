@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import core.helper.ObjectPoolService;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.orderService.interfaces.IProduct;
@@ -86,7 +87,8 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         this.variableName = variableSource.value();
     }
 
-    public static Map<String, List<Map>> getProductListMap() throws IOException {
+    @SneakyThrows
+    public static Map<String, List<Map>> getProductListMap()  {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.findAndRegisterModules();
         return mapper.readValue(new File(Steps.dataFolder +
@@ -99,28 +101,24 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
 
     public static List<IProduct> getProductList() {
         List<IProduct> list = new ArrayList<>();
-        try {
-            Map<String, List<Map>> products = getProductListMap();
-            final ObjectMapper objectMapper = new ObjectMapper();
-            for (Map.Entry<String, List<Map>> e : products.entrySet()) {
-                try {
-                    Class<?> c = Class.forName("models.orderService.products." + e.getKey());
-                    List<String> listAction = findListInMapByKey("actions", e.getValue());
-                    List listProduct = findListInMapByKey("options", e.getValue());
-                    if (listProduct == null)
-                        continue;
-                    for (Object orderObj : listProduct) {
-                        IProduct product = (IProduct) objectMapper.convertValue(orderObj, c);
-                        if (listAction != null)
-                            product.setActions(listAction);
-                        list.add(product);
-                    }
-                } catch (ClassNotFoundException classNotFoundException) {
-                    classNotFoundException.printStackTrace();
+        Map<String, List<Map>> products = getProductListMap();
+        final ObjectMapper objectMapper = new ObjectMapper();
+        for (Map.Entry<String, List<Map>> e : products.entrySet()) {
+            try {
+                Class<?> c = Class.forName("models.orderService.products." + e.getKey());
+                List<String> listAction = findListInMapByKey("actions", e.getValue());
+                List listProduct = findListInMapByKey("options", e.getValue());
+                if (listProduct == null)
+                    continue;
+                for (Object orderObj : listProduct) {
+                    IProduct product = (IProduct) objectMapper.convertValue(orderObj, c);
+                    if (listAction != null)
+                        product.setActions(listAction);
+                    list.add(product);
                 }
+            } catch (ClassNotFoundException classNotFoundException) {
+                classNotFoundException.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return list;
     }

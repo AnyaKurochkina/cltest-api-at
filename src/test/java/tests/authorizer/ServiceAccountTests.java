@@ -15,19 +15,19 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
-public class ServiceAccountCreateTests extends Tests {
+public class ServiceAccountTests extends Tests {
 
     @Test
     @Order(1)
     @DisplayName("Создание сервисного аккаунта")
-    public void createServiceAccount() {
+    void createServiceAccount() {
         ServiceAccount.builder().isForOrders(false).build().createObject();
     }
 
     @Test
     @Order(2)
     @DisplayName("Удаление сервисного аккаунта")
-    public void deleteServiceAccount() {
+    void deleteServiceAccount() {
         ServiceAccount.builder().isForOrders(false).build().createObject();
     }
 

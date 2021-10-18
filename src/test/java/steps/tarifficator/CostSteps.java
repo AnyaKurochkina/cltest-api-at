@@ -117,10 +117,11 @@ public class CostSteps extends Steps {
     @Step("Получение предварительной стоимости продукта {product}")
     public JSONArray getCost(IProduct product) {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        Project project = cacheService.entity(Project.class)
-                .withField("env", product.getEnv())
-                .forOrders(true)
-                .getEntity();
+        Project project = Project.builder()
+                .projectEnvironment(new ProjectEnvironment(product.getEnv()))
+                .isForOrders(true)
+                .build()
+                .createObject();
         String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = jsonHelper.getJsonTemplate("/tarifficator/cost.json").build();

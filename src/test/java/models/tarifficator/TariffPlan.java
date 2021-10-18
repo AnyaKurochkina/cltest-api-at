@@ -1,19 +1,23 @@
 package models.tarifficator;
 
 import core.CacheService;
+import core.helper.Configure;
+import core.helper.Http;
+import core.helper.StringUtils;
+import core.random.string.RandomStringGenerator;
+import io.qameta.allure.Step;
 import lombok.*;
 import models.Entity;
+import models.authorizer.Project;
 import org.json.JSONObject;
 import steps.tarifficator.TariffPlanSteps;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Builder
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true)
 public class TariffPlan extends Entity {
     Boolean base;
     String baseTariffPlanId;
@@ -27,6 +31,7 @@ public class TariffPlan extends Entity {
     TariffPlanStatus status;
     List<TariffClass> tariffClasses;
     @EqualsAndHashCode.Include
+    @ToString.Include
     String title;
     Boolean updateOrders;
     Date updatedAt;
@@ -35,16 +40,13 @@ public class TariffPlan extends Entity {
     transient TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
 
 
-    public JSONObject serialize() {
+    public JSONObject toJson() {
         return new JSONObject("{\"tariff_plan\":" + CacheService.toJson(this) + "}");
     }
 
-    public static TariffPlan deserialize(String object) {
-        return CacheService.getCustomGson().fromJson(object, TariffPlan.class);
-    }
 
     @Override
-    public void create() {
+    public void init() {
         if(title == null)
             title = "AT " + new Date();
         if(base == null)
@@ -56,22 +58,15 @@ public class TariffPlan extends Entity {
     }
 
     @Override
-    public void delete() {}
+    @Step("Создание тарифного плана")
+    public void create() {
+        String object = new Http(Configure.TarifficatorURL)
+                .post("tariff_plans", toJson())
+                .assertStatus(201)
+                .toString();
+        StringUtils.copyAvailableFields(tariffPlanSteps.deserialize(object), this);
+    }
 
-//    @Override
-//    public void reset() {
-//
-//    }
-//
-//    @Override
-//    public Map<Integer, Integer> graphState() {
-//        return new HashMap<Integer, Integer>() {{
-//            put(TariffPlanStatus.Num.draft, TariffPlanStatus.Num.planned);
-//            put(TariffPlanStatus.Num.planned, TariffPlanStatus.Num.draft);
-//            put(TariffPlanStatus.Num.planned, TariffPlanStatus.Num.active);
-//            put(TariffPlanStatus.Num.active, TariffPlanStatus.Num.archived);
-//        }};
-//    }
 
 
 }

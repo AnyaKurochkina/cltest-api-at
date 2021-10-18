@@ -18,7 +18,7 @@
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
     "id": "proj-ie2s5l0ycr",
     "projectName": "PROJECT_TEST",
-    "env": {
+    "projectEnvironment": {
       "env": "IFT",
       "envType": "TEST"
     },
@@ -49,7 +49,7 @@
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
     "id": "proj-xazpppulba",
     "projectName": "PROJECT_DEV",
-    "env": {
+    "projectEnvironment": {
       "env": "DSO",
       "envType": "DEV"
     },

@@ -35,6 +35,8 @@ import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @API(
         status = Status.EXPERIMENTAL,
@@ -140,20 +142,21 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         if (testDescriptor instanceof MethodBasedTestDescriptor) {
             String match = StringUtils.findByRegex(":\\w+\\(models.orderService.products.(\\w+)\\)]", testDescriptor.getUniqueId().toString());
             if (match != null) {
-                try {
-                    Map<String, List<Map>> products = ProductArgumentsProvider.getProductListMap();
-                    for (Map.Entry<String, List<Map>> e : products.entrySet()) {
-                        if(e.getKey().endsWith(match)){
-                        List listProduct = ProductArgumentsProvider.findListInMapByKey("options", e.getValue());
-                        if(listProduct == null)
-                            skipTests.add(testDescriptor);
-                        return;
-                        }
+                Map<String, List<Map>> products = ProductArgumentsProvider.getProductListMap();
+                for (Map.Entry<String, List<Map>> e : products.entrySet()) {
+                    if(e.getKey().endsWith(match)){
+                    List listProduct = ProductArgumentsProvider.findListInMapByKey("options", e.getValue());
+                    if(listProduct == null)
+                        skipTests.add(testDescriptor);
+                    return;
                     }
-                    skipTests.add(testDescriptor);
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+                skipTests.add(testDescriptor);
+            }
+            Matcher matchProduct = Pattern.compile(":\\w+\\(models.orderService.interfaces.IProduct\\)]").matcher(testDescriptor.getUniqueId().toString());
+            if (matchProduct.find()) {
+                if(ProductArgumentsProvider.getProductListMap().size() == 0)
+                    skipTests.add(testDescriptor);
             }
         }
     }

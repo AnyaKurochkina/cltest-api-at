@@ -229,8 +229,8 @@ public class Http {
 
         public Response assertStatus(int s) {
             if (s != status() || (path.endsWith("/orders") && method.equals("POST"))) {
-                Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
-                Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
+//                Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
+//                Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
             }
             if(s != status())
                 throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nResponse: %s\nRequest: %s\n%s\n",s, status(), responseMessage, host + path, body));

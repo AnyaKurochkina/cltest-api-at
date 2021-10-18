@@ -1,6 +1,8 @@
 package tests.keyCloak;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
@@ -8,19 +10,15 @@ import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
 
-@DisplayName("Набор тестов для проверки KeyCloak")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Epic("Авторизация на портале")
 @Tags({@Tag("regress"), @Tag("teamcity")})
-@OrderLabel("tests.keyCloak.KeyCloakTests")
 public class KeyCloakTests extends Tests {
 
     @Test
-    @TmsLink("33")
     //@Link(type="manual", value = "271850")
 //    @Tag("tariffPlans")
     @DisplayName("Получение токена")
-    @Description("Проверка получения токена для доступа к API портала")
-    public void getToken() {
+    void getToken() {
         KeyCloakSteps.getUserToken();
     }
 }

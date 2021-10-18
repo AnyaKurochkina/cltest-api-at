@@ -59,6 +59,17 @@ public class ObjectPoolEntity {
         return Objects.equals(jsonNodeThis, jsonNodeThat);
     }
 
+
+    private void removeNode(JsonNode jsonNodeThis, JsonNode jsonNodeThat){
+        Iterator<Map.Entry<String, JsonNode>> node = jsonNodeThis.fields();
+        while (node.hasNext()) {
+            Map.Entry<String, JsonNode> entry = node.next();
+            if (!jsonNodeThat.hasNonNull(entry.getKey()))
+                node.remove();
+            if(entry.getKey().)
+        }
+    }
+
     @ResourceLock(value = "entity", mode = READ)
     public <T extends Entity> T get() {
         return ObjectPoolService.fromJson(entity, clazz);

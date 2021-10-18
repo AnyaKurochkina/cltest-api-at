@@ -16,6 +16,7 @@ public class Configure {
     public static String AuthorizerURL;
     public static String AccountManagerURL;
     public static String PortalBackURL;
+    public static String TarifficatorURL;
 
     static {
         try {
@@ -35,6 +36,7 @@ public class Configure {
             AuthorizerURL = kongURL + "authorizer/api/v1/";
             AccountManagerURL = kongURL + "accountmanager/api/v1/";
             PortalBackURL = kongURL + "portal/api/v1/";
+            TarifficatorURL = kongURL + "tarifficator/api/v1/";
 
         } catch (Exception e) {
             e.printStackTrace();

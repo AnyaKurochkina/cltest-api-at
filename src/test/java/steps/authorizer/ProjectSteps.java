@@ -6,6 +6,7 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import models.authorizer.InformationSystem;
 import models.authorizer.ProjectEnvironment;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import models.authorizer.Folder;
 import models.authorizer.Project;
@@ -92,7 +93,7 @@ public class ProjectSteps extends Steps {
      * @param projectEnvId ID среды проекта
      * @return - возвращаем рандомный префикс из доступных
      */
-    public String getPrefixEnv(String projectId, String infoSystems, String projectEnvId) {
+    public String getPrefixEnv(String projectId, String infoSystems, @NotNull String projectEnvId) {
         //Получение префикосв среды
         JsonPath jsonPath = new Http(URL)
                 .get(String.format("portal/api/v1/folders/%s/information_systems/%s/environment_prefixes?project_environment_id=%s&reserved=false", projectId, infoSystems, projectEnvId))

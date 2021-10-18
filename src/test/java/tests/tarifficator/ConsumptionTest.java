@@ -23,6 +23,7 @@ import java.util.List;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("consumption")
+//TODO: доделать и перевести на новую базу
 public class ConsumptionTest extends Tests {
 
     @ParameterizedTest(name = "{0}")
