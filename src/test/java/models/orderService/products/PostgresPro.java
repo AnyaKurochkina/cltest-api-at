@@ -16,6 +16,7 @@ import models.subModels.DbUser;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.Action;
+import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -142,7 +143,7 @@ public class PostgresPro extends IProduct {
         String dbName = database.get(0).getNameDB();
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
         String dbUserNameActual = (String) orderServiceSteps.getProductsField(this, DB_USERNAME_PATH);
-        assertEquals("Имя пользователя отличается от создаваемого", username, dbUserNameActual);
+        assertEquals("Имя пользователя отличается от создаваемого", dbName+ "_" + username, dbUserNameActual);
         users.add(new DbUser(dbName, dbUserNameActual, false));
         log.info("users = " + users);
         cacheService.saveEntity(this);
@@ -150,7 +151,7 @@ public class PostgresPro extends IProduct {
 
     @Action("Добавить пользователя")
     public void createDbmsUserTest(String action) {
-        createDbmsUser("testdb_testchelik", "user", action);
+        createDbmsUser("testchelik", "user", action);
     }
 
     @Action("Сбросить пароль")
@@ -168,12 +169,25 @@ public class PostgresPro extends IProduct {
     @Action("Удалить пользователя")
     public void removeDbmsUser(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getNameDB() + "_" +users.get(0).getUsername())));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
         users.get(0).setDeleted(true);
         log.info("users = " + users);
         cacheService.saveEntity(this);
+    }
+
+    @Override
+    @Action("Изменить конфигурацию")
+    public void resize(String action) {
+        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
+        Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
+        Flavor flavor = list.get(list.size() - 1);
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}"));
+        int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
+        int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
+        assertEquals(flavor.data.cpus, cpusAfter);
+        assertEquals(flavor.data.memory, memoryAfter);
     }
 
 }

@@ -118,7 +118,7 @@ public class ClickHouse extends IProduct {
 
     @Action(CLICKHOUSE_CREATE_DBMS_USER)
     public void createDbmsUserTest(String action) {
-        createDbmsUser("testuser", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
+        createDbmsUser("chelik", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
     }
 
     public void createDb(String dbName, String action) {

@@ -40,7 +40,7 @@ public class Elasticsearch extends IProduct {
 
     public Elasticsearch() {
         jsonTemplate = "/orders/elasticsearch.json";
-        productName = "Elasticsearch";
+        productName = "Elasticsearch XPACK Cluster";
     }
 
     @Override
