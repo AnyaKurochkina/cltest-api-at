@@ -154,13 +154,13 @@ public class PostgreSQL extends IProduct {
         createDbmsUser("testchelik", "user", action);
     }
 
-    @Action("Сбросить пароль")
+    @Action("reset_db_user_password")
     public void resetPassword(String action) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
     }
 
-    @Action("Сбросить пароль")
+    @Action("reset_db_owner_password")
     public void resetDbOwnerPassword(String action) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password)));

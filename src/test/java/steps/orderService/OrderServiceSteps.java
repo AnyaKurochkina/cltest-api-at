@@ -300,16 +300,10 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath();
 
         Item item = new Item();
-        //Получаем все item ID по русскоязычному имени экшена он же title, например: "Удалить рекурсивно"
-        item.id = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.item_id", action));
-        //Получаем все item name по русскоязычному имени экшена он же title, например: "Удалить рекурсивно"
-        item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.actions.find{it.title=='%s'}.name", action, action));
+        //Получаем все item ID по имени экшена он же name, например: "reset_db_user_password"
+        item.id = jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.item_id", action));
+        item.name = action;
         //Достаем item ID и item name и сохраняем в объект Item
-        if (item.id == null) {
-            item.id = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action));
-            item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action));
-        }
-
         Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), item.id);
         return item;
     }
