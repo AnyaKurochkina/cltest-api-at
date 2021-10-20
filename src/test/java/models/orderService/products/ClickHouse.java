@@ -84,7 +84,7 @@ public class ClickHouse extends IProduct {
     }
 
     @Action(CLICKHOUSE_DELETE_DB)
-    private void deleteDb(String action) {
+    public void deleteDb(String action) {
         String dbName = database.get(0).getNameDB();
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
@@ -97,11 +97,11 @@ public class ClickHouse extends IProduct {
     @Action("Сбросить пароль")
     public void resetPassword(String action) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
     }
 
     @Action(CLICKHOUSE_DELETE_DBMS_USER)
-    private void deleteDbmsUser(String action) {
+    public void deleteDbmsUser(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
