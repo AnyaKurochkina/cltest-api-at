@@ -303,6 +303,10 @@ public class OrderServiceSteps extends Steps {
         //Получаем все item ID по имени экшена он же name, например: "reset_db_user_password"
         item.id = jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.item_id", action));
         item.name = action;
+        //Если такой id не найден, то ищем по name.contains
+        if (item.id == null) {
+            item.id = jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action));
+        }
         //Достаем item ID и item name и сохраняем в объект Item
         Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), item.id);
         return item;
