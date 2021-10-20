@@ -23,7 +23,7 @@ public class ObjectPoolEntity {
     @Getter
     @Setter
     private ObjectStatus status = ObjectStatus.NOT_CREATED;
-//    @Getter
+    //    @Getter
 //    @Setter
 //    private boolean failed = false;
 //    @Getter
@@ -49,24 +49,26 @@ public class ObjectPoolEntity {
         String that = new Gson().toJson(o, o.getClass());
         JsonNode jsonNodeThis = mapper.readTree(entity);
         JsonNode jsonNodeThat = mapper.readTree(that);
-        Iterator<Map.Entry<String, JsonNode>> node = jsonNodeThis.fields();
-        while (node.hasNext()) {
-            Map.Entry<String, JsonNode> entry = node.next();
-            if (!jsonNodeThat.hasNonNull(entry.getKey()))
-                node.remove();
-        }
-
+//        Iterator<Map.Entry<String, JsonNode>> node = jsonNodeThis.fields();
+//        while (node.hasNext()) {
+//            Map.Entry<String, JsonNode> entry = node.next();
+//            if (!jsonNodeThat.hasNonNull(entry.getKey()))
+//                node.remove();
+//        }
+        removeNode(jsonNodeThis, jsonNodeThat);
         return Objects.equals(jsonNodeThis, jsonNodeThat);
     }
 
 
-    private void removeNode(JsonNode jsonNodeThis, JsonNode jsonNodeThat){
+    private void removeNode(JsonNode jsonNodeThis, JsonNode jsonNodeThat) {
         Iterator<Map.Entry<String, JsonNode>> node = jsonNodeThis.fields();
         while (node.hasNext()) {
             Map.Entry<String, JsonNode> entry = node.next();
+            if (entry.getValue() != null && jsonNodeThat.has(entry.getKey())) {
+                removeNode(entry.getValue(), jsonNodeThat.get(entry.getKey()));
+            }
             if (!jsonNodeThat.hasNonNull(entry.getKey()))
                 node.remove();
-            if(entry.getKey().)
         }
     }
 
@@ -85,11 +87,11 @@ public class ObjectPoolEntity {
     }
 
     public void release() {
-            lock.unlock();
+        lock.unlock();
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return entity;
     }
 }
