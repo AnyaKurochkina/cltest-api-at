@@ -100,7 +100,8 @@ public class RabbitMQCluster extends IProduct {
                 .build();
     }
 
-    @Action("Создать пользователя RabbitMQ")
+    //Создать пользователя RabbitMQ
+    @Action("rabbitmq_create_user")
     public void rabbitmqCreateUser(String action) {
         String user = "testapiuser";
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
@@ -108,11 +109,14 @@ public class RabbitMQCluster extends IProduct {
         assertEquals(user, username);
     }
 
+    //Удалить рекурсивно
     @Override
-    @Action("Удалить рекурсивно")
+    @Action("delete_two_layer")
     public void delete(String action) {
         super.delete(action);
     }
 
-
+    @Override
+    @Action("rabbitmq_update_certs")
+    public void updateCerts(String action){super.updateCerts(action);}
 }

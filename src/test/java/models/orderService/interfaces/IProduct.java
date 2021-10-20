@@ -134,27 +134,32 @@ public abstract class IProduct extends Entity {
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
     }
 
-    @Action("Перезагрузить")
+    //Перезагрузить
+    @Action("reset_two_layer")
     public void restart(String action) {
         orderServiceSteps.executeAction(action, this, null);
     }
 
-    @Action("Выключить принудительно")
+    //Выключить принудительно
+    @Action("stop_hard_two_layer")
     public void stopHard(String action) {
         orderServiceSteps.executeAction(action, this, null);
     }
 
-    @Action("Выключить")
+    //Выключить
+    @Action("stop_two_layer")
     public void stopSoft(String action) {
         orderServiceSteps.executeAction(action, this, null);
     }
 
-    @Action("Включить")
+    //Включить
+    @Action("start_two_layer")
     public void start(String action) {
         orderServiceSteps.executeAction(action, this, null);
     }
 
-    @Action("Удалить")
+    //Удалить
+    @Action("delete_two_layer")
     public void delete(String action) {
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         orderServiceSteps.executeAction(action, this, null);
@@ -175,7 +180,8 @@ public abstract class IProduct extends Entity {
         assertEquals(flavor.data.memory, memoryAfter);
     }
 
-    @Action("Расширить")
+    //Расширить
+    @Action("expand_mount_point")
     public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));

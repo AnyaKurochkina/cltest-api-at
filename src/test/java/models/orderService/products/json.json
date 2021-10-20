@@ -1,0 +1,738 @@
+{
+  "id": "4a468b6e-39db-49fc-a1c6-1ee1ff36a313",
+  "created_at": "2021-10-20T17:03:27+03:00",
+  "updated_at": "2021-10-20T17:11:26+03:00",
+  "attrs": {
+    "domain": "corp.dev.vtb",
+    "flavor": {
+      "cpus": 2,
+      "name": "c2m4",
+      "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+      "memory": 4
+    },
+    "folder": "fold-456ks80urq",
+    "creator": {
+      "name": "sa_proj-xazpppulba-4c"
+    },
+    "platform": "Nutanix",
+    "boot_disk": {
+      "size": 30
+    },
+    "account_id": "85dcbb9b-b2f5-4247-8d66-b72745d7c189",
+    "extra_nics": [],
+    "on_support": false,
+    "os_version": "8.4",
+    "data_center": "5",
+    "default_nic": {
+      "net_segment": "dev-srv-app"
+    },
+    "access_group": [
+      "cloud-d2plux-xazppulba"
+    ],
+    "extra_mounts": [
+      {
+        "path": "/app/app",
+        "size": 30,
+        "file_system": "xfs"
+      },
+      {
+        "path": "/app/logs",
+        "size": 20,
+        "file_system": "xfs"
+      }
+    ],
+    "project_path": "/organization/vtb/folder/fold-3mjmru4kg1/folder/fold-4qn73gpzqg/folder/fold-456ks80urq/project/proj-xazpppulba/",
+    "graph_version": "1.0.21",
+    "preview_items": [
+      {
+        "data": {
+          "state": "on",
+          "config": {
+            "image": {
+              "os": {
+                "type": "linux",
+                "vendor": "ibm",
+                "version": "8.4",
+                "architecture": "x86_64",
+                "distribution": "rhel",
+                "localization": "en"
+              },
+              "name": "tpl_linux_rhel_8.4_x86_64_en",
+              "size": 30,
+              "uuid": "4c2002cf-5d94-4f12-8e12-175e944b9c32"
+            },
+            "domain": "corp.dev.vtb",
+            "flavor": {
+              "cpus": 2,
+              "name": "c2m4",
+              "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+              "memory": 4
+            },
+            "tenant": {},
+            "boot_disk": {
+              "size": 30
+            },
+            "extra_nics": [],
+            "on_support": false,
+            "os_version": "8.4",
+            "default_nic": {
+              "net_segment": "dev-srv-app"
+            },
+            "environment": "DSO",
+            "extra_disks": [
+              {
+                "size": 50
+              }
+            ],
+            "resource_pool": {
+              "name": "k37-dell-dev-1",
+              "uuid": "0005b44e-d3f9-4994-4444-2cea7ff188fd",
+              "endpoint": "https://prism-dev.corp.dev.vtb:9440/api/nutanix",
+              "platform": "nutanix",
+              "tenant_prefix": "Nutanix-K37-DEV-Cloud-001"
+            },
+            "ad_integration": true,
+            "environment_type": "DEV"
+          },
+          "parent": "fc926731-66d4-41c9-a562-eb4d74986a12",
+          "provider": "nutanix"
+        },
+        "type": "vm",
+        "item_id": "10eb2bf9-8f0e-4660-9de8-6946947a7609"
+      },
+      {
+        "data": {
+          "state": "on",
+          "config": {},
+          "provider": "wildfly"
+        },
+        "type": "app",
+        "item_id": "fc926731-66d4-41c9-a562-eb4d74986a12"
+      }
+    ],
+    "product_title": "WildFly",
+    "ad_integration": true,
+    "tariff_plan_id": "50f1c715-3292-4291-8957-85e1659d294c",
+    "ad_logon_grants": [
+      {
+        "role": "user",
+        "groups": [
+          "cloud-d2plux-xazppulba"
+        ]
+      }
+    ],
+    "wildfly_version": "23.0.2.Final",
+    "organization_name": "vtb",
+    "environment_prefix_id": "2636779e-2ddc-4446-8cc4-ae1a71a23cd1",
+    "information_system_id": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "project_environment_id": "395a0a01-e83a-4ede-80a5-7354f2a8db39",
+    "information_system_priority": 2
+  },
+  "status": "success",
+  "label": "WildFly_0001",
+  "category": "vm",
+  "deletable": true,
+  "power_status": [
+    {
+      "status": "on",
+      "item_id": "75ee71a7-2f16-4105-a668-a19115e744c6"
+    }
+  ],
+  "product_data": [
+    {
+      "ip": "10.226.10.39",
+      "type": "vm",
+      "hostname": "d2plux-wfc008ln"
+    }
+  ],
+  "project_name": "proj-xazpppulba",
+  "product_id": "972a66f1-cd45-437f-b920-676bad68e594",
+  "data": [
+    {
+      "item_id": "75ee71a7-2f16-4105-a668-a19115e744c6",
+      "actions": [
+        {
+          "id": "f0bf70a7-55f1-4300-bb28-3ea11d4700f1",
+          "last_version": "1.0.0",
+          "version_list": [
+            "1.0.0"
+          ],
+          "graph_id": "777cdad9-73a6-4329-9b81-191f420714b2",
+          "graph_version": "1.0.16",
+          "name": "resize_vm",
+          "title": "Изменить конфигурацию",
+          "description": "",
+          "icon": "",
+          "required_order_statuses": [
+            "success"
+          ],
+          "required_item_statuses": [
+            "off"
+          ],
+          "type": null,
+          "event_type": [
+            "vm"
+          ],
+          "event_provider": [
+            "vcloud",
+            "nutanix",
+            "vsphere",
+            "openstack"
+          ],
+          "data_config_path": null,
+          "data_config_key": null,
+          "data_config_fields": [],
+          "config_restriction": null,
+          "item_restriction": null,
+          "available_without_money": false,
+          "auto_removing_if_failed": false,
+          "skip_on_prebilling": false,
+          "graph_version_pattern": "",
+          "allowed_groups": [],
+          "restricted_groups": [],
+          "allowed_paths": [],
+          "restricted_paths": [],
+          "active": false
+        },
+        {
+          "id": "22994556-086b-45da-9500-ce7e07640333",
+          "last_version": "1.0.0",
+          "version_list": [
+            "1.0.0"
+          ],
+          "graph_id": "fa35e212-b413-436b-87c8-cfade5833477",
+          "graph_version": "1.0.41",
+          "name": "expand_mount_point",
+          "title": "Расширить",
+          "description": "Увеличить размер заданной точки монтирования",
+          "icon": "",
+          "required_order_statuses": [
+            "success"
+          ],
+          "required_item_statuses": [
+            "on"
+          ],
+          "type": null,
+          "event_type": [
+            "vm"
+          ],
+          "event_provider": [
+            "nutanix",
+            "vsphere",
+            "openstack"
+          ],
+          "data_config_path": "extra_mounts",
+          "data_config_key": "mount",
+          "data_config_fields": [],
+          "config_restriction": "image['os']['distribution'] in ['rhel', 'ubuntu', 'astra']",
+          "item_restriction": null,
+          "available_without_money": false,
+          "auto_removing_if_failed": false,
+          "skip_on_prebilling": false,
+          "graph_version_pattern": "",
+          "allowed_groups": [],
+          "restricted_groups": [],
+          "allowed_paths": [],
+          "restricted_paths": [],
+          "active": true
+        },
+        {
+          "id": "ae134f03-f3b7-4a7f-82ea-f8a545310a17",
+          "last_version": "1.0.0",
+          "version_list": [
+            "1.0.0"
+          ],
+          "graph_id": "e856e996-8acb-4fc8-904e-6c5963d4379f",
+          "graph_version": "1.0.93",
+          "name": "check_vm",
+          "title": "Проверить конфигурацию",
+          "description": "",
+          "icon": "",
+          "required_order_statuses": [
+            "success",
+            "warning"
+          ],
+          "required_item_statuses": [
+            "on",
+            "off"
+          ],
+          "type": null,
+          "event_type": [
+            "vm"
+          ],
+          "event_provider": [
+            "vcloud",
+            "nutanix",
+            "vsphere",
+            "openstack"
+          ],
+          "data_config_path": null,
+          "data_config_key": null,
+          "data_config_fields": [],
+          "config_restriction": null,
+          "item_restriction": null,
+          "available_without_money": false,
+          "auto_removing_if_failed": false,
+          "skip_on_prebilling": true,
+          "graph_version_pattern": "",
+          "allowed_groups": [],
+          "restricted_groups": [],
+          "allowed_paths": [],
+          "restricted_paths": [],
+          "active": true
+        }
+      ],
+      "type": "vm",
+      "config": {
+        "image": {
+          "os": {
+            "type": "linux",
+            "vendor": "ibm",
+            "version": "8.4",
+            "architecture": "x86_64",
+            "distribution": "rhel",
+            "localization": "en"
+          },
+          "name": "tpl_linux_rhel_8.4_x86_64_en",
+          "size": 30,
+          "uuid": "4c2002cf-5d94-4f12-8e12-175e944b9c32"
+        },
+        "domain": "corp.dev.vtb",
+        "flavor": {
+          "cpus": 2,
+          "name": "c2m4",
+          "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+          "memory": 4
+        },
+        "mounts": [
+          {
+            "size": 10.0,
+            "mount": "/",
+            "device": "/dev/mapper/vg_01-lv_root",
+            "fstype": "xfs",
+            "options": "rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota"
+          },
+          {
+            "size": 3.0,
+            "mount": "/tmp",
+            "device": "/dev/mapper/vg_01-lv_tmp",
+            "fstype": "xfs",
+            "options": "rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota"
+          },
+          {
+            "size": 5.0,
+            "mount": "/home",
+            "device": "/dev/mapper/vg_01-lv_home",
+            "fstype": "xfs",
+            "options": "rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota"
+          },
+          {
+            "size": 8.0,
+            "mount": "/var",
+            "device": "/dev/mapper/vg_01-lv_var",
+            "fstype": "xfs",
+            "options": "rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota"
+          },
+          {
+            "size": 0.5,
+            "mount": "/boot",
+            "device": "/dev/sda1",
+            "fstype": "xfs",
+            "options": "rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota"
+          }
+        ],
+        "tenant": {
+          "name": "Nutanix-K37-DEV-Cloud-001-d2plux",
+          "uuid": "bdc61f7f-aa2b-4eb5-9ffa-1bba5554da8a"
+        },
+        "hostname": "d2plux-wfc008ln",
+        "boot_disk": {
+          "path": "/dev/sda",
+          "size": 30,
+          "uuid": "8589a2fd-fa80-48e4-808b-a929cff52cfc",
+          "serial": "NFS_3_0_38204_803e2561_ef07_43dc_a128_f8b1ac67df63"
+        },
+        "swap_size": 2,
+        "extra_nics": [],
+        "on_support": false,
+        "os_version": "8.4",
+        "default_nic": {
+          "mtu": 1500,
+          "name": "ens3",
+          "uuid": "1111a197-0c6c-4c76-b838-06913baf33ba",
+          "subnet": {
+            "name": "vlan.1502",
+            "uuid": "9bcfac13-7d4f-4448-b357-064eb1db8ab5"
+          },
+          "addresses": [
+            {
+              "type": "ipv4",
+              "address": "10.226.10.39"
+            }
+          ],
+          "mac_address": "50:6b:8d:ac:ca:ea",
+          "net_segment": "dev-srv-app",
+          "address_assignment": "STATIC"
+        },
+        "environment": "DSO",
+        "extra_disks": [
+          {
+            "path": "/dev/sdb",
+            "size": 50,
+            "uuid": "b1452ec8-7ddf-4d82-9fc4-c8731fd07ab5",
+            "serial": "NFS_3_0_38205_20602d8f_6639_410d_9852_92c2c0e82941"
+          }
+        ],
+        "extra_mounts": [
+          {
+            "size": 30.0,
+            "mount": "/app/app",
+            "device": "/dev/mapper/vg_02-lv_app_app",
+            "fstype": "xfs",
+            "options": "rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota"
+          },
+          {
+            "size": 20.0,
+            "mount": "/app/logs",
+            "device": "/dev/mapper/vg_02-lv_app_logs",
+            "fstype": "xfs",
+            "options": "rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota"
+          }
+        ],
+        "resource_pool": {
+          "name": "k37-dell-dev-1",
+          "uuid": "0005b44e-d3f9-4994-4444-2cea7ff188fd",
+          "endpoint": "https://prism-dev.corp.dev.vtb:9440/api/nutanix",
+          "platform": "nutanix",
+          "tenant_prefix": "Nutanix-K37-DEV-Cloud-001"
+        },
+        "ad_integration": true,
+        "environment_type": "DEV",
+        "default_v4_address": "10.226.10.39",
+        "default_v6_address": "None"
+      },
+      "virtualization": null,
+      "state": "on",
+      "parent": "450250f1-866f-5b57-9aa9-d54a2fef2e52",
+      "provider": "nutanix"
+    },
+    {
+      "item_id": "450250f1-866f-5b57-9aa9-d54a2fef2e52",
+      "actions": [
+        {
+          "id": "29211b96-3bfa-4cd5-adb6-f1dc30d5aff5",
+          "last_version": "1.0.0",
+          "version_list": [
+            "1.0.0"
+          ],
+          "graph_id": "6e4522ef-631e-4e4b-9e71-c5959ecdf69b",
+          "graph_version": "1.0.3",
+          "name": "wildfly_update_certs",
+          "title": "Обновить сертификаты WildFly",
+          "description": "",
+          "icon": "",
+          "required_order_statuses": [
+            "success"
+          ],
+          "required_item_statuses": [
+            "on"
+          ],
+          "type": null,
+          "event_type": [
+            "app"
+          ],
+          "event_provider": [
+            "wildfly"
+          ],
+          "data_config_path": null,
+          "data_config_key": null,
+          "data_config_fields": [],
+          "config_restriction": null,
+          "item_restriction": null,
+          "available_without_money": false,
+          "auto_removing_if_failed": false,
+          "skip_on_prebilling": false,
+          "graph_version_pattern": "",
+          "allowed_groups": [],
+          "restricted_groups": [],
+          "allowed_paths": [],
+          "restricted_paths": [],
+          "active": true
+        },
+        {
+          "id": "4701735f-f53f-412b-ac48-b5e4b578114c",
+          "last_version": "1.0.0",
+          "version_list": [
+            "1.0.0"
+          ],
+          "graph_id": "56318e92-3c0f-4cf0-bb8d-0e8eb3436829",
+          "graph_version": "1.0.10",
+          "name": "reset_two_layer",
+          "title": "Перезагрузить",
+          "description": "",
+          "icon": "",
+          "required_order_statuses": [
+            "success"
+          ],
+          "required_item_statuses": [
+            "on"
+          ],
+          "type": null,
+          "event_type": [
+            "app",
+            "cluster"
+          ],
+          "event_provider": [
+            "nginx",
+            "redis",
+            "podman",
+            "wildfly",
+            "rabbitmq",
+            "clickhouse",
+            "postgrespro",
+            "postgresql_v001"
+          ],
+          "data_config_path": null,
+          "data_config_key": null,
+          "data_config_fields": [],
+          "config_restriction": null,
+          "item_restriction": null,
+          "available_without_money": false,
+          "auto_removing_if_failed": false,
+          "skip_on_prebilling": false,
+          "graph_version_pattern": "",
+          "allowed_groups": [],
+          "restricted_groups": [],
+          "allowed_paths": [],
+          "restricted_paths": [],
+          "active": true
+        },
+        {
+          "id": "c76bbc26-9883-4afa-8e2c-8c8c9f9c3c5f",
+          "last_version": "1.0.0",
+          "version_list": [
+            "1.0.0"
+          ],
+          "graph_id": "67f2c71f-0ae0-4828-bfc1-dc856e6b3630",
+          "graph_version": "1.0.9",
+          "name": "stop_hard_two_layer",
+          "title": "Выключить принудительно",
+          "description": "",
+          "icon": "",
+          "required_order_statuses": [
+            "success"
+          ],
+          "required_item_statuses": [
+            "on"
+          ],
+          "type": null,
+          "event_type": [
+            "app",
+            "cluster"
+          ],
+          "event_provider": [
+            "nginx",
+            "redis",
+            "podman",
+            "wildfly",
+            "rabbitmq",
+            "clickhouse",
+            "postgrespro",
+            "postgresql_v001"
+          ],
+          "data_config_path": null,
+          "data_config_key": null,
+          "data_config_fields": [],
+          "config_restriction": null,
+          "item_restriction": null,
+          "available_without_money": false,
+          "auto_removing_if_failed": false,
+          "skip_on_prebilling": false,
+          "graph_version_pattern": "",
+          "allowed_groups": [],
+          "restricted_groups": [],
+          "allowed_paths": [],
+          "restricted_paths": [],
+          "active": true
+        },
+        {
+          "id": "e80c7f02-a931-4682-b9a8-b7881c66980d",
+          "last_version": "1.0.0",
+          "version_list": [
+            "1.0.0"
+          ],
+          "graph_id": "22d4b92f-c72c-46b5-b317-f26df1500a94",
+          "graph_version": "1.0.8",
+          "name": "start_two_layer",
+          "title": "Включить",
+          "description": "",
+          "icon": "",
+          "required_order_statuses": [
+            "success"
+          ],
+          "required_item_statuses": [
+            "off"
+          ],
+          "type": null,
+          "event_type": [
+            "app",
+            "cluster"
+          ],
+          "event_provider": [
+            "nginx",
+            "redis",
+            "podman",
+            "wildfly",
+            "rabbitmq",
+            "clickhouse",
+            "postgrespro",
+            "postgresql_v001"
+          ],
+          "data_config_path": null,
+          "data_config_key": null,
+          "data_config_fields": [],
+          "config_restriction": null,
+          "item_restriction": null,
+          "available_without_money": false,
+          "auto_removing_if_failed": false,
+          "skip_on_prebilling": false,
+          "graph_version_pattern": "",
+          "allowed_groups": [],
+          "restricted_groups": [],
+          "allowed_paths": [],
+          "restricted_paths": [],
+          "active": false
+        },
+        {
+          "id": "8f2f39e9-5877-42e0-87aa-396be2f48790",
+          "last_version": "1.0.0",
+          "version_list": [
+            "1.0.0"
+          ],
+          "graph_id": "c8df29d7-cb51-4b0f-867d-4619f9463483",
+          "graph_version": "1.0.5",
+          "name": "delete_two_layer",
+          "title": "Удалить рекурсивно",
+          "description": "",
+          "icon": "",
+          "required_order_statuses": [
+            "success",
+            "damaged"
+          ],
+          "required_item_statuses": [
+            "on",
+            "off"
+          ],
+          "type": "delete",
+          "event_type": [
+            "app",
+            "cluster"
+          ],
+          "event_provider": [
+            "kafka",
+            "nginx",
+            "redis",
+            "podman",
+            "artemis",
+            "wildfly",
+            "rabbitmq",
+            "scylladb",
+            "clickhouse",
+            "postgresql",
+            "postgrespro",
+            "postgresql_v001"
+          ],
+          "data_config_path": null,
+          "data_config_key": null,
+          "data_config_fields": [],
+          "config_restriction": null,
+          "item_restriction": null,
+          "available_without_money": false,
+          "auto_removing_if_failed": false,
+          "skip_on_prebilling": false,
+          "graph_version_pattern": "",
+          "allowed_groups": [],
+          "restricted_groups": [],
+          "allowed_paths": [],
+          "restricted_paths": [],
+          "active": true
+        },
+        {
+          "id": "6e2294d8-3cf1-42a3-b6c2-372b9c659c98",
+          "last_version": "1.0.0",
+          "version_list": [
+            "1.0.0"
+          ],
+          "graph_id": "39c1a317-7a2e-4874-8c28-91080bde5578",
+          "graph_version": "1.0.10",
+          "name": "stop_two_layer",
+          "title": "Выключить",
+          "description": "",
+          "icon": "",
+          "required_order_statuses": [
+            "success"
+          ],
+          "required_item_statuses": [
+            "on"
+          ],
+          "type": null,
+          "event_type": [
+            "app",
+            "cluster"
+          ],
+          "event_provider": [
+            "nginx",
+            "redis",
+            "podman",
+            "wildfly",
+            "rabbitmq",
+            "clickhouse",
+            "postgrespro",
+            "postgresql_v001"
+          ],
+          "data_config_path": null,
+          "data_config_key": null,
+          "data_config_fields": [],
+          "config_restriction": null,
+          "item_restriction": null,
+          "available_without_money": true,
+          "auto_removing_if_failed": false,
+          "skip_on_prebilling": false,
+          "graph_version_pattern": "",
+          "allowed_groups": [],
+          "restricted_groups": [],
+          "allowed_paths": [],
+          "restricted_paths": [],
+          "active": true
+        }
+      ],
+      "type": "app",
+      "config": {
+        "console_url": "https://d2plux-wfc008ln.corp.dev.vtb:9993",
+        "java_version": "1.8.0",
+        "connection_url": "https://d2plux-wfc008ln.corp.dev.vtb:8443",
+        "wildfly_version": "23.0.2.Final",
+        "certificate_expiration": "2022-10-20T14:10:18+00:00"
+      },
+      "virtualization": null,
+      "state": "on",
+      "parent": null,
+      "provider": "wildfly"
+    }
+  ],
+  "data_center": {
+    "id": "4cd39103-f843-4de8-8adb-56766e80f39e",
+    "site": "КШ37",
+    "code": "5",
+    "name": "K37",
+    "description": "Коровинское шоссе, д.37",
+    "label": "КШ37 Коровинское шоссе, д.37",
+    "is_deleted": false
+  },
+  "net_segment": {
+    "id": "ffab2850-c9c8-4290-a7e5-c8d7bc77499b",
+    "code": "dev-srv-app",
+    "label": "dev-srv-app",
+    "is_deleted": false
+  }
+}

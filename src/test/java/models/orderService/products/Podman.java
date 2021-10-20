@@ -80,8 +80,9 @@ public class Podman extends IProduct {
                 .build();
     }
 
+    //Удалить рекурсивно
     @Override
-    @Action("Удалить рекурсивно")
+    @Action("delete_two_layer")
     public void delete(String action) {
         super.delete(action);
     }

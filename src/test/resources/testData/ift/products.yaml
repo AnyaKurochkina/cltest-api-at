@@ -1,9 +1,9 @@
-OpenShiftProject:
-  - actions:
-      [ 'Изменить проект']
-  - options:
-      - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
-      - { env: "DSO", resourcePoolLabel: "d0-oscp.corp.dev.vtb - VTB-DSO" }
+#OpenShiftProject:
+#  - actions:
+#      [ 'Изменить проект']
+#  - options:
+#      - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
+#      - { env: "DSO", resourcePoolLabel: "d0-oscp.corp.dev.vtb - VTB-DSO" }
 
 #Rhel:
 #  - actions:
@@ -12,9 +12,16 @@ OpenShiftProject:
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
+#PostgreSQL:
+#  - actions:
+#      [ 'Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Выключить принудительно' ]
+#  - options:
+#      - { platform: "Nutanix", postgresqlVersion: "11", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", postgresqlVersion: "12", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+
 PostgreSQL:
   - actions:
-      [ 'Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Изменить конфигурацию', 'Выключить принудительно' ]
+      [  'create_db', 'create_dbms_user', 'reset_db_user_password', 'reset_db_owner_password' ]
   - options:
       - { platform: "Nutanix", postgresqlVersion: "11", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", postgresqlVersion: "12", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
@@ -52,24 +59,24 @@ PostgreSQL:
 #  - options:
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
-Ubuntu:
-  - actions:
-      ['Расширить', 'Перезагрузить по питанию', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
-  - options:
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
-
-Astra:
-  - actions:
-      ['Расширить', 'Перезагрузить по питанию', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
-  - options:
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
-
-PostgresPro:
-  - actions:
-      ['Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Выключить принудительно']
-  - options:
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", postgresproVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", postgresproVersion: "13", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+#Ubuntu:
+#  - actions:
+#      ['Расширить', 'Перезагрузить по питанию', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+#  - options:
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
+#
+#Astra:
+#  - actions:
+#      ['Расширить', 'Перезагрузить по питанию', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
+#  - options:
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+#
+#PostgresPro:
+#  - actions:
+#      ['Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Выключить принудительно']
+#  - options:
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", postgresproVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", postgresproVersion: "13", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
 
 #Elasticsearch:
 #  - actions:
@@ -82,11 +89,11 @@ PostgresPro:
 #  - options:
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1", osVersion: "7.9" }
 
-ClickHouse:
-  - actions:
-      [ 'Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Выключить принудительно']
-  - options:
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#ClickHouse:
+#  - actions:
+#      [ 'Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Выключить принудительно']
+#  - options:
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 #Podman:
 #  - actions:

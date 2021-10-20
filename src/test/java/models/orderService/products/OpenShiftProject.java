@@ -79,7 +79,8 @@ public class OpenShiftProject extends IProduct {
                 .build();
     }
 
-    @Action("Изменить проект")
+    //Изменить проект
+    @Action("update_openshift_project")
     public void changeProject(String action) {
         String shdQuoteValue;
         shdQuoteValue = hasShdQuote() ? "1" : "0";
@@ -96,8 +97,9 @@ public class OpenShiftProject extends IProduct {
         }
     }
 
+    //Удалить проект
     @Override
-    @Action("Удалить проект")
+    @Action("delete_openshift_project")
     public void delete(String action) {
         super.delete(action);
     }

@@ -81,8 +81,9 @@ public class Astra extends IProduct {
                 .build();
     }
 
+    //Перезагрузить по питанию
     @Override
-    @Action("Перезагрузить по питанию")
+    @Action("reset_vm")
     public void restart(String action) {
         super.restart(action);
     }

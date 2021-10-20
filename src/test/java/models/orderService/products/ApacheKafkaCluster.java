@@ -90,19 +90,22 @@ public class ApacheKafkaCluster extends IProduct {
                 .build();
     }
 
-    @Action("Удалить рекурсивно")
+    //Удалить рекурсивно
+    @Action("delete_two_layer")
     public void delete(String action) {
         super.delete(action);
     }
 
+    //Перезагрузить
     @Override
-    @Action("Перезагрузить кластер Kafka")
+    @Action("restart_kafka")
     public void restart(String action) {
         super.restart(action);
     }
 
+    //Выключить
     @Override
-    @Action("Выключить кластер Kafka")
+    @Action("stop_kafka")
     public void stopSoft(String action) {
         super.stopSoft(action);
     }
@@ -125,18 +128,20 @@ public class ApacheKafkaCluster extends IProduct {
         cacheService.saveEntity(this);
     }
 
-
+    @Deprecated
     @Action(KAFKA_CREATE_TOPIC)
     public void createTopicTest(String action) {
         createTopic(new KafkaTopic("delete", 1, 1, 1, 1800000, "TopicName"));
     }
 
-    @Action("Пакетное создание Topic-ов Kafka")
+    //Пакетное создание Topic-ов Kafka
+    @Action("kafka_create_topics")
     public void createTopicsTest(String action) {
         createTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), action);
     }
 
-    @Action("Пакетное удаление Topic-ов Kafka")
+    //Пакетное удаление Topic-ов Kafka
+    @Action("kafka_delete_topics")
     public void deleteTopicsTest(String action) {
         deleteTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), action);
     }
@@ -157,7 +162,8 @@ public class ApacheKafkaCluster extends IProduct {
         cacheService.saveEntity(this);
     }
 
-    @Action("Удалить Topic Kafka")
+    @Deprecated
+    @Action("kafka_delete_topic")
     public void deleteTopicTest(String action) {
         deleteTopic("TopicName", action);
     }
@@ -174,18 +180,21 @@ public class ApacheKafkaCluster extends IProduct {
         Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)));
     }
 
-    @Action("Создать ACL Kafka")
+    //Создать ACL Kafka
+    @Action("kafka_create_acl")
     public void createAclTest(String action) {
         createAcl("*", action);
     }
 
-    @Action("Создание ACL на транзакцию Kafka")
+    //Создание ACL на транзакцию Kafka
+    @Action("kafka_create_transaction_acl")
     public void createAclTransactionTest(String action) {
         createAclTransaction("*", action);
     }
 
+    //Включить кластер Kafka
     @Override
-    @Action("Включить кластер Kafka")
+    @Action("start_kafka")
     public void start(String action) {
         super.start(action);
     }
