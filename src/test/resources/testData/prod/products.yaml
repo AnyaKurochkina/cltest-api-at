@@ -23,7 +23,7 @@
 #
 #Podman:
 #  - actions:
-#      ['Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно']
+#      ['Расширить', 'Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно']
 #  - options:
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
@@ -150,9 +150,9 @@
 #  - options:
 #      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
-PostgresPro:
-  - actions:
-        ['Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Выключить принудительно']
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresproVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresproVersion: "13", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+#PostgresPro:
+#  - actions:
+#        ['Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Выключить принудительно']
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresproVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresproVersion: "13", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
