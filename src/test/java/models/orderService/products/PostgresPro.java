@@ -169,7 +169,7 @@ public class PostgresPro extends IProduct {
     @Action("Удалить пользователя")
     public void removeDbmsUser(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getNameDB() + "_" +users.get(0).getUsername())));
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
         users.get(0).setDeleted(true);

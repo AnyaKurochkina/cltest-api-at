@@ -145,7 +145,7 @@
                     <namespace>API</namespace>
                     <apiToken>Rkp0SjVqMVZlNEhnS2dtOEF3</apiToken>
                     <projectId>23</projectId>
-                    <testRunName>PROD 0.20.0/ DEV + TEST #2</testRunName>
+                    <testRunName>PROD 0.21.0/ DEV + TEST</testRunName>
                     <infrastructureFailReasonExceptions>
                         <exception>ConnectionClosedException</exception>
                     </infrastructureFailReasonExceptions>
