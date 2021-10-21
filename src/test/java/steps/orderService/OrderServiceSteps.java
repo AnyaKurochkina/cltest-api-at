@@ -247,7 +247,7 @@ public class OrderServiceSteps extends Steps {
         String product_id = "";
 
         //Получение среды проекта
-        ProjectEnvironment projectEnvironment = ((Project) Project.builder().projectName(product.getProjectId())
+        ProjectEnvironment projectEnvironment = ((Project) Project.builder().id(product.getProjectId())
                 .build().createObject()).getProjectEnvironment();
 
         //Выполнение запроса

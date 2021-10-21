@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
 import models.Entity;
-import models.EntityOld;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
 @Builder
 @Getter
 public class ServiceAccount extends Entity {
-    public String projectName;
+    public String projectId;
     public String secret;
     public String name;
     @Singular
@@ -28,8 +27,8 @@ public class ServiceAccount extends Entity {
     public void init() {
         if (name == null)
             name = new RandomStringGenerator().generateByRegex("[a-z]{5,18}");
-        if (projectName == null)
-            projectName = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
+        if (projectId == null)
+            projectId = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
     }
 
     public JSONObject toJson() {
@@ -42,9 +41,9 @@ public class ServiceAccount extends Entity {
     @Step("Создание сервисного аккаунта")
     public void create() {
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/authorizer/service_accounts.json")
-                .set("$.service_account.title", projectName)
+                .set("$.service_account.title", projectId)
                 .send(Configure.AuthorizerURL)
-                .post(String.format("projects/%s/service_accounts", projectName))
+                .post(String.format("projects/%s/service_accounts", projectId))
                 .assertStatus(201)
                 .jsonPath();
         name = jsonPath.get("data.name");
@@ -55,7 +54,7 @@ public class ServiceAccount extends Entity {
     @Step("Удаление сервисного аккаунта")
     public void delete() {
         new Http(Configure.AuthorizerURL)
-                .delete(String.format("projects/%s/service_accounts/%s", projectName, name))
+                .delete(String.format("projects/%s/service_accounts/%s", projectId, name))
                 .assertStatus(204);
     }
 }

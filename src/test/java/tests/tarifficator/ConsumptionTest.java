@@ -46,4 +46,6 @@ public class ConsumptionTest extends Tests {
         Assertions.assertEquals(Double.parseDouble(String.valueOf(sumOfConsumptionOfAllProducts)), consumptionOfProject,
                 "Расход проекта не соответсвтует сумме расхода всех продуктов");
     }
+
+
 }

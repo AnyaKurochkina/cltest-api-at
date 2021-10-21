@@ -55,6 +55,8 @@ public class ObjectPoolEntity {
 //            if (!jsonNodeThat.hasNonNull(entry.getKey()))
 //                node.remove();
 //        }
+        removeEmptyNode(jsonNodeThis);
+        removeEmptyNode(jsonNodeThat);
         removeNode(jsonNodeThis, jsonNodeThat);
         return Objects.equals(jsonNodeThis, jsonNodeThat);
     }
@@ -69,6 +71,24 @@ public class ObjectPoolEntity {
             }
             if (!jsonNodeThat.hasNonNull(entry.getKey()))
                 node.remove();
+        }
+    }
+
+    private void removeEmptyNode(JsonNode jsonNode) {
+        Iterator<Map.Entry<String, JsonNode>> node = jsonNode.fields();
+        while (node.hasNext()) {
+            Map.Entry<String, JsonNode> entry = node.next();
+            if (entry.getValue().isArray()) {
+                removeEmptyNode(entry.getValue());
+            }
+            if (entry.getValue().isNull()) {
+                node.remove();
+                return;
+            }
+            if (entry.getValue().isArray() && entry.getValue().isEmpty()) {
+                node.remove();
+                return;
+            }
         }
     }
 

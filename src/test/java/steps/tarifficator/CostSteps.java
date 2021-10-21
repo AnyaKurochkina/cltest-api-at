@@ -65,7 +65,7 @@ public class CostSteps extends Steps {
 
     @Step("Получение текущего расхода для заказа")
     public Float getCurrentCost(IProduct product) {
-        Assumptions.assumeTrue(product.getStatus() == ProductStatus.CREATED, "Продукт " + product + " не был заказан");
+        Assert.assertSame("Продукт " + product + " не был заказан", ProductStatus.CREATED, product.getStatus());
         Float consumption = null;
         for (int i = 0; i < 15; i++) {
             Waiting.sleep(20000);
@@ -91,10 +91,16 @@ public class CostSteps extends Steps {
     @Step("Получение предварительной стоимости продукта {product}")
     public Float getPreBillingCost(IProduct product) {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-        Project project = cacheService.entity(Project.class)
-                .withField("env", product.getEnv())
-                .forOrders(true)
-                .getEntity();
+//        Project project = cacheService.entity(Project.class)
+//                .withField("env", product.getEnv())
+//                .forOrders(true)
+//                .getEntity();
+        Project project = Project.builder()
+                .projectEnvironment(new ProjectEnvironment(product.getEnv()))
+                .isForOrders(true)
+                .build()
+                .createObject();
+//        product.setProjectId(project.getId());
         String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = jsonHelper.getJsonTemplate("/tarifficator/cost.json").build();

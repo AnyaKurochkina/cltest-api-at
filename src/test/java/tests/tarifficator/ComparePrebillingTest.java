@@ -23,13 +23,14 @@ import java.util.HashMap;
 public class ComparePrebillingTest extends Tests {
     CostSteps costSteps = new CostSteps();
 
-    @DisplayName("Сравнение услуг продуктов предбиллинга с услугами продуктов активного тарифного плана")
+    @DisplayName("Сравнение стоимости продуктов в предбиллинге с ценами активного тарифного плана")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "Сравнение стоимости продукта {0} в предбиллинге с ценами активного тарифного плана")
     public void compareTariffs(IProduct product){
         String tariffPlanId = costSteps.getActiveTariffId();
         HashMap<String, Double> activeTariffPlanPrice = costSteps.getPrices(tariffPlanId);
         JSONArray preBillingData = costSteps.getCost(product);
         costSteps.compareTariffs(activeTariffPlanPrice, preBillingData);
     }
+
 }

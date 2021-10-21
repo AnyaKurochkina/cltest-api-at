@@ -31,7 +31,7 @@ public class ServiceAccountSteps extends Steps {
         //Создание сервисного аккаунта с параметрами полученными выше
         ServiceAccount serviceAccount = ServiceAccount.builder()
                 .name(jsonPath.get("data.name"))
-                .projectName(project.id)
+                .projectId(project.id)
                 .secret(jsonPath.get("data.client_secret"))
                 .build();
         //Сохранение сервисного аккаунта

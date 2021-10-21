@@ -60,6 +60,7 @@ public abstract class IProduct extends Entity {
     @Getter
     protected String orderId;
     @Getter
+    @Setter
     protected String projectId;
     @Getter
     protected String productName;
