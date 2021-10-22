@@ -90,12 +90,6 @@ public class ApacheKafkaCluster extends IProduct {
                 .build();
     }
 
-    //Удалить рекурсивно
-    @Action("delete_two_layer")
-    public void delete(String action) {
-        super.delete(action);
-    }
-
     //Перезагрузить
     @Override
     @Action("restart_kafka")

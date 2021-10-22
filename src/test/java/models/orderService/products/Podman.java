@@ -79,11 +79,4 @@ public class Podman extends IProduct {
                 .set("$.order.project_name", project.id)
                 .build();
     }
-
-    //Удалить рекурсивно
-    @Override
-    @Action("delete_two_layer")
-    public void delete(String action) {
-        super.delete(action);
-    }
 }

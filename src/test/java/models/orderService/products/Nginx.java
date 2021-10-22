@@ -82,12 +82,4 @@ public class Nginx extends IProduct {
                 .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
                 .build();
     }
-
-    //Удалить рекурсивно
-    @Override
-    @Action("delete_two_layer")
-    public void delete(String action) {
-        super.delete(action);
-    }
-
 }

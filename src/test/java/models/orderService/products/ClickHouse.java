@@ -21,6 +21,7 @@ import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -43,7 +44,7 @@ public class ClickHouse extends IProduct {
 
     //Проверить конфигурацию
     public static final String REFRESH_VM_CONFIG = "check_vm";
-    //Создать БД
+    //Добавить БД
     public static final String CLICKHOUSE_CREATE_DB = "clickhouse_create_db";
     //Удалить БД
     public static final String CLICKHOUSE_DELETE_DB = "clickhouse_remove_db";
@@ -76,12 +77,6 @@ public class ClickHouse extends IProduct {
     public ClickHouse() {
         jsonTemplate = "/orders/clickhouse.json";
         productName = "ClickHouse";
-    }
-
-    //Удалить рекурсивно
-    @Action("delete_two_layer")
-    public void delete(String action) {
-        super.delete(action);
     }
 
     @Action(REFRESH_VM_CONFIG)

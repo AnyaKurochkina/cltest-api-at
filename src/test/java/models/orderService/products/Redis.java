@@ -78,21 +78,12 @@ public class Redis extends IProduct {
                 .build();
     }
 
-    //Удалить рекурсивно
-    @Override
-    @Action("delete_two_layer")
-    public void delete(String action) {
-        orderServiceSteps.executeAction(action, this, null);
-        setStatus(ProductStatus.DELETED);
-        cacheService.saveEntity(this);
-    }
-
     //Расширить
     @Override
     @Action("expand_mount_point")
     public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/redis/data\"}"));
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app/redis/data\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore<sizeAfter);
     }

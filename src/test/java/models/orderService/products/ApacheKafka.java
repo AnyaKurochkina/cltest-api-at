@@ -60,7 +60,7 @@ public class ApacheKafka extends IProduct {
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
-        if(productId == null) {
+        if (productId == null) {
             projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
@@ -83,12 +83,27 @@ public class ApacheKafka extends IProduct {
                 .build();
     }
 
-    //Удалить рекурсивно
     @Override
-    @Action("delete_two_layer")
-    public void delete(String action) {
-        super.delete(action);
+    @Action("reset_two_layer_kafka")
+    public void restart(String action) {
+        super.restart(action);
     }
 
+    @Override
+    @Action("stop_two_layer_kafka")
+    public void stopSoft(String action) {
+        super.stopSoft(action);
+    }
 
+    @Override
+    @Action("start_two_layer_kafka")
+    public void start(String action) {
+        super.start(action);
+    }
+
+    @Override
+    @Action("stop_hard_two_layer_kafka")
+    public void stopHard(String action) {
+        super.stopHard(action);
+    }
 }

@@ -13,6 +13,7 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
+import org.junit.Action;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
@@ -81,4 +82,31 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
                 .build();
     }
+
+    //Перезагрузить по питанию
+    @Override
+    @Action("reset_vm")
+    public void restart(String action) {
+        super.restart(action);
+    }
+
+    //Выключить принудительно
+    @Override
+    @Action("stop_vm_hard")
+    public void stopHard(String action){super.stopHard(action);}
+
+    //Выключить
+    @Override
+    @Action("stop_vm_soft")
+    public void stopSoft(String action){super.stopSoft(action);}
+
+    //Включить
+    @Override
+    @Action("start_vm")
+    public void start(String action){super.start(action);}
+
+    //Удалить
+    @Override
+    @Action("delete_vm")
+    public void delete(String action){super.delete(action);}
 }

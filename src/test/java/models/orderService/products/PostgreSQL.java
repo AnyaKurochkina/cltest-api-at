@@ -98,13 +98,6 @@ public class PostgreSQL extends IProduct {
                 .build();
     }
 
-    //Удалить рекурсивно
-    @Override
-    @Action("delete_two_layer")
-    public void delete(String action) {
-        super.delete(action);
-    }
-
     //Расширить
     @Override
     @Action("expand_mount_point")

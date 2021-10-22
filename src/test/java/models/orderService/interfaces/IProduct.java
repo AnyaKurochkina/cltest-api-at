@@ -129,7 +129,7 @@ public abstract class IProduct extends Entity {
         return jsonTemplate;
     }
 
-    @Action("Обновить сертификаты")
+    //Обновить сертификаты
     public void updateCerts(String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
     }
@@ -158,7 +158,7 @@ public abstract class IProduct extends Entity {
         orderServiceSteps.executeAction(action, this, null);
     }
 
-    //Удалить
+    //Удалить рекурсивно
     @Action("delete_two_layer")
     public void delete(String action) {
         CalcCostSteps calcCostSteps = new CalcCostSteps();
@@ -168,7 +168,8 @@ public abstract class IProduct extends Entity {
         Assert.assertEquals("Стоимость после удаления заказа больше 0.0", 0.0F, calcCostSteps.getCostByUid(this), 0.0F);
     }
 
-    @Action("Изменить конфигурацию")
+    //Изменить конфигурацию
+    @Action("resize_vm")
     public void resize(String action) {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
@@ -176,8 +177,9 @@ public abstract class IProduct extends Entity {
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
         int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
-        assertEquals(flavor.data.cpus, cpusAfter);
-        assertEquals(flavor.data.memory, memoryAfter);
+        System.out.println();
+        assertEquals("Конфигурация cpu не изменилась или изменилась неверно", flavor.data.cpus, cpusAfter);
+        assertEquals("Конфигурация ram не изменилась или изменилась неверно", flavor.data.memory, memoryAfter);
     }
 
     //Расширить

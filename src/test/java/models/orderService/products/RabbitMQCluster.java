@@ -109,13 +109,6 @@ public class RabbitMQCluster extends IProduct {
         assertEquals(user, username);
     }
 
-    //Удалить рекурсивно
-    @Override
-    @Action("delete_two_layer")
-    public void delete(String action) {
-        super.delete(action);
-    }
-
     @Override
     @Action("rabbitmq_update_certs")
     public void updateCerts(String action){super.updateCerts(action);}
