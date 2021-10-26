@@ -7,6 +7,7 @@ import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Singular;
 import models.Entity;
 import org.json.JSONObject;
 
@@ -18,8 +19,8 @@ import java.util.List;
 public class AccessGroup extends Entity {
     String name;
     String projectName;
-    @Builder.Default
-    List<String> users = new ArrayList<>();
+    @Singular
+    List<String> users;
     Boolean isForOrders;
 
     public void addUser(String user){

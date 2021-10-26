@@ -33,8 +33,8 @@ public class Rhel extends IProduct {
     String domain;
     Flavor flavor;
 
-
-    public Rhel() {
+    @Override
+    public void init() {
         jsonTemplate = "/orders/rhel.json";
         productName = "Rhel";
     }
@@ -42,22 +42,19 @@ public class Rhel extends IProduct {
     @Override
     @Step("Заказ продукта")
     public void create() {
-        JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-//        return this;
     }
 
-    @Override
-    public JSONObject getJsonParametrizedTemplate() {
+    public JSONObject toJson() {
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
         if(productId == null) {
             projectId = project.id;

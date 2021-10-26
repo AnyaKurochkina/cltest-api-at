@@ -11,12 +11,11 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
-import static models.orderService.products.OpenShiftProject.CHANGE_PROJECT;
 
 @Epic("Продукты")
 @Feature("OpenShift")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("openshift")})
-public class OpenShiftTests extends Tests {
+public class OpenShiftTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание проекта {0}")
@@ -29,7 +28,7 @@ public class OpenShiftTests extends Tests {
     @ParameterizedTest(name = "Изменение проекта {0}")
     void change(OpenShiftProject product) {
         try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {
-            openShift.changeProject(CHANGE_PROJECT);
+            openShift.changeProject();
         }
     }
 

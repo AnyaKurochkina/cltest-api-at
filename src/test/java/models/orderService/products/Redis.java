@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +19,7 @@ import steps.orderService.OrderServiceSteps;
 
 import static org.junit.Assert.assertTrue;
 
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
@@ -32,40 +33,34 @@ public class Redis extends IProduct {
     @ToString.Include
     String osVersion;
 
-//    @Override
-    public void order() {
-        JSONObject template = getJsonParametrizedTemplate();
+    @Override
+    @Step("Заказ продукта")
+    public void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
     }
 
-    public Redis() {
+    @Override
+    public void init() {
         jsonTemplate = "/orders/redis.json";
         productName = "Redis";
     }
 
-    @Override
-    public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
+    public JSONObject toJson() {
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
         if(productId == null) {
             projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
+        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
@@ -79,36 +74,21 @@ public class Redis extends IProduct {
                 .build();
     }
 
-    @Override
-    @Action("Удалить рекурсивно")
-    public void delete(String action) {
-        orderServiceSteps.executeAction(action, this, null);
-        setStatus(ProductStatus.DELETED);
-        cacheService.saveEntity(this);
-    }
-
-    @Override
-    @Action("Расширить")
-    public void expandMountPoint(String action) {
+    public void expandMountPoint() {
         int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/redis/data\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore<sizeAfter);
     }
 
-    @Action("Сбросить пароль")
-    public void resetPassword(String action) {
+    public void resetPassword() {
         String password = "yxjpjk7xvOImb1O9vZZiGUlsItkqLqtbB1VPZHzL6";
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{redis_password: \"%s\"}", password)));
-    }
-
-    @Override
-    public void create() {
-
+        orderServiceSteps.executeAction("Сбросить пароль", this, new JSONObject(String.format("{redis_password: \"%s\"}", password)));
     }
 
     @Override
     public void delete() {
-
+        orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
+        setStatus(ProductStatus.DELETED);
     }
 }

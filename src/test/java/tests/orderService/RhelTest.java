@@ -19,7 +19,7 @@ import static models.orderService.interfaces.IProduct.*;
 @Epic("Продукты")
 @Feature("Rhel")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("rhel")})
-public class RhelTests extends Tests {
+public class RhelTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")

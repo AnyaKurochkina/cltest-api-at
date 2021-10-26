@@ -73,7 +73,7 @@ public abstract class IProduct extends Entity {
      * Метод для выбора json шаблона заказа
      * @return возвращает готовый параметризованный json
      */
-    public abstract JSONObject getJsonParametrizedTemplate();
+//    public abstract JSONObject getJsonParametrizedTemplate();
 
     /**
      * @param action экшен
@@ -129,9 +129,9 @@ public abstract class IProduct extends Entity {
         delete(value);
     }
 
-    public String getJsonTemplate() {
-        return jsonTemplate;
-    }
+//    public String getJsonTemplate() {
+//        return jsonTemplate;
+//    }
 
     public void setStatus(ProductStatus status) {
         this.status = status;
