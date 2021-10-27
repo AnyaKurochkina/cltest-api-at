@@ -180,7 +180,7 @@ public class PostgreSQL extends IProduct {
 
 
     @Override
-    @Action("postgresql_resize")
+    @Action("resize_two_layer")
     public void resize(String action) {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
