@@ -1,6 +1,5 @@
 package tests.orderService;
 
-import models.orderService.interfaces.IProduct;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
