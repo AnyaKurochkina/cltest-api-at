@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.OpenShiftProject;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -28,6 +29,7 @@ public class OpenShiftTest extends Tests {
     @ParameterizedTest(name = "Изменение проекта {0}")
     void change(OpenShiftProject product) {
         try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {
+            openShift.checkPreconditionStatusProduct(ProductStatus.CREATED);
             openShift.changeProject();
         }
     }

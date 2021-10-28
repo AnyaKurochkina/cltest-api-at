@@ -37,59 +37,70 @@ public class RedisTest extends Tests {
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Сбросить пароль {0}")
+    void resetPassword(Redis product) {
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            redis.resetPassword();
+        }
+    }
+
+    @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
-    void restart(Rhel product) {
-        try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rhel.restart(RESTART);
+    void restart(Redis product) {
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            redis.restart(RESTART);
         }
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
-    void stopSoft(Rhel product) {
-        try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rhel.stopSoft(STOP_SOFT);
-            rhel.start(START);
+    void stopSoft(Redis product) {
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            redis.stopSoft(STOP_SOFT);
+            redis.start(START);
         }
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
-    void resize(Rhel product) {
-        try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rhel.stopHard(STOP_HARD);
-            rhel.resize(RESIZE);
-            rhel.start(START);
+    void resize(Redis product) {
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            redis.stopHard(STOP_HARD);
+            redis.resize(RESIZE);
+            redis.start(START);
         }
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
-    void start(Rhel product) {
-        try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.stopHard(STOP_HARD);
-            rhel.start(START);
+    void start(Redis product) {
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            redis.stopHard(STOP_HARD);
+            redis.start(START);
         }
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
-    void stopHard(Rhel product) {
-        try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.stopHard(STOP_HARD);
-            rhel.start(START);
+    void stopHard(Redis product) {
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            redis.stopHard(STOP_HARD);
+            redis.start(START);
         }
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted(Rhel.class)
-    void delete(Rhel product) {
-        try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.deleteObject();
+    @Deleted(Redis.class)
+    void delete(Redis product) {
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+            redis.deleteObject();
         }
     }
 }

@@ -101,7 +101,7 @@ public class ClickHouse extends IProduct {
         createDbmsUser("testUser_1", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
     }
 
-    @Override
+//    @Override
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)

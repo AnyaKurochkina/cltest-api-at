@@ -71,6 +71,7 @@ public class RhelTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
+            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.stopHard(STOP_HARD);
             rhel.start(START);
         }
@@ -80,6 +81,7 @@ public class RhelTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
+            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.stopHard(STOP_HARD);
             rhel.start(START);
         }

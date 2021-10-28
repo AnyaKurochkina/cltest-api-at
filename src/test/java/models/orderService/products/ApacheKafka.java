@@ -54,7 +54,7 @@ public class ApacheKafka extends IProduct {
         productName = "Apache Kafka";
     }
 
-    @Override
+//    @Override
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)

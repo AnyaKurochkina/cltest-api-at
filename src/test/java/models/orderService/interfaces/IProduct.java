@@ -75,6 +75,10 @@ public abstract class IProduct extends Entity {
      */
 //    public abstract JSONObject getJsonParametrizedTemplate();
 
+    public JSONObject toJson() {
+        return null;
+    }
+
     /**
      * @param action экшен
      * @return - возвращаем статус вызова экшена

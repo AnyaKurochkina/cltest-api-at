@@ -104,7 +104,7 @@ public class CostSteps extends Steps {
         String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = jsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
-        JSONObject attrs = (JSONObject) product.getJsonParametrizedTemplate().query("/order/attrs");
+        JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
         template.put("params", attrs);
         template.put("project_name", project.id);
         template.put("product_id", productId);
@@ -131,7 +131,7 @@ public class CostSteps extends Steps {
         String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = jsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
-        JSONObject attrs = (JSONObject) product.getJsonParametrizedTemplate().query("/order/attrs");
+        JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
         template.put("params", attrs);
         template.put("project_name", project.id);
         template.put("product_id", productId);

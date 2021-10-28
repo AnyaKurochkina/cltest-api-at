@@ -37,6 +37,13 @@ public class Rhel extends IProduct {
     public void init() {
         jsonTemplate = "/orders/rhel.json";
         productName = "Rhel";
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        if(projectId == null) {
+            projectId = project.getId();
+        }
+        if(productId == null) {
+            productId = orderServiceSteps.getProductId(this);
+        }
     }
 
     @Override
@@ -55,12 +62,8 @@ public class Rhel extends IProduct {
     }
 
     public JSONObject toJson() {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(productId == null) {
-            projectId = project.id;
-            productId = orderServiceSteps.getProductId(this);
-        }
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
+        Project project = Project.builder().id(projectId).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().projectName(getProjectId()).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -72,7 +75,7 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
-                .set("$.order.project_name", project.id)
+                .set("$.order.project_name", getProjectId())
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST")).build();
     }
 

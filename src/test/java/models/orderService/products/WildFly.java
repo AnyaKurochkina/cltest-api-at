@@ -56,7 +56,7 @@ public class WildFly extends IProduct {
         productName = "WildFly";
     }
 
-    @Override
+//    @Override
     public JSONObject getJsonParametrizedTemplate() {
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
