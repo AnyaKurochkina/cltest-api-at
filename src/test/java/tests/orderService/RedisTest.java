@@ -69,9 +69,7 @@ public class RedisTest extends Tests {
     void resize(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            redis.stopHard(STOP_HARD);
             redis.resize(RESIZE);
-            redis.start(START);
         }
     }
 
@@ -97,7 +95,7 @@ public class RedisTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted(Redis.class)
+    @Deleted
     void delete(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.deleteObject();

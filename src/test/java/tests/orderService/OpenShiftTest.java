@@ -36,7 +36,7 @@ public class OpenShiftTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удаление проекта {0}")
-    @Deleted(OpenShiftProject.class)
+    @Deleted
     void delete(OpenShiftProject product) {
         try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {
             openShift.deleteObject();

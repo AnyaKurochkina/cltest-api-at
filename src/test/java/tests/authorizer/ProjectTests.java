@@ -29,7 +29,7 @@ public class ProjectTests extends Tests {
     @Order(2)
     @Test
     @DisplayName("Удаление проекта")
-    @Deleted(Project.class)
+    @Deleted
     void deleteProject() {
         Project.builder().isForOrders(false).build().createObject().deleteObject();
     }

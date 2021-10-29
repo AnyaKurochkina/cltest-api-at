@@ -40,7 +40,7 @@ public class FoldersTests extends Tests {
     @Test
     @Order(4)
     @DisplayName("Удаление Папки")
-    @Deleted(Folder.class)
+    @Deleted
     public void deleteFolder() {
         Folder.builder().kind(Folder.DEFAULT).build().createObject().deleteObject();
     }
@@ -48,7 +48,7 @@ public class FoldersTests extends Tests {
     @Test
     @Order(5)
     @DisplayName("Удаление Департамента")
-    @Deleted(Folder.class)
+    @Deleted
     public void deleteDepartmentBlock() {
         Folder.builder().kind(Folder.DEPARTMENT).build().createObject().deleteObject();
     }
@@ -56,7 +56,7 @@ public class FoldersTests extends Tests {
     @Test
     @Order(6)
     @DisplayName("Удаление Бизнес-блока")
-    @Deleted(Folder.class)
+    @Deleted
     public void deleteBusinessBlock() {
         Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject().deleteObject();
     }

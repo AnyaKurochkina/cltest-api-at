@@ -284,7 +284,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                     if (testDescriptor instanceof MethodBasedTestDescriptor) {
                         Deleted deleted = ((MethodBasedTestDescriptor) testDescriptor).getTestMethod().getAnnotation(Deleted.class);
                         if (deleted != null) {
-                            deleteTests.put(testTask, deleted.value().getName());
+                            deleteTests.put(testTask/*, deleted.value().getName()*/, "null");
                             var1.remove();
                             mapTests.remove(testDescriptor.getUniqueId().toString());
                         }

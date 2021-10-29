@@ -70,7 +70,10 @@
         "objectUid": "4087706b-e9b7-48ef-969d-000000000017",
         "id": "proj-frybyv41jh",
         "projectName": "DEV_AUTOTEST",
-        "env": "DEV",
+        "projectEnvironment": {
+            "env": "DEV",
+            "envType": "DEV"
+        },
         "isForOrders":true
     },
     {
@@ -80,7 +83,10 @@
         "objectUid": "4087706b-e9b7-48ef-969d-000000000016",
         "id": "proj-b7iigm67tk",
         "projectName": "EDU_AUTOTEST",
-        "env": "EDU",
+        "projectEnvironment": {
+            "env": "EDU",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {
@@ -90,7 +96,10 @@
         "objectUid": "4087706b-e9b7-48ef-969d-000000000015",
         "id": "proj-rr4ncna00e",
         "projectName": "HOTFIX_AUTOTEST",
-        "env": "HOTFIX",
+        "projectEnvironment": {
+            "env": "HOTFIX",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {
@@ -100,7 +109,10 @@
         "objectUid": "4087706b-e9b7-48ef-969d-000000000014",
         "id": "proj-sdt56df8rr",
         "projectName": "MIGR_AUTOTEST",
-        "env": "MIGR",
+        "projectEnvironment": {
+            "env": "MIGR",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {
@@ -110,7 +122,10 @@
         "objectUid": "4087706b-e9b7-48ef-969d-000000000013",
         "id": "proj-aiqk5zzot4",
         "projectName": "PREPROD_AUTOTEST",
-        "env": "PREPROD",
+        "projectEnvironment": {
+            "env": "PREPROD",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {
@@ -120,7 +135,10 @@
         "objectUid": "4087706b-e9b7-48ef-969d-000000000012",
         "id": "proj-ovkcqq41d3",
         "projectName": "ST_AUTOTEST",
-        "env": "ST",
+        "projectEnvironment": {
+            "env": "ST",
+            "envType": "DEV"
+        },
         "isForOrders":true
     },
     {
@@ -130,7 +148,10 @@
         "objectUid": "4087706b-e9b7-48ef-969d-000000000063",
         "id": "proj-j5uzlpvbjz",
         "projectName": "LT_AUTOTEST",
-        "env": "LT",
+        "projectEnvironment": {
+            "env": "LT",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {
@@ -140,7 +161,10 @@
         "objectUid": "4087706b-e9b7-48ef-969d-000000000011",
         "id": "proj-7ll0yy5zsc",
         "projectName": "IFT_AUTOTEST",
-        "env": "IFT",
+        "projectEnvironment": {
+            "env": "IFT",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {

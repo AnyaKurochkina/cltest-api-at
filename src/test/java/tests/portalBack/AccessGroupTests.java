@@ -59,7 +59,7 @@ public class AccessGroupTests extends Tests {
 
     @Test
     @Order(4)
-    @Deleted(AccessGroup.class)
+    @Deleted
     @DisplayName("Удаление Группы доступа")
     void deleteAccessGroup() {
         AccessGroup.builder().isForOrders(false).build().createObject().deleteObject();

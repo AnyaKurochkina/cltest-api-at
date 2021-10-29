@@ -89,7 +89,7 @@ public class RhelTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted(Rhel.class)
+    @Deleted
     void delete(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.deleteObject();

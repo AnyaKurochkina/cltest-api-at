@@ -45,7 +45,6 @@
 				}
 			]
 		},
-		"graph_version": "1.0.83",
 		"count": 1,
 		"label": "Redis"
 	}
