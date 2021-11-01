@@ -85,7 +85,7 @@ public class OpenShiftProject extends IProduct {
 
     @Override
     @Step("Удаление продукта")
-    protected void delete() {
+    public void delete() {
         super.delete("Удалить проект");
     }
 }

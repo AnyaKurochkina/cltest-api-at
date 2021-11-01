@@ -51,8 +51,8 @@ public class ApacheKafkaClusterTest extends Tests {
     void deleteTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.createTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), "Пакетное создание Topic-ов Kafka");
-            kafka.deleteTopic(Arrays.asList("PacketTopicName1", "PacketTopicName3"), "Пакетное удаление Topic-ов Kafka");
+            kafka.createTopic(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"), "Пакетное создание Topic-ов Kafka");
+            kafka.deleteTopic(Arrays.asList("PacketTopicName01", "PacketTopicName03"), "Пакетное удаление Topic-ов Kafka");
         }
     }
 

@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,7 +22,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
@@ -36,45 +37,39 @@ public class RabbitMQCluster extends IProduct {
     String role = "administrator";
     Flavor flavor;
 
-//    @Override
-    public void order() {
-        JSONObject template = getJsonParametrizedTemplate();
+    @Override
+    @Step("Заказ продукта")
+    public void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
     }
 
-    public RabbitMQCluster() {
+    @Override
+    public void init() {
         jsonTemplate = "/orders/rabbitmq_cluster.json";
         productName = "RabbitMQ Cluster";
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        if(projectId == null) {
+            projectId = project.getId();
+        }
+        if(productId == null) {
+            productId = orderServiceSteps.getProductId(this);
+        }
     }
 
 //    @Override
-    public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        if(productId == null) {
-            projectId = project.id;
-            productId = orderServiceSteps.getProductId(this);
-        }
-        ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
-        switch (projectEnvironment.envType){
+    public JSONObject toJson() {
+        Project project = Project.builder().id(projectId).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
+        switch (project.getProjectEnvironment().getEnvType()){
             case ("TEST"):
                 role = "manager";
                 break;
@@ -108,18 +103,7 @@ public class RabbitMQCluster extends IProduct {
     }
 
     @Override
-    @Action("Удалить рекурсивно")
-    public void delete(String action) {
-        super.delete(action);
-    }
-
-
-    @Override
-    public void create() {
-    }
-
-    @Override
     public void delete() {
-
+        delete("Удалить рекурсивно");
     }
 }

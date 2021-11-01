@@ -169,6 +169,12 @@ public abstract class IProduct extends Entity {
         Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
     }
 
+    @Override
+    @Step("Удаление продукта")
+    public void delete(){
+        delete("Удалить");
+    }
+
     @Action("Удалить")
     public void delete(String action) {
         CalcCostSteps calcCostSteps = new CalcCostSteps();

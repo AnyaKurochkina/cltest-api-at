@@ -60,7 +60,9 @@ public class WildFlyTest extends Tests {
     void resize(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            wildFly.stopHard(STOP_HARD);
             wildFly.resize(RESIZE);
+            wildFly.start(START);
         }
     }
 

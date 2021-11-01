@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,6 +18,7 @@ import models.subModels.Db;
 import models.subModels.DbUser;
 import org.json.JSONObject;
 import org.junit.Action;
+import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -25,14 +27,14 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
 public class PostgreSQL extends IProduct {
-    public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs[0].db_name";
+    public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs.any{it.db_name=='%s'}";
     public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
-    public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users[0].user_name";
+    public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users.any{it.user_name=='%s'}";
     public static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
     @ToString.Include
     String segment;
@@ -47,40 +49,39 @@ public class PostgreSQL extends IProduct {
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
 
-//    @Override
-    public void order() {
-        JSONObject template = getJsonParametrizedTemplate();
+    @Override
+    @Step("Заказ продукта")
+    public void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
+        save();
     }
 
-    public PostgreSQL() {
+    @Override
+    public void init() {
         jsonTemplate = "/orders/postgresql.json";
         productName = "PostgreSQL";
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        if(projectId == null) {
+            projectId = project.getId();
+        }
+        if(productId == null) {
+            productId = orderServiceSteps.getProductId(this);
+        }
     }
 
 //    @Override
-    public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        if(productId == null) {
-            projectId = project.id;
-            productId = orderServiceSteps.getProductId(this);
-        }
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
+    public JSONObject toJson() {
+        Project project = Project.builder().id(projectId).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -99,9 +100,8 @@ public class PostgreSQL extends IProduct {
     }
 
     @Override
-    @Action("Удалить рекурсивно")
-    public void delete(String action) {
-        super.delete(action);
+    public void delete() {
+        delete("Удалить рекурсивно");
     }
 
     @Override
@@ -115,11 +115,11 @@ public class PostgreSQL extends IProduct {
 
     public void createDb(String dbName, String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
-        String dbNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_NAME_PATH);
-        assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
+        Assert.assertTrue("База данных не создалась c именем" + dbName,
+                (Boolean) orderServiceSteps.getFiledProduct(this, String.format(DB_NAME_PATH, dbName)));
         database.add(new Db(dbName, false));
         log.info("database = " + database);
-        cacheService.saveEntity(this);
+        save();
     }
 
     @Action("Добавить БД")
@@ -136,17 +136,17 @@ public class PostgreSQL extends IProduct {
         assertTrue(sizeBefore > sizeAfter);
         database.get(0).setDeleted(true);
         log.info("database = " + database);
-        cacheService.saveEntity(this);
+        save();
     }
 
     public void createDbmsUser(String username, String dbRole, String action) {
         String dbName = database.get(0).getNameDB();
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
-        String dbUserNameActual = (String) orderServiceSteps.getFiledProduct(this, DB_USERNAME_PATH);
-        assertEquals("Имя пользователя отличается от создаваемого", String.format("%s_%s", dbName, username), dbUserNameActual);
-        users.add(new DbUser(dbName, dbUserNameActual, false));
+        Assert.assertTrue("Имя пользователя отличается от создаваемого",
+                (Boolean) orderServiceSteps.getFiledProduct(this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))));
+        users.add(new DbUser(dbName, username, false));
         log.info("users = " + users);
-        cacheService.saveEntity(this);
+        save();
     }
 
     @Action("Добавить пользователя")
@@ -174,16 +174,7 @@ public class PostgreSQL extends IProduct {
         assertTrue(sizeBefore > sizeAfter);
         users.get(0).setDeleted(true);
         log.info("users = " + users);
-        cacheService.saveEntity(this);
-    }
-
-    @Override
-    public void create() {
-    }
-
-    @Override
-    public void delete() {
-
+        save();
     }
 }
 

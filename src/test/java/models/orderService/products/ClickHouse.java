@@ -2,6 +2,7 @@ package models.orderService.products;
 
 import core.CacheService;
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,7 +27,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
@@ -49,8 +50,9 @@ public class ClickHouse extends IProduct {
     public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs.any{it.db_name=='%s'}";
     public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users.any{it.user_name=='%s'}";
 
-//    @Override
-    public void order() {
+    @Override
+    @Step("Заказ продукта")
+    public void create() {
         JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
@@ -62,12 +64,19 @@ public class ClickHouse extends IProduct {
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
     }
 
-    public ClickHouse() {
+    @Override
+    public void init() {
         jsonTemplate = "/orders/clickhouse.json";
         productName = "ClickHouse";
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        if(projectId == null) {
+            projectId = project.getId();
+        }
+        if(productId == null) {
+            productId = orderServiceSteps.getProductId(this);
+        }
     }
 
     @Action(REFRESH_VM_CONFIG)
@@ -85,7 +94,7 @@ public class ClickHouse extends IProduct {
         orderServiceSteps.executeAction(action, this, new JSONObject(new JSONObject(String.format("{\"db_name\":\"%s\"}", dbName))));
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(DB_NAME_PATH, dbName)));
         database.add(db);
-        cacheService.saveEntity(this);
+        save();
     }
 
     public void createDbmsUser(String username, String password, String action) {
@@ -93,7 +102,7 @@ public class ClickHouse extends IProduct {
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName, username, password)));
         Assert.assertTrue((Boolean) orderServiceSteps.getFiledProduct(this, String.format(DB_USERNAME_PATH, username)));
         users.add(new DbUser(dbName, username, false));
-        cacheService.saveEntity(this);
+        save();
     }
 
     @Action(CLICKHOUSE_CREATE_DBMS_USER)
@@ -103,17 +112,8 @@ public class ClickHouse extends IProduct {
 
 //    @Override
     public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        if(productId == null) {
-            projectId = project.id;
-            productId = orderServiceSteps.getProductId(this);
-        }
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
+        Project project = Project.builder().id(projectId).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -128,15 +128,6 @@ public class ClickHouse extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .build();
-
-    }
-
-    @Override
-    public void create() {
-    }
-
-    @Override
-    public void delete() {
 
     }
 }

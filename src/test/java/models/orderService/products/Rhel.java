@@ -79,10 +79,4 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST")).build();
     }
 
-
-    @Override
-    @Step("Удаление продукта")
-    protected void delete() {
-        delete("Удалить");
-    }
 }

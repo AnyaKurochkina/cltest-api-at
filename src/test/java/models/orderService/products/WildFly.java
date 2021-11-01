@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,7 +22,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
@@ -36,39 +37,37 @@ public class WildFly extends IProduct {
     String domain;
     Flavor flavor;
 
-//    @Override
-    public void order() {
-        JSONObject template = getJsonParametrizedTemplate();
+    @Override
+    @Step("Заказ продукта")
+    public void create() {
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
     }
 
-    public WildFly() {
+    @Override
+    public void init() {
         jsonTemplate = "/orders/wildfly.json";
         productName = "WildFly";
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        if(projectId == null) {
+            projectId = project.getId();
+        }
+        if(productId == null) {
+            productId = orderServiceSteps.getProductId(this);
+        }
     }
 
 //    @Override
-    public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
-        if(productId == null) {
-            projectId = project.id;
-            productId = orderServiceSteps.getProductId(this);
-        }
+    public JSONObject toJson() {
+        Project project = Project.builder().id(projectId).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -87,9 +86,8 @@ public class WildFly extends IProduct {
     }
 
     @Override
-    @Action("Удалить рекурсивно")
-    public void delete(String action) {
-        super.delete(action);
+    public void delete() {
+        delete("Удалить рекурсивно");
     }
 
     @Override
@@ -101,12 +99,4 @@ public class WildFly extends IProduct {
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
 
-    @Override
-    public void create() {
-    }
-
-    @Override
-    public void delete() {
-
-    }
 }

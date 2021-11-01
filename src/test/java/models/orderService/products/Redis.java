@@ -92,7 +92,6 @@ public class Redis extends IProduct {
 
     @Override
     public void delete() {
-        orderServiceSteps.executeAction("Удалить рекурсивно", this, null);
-        setStatus(ProductStatus.DELETED);
+        delete("Удалить рекурсивно");
     }
 }

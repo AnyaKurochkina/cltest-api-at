@@ -69,7 +69,9 @@ public class WindowsTest extends Tests {
     void resize(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            windows.stopHard(STOP_HARD);
             windows.resize(RESIZE);
+            windows.start(START);
         }
     }
 
