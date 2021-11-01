@@ -44,13 +44,15 @@ public class Rhel extends IProduct {
         if(productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
+        if(domain == null)
+            domain = orderServiceSteps.getDomainBySegment(this, segment);
+        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
+        flavor = flavorList.get(0);
     }
 
     @Override
     @Step("Заказ продукта")
     public void create() {
-        domain = orderServiceSteps.getDomainBySegment(this, segment);
-        log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
                 .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
@@ -64,8 +66,6 @@ public class Rhel extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(getProjectId()).build().createObject();
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)

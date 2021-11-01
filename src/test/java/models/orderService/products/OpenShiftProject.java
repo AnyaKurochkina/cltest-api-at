@@ -5,7 +5,6 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -16,9 +15,8 @@ import models.subModels.Role;
 import org.json.JSONObject;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -36,40 +34,42 @@ public class OpenShiftProject extends IProduct {
     public void init() {
         jsonTemplate = "/orders/openshift_project.json";
         productName = "OpenShift project";
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        if(projectId == null) {
+            projectId = project.getId();
+        }
+        if(productId == null) {
+            productId = orderServiceSteps.getProductId(this);
+        }
+        if(roles == null) {
+            AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
+            roles = Collections.singletonList(new Role("edit", accessGroup.getName()));
+        }
     }
 
     @Override
     @Step("Заказ продукта")
     public void create() {
-        JSONObject template = toJson();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
-        log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
-        roles.add(new Role("edit", accessGroup.getName()));
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
     }
 
     @SneakyThrows
     public JSONObject toJson() {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if (productId == null) {
-            projectId = project.id;
-            productId = orderServiceSteps.getProductId(this);
-        }
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        List<ResourcePool> resourcePoolList = orderServiceSteps.getResourcesPoolList("container", project.id);
+        AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
+        List<ResourcePool> resourcePoolList = orderServiceSteps.getResourcesPoolList("container", projectId);
         ResourcePool resourcePool = resourcePoolList.stream().
                 filter(r -> r.getLabel().equals(resourcePoolLabel)).findFirst().orElseThrow(NoSuchFieldException::new);
         return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup.getName())
-                .set("$.order.project_name", project.id)
+                .set("$.order.project_name", projectId)
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
                 .build();
     }

@@ -298,6 +298,8 @@ public class OrderServiceSteps extends Steps {
             item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action));
         }
 
+//        if(item.id == null)
+//            System.out.println(1);
         Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), item.id);
         return item;
     }
