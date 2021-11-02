@@ -1,160 +1,166 @@
+#
+#OpenShiftProject:
+#  - actions:
+#      [ 'update_openshift_project' ]
+#  - options:
+#      - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP" }
+#      - { env: "DEV", resourcePoolLabel: "ds1-lpad01.corp.dev.vtb - DEV-SRV-APP" }
+#      - { env: "IFT", resourcePoolLabel: "ss1-genr01.test.vtb.ru - TEST-SRV-SYNT" }
+#      - { env: "LT", resourcePoolLabel: "ls1-genr01.test.vtb.ru - TEST-SRV-PERF" }
+#
+#ClickHouse:
+#  - actions:
+#      [ 'expand_mount_point', 'clickhouse_create_db', 'clickhouse_create_dbms_user', 'clickhouse_reset_db_user_password', 'reset_two_layer', 'clickhouse_remove_dbms_user', 'clickhouse_remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#
+#Podman:
+#  - actions:
+#      ['expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#
+#WildFly:
+#  - actions:
+#      [ 'wildfly_update_certs', 'expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'resize_vm', 'start_two_layer', 'stop_hard_two_layer' ]
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#
+#Rhel:
+#  - actions:
+#      [ 'expand_mount_point', 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9", productName: "RHEL General Application" }
+#      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
+#      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
+#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
+#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
+#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#
+#PostgreSQL:
+#  - actions:
+#      [ 'expand_mount_point', 'create_db', 'create_dbms_user', 'remove_dbms_user', 'reset_db_owner_password', 'reset_two_layer', 'remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", postgresqlVersion: "11", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "IFT", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "OpenStack", env: "EDU", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "HOTFIX", postgresqlVersion: "11", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "LT", postgresqlVersion: "12", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "MIGR", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", postgresqlVersion: "12", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "ST", postgresqlVersion: "12", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#
+#RabbitMQCluster:
+#  - actions:
+#      [ 'rabbitmq_update_certs', 'expand_mount_point', 'rabbitmq_create_user', 'reset_two_layer', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#
+#Windows:
+#  - actions:
+#      #        'windows_add_disk', 'windows_expand_disk',
+#      [ 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2019" }
+#      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
+#      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2016" }
+#      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
+#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
+#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
+#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2016" }
+#
+#Nginx:
+#  - actions:
+#      [ 'expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'resize_vm', 'start_two_layer', 'stop_hard_two_layer' ]
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+#
+#Redis:
+#  - actions:
+#      [ 'expand_mount_point', 'reset_redis_password', 'reset_two_layer', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+#
+#ApacheKafka:
+#  - actions:
+#      ['expand_mount_point', 'reset_two_layer_kafka', 'stop_two_layer_kafka', 'resize_vm', 'start_two_layer_kafka', 'stop_hard_two_layer_kafka']
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1", osVersion: "7.9" }
+#
+#ApacheKafkaCluster:
+#  - actions:
+#      ['kafka_update_certs', 'kafka_create_topics', 'kafka_delete_topics', 'kafka_create_acl', 'kafka_create_transaction_acl', 'stop_kafka', 'start_kafka', 'restart_kafka', 'expand_mount_point']
+#  - options:
+#      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#
+#Ubuntu:
+#  - actions:
+#      ['expand_mount_point', 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
+#  - options:
+#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
+#
+#Astra:
+#  - actions:
+#      ['expand_mount_point', 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+#
+#PostgresPro:
+#  - actions:
+#      ['expand_mount_point', 'create_db', 'create_dbms_user', 'reset_db_user_password', 'reset_db_owner_password', 'reset_two_layer', 'remove_dbms_user', 'remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresproVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresproVersion: "13", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
 
-OpenShiftProject:
-  - actions:
-      [ 'update_openshift_project' ]
-  - options:
-      - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP" }
-      - { env: "DEV", resourcePoolLabel: "ds1-lpad01.corp.dev.vtb - DEV-SRV-APP" }
-      - { env: "IFT", resourcePoolLabel: "ss1-genr01.test.vtb.ru - TEST-SRV-SYNT" }
-      - { env: "LT", resourcePoolLabel: "ls1-genr01.test.vtb.ru - TEST-SRV-PERF" }
-
-ClickHouse:
-  - actions:
-      [ 'expand_mount_point', 'clickhouse_create_db', 'clickhouse_create_dbms_user', 'clickhouse_reset_db_user_password', 'reset_two_layer', 'clickhouse_remove_dbms_user', 'clickhouse_remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-
-Podman:
+Elasticsearch:
   - actions:
       ['expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-
-WildFly:
-  - actions:
-      [ 'wildfly_update_certs', 'expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'resize_vm', 'start_two_layer', 'stop_hard_two_layer' ]
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-
-Rhel:
-  - actions:
-      [ 'expand_mount_point', 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9", productName: "RHEL General Application" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
-      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-
-PostgreSQL:
-  - actions:
-      [ 'expand_mount_point', 'create_db', 'create_dbms_user', 'remove_dbms_user', 'reset_db_owner_password', 'reset_two_layer', 'remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
-  - options:
-      - { platform: "OpenStack", env: "DEV", postgresqlVersion: "11", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "IFT", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "OpenStack", env: "EDU", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "HOTFIX", postgresqlVersion: "11", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "LT", postgresqlVersion: "12", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "MIGR", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "PREPROD", postgresqlVersion: "12", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "ST", postgresqlVersion: "12", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-
-RabbitMQCluster:
-  - actions:
-      [ 'rabbitmq_update_certs', 'expand_mount_point', 'rabbitmq_create_user', 'reset_two_layer', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-
-Windows:
-  - actions:
-      #        'windows_add_disk', 'windows_expand_disk',
-      [ 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2019" }
-      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2016" }
-      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2016" }
-
-Nginx:
-  - actions:
-      [ 'expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'resize_vm', 'start_two_layer', 'stop_hard_two_layer' ]
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-
-Redis:
-  - actions:
-      [ 'expand_mount_point', 'reset_redis_password', 'reset_two_layer', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-
-ApacheKafka:
-  - actions:
-      ['expand_mount_point', 'reset_two_layer_kafka', 'stop_two_layer_kafka', 'resize_vm', 'start_two_layer_kafka', 'stop_hard_two_layer_kafka']
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1", osVersion: "7.9" }
-
-ApacheKafkaCluster:
-  - actions:
-      ['kafka_update_certs', 'kafka_create_topics', 'kafka_delete_topics', 'kafka_create_acl', 'kafka_create_transaction_acl', 'stop_kafka', 'start_kafka', 'restart_kafka', 'expand_mount_point']
-  - options:
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-
-Ubuntu:
-  - actions:
-      ['expand_mount_point', 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
-  - options:
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
-
-Astra:
-  - actions:
-      ['expand_mount_point', 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
-
-PostgresPro:
-  - actions:
-      ['expand_mount_point', 'create_db', 'create_dbms_user', 'reset_db_user_password', 'reset_db_owner_password', 'reset_two_layer', 'remove_dbms_user', 'remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresproVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresproVersion: "13", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", elasticsearchVersion: "7.9.2 + Exporter 1.1.0" }

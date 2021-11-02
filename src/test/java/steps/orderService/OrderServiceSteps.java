@@ -261,7 +261,7 @@ public class OrderServiceSteps extends Steps {
                 .forOrders(true)
                 .withField("env", product.getEnv())
                 .getEntity();
-        //Выполнение запроса
+        //Выполнение запроса на получение продуктового каталога
         int total_count = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=1&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id))
@@ -271,6 +271,7 @@ public class OrderServiceSteps extends Steps {
 
         int countOfIteration = total_count / 100 + 1;
         for (int i = 1; i <= countOfIteration; i++) {
+            //Выполнение запроса на получение id подукта
             product_id = new Http(URL)
                     .setProjectId(product.getProjectId())
                     .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=%s&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id, i))

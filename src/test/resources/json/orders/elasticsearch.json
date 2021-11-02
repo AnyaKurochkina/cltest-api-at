@@ -1,7 +1,7 @@
 {
   "order": {
-    "project_name": "proj-aydi9thv3w",
-    "product_id": "93c384df-7c01-4392-82d5-c6a78bcd35ed",
+    "project_name": "proj-frybyv41jh",
+    "product_id": "f7aec597-14d5-48c8-a4fe-25af4f19e5d5",
     "attrs": {
       "domain": "corp.dev.vtb",
       "platform": "OpenStack",
@@ -22,7 +22,7 @@
         "memory": 8
       },
       "nodes_count": "1,2",
-      "cluster_name": "clusterElastic",
+      "cluster_name": "elastic1",
       "flavor_master": {
         "cpus": 2,
         "name": "c2m4",
@@ -30,7 +30,10 @@
         "memory": 4
       },
       "ad_integration": true,
-      "install_kibana": true,
+      "admin_password": "YZazjckWJ257GwHbL3A",
+      "install_kibana": false,
+      "kibana_password": "xGeGr2DBbh0TqvwXtG",
+      "fluentd_password": "ro6tL6JqHSRnDGmxv7FIOCtPnl",
       "data_extra_mounts": [
         {
           "path": "/app/",
@@ -48,24 +51,10 @@
       "elasticsearch_version": "7.9.2 + Exporter 1.1.0",
       "ad_logon_grants": [
         {
-          "role": "user",
+          "role": "superuser",
           "groups": [
-            "cloud-dmcrux-vtb4044578"
+            "cloud-d5zorg-dev-group"
           ]
-        }
-      ],
-      "flavor_kibana": {
-        "cpus": 2,
-        "name": "c2m4",
-        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
-        "memory": 4
-      },
-      "kibana_location": "master",
-      "kibana_extra_mounts": [
-        {
-          "path": "/app/kibana",
-          "size": 100,
-          "file_system": "xfs"
         }
       ]
     },
