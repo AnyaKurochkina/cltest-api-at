@@ -2,6 +2,7 @@ package core.helper;
 
 import io.qameta.allure.Allure;
 import io.restassured.path.json.JsonPath;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -40,7 +41,7 @@ public class Http {
     private String token = "";
     private String contentType = "application/json";
     private boolean isUsedToken = true;
-    private static final Semaphore SEMAPHORE = new Semaphore(4, true);
+    private static final Semaphore SEMAPHORE = new Semaphore(1, true);
 
     static {
         try {
@@ -145,8 +146,20 @@ public class Http {
         return this;
     }
 
+    @SneakyThrows
     private Response request() {
-        HttpURLConnection http = null;
+        Response response = null;
+        for(int i = 0; i < 3; i++) {
+            response = filterRequest();
+            if(!(response.status() == 504 && method.equals("GET")))
+                break;
+            Thread.sleep(1000);
+        }
+        return response;
+    }
+
+    private Response filterRequest() {
+        HttpURLConnection http;
         String responseMessage = null;
         StringBuilder sbLog = new StringBuilder();
         int status = 0;
