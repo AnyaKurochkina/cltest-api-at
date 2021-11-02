@@ -138,20 +138,20 @@ ApacheKafkaCluster:
 #      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
 #      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
 #
-#Ubuntu:
-#  - actions:
-#      ['expand_mount_point', 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
-#  - options:
-#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
-#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
-#
-#Astra:
-#  - actions:
-#      ['expand_mount_point', 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
-#  - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
-#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
-#
+Ubuntu:
+  - actions:
+      ['expand_mount_point', 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
+  - options:
+      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
+
+Astra:
+  - actions:
+      ['expand_mount_point', 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
+  - options:
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+
 #PostgresPro:
 #  - actions:
 #      ['expand_mount_point', 'create_db', 'create_dbms_user', 'reset_db_user_password', 'reset_db_owner_password', 'reset_two_layer', 'remove_dbms_user', 'remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
@@ -166,8 +166,8 @@ ProstgresSQLCluster:
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresqlVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresproVersion: "11", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
-#Elasticsearch:
-#  - actions:
-#      ['expand_mount_point']
-#  - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", elasticsearchVersion: "7.9.2 + Exporter 1.1.0" }
+Elasticsearch:
+  - actions:
+      ['expand_mount_point']
+  - options:
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", elasticsearchVersion: "7.9.2 + Exporter 1.1.0" }
