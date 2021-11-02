@@ -309,11 +309,7 @@ public class OrderServiceSteps extends Steps {
         return item;
     }
 
-    /**
-     * Метод получает ресурсные пулы и сохраняет их
-     * @param category категория, например: container
-     * @param env имя среды
-     */
+
     @Step("Получение списка ресурсных пулов для категории {category} и среды {env}")
     public List<ResourcePool> getResourcesPoolList(String category, String projectId) {
         String jsonArray = new Http(URL)
@@ -327,7 +323,7 @@ public class OrderServiceSteps extends Steps {
         return new Gson().fromJson(jsonArray, type);
     }
 
-    public <T extends Comparable<T>> Comparable<T> getProductsField(@NotNull IProduct product, String path) {
+    public <T extends Comparable<T>> Comparable<T> getProductsField(IProduct product, String path) {
         Comparable<T> s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(URL)

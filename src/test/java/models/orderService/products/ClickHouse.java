@@ -57,12 +57,11 @@ public class ClickHouse extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
@@ -147,14 +146,10 @@ public class ClickHouse extends IProduct {
         save();
     }
 
-    @Action(CLICKHOUSE_CREATE_DBMS_USER)
-    public void createDbmsUserTest(String action) {
-        createDbmsUser("testUser_1", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
-    }
 
 //    @Override
     @Override
-    public JSONObject getJsonParametrizedTemplate() {
+    public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
