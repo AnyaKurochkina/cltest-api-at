@@ -147,6 +147,7 @@
                     <testRunName>Test new platform for API tests</testRunName>
                     <debug>true</debug>
                     <projectId>23</projectId>
+                    <testRunName>PROD 0.21.0/ DEV + TEST</testRunName>
                     <infrastructureFailReasonExceptions>
                         <exception>ConnectionClosedException</exception>
                     </infrastructureFailReasonExceptions>

@@ -79,9 +79,9 @@ public class Redis extends IProduct {
 
     @Override
     public void expandMountPoint(String action) {
-        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
+        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app/redis/data\"}"));
-        int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
+        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore<sizeAfter);
     }
 

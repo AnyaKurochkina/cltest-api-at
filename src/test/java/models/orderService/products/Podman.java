@@ -1,16 +1,13 @@
 package models.orderService.products;
 
 import core.helper.Http;
-import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
@@ -20,54 +17,55 @@ import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
 
-@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
-public class ApacheKafka extends IProduct {
+public class Podman extends IProduct {
     @ToString.Include
     String segment;
     String dataCentre;
+    String domain;
     @ToString.Include
     String platform;
     @ToString.Include
-    String kafkaVersion;
-    String domain;
-    Flavor flavor;
     String osVersion;
+    Flavor flavor;
+
+    public Podman() {
+        jsonTemplate = "/orders/podman.json";
+        productName = "Podman";
+    }
 
     @Override
-    @Step("Заказ продукта")
-    protected void create() {
+    public void order() {
+        JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
+                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
+        cacheService.saveEntity(this);
     }
 
     @Override
-    public void init() {
-        jsonTemplate = "/orders/apache_kafka.json";
-        productName = "Apache Kafka";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
-            projectId = project.getId();
-        }
+    public JSONObject getJsonParametrizedTemplate() {
+        Project project = cacheService.entity(Project.class)
+                .withField("env", env)
+                .forOrders(true)
+                .getEntity();
         if(productId == null) {
+            projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
-    }
-
-//    @Override
-    public JSONObject toJson() {
-        Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
+        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
+                .withField("projectName", project.id)
+                .getEntity();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -77,16 +75,14 @@ public class ApacheKafka extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.platform", platform)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
-                .set("$.order.attrs.kafka_version", kafkaVersion)
-                .set("$.order.attrs.os_version", osVersion)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .build();
     }
 
     @Override
-    protected void delete() {
-            delete("Удалить рекурсивно");
+    @Action("Удалить рекурсивно")
+    public void delete(String action) {
+        super.delete(action);
     }
-
 }

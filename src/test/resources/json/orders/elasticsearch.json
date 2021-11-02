@@ -1,0 +1,75 @@
+{
+  "order": {
+    "project_name": "proj-aydi9thv3w",
+    "product_id": "93c384df-7c01-4392-82d5-c6a78bcd35ed",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "platform": "OpenStack",
+      "boot_disk": {
+        "size": 30
+      },
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "8.4",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "flavor_data": {
+        "cpus": 4,
+        "name": "c4m8",
+        "uuid": "1498c9c9-5f20-4c1e-8d53-683bb8c2c205",
+        "memory": 8
+      },
+      "nodes_count": "1,2",
+      "cluster_name": "clusterElastic",
+      "flavor_master": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "ad_integration": true,
+      "install_kibana": true,
+      "data_extra_mounts": [
+        {
+          "path": "/app/",
+          "size": 100,
+          "file_system": "xfs"
+        }
+      ],
+      "master_extra_mounts": [
+        {
+          "path": "/app/",
+          "size": 100,
+          "file_system": "xfs"
+        }
+      ],
+      "elasticsearch_version": "7.9.2 + Exporter 1.1.0",
+      "ad_logon_grants": [
+        {
+          "role": "user",
+          "groups": [
+            "cloud-dmcrux-vtb4044578"
+          ]
+        }
+      ],
+      "flavor_kibana": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "kibana_location": "master",
+      "kibana_extra_mounts": [
+        {
+          "path": "/app/kibana",
+          "size": 100,
+          "file_system": "xfs"
+        }
+      ]
+    },
+    "count": 1,
+    "label": "Elasticsearch X-pack cluster"
+  }
+}

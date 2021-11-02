@@ -135,6 +135,11 @@ public abstract class IProduct extends Entity {
         save();
     }
 
+    @Action("Обновить сертификаты")
+    public void updateCerts(String action) {
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
+    }
+
     @Action("Перезагрузить")
     public void restart(String action) {
         orderServiceSteps.executeAction(action, this, null);
@@ -182,16 +187,16 @@ public abstract class IProduct extends Entity {
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
         Flavor flavor = list.get(list.size() - 1);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
-        int cpusAfter = (Integer) orderServiceSteps.getFiledProduct(this, CPUS);
-        int memoryAfter = (Integer) orderServiceSteps.getFiledProduct(this, MEMORY);
+        int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
+        int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
         assertEquals(flavor.data.cpus, cpusAfter);
         assertEquals(flavor.data.memory, memoryAfter);
     }
 
     public void expandMountPoint(String action) {
-        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
+        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));
-        int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
+        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
 

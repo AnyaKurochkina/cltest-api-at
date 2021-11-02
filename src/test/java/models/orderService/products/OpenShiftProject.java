@@ -74,13 +74,21 @@ public class OpenShiftProject extends IProduct {
                 .build();
     }
 
-    public void changeProject() {
-        String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": 0}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}", roles.get(0).getGroupId());
+    @Action("Изменить проект")
+    public void changeProject(String action) {
+        String shdQuoteValue;
+        shdQuoteValue = hasShdQuote() ? "1" : "0";
+        String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": %s}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}",
+                shdQuoteValue,
+                roles.get(0).getGroupId());
         roles.get(0).setName("view");
-        orderServiceSteps.executeAction("Изменить проект", this, new JSONObject(data));
-        Assert.assertEquals("Память не изменилась", 2, orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.quota.memory"));
-        Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getFiledProduct(this, "data.find{it.type=='project'}.config.roles[0].role"));
+        orderServiceSteps.executeAction(action, this, new JSONObject(data));
         save();
+        Assert.assertEquals("Память не изменилась", 2, orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.memory"));
+        Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.roles[0].role"));
+        if (shdQuoteValue.equals("1")){
+            Assert.assertEquals("СХД не изменился на 1", 1, orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"));
+        }
     }
 
     @Override
@@ -88,4 +96,18 @@ public class OpenShiftProject extends IProduct {
     protected void delete() {
         super.delete("Удалить проект");
     }
+
+    //Проверка на наличие СХД у продукта
+    private boolean hasShdQuote() {
+        String jsonArray = new Http(OrderServiceSteps.URL)
+                .setProjectId(getProjectId())
+                .get(String.format("order-service/api/v1/products/resource_pools?category=container&project_name=%s&quota[storage][sc-nfs-netapp-q]=1",
+                        getProjectId()))
+                .assertStatus(200)
+                .toJson()
+                .getJSONArray("list")
+                .toString();
+        return jsonArray.contains(resourcePoolLabel);
+    }
+
 }

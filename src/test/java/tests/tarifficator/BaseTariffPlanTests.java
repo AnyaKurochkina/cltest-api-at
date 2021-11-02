@@ -53,6 +53,7 @@ public class BaseTariffPlanTests extends Tests {
     void duplicateNameBaseTariffPlan() {
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(true)
+                .status(TariffPlanStatus.draft)
                 .build()
                 .createObject();
         JSONObject object = TariffPlan.builder()
@@ -72,6 +73,7 @@ public class BaseTariffPlanTests extends Tests {
     public void renameBaseTariffPlan() {
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(true)
+                .status(TariffPlanStatus.draft)
                 .build()
                 .createObject();
         String tariffName = "_RENAME " + tariffPlan.getTitle();

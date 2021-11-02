@@ -16,7 +16,7 @@ import models.authorizer.ProjectEnvironment;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Item;
-import org.jetbrains.annotations.NotNull;
+import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -62,7 +62,7 @@ public class OrderServiceSteps extends Steps {
             log.info("orderStatus = " + orderStatus);
             counter = counter - 1;
         }
-        log.info("Ордер статус итоговый " + orderStatus);
+        log.info("Итоговый статус заказа " + orderStatus);
         if (!orderStatus.equals(exp_status.toLowerCase())) {
             String error = "";
             try {
@@ -75,9 +75,14 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-
-    //deprovisioned, damaged, pending ,changing, success
-    @Step("Получение продуктов со статусом success")
+    /**
+     * Метод получает ID всех продуктов со статусом/статусами
+     * @param projectId ID проекта
+     * @param statuses статусы по которым нуно получить продукты
+     * Возможные статусы: deprovisioned, damaged, pending ,changing, success
+     * @return возвращает список ID продуктов
+     */
+    @Step("Получение продуктов со статусом")
     public List<String> getProductsWithStatus(String projectId, String... statuses) {
         List<String> idOfAllSuccessProductsOnOnePage;
         List<String> idOfAllSuccessProducts = new ArrayList<>();
@@ -124,11 +129,17 @@ public class OrderServiceSteps extends Steps {
                 .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + item.name);
     }
 
-
+    /**
+     * Метод выполняет экшен по его имени
+     * @param action имя экшена
+     * @param product объект продукта
+     * @param jsonData параметр дата в запросе, к примеру: "order":{"data":{}}}
+     */
     @Step("Выполнение action \"{action}\"")
     public void executeAction(String action, IProduct product, JSONObject jsonData) {
         CostSteps costSteps = new CostSteps();
         CalcCostSteps calcCostSteps = new CalcCostSteps();
+        //Получение item'ов для экшена
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         log.info("Отправка запроса на выполнение действия '" + action + "' для продукта " + product);
         DeferredException exception = new DeferredException();
@@ -163,7 +174,7 @@ public class OrderServiceSteps extends Steps {
                     cost = calcCostSteps.getCostByUid(product);
                     if (cost == null)
                         continue;
-                    if (Float.compare(cost, costPreBilling) > 0.00001)
+                    if (Math.abs(cost - costPreBilling) > 0.00001)
                         continue;
                     break;
                 }
@@ -284,7 +295,9 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath();
 
         Item item = new Item();
+        //Получаем все item ID по русскоязычному имени экшена он же title, например: "Удалить рекурсивно"
         item.id = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.item_id", action));
+        //Получаем все item name по русскоязычному имени экшена он же title, например: "Удалить рекурсивно"
         item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.actions.find{it.title=='%s'}.name", action, action));
         //Достаем item ID и item name и сохраняем в объект Item
         if (item.id == null) {
@@ -292,12 +305,15 @@ public class OrderServiceSteps extends Steps {
             item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action));
         }
 
-//        if(item.id == null)
-//            System.out.println(1);
         Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), item.id);
         return item;
     }
 
+    /**
+     * Метод получает ресурсные пулы и сохраняет их
+     * @param category категория, например: container
+     * @param env имя среды
+     */
     @Step("Получение списка ресурсных пулов для категории {category} и среды {env}")
     public List<ResourcePool> getResourcesPoolList(String category, String projectId) {
         String jsonArray = new Http(URL)
@@ -311,7 +327,7 @@ public class OrderServiceSteps extends Steps {
         return new Gson().fromJson(jsonArray, type);
     }
 
-    public <T extends Comparable<T>> Comparable<T> getFiledProduct(@NotNull IProduct product, String path) {
+    public <T extends Comparable<T>> Comparable<T> getProductsField(@NotNull IProduct product, String path) {
         Comparable<T> s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(URL)

@@ -36,6 +36,7 @@ public class RabbitMQCluster extends IProduct {
     String domain;
     String role = "administrator";
     Flavor flavor;
+    String osVersion;
 
     @Override
     @Step("Заказ продукта")
@@ -90,6 +91,7 @@ public class RabbitMQCluster extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .build();
     }
@@ -98,7 +100,7 @@ public class RabbitMQCluster extends IProduct {
     public void rabbitmqCreateUser(String action) {
         String user = "testapiuser";
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
-        String username = (String) orderServiceSteps.getFiledProduct(this, RABBITMQ_USER);
+        String username = (String) orderServiceSteps.getProductsField(this, RABBITMQ_USER);
         assertEquals(user, username);
     }
 

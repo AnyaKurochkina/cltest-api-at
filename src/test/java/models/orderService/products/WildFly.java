@@ -93,9 +93,9 @@ public class WildFly extends IProduct {
     @Override
     @Action("Расширить")
     public void expandMountPoint(String action) {
-        int sizeBefore = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
+        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app/app\"}"));
-        int sizeAfter = (Integer) orderServiceSteps.getFiledProduct(this, EXPAND_MOUNT_SIZE);
+        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
 
