@@ -81,6 +81,27 @@ public class Astra extends IProduct {
                 .build();
     }
 
+    //Выключить принудительно
+    @Override
+    @Action("stop_vm_hard")
+    public void stopHard(String action){super.stopHard(action);}
+
+    //Выключить
+    @Override
+    @Action("stop_vm_soft")
+    public void stopSoft(String action){super.stopSoft(action);}
+
+    //Включить
+    @Override
+    @Action("start_vm")
+    public void start(String action){super.start(action);}
+
+    //Удалить
+    @Override
+    @Action("delete_vm")
+    public void delete(String action){super.delete(action);}
+
+
     //Перезагрузить по питанию
     @Override
     @Action("reset_vm")

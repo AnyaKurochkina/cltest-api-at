@@ -48,7 +48,7 @@ WildFly:
 
 Redis:
   - actions:
-      [ 'expand_mount_point', 'reset_redis_password', 'reset_two_layer', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
+      [ 'resize_two_layer', 'expand_mount_point', 'reset_redis_password', 'reset_two_layer', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
   - options:
       - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 

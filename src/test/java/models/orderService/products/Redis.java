@@ -78,6 +78,11 @@ public class Redis extends IProduct {
                 .build();
     }
 
+    //Изменить конфигурацию
+    @Override
+    @Action("resize_two_layer")
+    public void resize(String action) {super.resize(action);}
+
     //Расширить
     @Override
     @Action("expand_mount_point")

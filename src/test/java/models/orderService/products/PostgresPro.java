@@ -178,9 +178,9 @@ public class PostgresPro extends IProduct {
         cacheService.saveEntity(this);
     }
 
-    //Не нашел
+    //Изменить конфигурацию
     @Override
-    @Action("Изменить конфигурацию")
+    @Action("resize_two_layer")
     public void resize(String action) {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);

@@ -193,4 +193,8 @@ public class ApacheKafkaCluster extends IProduct {
         super.start(action);
     }
 
+    @Override
+    @Action("kafka_update_certs")
+    public void updateCerts(String action){super.updateCerts(action);}
+
 }

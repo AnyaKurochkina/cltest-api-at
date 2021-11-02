@@ -16,6 +16,7 @@ import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.subModels.Flavor;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.junit.Action;
 import org.junit.Assert;
@@ -78,6 +79,9 @@ public abstract class IProduct extends Entity {
      * @throws Throwable необходим для метода invoke (java.lang.reflect.Method)
      */
     private boolean invokeAction(String action) throws Throwable {
+        if (action.equals("clickhouse_remove_dbms_user")){
+            System.out.println();
+        }
         boolean invoke = false;
         //Перебираем методы класса
         for (Method method : this.getClass().getMethods()) {
