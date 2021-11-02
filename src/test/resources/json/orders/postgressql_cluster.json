@@ -1,0 +1,48 @@
+{
+  "order": {
+    "project_name": "proj-frybyv41jh",
+    "product_id": "9c97f55c-ab21-4724-be4d-cb90b8a815c6",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 4,
+        "name": "c4m16",
+        "uuid": "cbdbf550-bf10-4526-8115-59b564d151c4",
+        "memory": 16
+      },
+      "platform": "OpenStack",
+      "boot_disk": {
+        "size": 30
+      },
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "7.9",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "extra_mounts": [
+        {
+          "path": "/pg_data",
+          "size": 50,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_integration": true,
+      "postgresql_config": {
+        "max_connections": 100
+      },
+      "postgresql_version": "12",
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-d5zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "PostgreSQL Cluster"
+  }
+}
