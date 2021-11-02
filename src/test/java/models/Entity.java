@@ -1,22 +1,7 @@
 package models;
 
 import core.helper.JsonHelper;
-import core.helper.ObjectPoolEntity;
-import core.helper.ObjectPoolService;
 import core.helper.ObjectStatus;
-import io.qameta.allure.AllureLifecycle;
-import io.qameta.allure.Step;
-import io.qameta.allure.model.Parameter;
-import lombok.SneakyThrows;
-import org.json.JSONObject;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static io.qameta.allure.Allure.getLifecycle;
 
 public abstract class Entity implements AutoCloseable {
 
@@ -27,7 +12,7 @@ public abstract class Entity implements AutoCloseable {
     }
 //    public abstract JSONObject toJson();
 //    public abstract Entity toEntity();
-    public abstract void create();
+    protected abstract void create();
 
     protected void delete() {
     }

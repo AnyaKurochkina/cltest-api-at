@@ -2,14 +2,12 @@ package org.junit;
 
 
 import core.helper.Configure;
-import core.helper.ObjectPoolService;
+import models.ObjectPoolService;
 import io.qameta.allure.TmsLink;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
-import core.CacheService;
-import steps.Steps;
 
 
 import java.io.FileWriter;

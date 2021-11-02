@@ -39,7 +39,7 @@ public class ServiceAccount extends Entity {
 
     @Override
     @Step("Создание сервисного аккаунта")
-    public void create() {
+    protected void create() {
         JsonPath jsonPath = jsonHelper.getJsonTemplate("/authorizer/service_accounts.json")
                 .set("$.service_account.title", projectId)
                 .send(Configure.AuthorizerURL)
@@ -52,7 +52,7 @@ public class ServiceAccount extends Entity {
 
     @Override
     @Step("Удаление сервисного аккаунта")
-    public void delete() {
+    protected void delete() {
         new Http(Configure.AuthorizerURL)
                 .delete(String.format("projects/%s/service_accounts/%s", projectId, name))
                 .assertStatus(204);

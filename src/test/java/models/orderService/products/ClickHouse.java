@@ -52,7 +52,7 @@ public class ClickHouse extends IProduct {
 
     @Override
     @Step("Заказ продукта")
-    public void create() {
+    protected void create() {
         JSONObject template = getJsonParametrizedTemplate();
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);

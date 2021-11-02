@@ -68,7 +68,7 @@ public class Folder extends Entity {
 
     @Override
     @Step("Создание папки")
-    public void create() {
+    protected void create() {
         String url = kind.equals(BUSINESS_BLOCK) ? "organizations/vtb/folders" : String.format("folders/%s/folders", parentId);
         name = new Http(Configure.AuthorizerURL)
                 .post(url, toJson())

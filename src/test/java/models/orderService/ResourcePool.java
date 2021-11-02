@@ -1,14 +1,9 @@
 package models.orderService;
 
-import core.helper.ObjectPoolService;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import models.Entity;
-import models.EntityOld;
-import models.authorizer.Project;
-import steps.orderService.OrderServiceSteps;
 //py -m pip install testit-allure-adaptor
 // py -m pip install --upgrade certifi
 @EqualsAndHashCode(callSuper = false)

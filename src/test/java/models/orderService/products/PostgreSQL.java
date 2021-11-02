@@ -51,7 +51,7 @@ public class PostgreSQL extends IProduct {
 
     @Override
     @Step("Заказ продукта")
-    public void create() {
+    protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
@@ -62,7 +62,6 @@ public class PostgreSQL extends IProduct {
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        save();
     }
 
     @Override
@@ -100,7 +99,7 @@ public class PostgreSQL extends IProduct {
     }
 
     @Override
-    public void delete() {
+    protected void delete() {
         delete("Удалить рекурсивно");
     }
 

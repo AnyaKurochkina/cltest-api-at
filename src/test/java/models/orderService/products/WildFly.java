@@ -39,7 +39,7 @@ public class WildFly extends IProduct {
 
     @Override
     @Step("Заказ продукта")
-    public void create() {
+    protected void create() {
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
@@ -86,7 +86,7 @@ public class WildFly extends IProduct {
     }
 
     @Override
-    public void delete() {
+    protected void delete() {
         delete("Удалить рекурсивно");
     }
 

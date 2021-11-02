@@ -2,13 +2,10 @@ package models.accountManager;
 
 import core.helper.Configure;
 import core.helper.Http;
-import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.Builder;
 import lombok.Getter;
 import models.Entity;
-import models.EntityOld;
 import models.authorizer.Folder;
 import models.authorizer.Organization;
 import org.json.JSONObject;
@@ -51,7 +48,7 @@ public class Account extends Entity {
 
     @Override
     @Step("Создание счета")
-    public void create() {
+    protected void create() {
         accountId = new Http(Configure.AccountManagerURL)
                 .post(String.format("organizations/%s/accounts", organization), toJson())
                 .assertStatus(200)

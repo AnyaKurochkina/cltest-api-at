@@ -2,9 +2,7 @@ package models.orderService.interfaces;
 
 import core.CacheService;
 import core.exception.DeferredException;
-import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
-import io.qameta.allure.model.Parameter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -20,14 +18,9 @@ import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static io.qameta.allure.Allure.getLifecycle;
 import static org.junit.Assert.*;
 
 @ToString(onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -171,7 +164,7 @@ public abstract class IProduct extends Entity {
 
     @Override
     @Step("Удаление продукта")
-    public void delete(){
+    protected void delete(){
         delete("Удалить");
     }
 

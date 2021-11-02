@@ -19,7 +19,6 @@ import java.util.List;
 public class AccessGroup extends Entity {
     String name;
     String projectName;
-    @Singular
     List<String> users;
     Boolean isForOrders;
 
@@ -50,7 +49,7 @@ public class AccessGroup extends Entity {
 
     @Override
     @Step("Создание группы доступа")
-    public void create() {
+    protected void create() {
         name = new Http(Configure.PortalBackURL)
                 .post(String.format("projects/%s/access_groups", projectName), toJson())
                 .assertStatus(201)
@@ -60,7 +59,7 @@ public class AccessGroup extends Entity {
 
     @Override
     @Step("Удаление группы доступа")
-    public void delete() {
+    protected void delete() {
         new Http(Configure.PortalBackURL)
                 .delete(String.format("projects/%s/access_groups/%s", projectName, name))
                 .assertStatus(204)

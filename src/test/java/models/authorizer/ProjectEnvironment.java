@@ -1,10 +1,7 @@
 package models.authorizer;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import models.Entity;
-import models.EntityOld;
 
 @AllArgsConstructor
 @Getter

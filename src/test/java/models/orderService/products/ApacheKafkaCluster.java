@@ -46,7 +46,7 @@ public class ApacheKafkaCluster extends IProduct {
 
     @Override
     @Step("Заказ продукта")
-    public void create() {
+    protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = new Http(OrderServiceSteps.URL)
@@ -91,7 +91,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     @Override
-    public void delete() {
+    protected void delete() {
         delete("Удалить рекурсивно");
     }
 

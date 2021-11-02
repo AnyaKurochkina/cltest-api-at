@@ -53,7 +53,7 @@ public class Project extends Entity {
 
     @Override
     @Step("Создание проекта")
-    public void create() {
+    protected void create() {
         id = new Http(Configure.AuthorizerURL)
                 .post(String.format("folders/%s/projects", folderName), toJson())
                 .assertStatus(201)
@@ -63,7 +63,7 @@ public class Project extends Entity {
 
     @Override
     @Step("Удаление проекта")
-    public void delete() {
+    protected void delete() {
         new Http(Configure.AuthorizerURL)
                 .delete("projects/" + id)
                 .assertStatus(204);

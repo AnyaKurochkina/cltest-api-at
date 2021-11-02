@@ -2,7 +2,6 @@ package models.keyCloak;
 
 import lombok.Builder;
 import models.Entity;
-import models.EntityOld;
 
 @Builder
 public class Service extends Entity {
@@ -10,11 +9,11 @@ public class Service extends Entity {
     public String clientSecret;
 
     @Override
-    public void create() {
+    protected void create() {
     }
 
     @Override
-    public void delete() {
+    protected void delete() {
 
     }
 }

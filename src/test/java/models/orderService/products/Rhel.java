@@ -52,7 +52,7 @@ public class Rhel extends IProduct {
 
     @Override
     @Step("Заказ продукта")
-    public void create() {
+    protected void create() {
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
                 .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())

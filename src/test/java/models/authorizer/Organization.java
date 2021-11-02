@@ -23,7 +23,7 @@ public class Organization extends Entity {
 
     @Override
     @Step("Получение организации")
-    public void create() {
+    protected void create() {
         name = new Http(AuthorizerSteps.URL)
                 .get("authorizer/api/v1/organizations?page=1&per_page=25")
                 .assertStatus(200)

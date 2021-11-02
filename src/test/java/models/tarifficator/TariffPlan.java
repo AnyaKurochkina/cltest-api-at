@@ -59,7 +59,7 @@ public class TariffPlan extends Entity {
 
     @Override
     @Step("Создание тарифного плана")
-    public void create() {
+    protected void create() {
         String object = new Http(Configure.TarifficatorURL)
                 .post("tariff_plans", toJson())
                 .assertStatus(201)

@@ -21,10 +21,10 @@ public class IProductMock extends IProduct {
     public void start(){}
 
     @Override
-    public void create() {
+    protected void create() {
     }
 
-    public void delete(){}
+    protected void delete(){}
     public void resize() {}
     public void expandMountPoint() {}
     public void runActionsBeforeOtherTests(){}

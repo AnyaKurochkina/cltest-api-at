@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import core.helper.ObjectPoolService;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureLifecycle;
+import models.ObjectPoolService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -19,23 +17,15 @@ import org.junit.jupiter.params.support.AnnotationConsumer;
 import steps.Steps;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static io.qameta.allure.Allure.getLifecycle;
 
 @Log4j2
 public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Source> {

@@ -5,22 +5,18 @@ import com.google.gson.reflect.TypeToken;
 import core.exception.DeferredException;
 import core.helper.Configure;
 import core.helper.Http;
-import core.helper.ObjectPoolService;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
-import models.authorizer.AccessGroup;
 import models.authorizer.InformationSystem;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Item;
-import models.subModels.Flavor;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -31,9 +27,7 @@ import steps.tarifficator.CostSteps;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Log4j2
 public class OrderServiceSteps extends Steps {

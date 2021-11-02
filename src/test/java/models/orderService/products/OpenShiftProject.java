@@ -49,7 +49,7 @@ public class OpenShiftProject extends IProduct {
 
     @Override
     @Step("Заказ продукта")
-    public void create() {
+    protected void create() {
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
                 .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
@@ -85,7 +85,7 @@ public class OpenShiftProject extends IProduct {
 
     @Override
     @Step("Удаление продукта")
-    public void delete() {
+    protected void delete() {
         super.delete("Удалить проект");
     }
 }
