@@ -40,7 +40,7 @@ public class Elasticsearch extends IProduct {
 
     public Elasticsearch() {
         jsonTemplate = "/orders/elasticsearch.json";
-        productName = "Elasticsearch";
+        productName = "Elasticsearch X-pack cluster";
     }
 
     @Override
@@ -91,8 +91,9 @@ public class Elasticsearch extends IProduct {
                 .build();
     }
 
+    //Удалить кластер EK Xpack
     @Override
-    @Action("Удалить кластер EK Xpack")
+    @Action("delete_elasticsearch_xpack")
     public void delete(String action) {
         super.delete(action);
     }

@@ -16,6 +16,7 @@ import models.subModels.Db;
 import models.subModels.DbUser;
 import org.json.JSONObject;
 import org.junit.Action;
+import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -97,14 +98,9 @@ public class PostgreSQL extends IProduct {
                 .build();
     }
 
+    //Расширить
     @Override
-    @Action("Удалить рекурсивно")
-    public void delete(String action) {
-        super.delete(action);
-    }
-
-    @Override
-    @Action("Расширить")
+    @Action("expand_mount_point")
     public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/pg_data\"}"));
@@ -121,12 +117,14 @@ public class PostgreSQL extends IProduct {
         cacheService.saveEntity(this);
     }
 
-    @Action("Добавить БД")
+    //Добавить БД
+    @Action("create_db")
     public void createDbTest(String action) {
         createDb("testdb", action);
     }
 
-    @Action("Удалить БД")
+    //Удалить БД
+    @Action("remove_db")
     public void removeDb(String action) {
         String dbName = database.get(0).getNameDB();
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
@@ -142,30 +140,34 @@ public class PostgreSQL extends IProduct {
         String dbName = database.get(0).getNameDB();
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
         String dbUserNameActual = (String) orderServiceSteps.getProductsField(this, DB_USERNAME_PATH);
-        assertEquals("Имя пользователя отличается от создаваемого", username, dbUserNameActual);
+        assertEquals("Имя пользователя отличается от создаваемого", dbName+ "_" + username, dbUserNameActual);
         users.add(new DbUser(dbName, dbUserNameActual, false));
         log.info("users = " + users);
         cacheService.saveEntity(this);
     }
 
-    @Action("Добавить пользователя")
+    //Добавить пользователя
+    @Action("create_dbms_user")
     public void createDbmsUserTest(String action) {
-        createDbmsUser("testdb_testchelik", "user", action);
+        createDbmsUser("testchelik", "user", action);
     }
 
-    @Action("Сбросить пароль")
+    //Сбросить пароль пользователя
+    @Action("reset_db_user_password")
     public void resetPassword(String action) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
     }
 
-    @Action("Сбросить пароль")
+    //Сбросить пароль владельца
+    @Action("reset_db_owner_password")
     public void resetDbOwnerPassword(String action) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password)));
     }
 
-    @Action("Удалить пользователя")
+    //Удалить пользователя
+    @Action("remove_dbms_user")
     public void removeDbmsUser(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
@@ -176,6 +178,19 @@ public class PostgreSQL extends IProduct {
         cacheService.saveEntity(this);
     }
 
+
+    @Override
+    @Action("resize_two_layer")
+    public void resize(String action) {
+        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
+        Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
+        Flavor flavor = list.get(list.size() - 1);
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}"));
+        int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
+        int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
+        assertEquals(flavor.data.cpus, cpusAfter);
+        assertEquals(flavor.data.memory, memoryAfter);
+    }
 }
 
 

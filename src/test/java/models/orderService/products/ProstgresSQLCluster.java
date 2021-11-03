@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
-public class PostgresPro extends IProduct {
+public class ProstgresSQLCluster extends IProduct {
     public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs[0].db_name";
     public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
     public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users[0].user_name";
@@ -41,7 +41,7 @@ public class PostgresPro extends IProduct {
     String platform;
     String osVersion;
     @ToString.Include
-    String postgresproVersion;
+    String postgresqlVersion;
     String domain;
     public List<Db> database = new ArrayList<>();
     public List<DbUser> users = new ArrayList<>();
@@ -63,9 +63,9 @@ public class PostgresPro extends IProduct {
         cacheService.saveEntity(this);
     }
 
-    public PostgresPro() {
-        jsonTemplate = "/orders/postgresPro.json";
-        productName = "PostgresPro";
+    public ProstgresSQLCluster() {
+        jsonTemplate = "/orders/postgressql_cluster.json";
+        productName = "PostgreSQL Cluster";
     }
 
     @Override
@@ -74,7 +74,7 @@ public class PostgresPro extends IProduct {
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
-        if(productId == null) {
+        if (productId == null) {
             projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
@@ -91,7 +91,7 @@ public class PostgresPro extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.postgrespro_version", postgresproVersion)
+                .set("$.order.attrs.postgresql_version", postgresqlVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
@@ -118,13 +118,13 @@ public class PostgresPro extends IProduct {
     }
 
     //Добавить БД
-    @Action("create_db")
+    @Action("postgresql_cluster_create_db")
     public void createDbTest(String action) {
         createDb("testdb", action);
     }
 
     //Удалить БД
-    @Action("remove_db")
+    @Action("postgresql_cluster_remove_db")
     public void removeDb(String action) {
         String dbName = database.get(0).getNameDB();
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
@@ -140,60 +140,41 @@ public class PostgresPro extends IProduct {
         String dbName = database.get(0).getNameDB();
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
         String dbUserNameActual = (String) orderServiceSteps.getProductsField(this, DB_USERNAME_PATH);
-        assertEquals("Имя пользователя отличается от создаваемого", dbName+ "_" + username, dbUserNameActual);
+        assertEquals("Имя пользователя отличается от создаваемого", dbName + "_" + username, dbUserNameActual);
         users.add(new DbUser(dbName, dbUserNameActual, false));
         log.info("users = " + users);
         cacheService.saveEntity(this);
     }
 
     //Добавить пользователя
-    @Action("create_dbms_user")
+    @Action("postgresql_cluster_create_dbms_user")
     public void createDbmsUserTest(String action) {
         createDbmsUser("testchelik", "user", action);
     }
 
     //Сбросить пароль пользователя
-    @Action("reset_db_user_password")
+    @Action("postgresql_cluster_reset_db_user_password")
     public void resetPassword(String action) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
     }
 
     //Сбросить пароль владельца
-    @Action("reset_db_owner_password")
+    @Action("postgresql_cluster_reset_db_owner_password")
     public void resetDbOwnerPassword(String action) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password)));
     }
 
     //Удалить пользователя
-    @Action("remove_dbms_user")
+    @Action("postgresql_cluster_remove_dbms_user")
     public void removeDbmsUser(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getNameDB() + "_" +users.get(0).getUsername())));
+        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
         users.get(0).setDeleted(true);
         log.info("users = " + users);
         cacheService.saveEntity(this);
     }
-
-    //Изменить конфигурацию
-    @Override
-    @Action("resize_two_layer")
-    public void resize(String action) {
-        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
-        Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
-        Flavor flavor = list.get(list.size() - 1);
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}"));
-        int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
-        int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
-        assertEquals(flavor.data.cpus, cpusAfter);
-        assertEquals(flavor.data.memory, memoryAfter);
-    }
-
 }
-
-
-
-

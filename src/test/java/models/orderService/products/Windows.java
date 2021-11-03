@@ -63,7 +63,7 @@ public class Windows extends IProduct {
                 .withField("env", env)
                 .forOrders(true)
                 .getEntity();
-        if(productId == null) {
+        if (productId == null) {
             projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
@@ -86,16 +86,46 @@ public class Windows extends IProduct {
                 .build();
     }
 
-    @Action("Добавить диск")
+    //Добавить диск
+    @Action("windows_add_disk")
     public void addDisk(String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 10, file_system: \"ntfs\"}"));
         Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK, "I")));
     }
 
+    //Расширить диск
     @Override
-    @Action("Расширить диск")
+    @Action("windows_expand_disk")
     public void expandMountPoint(String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 1}"));
         Assert.assertEquals(11, orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, "I")));
     }
+
+    //Перезагрузить по питанию
+    @Override
+    @Action("reset_vm")
+    public void restart(String action) {
+        super.restart(action);
+    }
+
+    //Выключить принудительно
+    @Override
+    @Action("stop_vm_hard")
+    public void stopHard(String action){super.stopHard(action);}
+
+    //Выключить
+    @Override
+    @Action("stop_vm_soft")
+    public void stopSoft(String action){super.stopSoft(action);}
+
+    //Включить
+    @Override
+    @Action("start_vm")
+    public void start(String action){super.start(action);}
+
+    //Удалить
+    @Override
+    @Action("delete_vm")
+    public void delete(String action){super.delete(action);}
+
 }

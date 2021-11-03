@@ -261,7 +261,7 @@ public class OrderServiceSteps extends Steps {
                 .forOrders(true)
                 .withField("env", product.getEnv())
                 .getEntity();
-        //Выполнение запроса
+        //Выполнение запроса на получение продуктового каталога
         int total_count = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=1&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id))
@@ -271,6 +271,7 @@ public class OrderServiceSteps extends Steps {
 
         int countOfIteration = total_count / 100 + 1;
         for (int i = 1; i <= countOfIteration; i++) {
+            //Выполнение запроса на получение id подукта
             product_id = new Http(URL)
                     .setProjectId(product.getProjectId())
                     .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=%s&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id, i))
@@ -300,16 +301,14 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath();
 
         Item item = new Item();
-        //Получаем все item ID по русскоязычному имени экшена он же title, например: "Удалить рекурсивно"
-        item.id = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.item_id", action));
-        //Получаем все item name по русскоязычному имени экшена он же title, например: "Удалить рекурсивно"
-        item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.actions.find{it.title=='%s'}.name", action, action));
-        //Достаем item ID и item name и сохраняем в объект Item
+        //Получаем все item ID по имени экшена он же name, например: "reset_db_user_password"
+        item.id = jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.item_id", action));
+        item.name = action;
+        //Если такой id не найден, то ищем по name.contains
         if (item.id == null) {
-            item.id = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action));
-            item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action));
+            item.id = jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action));
         }
-
+        //Достаем item ID и item name и сохраняем в объект Item
         Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), item.id);
         return item;
     }
@@ -360,7 +359,6 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Удаление всех заказов")
     public void deleteOrders(String env) {
-        String action_title;
         Project project = cacheService.entity(Project.class)
                 .withField("env", env)
                 .forOrders(true)
@@ -377,30 +375,24 @@ public class OrderServiceSteps extends Steps {
         for (String order : orders) {
             try {
                 System.out.println("order_id = " + order);
-                String productName = new Http(URL)
-                        .setProjectId(project.id)
-                        .get(String.format("order-service/api/v1/projects/%s/orders/%s", project.id, order))
-                        .assertStatus(200)
-                        .jsonPath()
-                        .get("attrs.product_title");
-                log.info("productName = " + productName);
-                if ("Apache Kafka Cluster" .equals(productName)) {
-                    action_title = "Удалить рекурсивно";
-                } else {
-                    action_title = "Удалить";
-                }
-                log.info("Получение item_id для " + action_title);
                 JsonPath jsonPath = new Http(URL)
                         .setProjectId(project.id)
                         .get("order-service/api/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
-                String item_id = jsonPath.get(String.format("data.find{it.actions.find{it.title.startsWith('%s')}}.item_id", action_title));
-                String action = jsonPath.get(String.format("data.find{it.actions.find{it.title.startsWith('%s')}}.actions.find{it.title.contains('%s')}.name", action_title, action_title));
-                log.info("item_id = " + item_id);
+                //TODO: сделать через массив строк например
+                String actionTitle = "delete_two_layer";
+                String itemId = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.item_id", actionTitle));
+                String action = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.actions.find{it.name.contains('%s')}.name", actionTitle, actionTitle));
+                if (action == null){
+                    actionTitle = "delete_vm";
+                    itemId = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.item_id", actionTitle));
+                    action = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.actions.find{it.name.contains('%s')}.name", actionTitle, actionTitle));
+                }
+                log.info("item_id = " + itemId);
                 log.info("action = " + action);
 
                 JsonPath response = jsonHelper.getJsonTemplate("/actions/template.json")
-                        .set("$.item_id", item_id)
+                        .set("$.item_id", itemId)
                         .send(URL)
                         .setProjectId(project.id)
                         .patch(String.format("order-service/api/v1/projects/%s/orders/%s/actions/%s", project.id, order, action))

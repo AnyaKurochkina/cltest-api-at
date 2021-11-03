@@ -5,6 +5,7 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Attachment;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

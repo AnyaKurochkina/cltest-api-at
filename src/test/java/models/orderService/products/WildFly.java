@@ -85,14 +85,14 @@ public class WildFly extends IProduct {
                 .build();
     }
 
+    //Обновить сертификаты
     @Override
-    @Action("Удалить рекурсивно")
-    public void delete(String action) {
-        super.delete(action);
-    }
+    @Action("wildfly_update_certs")
+    public void updateCerts(String action){super.updateCerts(action);}
 
+    //Расширить
     @Override
-    @Action("Расширить")
+    @Action("expand_mount_point")
     public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app/app\"}"));

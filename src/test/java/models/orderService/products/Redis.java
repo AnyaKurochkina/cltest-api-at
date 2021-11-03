@@ -11,10 +11,15 @@ import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
+import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.Action;
+import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
@@ -78,24 +83,33 @@ public class Redis extends IProduct {
                 .build();
     }
 
+    //Изменить конфигурацию
     @Override
-    @Action("Удалить рекурсивно")
-    public void delete(String action) {
-        orderServiceSteps.executeAction(action, this, null);
-        setStatus(ProductStatus.DELETED);
-        cacheService.saveEntity(this);
+    @Action("resize_two_layer")
+    public void resize(String action) {
+        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
+        Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
+        Flavor flavor = list.get(list.size() - 1);
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}"));
+        int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
+        int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
+        System.out.println();
+        assertEquals("Конфигурация cpu не изменилась или изменилась неверно", flavor.data.cpus, cpusAfter);
+        assertEquals("Конфигурация ram не изменилась или изменилась неверно", flavor.data.memory, memoryAfter);
     }
 
+    //Расширить
     @Override
-    @Action("Расширить")
+    @Action("expand_mount_point")
     public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        orderServiceSteps.executeAction("Расширить", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/redis/data\"}"));
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app/redis/data\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore<sizeAfter);
     }
 
-    @Action("Сбросить пароль")
+    //Сбросить пароль
+    @Action("reset_redis_password")
     public void resetPassword(String action) {
         String password = "yxjpjk7xvOImb1O9vZZiGUlsItkqLqtbB1VPZHzL6";
         orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{redis_password: \"%s\"}", password)));
