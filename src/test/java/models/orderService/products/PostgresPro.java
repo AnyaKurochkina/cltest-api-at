@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,7 +26,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
@@ -48,39 +49,37 @@ public class PostgresPro extends IProduct {
     Flavor flavor;
 
     @Override
-    public void order() {
-        JSONObject template = getJsonParametrizedTemplate();
+    @Step("Заказ продукта")
+    protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
-    }
-
-    public PostgresPro() {
-        jsonTemplate = "/orders/postgresPro.json";
-        productName = "PostgresPro";
     }
 
     @Override
-    public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
+    public void init() {
+        jsonTemplate = "/orders/postgresPro.json";
+        productName = "PostgresPro";
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        if(projectId == null) {
+            projectId = project.getId();
+        }
         if(productId == null) {
-            projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
+    }
+
+    @Override
+    public JSONObject toJson() {
+        Project project = Project.builder().id(projectId).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -92,16 +91,15 @@ public class PostgresPro extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.postgrespro_version", postgresproVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
+                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .build();
     }
 
     @Override
-    @Action("Удалить рекурсивно")
-    public void delete(String action) {
-        super.delete(action);
+    protected void delete() {
+        delete("Удалить рекурсивно");
     }
 
     @Override
@@ -119,7 +117,7 @@ public class PostgresPro extends IProduct {
         assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
         database.add(new Db(dbName, false));
         log.info("database = " + database);
-        cacheService.saveEntity(this);
+        save();
     }
 
     @Action("Добавить БД")
@@ -136,7 +134,7 @@ public class PostgresPro extends IProduct {
         assertTrue(sizeBefore > sizeAfter);
         database.get(0).setDeleted(true);
         log.info("database = " + database);
-        cacheService.saveEntity(this);
+        save();
     }
 
     public void createDbmsUser(String username, String dbRole, String action) {
@@ -146,7 +144,7 @@ public class PostgresPro extends IProduct {
         assertEquals("Имя пользователя отличается от создаваемого", dbName+ "_" + username, dbUserNameActual);
         users.add(new DbUser(dbName, dbUserNameActual, false));
         log.info("users = " + users);
-        cacheService.saveEntity(this);
+        save();
     }
 
     @Action("Добавить пользователя")
@@ -174,7 +172,7 @@ public class PostgresPro extends IProduct {
         assertTrue(sizeBefore > sizeAfter);
         users.get(0).setDeleted(true);
         log.info("users = " + users);
-        cacheService.saveEntity(this);
+        save();
     }
 
     @Override
