@@ -34,7 +34,7 @@ public class ApacheKafkaClusterNegativeTests extends Tests {
         ApacheKafkaCluster apacheKafkaCluster = cacheService.entity(ApacheKafkaCluster.class)
                 .getEntityWithoutAssert();
         Assume.assumeNotNull("Не найден ApacheKafkaCluster для тестов", apacheKafkaCluster);
-        orderServiceSteps.sendAction(ApacheKafkaCluster.KAFKA_CREATE_TOPIC, apacheKafkaCluster, new JSONObject(CacheService.toJson(kafkaTopic)))
+        orderServiceSteps.sendAction("Создать Topic Kafka", apacheKafkaCluster, new JSONObject(CacheService.toJson(kafkaTopic)))
                 .assertStatus(422);
     }
 

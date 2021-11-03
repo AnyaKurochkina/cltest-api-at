@@ -14,7 +14,6 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Action;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
@@ -39,10 +38,10 @@ public class Astra extends IProduct {
         jsonTemplate = "/orders/astra_general_application.json";
         productName = "Astra Linux (DEV only)";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
+        if (projectId == null) {
             projectId = project.getId();
         }
-        if(productId == null) {
+        if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
     }
@@ -81,31 +80,25 @@ public class Astra extends IProduct {
                 .build();
     }
 
-    //Выключить принудительно
-    @Override
-    @Action("stop_vm_hard")
-    public void stopHard(String action){super.stopHard(action);}
-
-    //Выключить
-    @Override
-    @Action("stop_vm_soft")
-    public void stopSoft(String action){super.stopSoft(action);}
-
-    //Включить
-    @Override
-    @Action("start_vm")
-    public void start(String action){super.start(action);}
-
-    //Удалить
-    @Override
-    @Action("delete_vm")
-    public void delete(String action){super.delete(action);}
-
-
-    //Перезагрузить по питанию
-    @Override
-    @Action("reset_vm")
-    public void restart(String action) {
-        super.restart(action);
+    public void stopHard() {
+        stopHard("stop_vm_hard");
     }
+
+    public void stopSoft() {
+        stopSoft("stop_vm_soft");
+    }
+
+    public void start() {
+        start("start_vm");
+    }
+
+    public void restart() {
+        restart("reset_vm");
+    }
+
+    @Override
+    protected void delete() {
+        delete("delete_vm");
+    }
+
 }

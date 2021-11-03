@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -15,7 +14,6 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Action;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
@@ -84,23 +82,27 @@ public class ApacheKafka extends IProduct {
                 .build();
     }
 
-    @Override
+    public void resize() {
+        resize("resize_vm");
+    }
+
     public void restart() {
-        super.restart("reset_two_layer_kafka");
+        restart("reset_two_layer_kafka");
     }
 
-    @Override
     public void stopSoft() {
-        super.stopSoft("stop_two_layer_kafka");
+        stopSoft("stop_two_layer_kafka");
     }
 
-    @Override
     public void start() {
-        super.start("start_two_layer_kafka");
+        start("start_two_layer_kafka");
     }
 
-    @Override
     public void stopHard() {
-        super.stopHard("stop_hard_two_layer_kafka");
+        stopHard("stop_hard_two_layer_kafka");
+    }
+
+    public void expandMountPoint(){
+        expandMountPoint("expand_mount_point");
     }
 }

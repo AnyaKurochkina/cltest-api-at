@@ -2,7 +2,10 @@ package models.orderService.interfaces;
 
 import core.CacheService;
 import core.exception.DeferredException;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
+import io.qameta.allure.model.Parameter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -18,7 +21,11 @@ import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -136,29 +143,29 @@ public abstract class IProduct extends Entity {
     }
 
     //Обновить сертификаты
-    public void updateCerts(String action) {
+    protected void updateCerts(String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
     }
 
     //Перезагрузить
-    public void restart(String action) {
+    protected void restart(String action) {
         orderServiceSteps.executeAction("reset_two_layer", this, null);
     }
 
     //Выключить принудительно
-    public void stopHard(String action) {
+    protected void stopHard(String action) {
         orderServiceSteps.executeAction("stop_hard_two_layer", this, null);
         setStatus(ProductStatus.STOPPED);
     }
 
     //Выключить
-    public void stopSoft(String action) {
+    protected void stopSoft(String action) {
         orderServiceSteps.executeAction("stop_two_layer", this, null);
         setStatus(ProductStatus.STOPPED);
     }
 
     //Включить
-    public void start(String action) {
+    protected void start(String action) {
         orderServiceSteps.executeAction("start_two_layer", this, null);
         setStatus(ProductStatus.CREATED);
     }
@@ -167,14 +174,9 @@ public abstract class IProduct extends Entity {
         Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
     }
 
-    @Override
-    @Step("Удаление продукта")
-    protected void delete(){
-        delete("delete_two_layer");
-    }
-
     //Удалить рекурсивно
-    public void delete(String action) {
+    @Step("Удаление продукта")
+    protected void delete(String action) {
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         orderServiceSteps.executeAction(action, this, null);
         setStatus(ProductStatus.DELETED);
@@ -182,7 +184,7 @@ public abstract class IProduct extends Entity {
     }
 
     //Изменить конфигурацию
-    public void resize(String action) {
+    protected void resize(String action) {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
         Flavor flavor = list.get(list.size() - 1);
@@ -194,7 +196,7 @@ public abstract class IProduct extends Entity {
     }
 
     //Расширить
-    public void expandMountPoint(String action) {
+    protected void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction("expand_mount_point", this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
@@ -204,7 +206,7 @@ public abstract class IProduct extends Entity {
     @Step
     @SneakyThrows
     public void toStringProductStep() {
-        AllureLifecycle allureLifecycle = getLifecycle();
+        AllureLifecycle allureLifecycle = Allure.getLifecycle();
         String id = allureLifecycle.getCurrentTestCaseOrStep().get();
         List<Parameter> list = new ArrayList<>();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(getClass().getSuperclass().getDeclaredFields()));
@@ -223,5 +225,5 @@ public abstract class IProduct extends Entity {
         allureLifecycle.updateStep(id, s -> s.setName("Получен продукт " + getProductName() + " с параметрами"));
         allureLifecycle.updateStep(id, s -> s.setParameters(list));
     }
-}
+
 }

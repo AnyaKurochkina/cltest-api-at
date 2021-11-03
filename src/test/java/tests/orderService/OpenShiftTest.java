@@ -30,7 +30,7 @@ public class OpenShiftTest extends Tests {
     void change(OpenShiftProject product) {
         try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {
             openShift.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            openShift.changeProject("Изменить проект");
+            openShift.changeProject();
         }
     }
 

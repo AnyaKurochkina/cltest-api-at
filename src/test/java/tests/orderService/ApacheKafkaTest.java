@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
-import static models.orderService.interfaces.IProduct.*;
-
 @Epic("Продукты")
 @Feature("ApacheKafka")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafka")})
@@ -31,7 +29,7 @@ public class ApacheKafkaTest extends Tests {
     void expandMountPoint(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.expandMountPoint(EXPAND_MOUNT_POINT);
+            kafka.expandMountPoint();
         }
     }
 
@@ -40,7 +38,7 @@ public class ApacheKafkaTest extends Tests {
     void restart(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.restart(RESTART);
+            kafka.restart();
         }
     }
 
@@ -49,8 +47,8 @@ public class ApacheKafkaTest extends Tests {
     void stopSoft(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.stopSoft(STOP_SOFT);
-            kafka.start(START);
+            kafka.stopSoft();
+            kafka.start();
         }
     }
 
@@ -59,9 +57,9 @@ public class ApacheKafkaTest extends Tests {
     void resize(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.stopHard(STOP_HARD);
-            kafka.resize(RESIZE);
-            kafka.start(START);
+            kafka.stopHard();
+            kafka.resize();
+            kafka.start();
         }
     }
 
@@ -70,8 +68,8 @@ public class ApacheKafkaTest extends Tests {
     void start(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.stopHard(STOP_HARD);
-            kafka.start(START);
+            kafka.stopHard();
+            kafka.start();
         }
     }
 
@@ -80,8 +78,8 @@ public class ApacheKafkaTest extends Tests {
     void stopHard(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.stopHard(STOP_HARD);
-            kafka.start(START);
+            kafka.stopHard();
+            kafka.start();
         }
     }
 

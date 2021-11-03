@@ -14,8 +14,6 @@ import tests.Tests;
 
 import java.util.Arrays;
 
-import static models.orderService.interfaces.IProduct.EXPAND_MOUNT_POINT;
-
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafkacluster")})
@@ -33,7 +31,7 @@ public class ApacheKafkaClusterTest extends Tests {
     void updateCerts(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.updateCerts("Обновить сертификаты");
+            kafka.updateCerts();
         }
     }
 
@@ -42,7 +40,7 @@ public class ApacheKafkaClusterTest extends Tests {
     void createTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.createTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), "Пакетное создание Topic-ов Kafka");
+            kafka.createTopics(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"));
         }
     }
 
@@ -51,8 +49,8 @@ public class ApacheKafkaClusterTest extends Tests {
     void deleteTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.createTopic(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"), "Пакетное создание Topic-ов Kafka");
-            kafka.deleteTopic(Arrays.asList("PacketTopicName01", "PacketTopicName03"), "Пакетное удаление Topic-ов Kafka");
+            kafka.createTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
+            kafka.deleteTopics(Arrays.asList("PacketTopicName01", "PacketTopicName03"));
         }
     }
 
@@ -79,8 +77,8 @@ public class ApacheKafkaClusterTest extends Tests {
     void stopSoft(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.stopSoft("Выключить кластер Kafka");
-            kafka.start("Включить кластер Kafka");
+            kafka.stopSoft();
+            kafka.start();
         }
     }
 
@@ -89,7 +87,7 @@ public class ApacheKafkaClusterTest extends Tests {
     void resize(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.restart("Перезагрузить кластер Kafka");
+            kafka.restart();
         }
     }
 
@@ -98,8 +96,8 @@ public class ApacheKafkaClusterTest extends Tests {
     void start(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.stopSoft("Выключить кластер Kafka");
-            kafka.start("Включить кластер Kafka");
+            kafka.stopSoft();
+            kafka.start();
         }
     }
 
@@ -108,7 +106,7 @@ public class ApacheKafkaClusterTest extends Tests {
     void expandMountPoint(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.expandMountPoint(EXPAND_MOUNT_POINT);
+            kafka.expandMountPoint();
         }
     }
 
