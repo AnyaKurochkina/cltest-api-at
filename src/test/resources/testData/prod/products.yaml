@@ -82,8 +82,7 @@ RabbitMQCluster:
 #
 Windows:
   - actions:
-      #        'windows_add_disk', 'windows_expand_disk',
-      [ 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
+      [ 'windows_add_disk', 'windows_expand_disk', 'reset_vm', 'stop_vm_soft', 'resize_vm', 'start_vm', 'stop_vm_hard' ]
   - options:
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2019" }
       - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
@@ -109,7 +108,7 @@ Nginx:
 #
 Redis:
   - actions:
-      [ 'expand_mount_point', 'reset_redis_password', 'reset_two_layer', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
+      [ 'expand_mount_point', 'reset_redis_password', 'reset_two_layer', 'stop_two_layer', 'resize_vm', 'start_two_layer', 'stop_hard_two_layer' ]
   - options:
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
       - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
