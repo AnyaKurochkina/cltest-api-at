@@ -43,11 +43,16 @@ public class ClickHouse extends IProduct {
     public List<Db> database = new ArrayList<>();
     public List<DbUser> users = new ArrayList<>();
 
-    public static final String REFRESH_VM_CONFIG = "Проверить конфигурацию";
-    public static final String CLICKHOUSE_CREATE_DB = "Добавить БД";
-    public static final String CLICKHOUSE_DELETE_DB = "Удалить БД";
-    public static final String CLICKHOUSE_CREATE_DBMS_USER = "Добавить пользователя";
-    public static final String CLICKHOUSE_DELETE_DBMS_USER = "Удалить пользователя";
+    //Проверить конфигурацию
+    public static final String REFRESH_VM_CONFIG = "check_vm";
+    //Добавить БД
+    public static final String CLICKHOUSE_CREATE_DB = "clickhouse_create_db";
+    //Удалить БД
+    public static final String CLICKHOUSE_DELETE_DB = "clickhouse_remove_db";
+    //Добавить пользователя
+    public static final String CLICKHOUSE_CREATE_DBMS_USER = "clickhouse_create_dbms_user";
+    //Удалить пользователя
+    public static final String CLICKHOUSE_DELETE_DBMS_USER = "clickhouse_remove_dbms_user";
 
     public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs.any{it.db_name=='%s'}";
     public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
@@ -87,32 +92,29 @@ public class ClickHouse extends IProduct {
         delete("Удалить рекурсивно");
     }
 
-    @Action(REFRESH_VM_CONFIG)
-    public void refreshVmConfig(String action) {
-        orderServiceSteps.executeAction(action, this, null);
+    public void refreshVmConfig() {
+        orderServiceSteps.executeAction(REFRESH_VM_CONFIG, this, null);
     }
 
-    @Action(CLICKHOUSE_DELETE_DB)
-    public void deleteDb(String action) {
+    public void deleteDb() {
         String dbName = database.get(0).getNameDB();
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
+        orderServiceSteps.executeAction(CLICKHOUSE_DELETE_DB, this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
         database.get(0).setDeleted(true);
         save();
     }
 
-    @Action("Сбросить пароль")
-    public void resetPassword(String action) {
+    //Сбросить пароль
+    public void resetPassword() {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
+        orderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
     }
 
-    @Action(CLICKHOUSE_DELETE_DBMS_USER)
-    public void deleteDbmsUser(String action) {
+    public void deleteDbmsUser() {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
+        orderServiceSteps.executeAction(CLICKHOUSE_DELETE_DBMS_USER, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
         users.get(0).setDeleted(true);
@@ -120,14 +122,12 @@ public class ClickHouse extends IProduct {
         save();
     }
 
-    @Action(CLICKHOUSE_CREATE_DB)
-    public void createDbTest(String action) {
-        createDb("db_1", action);
+    public void createDbTest() {
+        createDb("db_1", CLICKHOUSE_CREATE_DB);
     }
 
-    @Action(CLICKHOUSE_CREATE_DBMS_USER)
-    public void createDbmsUserTest(String action) {
-        createDbmsUser("chelik", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", action);
+    public void createDbmsUserTest() {
+        createDbmsUser("chelik", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", CLICKHOUSE_CREATE_DBMS_USER);
     }
 
     public void createDb(String dbName, String action) {

@@ -41,7 +41,7 @@ public class Elasticsearch extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/elasticsearch.json";
-        productName = "Elasticsearch XPACK Cluster";
+        productName = "Elasticsearch X-pack cluster";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
         if(projectId == null) {
             projectId = project.getId();
@@ -90,8 +90,8 @@ public class Elasticsearch extends IProduct {
     }
 
     @Override
-    @Action("Удалить кластер EK Xpack")
+    //Удалить кластер EK Xpack
     protected void delete() {
-        delete("Удалить кластер EK Xpack");
+        delete("delete_elasticsearch_xpack");
     }
 }

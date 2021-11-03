@@ -75,15 +75,15 @@ public class OpenShiftProject extends IProduct {
                 .build();
     }
 
-    @Action("Изменить проект")
-    public void changeProject(String action) {
+    //Изменить проект
+    public void changeProject() {
         String shdQuoteValue;
         shdQuoteValue = hasShdQuote() ? "1" : "0";
         String data = String.format("{\"quota\":{\"cpu\":1,\"memory\":2,\"storage\":{\"sc-nfs-netapp-q\": %s}},\"roles\":[{\"role\":\"view\",\"groups\":[\"%s\"]}]}",
                 shdQuoteValue,
                 roles.get(0).getGroupId());
         roles.get(0).setName("view");
-        orderServiceSteps.executeAction(action, this, new JSONObject(data));
+        orderServiceSteps.executeAction("update_openshift_project", this, new JSONObject(data));
         save();
         Assert.assertEquals("Память не изменилась", 2, orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.memory"));
         Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.roles[0].role"));
@@ -95,7 +95,7 @@ public class OpenShiftProject extends IProduct {
     @Override
     @Step("Удаление продукта")
     protected void delete() {
-        super.delete("Удалить проект");
+        super.delete("delete_openshift_project");
     }
 
     //Проверка на наличие СХД у продукта

@@ -93,20 +93,13 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     @Override
-    protected void delete() {
-        delete("Удалить рекурсивно");
+    public void restart() {
+        super.restart("restart_kafka");
     }
 
     @Override
-    @Action("Перезагрузить кластер Kafka")
-    public void restart(String action) {
-        super.restart(action);
-    }
-
-    @Override
-    @Action("Выключить кластер Kafka")
-    public void stopSoft(String action) {
-        super.stopSoft(action);
+    public void stopSoft() {
+        super.stopSoft("stop_kafka");
     }
 
     public void createTopic(KafkaTopic kafkaTopic) {
@@ -127,20 +120,17 @@ public class ApacheKafkaCluster extends IProduct {
         save();
     }
 
-
-    @Action(KAFKA_CREATE_TOPIC)
-    public void createTopicTest(String action) {
+    @Deprecated
+    public void createTopicTest() {
         createTopic(new KafkaTopic("delete", 1, 1, 1, 1800000, "TopicName"));
     }
 
-    @Action("Пакетное создание Topic-ов Kafka")
-    public void createTopicsTest(String action) {
-        createTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), action);
+    public void createTopicsTest() {
+        createTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), "kafka_create_topics");
     }
 
-    @Action("Пакетное удаление Topic-ов Kafka")
-    public void deleteTopicsTest(String action) {
-        deleteTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), action);
+    public void deleteTopicsTest() {
+        deleteTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), "kafka_delete_topics");
     }
 
     public void deleteTopic(List<String> names, String action) {
@@ -159,9 +149,9 @@ public class ApacheKafkaCluster extends IProduct {
         save();
     }
 
-    @Action("Удалить Topic Kafka")
-    public void deleteTopicTest(String action) {
-        deleteTopic("TopicName", action);
+    @Deprecated
+    public void deleteTopicTest() {
+        deleteTopic("TopicName", "kafka_delete_topic");
     }
 
     public void createAcl(String topicNameRegex, String action) {
@@ -176,20 +166,25 @@ public class ApacheKafkaCluster extends IProduct {
         Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)));
     }
 
-    @Action("Создать ACL Kafka")
-    public void createAclTest(String action) {
-        createAcl("*", action);
+    //Создать ACL Kafka
+    public void createAclTest() {
+        createAcl("*", "kafka_create_acl");
     }
 
-    @Action("Создание ACL на транзакцию Kafka")
-    public void createAclTransactionTest(String action) {
-        createAclTransaction("*", action);
+    //Создание ACL на транзакцию Kafka
+    public void createAclTransactionTest() {
+        createAclTransaction("*", "kafka_create_transaction_acl");
+    }
+
+    //Включить кластер Kafka
+    @Override
+    public void start() {
+        super.start("start_kafka");
     }
 
     @Override
-    @Action("Включить кластер Kafka")
-    public void start(String action) {
-        super.start(action);
+    public void updateCerts(){
+        super.updateCerts("kafka_update_certs");
     }
 
 }

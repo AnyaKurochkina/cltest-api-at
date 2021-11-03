@@ -86,17 +86,41 @@ public class Windows extends IProduct {
                 .build();
     }
 
-    @Action("Добавить диск")
-    public void addDisk(String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 10, file_system: \"ntfs\"}"));
+    //Добавить диск
+    public void addDisk() {
+        orderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"I\", size: 10, file_system: \"ntfs\"}"));
         Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, "I")));
     }
 
     @Override
-    @Action("Расширить диск")
-    public void expandMountPoint(String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 1}"));
+    //Расширить диск
+    public void expandMountPoint() {
+        orderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"I\", size: 1}"));
         Assert.assertEquals(11, orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, "I")));
     }
+
+
+    //Перезагрузить по питанию
+    @Override
+    @Action("reset_vm")
+    public void restart(String action) {
+        super.restart("reset_vm");
+    }
+
+    //Выключить принудительно
+    @Override
+    public void stopHard(){super.stopHard("stop_vm_hard");}
+
+    //Выключить
+    @Override
+    public void stopSoft(){super.stopSoft("stop_vm_soft");}
+
+    //Включить
+    @Override
+    public void start(){super.start("start_vm");}
+
+    //Удалить
+    @Override
+    protected void delete(){super.delete("delete_vm");}
 
 }

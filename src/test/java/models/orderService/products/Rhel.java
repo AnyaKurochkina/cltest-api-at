@@ -79,4 +79,26 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST")).build();
     }
 
+
+    //Перезагрузить по питанию
+    @Override
+    public void restart() {
+        super.restart("reset_vm");
+    }
+
+    //Выключить принудительно
+    @Override
+    public void stopHard(){super.stopHard("stop_vm_hard");}
+
+    //Выключить
+    @Override
+    public void stopSoft(){super.stopSoft("stop_vm_soft");}
+
+    //Включить
+    @Override
+    public void start(){super.start("start_vm");}
+
+    //Удалить
+    @Override
+    public void delete(){super.delete("delete_vm");}
 }

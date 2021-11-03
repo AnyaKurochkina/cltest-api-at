@@ -135,31 +135,31 @@ public abstract class IProduct extends Entity {
         save();
     }
 
-    @Action("Обновить сертификаты")
+    //Обновить сертификаты
     public void updateCerts(String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
     }
 
-    @Action("Перезагрузить")
+    //Перезагрузить
     public void restart(String action) {
-        orderServiceSteps.executeAction(action, this, null);
+        orderServiceSteps.executeAction("reset_two_layer", this, null);
     }
 
-    @Action("Выключить принудительно")
+    //Выключить принудительно
     public void stopHard(String action) {
-        orderServiceSteps.executeAction(action, this, null);
+        orderServiceSteps.executeAction("stop_hard_two_layer", this, null);
         setStatus(ProductStatus.STOPPED);
     }
 
-    @Action("Выключить")
+    //Выключить
     public void stopSoft(String action) {
-        orderServiceSteps.executeAction(action, this, null);
+        orderServiceSteps.executeAction("stop_two_layer", this, null);
         setStatus(ProductStatus.STOPPED);
     }
 
-    @Action("Включить")
+    //Включить
     public void start(String action) {
-        orderServiceSteps.executeAction(action, this, null);
+        orderServiceSteps.executeAction("start_two_layer", this, null);
         setStatus(ProductStatus.CREATED);
     }
 
@@ -170,10 +170,10 @@ public abstract class IProduct extends Entity {
     @Override
     @Step("Удаление продукта")
     protected void delete(){
-        delete("Удалить");
+        delete("delete_two_layer");
     }
 
-    @Action("Удалить")
+    //Удалить рекурсивно
     public void delete(String action) {
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         orderServiceSteps.executeAction(action, this, null);
@@ -181,23 +181,47 @@ public abstract class IProduct extends Entity {
         Assert.assertEquals("Стоимость после удаления заказа больше 0.0", 0.0F, calcCostSteps.getCostByUid(this), 0.0F);
     }
 
-    @Action("Изменить конфигурацию")
+    //Изменить конфигурацию
     public void resize(String action) {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
         Flavor flavor = list.get(list.size() - 1);
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
+        orderServiceSteps.executeAction("resize_vm", this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
         int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
-        assertEquals(flavor.data.cpus, cpusAfter);
-        assertEquals(flavor.data.memory, memoryAfter);
+        assertEquals("Конфигурация cpu не изменилась или изменилась неверно", flavor.data.cpus, cpusAfter);
+        assertEquals("Конфигурация ram не изменилась или изменилась неверно", flavor.data.memory, memoryAfter);
     }
 
+    //Расширить
     public void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));
+        orderServiceSteps.executeAction("expand_mount_point", this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
 
+    @Step
+    @SneakyThrows
+    public void toStringProductStep() {
+        AllureLifecycle allureLifecycle = getLifecycle();
+        String id = allureLifecycle.getCurrentTestCaseOrStep().get();
+        List<Parameter> list = new ArrayList<>();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(getClass().getSuperclass().getDeclaredFields()));
+        fieldList.addAll(Arrays.asList(getClass().getDeclaredFields()));
+        for (Field field : fieldList) {
+            if (Modifier.isStatic(field.getModifiers()))
+                continue;
+            field.setAccessible(true);
+            if (field.get(this) != null) {
+                Parameter parameter = new Parameter();
+                parameter.setName(field.getName());
+                parameter.setValue(field.get(this).toString());
+                list.add(parameter);
+            }
+        }
+        allureLifecycle.updateStep(id, s -> s.setName("Получен продукт " + getProductName() + " с параметрами"));
+        allureLifecycle.updateStep(id, s -> s.setParameters(list));
+    }
+}
 }

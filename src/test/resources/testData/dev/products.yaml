@@ -1,10 +1,17 @@
-ClickHouse:
+#ClickHouse:
+#  - actions:
+#      [ 'expand_mount_point', 'clickhouse_create_db', 'clickhouse_create_dbms_user', 'clickhouse_reset_db_user_password', 'reset_two_layer', 'clickhouse_remove_dbms_user', 'clickhouse_remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
+#  - options:
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+
+Rhel:
   - actions:
-      [ 'Проверить конфигурацию', 'Расширить', 'Добавить БД', 'Добавить пользователя', 'Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно', ]
+      [ 'expand_mount_point', 'reset_vm', 'stop_vm_soft', 'check_vm', 'start_vm', 'stop_vm_hard' ]
   - options:
       - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
 #OpenShiftProject:
 #  - actions:

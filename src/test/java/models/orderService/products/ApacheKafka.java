@@ -64,7 +64,7 @@ public class ApacheKafka extends IProduct {
         }
     }
 
-//    @Override
+    @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
@@ -85,8 +85,22 @@ public class ApacheKafka extends IProduct {
     }
 
     @Override
-    protected void delete() {
-            delete("Удалить рекурсивно");
+    public void restart() {
+        super.restart("reset_two_layer_kafka");
     }
 
+    @Override
+    public void stopSoft() {
+        super.stopSoft("stop_two_layer_kafka");
+    }
+
+    @Override
+    public void start() {
+        super.start("start_two_layer_kafka");
+    }
+
+    @Override
+    public void stopHard() {
+        super.stopHard("stop_hard_two_layer_kafka");
+    }
 }
