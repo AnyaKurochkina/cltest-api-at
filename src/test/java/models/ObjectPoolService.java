@@ -34,9 +34,7 @@ public class ObjectPoolService {
 
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess) {
         ObjectPoolEntity objectPoolEntity = createObjectPoolEntity(e);
-        System.out.println(e + "ПреЛок");
         objectPoolEntity.lock();
-        System.out.println(e + " ПостЛок");
         if (objectPoolEntity.getStatus() == ObjectStatus.FAILED) {
             objectPoolEntity.release();
             Assume.assumeFalse("Object is failed", objectPoolEntity.getStatus() == ObjectStatus.FAILED);
@@ -57,9 +55,7 @@ public class ObjectPoolService {
             objectPoolEntity.setStatus(ObjectStatus.CREATED);
         }
         if (!exclusiveAccess) {
-            System.out.println(e + " ПреРелизНО");
             objectPoolEntity.release();
-            System.out.println(e + " ПостРелизНО");
         }
         T entity = objectPoolEntity.get();
         toStringProductStep(entity);

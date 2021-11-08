@@ -222,11 +222,6 @@
     },
     {
         "objectClassName": "models.authorizer.ProjectEnvironment",
-        "env": "DEV",
-        "envType": "DEV"
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
         "env": "LT",
         "envType": "TEST"
     },

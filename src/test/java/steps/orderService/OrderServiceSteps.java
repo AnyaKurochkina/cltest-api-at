@@ -9,6 +9,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
+import lombok.Builder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.InformationSystem;
 import models.authorizer.Project;
@@ -71,7 +72,7 @@ public class OrderServiceSteps extends Steps {
                 e.printStackTrace();
                 log.error("Ошибка в GetErrorFromOrch " + e);
             }
-            Assert.fail(String.format("Ошибка заказа продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product.toString(), orderStatus, error));
+            Assert.fail(String.format("Ошибка заказа продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product, orderStatus, error));
         }
     }
 
@@ -293,17 +294,18 @@ public class OrderServiceSteps extends Steps {
         JsonPath jsonPath = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
+                .assertStatus(200)
                 .jsonPath();
 
         Item item = new Item();
-        //Получаем все item ID по русскоязычному имени экшена он же title, например: "Удалить рекурсивно"
-        item.id = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.item_id", action));
-        //Получаем все item name по русскоязычному имени экшена он же title, например: "Удалить рекурсивно"
-        item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title=='%s'}}.actions.find{it.title=='%s'}.name", action, action));
+        //Получаем все item ID по name, например: "expand_mount_point"
+        item.id = jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.item_id", action));
+        //Получаем все item name
+        item.name = jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.name", action, action));
         //Достаем item ID и item name и сохраняем в объект Item
         if (item.id == null) {
-            item.id = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.item_id", action));
-            item.name = jsonPath.get(String.format("data.find{it.actions.find{it.title.contains('%s')}}.actions.find{it.title.contains('%s')}.name", action, action));
+            item.id = jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action));
+            item.name = jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.actions.find{it.name.contains('%s')}.name", action, action));
         }
 
         Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), item.id);

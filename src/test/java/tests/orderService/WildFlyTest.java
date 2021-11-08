@@ -10,6 +10,7 @@ import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
@@ -83,6 +84,15 @@ public class WildFlyTest extends Tests {
             wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.stopHard();
             wildFly.start();
+        }
+    }
+
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить сертификаты {0}")
+    void updateCerts(WildFly product) {
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            wildFly.updateCerts();
         }
     }
 

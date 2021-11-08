@@ -6,10 +6,8 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.SneakyThrows;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.subModels.Flavor;
@@ -30,6 +28,8 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+@SuperBuilder
+@NoArgsConstructor
 @ToString(onlyExplicitlyIncluded = true, includeFieldNames = false)
 @Log4j2
 public abstract class IProduct extends Entity {
@@ -82,7 +82,6 @@ public abstract class IProduct extends Entity {
     /**
      * @param action экшен
      * @return - возвращаем статус вызова экшена
-     * @throws Throwable необходим для метода invoke (java.lang.reflect.Method)
      */
     @SneakyThrows
     public boolean invokeAction(String action) {
