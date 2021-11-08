@@ -58,19 +58,19 @@ public class RabbitMQCluster extends IProduct {
         jsonTemplate = "/orders/rabbitmq_cluster.json";
         productName = "RabbitMQ Cluster";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
+        if (projectId == null) {
             projectId = project.getId();
         }
-        if(productId == null) {
+        if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
     }
 
-//    @Override
+    //    @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        switch (project.getProjectEnvironment().getEnvType()){
+        switch (project.getProjectEnvironment().getEnvType()) {
             case ("TEST"):
                 role = "manager";
                 break;
@@ -104,10 +104,37 @@ public class RabbitMQCluster extends IProduct {
         assertEquals(user, username);
     }
 
+    @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("Удалить рекурсивно");
+        delete("delete_vm");
     }
 
-    public void updateCerts(){super.updateCerts("rabbitmq_update_certs");}
+    public void updateCerts() {
+        super.updateCerts("rabbitmq_update_certs");
+    }
+
+    public void resize() {
+        resize("resize_vm");
+    }
+
+    public void restart() {
+        restart("reset_two_layer_kafka");
+    }
+
+    public void stopSoft() {
+        stopSoft("stop_two_layer_kafka");
+    }
+
+    public void start() {
+        start("start_two_layer_kafka");
+    }
+
+    public void stopHard() {
+        stopHard("stop_hard_two_layer_kafka");
+    }
+
+    public void expandMountPoint(){
+        expandMountPoint("expand_mount_point");
+    }
 }

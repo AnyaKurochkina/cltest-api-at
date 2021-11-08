@@ -103,8 +103,9 @@ public class Ubuntu extends IProduct {
     @Action("start_vm")
     public void start(String action){super.start(action);}
 
-    //Удалить
+    @Step("Удаление продукта")
     @Override
-    @Action("delete_vm")
-    public void delete(String action){super.delete(action);}
+    protected void delete() {
+        delete("delete_vm");
+    }
 }

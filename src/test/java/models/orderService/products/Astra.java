@@ -96,6 +96,7 @@ public class Astra extends IProduct {
         restart("reset_vm");
     }
 
+    @Step("Удаление продукта")
     @Override
     protected void delete() {
         delete("delete_vm");

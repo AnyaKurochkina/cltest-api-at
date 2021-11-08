@@ -87,9 +87,10 @@ public class ClickHouse extends IProduct {
         }
     }
 
+    @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("Удалить рекурсивно");
+        delete("delete_vm");
     }
 
     public void refreshVmConfig() {

@@ -98,12 +98,12 @@ public class PostgreSQL extends IProduct {
                 .build();
     }
 
+    @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("Удалить рекурсивно");
+        delete("delete_vm");
     }
 
-    @Override
     public void expandMountPoint() {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction("expand_mount_point", this, new JSONObject("{\"size\": 10, \"mount\": \"/pg_data\"}"));
@@ -111,8 +111,8 @@ public class PostgreSQL extends IProduct {
         assertTrue(sizeBefore < sizeAfter);
     }
 
-    public void createDb(String dbName, String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
+    public void createDb(String dbName) {
+        orderServiceSteps.executeAction("create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
         Assert.assertTrue("База данных не создалась c именем" + dbName,
                 (Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.add(new Db(dbName, false));
@@ -120,10 +120,6 @@ public class PostgreSQL extends IProduct {
         save();
     }
 
-    //Добавить БД
-    public void createDbTest() {
-        createDb("testdb", "create_db");
-    }
 
     //Удалить БД
     public void removeDb() {
@@ -137,19 +133,14 @@ public class PostgreSQL extends IProduct {
         save();
     }
 
-    public void createDbmsUser(String username, String dbRole, String action) {
+    public void createDbmsUser(String username, String dbRole) {
         String dbName = database.get(0).getNameDB();
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
+        orderServiceSteps.executeAction("create_dbms_user", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
         Assert.assertTrue("Имя пользователя отличается от создаваемого",
                 (Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))));
         users.add(new DbUser(dbName, username, false));
         log.info("users = " + users);
         save();
-    }
-
-    //Добавить пользователя
-    public void createDbmsUserTest() {
-        createDbmsUser("testchelik", "user", "create_dbms_user");
     }
 
     //Сбросить пароль пользователя
@@ -175,7 +166,6 @@ public class PostgreSQL extends IProduct {
         save();
     }
 
-    @Override
     public void resize() {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
@@ -185,6 +175,23 @@ public class PostgreSQL extends IProduct {
         int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
         assertEquals(flavor.data.cpus, cpusAfter);
         assertEquals(flavor.data.memory, memoryAfter);
+    }
+
+    //Перезагрузить по питанию
+    public void restart() {
+        restart("reset_vm");
+    }
+    //Выключить
+    public void stopSoft(){
+        stopSoft("stop_vm_soft");
+    }
+    //Включить
+    public void start(){
+        start("start_vm");
+    }
+    //Выключить принудительно
+    public void stopHard() {
+        stopHard("stop_vm_hard");
     }
 }
 

@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,7 +26,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
@@ -48,39 +49,37 @@ public class ProstgresSQLCluster extends IProduct {
     Flavor flavor;
 
     @Override
-    public void order() {
-        JSONObject template = getJsonParametrizedTemplate();
+    @Step("Заказ продукта")
+    protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
-    }
-
-    public ProstgresSQLCluster() {
-        jsonTemplate = "/orders/postgressql_cluster.json";
-        productName = "PostgreSQL Cluster";
     }
 
     @Override
-    public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        if (productId == null) {
-            projectId = project.id;
+    public void init() {
+        jsonTemplate = "/orders/postgressql_cluster.json";
+        productName = "PostgreSQL Cluster";
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        if(projectId == null) {
+            projectId = project.getId();
+        }
+        if(productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
+    }
+
+    @Override
+    public JSONObject toJson() {
+        Project project = Project.builder().id(projectId).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -92,18 +91,16 @@ public class ProstgresSQLCluster extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.postgresql_version", postgresqlVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
+                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .build();
     }
 
     //Расширить
-    @Override
-    @Action("expand_mount_point")
-    public void expandMountPoint(String action) {
+    public void expandMountPoint() {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/pg_data\"}"));
+        orderServiceSteps.executeAction("expand_mount_point", this, new JSONObject("{\"size\": 10, \"mount\": \"/pg_data\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         assertTrue(sizeBefore < sizeAfter);
     }
@@ -114,26 +111,20 @@ public class ProstgresSQLCluster extends IProduct {
         assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
         database.add(new Db(dbName, false));
         log.info("database = " + database);
-        cacheService.saveEntity(this);
-    }
-
-    //Добавить БД
-    @Action("postgresql_cluster_create_db")
-    public void createDbTest(String action) {
-        createDb("testdb", action);
+        save();
     }
 
     //Удалить БД
     @Action("postgresql_cluster_remove_db")
-    public void removeDb(String action) {
+    public void removeDb() {
         String dbName = database.get(0).getNameDB();
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
+        orderServiceSteps.executeAction("postgresql_cluster_remove_db", this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
         database.get(0).setDeleted(true);
         log.info("database = " + database);
-        cacheService.saveEntity(this);
+        save();
     }
 
     public void createDbmsUser(String username, String dbRole, String action) {
@@ -143,38 +134,40 @@ public class ProstgresSQLCluster extends IProduct {
         assertEquals("Имя пользователя отличается от создаваемого", dbName + "_" + username, dbUserNameActual);
         users.add(new DbUser(dbName, dbUserNameActual, false));
         log.info("users = " + users);
-        cacheService.saveEntity(this);
+        save();
     }
 
     //Добавить пользователя
-    @Action("postgresql_cluster_create_dbms_user")
-    public void createDbmsUserTest(String action) {
-        createDbmsUser("testchelik", "user", action);
+    public void createDbmsUserTest() {
+        createDbmsUser("testchelik", "user", "postgresql_cluster_create_dbms_user");
     }
 
     //Сбросить пароль пользователя
-    @Action("postgresql_cluster_reset_db_user_password")
-    public void resetPassword(String action) {
+    public void resetPassword() {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
+        orderServiceSteps.executeAction("postgresql_cluster_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
     }
 
     //Сбросить пароль владельца
-    @Action("postgresql_cluster_reset_db_owner_password")
-    public void resetDbOwnerPassword(String action) {
+    public void resetDbOwnerPassword() {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password)));
+        orderServiceSteps.executeAction("postgresql_cluster_reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password)));
     }
 
     //Удалить пользователя
-    @Action("postgresql_cluster_remove_dbms_user")
-    public void removeDbmsUser(String action) {
+    public void removeDbmsUser() {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
+        orderServiceSteps.executeAction("postgresql_cluster_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
         users.get(0).setDeleted(true);
         log.info("users = " + users);
         cacheService.saveEntity(this);
+    }
+
+    @Step("Удаление продукта")
+    @Override
+    protected void delete() {
+        delete("delete_vm");
     }
 }

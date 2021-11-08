@@ -32,7 +32,7 @@ public class PostgreSQLTest extends Tests {
     void expandMountPoint(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.expandMountPoint(EXPAND_MOUNT_POINT);
+            postgreSQL.expandMountPoint();
         }
     }
 
@@ -40,7 +40,7 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdb", "Добавить БД");
+            postgreSQL.createDb("createdb");
         }
     }
 
@@ -48,8 +48,8 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdbforuser", "Добавить БД");
-            postgreSQL.createDbmsUser("chelik", "user", "Добавить пользователя");
+            postgreSQL.createDb("createdbforuser");
+            postgreSQL.createDbmsUser("chelik", "user");
         }
     }
 
@@ -57,9 +57,9 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdbforreset", "Добавить БД");
-            postgreSQL.createDbmsUser("chelikforreset", "user", "Добавить пользователя");
-            postgreSQL.resetPassword("Сбросить пароль");
+            postgreSQL.createDb("createdbforreset");
+            postgreSQL.createDbmsUser("chelikforreset", "user");
+            postgreSQL.resetPassword();
         }
     }
 
@@ -67,9 +67,9 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdbforreset", "Добавить БД");
-            postgreSQL.createDbmsUser("chelikforreset", "user", "Добавить пользователя");
-            postgreSQL.removeDbmsUser("Удалить пользователя");
+            postgreSQL.createDb("createdbforreset");
+            postgreSQL.createDbmsUser("chelikforreset", "user");
+            postgreSQL.removeDbmsUser();
         }
     }
 
@@ -78,7 +78,7 @@ public class PostgreSQLTest extends Tests {
     void restart(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.restart(RESTART);
+            postgreSQL.restart();
         }
     }
 
@@ -86,8 +86,8 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdbforremove", "Добавить БД");
-            postgreSQL.removeDb("Удалить БД");
+            postgreSQL.createDb("createdbforremove");
+            postgreSQL.removeDb();
         }
     }
 
@@ -96,8 +96,8 @@ public class PostgreSQLTest extends Tests {
     void stopSoft(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.stopSoft(STOP_SOFT);
-            postgreSQL.start(START);
+            postgreSQL.stopSoft();
+            postgreSQL.start();
         }
     }
 
@@ -106,7 +106,7 @@ public class PostgreSQLTest extends Tests {
     void resize(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.resize(RESIZE);
+            postgreSQL.resize();
         }
     }
 
@@ -115,8 +115,8 @@ public class PostgreSQLTest extends Tests {
     void start(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.stopHard(STOP_HARD);
-            postgreSQL.start(START);
+            postgreSQL.stopHard();
+            postgreSQL.start();
         }
     }
 
@@ -125,8 +125,8 @@ public class PostgreSQLTest extends Tests {
     void stopHard(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.stopHard(STOP_HARD);
-            postgreSQL.start(START);
+            postgreSQL.stopHard();
+            postgreSQL.start();
         }
     }
 

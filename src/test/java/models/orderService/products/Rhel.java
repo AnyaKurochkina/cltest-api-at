@@ -16,6 +16,7 @@ import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
+
 import java.util.List;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -38,13 +39,13 @@ public class Rhel extends IProduct {
         jsonTemplate = "/orders/rhel.json";
         productName = "Rhel";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
+        if (projectId == null) {
             projectId = project.getId();
         }
-        if(productId == null) {
+        if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
-        if(domain == null)
+        if (domain == null)
             domain = orderServiceSteps.getDomainBySegment(this, segment);
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
@@ -81,24 +82,35 @@ public class Rhel extends IProduct {
 
 
     //Перезагрузить по питанию
-    @Override
     public void restart() {
-        super.restart("reset_vm");
+        restart("reset_vm");
     }
 
     //Выключить принудительно
-    @Override
-    public void stopHard(){super.stopHard("stop_vm_hard");}
+    public void stopHard() {
+        stopHard("stop_vm_hard");
+    }
 
     //Выключить
-    @Override
-    public void stopSoft(){super.stopSoft("stop_vm_soft");}
+    public void stopSoft() {
+        stopSoft("stop_vm_soft");
+    }
 
     //Включить
-    @Override
-    public void start(){super.start("start_vm");}
+    public void start() {
+        start("start_vm");
+    }
 
-    //Удалить
+    public void resize() {
+        resize("resize_vm");
+    }
+    public void expandMountPoint(){
+        expandMountPoint("expand_mount_point");
+    }
+
+    @Step("Удаление продукта")
     @Override
-    public void delete(){super.delete("delete_vm");}
+    protected void delete() {
+        delete("delete_vm");
+    }
 }

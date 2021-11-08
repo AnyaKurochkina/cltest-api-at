@@ -80,8 +80,9 @@ public class Podman extends IProduct {
                 .build();
     }
 
+    @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("Удалить рекурсивно");
+        delete("delete_vm");
     }
 }

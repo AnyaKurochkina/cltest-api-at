@@ -96,10 +96,11 @@ public class PostgresPro extends IProduct {
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .build();
     }
-    
+
+    @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("Удалить рекурсивно");
+        delete("delete_vm");
     }
 
     //Расширить
@@ -175,7 +176,6 @@ public class PostgresPro extends IProduct {
     }
 
     //Изменить конфигурацию
-    @Override
     public void resize() {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);

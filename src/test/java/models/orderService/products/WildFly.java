@@ -56,15 +56,15 @@ public class WildFly extends IProduct {
         jsonTemplate = "/orders/wildfly.json";
         productName = "WildFly";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
+        if (projectId == null) {
             projectId = project.getId();
         }
-        if(productId == null) {
+        if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
     }
 
-//    @Override
+    //    @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
@@ -86,14 +86,45 @@ public class WildFly extends IProduct {
     }
 
     //Обновить сертификаты
-    public void updateCerts(){super.updateCerts("wildfly_update_certs");}
+    public void updateCerts() {
+        super.updateCerts("wildfly_update_certs");
+    }
 
-    @Override
     public void expandMountPoint() {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction("expand_mount_point", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/app\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
+    }
+
+    //Перезагрузить по питанию
+    public void restart() {
+        restart("reset_vm");
+    }
+
+    //Выключить
+    public void stopSoft() {
+        stopSoft("stop_vm_soft");
+    }
+
+    //Включить
+    public void start() {
+        start("start_vm");
+    }
+
+    //Выключить принудительно
+    public void stopHard() {
+        stopHard("stop_vm_hard");
+    }
+
+    public void resize() {
+        resize("resize_vm");
+    }
+
+    @Step("Удаление продукта")
+    @Override
+    protected void delete() {
+        delete("delete_vm");
     }
 
 }

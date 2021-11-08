@@ -95,7 +95,7 @@ public class OpenShiftProject extends IProduct {
     @Override
     @Step("Удаление продукта")
     protected void delete() {
-        super.delete("delete_openshift_project");
+        delete("delete_openshift_project");
     }
 
     //Проверка на наличие СХД у продукта

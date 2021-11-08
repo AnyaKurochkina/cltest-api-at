@@ -32,7 +32,7 @@ public class NginxTest extends Tests {
     void expandMountPoint(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            nginx.expandMountPoint(EXPAND_MOUNT_POINT);
+            nginx.expandMountPoint();
         }
     }
 
@@ -41,7 +41,7 @@ public class NginxTest extends Tests {
     void restart(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            nginx.restart(RESTART);
+            nginx.restart();
         }
     }
 
@@ -50,8 +50,8 @@ public class NginxTest extends Tests {
     void stopSoft(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            nginx.stopSoft(STOP_SOFT);
-            nginx.start(START);
+            nginx.stopSoft();
+            nginx.start();
         }
     }
 
@@ -60,9 +60,9 @@ public class NginxTest extends Tests {
     void resize(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            nginx.stopHard(STOP_HARD);
-            nginx.resize(RESIZE);
-            nginx.start(START);
+            nginx.stopHard();
+            nginx.resize();
+            nginx.start();
         }
     }
 
@@ -71,8 +71,8 @@ public class NginxTest extends Tests {
     void start(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            nginx.stopHard(STOP_HARD);
-            nginx.start(START);
+            nginx.stopHard();
+            nginx.start();
         }
     }
 
@@ -81,8 +81,8 @@ public class NginxTest extends Tests {
     void stopHard(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            nginx.stopHard(STOP_HARD);
-            nginx.start(START);
+            nginx.stopHard();
+            nginx.start();
         }
     }
 

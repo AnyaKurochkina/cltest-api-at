@@ -32,7 +32,7 @@ public class RedisTest extends Tests {
     void expandMountPoint(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            redis.expandMountPoint(EXPAND_MOUNT_POINT);
+            redis.expandMountPoint();
         }
     }
 
@@ -50,7 +50,7 @@ public class RedisTest extends Tests {
     void restart(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            redis.restart(RESTART);
+            redis.restart();
         }
     }
 
@@ -59,8 +59,8 @@ public class RedisTest extends Tests {
     void stopSoft(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            redis.stopSoft(STOP_SOFT);
-            redis.start(START);
+            redis.stopSoft();
+            redis.start();
         }
     }
 
@@ -69,7 +69,7 @@ public class RedisTest extends Tests {
     void resize(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            redis.resize(RESIZE);
+            redis.resize();
         }
     }
 
@@ -78,8 +78,8 @@ public class RedisTest extends Tests {
     void start(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            redis.stopHard(STOP_HARD);
-            redis.start(START);
+            redis.stopHard();
+            redis.start();
         }
     }
 
@@ -88,8 +88,8 @@ public class RedisTest extends Tests {
     void stopHard(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            redis.stopHard(STOP_HARD);
-            redis.start(START);
+            redis.stopHard();
+            redis.start();
         }
     }
 

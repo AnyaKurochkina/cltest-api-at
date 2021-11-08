@@ -32,7 +32,7 @@ public class WindowsTest extends Tests {
     void addDisk(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            windows.addDisk(ADD_DISK);
+            windows.addDisk();
         }
     }
 
@@ -41,7 +41,7 @@ public class WindowsTest extends Tests {
     void expandMountPoint(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            windows.expandMountPoint(EXPAND_MOUNT_POINT);
+            windows.expandMountPoint();
         }
     }
 
@@ -50,7 +50,7 @@ public class WindowsTest extends Tests {
     void restart(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            windows.restart(RESTART);
+            windows.restart();
         }
     }
 
@@ -59,8 +59,8 @@ public class WindowsTest extends Tests {
     void stopSoft(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            windows.stopSoft(STOP_SOFT);
-            windows.start(START);
+            windows.stopSoft();
+            windows.start();
         }
     }
 
@@ -69,9 +69,9 @@ public class WindowsTest extends Tests {
     void resize(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            windows.stopHard(STOP_HARD);
-            windows.resize(RESIZE);
-            windows.start(START);
+            windows.stopHard();
+            windows.resize();
+            windows.start();
         }
     }
 
@@ -80,8 +80,8 @@ public class WindowsTest extends Tests {
     void start(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            windows.stopHard(STOP_HARD);
-            windows.start(START);
+            windows.stopHard();
+            windows.start();
         }
     }
 
@@ -90,8 +90,8 @@ public class WindowsTest extends Tests {
     void stopHard(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            windows.stopHard(STOP_HARD);
-            windows.start(START);
+            windows.stopHard();
+            windows.start();
         }
     }
 

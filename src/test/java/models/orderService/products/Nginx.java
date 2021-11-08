@@ -83,8 +83,33 @@ public class Nginx extends IProduct {
                 .build();
     }
 
+    public void resize() {
+        resize("resize_vm");
+    }
+
+    public void restart() {
+        restart("reset_two_layer_kafka");
+    }
+
+    public void stopSoft() {
+        stopSoft("stop_two_layer_kafka");
+    }
+
+    public void start() {
+        start("start_two_layer_kafka");
+    }
+
+    public void stopHard() {
+        stopHard("stop_hard_two_layer_kafka");
+    }
+
+    public void expandMountPoint(){
+        expandMountPoint("expand_mount_point");
+    }
+
+    @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("Удалить рекурсивно");
+        delete("delete_vm");
     }
 }

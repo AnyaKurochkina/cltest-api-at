@@ -32,7 +32,7 @@ public class WildFlyTest extends Tests {
     void expandMountPoint(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            wildFly.expandMountPoint(EXPAND_MOUNT_POINT);
+            wildFly.expandMountPoint();
         }
     }
 
@@ -41,7 +41,7 @@ public class WildFlyTest extends Tests {
     void restart(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            wildFly.restart(RESTART);
+            wildFly.restart();
         }
     }
 
@@ -50,8 +50,8 @@ public class WildFlyTest extends Tests {
     void stopSoft(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            wildFly.stopSoft(STOP_SOFT);
-            wildFly.start(START);
+            wildFly.stopSoft();
+            wildFly.start();
         }
     }
 
@@ -60,9 +60,9 @@ public class WildFlyTest extends Tests {
     void resize(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            wildFly.stopHard(STOP_HARD);
-            wildFly.resize(RESIZE);
-            wildFly.start(START);
+            wildFly.stopHard();
+            wildFly.resize();
+            wildFly.start();
         }
     }
 
@@ -71,8 +71,8 @@ public class WildFlyTest extends Tests {
     void start(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            wildFly.stopHard(STOP_HARD);
-            wildFly.start(START);
+            wildFly.stopHard();
+            wildFly.start();
         }
     }
 
@@ -81,8 +81,8 @@ public class WildFlyTest extends Tests {
     void stopHard(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            wildFly.stopHard(STOP_HARD);
-            wildFly.start(START);
+            wildFly.stopHard();
+            wildFly.start();
         }
     }
 

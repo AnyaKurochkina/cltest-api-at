@@ -138,6 +138,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     @Override
+    @Step("Удаление продукта")
     protected void delete(){
         delete("delete_two_layer");
     }

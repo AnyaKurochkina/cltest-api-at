@@ -31,7 +31,7 @@ public class RabbitMQClusterTest extends Tests {
     void expandMountPoint(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.expandMountPoint(EXPAND_MOUNT_POINT);
+            rabbit.expandMountPoint();
         }
     }
 
@@ -40,7 +40,7 @@ public class RabbitMQClusterTest extends Tests {
     void restart(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.restart(RESTART);
+            rabbit.restart();
         }
     }
 
@@ -49,8 +49,8 @@ public class RabbitMQClusterTest extends Tests {
     void stopSoft(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.stopSoft(STOP_SOFT);
-            rabbit.start(START);
+            rabbit.stopSoft();
+            rabbit.start();
         }
     }
 
@@ -59,7 +59,7 @@ public class RabbitMQClusterTest extends Tests {
     void resize(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.rabbitmqCreateUser("Создать пользователя RabbitMQ");
+            rabbit.rabbitmqCreateUser();
         }
     }
 
@@ -68,8 +68,8 @@ public class RabbitMQClusterTest extends Tests {
     void start(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.stopHard(STOP_HARD);
-            rabbit.start(START);
+            rabbit.stopHard();
+            rabbit.start();
         }
     }
 
@@ -78,8 +78,8 @@ public class RabbitMQClusterTest extends Tests {
     void stopHard(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.stopHard(STOP_HARD);
-            rabbit.start(START);
+            rabbit.stopHard();
+            rabbit.start();
         }
     }
 

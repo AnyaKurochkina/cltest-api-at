@@ -83,7 +83,6 @@ public class Redis extends IProduct {
     }
 
     //Изменить конфигурацию
-    @Override
     public void resize() {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
@@ -97,7 +96,6 @@ public class Redis extends IProduct {
     }
 
     //Расширить
-    @Override
     public void expandMountPoint() {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction("expand_mount_point", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/redis/data\"}"));
@@ -108,6 +106,29 @@ public class Redis extends IProduct {
     public void resetPassword() {
         String password = "yxjpjk7xvOImb1O9vZZiGUlsItkqLqtbB1VPZHzL6";
         orderServiceSteps.executeAction("reset_redis_password", this, new JSONObject(String.format("{redis_password: \"%s\"}", password)));
+    }
+
+    //Перезагрузить по питанию
+    public void restart() {
+        restart("reset_vm");
+    }
+    //Выключить
+    public void stopSoft(){
+        stopSoft("stop_vm_soft");
+    }
+    //Включить
+    public void start(){
+        start("start_vm");
+    }
+    //Выключить принудительно
+    public void stopHard() {
+        stopHard("stop_vm_hard");
+    }
+
+    @Step("Удаление продукта")
+    @Override
+    protected void delete() {
+        delete("delete_vm");
     }
 
 }

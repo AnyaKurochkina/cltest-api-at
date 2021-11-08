@@ -33,7 +33,7 @@ public class RhelTest extends Tests {
     void expandMountPoint(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rhel.expandMountPoint(EXPAND_MOUNT_POINT);
+            rhel.expandMountPoint();
         }
     }
 
@@ -42,7 +42,7 @@ public class RhelTest extends Tests {
     void restart(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rhel.restart(RESTART);
+            rhel.restart();
         }
     }
 
@@ -51,8 +51,8 @@ public class RhelTest extends Tests {
     void stopSoft(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rhel.stopSoft(STOP_SOFT);
-            rhel.start(START);
+            rhel.stopSoft();
+            rhel.start();
         }
     }
 
@@ -61,9 +61,9 @@ public class RhelTest extends Tests {
     void resize(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rhel.stopHard(STOP_HARD);
-            rhel.resize(RESIZE);
-            rhel.start(START);
+            rhel.stopHard();
+            rhel.resize();
+            rhel.start();
         }
     }
 
@@ -72,8 +72,8 @@ public class RhelTest extends Tests {
     void start(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rhel.stopHard(STOP_HARD);
-            rhel.start(START);
+            rhel.stopHard();
+            rhel.start();
         }
     }
 
@@ -82,8 +82,8 @@ public class RhelTest extends Tests {
     void stopHard(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rhel.stopHard(STOP_HARD);
-            rhel.start(START);
+            rhel.stopHard();
+            rhel.start();
         }
     }
 

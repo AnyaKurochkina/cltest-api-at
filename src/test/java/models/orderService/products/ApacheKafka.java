@@ -105,4 +105,10 @@ public class ApacheKafka extends IProduct {
     public void expandMountPoint(){
         expandMountPoint("expand_mount_point");
     }
+
+    @Step("Удаление продукта")
+    @Override
+    protected void delete() {
+        delete("delete_vm");
+    }
 }

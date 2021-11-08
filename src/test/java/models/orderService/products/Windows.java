@@ -58,15 +58,15 @@ public class Windows extends IProduct {
         jsonTemplate = "/orders/windows_server.json";
         productName = "Windows server";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
+        if (projectId == null) {
             projectId = project.getId();
         }
-        if(productId == null) {
+        if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
     }
 
-//    @Override
+    //    @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
@@ -92,7 +92,6 @@ public class Windows extends IProduct {
         Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, "I")));
     }
 
-    @Override
     //Расширить диск
     public void expandMountPoint() {
         orderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"I\", size: 1}"));
@@ -101,26 +100,33 @@ public class Windows extends IProduct {
 
 
     //Перезагрузить по питанию
-    @Override
-    @Action("reset_vm")
-    public void restart(String action) {
-        super.restart("reset_vm");
+    public void restart() {
+        restart("reset_vm");
     }
 
     //Выключить принудительно
-    @Override
-    public void stopHard(){super.stopHard("stop_vm_hard");}
+    public void stopHard() {
+        stopHard("stop_vm_hard");
+    }
 
     //Выключить
-    @Override
-    public void stopSoft(){super.stopSoft("stop_vm_soft");}
+    public void stopSoft() {
+        stopSoft("stop_vm_soft");
+    }
 
     //Включить
-    @Override
-    public void start(){super.start("start_vm");}
+    public void start() {
+        start("start_vm");
+    }
 
-    //Удалить
+    public void resize() {
+        resize("resize_vm");
+    }
+
+    @Step("Удаление продукта")
     @Override
-    protected void delete(){super.delete("delete_vm");}
+    protected void delete() {
+        delete("delete_vm");
+    }
 
 }
