@@ -95,6 +95,12 @@ public class Astra extends IProduct {
     public void restart() {
         restart("reset_vm");
     }
+    public void expandMountPoint(){
+        expandMountPoint("expand_mount_point");
+    }
+    public void resize() {
+        resize("resize_vm");
+    }
 
     @Step("Удаление продукта")
     @Override

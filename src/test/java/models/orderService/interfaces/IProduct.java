@@ -203,27 +203,27 @@ public abstract class IProduct extends Entity {
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
 
-    @Step
-    @SneakyThrows
-    public void toStringProductStep() {
-        AllureLifecycle allureLifecycle = Allure.getLifecycle();
-        String id = allureLifecycle.getCurrentTestCaseOrStep().get();
-        List<Parameter> list = new ArrayList<>();
-        List<Field> fieldList = new ArrayList<>(Arrays.asList(getClass().getSuperclass().getDeclaredFields()));
-        fieldList.addAll(Arrays.asList(getClass().getDeclaredFields()));
-        for (Field field : fieldList) {
-            if (Modifier.isStatic(field.getModifiers()))
-                continue;
-            field.setAccessible(true);
-            if (field.get(this) != null) {
-                Parameter parameter = new Parameter();
-                parameter.setName(field.getName());
-                parameter.setValue(field.get(this).toString());
-                list.add(parameter);
-            }
-        }
-        allureLifecycle.updateStep(id, s -> s.setName("Получен продукт " + getProductName() + " с параметрами"));
-        allureLifecycle.updateStep(id, s -> s.setParameters(list));
-    }
+//    @Step
+//    @SneakyThrows
+//    public void toStringProductStep() {
+//        AllureLifecycle allureLifecycle = Allure.getLifecycle();
+//        String id = allureLifecycle.getCurrentTestCaseOrStep().get();
+//        List<Parameter> list = new ArrayList<>();
+//        List<Field> fieldList = new ArrayList<>(Arrays.asList(getClass().getSuperclass().getDeclaredFields()));
+//        fieldList.addAll(Arrays.asList(getClass().getDeclaredFields()));
+//        for (Field field : fieldList) {
+//            if (Modifier.isStatic(field.getModifiers()))
+//                continue;
+//            field.setAccessible(true);
+//            if (field.get(this) != null) {
+//                Parameter parameter = new Parameter();
+//                parameter.setName(field.getName());
+//                parameter.setValue(field.get(this).toString());
+//                list.add(parameter);
+//            }
+//        }
+//        allureLifecycle.updateStep(id, s -> s.setName("Получен продукт " + getProductName() + " с параметрами"));
+//        allureLifecycle.updateStep(id, s -> s.setParameters(list));
+//    }
 
 }

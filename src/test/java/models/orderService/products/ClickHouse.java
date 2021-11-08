@@ -90,14 +90,14 @@ public class ClickHouse extends IProduct {
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_vm");
+        delete("delete_two_layer");
     }
 
     public void refreshVmConfig() {
         orderServiceSteps.executeAction(REFRESH_VM_CONFIG, this, null);
     }
 
-    public void deleteDb() {
+    public void removeDb() {
         String dbName = database.get(0).getNameDB();
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
         orderServiceSteps.executeAction(CLICKHOUSE_DELETE_DB, this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
@@ -113,7 +113,7 @@ public class ClickHouse extends IProduct {
         orderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
     }
 
-    public void deleteDbmsUser() {
+    public void removeDbmsUser() {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         orderServiceSteps.executeAction(CLICKHOUSE_DELETE_DBMS_USER, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
@@ -123,30 +123,43 @@ public class ClickHouse extends IProduct {
         save();
     }
 
-    public void createDbTest() {
-        createDb("db_1", CLICKHOUSE_CREATE_DB);
-    }
-
-    public void createDbmsUserTest() {
-        createDbmsUser("chelik", "txLhQ3UoykznQ2i2qD_LEMUQ_-U", CLICKHOUSE_CREATE_DBMS_USER);
-    }
-
-    public void createDb(String dbName, String action) {
+    public void createDb(String dbName) {
         Db db = new Db(dbName, false);
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"db_name\":\"%s\"}", dbName)));
+        orderServiceSteps.executeAction(CLICKHOUSE_CREATE_DB, this, new JSONObject(String.format("{\"db_name\":\"%s\"}", dbName)));
         Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.add(db);
         save();
     }
 
-    public void createDbmsUser(String username, String password, String action) {
+    public void createDbmsUser(String username, String password) {
         String dbName = database.get(0).getNameDB();
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName, username, password)));
+        orderServiceSteps.executeAction(CLICKHOUSE_CREATE_DBMS_USER, this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName, username, password)));
         Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)));
         users.add(new DbUser(dbName, username, false));
         save();
     }
 
+    public void expandMountPoint(){
+        expandMountPoint("expand_mount_point");
+    }
+    //Перезагрузить по питанию
+    public void restart() {
+        restart("reset_two_layer");
+    }
+    //Выключить принудительно
+    public void stopHard() {
+        stopHard("stop_hard_two_layer");
+    }
+
+    //Выключить
+    public void stopSoft() {
+        stopSoft("stop_two_layer");
+    }
+
+    //Включить
+    public void start() {
+        start("start_two_layer");
+    }
 
 //    @Override
     @Override
