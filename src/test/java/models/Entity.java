@@ -2,7 +2,11 @@ package models;
 
 import core.helper.JsonHelper;
 import core.helper.ObjectStatus;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
+@NoArgsConstructor
+@SuperBuilder
 public abstract class Entity implements AutoCloseable {
 
     public String objectClassName;

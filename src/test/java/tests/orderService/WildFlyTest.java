@@ -87,6 +87,13 @@ public class WildFlyTest extends Tests {
         }
     }
 
+//    @Test
+//    void updateCerts() {
+//        WildFly wildFly = new WildFly("f529a1ce-d2e5-4ae3-ab24-30b5a7957be2",
+//                "proj-frybyv41jh", "WildFly");
+//        wildFly.updateCerts();
+//    }
+
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(WildFly product) {
