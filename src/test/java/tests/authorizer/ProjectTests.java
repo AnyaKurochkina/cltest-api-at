@@ -3,14 +3,9 @@ package tests.authorizer;
 import core.helper.Deleted;
 import io.qameta.allure.*;
 import models.authorizer.Project;
-import org.junit.OrderLabel;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.params.ParameterizedTest;
-import steps.authorizer.ProjectSteps;
 import tests.Tests;
 
 @Epic("Организационная структура")

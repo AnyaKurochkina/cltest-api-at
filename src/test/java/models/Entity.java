@@ -1,10 +1,11 @@
 package models;
 
 import core.helper.JsonHelper;
-import core.helper.ObjectStatus;
+import core.enums.ObjectStatus;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.json.JSONObject;
 
 @NoArgsConstructor
 @SuperBuilder
@@ -12,11 +13,12 @@ public abstract class Entity implements AutoCloseable {
 
     public String objectClassName;
 
-    public void init(){
+    public void init() {
 
     }
-//    public abstract JSONObject toJson();
-//    public abstract Entity toEntity();
+
+    public abstract JSONObject toJson();
+
     protected abstract void create();
 
     protected void delete() {
@@ -33,14 +35,12 @@ public abstract class Entity implements AutoCloseable {
     @Override
     public void close() {
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
-        System.out.println(this + " ПреРелиз");
         objectPoolEntity.release();
-        System.out.println(this + " ПостРелиз");
     }
 
     public void deleteObject() {
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
-        if(objectPoolEntity.getStatus() == ObjectStatus.DELETED)
+        if (objectPoolEntity.getStatus() == ObjectStatus.DELETED)
             return;
         delete();
         objectPoolEntity.setStatus(ObjectStatus.DELETED);
@@ -59,6 +59,4 @@ public abstract class Entity implements AutoCloseable {
         return createObject(true);
     }
 
-
-//    public abstract void initDefaultFields();
 }

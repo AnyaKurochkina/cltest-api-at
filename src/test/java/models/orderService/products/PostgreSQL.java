@@ -7,7 +7,6 @@ import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -17,7 +16,6 @@ import models.subModels.Flavor;
 import models.subModels.Db;
 import models.subModels.DbUser;
 import org.json.JSONObject;
-import org.junit.Action;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 

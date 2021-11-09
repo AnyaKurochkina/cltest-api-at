@@ -7,7 +7,6 @@ import io.qameta.allure.TmsLink;
 import models.authorizer.Organization;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
-import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import steps.tarifficator.TariffPlanSteps;
 import tests.Tests;
@@ -20,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @DisplayName("Базовые тарифные планы")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@OrderLabel("tests.tarifficator.OrganizationTariffPlansTests")
+//@OrderLabel("tests.tarifficator.OrganizationTariffPlansTests")
 @Tag("OTP")
 public class OrganizationTariffPlansTests extends Tests {
     TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();

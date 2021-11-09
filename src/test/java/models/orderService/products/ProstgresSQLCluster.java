@@ -15,7 +15,6 @@ import models.subModels.Db;
 import models.subModels.DbUser;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Action;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -117,7 +116,6 @@ public class ProstgresSQLCluster extends IProduct {
     }
 
     //Удалить БД
-    @Action("postgresql_cluster_remove_db")
     public void removeDb() {
         String dbName = database.get(0).getNameDB();
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
