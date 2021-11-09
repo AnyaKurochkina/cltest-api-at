@@ -13,7 +13,7 @@ ClickHouse:
       [ 'expand_mount_point', 'clickhouse_create_db', 'clickhouse_create_dbms_user', 'clickhouse_reset_db_user_password', 'reset_two_layer', 'clickhouse_remove_dbms_user', 'clickhouse_remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
   - options:
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+        - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
@@ -28,7 +28,7 @@ ClickHouse:
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 #
-  WildFly:
+WildFly:
     - actions:
         [ 'wildfly_update_certs', 'expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'resize_vm', 'start_two_layer', 'stop_hard_two_layer' ]
     - options:

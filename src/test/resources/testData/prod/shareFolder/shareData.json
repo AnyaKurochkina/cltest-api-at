@@ -219,40 +219,5 @@
         "objectClassName": "models.authorizer.InformationSystem",
         "id": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
         "isForOrders":true
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "env": "LT",
-        "envType": "TEST"
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "env": "IFT",
-        "envType": "TEST"
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "env": "PREPROD",
-        "envType": "TEST"
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "env": "MIGR",
-        "envType": "TEST"
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "env": "ST",
-        "envType": "DEV"
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "env": "HOTFIX",
-        "envType": "TEST"
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "env": "EDU",
-        "envType": "TEST"
     }
 ]

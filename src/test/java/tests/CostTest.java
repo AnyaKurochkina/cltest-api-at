@@ -5,6 +5,7 @@ import core.helper.Http;
 import io.qameta.allure.Description;
 import io.qameta.allure.TmsLink;
 import models.authorizer.Project;
+import models.orderService.products.WildFly;
 import models.subModels.KafkaTopic;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,34 +31,12 @@ import java.util.stream.Stream;
 @Tag("cost2")
 public class CostTest extends Tests {
 
-
     @Test
-    public void getCost(){
-
-//        CostSteps costSteps = new CostSteps();
-//        String tariffPlanId = costSteps.getActiveTariffId();
-//        costSteps.getPrices(tariffPlanId);
-        System.out.println(1);
+    void updateCerts() {
+        WildFly wildFly = new WildFly("f529a1ce-d2e5-4ae3-ab24-30b5a7957be2",
+                "proj-frybyv41jh", "WildFly");
+        wildFly.updateCerts();
     }
-
-
-//    @ParameterizedTest
-//    @Order(1)
-//    @DisplayName("Создание проекта")
-//    @Source(ProductArgumentsProvider.ENV)
-//    @Description("Создание проекта с сохранением в Shared Memory")
-//    public void createProject(String env, String tmsId) {
-//
-//
-//        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-//        List<String> list = orderServiceSteps.getProductsWithStatus(env, "damaged", "changing", "pending", "success");
-//
-//
-//        for (String id : list){
-//            System.out.println(id);
-//        }
-//    }
-
 
     @ParameterizedTest
     @Order(1)
@@ -69,44 +48,4 @@ public class CostTest extends Tests {
             System.out.println(id);
         }
     }
-
-
-
-
-
-
-//    @Tag("test")
-//    @ParameterizedTest
-//    @MethodSource("provideStringsForIsBlank")
-//    void isBlank_ShouldReturnTrueForNullOrBlankStrings(String input, boolean expected) {
-//        System.out.println(input);
-//    }
-//
-//
-//    private static Stream<Arguments> provideStringsForIsBlank() {
-//        return null;
-//    }
-
-//    @Test
-//    @Tag("test")
-//    public void test(){
-//        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-//        List<String> l = orderServiceSteps.getProductsWithStatus("DEV");
-//
-//        List all = new ArrayList();
-//        List list;
-//        int i = 0;
-//        do {
-//            list = new Http(OrderServiceSteps.URL)
-//                    .setProjectId("proj-frybyv41jh")
-//                    .get("calculator/orders/?folder=%2Forganization%2Fvtb%2Ffolder%2Ffold-s5wu0ff33x%2Ffolder%2Ffold-fr4o3pcghy%2Ffolder%2Ffold-humog4orc1%2Ffolder%2Ffold-cq6hc1jmgd%2Ffolder%2Ffold-dkj0exqf9q%2Ffolder%2Ffold-21yhccp939%2Fproject%2Fproj-frybyv41jh%2F&offset="+i)
-//                    .assertStatus(200)
-//                    .jsonPath()
-//                    .getList("results");
-//            all.addAll(list);
-//            i += 100;
-//        } while (list.size() != 0);
-//
-//        System.out.printf("1");
-//    }
 }

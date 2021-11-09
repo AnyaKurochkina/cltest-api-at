@@ -5,7 +5,9 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.authorizer.AccessGroup;
@@ -28,6 +30,8 @@ import static org.junit.Assert.assertTrue;
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
+@NoArgsConstructor
+@SuperBuilder
 public class Redis extends IProduct {
     @ToString.Include
     String segment;

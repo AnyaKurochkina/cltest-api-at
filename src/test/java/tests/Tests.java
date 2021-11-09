@@ -7,11 +7,13 @@ import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.model.Attachment;
 import io.qameta.allure.model.Status;
 import lombok.SneakyThrows;
+import models.orderService.products.WildFly;
 import org.junit.CustomDisplayNameGenerator;
 import org.junit.TmsLinkExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.ByteArrayInputStream;
@@ -51,5 +53,4 @@ public class Tests {
     public void tmsLink(String id, String subId) {
         Allure.tms(id + "." + subId, "");
     }
-
 }

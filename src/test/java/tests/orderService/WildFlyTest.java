@@ -77,21 +77,14 @@ public class WildFlyTest extends Tests {
         }
     }
 
-//    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "Выключить принудительно {0}")
-//    void stopHard(WildFly product) {
-//        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-//            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
-//            wildFly.stopHard();
-//            wildFly.start();
-//        }
-//    }
-
-    @Test
-    void updateCerts() {
-        WildFly wildFly = new WildFly("f529a1ce-d2e5-4ae3-ab24-30b5a7957be2",
-                "proj-frybyv41jh", "WildFly");
-        wildFly.updateCerts();
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Выключить принудительно {0}")
+    void stopHard(WildFly product) {
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            wildFly.stopHard();
+            wildFly.start();
+        }
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

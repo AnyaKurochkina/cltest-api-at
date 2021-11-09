@@ -1,4 +1,4 @@
-package models.orderService.products;
+package core.enums;
 
 public enum ProductStatus {
     success (Num.success),

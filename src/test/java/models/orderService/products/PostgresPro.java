@@ -5,7 +5,9 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
@@ -30,6 +32,8 @@ import static org.junit.Assert.assertTrue;
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
+@NoArgsConstructor
+@SuperBuilder
 public class PostgresPro extends IProduct {
     public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs[0].db_name";
     public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";

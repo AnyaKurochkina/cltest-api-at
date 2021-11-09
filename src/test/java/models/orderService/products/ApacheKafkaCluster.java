@@ -6,7 +6,9 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -25,6 +27,8 @@ import java.util.List;
 @Data
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@SuperBuilder
 public class ApacheKafkaCluster extends IProduct {
     @ToString.Include
     String segment;

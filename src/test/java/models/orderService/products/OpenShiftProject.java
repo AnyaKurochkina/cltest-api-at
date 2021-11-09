@@ -4,6 +4,7 @@ import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
@@ -25,6 +26,8 @@ import java.util.Random;
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
+@NoArgsConstructor
+@SuperBuilder
 public class OpenShiftProject extends IProduct {
     @ToString.Include
     public String resourcePoolLabel;

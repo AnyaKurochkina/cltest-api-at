@@ -17,6 +17,7 @@ import org.junit.jupiter.params.support.AnnotationConsumer;
 import steps.Steps;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,16 +78,22 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         this.variableName = variableSource.value();
     }
 
-    @SneakyThrows
-    public static Map<String, List<Map>> getProductListMap()  {
+    public static Map<String, List<Map>> getProductListMap() {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.findAndRegisterModules();
-        return mapper.readValue(new File(Steps.dataFolder +
-                        ((System.getProperty("products") != null) ?
-                                "/" + System.getProperty("products") :
-                                "/products") + ".yaml"),
-                new TypeReference<Map<String, List<Map>>>() {
-                });
+        Map<String, List<Map>> stringListMap = null;
+        try {
+            stringListMap = mapper.readValue(new File(Steps.dataFolder +
+                            ((System.getProperty("products") != null) ?
+                                    "/" + System.getProperty("products") :
+                                    "/products") + ".yaml"),
+                    new TypeReference<Map<String, List<Map>>>() {
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+        return stringListMap;
     }
 
     public static List<IProduct> getProductList() {
@@ -106,8 +113,8 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                         product.setActions(listAction);
                     list.add(product);
                 }
-            } catch (ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
+            } catch (Exception x) {
+                x.printStackTrace();
             }
         }
         return list;
