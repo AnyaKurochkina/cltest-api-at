@@ -3,10 +3,7 @@ package models.orderService.products;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -38,6 +35,7 @@ public class RabbitMQCluster extends IProduct {
     @ToString.Include
     String platform;
     String domain;
+    @Builder.Default
     String role = "administrator";
     Flavor flavor;
     String osVersion;
@@ -111,7 +109,7 @@ public class RabbitMQCluster extends IProduct {
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_vm");
+        delete("delete_two_layer");
     }
 
     public void updateCerts() {

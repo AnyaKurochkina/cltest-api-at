@@ -146,7 +146,7 @@ public class WildFly extends IProduct {
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_vm");
+        delete("delete_two_layer");
     }
 
 }

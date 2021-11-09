@@ -3,10 +3,7 @@ package models.orderService.products;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -44,7 +41,9 @@ public class ClickHouse extends IProduct {
     String platform;
     String osVersion;
     String domain;
+    @Builder.Default
     public List<Db> database = new ArrayList<>();
+    @Builder.Default
     public List<DbUser> users = new ArrayList<>();
 
     //Проверить конфигурацию

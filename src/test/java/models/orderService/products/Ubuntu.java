@@ -86,26 +86,31 @@ public class Ubuntu extends IProduct {
     }
 
     //Перезагрузить по питанию
-    @Override
-    @Action("reset_vm")
-    public void restart(String action) {
-        super.restart(action);
+    public void restart() {
+        restart("reset_vm");
     }
 
     //Выключить принудительно
-    @Override
-    @Action("stop_vm_hard")
-    public void stopHard(String action){super.stopHard(action);}
+    public void stopHard() {
+        stopHard("stop_vm_hard");
+    }
 
     //Выключить
-    @Override
-    @Action("stop_vm_soft")
-    public void stopSoft(String action){super.stopSoft(action);}
+    public void stopSoft() {
+        stopSoft("stop_vm_soft");
+    }
 
     //Включить
-    @Override
-    @Action("start_vm")
-    public void start(String action){super.start(action);}
+    public void start() {
+        start("start_vm");
+    }
+
+    public void resize() {
+        resize("resize_vm");
+    }
+    public void expandMountPoint(){
+        expandMountPoint("expand_mount_point");
+    }
 
     @Step("Удаление продукта")
     @Override
