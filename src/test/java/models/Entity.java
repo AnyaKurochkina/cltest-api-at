@@ -1,7 +1,7 @@
 package models;
 
 import core.helper.JsonHelper;
-import core.helper.ObjectStatus;
+import core.enums.ObjectStatus;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
