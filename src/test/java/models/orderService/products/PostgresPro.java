@@ -3,10 +3,7 @@ package models.orderService.products;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
@@ -48,7 +45,9 @@ public class PostgresPro extends IProduct {
     @ToString.Include
     String postgresproVersion;
     String domain;
+    @Builder.Default
     public List<Db> database = new ArrayList<>();
+    @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
 
@@ -104,7 +103,7 @@ public class PostgresPro extends IProduct {
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_vm");
+        delete("delete_two_layer");
     }
 
     //Расширить
@@ -115,18 +114,13 @@ public class PostgresPro extends IProduct {
         assertTrue(sizeBefore < sizeAfter);
     }
 
-    public void createDb(String dbName, String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
+    public void createDb(String dbName) {
+        orderServiceSteps.executeAction("create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
         String dbNameActual = (String) orderServiceSteps.getProductsField(this, DB_NAME_PATH);
         assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
         database.add(new Db(dbName, false));
         log.info("database = " + database);
         save();
-    }
-
-    //Добавить БД
-    public void createDbTest() {
-        createDb("testdb", "create_db");
     }
 
     //Удалить БД
@@ -141,19 +135,14 @@ public class PostgresPro extends IProduct {
         save();
     }
 
-    public void createDbmsUser(String username, String dbRole, String action) {
+    public void createDbmsUser(String username, String dbRole) {
         String dbName = database.get(0).getNameDB();
-        orderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
+        orderServiceSteps.executeAction("create_dbms_user", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
         String dbUserNameActual = (String) orderServiceSteps.getProductsField(this, DB_USERNAME_PATH);
         assertEquals("Имя пользователя отличается от создаваемого", dbName+ "_" + username, dbUserNameActual);
         users.add(new DbUser(dbName, dbUserNameActual, false));
         log.info("users = " + users);
         save();
-    }
-
-    //Добавить пользователя
-    public void createDbmsUserTest() {
-        createDbmsUser("testchelik", "user", "create_dbms_user");
     }
 
     //Сбросить пароль пользователя
@@ -191,6 +180,22 @@ public class PostgresPro extends IProduct {
         assertEquals(flavor.data.memory, memoryAfter);
     }
 
+    //Перезагрузить по питанию
+    public void restart() {
+        restart("reset_vm");
+    }
+    //Выключить
+    public void stopSoft(){
+        stopSoft("stop_vm_soft");
+    }
+    //Включить
+    public void start(){
+        start("start_vm");
+    }
+    //Выключить принудительно
+    public void stopHard() {
+        stopHard("stop_vm_hard");
+    }
 }
 
 

@@ -47,8 +47,11 @@ public abstract class IProduct extends Entity {
     public static final String STOP_HARD = "Выключить принудительно";
     public static final String RESIZE = "Изменить конфигурацию";
 
+    @Builder.Default
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+    @Builder.Default
     protected transient ReferencesStep referencesStep = new ReferencesStep();
+    @Builder.Default
     protected transient CacheService cacheService = new CacheService();
     protected transient String jsonTemplate;
     @Setter

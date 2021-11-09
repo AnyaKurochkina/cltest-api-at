@@ -4,10 +4,7 @@ import core.CacheService;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -50,7 +47,9 @@ public class PostgreSQL extends IProduct {
     @ToString.Include
     String postgresqlVersion;
     String domain;
+    @Builder.Default
     public List<Db> database = new ArrayList<>();
+    @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
 
@@ -106,7 +105,7 @@ public class PostgreSQL extends IProduct {
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_vm");
+        delete("delete_two_layer");
     }
 
     public void expandMountPoint() {

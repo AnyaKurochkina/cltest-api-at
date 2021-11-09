@@ -2,6 +2,7 @@ package models;
 
 import core.helper.JsonHelper;
 import core.helper.ObjectStatus;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -21,7 +22,7 @@ public abstract class Entity implements AutoCloseable {
     protected void delete() {
     }
 
-
+    @Builder.Default
     protected transient JsonHelper jsonHelper = new JsonHelper();
     public String uuid;
 

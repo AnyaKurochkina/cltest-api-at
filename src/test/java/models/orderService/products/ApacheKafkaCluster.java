@@ -4,10 +4,7 @@ import core.CacheService;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
@@ -38,6 +35,7 @@ public class ApacheKafkaCluster extends IProduct {
     @ToString.Include
     String kafkaVersion;
     String domain;
+    @Builder.Default
     public List<KafkaTopic> topics = new ArrayList<>();
     Flavor flavor;
     String osVersion;

@@ -20,6 +20,8 @@ import static models.orderService.interfaces.IProduct.*;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql")})
 public class PostgreSQLTest extends Tests {
 
+    //TODO: добавить сброс пароля владельца
+
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     @Tag("removeTest")
