@@ -1,5 +1,6 @@
 package models.orderService.products;
 
+import core.CacheService;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -124,16 +125,11 @@ public class PostgreSQL extends IProduct {
         save();
     }
 
-
     //Удалить БД
-    public void removeDb() {
-        String dbName = database.get(0).getNameDB();
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
-        orderServiceSteps.executeAction("remove_db", this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
-        assertTrue(sizeBefore > sizeAfter);
-        database.get(0).setDeleted(true);
-        log.info("database = " + database);
+    public void removeDb(String dbName) {
+        orderServiceSteps.executeAction("remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
+        Assert.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
     }
 
@@ -160,12 +156,12 @@ public class PostgreSQL extends IProduct {
     }
 
     //Удалить пользователя
-    public void removeDbmsUser() {
+    public void removeDbmsUser(String userName) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         orderServiceSteps.executeAction("remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
+        Assert.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, userName)));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
         assertTrue(sizeBefore > sizeAfter);
-        users.get(0).setDeleted(true);
         log.info("users = " + users);
         save();
     }

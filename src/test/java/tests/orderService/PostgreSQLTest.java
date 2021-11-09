@@ -22,6 +22,7 @@ public class PostgreSQLTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
+    @Tag("removeTest")
     void create(PostgreSQL product) {
         PostgreSQL postgreSQL = product.createObjectExclusiveAccess();
         postgreSQL.close();
@@ -38,6 +39,7 @@ public class PostgreSQLTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить БД {0}")
+    @Tag("removeTest")
     void createDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb("createdb");
@@ -46,6 +48,7 @@ public class PostgreSQLTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить пользователя {0}")
+    @Tag("removeTest")
     void createDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb("createdbforuser");
@@ -65,11 +68,12 @@ public class PostgreSQLTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить пользователя {0}")
+    @Tag("removeTest")
     void removeDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb("createdbforreset");
             postgreSQL.createDbmsUser("chelikforreset", "user");
-            postgreSQL.removeDbmsUser();
+            postgreSQL.removeDbmsUser("chelikforreset");
         }
     }
 
@@ -84,10 +88,11 @@ public class PostgreSQLTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить БД {0}")
+    @Tag("removeTest")
     void removeDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb("createdbforremove");
-            postgreSQL.removeDb();
+            postgreSQL.removeDb("createdbforremove");
         }
     }
 
