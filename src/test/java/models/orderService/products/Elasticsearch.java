@@ -93,6 +93,10 @@ public class Elasticsearch extends IProduct {
                 .build();
     }
 
+    public void expandMountPoint(){
+        expandMountPoint("expand_mount_point");
+    }
+
     @Override
     //Удалить кластер EK Xpack
     protected void delete() {

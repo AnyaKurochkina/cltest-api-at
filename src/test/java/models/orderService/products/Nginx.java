@@ -92,19 +92,19 @@ public class Nginx extends IProduct {
     }
 
     public void restart() {
-        restart("reset_two_layer_kafka");
+        restart("reset_two_layer");
     }
 
     public void stopSoft() {
-        stopSoft("stop_two_layer_kafka");
+        stopSoft("stop_two_layer");
     }
 
     public void start() {
-        start("start_two_layer_kafka");
+        start("start_two_layer");
     }
 
     public void stopHard() {
-        stopHard("stop_hard_two_layer_kafka");
+        stopHard("stop_hard_two_layer");
     }
 
     public void expandMountPoint(){
@@ -114,6 +114,6 @@ public class Nginx extends IProduct {
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_vm");
+        delete("delete_two_layer");
     }
 }

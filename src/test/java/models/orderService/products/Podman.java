@@ -84,6 +84,26 @@ public class Podman extends IProduct {
                 .build();
     }
 
+    public void expandMountPoint(){
+        expandMountPoint("expand_mount_point");
+    }
+
+    public void resize() {
+        resize("resize_vm");
+    }
+
+    public void stopSoft() {
+        stopSoft("stop_two_layer");
+    }
+
+    public void start() {
+        start("start_two_layer");
+    }
+
+    public void stopHard() {
+        stopHard("stop_hard_two_layer");
+    }
+
     @Step("Удаление продукта")
     @Override
     protected void delete() {
