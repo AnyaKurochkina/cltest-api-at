@@ -5,6 +5,7 @@ import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
 import models.Entity;
+import org.json.JSONObject;
 import steps.Steps;
 import steps.authorizer.AuthorizerSteps;
 import tests.Tests;
@@ -19,6 +20,11 @@ public class Organization extends Entity {
     public void init() {
         if(title == null)
             title = "ВТБ";
+    }
+
+    @Override
+    public JSONObject toJson() {
+        return null;
     }
 
     @Override

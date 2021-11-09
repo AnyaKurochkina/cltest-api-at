@@ -1,19 +1,13 @@
 package tests.portalBack;
 
 import core.helper.Deleted;
-import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import io.qameta.allure.TmsLink;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
-import org.junit.OrderLabel;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.params.ParameterizedTest;
 
 import steps.portalBack.AccessGroupSteps;
 import steps.portalBack.PortalBackSteps;
