@@ -33,11 +33,10 @@ import static org.junit.Assert.assertTrue;
 @NoArgsConstructor
 @SuperBuilder
 public class PostgreSQL extends IProduct {
-    public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs.any{it.db_name=='%s'}";
-    public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
-//    public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users.any{it.user_name=='%s'}";
-    public static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name='%s'}";
-    public static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
+    private final static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs.any{it.db_name=='%s'}";
+    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
+    private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name='%s'}";
+    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
     @ToString.Include
     String segment;
     String dataCentre;

@@ -15,6 +15,8 @@ import models.subModels.Db;
 import models.subModels.DbUser;
 import models.subModels.Flavor;
 import org.json.JSONObject;
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -30,10 +32,10 @@ import static org.junit.Assert.assertTrue;
 @NoArgsConstructor
 @SuperBuilder
 public class ProstgresSQLCluster extends IProduct {
-    public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs[0].db_name";
-    public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
-    public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users[0].user_name";
-    public static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
+    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.db_name.contains('%s')";
+    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
+    private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name='%s'}";
+    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -107,32 +109,30 @@ public class ProstgresSQLCluster extends IProduct {
     }
 
     public void createDb(String dbName) {
-        orderServiceSteps.executeAction("postgresql_cluster_create_dbms_user", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
-        String dbNameActual = (String) orderServiceSteps.getProductsField(this, DB_NAME_PATH);
-        assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
+        orderServiceSteps.executeAction("postgresql_cluster_create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
+        Assert.assertTrue("База данных не создалась c именем" + dbName,
+                (Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.add(new Db(dbName, false));
         log.info("database = " + database);
         save();
     }
 
     //Удалить БД
-    public void removeDb() {
-        String dbName = database.get(0).getNameDB();
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
-        orderServiceSteps.executeAction("postgresql_cluster_remove_db", this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
-        assertTrue(sizeBefore > sizeAfter);
-        database.get(0).setDeleted(true);
-        log.info("database = " + database);
+    public void removeDb(String dbName) {
+        orderServiceSteps.executeAction("postgresql_cluster_remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
+        Assert.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
     }
 
-    public void createDbmsUser(String username, String dbRole) {
-        String dbName = database.get(0).getNameDB();
-        orderServiceSteps.executeAction("postgresql_cluster_create_dbms_user", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
-        String dbUserNameActual = (String) orderServiceSteps.getProductsField(this, DB_USERNAME_PATH);
-        assertEquals("Имя пользователя отличается от создаваемого", dbName + "_" + username, dbUserNameActual);
-        users.add(new DbUser(dbName, dbUserNameActual, false));
+    public void createDbmsUser(String username, String dbRole, String dbName) {
+        orderServiceSteps.executeAction("postgresql_cluster_create_dbms_user",
+                this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}",
+                        dbName, dbRole, username)));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(
+                        this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
+                "Имя пользователя отличается от создаваемого");
+        users.add(new DbUser(dbName, username, false));
         log.info("users = " + users);
         save();
     }
@@ -150,12 +150,11 @@ public class ProstgresSQLCluster extends IProduct {
     }
 
     //Удалить пользователя
-    public void removeDbmsUser() {
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
-        orderServiceSteps.executeAction("postgresql_cluster_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
-        assertTrue(sizeBefore > sizeAfter);
-        users.get(0).setDeleted(true);
+    public void removeDbmsUser(String username, String dbName) {
+        orderServiceSteps.executeAction("remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))));
+        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(
+                        this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
+                String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));
         log.info("users = " + users);
         save();
     }

@@ -4,12 +4,14 @@ import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
+import models.orderService.products.PostgreSQL;
 import models.orderService.products.PostgresPro;
 import models.orderService.products.ProstgresSQLCluster;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
@@ -49,7 +51,7 @@ public class ProstgresSQLClusterTest extends Tests {
         try (ProstgresSQLCluster prostgres = product.createObjectExclusiveAccess()) {
             prostgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
             prostgres.createDb("dbforuser");
-            prostgres.createDbmsUser("testchelik", "user");
+            prostgres.createDbmsUser("testchelik", "user", "dbforuser");
         }
     }
 
@@ -58,7 +60,7 @@ public class ProstgresSQLClusterTest extends Tests {
     void resetPassword(ProstgresSQLCluster product) {
         try (ProstgresSQLCluster prostgres = product.createObjectExclusiveAccess()) {
             prostgres.createDb("createdbforreset");
-            prostgres.createDbmsUser("chelikforreset", "user");
+            prostgres.createDbmsUser("chelikforreset", "user","createdbforreset");
             prostgres.resetPassword();
         }
     }
@@ -66,10 +68,11 @@ public class ProstgresSQLClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(ProstgresSQLCluster product) {
-        try (ProstgresSQLCluster prostgres = product.createObjectExclusiveAccess()) {
-            prostgres.createDb("createdbforreset");
-            prostgres.createDbmsUser("chelikforreset", "user");
-            prostgres.removeDbmsUser();
+        try (ProstgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.createDb("createdbforremove");
+            postgres.createDbmsUser("chelikforremove", "user", "createdbforremove");
+            postgres.removeDbmsUser("chelikforremove", "createdbforremove");
+            postgres.removeDb("createdbforremove");
         }
     }
 
@@ -85,8 +88,8 @@ public class ProstgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(PostgresPro product) {
         try (ProstgresSQLCluster prostgres = product.createObjectExclusiveAccess()) {
-            prostgres.createDb("createdbforremove");
-            prostgres.removeDb();
+            prostgres.createDb("createdbforremove1");
+            prostgres.removeDb("createdbforremove1");
         }
     }
 
