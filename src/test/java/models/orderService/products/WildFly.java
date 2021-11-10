@@ -103,8 +103,8 @@ public class WildFly extends IProduct {
         super.updateCerts("wildfly_update_certs");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
-            dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items[0].data.config.certificate_expiration"));
-            dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data[0].config.certificate_expiration"));
+            dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+            dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -31,12 +31,15 @@ import java.util.stream.Stream;
 @Tag("cost2")
 public class CostTest extends Tests {
 
-    @Test
-    void updateCerts() {
-        WildFly wildFly = new WildFly("f529a1ce-d2e5-4ae3-ab24-30b5a7957be2",
-                "proj-frybyv41jh", "WildFly");
-        wildFly.updateCerts();
-    }
+//    @Test
+//    void removeDbmsUser1() {
+//            PostgreSQL postgreSQL= new PostgreSQL("68f64f59-5072-48c1-9ba6-80129fa18d2e",
+//                    "proj-frybyv41jh",
+//                    "PostgreSQL");
+////            postgreSQL.createDb("createdbforremove");
+//            postgreSQL.createDbmsUser("chelikforreset15", "user", "createdbforremove");
+//            postgreSQL.removeDbmsUser("chelikforreset15", "createdbforremove");
+//    }
 
     @ParameterizedTest
     @Order(1)

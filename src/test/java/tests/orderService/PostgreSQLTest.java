@@ -10,6 +10,7 @@ import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
@@ -54,7 +55,7 @@ public class PostgreSQLTest extends Tests {
     void createDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb("createdbforuser");
-            postgreSQL.createDbmsUser("chelik", "user");
+            postgreSQL.createDbmsUser("chelik", "user", "createdbforuser");
         }
     }
 
@@ -62,8 +63,8 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdbforreset");
-            postgreSQL.createDbmsUser("chelikforreset", "user");
+            postgreSQL.createDb("createdbforreset1");
+            postgreSQL.createDbmsUser("chelikforreset", "user", "createdbforreset1");
             postgreSQL.resetPassword();
         }
     }
@@ -73,9 +74,10 @@ public class PostgreSQLTest extends Tests {
     @Tag("removeTest")
     void removeDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdbforreset");
-            postgreSQL.createDbmsUser("chelikforreset", "user");
-            postgreSQL.removeDbmsUser("chelikforreset");
+            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            postgreSQL.createDb("createdbforremove");
+            postgreSQL.createDbmsUser("chelikforreset", "user", "createdbforremove");
+            postgreSQL.removeDbmsUser("chelikforreset", "createdbforremove");
         }
     }
 

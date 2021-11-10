@@ -1,13 +1,6 @@
-WildFly:
+PostgreSQL:
   - actions:
-      [ 'wildfly_update_certs' ]
+      [ 'expand_mount_point', 'create_db', 'create_dbms_user', 'remove_dbms_user', 'reset_db_owner_password', 'reset_two_layer', 'remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
   - options:
-       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "vsphere", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#
+       - { platform: "OpenStack", env: "DEV", postgresqlVersion: "12", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "vsphere", env: "IFT", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
