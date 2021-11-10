@@ -1,6 +1,5 @@
 package models.orderService.products;
 
-import core.CacheService;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -51,12 +50,6 @@ public class PostgreSQL extends IProduct {
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
-
-    public PostgreSQL(String orderId, String projectId, String productName) {
-        this.productName = productName;
-        this.orderId = orderId;
-        this.projectId = projectId;
-    }
 
     @Override
     @Step("Заказ продукта")
@@ -180,24 +173,20 @@ public class PostgreSQL extends IProduct {
         assertEquals(flavor.data.memory, memoryAfter);
     }
 
-    //Перезагрузить по питанию
     public void restart() {
-        restart("reset_vm");
+        restart("reset_two_layer");
     }
 
-    //Выключить
     public void stopSoft() {
-        stopSoft("stop_vm_soft");
+        stopSoft("stop_two_layer");
     }
 
-    //Включить
     public void start() {
-        start("start_vm");
+        start("start_two_layer");
     }
 
-    //Выключить принудительно
     public void stopHard() {
-        stopHard("stop_vm_hard");
+        stopHard("stop_hard_two_layer");
     }
 }
 

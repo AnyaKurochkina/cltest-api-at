@@ -98,7 +98,8 @@ public abstract class IProduct extends Entity {
     }
 
     public void checkPreconditionStatusProduct(ProductStatus status){
-        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
+//        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
+        assertEquals(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus(), status);
     }
 
     //Удалить рекурсивно

@@ -41,7 +41,8 @@ public class Rhel extends IProduct {
     @Override
     public void init() {
         jsonTemplate = "/orders/rhel.json";
-        productName = "Rhel";
+        if(productName == null)
+            productName = "Rhel";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
         if (projectId == null) {
             projectId = project.getId();

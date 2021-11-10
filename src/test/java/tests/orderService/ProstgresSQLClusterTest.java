@@ -86,7 +86,7 @@ public class ProstgresSQLClusterTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить БД {0}")
-    void removeDb(PostgresPro product) {
+    void removeDb(ProstgresSQLCluster product) {
         try (ProstgresSQLCluster prostgres = product.createObjectExclusiveAccess()) {
             prostgres.createDb("createdbforremove1");
             prostgres.removeDb("createdbforremove1");

@@ -1,6 +1,7 @@
 package core.random.string;
 
 import core.random.string.UserDefinedLetterPickerScanner.ScannedUserDefinedPicker;
+import org.intellij.lang.annotations.Language;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -165,7 +166,7 @@ public class RandomStringGenerator {
    * @param regex Pattern based on regular expression
    * @return Random String
    */
-  public String generateByRegex(final String regex) {
+  public String generateByRegex(@Language("RegExp") final String regex) {
     String expanded = new RegexNormalizer(numOfUpperLimit, random).normalizeQuantifiers(regex);
 
     final String[] regexCharacters = expanded.split("");
@@ -266,7 +267,6 @@ public class RandomStringGenerator {
         throw new RuntimeException("Occurs parsing error");
       }
     }
-
     return sb.toString();
   }
 

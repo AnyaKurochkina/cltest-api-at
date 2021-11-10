@@ -42,9 +42,9 @@ public class TestsExecutionListener implements TestExecutionListener {
     public void testPlanExecutionFinished(TestPlan testPlan) {
         ObjectPoolService.saveEntities(Configure.getAppProp("data.folder") + "/shareFolder/logData.json");
 
-        FileWriter fooWriter = new FileWriter(Configure.getAppProp("allure.results") + "environment.properties", false);
-        fooWriter.write("ENV=" + ENV);
-        fooWriter.close();
+//        FileWriter fooWriter = new FileWriter(Configure.getAppProp("allure.results") + "environment.properties", false);
+//        fooWriter.write("ENV=" + ENV);
+//        fooWriter.close();
 
     }
 

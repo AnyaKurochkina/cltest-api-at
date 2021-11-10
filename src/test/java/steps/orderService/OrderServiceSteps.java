@@ -342,10 +342,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Удаление всех заказов")
     public void deleteOrders(String env) {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
         List<String> orders = new Http(URL)
                 .setProjectId(project.id)
                 .get(String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=1&per_page=100&f[status][]=success", project.id))
@@ -362,15 +359,8 @@ public class OrderServiceSteps extends Steps {
                         .setProjectId(project.id)
                         .get("order-service/api/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
-                //TODO: сделать через массив строк например
-                String actionTitle = "delete_two_layer";
-                String itemId = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.item_id", actionTitle));
-                String action = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.actions.find{it.name.contains('%s')}.name", actionTitle, actionTitle));
-                if (action == null){
-                    actionTitle = "delete_vm";
-                    itemId = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.item_id", actionTitle));
-                    action = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.actions.find{it.name.contains('%s')}.name", actionTitle, actionTitle));
-                }
+                String itemId = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.item_id");
+                String action = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.actions.find{it.type == 'delete'}.name");
                 log.info("item_id = " + itemId);
                 log.info("action = " + action);
 
