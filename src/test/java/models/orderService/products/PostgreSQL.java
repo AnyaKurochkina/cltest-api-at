@@ -16,6 +16,7 @@ import models.subModels.Db;
 import models.subModels.DbUser;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ import static org.junit.Assert.assertTrue;
 public class PostgreSQL extends IProduct {
     public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs.any{it.db_name=='%s'}";
     public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
-    public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users.any{it.user_name=='%s'}";
+//    public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users.any{it.user_name=='%s'}";
+    public static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name='%s'}";
     public static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
     @ToString.Include
     String segment;
@@ -70,15 +72,15 @@ public class PostgreSQL extends IProduct {
         jsonTemplate = "/orders/postgresql.json";
         productName = "PostgreSQL";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
+        if (projectId == null) {
             projectId = project.getId();
         }
-        if(productId == null) {
+        if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
     }
 
-//    @Override
+    //    @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
@@ -121,24 +123,19 @@ public class PostgreSQL extends IProduct {
         save();
     }
 
-
     //Удалить БД
-    public void removeDb() {
-        String dbName = database.get(0).getNameDB();
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
-        orderServiceSteps.executeAction("remove_db", this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
-        assertTrue(sizeBefore > sizeAfter);
-        database.get(0).setDeleted(true);
-        log.info("database = " + database);
+    public void removeDb(String dbName) {
+        orderServiceSteps.executeAction("remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
+        Assert.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
     }
 
-    public void createDbmsUser(String username, String dbRole) {
-        String dbName = database.get(0).getNameDB();
+    public void createDbmsUser(String username, String dbRole, String dbName) {
         orderServiceSteps.executeAction("create_dbms_user", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
-        Assert.assertTrue("Имя пользователя отличается от создаваемого",
-                (Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(
+                        this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
+                "Имя пользователя отличается от создаваемого");
         users.add(new DbUser(dbName, username, false));
         log.info("users = " + users);
         save();
@@ -157,12 +154,11 @@ public class PostgreSQL extends IProduct {
     }
 
     //Удалить пользователя
-    public void removeDbmsUser() {
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
-        orderServiceSteps.executeAction("remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
-        assertTrue(sizeBefore > sizeAfter);
-        users.get(0).setDeleted(true);
+    public void removeDbmsUser(String username, String dbName) {
+        orderServiceSteps.executeAction("remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))));
+        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(
+                this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
+                String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));
         log.info("users = " + users);
         save();
     }

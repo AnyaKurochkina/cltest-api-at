@@ -6,12 +6,12 @@
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
-Rhel:
-  - actions:
-      [ 'expand_mount_point', 'reset_vm', 'stop_vm_soft', 'check_vm', 'start_vm', 'stop_vm_hard' ]
-  - options:
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+#Rhel:
+#  - actions:
+#      [ 'expand_mount_point', 'reset_vm', 'stop_vm_soft', 'check_vm', 'start_vm', 'stop_vm_hard' ]
+#  - options:
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
 #OpenShiftProject:
 #  - actions:
@@ -27,12 +27,13 @@ Rhel:
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 #
-#PostgreSQL:
-#  - actions:
-#      [ 'Расширить', 'Добавить БД', 'Добавить пользователя', 'Сбросить пароль', 'Перезагрузить', 'Удалить пользователя', 'Удалить БД', 'Выключить', 'Включить', 'Выключить принудительно' ]
-#  - options:
-#      - { platform: "Nutanix", postgresqlVersion: "11", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", postgresqlVersion: "12", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+PostgreSQL:
+  - actions:
+      #      [ 'expand_mount_point', 'resize_two_layer', 'create_db', 'create_dbms_user', 'remove_dbms_user', 'reset_db_owner_password', 'reset_two_layer', 'remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
+      [ 'create_db', 'create_dbms_user', 'remove_dbms_user', 'remove_db' ]
+  - options:
+      - { platform: "Nutanix", postgresqlVersion: "11", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", postgresqlVersion: "12", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 #
 #RabbitMQCluster:
 #  - actions:
