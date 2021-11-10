@@ -4,6 +4,7 @@ import core.helper.JsonHelper;
 import core.enums.ObjectStatus;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.experimental.SuperBuilder;
 import org.json.JSONObject;
 
@@ -38,11 +39,13 @@ public abstract class Entity implements AutoCloseable {
         objectPoolEntity.release();
     }
 
+    @SneakyThrows
     public void deleteObject() {
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
         if (objectPoolEntity.getStatus() == ObjectStatus.DELETED)
             return;
-        delete();
+        if(objectPoolEntity.getStatus() == ObjectStatus.FAILED_DELETE)
+        throw objectPoolEntity.getError();
         objectPoolEntity.setStatus(ObjectStatus.DELETED);
     }
 

@@ -36,6 +36,7 @@ public class WindowsTest extends Tests {
         }
     }
 
+    //TODO: Ошибка 'uuid' is a required property
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить диск {0}")
     void expandMountPoint(Windows product) {

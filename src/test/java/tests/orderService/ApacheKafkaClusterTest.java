@@ -13,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster")
@@ -59,7 +60,8 @@ public class ApacheKafkaClusterTest extends Tests {
     void createAcl(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.createAcl("*", "Создать ACL Kafka");
+            kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
+            kafka.createAcl("*");
         }
     }
 
@@ -68,7 +70,7 @@ public class ApacheKafkaClusterTest extends Tests {
     void createAclTransaction(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.createAclTransaction("*", "Создание ACL на транзакцию Kafka");
+            kafka.createAclTransaction("*");
         }
     }
 

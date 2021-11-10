@@ -179,21 +179,20 @@ public class PostgresPro extends IProduct {
         assertEquals(flavor.data.memory, memoryAfter);
     }
 
-    //Перезагрузить по питанию
     public void restart() {
-        restart("reset_vm");
+        restart("reset_two_layer");
     }
-    //Выключить
-    public void stopSoft(){
-        stopSoft("stop_vm_soft");
+
+    public void stopSoft() {
+        stopSoft("stop_two_layer");
     }
-    //Включить
-    public void start(){
-        start("start_vm");
+
+    public void start() {
+        start("start_two_layer");
     }
-    //Выключить принудительно
+
     public void stopHard() {
-        stopHard("stop_vm_hard");
+        stopHard("stop_hard_two_layer");
     }
 }
 

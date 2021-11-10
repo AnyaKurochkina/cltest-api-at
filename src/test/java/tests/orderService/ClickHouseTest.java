@@ -53,7 +53,7 @@ public class ClickHouseTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
-    void resetPassword(PostgreSQL product) {
+    void resetPassword(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.createDb("createdbforreset");
             clickHouse.createDbmsUser("chelikforreset", "txLhQ0UoykznQ2i2qD_LEMUQ_-U");

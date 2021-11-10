@@ -42,7 +42,7 @@ public class WildFly extends IProduct {
     String domain;
     Flavor flavor;
 
-    public WildFly(String orderId, String projectId, String productName){
+    public WildFly(String orderId, String projectId, String productName) {
         this.productName = productName;
         this.orderId = orderId;
         this.projectId = projectId;
@@ -105,7 +105,7 @@ public class WildFly extends IProduct {
         try {
             dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items[0].data.config.certificate_expiration"));
             dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data[0].config.certificate_expiration"));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate),
@@ -119,24 +119,20 @@ public class WildFly extends IProduct {
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
 
-    //Перезагрузить по питанию
     public void restart() {
-        restart("reset_vm");
+        restart("reset_two_layer");
     }
 
-    //Выключить
     public void stopSoft() {
-        stopSoft("stop_vm_soft");
+        stopSoft("stop_two_layer");
     }
 
-    //Включить
     public void start() {
-        start("start_vm");
+        start("start_two_layer");
     }
 
-    //Выключить принудительно
     public void stopHard() {
-        stopHard("stop_vm_hard");
+        stopHard("stop_hard_two_layer");
     }
 
     public void resize() {

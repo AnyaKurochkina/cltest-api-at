@@ -10,10 +10,12 @@ import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.junit.Assert;
 import org.junit.Assume;
 
 import java.io.FileInputStream;
@@ -26,7 +28,7 @@ import java.util.*;
 
 import static io.qameta.allure.Allure.getLifecycle;
 
-
+@Log4j2
 public class ObjectPoolService {
     private static final Map<String, ObjectPoolEntity> entities = Collections.synchronizedMap(new LinkedHashMap<>());
     public static final List<String> deleteClassesName = Collections.synchronizedList(new ArrayList<>());
@@ -37,7 +39,8 @@ public class ObjectPoolService {
         objectPoolEntity.lock();
         if (objectPoolEntity.getStatus() == ObjectStatus.FAILED) {
             objectPoolEntity.release();
-            Assume.assumeFalse("Object is failed", objectPoolEntity.getStatus() == ObjectStatus.FAILED);
+//            Assume.assumeFalse("Object is failed", objectPoolEntity.getStatus() == ObjectStatus.FAILED);
+            Assert.assertSame("Object is failed", objectPoolEntity.getStatus(), ObjectStatus.FAILED);
         }
         if (objectPoolEntity.getStatus() == ObjectStatus.NOT_CREATED) {
             try {
@@ -85,8 +88,6 @@ public class ObjectPoolService {
     }
 
     public static ObjectPoolEntity getObjectPoolEntity(Entity entity) {
-//        if(entity.uuid == null)
-//            System.out.println(1);
         return entities.get(entity.uuid);
     }
 
@@ -99,7 +100,7 @@ public class ObjectPoolService {
     }
 
     public static void deleteAllResources() {
-        System.out.println("deleteAllResources");
+        log.debug("##### deleteAllResources start #####");
         List<Thread> threadList = new ArrayList<>();
         Collections.reverse(createdEntities);
         for (String key : createdEntities) {
@@ -117,6 +118,7 @@ public class ObjectPoolService {
                         entity.deleteObject();
                     } catch (Exception e) {
                         objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
+                        objectPoolEntity.setError(e);
                         e.printStackTrace();
                     }
                 });
@@ -127,6 +129,7 @@ public class ObjectPoolService {
                     entity.deleteObject();
                 } catch (Exception e) {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
+                    objectPoolEntity.setError(e);
                     e.printStackTrace();
                 }
             }
@@ -138,6 +141,7 @@ public class ObjectPoolService {
                 e.printStackTrace();
             }
         });
+        log.debug("##### deleteAllResources end #####");
     }
 
     public static void saveEntities(String file) {

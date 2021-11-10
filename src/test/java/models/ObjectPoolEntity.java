@@ -23,12 +23,9 @@ public class ObjectPoolEntity {
     @Getter
     @Setter
     private ObjectStatus status = ObjectStatus.NOT_CREATED;
-    //    @Getter
-//    @Setter
-//    private boolean failed = false;
-//    @Getter
-//    @Setter
-//    private boolean mock = false;
+    @Getter
+    @Setter
+    private Throwable error;
     @Getter
     public final Class<? extends Entity> clazz;
     private final Lock lock = new ReentrantLock();

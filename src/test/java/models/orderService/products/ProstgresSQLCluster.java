@@ -107,7 +107,7 @@ public class ProstgresSQLCluster extends IProduct {
     }
 
     public void createDb(String dbName) {
-        orderServiceSteps.executeAction("postgresql_cluster_create_dbms_user", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
+        orderServiceSteps.executeAction("postgresql_cluster_create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
         String dbNameActual = (String) orderServiceSteps.getProductsField(this, DB_NAME_PATH);
         assertEquals("База данных не создалась именем" + dbName, dbName, dbNameActual);
         database.add(new Db(dbName, false));
