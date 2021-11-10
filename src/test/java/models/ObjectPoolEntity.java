@@ -104,7 +104,11 @@ public class ObjectPoolEntity {
     }
 
     public void release() {
-        lock.unlock();
+        try {
+            lock.unlock();
+        } catch (IllegalMonitorStateException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
