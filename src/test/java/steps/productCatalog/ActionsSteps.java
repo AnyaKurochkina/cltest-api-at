@@ -7,6 +7,7 @@ import io.restassured.response.ValidatableResponse;
 import lombok.SneakyThrows;
 import models.productCatalog.StringModel.StringModelResponse;
 import models.productCatalog.testModel.ActionResponse;
+import models.tarifficator.TariffPlan;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
@@ -36,6 +37,8 @@ public class ActionsSteps {
                 "}";
 
         StringModelResponse response = mapResponseOnClass(object, StringModelResponse.class);
+        StringModelResponse responseGson = CacheService.getCustomGson().fromJson(object, StringModelResponse.class);
+
 
         System.out.println();
 
