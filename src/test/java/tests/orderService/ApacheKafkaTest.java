@@ -14,7 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("ApacheKafka")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafka")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafka"), @Tag("prod")})
 public class ApacheKafkaTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

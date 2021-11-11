@@ -15,7 +15,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("Astra")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("astra")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("astra"), @Tag("prod")})
 public class AstraTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -14,7 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("PostgresPro")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresPro")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresPro"), @Tag("prod")})
 public class PostgresProTest extends Tests {
 
     //TODO: добавить сброс пароля владельца

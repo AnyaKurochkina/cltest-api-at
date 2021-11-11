@@ -18,7 +18,7 @@ import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("WildFly")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("wildfly")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("wildfly"), @Tag("prod")})
 public class WildFlyTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -17,7 +17,7 @@ import tests.Tests;
 
 @Epic("Финансы")
 @Feature("Калькулятор")
-@Tags({@Tag("regress"), @Tag("tariff3")})
+@Tags({@Tag("tariff3")})
 public class CalculatorTest extends Tests {
     CostSteps costSteps = new CostSteps();
 

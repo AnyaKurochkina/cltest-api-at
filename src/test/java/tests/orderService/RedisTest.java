@@ -17,7 +17,7 @@ import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("Redis")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("redis")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("redis"), @Tag("prod")})
 public class RedisTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

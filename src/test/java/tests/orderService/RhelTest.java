@@ -18,7 +18,7 @@ import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("Rhel")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("rhel"), @Tag("prod")})
 public class RhelTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -15,7 +15,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("ClickHouse")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("clickhouse")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("clickhouse"), @Tag("prod")})
 public class ClickHouseTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

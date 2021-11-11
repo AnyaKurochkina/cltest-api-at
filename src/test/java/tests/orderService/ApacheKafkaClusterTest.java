@@ -17,7 +17,7 @@ import java.util.Collections;
 
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafkacluster")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafkacluster"), @Tag("prod")})
 public class ApacheKafkaClusterTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 @DisplayName("Негативные тесты ApacheKafkaCluster")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("regress"), @Tag("negative")})
+//@Tags({@Tag("regress"), @Tag("negative"), @Tag("prod")})
 //@OrderLabel("tests.orderService.ApacheKafkaClusterNegativeTests")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ApacheKafkaClusterNegativeTests extends Tests {

@@ -14,7 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("Podman")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("podman")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("podman"), @Tag("prod")})
 public class PodmanTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
