@@ -71,6 +71,7 @@ public class ObjectPoolEntity {
         }
     }
 
+
     private void removeEmptyNode(JsonNode jsonNode) {
         Iterator<Map.Entry<String, JsonNode>> node = jsonNode.fields();
         while (node.hasNext()) {
@@ -80,11 +81,11 @@ public class ObjectPoolEntity {
             }
             if (entry.getValue().isNull()) {
                 node.remove();
-                return;
+                continue;
             }
             if (entry.getValue().isArray() && entry.getValue().isEmpty()) {
                 node.remove();
-                return;
+                continue;
             }
         }
     }

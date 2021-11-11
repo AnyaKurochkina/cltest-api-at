@@ -71,9 +71,9 @@ public class PostgreSQLTest extends Tests {
     void removeDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.createDb("createdbforremove");
-            postgreSQL.createDbmsUser("chelikforreset", "user", "createdbforremove");
-            postgreSQL.removeDbmsUser("chelikforreset", "createdbforremove");
+            postgreSQL.createDb("createdbforremoveuser");
+            postgreSQL.createDbmsUser("chelikforreset", "user", "createdbforremoveuser");
+            postgreSQL.removeDbmsUser("chelikforreset", "createdbforremoveuser");
         }
     }
 
