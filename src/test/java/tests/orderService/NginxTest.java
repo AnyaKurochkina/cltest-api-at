@@ -61,8 +61,12 @@ public class NginxTest extends Tests {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
             nginx.stopHard();
-            nginx.resize();
-            nginx.start();
+            try {
+                nginx.resize();
+            } finally {
+                nginx.start();
+            }
+
         }
     }
 

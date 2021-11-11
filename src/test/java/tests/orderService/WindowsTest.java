@@ -71,8 +71,11 @@ public class WindowsTest extends Tests {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
             windows.stopHard();
-            windows.resize();
-            windows.start();
+            try {
+                windows.resize();
+            } finally {
+                windows.start();
+            }
         }
     }
 

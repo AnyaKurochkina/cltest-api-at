@@ -45,7 +45,7 @@ public abstract class Entity implements AutoCloseable {
         if (objectPoolEntity.getStatus() == ObjectStatus.DELETED)
             return;
         if(objectPoolEntity.getStatus() == ObjectStatus.FAILED_DELETE)
-        throw objectPoolEntity.getError();
+            throw objectPoolEntity.getError();
         delete();
         objectPoolEntity.setStatus(ObjectStatus.DELETED);
     }

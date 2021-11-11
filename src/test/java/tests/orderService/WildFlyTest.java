@@ -62,8 +62,11 @@ public class WildFlyTest extends Tests {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.stopHard();
-            wildFly.resize();
-            wildFly.start();
+            try {
+                wildFly.resize();
+            } finally {
+                wildFly.start();
+            }
         }
     }
 

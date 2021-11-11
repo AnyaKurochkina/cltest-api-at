@@ -59,8 +59,11 @@ public class AstraTest extends Tests {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.checkPreconditionStatusProduct(ProductStatus.CREATED);
             astra.stopHard();
-            astra.resize();
-            astra.start();
+            try {
+                astra.resize();
+            } finally {
+                astra.start();
+            }
         }
     }
 

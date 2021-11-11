@@ -58,8 +58,11 @@ public class PodmanTest extends Tests {
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
             podman.stopHard();
-            podman.resize();
-            podman.start();
+            try {
+                podman.resize();
+            } finally {
+                podman.start();
+            }
         }
     }
 
