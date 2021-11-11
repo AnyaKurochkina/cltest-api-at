@@ -69,7 +69,6 @@ public class PostgresProTest extends Tests {
             postgresPro.createDb("createdbforreset");
             postgresPro.createDbmsUser("chelikforreset", "user", "createdbforreset");
             postgresPro.removeDbmsUser("chelikforreset", "createdbforreset");
-            postgresPro.removeDb("createdbforreset");
         }
     }
 
