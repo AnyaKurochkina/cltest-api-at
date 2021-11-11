@@ -52,7 +52,7 @@ public class PostgreSQLTest extends Tests {
     void createDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb("createdbforuser");
-            postgreSQL.createDbmsUser("chelik", "user", "createdbforuser");
+            postgreSQL.createDbmsUser("chelik1", "user", "createdbforuser");
         }
     }
 
@@ -61,7 +61,7 @@ public class PostgreSQLTest extends Tests {
     void resetPassword(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb("createdbforreset1");
-            postgreSQL.createDbmsUser("chelikforreset", "user", "createdbforreset1");
+            postgreSQL.createDbmsUser("chelikforreset1", "user", "createdbforreset1");
             postgreSQL.resetPassword();
         }
     }
@@ -72,8 +72,8 @@ public class PostgreSQLTest extends Tests {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgreSQL.createDb("createdbforremove");
-            postgreSQL.createDbmsUser("chelikforreset", "user", "createdbforremove");
-            postgreSQL.removeDbmsUser("chelikforreset", "createdbforremove");
+            postgreSQL.createDbmsUser("chelikforreset2", "user", "createdbforremove");
+            postgreSQL.removeDbmsUser("chelikforreset2", "createdbforremove");
         }
     }
 

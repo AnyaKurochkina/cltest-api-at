@@ -47,7 +47,7 @@ public class ClickHouseTest extends Tests {
     void createDbmsUser(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.createDb("createdbforuser");
-            clickHouse.createDbmsUser("chelik", "txLhQ3UoykznQ2i2qD_LEMUQ_-U");
+            clickHouse.createDbmsUser("chelik1", "user", "createdbforuser");
         }
     }
 
@@ -56,7 +56,7 @@ public class ClickHouseTest extends Tests {
     void resetPassword(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.createDb("createdbforreset");
-            clickHouse.createDbmsUser("chelikforreset", "txLhQ0UoykznQ2i2qD_LEMUQ_-U");
+            clickHouse.createDbmsUser("chelikforreset1", "user", "createdbforreset");
             clickHouse.resetPassword();
         }
     }
@@ -66,8 +66,8 @@ public class ClickHouseTest extends Tests {
     void removeDbmsUser(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.createDb("createdbforreset");
-            clickHouse.createDbmsUser("chelikforreset", "txLhQ0UoykznQ2i0qD_LEMUQ_-U");
-            clickHouse.removeDbmsUser();
+            clickHouse.createDbmsUser("chelikforreset2", "user", "createdbforreset");
+            clickHouse.removeDbmsUser("chelikforreset2", "createdbforreset");
         }
     }
 
@@ -85,7 +85,7 @@ public class ClickHouseTest extends Tests {
     void removeDb(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.createDb("createdbforremove");
-            clickHouse.removeDb();
+            clickHouse.removeDb("createdbforremove");
         }
     }
 

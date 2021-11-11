@@ -51,7 +51,7 @@ public class ProstgresSQLClusterTest extends Tests {
         try (ProstgresSQLCluster prostgres = product.createObjectExclusiveAccess()) {
             prostgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
             prostgres.createDb("dbforuser");
-            prostgres.createDbmsUser("testchelik", "user", "dbforuser");
+            prostgres.createDbmsUser("testchelik1", "user", "dbforuser");
         }
     }
 
@@ -60,7 +60,7 @@ public class ProstgresSQLClusterTest extends Tests {
     void resetPassword(ProstgresSQLCluster product) {
         try (ProstgresSQLCluster prostgres = product.createObjectExclusiveAccess()) {
             prostgres.createDb("createdbforreset");
-            prostgres.createDbmsUser("chelikforreset", "user","createdbforreset");
+            prostgres.createDbmsUser("chelikforreset1", "user","createdbforreset");
             prostgres.resetPassword();
         }
     }
@@ -70,8 +70,8 @@ public class ProstgresSQLClusterTest extends Tests {
     void removeDbmsUser(ProstgresSQLCluster product) {
         try (ProstgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb("createdbforremove");
-            postgres.createDbmsUser("chelikforremove", "user", "createdbforremove");
-            postgres.removeDbmsUser("chelikforremove", "createdbforremove");
+            postgres.createDbmsUser("chelikforremove2", "user", "createdbforremove");
+            postgres.removeDbmsUser("chelikforremove2", "createdbforremove");
         }
     }
 

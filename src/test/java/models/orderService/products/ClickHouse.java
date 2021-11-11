@@ -16,6 +16,7 @@ import models.subModels.Flavor;
 import models.subModels.Db;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -45,20 +46,20 @@ public class ClickHouse extends IProduct {
     public List<DbUser> users = new ArrayList<>();
 
     //Проверить конфигурацию
-    public static final String REFRESH_VM_CONFIG = "check_vm";
+    private static final String REFRESH_VM_CONFIG = "check_vm";
     //Добавить БД
-    public static final String CLICKHOUSE_CREATE_DB = "clickhouse_create_db";
+    private static final String CLICKHOUSE_CREATE_DB = "clickhouse_create_db";
     //Удалить БД
-    public static final String CLICKHOUSE_DELETE_DB = "clickhouse_remove_db";
+    private static final String CLICKHOUSE_DELETE_DB = "clickhouse_remove_db";
     //Добавить пользователя
-    public static final String CLICKHOUSE_CREATE_DBMS_USER = "clickhouse_create_dbms_user";
+    private static final String CLICKHOUSE_CREATE_DBMS_USER = "clickhouse_create_dbms_user";
     //Удалить пользователя
-    public static final String CLICKHOUSE_DELETE_DBMS_USER = "clickhouse_remove_dbms_user";
+    private static final String CLICKHOUSE_DELETE_DBMS_USER = "clickhouse_remove_dbms_user";
 
-    public static String DB_NAME_PATH = "data.find{it.type=='app'}.config.dbs.any{it.db_name=='%s'}";
-    public static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
-    public static String DB_USERNAME_PATH = "data.find{it.type=='app'}.config.db_users.any{it.user_name=='%s'}";
-    public static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
+    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.db_name.contains('%s')";
+    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
+    private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name='%s'}";
+    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
 
     @Override
     @Step("Заказ продукта")
@@ -98,13 +99,10 @@ public class ClickHouse extends IProduct {
         orderServiceSteps.executeAction(REFRESH_VM_CONFIG, this, null);
     }
 
-    public void removeDb() {
-        String dbName = database.get(0).getNameDB();
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
-        orderServiceSteps.executeAction(CLICKHOUSE_DELETE_DB, this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_SIZE_PATH);
-        assertTrue(sizeBefore > sizeAfter);
-        database.get(0).setDeleted(true);
+    public void removeDb(String dbName) {
+        orderServiceSteps.executeAction(CLICKHOUSE_DELETE_DB, this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
+        Assert.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
     }
 
@@ -114,29 +112,33 @@ public class ClickHouse extends IProduct {
         orderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
     }
 
-    public void removeDbmsUser() {
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
-        orderServiceSteps.executeAction(CLICKHOUSE_DELETE_DBMS_USER, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", users.get(0).getUsername())));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, DB_USERNAME_SIZE_PATH);
-        assertTrue(sizeBefore > sizeAfter);
-        users.get(0).setDeleted(true);
+    public void removeDbmsUser(String username, String dbName) {
+        orderServiceSteps.executeAction(CLICKHOUSE_DELETE_DBMS_USER, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)));
+        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(
+                        this, String.format(DB_USERNAME_PATH, username)),
+                String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));
         log.info("users = " + users);
         save();
     }
 
     public void createDb(String dbName) {
-        Db db = new Db(dbName, false);
-        orderServiceSteps.executeAction(CLICKHOUSE_CREATE_DB, this, new JSONObject(String.format("{\"db_name\":\"%s\"}", dbName)));
-        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
-        database.add(db);
+        orderServiceSteps.executeAction(CLICKHOUSE_CREATE_DB, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
+        Assert.assertTrue("База данных не создалась c именем" + dbName,
+                (Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        database.add(new Db(dbName, false));
+        log.info("database = " + database);
         save();
     }
 
-    public void createDbmsUser(String username, String password) {
-        String dbName = database.get(0).getNameDB();
-        orderServiceSteps.executeAction(CLICKHOUSE_CREATE_DBMS_USER, this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName, username, password)));
-        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)));
+    public void createDbmsUser(String username, String dbRole, String dbName) {
+        orderServiceSteps.executeAction(CLICKHOUSE_CREATE_DBMS_USER,
+                this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"txLhQ3UoykznQ2i2qD_LEMUQ_-U\"}",
+                        dbName, dbRole, username)));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(
+                        this, String.format(DB_USERNAME_PATH, username)),
+                "Имя пользователя отличается от создаваемого");
         users.add(new DbUser(dbName, username, false));
+        log.info("users = " + users);
         save();
     }
 
