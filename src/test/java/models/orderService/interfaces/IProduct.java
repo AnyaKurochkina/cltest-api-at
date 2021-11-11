@@ -43,7 +43,7 @@ public abstract class IProduct extends Entity {
     protected transient ReferencesStep referencesStep = new ReferencesStep();
     @Builder.Default
     protected transient CacheService cacheService = new CacheService();
-    protected transient String jsonTemplate;
+    protected String jsonTemplate;
     @Setter
     protected List<String> actions;
 

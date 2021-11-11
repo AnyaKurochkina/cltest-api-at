@@ -18,7 +18,7 @@ import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("PostgreSQL")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql"), @Tag("prod")})
 public class PostgreSQLTest extends Tests {
 
     //TODO: добавить сброс пароля владельца

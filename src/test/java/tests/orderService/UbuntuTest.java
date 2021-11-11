@@ -14,7 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("Ubuntu")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("ubuntu")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("ubuntu"), @Tag("prod")})
 public class UbuntuTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

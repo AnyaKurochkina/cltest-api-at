@@ -17,7 +17,7 @@ import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("Nginx")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("nginx")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("nginx"), @Tag("prod")})
 public class NginxTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

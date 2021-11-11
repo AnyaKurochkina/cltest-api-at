@@ -17,7 +17,7 @@ import static models.orderService.products.Windows.ADD_DISK;
 
 @Epic("Продукты")
 @Feature("Windows")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("windows")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("windows"), @Tag("prod")})
 public class WindowsTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

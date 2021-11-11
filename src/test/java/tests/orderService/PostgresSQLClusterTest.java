@@ -14,7 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("PostgresSQL Cluster")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgressqlcluster")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgressqlcluster"), @Tag("prod")})
 public class PostgresSQLClusterTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -14,7 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("ElasticSearch")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearch")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearch"), @Tag("prod")})
 public class ElasticsearchTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
