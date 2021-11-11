@@ -58,8 +58,11 @@ public class ApacheKafkaTest extends Tests {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.stopHard();
-            kafka.resize();
-            kafka.start();
+            try {
+                kafka.resize();
+            } finally {
+                kafka.start();
+            }
         }
     }
 

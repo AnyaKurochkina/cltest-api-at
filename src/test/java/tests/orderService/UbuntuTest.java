@@ -58,8 +58,11 @@ public class UbuntuTest extends Tests {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.checkPreconditionStatusProduct(ProductStatus.CREATED);
             ubuntu.stopHard();
-            ubuntu.resize();
-            ubuntu.start();
+            try {
+                ubuntu.resize();
+            } finally {
+                ubuntu.start();
+            }
         }
     }
 

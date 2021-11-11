@@ -62,8 +62,11 @@ public class RhelTest extends Tests {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.stopHard();
-            rhel.resize();
-            rhel.start();
+            try {
+                rhel.resize();
+            } finally {
+                rhel.start();
+            }
         }
     }
 

@@ -23,10 +23,12 @@ public class ComparePrebillingTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сравнение стоимости продукта {0} в предбиллинге с ценами активного тарифного плана")
     public void compareTariffs(IProduct product){
+        product.createObject();
         String tariffPlanId = costSteps.getActiveTariffId();
         HashMap<String, Double> activeTariffPlanPrice = costSteps.getPrices(tariffPlanId);
         JSONArray preBillingData = costSteps.getCost(product);
         costSteps.compareTariffs(activeTariffPlanPrice, preBillingData);
+        product.close();
     }
 
 }
