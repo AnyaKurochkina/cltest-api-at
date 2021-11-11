@@ -42,12 +42,6 @@ public class WildFly extends IProduct {
     String domain;
     Flavor flavor;
 
-    public WildFly(String orderId, String projectId, String productName) {
-        this.productName = productName;
-        this.orderId = orderId;
-        this.projectId = projectId;
-    }
-
     @Override
     @Step("Заказ продукта")
     protected void create() {
@@ -105,7 +99,7 @@ public class WildFly extends IProduct {
         try {
             dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
             dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate),

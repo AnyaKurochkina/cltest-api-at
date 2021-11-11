@@ -40,7 +40,7 @@ public class ObjectPoolService {
         if (objectPoolEntity.getStatus() == ObjectStatus.FAILED) {
             objectPoolEntity.release();
 //            Assume.assumeFalse("Object is failed", objectPoolEntity.getStatus() == ObjectStatus.FAILED);
-            Assert.assertSame("Object is failed", objectPoolEntity.getStatus(), ObjectStatus.FAILED);
+            Assert.assertNotSame("Object is failed", objectPoolEntity.getStatus(), ObjectStatus.FAILED);
         }
         if (objectPoolEntity.getStatus() == ObjectStatus.NOT_CREATED) {
             try {
