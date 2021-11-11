@@ -116,7 +116,7 @@ public class ClickHouse extends IProduct {
         orderServiceSteps.executeAction(CLICKHOUSE_DELETE_DBMS_USER, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)));
         Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, username)),
-                String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));
+                String.format("Пользователь: %s не удалился из базы данных: %s",  username, dbName));
         log.info("users = " + users);
         save();
     }
