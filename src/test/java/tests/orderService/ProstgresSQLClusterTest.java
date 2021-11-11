@@ -72,7 +72,6 @@ public class ProstgresSQLClusterTest extends Tests {
             postgres.createDb("createdbforremove");
             postgres.createDbmsUser("chelikforremove", "user", "createdbforremove");
             postgres.removeDbmsUser("chelikforremove", "createdbforremove");
-            postgres.removeDb("createdbforremove");
         }
     }
 

@@ -48,7 +48,7 @@ public class PostgresProTest extends Tests {
     void createDbmsUser(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
             postgresPro.createDb("createdbforuser");
-            postgresPro.createDbmsUser("chelik", "user");
+            postgresPro.createDbmsUser("chelik", "user", "createdbforuser");
         }
     }
 
@@ -57,7 +57,7 @@ public class PostgresProTest extends Tests {
     void resetPassword(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
             postgresPro.createDb("createdbforreset");
-            postgresPro.createDbmsUser("chelikforreset", "user");
+            postgresPro.createDbmsUser("chelikforreset", "user", "createdbforreset");
             postgresPro.resetPassword();
         }
     }
@@ -67,8 +67,9 @@ public class PostgresProTest extends Tests {
     void removeDbmsUser(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
             postgresPro.createDb("createdbforreset");
-            postgresPro.createDbmsUser("chelikforreset", "user");
-            postgresPro.removeDbmsUser();
+            postgresPro.createDbmsUser("chelikforreset", "user", "createdbforreset");
+            postgresPro.removeDbmsUser("chelikforreset", "createdbforreset");
+            postgresPro.removeDb("createdbforreset");
         }
     }
 
@@ -86,7 +87,7 @@ public class PostgresProTest extends Tests {
     void removeDb(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
             postgresPro.createDb("createdbforremove");
-            postgresPro.removeDb();
+            postgresPro.removeDb("createdbforremove");
         }
     }
 
