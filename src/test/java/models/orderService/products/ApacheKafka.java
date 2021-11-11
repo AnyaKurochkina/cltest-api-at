@@ -113,6 +113,6 @@ public class ApacheKafka extends IProduct {
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_vm");
+        delete("delete_two_layer");
     }
 }
