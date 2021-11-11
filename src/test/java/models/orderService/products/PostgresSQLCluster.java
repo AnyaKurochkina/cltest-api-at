@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class ProstgresSQLCluster extends IProduct {
+public class PostgresSQLCluster extends IProduct {
     private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.db_name.contains('%s')";
     private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
     private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name='%s'}";

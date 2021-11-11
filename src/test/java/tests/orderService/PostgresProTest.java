@@ -39,7 +39,7 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("createdb");
+            postgresPro.createDb("createdb1");
         }
     }
 
@@ -47,8 +47,8 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("createdbforuser");
-            postgresPro.createDbmsUser("chelik1", "user", "createdbforuser");
+            postgresPro.createDb("createdbforuser2");
+            postgresPro.createDbmsUser("chelik1", "user", "createdbforuser2");
         }
     }
 
@@ -56,8 +56,8 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("createdbforreset");
-            postgresPro.createDbmsUser("chelikforreset1", "user", "createdbforreset");
+            postgresPro.createDb("createdbforreset3");
+            postgresPro.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
             postgresPro.resetPassword();
         }
     }
@@ -66,9 +66,9 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("createdbforreset");
-            postgresPro.createDbmsUser("chelikforreset2", "user", "createdbforreset");
-            postgresPro.removeDbmsUser("chelikforreset2", "createdbforreset");
+            postgresPro.createDb("createdbforreset4");
+            postgresPro.createDbmsUser("chelikforreset2", "user", "createdbforreset4");
+            postgresPro.removeDbmsUser("chelikforreset2", "createdbforreset4");
         }
     }
 
@@ -85,8 +85,8 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("createdbforremove");
-            postgresPro.removeDb("createdbforremove");
+            postgresPro.createDb("createdbforremove5");
+            postgresPro.removeDb("createdbforremove5");
         }
     }
 

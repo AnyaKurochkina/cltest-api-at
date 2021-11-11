@@ -55,8 +55,8 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("createdbforreset");
-            clickHouse.createDbmsUser("chelikforreset1", "user", "createdbforreset");
+            clickHouse.createDb("createdbforreset1");
+            clickHouse.createDbmsUser("chelikforreset1", "user", "createdbforreset1");
             clickHouse.resetPassword();
         }
     }
@@ -65,9 +65,9 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("createdbforreset");
-            clickHouse.createDbmsUser("chelikforreset2", "user", "createdbforreset");
-            clickHouse.removeDbmsUser("chelikforreset2", "createdbforreset");
+            clickHouse.createDb("createdbforreset2");
+            clickHouse.createDbmsUser("chelikforreset2", "user", "createdbforreset2");
+            clickHouse.removeDbmsUser("chelikforreset2", "createdbforreset2");
         }
     }
 
@@ -84,8 +84,8 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("createdbforremove");
-            clickHouse.removeDb("createdbforremove");
+            clickHouse.createDb("createdbforremove3");
+            clickHouse.removeDb("createdbforremove3");
         }
     }
 
