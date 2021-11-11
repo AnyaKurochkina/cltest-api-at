@@ -107,9 +107,9 @@ public class ClickHouse extends IProduct {
     }
 
     //Сбросить пароль
-    public void resetPassword() {
+    public void resetPassword(String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
+        orderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)));
     }
 
     public void removeDbmsUser(String username, String dbName) {
@@ -123,7 +123,7 @@ public class ClickHouse extends IProduct {
 
     public void createDb(String dbName) {
         orderServiceSteps.executeAction(CLICKHOUSE_CREATE_DB, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
-        Assert.assertTrue("База данных не создалась c именем" + dbName,
+        Assert.assertTrue("База данных не создалась c именем " + dbName,
                 (Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.add(new Db(dbName, false));
         log.info("database = " + database);

@@ -62,7 +62,7 @@ public class PostgreSQLTest extends Tests {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb("createdbforreset3");
             postgreSQL.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
-            postgreSQL.resetPassword();
+            postgreSQL.resetPassword("chelikforreset1");
         }
     }
 

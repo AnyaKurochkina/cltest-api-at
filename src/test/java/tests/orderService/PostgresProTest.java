@@ -58,7 +58,7 @@ public class PostgresProTest extends Tests {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
             postgresPro.createDb("createdbforreset3");
             postgresPro.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
-            postgresPro.resetPassword();
+            postgresPro.resetPassword("chelikforreset1");
         }
     }
 

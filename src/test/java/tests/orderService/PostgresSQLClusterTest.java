@@ -58,7 +58,7 @@ public class PostgresSQLClusterTest extends Tests {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb("createdbforreset3");
             postgres.createDbmsUser("chelikforreset1", "user","createdbforreset3");
-            postgres.resetPassword();
+            postgres.resetPassword("chelikforreset1");
         }
     }
 

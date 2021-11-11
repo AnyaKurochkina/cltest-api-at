@@ -57,7 +57,7 @@ public class ClickHouseTest extends Tests {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.createDb("createdbforreset1");
             clickHouse.createDbmsUser("chelikforreset1", "user", "createdbforreset1");
-            clickHouse.resetPassword();
+            clickHouse.resetPassword("chelikforreset1");
         }
     }
 
