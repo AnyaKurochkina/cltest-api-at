@@ -68,6 +68,7 @@ public class ClickHouseTest extends Tests {
             clickHouse.createDb("createdbforreset2");
             clickHouse.createDbmsUser("chelikforreset2", "user", "createdbforreset2");
             clickHouse.removeDbmsUser("chelikforreset2", "createdbforreset2");
+            clickHouse.removeDb("createdbforreset2");
         }
     }
 

@@ -56,7 +56,7 @@ public class ClickHouse extends IProduct {
     //Удалить пользователя
     private static final String CLICKHOUSE_DELETE_DBMS_USER = "clickhouse_remove_dbms_user";
 
-    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.db_name.=='%s'";
+    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.db_name=='%s'";
     private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
     private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
     private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
