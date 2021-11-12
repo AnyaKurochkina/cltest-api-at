@@ -10,6 +10,11 @@ public class User extends Entity {
     public String password;
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public JSONObject toJson() {
         return null;
     }

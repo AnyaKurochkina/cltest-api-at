@@ -1,6 +1,7 @@
 package models.orderService.interfaces;
 
 import core.CacheService;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -9,9 +10,11 @@ import models.Entity;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
+import steps.tarifficator.CostSteps;
 
 import java.util.List;
 
@@ -67,6 +70,20 @@ public abstract class IProduct extends Entity {
     public void setStatus(ProductStatus status) {
         this.status = status;
         save();
+    }
+
+    @Step("Сравнение стоимости продукта с ценой предбиллинга")
+    protected void compareCostOrderAndPrice(){
+        CostSteps costSteps = new CostSteps();
+        Float preBillingCost = costSteps.getPreBillingCost(this);
+        Float currentCost = costSteps.getCurrentCost(this);
+        for (int i = 0; i < 15; i++) {
+            Waiting.sleep(20000);
+            if (Float.compare(currentCost, preBillingCost) > 0.00001)
+                continue;
+            break;
+        }
+        Assertions.assertEquals(preBillingCost, currentCost, 0.00001, "Стоимость предбиллинга отличается от стоимости продукта " + this);
     }
 
     //Обновить сертификаты

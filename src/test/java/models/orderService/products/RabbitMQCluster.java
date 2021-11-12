@@ -51,6 +51,7 @@ public class RabbitMQCluster extends IProduct {
         orderId = jsonPath.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
+        compareCostOrderAndPrice();
     }
 
     @Override
