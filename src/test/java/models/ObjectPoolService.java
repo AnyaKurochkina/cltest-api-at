@@ -116,7 +116,7 @@ public class ObjectPoolService {
                 Thread thread = new Thread(() -> {
                     try {
                         entity.deleteObject();
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
                         objectPoolEntity.setError(e);
                         e.printStackTrace();
@@ -127,7 +127,7 @@ public class ObjectPoolService {
             } else {
                 try {
                     entity.deleteObject();
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
                     objectPoolEntity.setError(e);
                     e.printStackTrace();

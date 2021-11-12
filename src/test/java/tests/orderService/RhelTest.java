@@ -18,7 +18,7 @@ import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("Rhel")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("rhel")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("rhel"), @Tag("prod")})
 public class RhelTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -62,8 +62,11 @@ public class RhelTest extends Tests {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.stopHard();
-            rhel.resize();
-            rhel.start();
+            try {
+                rhel.resize();
+            } finally {
+                rhel.start();
+            }
         }
     }
 

@@ -14,7 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("PostgresSQL Cluster")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgressqlcluster")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgressqlcluster"), @Tag("prod")})
 public class PostgresSQLClusterTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -58,7 +58,7 @@ public class PostgresSQLClusterTest extends Tests {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb("createdbforreset3");
             postgres.createDbmsUser("chelikforreset1", "user","createdbforreset3");
-            postgres.resetPassword();
+            postgres.resetPassword("chelikforreset1");
         }
     }
 

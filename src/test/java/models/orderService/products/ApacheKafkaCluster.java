@@ -15,9 +15,12 @@ import models.subModels.Flavor;
 import models.subModels.KafkaTopic;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Log4j2
@@ -53,6 +56,7 @@ public class ApacheKafkaCluster extends IProduct {
         orderId = jsonPath.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
+        compareCostOrderAndPrice();
     }
 
     @Override
@@ -124,7 +128,18 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void updateCerts(){
-        updateCerts("kafka_update_certs");
+        Date dateBeforeUpdate = new Date();
+        Date dateAfterUpdate = new Date();
+        super.updateCerts("kafka_update_certs");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+            dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate),
+                "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
     }
 
     public void expandMountPoint(){

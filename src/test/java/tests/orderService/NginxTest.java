@@ -17,7 +17,7 @@ import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("Nginx")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("nginx")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("nginx"), @Tag("prod")})
 public class NginxTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -61,8 +61,12 @@ public class NginxTest extends Tests {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
             nginx.stopHard();
-            nginx.resize();
-            nginx.start();
+            try {
+                nginx.resize();
+            } finally {
+                nginx.start();
+            }
+
         }
     }
 

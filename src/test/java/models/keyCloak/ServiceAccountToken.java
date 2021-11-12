@@ -13,6 +13,11 @@ public class ServiceAccountToken extends Entity {
     public Long time;
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public JSONObject toJson() {
         return null;
     }

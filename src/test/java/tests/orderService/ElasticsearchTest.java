@@ -14,7 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("ElasticSearch")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearch")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearch"), @Tag("prod")})
 public class ElasticsearchTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -30,6 +30,56 @@ public class ElasticsearchTest extends Tests {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             elastic.checkPreconditionStatusProduct(ProductStatus.CREATED);
             elastic.expandMountPoint();
+        }
+    }
+
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Включить {0}")
+    void start(Elasticsearch product) {
+        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
+            elastic.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            elastic.stopHard();
+            elastic.start();
+
+        }
+    }
+
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Выключить {0}")
+    void stopSoft(Elasticsearch product) {
+        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
+            elastic.stopSoft();
+            elastic.start();
+        }
+    }
+
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Выключить принудительно {0}")
+    void stopHard(Elasticsearch product) {
+        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
+            elastic.stopHard();
+            elastic.start();
+        }
+    }
+
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+    void resize(Elasticsearch product) {
+        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
+            elastic.stopHard();
+            try {
+                elastic.resize();
+            } finally {
+                elastic.start();
+            }
+        }
+    }
+
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Перезагрузить по питанию {0}")
+    void restart(Elasticsearch product) {
+        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
+            elastic.restart();
         }
     }
 

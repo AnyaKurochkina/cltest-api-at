@@ -15,7 +15,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("ClickHouse")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("clickhouse")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("clickhouse"), @Tag("prod")})
 public class ClickHouseTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -57,7 +57,7 @@ public class ClickHouseTest extends Tests {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.createDb("createdbforreset1");
             clickHouse.createDbmsUser("chelikforreset1", "user", "createdbforreset1");
-            clickHouse.resetPassword();
+            clickHouse.resetPassword("chelikforreset1");
         }
     }
 

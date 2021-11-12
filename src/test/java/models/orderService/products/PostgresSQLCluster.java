@@ -32,10 +32,10 @@ import static org.junit.Assert.assertTrue;
 @NoArgsConstructor
 @SuperBuilder
 public class PostgresSQLCluster extends IProduct {
-    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.db_name.contains('%s')";
-    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
-    private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name='%s'}";
-    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
+    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.any{it.db_name=='%s'}";
+//    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
+    private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
+//    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -64,6 +64,7 @@ public class PostgresSQLCluster extends IProduct {
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
+        compareCostOrderAndPrice();
     }
 
     @Override
@@ -138,9 +139,9 @@ public class PostgresSQLCluster extends IProduct {
     }
 
     //Сбросить пароль пользователя
-    public void resetPassword() {
+    public void resetPassword(String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction("postgresql_cluster_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", users.get(0).getUsername(), password)));
+        orderServiceSteps.executeAction("postgresql_cluster_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", username, password)));
     }
 
     //Сбросить пароль владельца

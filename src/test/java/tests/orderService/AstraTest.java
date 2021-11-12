@@ -15,7 +15,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("Astra")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("astra")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("astra"), @Tag("prod")})
 public class AstraTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -59,8 +59,11 @@ public class AstraTest extends Tests {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.checkPreconditionStatusProduct(ProductStatus.CREATED);
             astra.stopHard();
-            astra.resize();
-            astra.start();
+            try {
+                astra.resize();
+            } finally {
+                astra.start();
+            }
         }
     }
 

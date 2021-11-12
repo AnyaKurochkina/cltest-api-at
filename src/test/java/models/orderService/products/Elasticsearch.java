@@ -44,10 +44,10 @@ public class Elasticsearch extends IProduct {
         jsonTemplate = "/orders/elasticsearch.json";
         productName = "Elasticsearch X-pack cluster";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
+        if (projectId == null) {
             projectId = project.getId();
         }
-        if(productId == null) {
+        if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
     }
@@ -65,6 +65,7 @@ public class Elasticsearch extends IProduct {
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
+        compareCostOrderAndPrice();
     }
 
     @Override
@@ -90,7 +91,7 @@ public class Elasticsearch extends IProduct {
                 .build();
     }
 
-    public void expandMountPoint(){
+    public void expandMountPoint() {
         expandMountPoint("expand_mount_point");
     }
 
@@ -98,5 +99,34 @@ public class Elasticsearch extends IProduct {
     //Удалить кластер EK Xpack
     protected void delete() {
         delete("delete_elasticsearch_xpack");
+    }
+
+    //Удалить хост
+    public void deleteHost(String action) {
+        orderServiceSteps.executeAction("delete_vm", this, null);
+    }
+
+    //Перезагрузить по питанию
+    public void restart() {
+        restart("reset_vm");
+    }
+
+    //Выключить принудительно
+    public void stopHard() {
+        stopHard("stop_vm_hard");
+    }
+
+    //Выключить
+    public void stopSoft() {
+        stopSoft("stop_vm_soft");
+    }
+
+    //Включить
+    public void start() {
+        start("start_vm");
+    }
+
+    public void resize() {
+        resize("resize_vm");
     }
 }

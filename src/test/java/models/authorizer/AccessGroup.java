@@ -19,7 +19,8 @@ import java.util.List;
 public class AccessGroup extends Entity {
     String name;
     String projectName;
-    List<String> users;
+    @Builder.Default
+    List<String> users = new ArrayList<>();
     Boolean isForOrders;
 
     public void addUser(String user){

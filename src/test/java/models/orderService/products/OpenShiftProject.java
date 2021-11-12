@@ -61,9 +61,11 @@ public class OpenShiftProject extends IProduct {
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
+        compareCostOrderAndPrice();
     }
 
     @SneakyThrows
+    @Override
     public JSONObject toJson() {
         AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
         List<ResourcePool> resourcePoolList = orderServiceSteps.getResourcesPoolList("container", projectId);

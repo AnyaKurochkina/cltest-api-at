@@ -14,7 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("ApacheKafka")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafka")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafka"), @Tag("prod")})
 public class ApacheKafkaTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -58,8 +58,11 @@ public class ApacheKafkaTest extends Tests {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.stopHard();
-            kafka.resize();
-            kafka.start();
+            try {
+                kafka.resize();
+            } finally {
+                kafka.start();
+            }
         }
     }
 

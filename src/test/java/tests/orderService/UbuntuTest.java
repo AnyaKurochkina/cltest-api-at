@@ -14,7 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("Ubuntu")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("ubuntu")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("ubuntu"), @Tag("prod")})
 public class UbuntuTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -58,8 +58,11 @@ public class UbuntuTest extends Tests {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.checkPreconditionStatusProduct(ProductStatus.CREATED);
             ubuntu.stopHard();
-            ubuntu.resize();
-            ubuntu.start();
+            try {
+                ubuntu.resize();
+            } finally {
+                ubuntu.start();
+            }
         }
     }
 

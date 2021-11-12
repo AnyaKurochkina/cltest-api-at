@@ -18,7 +18,7 @@ import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("PostgreSQL")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql"), @Tag("prod")})
 public class PostgreSQLTest extends Tests {
 
     //TODO: добавить сброс пароля владельца
@@ -62,7 +62,7 @@ public class PostgreSQLTest extends Tests {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb("createdbforreset3");
             postgreSQL.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
-            postgreSQL.resetPassword();
+            postgreSQL.resetPassword("chelikforreset1");
         }
     }
 

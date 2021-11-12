@@ -42,6 +42,7 @@ public class Project extends Entity {
             projectName = new RandomStringGenerator().generateByRegex("project [0-9a-zA-Z]{5,15}");
         }
     }
+
     public JSONObject toJson() {
         return jsonHelper.getJsonTemplate("/structure/create_project.json")
                 .set("$.project.title", projectName)

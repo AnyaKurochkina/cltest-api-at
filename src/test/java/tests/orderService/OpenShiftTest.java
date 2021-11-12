@@ -15,7 +15,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("OpenShift")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("openshift")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("openshift"), @Tag("prod")})
 public class OpenShiftTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

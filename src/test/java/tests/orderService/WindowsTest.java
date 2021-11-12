@@ -17,7 +17,7 @@ import static models.orderService.products.Windows.ADD_DISK;
 
 @Epic("Продукты")
 @Feature("Windows")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("windows")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("windows"), @Tag("prod")})
 public class WindowsTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -71,8 +71,11 @@ public class WindowsTest extends Tests {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
             windows.stopHard();
-            windows.resize();
-            windows.start();
+            try {
+                windows.resize();
+            } finally {
+                windows.start();
+            }
         }
     }
 

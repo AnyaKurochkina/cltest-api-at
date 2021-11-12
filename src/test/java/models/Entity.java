@@ -14,9 +14,7 @@ public abstract class Entity implements AutoCloseable {
 
     public String objectClassName;
 
-    public void init() {
-
-    }
+    public abstract void init();
 
     public abstract JSONObject toJson();
 
@@ -45,7 +43,7 @@ public abstract class Entity implements AutoCloseable {
         if (objectPoolEntity.getStatus() == ObjectStatus.DELETED)
             return;
         if(objectPoolEntity.getStatus() == ObjectStatus.FAILED_DELETE)
-        throw objectPoolEntity.getError();
+            throw objectPoolEntity.getError();
         delete();
         objectPoolEntity.setStatus(ObjectStatus.DELETED);
     }

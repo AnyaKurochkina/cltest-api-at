@@ -16,7 +16,7 @@ import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("RabbitMQCluster")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("rabbitmqcluster")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("rabbitmqcluster"), @Tag("prod")})
 public class RabbitMQClusterTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

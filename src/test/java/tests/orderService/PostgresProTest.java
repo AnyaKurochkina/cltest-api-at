@@ -14,7 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("PostgresPro")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresPro")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresPro"), @Tag("prod")})
 public class PostgresProTest extends Tests {
 
     //TODO: добавить сброс пароля владельца
@@ -58,7 +58,7 @@ public class PostgresProTest extends Tests {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
             postgresPro.createDb("createdbforreset3");
             postgresPro.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
-            postgresPro.resetPassword();
+            postgresPro.resetPassword("chelikforreset1");
         }
     }
 

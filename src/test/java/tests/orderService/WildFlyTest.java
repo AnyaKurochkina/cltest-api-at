@@ -18,7 +18,7 @@ import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("WildFly")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("wildfly")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("wildfly"), @Tag("prod")})
 public class WildFlyTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -62,8 +62,11 @@ public class WildFlyTest extends Tests {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.stopHard();
-            wildFly.resize();
-            wildFly.start();
+            try {
+                wildFly.resize();
+            } finally {
+                wildFly.start();
+            }
         }
     }
 
