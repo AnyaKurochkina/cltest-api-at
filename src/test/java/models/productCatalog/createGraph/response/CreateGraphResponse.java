@@ -19,46 +19,46 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateGraphResponse{
-	private JsonHelper jsonHelper = new JsonHelper();
+public class CreateGraphResponse {
 
-	public JSONObject toJson() {
-		return jsonHelper.getJsonTemplate("/productCatalog/graphs/createGraph.json").build();
-	}
+    @JsonProperty("author")
+    private String author;
 
-	public void createGraph(){
-		String object = new Http("http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/")
-				.setContentType("application/json")
-				.setWithoutToken()
-				.post("graphs/?save_as_next_version=true", toJson())
-				.assertStatus(200)
-				.toString();
-	}
+    @JsonProperty("json_schema")
+    private JsonSchema jsonSchema;
 
-	@JsonProperty("author")
-	private String author;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("json_schema")
-	private JsonSchema jsonSchema;
+    @JsonProperty("description")
+    private String description;
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("static_data")
+    private StaticData staticData;
 
-	@JsonProperty("description")
-	private String description;
+    @JsonProperty("id")
+    private String id;
 
-	@JsonProperty("static_data")
-	private StaticData staticData;
+    @JsonProperty("title")
+    private String title;
 
-	@JsonProperty("id")
-	private String id;
+    @JsonProperty("type")
+    private String type;
 
-	@JsonProperty("title")
-	private String title;
+    @JsonProperty("ui_schema")
+    private UiSchema uiSchema;
 
-	@JsonProperty("type")
-	private String type;
+    public JSONObject toJson() {
+        JsonHelper jsonHelper = new JsonHelper();
+        return jsonHelper.getJsonTemplate("/productCatalog/graphs/createGraph.json").build();
+    }
 
-	@JsonProperty("ui_schema")
-	private UiSchema uiSchema;
+    public void createGraph() {
+        String object = new Http("http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/")
+                .setContentType("application/json")
+                .setWithoutToken()
+                .post("graphs/?save_as_next_version=true", toJson())
+                .assertStatus(200)
+                .toString();
+    }
 }
