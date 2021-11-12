@@ -119,7 +119,7 @@ public class OrderServiceSteps extends Steps {
         return idOfAllSuccessProducts;
     }
 
-    @Step("Отправка action \"{action}\"")
+    @Step("Отправка action {action}")
     public Http.Response sendAction(String action, IProduct product, JSONObject jsonData) {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         return jsonHelper.getJsonTemplate("/actions/template.json")
@@ -128,6 +128,12 @@ public class OrderServiceSteps extends Steps {
                 .send(URL)
                 .setProjectId(product.getProjectId())
                 .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + item.name);
+    }
+
+    @Step("Перенос продукта {product} в проект {target}")
+    public Http.Response changeProjectForOrder(IProduct product, Project target) {
+        return new Http(URL)
+                .patch(String.format("order-service/api/v1/projects/proj-xazpppulba/orders/%s/change_project", product.getOrderId()), new JSONObject(String.format("{target_project_name: \"%s\"}", target.getId())));
     }
 
     /**

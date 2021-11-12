@@ -30,20 +30,22 @@ public class Folder extends Entity {
 
     @Override
     public void init() {
-        switch (kind) {
-            case BUSINESS_BLOCK:
-                Organization organization = Organization.builder().build().createObject();
-                parentId = organization.getName();
-                break;
-            case DEPARTMENT: {
-                Folder folder = Folder.builder().kind(BUSINESS_BLOCK).build().createObject();
-                parentId = folder.getName();
-                break;
-            }
-            case DEFAULT: {
-                Folder folder = Folder.builder().kind(DEPARTMENT).build().createObject();
-                parentId = folder.getName();
-                break;
+        if (parentId == null) {
+            switch (kind) {
+                case BUSINESS_BLOCK:
+                    Organization organization = Organization.builder().build().createObject();
+                    parentId = organization.getName();
+                    break;
+                case DEPARTMENT: {
+                    Folder folder = Folder.builder().kind(BUSINESS_BLOCK).build().createObject();
+                    parentId = folder.getName();
+                    break;
+                }
+                case DEFAULT: {
+                    Folder folder = Folder.builder().kind(DEPARTMENT).build().createObject();
+                    parentId = folder.getName();
+                    break;
+                }
             }
         }
         if (title == null) {

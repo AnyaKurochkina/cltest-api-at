@@ -20,7 +20,8 @@
     "projectName": "PROJECT_TEST",
     "projectEnvironment": {
       "env": "IFT",
-      "envType": "TEST"
+      "envType": "TEST",
+      "id": "92f2acb2-aa33-4317-9352-dc1553e0097f"
     },
     "isForOrders": true
   },
@@ -51,7 +52,8 @@
     "projectName": "PROJECT_DEV",
     "projectEnvironment": {
       "env": "DSO",
-      "envType": "DEV"
+      "envType": "DEV",
+      "id": "395a0a01-e83a-4ede-80a5-7354f2a8db39"
     },
     "isForOrders": true
   },
