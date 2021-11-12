@@ -10,6 +10,11 @@ public class Service extends Entity {
     public String clientSecret;
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public JSONObject toJson() {
         return null;
     }

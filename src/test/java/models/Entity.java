@@ -14,9 +14,7 @@ public abstract class Entity implements AutoCloseable {
 
     public String objectClassName;
 
-    public void init() {
-
-    }
+    public abstract void init();
 
     public abstract JSONObject toJson();
 

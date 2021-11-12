@@ -21,6 +21,11 @@ public class IProductMock extends IProduct {
     public void start(){}
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public JSONObject toJson() {
         return null;
     }

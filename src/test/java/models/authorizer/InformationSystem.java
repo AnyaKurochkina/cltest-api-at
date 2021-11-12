@@ -12,6 +12,11 @@ public class InformationSystem extends Entity {
     public Boolean isForOrders;
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public JSONObject toJson() {
         return null;
     }
