@@ -1,15 +1,15 @@
 package tests.productCatalog;
 
+import core.helper.Deleted;
 import models.productCatalog.Action;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ActionsSteps;
-import steps.productCatalog.GraphSteps;
 
+@Tag("zalupa")
 public class ActionsTest {
 
     @Test
-    public void createACtion(){
+    public void createAction() {
 //        GraphSteps createGraphResponse = new GraphSteps();
 //        ActionsSteps actionsSteps = new ActionsSteps();
 //        String graphId = createGraphResponse.getGraph("AtTestGraph");
@@ -22,7 +22,8 @@ public class ActionsTest {
     }
 
     @Test
-    public void deleteAction(){
+    @Deleted
+    public void deleteAction() {
 //        GraphSteps createGraphResponse = new GraphSteps();
 //        ActionsSteps actionsSteps = new ActionsSteps();
 //        String graphId = createGraphResponse.getGraph("AtTestGraph");
@@ -34,3 +35,4 @@ public class ActionsTest {
         Action.builder().actionName("TestObjectAT1").build().createObject().deleteObject();
     }
 }
+

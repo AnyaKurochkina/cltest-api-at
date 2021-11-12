@@ -10,6 +10,11 @@ import org.json.JSONObject;
 public class Graph extends Entity {
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public JSONObject toJson() {
         return null;
     }

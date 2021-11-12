@@ -74,8 +74,8 @@ public class Action extends Entity {
                 .setContentType("application/json")
                 .delete("actions/" + actionId + "/")
                 .assertStatus(204);
-
-        actionId = actionsSteps.getActionId(actionName);
-        Assertions.assertNull(actionId, "Экшен с именем: " + actionName + ", не удалился");
+        
+        Integer a = 10;
+        Assertions.assertNull(a);
     }
 }
