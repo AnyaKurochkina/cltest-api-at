@@ -1,24 +1,24 @@
 package steps.productCatalog;
 
+import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import models.productCatalog.getGraphs.response.GetGraphsResponse;
-import models.productCatalog.getGraphs.response.ListItem;
+import httpModels.productCatalog.getGraphs.response.GetGraphsResponse;
+import httpModels.productCatalog.getGraphs.response.ListItem;
 import org.json.JSONObject;
 
-import static steps.productCatalog.ActionsSteps.convertResponseOnClass;
+import static core.helper.JsonHelper.convertResponseOnClass;
 
 public class GraphSteps {
 
-    public JSONObject toJson(String pathToJsonBody) {
+    private JSONObject toJson(String pathToJsonBody) {
         JsonHelper jsonHelper = new JsonHelper();
         return jsonHelper.getJsonTemplate(pathToJsonBody).build();
     }
 
     public void createGraph() {
-        String object = new Http("http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/")
+        String object = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
-                .setWithoutToken()
                 .post("graphs/?save_as_next_version=true", toJson("/productCatalog/graphs/createGraph.json"))
                 .assertStatus(200)
                 .toString();
@@ -26,10 +26,9 @@ public class GraphSteps {
 
     public String getGraph(String graphName){
         String graphId = null;
-        String object = new Http("http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/")
+        String object = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
-                .setWithoutToken()
-                .get("graphs")
+                .get("graphs/?include=total_count&page=1&per_page=10")
                 .assertStatus(200)
                 .toString();
 

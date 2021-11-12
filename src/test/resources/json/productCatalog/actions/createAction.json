@@ -1,0 +1,30 @@
+{
+  "id": "",
+  "name": "moroz-test",
+  "title": "moroz-test",
+  "description": "",
+  "icon": "",
+  "required_order_statuses": [
+    "new"
+  ],
+  "required_item_statuses": [
+    "on"
+  ],
+  "type": "delete",
+  "data_config_path": "",
+  "data_config_key": "",
+  "data_config_fields": [],
+  "available_without_money": false,
+  "auto_removing_if_failed": false,
+  "skip_on_prebilling": false,
+  "event_type": [],
+  "event_provider": [],
+  "config_restriction": "",
+  "graph_id": "e9063b4b-9869-4596-9ac8-7401bc6142bd",
+  "graph_version": "",
+  "graph_version_pattern": "",
+  "allowed_groups": [],
+  "allowed_paths": [],
+  "restricted_groups": [],
+  "restricted_paths": []
+}

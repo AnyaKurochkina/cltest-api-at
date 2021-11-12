@@ -1,4 +1,4 @@
-package models.productCatalog.testModel;
+package httpModels.productCatalog.getGraphs.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Meta{
 
 	@JsonProperty("next")
-	private Object next;
+	private String next;
 
 	@JsonProperty("previous")
 	private Object previous;

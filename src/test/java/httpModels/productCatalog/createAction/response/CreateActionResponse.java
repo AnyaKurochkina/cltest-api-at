@@ -1,4 +1,4 @@
-package models.productCatalog.testModel;
+package httpModels.productCatalog.createAction.response;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListItem{
+public class CreateActionResponse{
 
 	@JsonProperty("available_without_money")
 	private Boolean availableWithoutMoney;
@@ -41,16 +41,16 @@ public class ListItem{
 	private String title;
 
 	@JsonProperty("type")
-	private Object type;
+	private String type;
 
 	@JsonProperty("event_type")
-	private List<String> eventType;
+	private List<Object> eventType;
 
 	@JsonProperty("required_item_statuses")
 	private List<String> requiredItemStatuses;
 
 	@JsonProperty("data_config_path")
-	private Object dataConfigPath;
+	private String dataConfigPath;
 
 	@JsonProperty("restricted_paths")
 	private List<Object> restrictedPaths;
@@ -65,7 +65,7 @@ public class ListItem{
 	private List<Object> allowedPaths;
 
 	@JsonProperty("event_provider")
-	private List<String> eventProvider;
+	private List<Object> eventProvider;
 
 	@JsonProperty("restricted_groups")
 	private List<Object> restrictedGroups;
@@ -80,10 +80,10 @@ public class ListItem{
 	private String lastVersion;
 
 	@JsonProperty("config_restriction")
-	private Object configRestriction;
+	private String configRestriction;
 
 	@JsonProperty("data_config_key")
-	private Object dataConfigKey;
+	private String dataConfigKey;
 
 	@JsonProperty("name")
 	private String name;

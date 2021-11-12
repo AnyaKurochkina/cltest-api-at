@@ -1,4 +1,4 @@
-package models.productCatalog.testModel;
+package httpModels.productCatalog.getGraphs.response;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActionResponse{
+public class GetGraphsResponse{
 
 	@JsonProperty("meta")
 	private Meta meta;

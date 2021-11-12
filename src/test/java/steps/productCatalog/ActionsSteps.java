@@ -1,74 +1,64 @@
 package steps.productCatalog;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import core.CacheService;
+import core.helper.Configure;
 import core.helper.Http;
+import core.helper.JsonHelper;
+import httpModels.productCatalog.createAction.response.CreateActionResponse;
 import lombok.SneakyThrows;
-import models.productCatalog.StringModel.StringModelResponse;
-import models.productCatalog.testModel.ActionResponse;
+import httpModels.productCatalog.getActions.response.ActionResponse;
+import httpModels.productCatalog.getActions.response.ListItem;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Test;
+
+import static core.helper.JsonHelper.convertResponseOnClass;
 
 public class ActionsSteps {
 
+    private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {
+        JsonHelper jsonHelper = new JsonHelper();
+        return jsonHelper.getJsonTemplate(pathToJsonBody)
+                .set("$.name", actionName)
+                .set("$.title", actionName)
+                .set("$.description", actionName)
+                .set("$.graph_id", graphId)
+//                .set("$.required_order_statuses[0]", "success")
+//                .set("$.event_type[0]", "bm")
+//                .set("$.event_provider[0]", "s3")
+//                .set("$.type", "deleted")
+                .build();
+    }
+
     @SneakyThrows
-    @Test
-    public void test() {
-        String object = new Http("http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/")
+    public String getActionId(String actionName) {
+        String actionId = null;
+        String object = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
-                .setWithoutToken()
-                .get("actions")
+                .get("actions/")
                 .assertStatus(200)
                 .toString();
 
-//        String object = "{\n" +
-//                "  \"service_account\": {\n" +
-//                "    \"title\": \"TEST02\",\n" +
-//                "    \"policy\": {\n" +
-//                "      \"bindings\": [\n" +
-//                "        {\n" +
-//                "          \"role\": null\n" +
-//                "        }\n" +
-//                "      ]\n" +
-//                "    }\n" +
-//                "  }\n" +
-//                "}";
-
         ActionResponse response = convertResponseOnClass(object, ActionResponse.class);
-//        StringModelResponse responseGson = CacheService.getCustomGson().fromJson(object, StringModelResponse.class);
-        System.out.println();
+
+        for (ListItem listItem : response.getList()) {
+            if (listItem.getName().equals(actionName)) {
+                actionId = listItem.getId();
+            }
+        }
+        return actionId;
     }
 
     @SneakyThrows
-    public static <T> T convertResponseOnClass(String rawJson, Class<T> clazz){
-        JSONObject jsonObject = new JSONObject(rawJson);
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.convertValue(jsonObject.toMap(), clazz);
+    public void createAction(String actionName, String graphId) {
+        new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .post("actions/", toJson("productCatalog/actions/createAction.json", actionName, graphId))
+                .assertStatus(201);
+    }
+
+    @SneakyThrows
+    public void deleteAction(String id) {
+        new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .delete("actions/" + id + "/")
+                .assertStatus(204);
     }
 }
-
-//class MyTypeAdapter extends TypeAdapter<TestObject>(){
-//
-//@Override
-//public void write(JsonWriter out,TestObject value)throws IOException{
-//        out.beginObject();
-//        if(!Strings.isNullOrEmpty(value.test1)){
-//        out.name("test1");
-//        out.value(value.test1);
-//        }
-//
-//
-//        if(!Strings.isNullOrEmpty(value.test2)){
-//        out.name("test2");
-//        out.value(value.test1);
-//        }
-//        /* similar check for otherObject */
-//        out.endObject();
-//        }
-//
-//@Override
-//public TestObject read(JsonReader in)throws IOException{
-//        // do something similar, but the other way around
-//        }
-//        }
-//

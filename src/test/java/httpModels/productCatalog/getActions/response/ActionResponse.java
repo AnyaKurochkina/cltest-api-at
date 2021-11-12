@@ -1,5 +1,6 @@
-package models.productCatalog.StringModel;
+package httpModels.productCatalog.getActions.response;
 
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ServiceAccount{
+public class ActionResponse{
 
-	@JsonProperty("title")
-	private String title;
+	@JsonProperty("meta")
+	private Meta meta;
 
-	@JsonProperty("policy")
-	private Policy policy;
+	@JsonProperty("list")
+	private List<ListItem> list;
 }
