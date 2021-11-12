@@ -22,7 +22,6 @@ public class ActionsTest {
     }
 
     @Test
-    @Deleted
     public void deleteAction() {
 //        GraphSteps createGraphResponse = new GraphSteps();
 //        ActionsSteps actionsSteps = new ActionsSteps();
