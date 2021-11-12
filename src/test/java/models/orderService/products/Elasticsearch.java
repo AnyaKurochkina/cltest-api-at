@@ -99,4 +99,39 @@ public class Elasticsearch extends IProduct {
     protected void delete() {
         delete("delete_elasticsearch_xpack");
     }
+
+    //Удалить хост
+    public void deleteHost(String action) {
+        orderServiceSteps.executeAction("delete_vm", this, null);
+    }
+
+    //Включить
+    @Override
+    public void start(String action) {
+        super.start("start_vm");
+    }
+
+    //Выключить
+    @Override
+    public void stopSoft(String action) {
+        super.stopSoft("stop_vm_soft");
+    }
+
+    //Выключить принудительно
+    @Override
+    public void stopHard(String action) {
+        super.stopHard("stop_vm_hard");
+    }
+
+    //Изменить конфигурацию
+    @Override
+    public void resize(String action) {
+        super.resize("resize_vm");
+    }
+
+    //Перезагрузить по питанию
+    @Override
+    public void restart(String action) {
+        super.restart("reset_vm");
+    }
 }
