@@ -44,10 +44,10 @@ public class Elasticsearch extends IProduct {
         jsonTemplate = "/orders/elasticsearch.json";
         productName = "Elasticsearch X-pack cluster";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
+        if (projectId == null) {
             projectId = project.getId();
         }
-        if(productId == null) {
+        if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
     }
@@ -90,7 +90,7 @@ public class Elasticsearch extends IProduct {
                 .build();
     }
 
-    public void expandMountPoint(){
+    public void expandMountPoint() {
         expandMountPoint("expand_mount_point");
     }
 
@@ -105,33 +105,27 @@ public class Elasticsearch extends IProduct {
         orderServiceSteps.executeAction("delete_vm", this, null);
     }
 
-    //Включить
-    @Override
-    public void start(String action) {
-        super.start("start_vm");
-    }
-
-    //Выключить
-    @Override
-    public void stopSoft(String action) {
-        super.stopSoft("stop_vm_soft");
+    //Перезагрузить по питанию
+    public void restart() {
+        restart("reset_vm");
     }
 
     //Выключить принудительно
-    @Override
-    public void stopHard(String action) {
-        super.stopHard("stop_vm_hard");
+    public void stopHard() {
+        stopHard("stop_vm_hard");
     }
 
-    //Изменить конфигурацию
-    @Override
-    public void resize(String action) {
-        super.resize("resize_vm");
+    //Выключить
+    public void stopSoft() {
+        stopSoft("stop_vm_soft");
     }
 
-    //Перезагрузить по питанию
-    @Override
-    public void restart(String action) {
-        super.restart("reset_vm");
+    //Включить
+    public void start() {
+        start("start_vm");
+    }
+
+    public void resize() {
+        resize("resize_vm");
     }
 }
