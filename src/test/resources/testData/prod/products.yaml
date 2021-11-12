@@ -130,7 +130,7 @@ ApacheKafkaCluster:
   - actions:
       ['kafka_update_certs', 'kafka_create_topics', 'kafka_delete_topics', 'kafka_create_acl', 'kafka_create_transaction_acl', 'stop_kafka', 'start_kafka', 'restart_kafka', 'expand_mount_point']
   - options:
-#      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
 #      - { platform: "Nutanix", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
 #      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
 #      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
