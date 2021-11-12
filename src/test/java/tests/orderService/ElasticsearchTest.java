@@ -38,6 +38,7 @@ public class ElasticsearchTest extends Tests {
     void start(Elasticsearch product) {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             elastic.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            elastic.stopHard();
             elastic.start();
 
         }
