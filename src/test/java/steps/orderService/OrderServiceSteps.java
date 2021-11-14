@@ -130,11 +130,18 @@ public class OrderServiceSteps extends Steps {
                 .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + item.name);
     }
 
-    @Step("Перенос продукта {product} в проект {target}")
-    public Http.Response changeProjectForOrder(IProduct product, Project target) {
+    public Http.Response changeProjectForOrderRequest(IProduct product, Project target) {
         return new Http(URL)
-                .patch(String.format("order-service/api/v1/projects/proj-xazpppulba/orders/%s/change_project", product.getOrderId()), new JSONObject(String.format("{target_project_name: \"%s\"}", target.getId())));
+                .patch(String.format("order-service/api/v1/projects/%s/orders/%s/change_project",product.getProjectId(), product.getOrderId()), new JSONObject(String.format("{target_project_name: \"%s\"}", target.getId())));
     }
+
+    @Step("Перенос продукта {product} в проект {target}")
+    public void changeProjectForOrder(IProduct product, Project target) {
+        Http.Response response =  changeProjectForOrderRequest(product, target)
+                .assertStatus(200);
+        product.setProjectId(target.getId());
+    }
+
 
     /**
      * Метод выполняет экшен по его имени

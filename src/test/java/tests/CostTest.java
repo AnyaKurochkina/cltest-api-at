@@ -7,6 +7,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import models.accountManager.Account;
 import models.authorizer.Folder;
 import models.authorizer.Project;
@@ -39,10 +40,12 @@ import java.util.stream.Stream;
 @Epic("Финансы")
 @Feature("Калькулятор")
 @Tag("test")
+@Log4j2
 public class CostTest extends Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
     AccountSteps accountSteps = new AccountSteps();
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();
+    CostSteps costSteps = new CostSteps();
 
     @SneakyThrows
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
@@ -69,11 +72,18 @@ public class CostTest extends Tests {
             String accountFrom = accountSteps.getAccountIdByContext(parentFolderId);
             String accountTo = ((Account) Account.builder().folder(folderTarget).build().createObject()).getAccountId();
             accountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
-            orderServiceSteps.changeProjectForOrder(product, projectTarget)
-                    .assertStatus(200);
-            Thread.sleep(5000);
-            orderServiceSteps.changeProjectForOrder(product, projectSource)
-                    .assertStatus(200);
+            log.debug("getPreBillingCost = {}", costSteps.getPreBillingCost(product));
+            orderServiceSteps.changeProjectForOrder(product, projectTarget);
+
+
+            Thread.sleep(60000 * 10 + 30000);
+            log.debug("getCurrentBalance = {}", 1000.0f - accountSteps.getCurrentBalance(folderTarget.getName()));
+
+            orderServiceSteps.changeProjectForOrder(product, projectSource);
         }
     }
 }
+
+
+//getPreBillingCost = 0,02177494
+//getCurrentBalance = 0.19000244
