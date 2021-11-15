@@ -75,15 +75,9 @@ public class ActionsTest extends Tests {
     @Test
     @Deleted
     public void deleteAction() {
-//        GraphSteps createGraphResponse = new GraphSteps();
-//        ActionsSteps actionsSteps = new ActionsSteps();
-//        String graphId = createGraphResponse.getGraph("AtTestGraph");
-//        actionsSteps.createAction("TestAction",graphId);
-//        String actionId = actionsSteps.getActionId("TestAction");
-//        actionsSteps.deleteAction(actionId);
-//        String actionIdAfterDelete = actionsSteps.getActionId("TestAction");
-//        Assertions.assertNull(actionIdAfterDelete);
-        Action.builder().actionName("TestObjectAT1").build().createObject().deleteObject();
+        try (Action action = Action.builder().actionName("TestObjectAT").build().createObjectExclusiveAccess()){
+            action.deleteObject();
+        }
     }
 }
 
