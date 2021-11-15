@@ -2,6 +2,7 @@ package tests;
 
 import core.CacheService;
 import core.helper.Http;
+import core.utils.Waiting;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -17,6 +18,7 @@ import models.orderService.products.WildFly;
 import models.subModels.KafkaTopic;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
@@ -35,6 +37,7 @@ import steps.tarifficator.CostSteps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @Epic("Финансы")
@@ -72,18 +75,22 @@ public class CostTest extends Tests {
             String accountFrom = accountSteps.getAccountIdByContext(parentFolderId);
             String accountTo = ((Account) Account.builder().folder(folderTarget).build().createObject()).getAccountId();
             accountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
-            log.debug("getPreBillingCost = {}", costSteps.getPreBillingCost(product));
-            orderServiceSteps.changeProjectForOrder(product, projectTarget);
-
-
-            Thread.sleep(60000 * 10 + 30000);
-            log.debug("getCurrentBalance = {}", 1000.0f - accountSteps.getCurrentBalance(folderTarget.getName()));
-
-            orderServiceSteps.changeProjectForOrder(product, projectSource);
+            try {
+                Float cost = costSteps.getPreBillingCost(product);
+                orderServiceSteps.changeProjectForOrder(product, projectTarget);
+                Float spent = null;
+                for (int i = 0; i < 15; i++) {
+                    Waiting.sleep(20000);
+                    spent = accountSteps.getCurrentBalance(folderTarget.getName());
+                    if (spent.equals(1000.0f))
+                        continue;
+                    break;
+                }
+                Assertions.assertEquals(cost, (1000.0f - Objects.requireNonNull(spent)), 0.01, "Сумма списания отличается от ожидаемой суммы");
+            } finally {
+                orderServiceSteps.changeProjectForOrder(product, projectSource);
+            }
         }
     }
 }
 
-
-//getPreBillingCost = 0,02177494
-//getCurrentBalance = 0.19000244
