@@ -19,8 +19,8 @@ public class Project extends Entity {
     public ProjectEnvironment projectEnvironment;
     public String projectName;
     public Boolean isForOrders;
+    public String prefix;
 
-    transient String prefix;
     transient String folderName;
 
 

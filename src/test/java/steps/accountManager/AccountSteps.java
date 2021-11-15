@@ -10,6 +10,8 @@ import models.authorizer.Folder;
 import models.authorizer.Organization;
 import steps.Steps;
 
+import java.util.Objects;
+
 @Log4j2
 public class AccountSteps extends Steps {
     private static final String URL = Configure.getAppProp("host_kong");
@@ -62,6 +64,16 @@ public class AccountSteps extends Steps {
                 .send(URL)
                 .post("accountmanager/api/v1/organizations/vtb/accounts/transfers")
                 .assertStatus(200);
+    }
+
+    @Step("Запрос текущего баланса для папки {folderId}")
+    public Float getCurrentBalance(String folderId) {
+        String res = new Http(URL)
+                .get(String.format("accountmanager/api/v1/folders/%s/accounts", folderId))
+                .assertStatus(200)
+                .jsonPath()
+                .getString("account.current_balance");
+        return Float.valueOf(Objects.requireNonNull(res));
     }
 
     @Step("Перевод со счета {sourceContext} на счет папки {targetContext} проекта {amount}")

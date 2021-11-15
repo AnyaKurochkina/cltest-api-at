@@ -31,7 +31,8 @@ import java.util.stream.Stream;
 @Log4j2
 public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Source> {
     public final static int PRODUCTS = 0;
-    public final static int ENV = 1;
+    public final static int ONE_PRODUCT = 1;
+    public final static int ENV = 2;
     private final static List<IProduct> orders = getProductList();
     private int variableName;
 
@@ -47,7 +48,6 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                         clazz = m;
                         break;
                     }
-
                 }
                 Class<?> finalClazz = clazz;
                 orders.forEach(entity -> {
@@ -60,7 +60,28 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                     list.add(Arguments.of(new IProductMock(entity.toString())));
                 });
             }
-        } else if (variableName == ENV) {
+        }
+        else if (variableName == ONE_PRODUCT) {
+            if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
+                Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
+                Class<?> clazz = null;
+                for (Class<?> m : params) {
+                    if (Entity.class.isAssignableFrom(m)) {
+                        clazz = m;
+                        break;
+                    }
+                }
+                Class<?> finalClazz = clazz;
+                for (IProduct entity : orders) {
+                    Class<?> c = entity.getClass();
+                    if (finalClazz.isInstance(entity)) {
+                        list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
+                        break;
+                    }
+                }
+            }
+        }
+        else if (variableName == ENV) {
             AtomicInteger i = new AtomicInteger(1);
             orders.stream()
                     .filter(distinctByKey(IProduct::getEnv))

@@ -119,7 +119,7 @@ public class OrderServiceSteps extends Steps {
         return idOfAllSuccessProducts;
     }
 
-    @Step("Отправка action \"{action}\"")
+    @Step("Отправка action {action}")
     public Http.Response sendAction(String action, IProduct product, JSONObject jsonData) {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         return jsonHelper.getJsonTemplate("/actions/template.json")
@@ -129,6 +129,19 @@ public class OrderServiceSteps extends Steps {
                 .setProjectId(product.getProjectId())
                 .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + item.name);
     }
+
+    public Http.Response changeProjectForOrderRequest(IProduct product, Project target) {
+        return new Http(URL)
+                .patch(String.format("order-service/api/v1/projects/%s/orders/%s/change_project",product.getProjectId(), product.getOrderId()), new JSONObject(String.format("{target_project_name: \"%s\"}", target.getId())));
+    }
+
+    @Step("Перенос продукта {product} в проект {target}")
+    public void changeProjectForOrder(IProduct product, Project target) {
+        Http.Response response =  changeProjectForOrderRequest(product, target)
+                .assertStatus(200);
+        product.setProjectId(target.getId());
+    }
+
 
     /**
      * Метод выполняет экшен по его имени
