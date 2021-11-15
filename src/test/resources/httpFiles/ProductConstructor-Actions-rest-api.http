@@ -1,0 +1,145 @@
+### ACTIONS
+GET http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/actions/?per_page=1&page=1
+Accept: application/json
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
+
+###
+POST http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/actions/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "graph_id": "dce09e6c-5a9e-4ce6-a21d-b9d6a6e9ca17",
+  "graph_version": "",
+  "graph_version_pattern": "",
+  "name": "sailor_moon",
+  "title": "sailor_moon",
+  "description": "sailor_moon",
+  "author": "sailor_moon",
+  "required_order_statuses": [
+    "success"
+  ],
+  "required_item_statuses": [
+    "on"
+  ],
+  "type": null,
+  "event_type": [
+    "cluster"
+  ],
+  "event_provider": [
+    "kafka"
+  ],
+  "data_config_path": "",
+  "data_config_key": "",
+  "data_config_fields": [],
+  "config_restriction": "",
+  "item_restriction": "",
+  "available_without_money": false,
+  "auto_removing_if_failed": false,
+  "skip_on_prebilling": false,
+  "allowed_groups": [],
+  "restricted_groups": [],
+  "allowed_paths": [],
+  "restricted_paths": []
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+    client.assert(response.status === 201, "Response status is not 201");
+    });
+    client.global.set("action_id", response.body.id);
+%}
+
+###
+GET http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/actions/?include=total_count&page=1&per_page=10&multisearch=sailor_moon
+Accept: application/json
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
+
+###
+GET http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/actions/{{action_id}}/
+Accept: application/json
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
+
+
+###
+PATCH http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/actions/{{action_id}}/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "version": "1.0.15",
+  "graph_id": "dce09e6c-5a9e-4ce6-a21d-b9d6a6e9ca17",
+  "graph_version": "1.0.1"
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+    })
+%}
+
+###
+PATCH http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/actions/{{action_id}}/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "version": "1.0.20",
+  "graph_id": "dce09e6c-5a9e-4ce6-a21d-b9d6a6e9ca17",
+  "graph_version": ""
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+    })
+%}
+
+<> 2021-11-15T143644.200.json
+<> 2021-11-15T143603-3.200.json
+<> 2021-11-15T143427-3.200.json
+<> 2021-11-15T143414-2.200.json
+<> 2021-11-15T142529-3.200.json
+
+
+###
+PATCH http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/actions/{{action_id}}/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "graph_id": "dce09e6c-5a9e-4ce6-a21d-b9d6a6e9ca17",
+  "graph_version_pattern": "1."
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+    })
+%}
+
+
+DELETE http://d4-product-catalog.apps.d0-oscp.corp.dev.vtb/actions/{{action_id}}/
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test("Request executed successfully", function() {
+    client.assert(response.status === 204, "Response status is not 204");
+    })
+%}

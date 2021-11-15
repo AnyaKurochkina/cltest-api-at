@@ -11,16 +11,18 @@ import static core.helper.JsonHelper.convertResponseOnClass;
 
 public class GraphSteps {
 
-    private JSONObject toJson(String pathToJsonBody) {
+    private JSONObject toJson(String pathToJsonBody, String graphName) {
         JsonHelper jsonHelper = new JsonHelper();
-        return jsonHelper.getJsonTemplate(pathToJsonBody).build();
+        return jsonHelper.getJsonTemplate(pathToJsonBody)
+                .set("$.name", graphName)
+                .build();
     }
 
-    public void createGraph() {
+    public void createGraph(String graphName) {
         String object = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
-                .post("graphs/?save_as_next_version=true", toJson("/productCatalog/graphs/createGraph.json"))
-                .assertStatus(200)
+                .post("graphs/?save_as_next_version=true", toJson("/productCatalog/graphs/createGraph.json", graphName))
+                .assertStatus(201)
                 .toString();
     }
 

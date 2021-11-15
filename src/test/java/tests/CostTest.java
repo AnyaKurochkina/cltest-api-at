@@ -32,6 +32,18 @@ import java.util.stream.Stream;
 public class CostTest extends Tests {
 
 //    @Test
+//    public void ActionCreateDeleteTest(){
+        //        GraphSteps createGraphResponse = new GraphSteps();
+//        ActionsSteps actionsSteps = new ActionsSteps();
+//        String graphId = createGraphResponse.getGraph("AtTestGraph");
+//        actionsSteps.createAction("TestAction",graphId);
+//        String actionId = actionsSteps.getActionId("TestAction");
+//        actionsSteps.deleteAction(actionId);
+//        String actionIdAfterDelete = actionsSteps.getActionId("TestAction");
+//        Assertions.assertNull(actionIdAfterDelete);
+//    }
+
+//    @Test
 //    void removeDbmsUser1() {
 //            PostgreSQL postgreSQL= new PostgreSQL("68f64f59-5072-48c1-9ba6-80129fa18d2e",
 //                    "proj-frybyv41jh",

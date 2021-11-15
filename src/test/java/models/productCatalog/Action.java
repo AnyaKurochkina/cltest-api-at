@@ -32,10 +32,10 @@ public class Action extends Entity {
     public void init() {
         jsonTemplate = "productCatalog/actions/createAction.json";
         GraphSteps graphSteps = new GraphSteps();
-        graphId = graphSteps.getGraph("AtTestGraph");
 //        if(graph == null){
 //            graph = Graph.builder().build().createObject();
 //        }
+        graphId = graphSteps.getGraph("AtTestGraph");
     }
 
     @Override
@@ -74,8 +74,9 @@ public class Action extends Entity {
                 .setContentType("application/json")
                 .delete("actions/" + actionId + "/")
                 .assertStatus(204);
-        
-        Integer a = 10;
-        Assertions.assertNull(a);
+
+        ActionsSteps actionsSteps = new ActionsSteps();
+        actionId = actionsSteps.getActionId(actionName);
+        Assertions.assertNull(actionId, String.format("Экшен с именем: %s не найден", actionName));
     }
 }
