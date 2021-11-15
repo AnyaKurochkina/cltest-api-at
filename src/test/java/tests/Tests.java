@@ -10,10 +10,7 @@ import lombok.SneakyThrows;
 import models.orderService.products.WildFly;
 import org.junit.CustomDisplayNameGenerator;
 import org.junit.TmsLinkExtension;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.ByteArrayInputStream;
@@ -29,11 +26,13 @@ public class Tests {
 //    private static final ThreadLocal<StringBuilder> testLog = new ThreadLocal<>();
 //    private static final ThreadLocal<Map<String, StringBuilder>> testLogMap = new ThreadLocal<>();
 
-//    @BeforeEach
-//    public void beforeScenarios(){
-//        testLogMap.remove();
-//        testLogMap.set(new HashMap<>());
-//    }
+    @BeforeEach
+    @SneakyThrows
+    public void beforeScenarios(TestInfo testInfo){
+        String className = testInfo.getTestClass().orElseThrow(Exception::new).getSimpleName();
+        String methodName = testInfo.getTestMethod().orElseThrow(Exception::new).getName();
+        Allure.tms(className + "#" + methodName, "");
+    }
 
     public static void putAttachLog(String text) {
         String stepId = getLifecycle().getCurrentTestCaseOrStep().orElse(null);
@@ -50,7 +49,7 @@ public class Tests {
     //    @AfterEach
 //    public void afterScenarios(){
 //    }
-    public void tmsLink(String id, String subId) {
-        Allure.tms(id + "." + subId, "");
-    }
+//    public void tmsLink(String id, String subId) {
+//        Allure.tms(id + "." + subId, "");
+//    }
 }

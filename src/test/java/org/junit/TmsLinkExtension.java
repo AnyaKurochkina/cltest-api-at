@@ -40,8 +40,8 @@ public class TmsLinkExtension implements InvocationInterceptor {
     public void interceptAfterEachMethod(InvocationInterceptor.Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
                                           ExtensionContext extensionContext) throws Throwable {
         invocation.proceed();
-        CRC32 crc = new CRC32();
-        crc.update(extensionContext.getUniqueId().getBytes());
-        Allure.tms(Long.toHexString(crc.getValue()), "");
+//        String className = extensionContext.getTestClass().orElseThrow(Exception::new).getSimpleName();
+//        String methodName = extensionContext.getTestMethod().orElseThrow(Exception::new).getName();
+//        Allure.tms(className + "#" + methodName, "");
     }
 }
