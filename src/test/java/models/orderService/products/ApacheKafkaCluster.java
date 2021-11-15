@@ -139,7 +139,7 @@ public class ApacheKafkaCluster extends IProduct {
             e.printStackTrace();
         }
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate),
-                "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
+                String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
 
     public void expandMountPoint(){
