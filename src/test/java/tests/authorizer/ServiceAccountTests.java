@@ -12,7 +12,7 @@ import tests.Tests;
 
 @Epic("Управление")
 @Feature("Сервисные аккаунты")
-@Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class ServiceAccountTests extends Tests {

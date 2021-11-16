@@ -11,7 +11,7 @@ import tests.Tests;
 
 @Epic("Организационная структура")
 @Feature("Папки")
-@Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class FoldersTests extends Tests {

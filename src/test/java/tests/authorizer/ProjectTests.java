@@ -10,7 +10,7 @@ import tests.Tests;
 
 @Epic("Организационная структура")
 @Feature("Проекты")
-@Tags({@Tag("regress"), @Tag("orgStructure3"), @Tag("smoke")})
+@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @Execution(ExecutionMode.SAME_THREAD)
 public class ProjectTests extends Tests {
 
