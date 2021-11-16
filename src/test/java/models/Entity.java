@@ -2,6 +2,7 @@ package models;
 
 import core.helper.JsonHelper;
 import core.enums.ObjectStatus;
+import core.helper.JsonTemplate;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -14,9 +15,13 @@ public abstract class Entity implements AutoCloseable {
 
     public String objectClassName;
 
-    public abstract void init();
+    public abstract Entity init();
 
     public abstract JSONObject toJson();
+
+    public JsonTemplate getTemplate(){
+        return new JsonTemplate(toJson());
+    }
 
     protected abstract void create();
 

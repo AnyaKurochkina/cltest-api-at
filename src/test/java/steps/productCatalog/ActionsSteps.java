@@ -4,6 +4,7 @@ import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.createAction.response.CreateActionResponse;
+import httpModels.productCatalog.patchActions.response.PatchResponse;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import httpModels.productCatalog.getActions.response.ActionResponse;
@@ -89,11 +90,14 @@ public class ActionsSteps {
     }
 
     @SneakyThrows
-    public void patchAction(String actionName, String graphId, String actionId) {
-        new Http(Configure.ProductCatalog)
+    public PatchResponse patchAction(String actionName, String graphId, String actionId) {
+        String response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .patch("actions/" + actionId + "/", toJson("productCatalog/actions/createAction.json", actionName, graphId))
-                .assertStatus(200);
+                .assertStatus(200)
+                .toString();
+
+        return convertResponseOnClass(response, PatchResponse.class);
     }
 
     @SneakyThrows

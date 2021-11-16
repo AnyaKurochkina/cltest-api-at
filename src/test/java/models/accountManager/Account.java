@@ -21,7 +21,7 @@ public class Account extends Entity {
     public String organization;
 
     @Override
-    public void init() {
+    public Entity init() {
         if(folder == null) {
             folder = Folder.builder().build().createObject();
             folderId = folder.getName();
@@ -36,6 +36,7 @@ public class Account extends Entity {
         if(organization == null){
             organization = ((Organization) Organization.builder().build().createObject()).getName();
         }
+        return this;
     }
 
     public JSONObject toJson() {

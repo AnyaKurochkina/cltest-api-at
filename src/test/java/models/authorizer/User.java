@@ -10,8 +10,8 @@ public class User extends Entity {
     public String password;
 
     @Override
-    public void init() {
-
+    public Entity init() {
+        return this;
     }
 
     @Override

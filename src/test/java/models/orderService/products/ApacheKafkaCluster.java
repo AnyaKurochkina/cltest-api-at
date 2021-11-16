@@ -7,6 +7,7 @@ import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
@@ -60,7 +61,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     @Override
-    public void init() {
+    public Entity init() {
         jsonTemplate = "/orders/apache_kafka_cluster.json";
         productName = "Apache Kafka Cluster";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
@@ -70,6 +71,7 @@ public class ApacheKafkaCluster extends IProduct {
         if(productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
+        return this;
     }
 
     @Override

@@ -39,7 +39,7 @@ public class Rhel extends IProduct {
     Flavor flavor;
 
     @Override
-    public void init() {
+    public Entity init() {
         jsonTemplate = "/orders/rhel.json";
         if(productName == null)
             productName = "Rhel";
@@ -54,6 +54,7 @@ public class Rhel extends IProduct {
             domain = orderServiceSteps.getDomainBySegment(this, segment);
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
+        return this;
     }
 
     @Override

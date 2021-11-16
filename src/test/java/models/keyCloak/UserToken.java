@@ -11,8 +11,8 @@ public class UserToken extends Entity {
     public Long time;
 
     @Override
-    public void init() {
-
+    public Entity init() {
+        return this;
     }
 
     @Override

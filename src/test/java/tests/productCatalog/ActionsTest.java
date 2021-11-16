@@ -1,18 +1,15 @@
 package tests.productCatalog;
 
 import core.helper.Deleted;
-import core.helper.JsonHelper;
-import httpModels.productCatalog.getActions.response.ActionResponse;
 import httpModels.productCatalog.patchActions.response.PatchResponse;
 import models.productCatalog.Action;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.productCatalog.ActionsSteps;
-import steps.productCatalog.GraphSteps;
 import tests.Tests;
 
-import static core.helper.JsonHelper.convertResponseOnClass;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
@@ -21,61 +18,61 @@ public class ActionsTest extends Tests {
     Action action;
 
     @Order(1)
+    @DisplayName("Создание экшена в продуктовом каталоге")
     @Test
     public void createAction() {
         action = Action.builder().actionName("TestObjectAT").build().createObject();
     }
 
     @Order(2)
+    @DisplayName("Поиск экшена по имени, с использованием multiSearch")
     @Test
     public void searchActionByName() {
         String actionIdWithMultiSearch = actionsSteps.getActionByNameWithMultiSearch("TestObjectAT");
-        Assertions.assertNotNull(actionIdWithMultiSearch, String.format("Экшен с именем: %s не найден", "TestObjectAT"));
-        Assertions.assertEquals(action.getActionId(), actionIdWithMultiSearch);
+        assertAll("I Love messages ♡",
+                () -> assertNotNull(actionIdWithMultiSearch, String.format("Экшен с именем: %s не найден", "TestObjectAT")),
+                () -> assertEquals(action.getActionId(), actionIdWithMultiSearch));
     }
 
     @Order(3)
+    @DisplayName("Негативный тест на создание экшена с двумя параметрами одновременно graph_version_pattern и graph_version")
     @Test
     public void doubleVersionTest() {
-        JsonHelper jsonHelper = new JsonHelper();
-        GraphSteps graphSteps = new GraphSteps();
-        actionsSteps.createAction(jsonHelper.getJsonTemplate("productCatalog/actions/createAction.json")
-                .set("$.name", "NegativeAction")
-                .set("$.title", "NegativeAction")
-                .set("$.description", "NegativeAction")
-                .set("$.graph_id", action.getGraphId())
-//                .set("$.graph_version", "1.0.0")
-                .set("$.graph_version_pattern", "1.")
-//                .set("$.required_order_statuses[0]", "success")
-//                .set("$.event_type[0]", "bm")
-//                .set("$.event_provider[0]", "s3")
-//                .set("$.type", "deleted")
-                .build()).assertStatus(404);
+        try {
+            actionsSteps.createAction(Action.builder().actionName("NegativeAction").build().init().getTemplate()
+                    .set("$.version", "1.1.1")
+                    .set("$.graph_version", "1.0.0")
+                    .set("$.graph_version_pattern", "1.")
+                    .build()).assertStatus(404);
+        } finally {
+            String actionIdForDelete = actionsSteps.getActionByNameWithMultiSearch("NegativeAction");
+            actionsSteps.deleteAction(actionIdForDelete);
+        }
     }
 
     @Order(4)
+    @DisplayName("Обновление экшена без указания версии, вресия должна инкрементироваться")
     @Test
     public void patchTest() {
-        JsonHelper jsonHelper = new JsonHelper();
-        GraphSteps graphSteps = new GraphSteps();
-        actionsSteps.patchAction("TestObjectAT", action.getGraphId(), action.getActionId());
-        String response = actionsSteps.patchActionRow(jsonHelper.getJsonTemplate("productCatalog/actions/patchVersion.json")
-                .set("$.name", "TestObjectAT")
-                .set("$.title", "TestObjectAT")
-                .set("$.description", "TestObjectAT1")
-                .set("$.graph_id", action.getGraphId())
-                .build(), action.getActionId()).assertStatus(200).toString();
-
-        PatchResponse mappedResponse = convertResponseOnClass(response, PatchResponse.class);
-        Assertions.assertEquals("1.0.1", mappedResponse.getGraphVersion());
+        PatchResponse patchResponse = actionsSteps.patchAction("TestObjectAT", action.getGraphId(), action.getActionId());
+        Assertions.assertEquals("1.1.2", patchResponse.getLastVersion());
     }
 
+    @Order(5)
+    @DisplayName("Негативный тест на обновление экшена до той же версии/текущей")
+    @Test
+    public void sameVersionTest() {
+        actionsSteps.patchActionRow(Action.builder().actionName("TestObjectAT").build().init().getTemplate()
+                .set("$.version", "1.1.2")
+                .build(), action.getActionId()).assertStatus(404);
+    }
 
     @Order(100)
     @Test
+    @DisplayName("Удаление экшена")
     @Deleted
     public void deleteAction() {
-        try (Action action = Action.builder().actionName("TestObjectAT").build().createObjectExclusiveAccess()){
+        try (Action action = Action.builder().actionName("TestObjectAT").build().createObjectExclusiveAccess()) {
             action.deleteObject();
         }
     }

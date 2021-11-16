@@ -6,6 +6,7 @@ import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -68,7 +69,7 @@ public class PostgresSQLCluster extends IProduct {
     }
 
     @Override
-    public void init() {
+    public Entity init() {
         jsonTemplate = "/orders/postgressql_cluster.json";
         productName = "PostgreSQL Cluster";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
@@ -78,6 +79,7 @@ public class PostgresSQLCluster extends IProduct {
         if(productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
+        return this;
     }
 
     @Override

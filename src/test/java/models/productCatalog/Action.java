@@ -29,13 +29,14 @@ public class Action extends Entity {
     protected transient ActionsSteps actionsSteps = new ActionsSteps();
 
     @Override
-    public void init() {
+    public Entity init() {
         jsonTemplate = "productCatalog/actions/createAction.json";
         GraphSteps graphSteps = new GraphSteps();
 //        if(graph == null){
 //            graph = Graph.builder().build().createObject();
 //        }
-        graphId = graphSteps.getGraph("AtTestGraph");
+        graphId = graphSteps.getGraphId("AtTestGraph");
+        return this;
     }
 
     @Override
@@ -46,6 +47,7 @@ public class Action extends Entity {
                 .set("$.title", actionName)
                 .set("$.description", actionName)
                 .set("$.graph_id", graphId)
+                .set("$.version", "1.1.1")
 //                .set("$.required_order_statuses[0]", "success")
 //                .set("$.event_type[0]", "bm")
 //                .set("$.event_provider[0]", "s3")

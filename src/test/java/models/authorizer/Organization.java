@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import models.Entity;
 import org.json.JSONObject;
-import steps.Steps;
 import steps.authorizer.AuthorizerSteps;
-import tests.Tests;
 
 @Builder
 @Getter
@@ -17,9 +15,10 @@ public class Organization extends Entity {
     public String name;
 
     @Override
-    public void init() {
+    public Entity init() {
         if(title == null)
             title = "ВТБ";
+        return this;
     }
 
     @Override

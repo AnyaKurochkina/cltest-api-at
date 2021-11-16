@@ -26,7 +26,7 @@ public class GraphSteps {
                 .toString();
     }
 
-    public String getGraph(String graphName){
+    public String getGraphId(String graphName){
         String graphId = null;
         String object = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")

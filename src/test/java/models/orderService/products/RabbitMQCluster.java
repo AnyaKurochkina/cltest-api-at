@@ -6,6 +6,7 @@ import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -55,7 +56,7 @@ public class RabbitMQCluster extends IProduct {
     }
 
     @Override
-    public void init() {
+    public Entity init() {
         jsonTemplate = "/orders/rabbitmq_cluster.json";
         productName = "RabbitMQ Cluster";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
@@ -65,6 +66,7 @@ public class RabbitMQCluster extends IProduct {
         if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
+        return this;
     }
 
     //    @Override

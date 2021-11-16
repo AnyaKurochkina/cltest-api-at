@@ -6,8 +6,6 @@ import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.Singular;
 import models.Entity;
 import org.json.JSONObject;
 
@@ -34,11 +32,12 @@ public class AccessGroup extends Entity {
     }
 
     @Override
-    public void init() {
+    public Entity init() {
         if (name == null)
             name = new RandomStringGenerator().generateByRegex("[a-z]{5,15}");
         if (projectName == null)
             projectName = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
+        return this;
     }
 
     public JSONObject toJson() {

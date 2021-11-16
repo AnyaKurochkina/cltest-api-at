@@ -10,8 +10,8 @@ import org.json.JSONObject;
 public class Graph extends Entity {
 
     @Override
-    public void init() {
-
+    public Entity init() {
+        return this;
     }
 
     @Override

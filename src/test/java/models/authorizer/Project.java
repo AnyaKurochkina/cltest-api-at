@@ -24,7 +24,7 @@ public class Project extends Entity {
     transient String folderName;
 
 
-    public void init() {
+    public Entity init() {
         if(informationSystem == null){
             informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
         }
@@ -41,6 +41,7 @@ public class Project extends Entity {
         if(projectName == null){
             projectName = new RandomStringGenerator().generateByRegex("project [0-9a-zA-Z]{5,15}");
         }
+        return this;
     }
 
     public JSONObject toJson() {

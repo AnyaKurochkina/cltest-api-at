@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -57,7 +58,7 @@ public class Redis extends IProduct {
     }
 
     @Override
-    public void init() {
+    public Entity init() {
         jsonTemplate = "/orders/redis.json";
         productName = "Redis";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
@@ -67,6 +68,7 @@ public class Redis extends IProduct {
         if(productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
+        return this;
     }
 
     public JSONObject toJson() {

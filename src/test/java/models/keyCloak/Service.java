@@ -10,8 +10,8 @@ public class Service extends Entity {
     public String clientSecret;
 
     @Override
-    public void init() {
-
+    public Entity init() {
+        return this;
     }
 
     @Override

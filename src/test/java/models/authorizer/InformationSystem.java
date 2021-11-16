@@ -12,8 +12,8 @@ public class InformationSystem extends Entity {
     public Boolean isForOrders;
 
     @Override
-    public void init() {
-
+    public Entity init() {
+        return this;
     }
 
     @Override

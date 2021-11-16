@@ -29,7 +29,7 @@ public class Folder extends Entity {
     transient static final public String DEFAULT = "default";
 
     @Override
-    public void init() {
+    public Entity init() {
         if (parentId == null) {
             switch (kind) {
                 case BUSINESS_BLOCK:
@@ -56,6 +56,7 @@ public class Folder extends Entity {
             informationSystemIds = new ArrayList<>();
             informationSystemIds.add(informationSystem.getId());
         }
+        return this;
     }
 
     //    @Override

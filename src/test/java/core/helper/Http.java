@@ -57,7 +57,7 @@ public class Http {
                 public void checkServerTrusted(X509Certificate[] certs, String authType) {
                 }
             }};
-            SSLContext sc = null;
+            SSLContext sc;
             sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
@@ -150,9 +150,9 @@ public class Http {
     @SneakyThrows
     private Response request() {
         Response response = null;
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             response = filterRequest();
-            if(!(response.status() == 504 && method.equals("GET")))
+            if (!(response.status() == 504 && method.equals("GET")))
                 break;
             Thread.sleep(1000);
         }
@@ -166,7 +166,7 @@ public class Http {
         int status = 0;
         try {
             URL url = new URL(host + path);
-            if(path.endsWith("/cost") || path.contains("order-service"))
+            if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.acquire();
             URLConnection connection = url.openConnection();
             http = (HttpURLConnection) connection;
@@ -193,12 +193,12 @@ public class Http {
             else
                 is = http.getInputStream();
             status = http.getResponseCode();
-            if(status >= 400 && is == null)
+            if (status >= 400 && is == null)
                 responseMessage = "";
             else
                 responseMessage = IOUtils.toString(is, StandardCharsets.UTF_8);
             http.disconnect();
-            if(path.endsWith("/cost") || path.contains("order-service"))
+            if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
             if (responseMessage.length() > 10000)
                 sbLog.append(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
@@ -225,7 +225,7 @@ public class Http {
         return new Response(status, responseMessage);
     }
 
-    public static class StatusResponseException extends RuntimeException {
+    public static class StatusResponseException extends AssertionError {
         public StatusResponseException(String errorMessage) {
             super(errorMessage);
         }
@@ -241,12 +241,12 @@ public class Http {
         }
 
         public Response assertStatus(int s) {
-            if (s != status() || (path.endsWith("/orders") && method.equals("POST"))) {
+//            if (s != status() || (path.endsWith("/orders") && method.equals("POST"))) {
 //                Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
 //                Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
-            }
-            if(s != status())
-                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nResponse: %s\nRequest: %s\n%s\n",s, status(), responseMessage, host + path, body));
+//            }
+            if (s != status())
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nResponse: %s\nRequest: %s\n%s\n", s, status(), responseMessage, host + path, body));
             return this;
         }
 

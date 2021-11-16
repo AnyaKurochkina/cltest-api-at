@@ -24,11 +24,12 @@ public class ServiceAccount extends Entity {
     public Boolean isForOrders;
 
     @Override
-    public void init() {
+    public Entity init() {
         if (name == null)
             name = new RandomStringGenerator().generateByRegex("[a-z]{5,18}");
         if (projectId == null)
             projectId = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
+        return this;
     }
 
     public JSONObject toJson() {

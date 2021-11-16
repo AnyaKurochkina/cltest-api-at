@@ -4,11 +4,9 @@ import core.CacheService;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.StringUtils;
-import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
 import lombok.*;
 import models.Entity;
-import models.authorizer.Project;
 import org.json.JSONObject;
 import steps.tarifficator.TariffPlanSteps;
 
@@ -46,7 +44,7 @@ public class TariffPlan extends Entity {
 
 
     @Override
-    public void init() {
+    public Entity init() {
         if(title == null)
             title = "AT " + new Date();
         if(base == null)
@@ -55,6 +53,7 @@ public class TariffPlan extends Entity {
             TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
             oldTariffPlanId = activeTariff.getId();
         }
+        return this;
     }
 
     @Override
