@@ -43,10 +43,10 @@ public class Podman extends IProduct {
         jsonTemplate = "/orders/podman.json";
         productName = "Podman";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
+        if (projectId == null) {
             projectId = project.getId();
         }
-        if(productId == null) {
+        if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
         return this;
@@ -74,6 +74,7 @@ public class Podman extends IProduct {
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
+        boolean isTestEnv = project.getProjectEnvironment().getEnvType().contains("TEST");
         return jsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
@@ -83,10 +84,11 @@ public class Podman extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", project.id)
-                .build();
+                .set("$.order.attrs.ad_logon_grants[0].role", isTestEnv ? "podman_admin" : "superuser")
+                .set("$.order.attrs.on_support", isTestEnv).build();
     }
 
-    public void expandMountPoint(){
+    public void expandMountPoint() {
         expandMountPoint("expand_mount_point");
     }
 

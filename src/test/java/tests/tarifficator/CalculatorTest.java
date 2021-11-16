@@ -35,23 +35,6 @@ public class CalculatorTest extends Tests {
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();
     CostSteps costSteps = new CostSteps();
 
-    @ParameterizedTest(name = "Сравнение стоимости продукта {0} с ценой предбиллинга")
-    @DisplayName("Сравнение стоимости продуктов с ценой предбиллинга")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    public void getCost(IProduct resource) {
-        try (IProduct product = resource.createObjectExclusiveAccess()) {
-            Float preBillingCost = costSteps.getPreBillingCost(product);
-            Float currentCost = costSteps.getCurrentCost(product);
-            for (int i = 0; i < 15; i++) {
-                Waiting.sleep(20000);
-                if (Math.abs(currentCost - preBillingCost) > 0.00001)
-                    continue;
-                break;
-            }
-            Assertions.assertEquals(preBillingCost, currentCost, 0.00001, "Стоимость предбиллинга отличается от стоимости продукта " + product);
-        }
-    }
-
     @SneakyThrows
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Списание средств за продукт {0}")

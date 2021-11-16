@@ -1,5 +1,0 @@
-Elasticsearch:
-  - actions:
-      ['expand_mount_point']
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", elasticsearchVersion: "7.9.2 + Exporter 1.1.0" }
