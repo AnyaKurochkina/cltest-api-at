@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 @Epic("Финансы")
 @Feature("Тарификатор")
-@Tags({@Tag("regress"), @Tag("tariff2")})
+@Tags({@Tag("regress"), @Tag("tariff")})
 public class ComparePrebillingTest extends Tests {
     CostSteps costSteps = new CostSteps();
 

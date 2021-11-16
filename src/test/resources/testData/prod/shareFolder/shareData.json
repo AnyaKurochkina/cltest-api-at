@@ -63,6 +63,7 @@
         "projectName": "DEV_AUTOTEST",
         "projectEnvironment": {
             "env": "DEV",
+            "id": "ce11798a-e5f6-4e54-9582-78770f15b52a",
             "envType": "DEV"
         },
         "isForOrders":true
@@ -75,6 +76,7 @@
         "projectName": "EDU_AUTOTEST",
         "projectEnvironment": {
             "env": "EDU",
+            "id": "feff8762-5f69-41a2-9054-3d03530945f8",
             "envType": "TEST"
         },
         "isForOrders":true
@@ -87,6 +89,7 @@
         "projectName": "HOTFIX_AUTOTEST",
         "projectEnvironment": {
             "env": "HOTFIX",
+            "id": "3aee543c-8867-4c0f-a1be-7681bd249d56",
             "envType": "TEST"
         },
         "isForOrders":true
@@ -99,6 +102,7 @@
         "projectName": "MIGR_AUTOTEST",
         "projectEnvironment": {
             "env": "MIGR",
+            "id": "77a53624-787d-42ac-b478-cd3119560ed0",
             "envType": "TEST"
         },
         "isForOrders":true
@@ -111,6 +115,7 @@
         "projectName": "PREPROD_AUTOTEST",
         "projectEnvironment": {
             "env": "PREPROD",
+            "id": "df4d904e-f0b1-4c74-877e-fec4576666f3",
             "envType": "TEST"
         },
         "isForOrders":true
@@ -123,6 +128,7 @@
         "projectName": "ST_AUTOTEST",
         "projectEnvironment": {
             "env": "ST",
+            "id": "057a6be5-9677-4433-b0fd-3fe2f8b38aca",
             "envType": "DEV"
         },
         "isForOrders":true
@@ -135,6 +141,7 @@
         "projectName": "LT_AUTOTEST",
         "projectEnvironment": {
             "env": "LT",
+            "id": "eeb890b0-e769-48a1-ba49-904821dbc2a2",
             "envType": "TEST"
         },
         "isForOrders":true
@@ -147,6 +154,7 @@
         "projectName": "IFT_AUTOTEST",
         "projectEnvironment": {
             "env": "IFT",
+            "id": "3fd0e51e-bf33-45c1-afa6-8dcb2a4ee7bc",
             "envType": "TEST"
         },
         "isForOrders":true
