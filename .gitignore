@@ -18,3 +18,4 @@
 /test/resources/logs/
 /cltest-api-at-junit5.iml
 **/logData.json
+**/secret.json

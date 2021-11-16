@@ -42,6 +42,7 @@ public class Http {
     private String token = "";
     private String contentType = "application/json";
     private boolean isUsedToken = true;
+    private boolean isLogged = true;
     private static final Semaphore SEMAPHORE = new Semaphore(1, true);
 
     static {
@@ -86,6 +87,11 @@ public class Http {
     public Http(String host, JSONObject body) {
         this.host = host;
         this.body = body.toString();
+    }
+
+    public Http disableAttachmentLog() {
+        this.isLogged = false;
+        return this;
     }
 
     public Response get(String path) {
@@ -159,10 +165,15 @@ public class Http {
         return response;
     }
 
+    private final StringBuilder sbLog = new StringBuilder();
+    private void log(String str){
+        if(isLogged)
+            sbLog.append(str);
+    }
+
     private Response filterRequest() {
         HttpURLConnection http;
         String responseMessage = null;
-        StringBuilder sbLog = new StringBuilder();
         int status = 0;
         try {
             URL url = new URL(host + path);
@@ -182,9 +193,9 @@ public class Http {
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
-            sbLog.append(String.format("URL: %s\n", (host + path)));
+            log(String.format("URL: %s\n", (host + path)));
             if (body.length() > 0) {
-                sbLog.append(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
+                log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
                 http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
             }
             InputStream is;
@@ -201,9 +212,9 @@ public class Http {
             if(path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
             if (responseMessage.length() > 10000)
-                sbLog.append(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
+                log(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
             else
-                sbLog.append(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
+                log(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
             log.debug(sbLog.toString());
 //            AllureLifecycle allureLifecycle = getLifecycle();
 //            Attachment attachment = new Attachment().setSource(sbLog.toString()).setName(String.valueOf(new Date()));
