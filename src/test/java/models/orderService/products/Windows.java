@@ -93,14 +93,14 @@ public class Windows extends IProduct {
     }
 
     //Добавить диск
-    public void addDisk() {
-        orderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"I\", size: 10, file_system: \"ntfs\"}"));
+    public void addDisk(String disk) {
+        orderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"" + disk + "\", size: 10, file_system: \"ntfs\"}"));
         Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, "I")));
     }
 
     //Расширить диск
-    public void expandMountPoint() {
-        orderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"I\", size: 1}"));
+    public void expandMountPoint(String disk) {
+        orderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 1}"));
         Assert.assertEquals(11, orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, "I")));
     }
 

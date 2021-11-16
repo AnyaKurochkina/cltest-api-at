@@ -37,8 +37,7 @@ public class RabbitMQCluster extends IProduct {
     @ToString.Include
     String platform;
     String domain;
-    @Builder.Default
-    String role = "administrator";
+    String role;
     Flavor flavor;
     String osVersion;
 
@@ -62,6 +61,7 @@ public class RabbitMQCluster extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/rabbitmq_cluster.json";
         productName = "RabbitMQ Cluster";
+        role = "administrator";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
         if (projectId == null) {
             projectId = project.getId();
@@ -72,7 +72,7 @@ public class RabbitMQCluster extends IProduct {
         return this;
     }
 
-    //    @Override
+    @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();

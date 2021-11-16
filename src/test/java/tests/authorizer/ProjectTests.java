@@ -12,6 +12,7 @@ import tests.Tests;
 @Feature("Проекты")
 @Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
 @Execution(ExecutionMode.SAME_THREAD)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectTests extends Tests {
 
     @Order(1)

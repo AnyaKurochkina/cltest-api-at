@@ -52,19 +52,19 @@ public class PodmanTest extends Tests {
         }
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
-    void resize(Podman product) {
-        try (Podman podman = product.createObjectExclusiveAccess()) {
-            podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            podman.stopHard();
-            try {
-                podman.resize();
-            } finally {
-                podman.start();
-            }
-        }
-    }
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+//    void resize(Podman product) {
+//        try (Podman podman = product.createObjectExclusiveAccess()) {
+//            podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
+//            podman.stopHard();
+//            try {
+//                podman.resize();
+//            } finally {
+//                podman.start();
+//            }
+//        }
+//    }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")

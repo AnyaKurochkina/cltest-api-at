@@ -32,7 +32,7 @@ public class WindowsTest extends Tests {
     void addDisk(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            windows.addDisk();
+            windows.addDisk("K");
         }
     }
 
@@ -42,7 +42,8 @@ public class WindowsTest extends Tests {
     void expandMountPoint(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            windows.expandMountPoint();
+            windows.addDisk("I");
+            windows.expandMountPoint("I");
         }
     }
 
