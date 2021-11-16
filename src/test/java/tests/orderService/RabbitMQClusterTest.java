@@ -5,6 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.RabbitMQCluster;
+import models.orderService.products.WildFly;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -70,6 +71,15 @@ public class RabbitMQClusterTest extends Tests {
             rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rabbit.stopHard();
             rabbit.start();
+        }
+    }
+
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить сертификаты {0}")
+    void updateCerts(RabbitMQCluster product) {
+        try (RabbitMQCluster rabbitMQCluster = product.createObjectExclusiveAccess()) {
+            rabbitMQCluster.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            rabbitMQCluster.updateCerts();
         }
     }
 
