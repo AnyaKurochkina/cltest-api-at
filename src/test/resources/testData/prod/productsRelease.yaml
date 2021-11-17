@@ -169,7 +169,7 @@ PostgresSQLCluster:
       [ 'expand_mount_point', 'postgresql_cluster_create_db', 'postgresql_cluster_create_dbms_user', 'postgresql_cluster_reset_db_user_password', 'postgresql_cluster_remove_dbms_user', 'postgresql_cluster_reset_db_owner_password', 'reset_two_layer', 'postgresql_cluster_remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
   - options:
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresqlVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresproVersion: "11", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresqlVersion: "11", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
 Elasticsearch:
   - actions:
