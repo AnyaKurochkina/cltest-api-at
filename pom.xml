@@ -222,9 +222,7 @@
                 <artifactId>allure-maven</artifactId>
                 <version>2.10.0</version>
                 <configuration>
-                    <allureDownloadUrl>
-                        https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/%s/allure-commandline-%s.zip
-                    </allureDownloadUrl>
+                    <reportDirectory>${basedir}/allure-results}</reportDirectory>
                     <reportVersion>2.13.8</reportVersion>
                 </configuration>
             </plugin>
