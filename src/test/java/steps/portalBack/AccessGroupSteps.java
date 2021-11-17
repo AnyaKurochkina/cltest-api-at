@@ -5,6 +5,7 @@ import core.helper.Http;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
@@ -44,40 +45,32 @@ public class AccessGroupSteps extends Steps {
                 .jsonPath()
                 .get("name");
 
-        models.authorizer.AccessGroup accessGroup = models.authorizer.AccessGroup.builder()
-                .name(groupName)
-                .projectName(project.id)
-                .user(null)
-                .build();
-        cacheService.saveEntity(accessGroup);
+//        models.authorizer.AccessGroup accessGroup = models.authorizer.AccessGroup.builder()
+//                .name(groupName)
+//                .projectName(project.id)
+//                .user(null)
+//                .build();
+//        cacheService.saveEntity(accessGroup);
     }
 
-    /**
-     * Метод удаляет группу доступа по ID проекта
-     * @param env среда
-     */
-    @Step("Удаление группы доступа в проекте {projectName}")
-    public void deleteAccessGroup(String env) {
-        //Получение проекта из памяти
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(false)
-                .getEntity();
-        //Плучение группы доступа из памяти
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
-        //Отправка запроса на удаление группы доступа
-        new Http(URL)
-                .setProjectId(project.id)
-                .delete(String.format("portal/api/v1/projects/%s/access_groups/%s", project.id, accessGroup.name))
-                .assertStatus(204)
-                .jsonPath();
-        //Проставление флага "группа доступа удалена"
-        accessGroup.isDeleted = true;
-        //Сохранение состояния группы доступа в память
-        cacheService.saveEntity(accessGroup);
-    }
+//    @Step("Удаление группы доступа в проекте {projectName}")
+//    public void deleteAccessGroup(String env) {
+//        Project project = cacheService.entity(Project.class)
+//                .withField("env", env)
+//                .forOrders(false)
+//                .getEntity();
+//        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
+//                .withField("projectName", project.id)
+//                .getEntity();
+//        JsonPath jsonPath = new Http(URL)
+//                .setProjectId(project.id)
+//                .delete(String.format("portal/api/v1/projects/%s/access_groups/%s", project.id, accessGroup.name))
+//                .assertStatus(204)
+//                .jsonPath();
+//
+////        accessGroup.isDeleted = true;
+//        cacheService.saveEntity(accessGroup);
+//    }
 
     /**
      * Метод добавляет пользователя в группу доступа
@@ -85,48 +78,22 @@ public class AccessGroupSteps extends Steps {
      * @param username пользователь
      */
     @Step("Добавление пользователя в группу доступа для проекта среды {env}")
-    public void addUsersToGroup(String env, String username) {
-        //Получение проекта из памяти
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(false)
-                .getEntity();
-        //Плучение группы доступа из памяти
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
+    public void addUsersToGroup(AccessGroup group, String username) {
         String[] arr = new String[]{username};
-        //Отправка запроса на добавление пользователя в группу доступа
-        String response = jsonHelper.getJsonTemplate("/accessGroup/users.json")
+        jsonHelper.getJsonTemplate("/accessGroup/users.json")
                 .set("$.users", arr)
                 .send(URL)
-                .post(String.format("portal/api/v1/projects/%s/access_groups/%s/group_users", project.id, accessGroup.name))
-                .assertStatus(201)
-                .jsonPath().getString("unique_name");
-
-        //Отсечение скобок [] у пользователя
-        String usernameFromResponse = response.substring(1, response.length() - 1);
-        //Сравнение пользователя с пользователем из ответа на добавление
-        Assertions.assertEquals(username, usernameFromResponse);
-        //Сохранение группы доступа в память
-        accessGroup.user = usernameFromResponse;
-        cacheService.saveEntity(accessGroup);
+                .post(String.format("portal/api/v1/projects/%s/access_groups/%s/group_users", group.getProjectName(), group.getName()))
+                .assertStatus(201);
+        group.addUser(username);
     }
 
-    @Step("Удаление пользователя из группы доступа для проекта среды {env}")
-    public void deleteUsersFromGroup(String env) throws UnsupportedEncodingException {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(false)
-                .getEntity();
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
-        JsonPath jsonPath = new Http(URL)
-                .delete(String.format("portal/api/v1/projects/%s/access_groups/%s/group_users?unique_name=%s", project.id, accessGroup.name, URLEncoder.encode(accessGroup.user, String.valueOf(StandardCharsets.UTF_8))))
-                .assertStatus(204)
-                .jsonPath();
-
-        accessGroup.user = null;
+    @SneakyThrows
+    @Step("Добавление пользователя в группу доступа для проекта среды {env}")
+    public void removeUserFromGroup(AccessGroup group, String user) {
+        new Http(URL)
+                .delete(String.format("portal/api/v1/projects/%s/access_groups/%s/group_users?unique_name=%s", group.getProjectName(), group.getName(), URLEncoder.encode(user, String.valueOf(StandardCharsets.UTF_8))))
+                .assertStatus(204);
+        group.removeUser(user);
     }
 }

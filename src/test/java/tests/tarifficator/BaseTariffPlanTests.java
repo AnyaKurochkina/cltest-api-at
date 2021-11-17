@@ -1,12 +1,16 @@
 package tests.tarifficator;
 
-import core.CacheService;
+import core.helper.Configure;
 import core.helper.Http;
 import core.utils.AssertUtils;
-import io.qameta.allure.TmsLink;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.tarifficator.TariffPlanSteps;
 import tests.Tests;
 
@@ -14,27 +18,24 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@DisplayName("Базовые тарифные планы")
+@Epic("Управление")
+@Feature("Базовые тарифные планы")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Execution(ExecutionMode.SAME_THREAD)
+@Tags({@Tag("regress"), @Tag("tariff")})
 public class BaseTariffPlanTests extends Tests {
     TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
-    CacheService cacheService = new CacheService();
 
     @Test
-    @TmsLink("34")
     @Order(1)
     @DisplayName("Создание тарифного плана на базе активного")
-    public void createBaseTariffPlanFromActive() {
-        Date currentDate = new Date();
-        String tariffName = "AT " + currentDate;
+    void createBaseTariffPlanFromActive() {
         TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=true&f[status][]=active").get(0);
-        String tariffPlanId = tariffPlanSteps.createTariffPlan(TariffPlan.builder()
-                .title(tariffName)
+        TariffPlan tariffPlan = TariffPlan.builder()
                 .base(true)
                 .oldTariffPlanId(activeTariff.getId())
-                .build()).getId();
-        TariffPlan tariffPlan = tariffPlanSteps.getTariffPlan(tariffPlanId);
+                .build()
+                .createObject();
 
         assertAll("Проверка полей созданного тарифного плана",
                 () -> assertNull(tariffPlan.getBeginDate()),
@@ -42,39 +43,39 @@ public class BaseTariffPlanTests extends Tests {
                 () -> assertNull(tariffPlan.getOrganizationName()),
                 () -> assertEquals(activeTariff.getId(), tariffPlan.getOldTariffPlanId()),
                 () -> assertEquals(TariffPlanStatus.draft, tariffPlan.getStatus()),
-                () -> assertEquals(tariffName, tariffPlan.getTitle()),
                 () -> assertEquals(activeTariff.getTariffClasses().size(), tariffPlan.getTariffClasses().size()),
-                () -> AssertUtils.AssertDate(currentDate, tariffPlan.getCreatedAt(), 300));
-        cacheService.saveEntity(tariffPlan);
+                () -> AssertUtils.AssertDate(new Date(), tariffPlan.getCreatedAt(), 300));
     }
 
     @Test
-    @TmsLink("35")
     @Order(2)
-    @DisplayName("Создание тарифного плана с существующим именем")
-    public void duplicateNameBaseTariffPlan() {
-        TariffPlan tariffPlan = cacheService.entity(TariffPlan.class)
-                .withField("status", TariffPlanStatus.draft)
-                .withField("base", true)
-                .getEntity();
-        assertThrows(
-                Http.StatusResponseException.class,
-                () -> tariffPlanSteps.createTariffPlan(TariffPlan.builder()
-                        .title(tariffPlan.getTitle())
-                        .base(true)
-                        .oldTariffPlanId(tariffPlan.getOldTariffPlanId())
-                        .build()));
+    @DisplayName("Создание базового тарифного плана с существующим именем")
+    void duplicateNameBaseTariffPlan() {
+        TariffPlan tariffPlan = TariffPlan.builder()
+                .base(true)
+                .status(TariffPlanStatus.draft)
+                .build()
+                .createObject();
+        JSONObject object = TariffPlan.builder()
+                .title(tariffPlan.getTitle())
+                .base(true)
+                .oldTariffPlanId(tariffPlan.getOldTariffPlanId())
+                .build()
+                .toJson();
+        new Http(Configure.TarifficatorURL)
+                .post("tariff_plans", object)
+                .assertStatus(422);
     }
 
     @Test
-    @TmsLink("36")
     @Order(3)
-    @DisplayName("Изменение имени тарифного плана в статусе черновик")
+    @DisplayName("Изменение имени базового тарифного плана в статусе черновик")
     public void renameBaseTariffPlan() {
-        TariffPlan tariffPlan = cacheService.entity(TariffPlan.class)
-                .withField("status", TariffPlanStatus.draft)
-                .withField("base", true)
-                .getEntity();
+        TariffPlan tariffPlan = TariffPlan.builder()
+                .base(true)
+                .status(TariffPlanStatus.draft)
+                .build()
+                .createObject();
         String tariffName = "_RENAME " + tariffPlan.getTitle();
         TariffPlan updateTariff = TariffPlan.builder()
                 .id(tariffPlan.getId())
@@ -85,11 +86,4 @@ public class BaseTariffPlanTests extends Tests {
         assertEquals(tariffName, updateTariff.getTitle());
     }
 
-    @Test
-    @TmsLink("37")
-    @Order(4)
-    @Tag("tariffPlans")
-    public void test() {
-
-    }
 }

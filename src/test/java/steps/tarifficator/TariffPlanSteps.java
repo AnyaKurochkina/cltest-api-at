@@ -19,6 +19,10 @@ import java.util.*;
 public class TariffPlanSteps extends Steps {
     public static final String URL = Configure.getAppProp("host_kong") + "tarifficator/api/v1/";
 
+    public TariffPlan deserialize(String object) {
+        return CacheService.getCustomGson().fromJson(object, TariffPlan.class);
+    }
+
     /**
      * Отправка запроса на создание ТП
      *
@@ -28,10 +32,10 @@ public class TariffPlanSteps extends Steps {
     @Step("Создание тарифного плана {tariffPlan}")
     public TariffPlan createTariffPlan(TariffPlan tariffPlan) {
         String object = new Http(URL)
-                .post("tariff_plans", tariffPlan.serialize())
+                .post("tariff_plans", tariffPlan.toJson())
                 .assertStatus(201)
                 .toString();
-        return TariffPlan.deserialize(object);
+        return deserialize(object);
     }
 
     /**
@@ -40,7 +44,7 @@ public class TariffPlanSteps extends Steps {
      * @param urlParameters строка GET параметров, по которым осуществится выборка, например {@code "f[base]=true&f[status][]=active"}
      * @return список тарифных планов соответствующих urlParameters
      */
-    @Step("Получение списка тарифных планов c параметрами '{parameters}'")
+    @Step("Получение списка тарифных планов c параметрами '{urlParameters}'")
     public List<TariffPlan> getTariffPlanList(String urlParameters) {
         Type type = new TypeToken<List<TariffPlan>>() {
         }.getType();
@@ -71,7 +75,7 @@ public class TariffPlanSteps extends Steps {
                 .get(String.format("tariff_plans/%s?include=tariff_classes", tariffPlanId))
                 .assertStatus(200)
                 .toString();
-        return TariffPlan.deserialize(object);
+        return deserialize(object);
     }
 
     /**
@@ -83,10 +87,10 @@ public class TariffPlanSteps extends Steps {
     @Step("Редактирование тарифного плана {tariffPlan}")
     public TariffPlan editTariffPlan(TariffPlan tariffPlan) {
         String object = new Http(URL)
-                .patch(String.format("tariff_plans/%s", tariffPlan.getId()), tariffPlan.serialize())
+                .patch(String.format("tariff_plans/%s", tariffPlan.getId()), tariffPlan.toJson())
                 .assertStatus(200)
                 .toString();
-        return TariffPlan.deserialize(object);
+        return deserialize(object);
     }
 
 //    @Step("Редактирование статуса тарифного плана {tariffPlan}")

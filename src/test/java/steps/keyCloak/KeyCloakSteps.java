@@ -1,6 +1,5 @@
 package steps.keyCloak;
 
-import core.CacheService;
 import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
@@ -16,89 +15,64 @@ public class KeyCloakSteps {
     private static final String URL = Configure.getAppProp("host_kk");
     private static final int TOKEN_LIFETIME_SEC = 300;
 
-    /**
-     *
-     * @return возвращаем токен
-     */
-    public static synchronized String getUserToken() {
-        CacheService cacheService = new CacheService();
-        //Получаем токен из памяти без проверки на Null
-        UserToken userToken = cacheService.entity(UserToken.class).getEntityWithoutAssert();
-        //Получаем текущее время
-        long currentTime = System.currentTimeMillis() / 1000L;
-        //Создаем токен, если в памяти он null
-        if (userToken == null) {
-            userToken = UserToken.builder()
-                    .token(getNewUserToken())
-                    .time(currentTime)
-                    .build();
-        /* Если он не null то проверяем время существования токена,
-         если оно превышает 5 мин., то создаем новый */
-        } else if (currentTime - userToken.time > TOKEN_LIFETIME_SEC) {
-            userToken.token = getNewUserToken();
-            userToken.time = currentTime;
-        //Если он не Null и время его существования не превышено, то просто возвращаем токен из памяти
-        } else {
-            return userToken.token;
-        }
-        //Сохраняем токен
-        cacheService.saveEntity(userToken);
-        return userToken.token;
-    }
 
     /**
-     *
      * @return - возвращаем токен
      */
     @Step("Получение нового UserToken")
     public static synchronized String getNewUserToken() {
-        CacheService cacheService = new CacheService();
         //Получение сервис из памяти
-        Service service = cacheService.entity(Service.class).getEntity();
+        Service service = Service.builder().build().createObject();
         //Получение пользователя из памяти
-        User user = cacheService.entity(User.class).getEntity();
+        User user = User.builder().build().createObject();
         //Отправка запроса на получение токена
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()
+                .disableAttachmentLog()
+//                .post("auth/realms/Portal/protocol/openid-connect/token",
+//                        String.format("client_id=%s&client_secret=%s&grant_type=password&username=%s&password=%s",
+//                                service.clientId, service.clientSecret, user.username, user.password))
                 .post("auth/realms/Portal/protocol/openid-connect/token",
-                        String.format("client_id=%s&client_secret=%s&grant_type=password&username=%s&password=%s",
-                                service.clientId, service.clientSecret, user.username, user.password))
+                        String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
+                                 user.username, user.password))
                 .assertStatus(200)
                 .jsonPath()
                 .get("access_token");
     }
 
-//    @Step("Получение ServiceAccountToken")
-    public static synchronized String getServiceAccountToken(String projectId) {
-        CacheService cacheService = new CacheService();
-        ServiceAccount serviceAccount = cacheService.entity(ServiceAccount.class)
-                .withField("projectId", projectId)
-                .getEntity();
-        ServiceAccountToken serviceAccountToken = cacheService.entity(ServiceAccountToken.class)
-                .withField("serviceAccountName", serviceAccount.name)
-                .getEntityWithoutAssert();
+    /**
+     * @return возвращаем токен
+     */
+    public static synchronized String getUserToken() {
+        UserToken userToken = UserToken.builder().build().createObject();
         long currentTime = System.currentTimeMillis() / 1000L;
-        if (serviceAccountToken == null) {
-            serviceAccountToken = ServiceAccountToken.builder()
-                    .token(getNewServiceAccountToken(projectId, serviceAccount))
-                    .serviceAccountName(serviceAccount.name)
-                    .time(currentTime)
-                    .build();
-        } else if (currentTime - serviceAccountToken.time > TOKEN_LIFETIME_SEC) {
-            serviceAccountToken.token = getNewServiceAccountToken(projectId, serviceAccount);
-            serviceAccountToken.time = currentTime;
-        } else {
-//            log.debug("Использован SA токен из кэша {}", serviceAccountToken.serviceAccountName);
-            return serviceAccountToken.token;
+
+        if (currentTime - userToken.time > TOKEN_LIFETIME_SEC) {
+            userToken.token = getNewUserToken();
+            userToken.time = currentTime;
+            //Если он не Null и время его существования не превышено, то просто возвращаем токен из памяти
         }
-//        log.debug("Использован SA новый токен {}", serviceAccountToken.serviceAccountName);
-        cacheService.saveEntity(serviceAccountToken);
-        return serviceAccountToken.token;
+        //Сохраняем токен
+        userToken.save();
+        return userToken.token;
+    }
+
+    //    @Step("Получение ServiceAccountToken")
+    public static synchronized String getServiceAccountToken(String projectId) {
+        ServiceAccount serviceAccount = ServiceAccount.builder().projectId(projectId).build().createObject();
+        ServiceAccountToken saToken = ServiceAccountToken.builder().serviceAccountName(serviceAccount.name).build().createObject();
+        long currentTime = System.currentTimeMillis() / 1000L;
+        if (currentTime - saToken.time > TOKEN_LIFETIME_SEC) {
+            saToken.token = getNewServiceAccountToken(serviceAccount);
+            saToken.time = currentTime;
+        }
+        saToken.save();
+        return saToken.token;
     }
 
     @Step("Получение нового ServiceAccountToken")
-    public static synchronized String getNewServiceAccountToken(String projectId, ServiceAccount serviceAccount) {
+    public static synchronized String getNewServiceAccountToken(ServiceAccount serviceAccount) {
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()

@@ -10,7 +10,6 @@ import steps.orderService.OrderServiceSteps;
 import tests.Tests;
 
 @DisplayName("Тестовый набор по удалению всех заказов из проекта")
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Execution(ExecutionMode.CONCURRENT)
 @Order(1)
 @Tag("deleteorders")

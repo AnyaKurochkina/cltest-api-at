@@ -57,7 +57,7 @@ public class ServiceAccountSteps extends Steps {
                 .delete(String.format("authorizer/api/v1/projects/%s/service_accounts/%s", project.id, serviceAccount.name))
                 .assertStatus(204);
         //Проставление флага "Сервисный аккаунт удалён"
-        serviceAccount.isDeleted = true;
+//        serviceAccount.isDeleted = true;
         //Сохранение текущего состояния сервисного аккаунта
         cacheService.saveEntity(serviceAccount);
     }

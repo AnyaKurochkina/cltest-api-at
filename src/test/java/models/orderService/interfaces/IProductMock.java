@@ -2,6 +2,7 @@ package models.orderService.interfaces;
 
 import core.utils.Waiting;
 import lombok.AllArgsConstructor;
+import models.Entity;
 import org.json.JSONObject;
 
 @AllArgsConstructor
@@ -9,16 +10,31 @@ public class IProductMock extends IProduct {
     public void order(){
         Waiting.sleep(1000);
     }
-    @Override
-    public JSONObject getJsonParametrizedTemplate() {
-        return null;
-    }
+//    @Override
+//    public JSONObject getJsonParametrizedTemplate() {
+//        return null;
+//    }
 
     public void restart(){}
     public void stopHard(){}
     public void stopSoft(){}
     public void start(){}
-    public void delete(){}
+
+    @Override
+    public Entity init() {
+        return this;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        return null;
+    }
+
+    @Override
+    protected void create() {
+    }
+
+    protected void delete(){}
     public void resize() {}
     public void expandMountPoint() {}
     public void runActionsBeforeOtherTests(){}

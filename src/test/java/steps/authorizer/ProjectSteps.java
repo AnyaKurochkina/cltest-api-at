@@ -6,6 +6,7 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import models.authorizer.InformationSystem;
 import models.authorizer.ProjectEnvironment;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import models.authorizer.Folder;
 import models.authorizer.Project;
@@ -41,7 +42,7 @@ public class ProjectSteps extends Steps {
                 .forOrders(false)
                 .getEntity();
         //Получение рандомного префикса среды из доступных
-        String prefix = getPrefixEnv(folder.id, informationSystem.id, projectEnvironment.id);
+        String prefix = getPrefixEnv(folder.getName(), informationSystem.id, projectEnvironment.id);
         //Отправление запроса на создание проекта с получение его ID
         String projectId = jsonHelper.getJsonTemplate("/structure/create_project.json")
                 .set("$.project.title", projectName)
@@ -49,7 +50,7 @@ public class ProjectSteps extends Steps {
                 .set("$.project.project_environment_id", projectEnvironment.id)
                 .set("$.project.environment_prefix_id", prefix)
                 .send(URL)
-                .post(String.format("authorizer/api/v1/folders/%s/projects", folder.id))
+                .post(String.format("authorizer/api/v1/folders/%s/projects", folder.getName()))
                 .assertStatus(201)
                 .jsonPath()
                 .get("data.name");
@@ -59,7 +60,7 @@ public class ProjectSteps extends Steps {
                 .projectName(projectName)
                 .id(projectId)
                 .informationSystem(informationSystem.id)
-                .env(env)
+//                .env(env)
                 .build();
         //Сохранение проекта
         cacheService.saveEntity(project);
@@ -81,7 +82,6 @@ public class ProjectSteps extends Steps {
                 .delete("authorizer/api/v1/projects/" + project.id)
                 .assertStatus(204);
         //Сохранение флага "Проект удалён"
-        project.isDeleted = true;
         //Сохранение текущего состояния проекта
         cacheService.saveEntity(project);
     }
@@ -93,7 +93,7 @@ public class ProjectSteps extends Steps {
      * @param projectEnvId ID среды проекта
      * @return - возвращаем рандомный префикс из доступных
      */
-    public String getPrefixEnv(String projectId, String infoSystems, String projectEnvId) {
+    public String getPrefixEnv(String projectId, String infoSystems, @NotNull String projectEnvId) {
         //Получение префикосв среды
         JsonPath jsonPath = new Http(URL)
                 .get(String.format("portal/api/v1/folders/%s/information_systems/%s/environment_prefixes?project_environment_id=%s&reserved=false", projectId, infoSystems, projectEnvId))

@@ -1,5 +1,6 @@
 package core.helper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
@@ -7,6 +8,7 @@ import com.jayway.jsonpath.spi.json.JsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -43,6 +45,13 @@ public class JsonHelper {
                 return EnumSet.noneOf(Option.class);
             }
         });
+    }
+
+    @SneakyThrows
+    public static <T> T convertResponseOnClass(String rawJson, Class<T> clazz){
+        JSONObject jsonObject = new JSONObject(rawJson);
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.convertValue(jsonObject.toMap(), clazz);
     }
 
     public String getStringFromFile(String s) {

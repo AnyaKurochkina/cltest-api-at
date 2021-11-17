@@ -1,58 +1,62 @@
 package models.orderService.interfaces;
 
-import static io.qameta.allure.Allure.getLifecycle;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import core.exception.DeferredException;
-import io.qameta.allure.AllureLifecycle;
+import core.CacheService;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
-import io.qameta.allure.model.Parameter;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.SneakyThrows;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.subModels.Flavor;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
-import org.junit.Action;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
+import steps.tarifficator.CostSteps;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-@ToString(onlyExplicitlyIncluded = true)
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+@SuperBuilder
+@NoArgsConstructor
+@ToString(onlyExplicitlyIncluded = true, includeFieldNames = false)
 @Log4j2
 public abstract class IProduct extends Entity {
-    public static String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
-    public static String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
-    public static String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
-    public static String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.config.topics.any{it.topic_name=='%s'}";
-    public static String KAFKA_CLUSTER_ACL_TOPICS = "data.find{it.type=='cluster'}.config.acls.any{it.topic_name=='%s'}";
-    public static String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.config.transaction_acls.any{it.transaction_id=='%s'}";
+    public static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
+    public static final String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
+    public static final String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
+    public static final String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.config.topics.any{it.topic_name=='%s'}";
+    public static final String KAFKA_CLUSTER_ACL_TOPICS = "data.find{it.type=='cluster'}.config.acls.any{it.topic_name=='%s'}";
+    public static final String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.config.transaction_acls.any{it.transaction_id=='%s'}";
 
+    public static final String EXPAND_MOUNT_POINT = "Расширить";
+    public static final String RESTART = "Перезагрузить";
+    public static final String STOP_SOFT = "Выключить";
+    public static final String START = "Включить";
+    public static final String STOP_HARD = "Выключить принудительно";
+    public static final String RESIZE = "Изменить конфигурацию";
+
+    @Builder.Default
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+    @Builder.Default
     protected transient ReferencesStep referencesStep = new ReferencesStep();
-    protected transient String jsonTemplate;
+    @Builder.Default
+    protected transient CacheService cacheService = new CacheService();
+    protected String jsonTemplate;
     @Setter
-    protected transient List<String> actions;
+    protected List<String> actions;
 
-    @Setter
     @Getter
-    private ProductStatus status = ProductStatus.NOT_CREATED;
+    private ProductStatus status;
+
     @Getter
     protected String orderId;
     @Getter
+    @Setter
     protected String projectId;
     @Getter
     protected String productName;
@@ -62,159 +66,109 @@ public abstract class IProduct extends Entity {
     @Getter
     protected String productId;
 
-    /**
-     * Заказ продукта, реализуется в каждом продукте по своему
-     */
-    public abstract void order();
 
-    /**
-     * Метод для выбора json шаблона заказа
-     * @return возвращает готовый параметризованный json
-     */
-    public abstract JSONObject getJsonParametrizedTemplate();
-
-    /**
-     * @param action экшен
-     * @return - возвращаем статус вызова экшена
-     * @throws Throwable необходим для метода invoke (java.lang.reflect.Method)
-     */
-    private boolean invokeAction(String action) throws Throwable {
-        if (action.equals("clickhouse_remove_dbms_user")){
-            System.out.println();
-        }
-        boolean invoke = false;
-        //Перебираем методы класса
-        for (Method method : this.getClass().getMethods()) {
-            /* Если аннотиация @Action присутствует над методом и ее знаечение соответсвтует названию экшена,
-            то вызываем его и изменяем состояние вызова в true */
-            if (method.isAnnotationPresent(Action.class)
-                    && method.getAnnotation(Action.class).value().equals(action)) {
-                method.invoke(this, action);
-                invoke = true;
-            }
-        }
-        return invoke;
+    public void setStatus(ProductStatus status) {
+        this.status = status;
+        save();
     }
 
-    /**
-     * Вызываем экшены кроме удаления в цикле, если экшен не выполнился или выполнился с ошибкой,
-     * то сохраняем его ошибку и после прохождения всех экшенов отображаем её
-     */
-    @SneakyThrows
-    public void runActionsBeforeOtherTests() {
-        //Инициализация отложенного исключения
-        DeferredException exception = new DeferredException();
-        for (String action : actions) {
-            try {
-                if (!invokeAction(action)) {
-                    fail("Action '" + action + "' не найден у продукта " + getProductName() + " с id " + getOrderId());
-                }
-            } catch (Throwable e) {
-                exception.addException(e, getOrderId());
-            }
+    @Step("Сравнение стоимости продукта с ценой предбиллинга")
+    protected void compareCostOrderAndPrice(){
+        CostSteps costSteps = new CostSteps();
+        Float preBillingCost = costSteps.getPreBillingCost(this);
+        Float currentCost = costSteps.getCurrentCost(this);
+        for (int i = 0; i < 15; i++) {
+            Waiting.sleep(20000);
+            if (Float.compare(currentCost, preBillingCost) > 0.00001)
+                continue;
+            break;
         }
-        exception.trowExceptionIfNotEmpty();
-    }
-
-    /**
-     * Выполнение экшенов "Удаление заказа"
-     */
-    public void runActionsAfterOtherTests() {
-        String value = "";
-        try {
-            value = this.getClass().getMethod("delete", String.class).getAnnotation(Action.class).value();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        delete(value);
-    }
-
-    public String getJsonTemplate() {
-        return jsonTemplate;
+        Assertions.assertEquals(preBillingCost, currentCost, 0.00001, "Стоимость предбиллинга отличается от стоимости продукта " + this);
     }
 
     //Обновить сертификаты
-    public void updateCerts(String action) {
+    protected void updateCerts(String action) {
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
     }
 
     //Перезагрузить
-    @Action("reset_two_layer")
-    public void restart(String action) {
+    protected void restart(String action) {
         orderServiceSteps.executeAction(action, this, null);
     }
 
     //Выключить принудительно
-    @Action("stop_hard_two_layer")
-    public void stopHard(String action) {
+    protected void stopHard(String action) {
         orderServiceSteps.executeAction(action, this, null);
+        setStatus(ProductStatus.STOPPED);
     }
 
     //Выключить
-    @Action("stop_two_layer")
-    public void stopSoft(String action) {
+    protected void stopSoft(String action) {
         orderServiceSteps.executeAction(action, this, null);
+        setStatus(ProductStatus.STOPPED);
     }
 
     //Включить
-    @Action("start_two_layer")
-    public void start(String action) {
+    protected void start(String action) {
         orderServiceSteps.executeAction(action, this, null);
+        setStatus(ProductStatus.CREATED);
+    }
+
+    public void checkPreconditionStatusProduct(ProductStatus status){
+//        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
+        assertEquals(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus(), status);
     }
 
     //Удалить рекурсивно
-    @Action("delete_two_layer")
-    public void delete(String action) {
+    @Step("Удаление продукта")
+    protected void delete(String action) {
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         orderServiceSteps.executeAction(action, this, null);
         setStatus(ProductStatus.DELETED);
-        cacheService.saveEntity(this);
         Assert.assertEquals("Стоимость после удаления заказа больше 0.0", 0.0F, calcCostSteps.getCostByUid(this), 0.0F);
     }
 
     //Изменить конфигурацию
-    @Action("resize_vm")
-    public void resize(String action) {
+    protected void resize(String action) {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
         Flavor flavor = list.get(list.size() - 1);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
         int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
-        System.out.println();
         assertEquals("Конфигурация cpu не изменилась или изменилась неверно", flavor.data.cpus, cpusAfter);
         assertEquals("Конфигурация ram не изменилась или изменилась неверно", flavor.data.memory, memoryAfter);
     }
 
     //Расширить
-    @Action("expand_mount_point")
-    public void expandMountPoint(String action) {
+    protected void expandMountPoint(String action) {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
         assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
     }
 
-    @Step
-    @SneakyThrows
-    public void toStringProductStep() {
-        AllureLifecycle allureLifecycle = getLifecycle();
-        String id = allureLifecycle.getCurrentTestCaseOrStep().get();
-        List<Parameter> list = new ArrayList<>();
-        List<Field> fieldList = new ArrayList<>(Arrays.asList(getClass().getSuperclass().getDeclaredFields()));
-        fieldList.addAll(Arrays.asList(getClass().getDeclaredFields()));
-        for (Field field : fieldList) {
-            if (Modifier.isStatic(field.getModifiers()))
-                continue;
-            field.setAccessible(true);
-            if (field.get(this) != null) {
-                Parameter parameter = new Parameter();
-                parameter.setName(field.getName());
-                parameter.setValue(field.get(this).toString());
-                list.add(parameter);
-            }
-        }
-        allureLifecycle.updateStep(id, s -> s.setName("Получен продукт " + getProductName() + " с параметрами"));
-        allureLifecycle.updateStep(id, s -> s.setParameters(list));
-    }
+//    @Step
+//    @SneakyThrows
+//    public void toStringProductStep() {
+//        AllureLifecycle allureLifecycle = Allure.getLifecycle();
+//        String id = allureLifecycle.getCurrentTestCaseOrStep().get();
+//        List<Parameter> list = new ArrayList<>();
+//        List<Field> fieldList = new ArrayList<>(Arrays.asList(getClass().getSuperclass().getDeclaredFields()));
+//        fieldList.addAll(Arrays.asList(getClass().getDeclaredFields()));
+//        for (Field field : fieldList) {
+//            if (Modifier.isStatic(field.getModifiers()))
+//                continue;
+//            field.setAccessible(true);
+//            if (field.get(this) != null) {
+//                Parameter parameter = new Parameter();
+//                parameter.setName(field.getName());
+//                parameter.setValue(field.get(this).toString());
+//                list.add(parameter);
+//            }
+//        }
+//        allureLifecycle.updateStep(id, s -> s.setName("Получен продукт " + getProductName() + " с параметрами"));
+//        allureLifecycle.updateStep(id, s -> s.setParameters(list));
+//    }
+
 }

@@ -1,7 +1,6 @@
 [
     {
         "objectClassName": "models.authorizer.ServiceAccount",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000088",
         "secret": "085c9e288ff24a68541aecdccde30447",
         "name": "sa_proj-frybyv41jh-4b",
         "projectId": "proj-frybyv41jh",
@@ -9,7 +8,6 @@
     },
     {
         "objectClassName": "models.authorizer.ServiceAccount",
-        "objectUid": "4087706b-e9b7-48ef-969d-040050000067",
         "secret": "03b471bd39ecb69cafeebeb63fcc2723",
         "name": "sa_proj-b7iigm67tk-4c",
         "projectId": "proj-b7iigm67tk",
@@ -17,7 +15,6 @@
     },
     {
         "objectClassName": "models.authorizer.ServiceAccount",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000045",
         "secret": "beaa651f52a682f6b77a29b1c7572c33",
         "name": "sa_proj-rr4ncna00e-4d",
         "projectId": "proj-rr4ncna00e",
@@ -25,7 +22,6 @@
     },
     {
         "objectClassName": "models.authorizer.ServiceAccount",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000034",
         "secret": "d6ca8c09f18e417b59689ea4fca83257",
         "name": "sa_proj-7ll0yy5zsc-4e",
         "projectId": "proj-7ll0yy5zsc",
@@ -33,7 +29,6 @@
     },
     {
         "objectClassName": "models.authorizer.ServiceAccount",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000098",
         "secret": "e7a6b6941d13c7d2b2a741027354261e",
         "name": "sa_proj-j5uzlpvbjz-4f",
         "projectId": "proj-j5uzlpvbjz",
@@ -41,7 +36,6 @@
     },
     {
         "objectClassName": "models.authorizer.ServiceAccount",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000096",
         "secret": "9eb9bbfbdc8a266e77dbcbf0dd4723a4",
         "name": "sa_proj-sdt56df8rr-4g",
         "projectId": "proj-sdt56df8rr",
@@ -49,7 +43,6 @@
     },
     {
         "objectClassName": "models.authorizer.ServiceAccount",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000019",
         "secret": "ecf9d4727f6d2c47732afe3e6da69646",
         "name": "sa_proj-aiqk5zzot4-4h",
         "projectId": "proj-aiqk5zzot4",
@@ -57,7 +50,6 @@
     },
     {
         "objectClassName": "models.authorizer.ServiceAccount",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000018",
         "secret": "2c7602ac734551ac62c6c79dad6ea6d2",
         "name": "sa_proj-ovkcqq41d3-4i",
         "projectId": "proj-ovkcqq41d3",
@@ -67,80 +59,104 @@
         "objectClassName": "models.authorizer.Project",
         "isDeleted": false,
         "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000017",
         "id": "proj-frybyv41jh",
         "projectName": "DEV_AUTOTEST",
-        "env": "DEV",
+        "projectEnvironment": {
+            "env": "DEV",
+            "id": "ce11798a-e5f6-4e54-9582-78770f15b52a",
+            "envType": "DEV"
+        },
         "isForOrders":true
     },
     {
         "objectClassName": "models.authorizer.Project",
         "isDeleted": false,
         "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000016",
         "id": "proj-b7iigm67tk",
         "projectName": "EDU_AUTOTEST",
-        "env": "EDU",
+        "projectEnvironment": {
+            "env": "EDU",
+            "id": "feff8762-5f69-41a2-9054-3d03530945f8",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {
         "objectClassName": "models.authorizer.Project",
         "isDeleted": false,
         "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000015",
         "id": "proj-rr4ncna00e",
         "projectName": "HOTFIX_AUTOTEST",
-        "env": "HOTFIX",
+        "projectEnvironment": {
+            "env": "HOTFIX",
+            "id": "3aee543c-8867-4c0f-a1be-7681bd249d56",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {
         "objectClassName": "models.authorizer.Project",
         "isDeleted": false,
         "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000014",
         "id": "proj-sdt56df8rr",
         "projectName": "MIGR_AUTOTEST",
-        "env": "MIGR",
+        "projectEnvironment": {
+            "env": "MIGR",
+            "id": "77a53624-787d-42ac-b478-cd3119560ed0",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {
         "objectClassName": "models.authorizer.Project",
         "isDeleted": false,
         "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000013",
         "id": "proj-aiqk5zzot4",
         "projectName": "PREPROD_AUTOTEST",
-        "env": "PREPROD",
+        "projectEnvironment": {
+            "env": "PREPROD",
+            "id": "df4d904e-f0b1-4c74-877e-fec4576666f3",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {
         "objectClassName": "models.authorizer.Project",
         "isDeleted": false,
         "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000012",
         "id": "proj-ovkcqq41d3",
         "projectName": "ST_AUTOTEST",
-        "env": "ST",
+        "projectEnvironment": {
+            "env": "ST",
+            "id": "057a6be5-9677-4433-b0fd-3fe2f8b38aca",
+            "envType": "DEV"
+        },
         "isForOrders":true
     },
     {
         "objectClassName": "models.authorizer.Project",
         "isDeleted": false,
         "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000063",
         "id": "proj-j5uzlpvbjz",
         "projectName": "LT_AUTOTEST",
-        "env": "LT",
+        "projectEnvironment": {
+            "env": "LT",
+            "id": "eeb890b0-e769-48a1-ba49-904821dbc2a2",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {
         "objectClassName": "models.authorizer.Project",
         "isDeleted": false,
         "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000011",
         "id": "proj-7ll0yy5zsc",
         "projectName": "IFT_AUTOTEST",
-        "env": "IFT",
+        "projectEnvironment": {
+            "env": "IFT",
+            "id": "3fd0e51e-bf33-45c1-afa6-8dcb2a4ee7bc",
+            "envType": "TEST"
+        },
         "isForOrders":true
     },
     {
@@ -149,7 +165,6 @@
         "user": "",
         "isDeleted": false,
         "projectName": "proj-b7iigm67tk",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000500010",
         "isForOrders":true
     },
     {
@@ -158,7 +173,6 @@
         "user": "",
         "isDeleted": false,
         "projectName": "proj-rr4ncna00e",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000500021",
         "isForOrders":true
     },
     {
@@ -167,7 +181,6 @@
         "user": "",
         "isDeleted": false,
         "projectName": "proj-sdt56df8rr",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000500022",
         "isForOrders":true
     },
      {
@@ -176,7 +189,6 @@
         "user": "",
         "isDeleted": false,
         "projectName": "proj-aiqk5zzot4",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000500023",
          "isForOrders":true
     },
     {
@@ -185,7 +197,6 @@
         "user": "",
         "isDeleted": false,
         "projectName": "proj-ovkcqq41d3",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000500024",
         "isForOrders":true
     },
     {
@@ -194,7 +205,6 @@
         "user": "",
         "isDeleted": false,
         "projectName": "proj-7ll0yy5zsc",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000500025",
         "isForOrders":true
     },
     {
@@ -203,7 +213,6 @@
         "user": "",
         "isDeleted": false,
         "projectName": "proj-frybyv41jh",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000026",
         "isForOrders":true
     },
     {
@@ -212,69 +221,11 @@
         "user": "",
         "isDeleted": false,
         "projectName": "proj-j5uzlpvbjz",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000027",
         "isForOrders":true
     },
     {
         "objectClassName": "models.authorizer.InformationSystem",
-        "objectUid": "cafa1b9d-5702-459a-bfff-7ee70df2651d",
         "id": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-        "isForOrders":true
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000128",
-        "env": "DEV",
-        "envType": "DEV",
-        "isForOrders":true
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000129",
-        "env": "LT",
-        "envType": "TEST",
-        "isForOrders":true
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000130",
-        "env": "IFT",
-        "envType": "TEST",
-        "isForOrders":true
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000131",
-        "env": "PREPROD",
-        "envType": "TEST",
-        "isForOrders":true
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000132",
-        "env": "MIGR",
-        "envType": "TEST",
-        "isForOrders":true
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000133",
-        "env": "ST",
-        "envType": "DEV",
-        "isForOrders":true
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000134",
-        "env": "HOTFIX",
-        "envType": "TEST",
-        "isForOrders":true
-    },
-    {
-        "objectClassName": "models.authorizer.ProjectEnvironment",
-        "objectUid": "4087706b-e9b7-48ef-969d-000000000135",
-        "env": "EDU",
-        "envType": "TEST",
         "isForOrders":true
     }
 ]

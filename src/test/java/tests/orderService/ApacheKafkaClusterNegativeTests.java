@@ -6,7 +6,6 @@ import models.orderService.products.ApacheKafkaCluster;
 import models.subModels.KafkaTopic;
 import org.json.JSONObject;
 import org.junit.Assume;
-import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,8 +17,8 @@ import java.util.stream.Stream;
 
 @DisplayName("Негативные тесты ApacheKafkaCluster")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("regress"), @Tag("negative")})
-@OrderLabel("tests.orderService.ApacheKafkaClusterNegativeTests")
+//@Tags({@Tag("regress"), @Tag("negative"), @Tag("prod")})
+//@OrderLabel("tests.orderService.ApacheKafkaClusterNegativeTests")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ApacheKafkaClusterNegativeTests extends Tests {
     CacheService cacheService = new CacheService();
@@ -34,7 +33,7 @@ public class ApacheKafkaClusterNegativeTests extends Tests {
         ApacheKafkaCluster apacheKafkaCluster = cacheService.entity(ApacheKafkaCluster.class)
                 .getEntityWithoutAssert();
         Assume.assumeNotNull("Не найден ApacheKafkaCluster для тестов", apacheKafkaCluster);
-        orderServiceSteps.sendAction(ApacheKafkaCluster.KAFKA_CREATE_TOPIC, apacheKafkaCluster, new JSONObject(CacheService.toJson(kafkaTopic)))
+        orderServiceSteps.sendAction("Создать Topic Kafka", apacheKafkaCluster, new JSONObject(CacheService.toJson(kafkaTopic)))
                 .assertStatus(422);
     }
 

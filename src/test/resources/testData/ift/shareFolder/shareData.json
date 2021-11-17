@@ -1,19 +1,5 @@
 [
   {
-    "objectClassName": "models.authorizer.ProjectEnvironment",
-    "objectUid": "4087706b-e9b7-48ef-969d-000000000012",
-    "env": "DSO",
-    "envType": "DEV",
-    "isForOrders": true
-  },
-  {
-    "objectClassName": "models.authorizer.ProjectEnvironment",
-    "objectUid": "4087706b-e9b7-48ef-969d-000000000013",
-    "env": "IFT",
-    "envType": "TEST",
-    "isForOrders": true
-  },
-  {
     "objectClassName": "models.keyCloak.Service",
     "objectUid": "4087706b-e9b7-48ef-969d-000000000001",
     "clientId": "cloud_autotest",
@@ -32,7 +18,11 @@
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
     "id": "proj-ie2s5l0ycr",
     "projectName": "PROJECT_TEST",
-    "env": "IFT",
+    "projectEnvironment": {
+      "env": "IFT",
+      "envType": "TEST",
+      "id": "92f2acb2-aa33-4317-9352-dc1553e0097f"
+    },
     "isForOrders": true
   },
   {
@@ -60,7 +50,11 @@
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
     "id": "proj-xazpppulba",
     "projectName": "PROJECT_DEV",
-    "env": "DSO",
+    "projectEnvironment": {
+      "env": "DSO",
+      "envType": "DEV",
+      "id": "395a0a01-e83a-4ede-80a5-7354f2a8db39"
+    },
     "isForOrders": true
   },
   {

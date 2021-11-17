@@ -1,6 +1,0 @@
-Podman:
-  - actions:
-      ['Перезагрузить', 'Выключить', 'Включить', 'Выключить принудительно']
-  - options:
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "OpenStack", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }

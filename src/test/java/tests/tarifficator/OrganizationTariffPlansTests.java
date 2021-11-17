@@ -7,31 +7,31 @@ import io.qameta.allure.TmsLink;
 import models.authorizer.Organization;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
-import org.junit.OrderLabel;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.tarifficator.TariffPlanSteps;
 import tests.Tests;
+
 import java.util.Calendar;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @DisplayName("Базовые тарифные планы")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@OrderLabel("tests.tarifficator.OrganizationTariffPlansTests")
+@Execution(ExecutionMode.SAME_THREAD)
 @Tag("OTP")
 public class OrganizationTariffPlansTests extends Tests {
     TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
     CacheService cacheService = new CacheService();
 
     @Test
-    @TmsLink("38")
     @Order(1)
     @DisplayName("Создание тарифного плана на базе активного")
     public void createOrganizationTariffPlanFromActive() {
         Organization organization = cacheService.entity(Organization.class).getEntity();
+//        Organization organization = Organization.builder().build().createObject();
         Date currentDate = new Date();
         String tariffName = "AT " + currentDate;
         TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList(String.format("include=tariff_classes&f[base]=%s&f[status][]=%s",

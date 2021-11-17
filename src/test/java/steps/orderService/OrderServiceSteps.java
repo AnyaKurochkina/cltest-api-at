@@ -9,6 +9,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.exception.JsonPathException;
+import lombok.Builder;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.InformationSystem;
 import models.authorizer.Project;
@@ -17,8 +18,6 @@ import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Item;
 import models.subModels.Flavor;
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -29,9 +28,7 @@ import steps.tarifficator.CostSteps;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Log4j2
 public class OrderServiceSteps extends Steps {
@@ -75,7 +72,7 @@ public class OrderServiceSteps extends Steps {
                 e.printStackTrace();
                 log.error("Ошибка в GetErrorFromOrch " + e);
             }
-            Assert.fail(String.format("Ошибка заказа продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product.toString(), orderStatus, error));
+            Assert.fail(String.format("Ошибка заказа продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product, orderStatus, error));
         }
     }
 
@@ -122,7 +119,7 @@ public class OrderServiceSteps extends Steps {
         return idOfAllSuccessProducts;
     }
 
-    @Step("Отправка action \"{action}\"")
+    @Step("Отправка action {action}")
     public Http.Response sendAction(String action, IProduct product, JSONObject jsonData) {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         return jsonHelper.getJsonTemplate("/actions/template.json")
@@ -132,6 +129,19 @@ public class OrderServiceSteps extends Steps {
                 .setProjectId(product.getProjectId())
                 .patch("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId() + "/actions/" + item.name);
     }
+
+    public Http.Response changeProjectForOrderRequest(IProduct product, Project target) {
+        return new Http(URL)
+                .patch(String.format("order-service/api/v1/projects/%s/orders/%s/change_project",product.getProjectId(), product.getOrderId()), new JSONObject(String.format("{target_project_name: \"%s\"}", target.getId())));
+    }
+
+    @Step("Перенос продукта {product} в проект {target}")
+    public void changeProjectForOrder(IProduct product, Project target) {
+        Http.Response response =  changeProjectForOrderRequest(product, target)
+                .assertStatus(200);
+        product.setProjectId(target.getId());
+    }
+
 
     /**
      * Метод выполняет экшен по его имени
@@ -252,16 +262,15 @@ public class OrderServiceSteps extends Steps {
     public String getProductId(IProduct product) {
         log.info("Получение id для продукта " + product.getProductName());
         //Получение информационной сисетмы
-        InformationSystem informationSystem = cacheService.entity(InformationSystem.class)
-                .forOrders(true)
-                .getEntity();
+        InformationSystem informationSystem = InformationSystem.builder().isForOrders(true).build().createObject();
         String product_id = "";
+
         //Получение среды проекта
-        ProjectEnvironment projectEnvironment = cacheService.entity(ProjectEnvironment.class)
-                .forOrders(true)
-                .withField("env", product.getEnv())
-                .getEntity();
-        //Выполнение запроса на получение продуктового каталога
+        ProjectEnvironment projectEnvironment = ((Project) Project.builder().id(product.getProjectId())
+                .build().createObject()).getProjectEnvironment();
+
+        //Выполнение запроса
+        //TODO: оптимизировать
         int total_count = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get(String.format("product-catalog/products/?is_open=true&env=%s&information_systems=%s&page=1&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id))
@@ -298,52 +307,39 @@ public class OrderServiceSteps extends Steps {
         JsonPath jsonPath = new Http(URL)
                 .setProjectId(product.getProjectId())
                 .get("order-service/api/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
+                .assertStatus(200)
                 .jsonPath();
 
         Item item = new Item();
-        //Получаем все item ID по имени экшена он же name, например: "reset_db_user_password"
+        //Получаем все item ID по name, например: "expand_mount_point"
         item.id = jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.item_id", action));
-        item.name = action;
-        //Если такой id не найден, то ищем по name.contains
+        //Получаем все item name
+        item.name = jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.name", action, action));
+        //Достаем item ID и item name и сохраняем в объект Item
         if (item.id == null) {
             item.id = jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action));
+            item.name = jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.actions.find{it.name.contains('%s')}.name", action, action));
         }
-        //Достаем item ID и item name и сохраняем в объект Item
+
         Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), item.id);
         return item;
     }
 
-    /**
-     * Метод получает ресурсные пулы и сохраняет их
-     * @param category категория, например: container
-     * @param env имя среды
-     */
+
     @Step("Получение списка ресурсных пулов для категории {category} и среды {env}")
-    public void getResourcesPool(String category, String env) {
-        //Получение проекта из памяти
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
-        //Отправка запроса на получение ресурсных пулов с параметрами: категория и ID проекта полученного ранее
+    public List<ResourcePool> getResourcesPoolList(String category, String projectId) {
         String jsonArray = new Http(URL)
-                .setProjectId(project.id)
-                .get(String.format("order-service/api/v1/products/resource_pools?category=%s&project_name=%s", category, project.id))
+                .setProjectId(projectId)
+                .get(String.format("order-service/api/v1/products/resource_pools?category=%s&project_name=%s", category, projectId))
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("list")
                 .toString();
-        //Преобразование json ответа в список обектов (ресурсных пулов)
         Type type = new TypeToken<List<ResourcePool>>() {}.getType();
-        List<ResourcePool> list = new Gson().fromJson(jsonArray, type);
-        //Сохранение ресурсных пулов в память
-        for(ResourcePool resourcePool : list) {
-            resourcePool.projectId = project.id;
-            cacheService.saveEntity(resourcePool);
-        }
+        return new Gson().fromJson(jsonArray, type);
     }
 
-    public <T extends Comparable<T>> Comparable<T> getProductsField(@NotNull IProduct product, String path) {
+    public <T extends Comparable<T>> Comparable<T> getProductsField(IProduct product, String path) {
         Comparable<T> s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(URL)
@@ -359,10 +355,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Удаление всех заказов")
     public void deleteOrders(String env) {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
         List<String> orders = new Http(URL)
                 .setProjectId(project.id)
                 .get(String.format("order-service/api/v1/projects/%s/orders?include=total_count&page=1&per_page=100&f[status][]=success", project.id))
@@ -379,15 +372,8 @@ public class OrderServiceSteps extends Steps {
                         .setProjectId(project.id)
                         .get("order-service/api/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
-                //TODO: сделать через массив строк например
-                String actionTitle = "delete_two_layer";
-                String itemId = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.item_id", actionTitle));
-                String action = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.actions.find{it.name.contains('%s')}.name", actionTitle, actionTitle));
-                if (action == null){
-                    actionTitle = "delete_vm";
-                    itemId = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.item_id", actionTitle));
-                    action = jsonPath.get(String.format("data.find{it.actions.find{it.name.startsWith('%s')}}.actions.find{it.name.contains('%s')}.name", actionTitle, actionTitle));
-                }
+                String itemId = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.item_id");
+                String action = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.actions.find{it.type == 'delete'}.name");
                 log.info("item_id = " + itemId);
                 log.info("action = " + action);
 

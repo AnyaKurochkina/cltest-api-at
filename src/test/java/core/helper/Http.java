@@ -30,7 +30,8 @@ import java.util.concurrent.Semaphore;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
 import static org.junit.Assert.fail;
-import static tests.Tests.putLog;
+import static tests.Tests.putAttachLog;
+//import static tests.Tests.putLog;
 
 @Log4j2
 public class Http {
@@ -41,6 +42,7 @@ public class Http {
     private String token = "";
     private String contentType = "application/json";
     private boolean isUsedToken = true;
+    private boolean isLogged = true;
     private static final Semaphore SEMAPHORE = new Semaphore(1, true);
 
     static {
@@ -56,7 +58,7 @@ public class Http {
                 public void checkServerTrusted(X509Certificate[] certs, String authType) {
                 }
             }};
-            SSLContext sc = null;
+            SSLContext sc;
             sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
@@ -85,6 +87,11 @@ public class Http {
     public Http(String host, JSONObject body) {
         this.host = host;
         this.body = body.toString();
+    }
+
+    public Http disableAttachmentLog() {
+        this.isLogged = false;
+        return this;
     }
 
     public Response get(String path) {
@@ -149,23 +156,28 @@ public class Http {
     @SneakyThrows
     private Response request() {
         Response response = null;
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             response = filterRequest();
-            if(!(response.status() == 504 && method.equals("GET")))
+            if (!(response.status() == 504 && method.equals("GET")))
                 break;
             Thread.sleep(1000);
         }
         return response;
     }
 
+    private final StringBuilder sbLog = new StringBuilder();
+    private void log(String str){
+        if(isLogged)
+            sbLog.append(str);
+    }
+
     private Response filterRequest() {
         HttpURLConnection http;
         String responseMessage = null;
-        StringBuilder sbLog = new StringBuilder();
         int status = 0;
         try {
             URL url = new URL(host + path);
-            if(path.endsWith("/cost") || path.contains("order-service"))
+            if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.acquire();
             URLConnection connection = url.openConnection();
             http = (HttpURLConnection) connection;
@@ -181,9 +193,9 @@ public class Http {
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
-            sbLog.append(String.format("URL: %s\n", (host + path)));
+            log(String.format("URL: %s\n", (host + path)));
             if (body.length() > 0) {
-                sbLog.append(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
+                log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
                 http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
             }
             InputStream is;
@@ -192,19 +204,31 @@ public class Http {
             else
                 is = http.getInputStream();
             status = http.getResponseCode();
-            if(status >= 400 && is == null)
+            if (status >= 400 && is == null)
                 responseMessage = "";
             else
                 responseMessage = IOUtils.toString(is, StandardCharsets.UTF_8);
             http.disconnect();
-            if(path.endsWith("/cost") || path.contains("order-service"))
+            if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
             if (responseMessage.length() > 10000)
-                sbLog.append(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
+                log(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
             else
-                sbLog.append(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
+                log(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
             log.debug(sbLog.toString());
-            putLog(sbLog.toString());
+//            AllureLifecycle allureLifecycle = getLifecycle();
+//            Attachment attachment = new Attachment().setSource(sbLog.toString()).setName(String.valueOf(new Date()));
+//            allureLifecycle.getCurrentTestCaseOrStep().ifPresent(id -> allureLifecycle.updateStep(id, s -> s.getAttachments().add(attachment)));
+//            Allure.getLifecycle().updateTestCase((t) -> {
+//                StatusDetails  statusDetails = t.getStatusDetails();
+//                if(statusDetails == null)
+//                    statusDetails = new StatusDetails();
+//                String message = statusDetails.getMessage();
+//                if(message == null)
+//                    message = "";
+//                t.setStatusDetails( statusDetails.setMessage(message + sbLog));
+//            });
+            putAttachLog(sbLog.toString());
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
@@ -212,7 +236,7 @@ public class Http {
         return new Response(status, responseMessage);
     }
 
-    public static class StatusResponseException extends RuntimeException {
+    public static class StatusResponseException extends AssertionError {
         public StatusResponseException(String errorMessage) {
             super(errorMessage);
         }
@@ -228,12 +252,12 @@ public class Http {
         }
 
         public Response assertStatus(int s) {
-            if (s != status() || (path.endsWith("/orders") && method.equals("POST"))) {
-                Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
-                Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
-            }
-            if(s != status())
-                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nResponse: %s\nRequest: %s\n%s\n",s, status(), responseMessage, host + path, body));
+//            if (s != status() || (path.endsWith("/orders") && method.equals("POST"))) {
+//                Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
+//                Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
+//            }
+            if (s != status())
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nResponse: %s\nRequest: %s\n%s\n", s, status(), responseMessage, host + path, body));
             return this;
         }
 

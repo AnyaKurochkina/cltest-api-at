@@ -1,13 +1,15 @@
 package models.orderService;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import models.Entity;
-
+//py -m pip install testit-allure-adaptor
+// py -m pip install --upgrade certifi
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class ResourcePool extends Entity {
+@Builder
+public class ResourcePool {
     public String id;
     @Getter
     public String label;
@@ -18,4 +20,6 @@ public class ResourcePool extends Entity {
     public String toString() {
         return String.format("{\"id\": \"%s\", \"name\": \"%s\"}", id, name);
     }
+
+
 }

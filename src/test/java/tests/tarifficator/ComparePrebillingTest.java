@@ -1,43 +1,34 @@
 package tests.tarifficator;
 
-import io.qameta.allure.TmsLink;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
-import org.junit.OrderLabel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.tarifficator.CostSteps;
 import tests.Tests;
 
 import java.util.HashMap;
 
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@Execution(ExecutionMode.CONCURRENT)
-@OrderLabel("tests.tarifficator.ComparePrebillingTest")
-@DisplayName("Набор тестов для проверки предбиллинга продуктов")
-@Tags({@Tag("regress"), @Tag("cost2"), @Tag("smoke")})
+@Epic("Финансы")
+@Feature("Тарификатор")
+@Tags({@Tag("regress"), @Tag("tariff")})
 public class ComparePrebillingTest extends Tests {
     CostSteps costSteps = new CostSteps();
 
-    @ParameterizedTest(name = "{0}")
-    @DisplayName("Сравнение услуг продуктов предбиллинга с услугами продуктов активного тарифного плана")
-    @TmsLink("30")
+    @DisplayName("Сравнение стоимости продуктов в предбиллинге с ценами активного тарифного плана")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    public void compareTariffs(IProduct product, String tmsId){
-        //Получаем ID активного тарифного плана
-        String tariffPlanId = costSteps.getActiveTariffId();
-        //Получаем прайс активного тарифного плана
-        HashMap<String, Double> activeTariffPlanPrice = costSteps.getPrices(tariffPlanId);
-        //Получаем цены услуг из предбиллинга
-        JSONArray preBillingData = costSteps.getCost(product);
-        //Сравниваем цены из предбиллинга с тарифами из активного тарифного плана
-        costSteps.compareTariffs(activeTariffPlanPrice, preBillingData);
+    @ParameterizedTest(name = "Сравнение стоимости продукта {0} в предбиллинге с ценами активного тарифного плана")
+    public void compareTariffs(IProduct resource){
+        try (IProduct product = resource.createObjectExclusiveAccess()) {
+            String tariffPlanId = costSteps.getActiveTariffId();
+            HashMap<String, Double> activeTariffPlanPrice = costSteps.getPrices(tariffPlanId);
+            JSONArray preBillingData = costSteps.getCost(product);
+            costSteps.compareTariffs(activeTariffPlanPrice, preBillingData);
+        }
     }
+
 }

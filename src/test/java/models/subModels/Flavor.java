@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Flavor {
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     public String name;
     public String id;
     public Data data;

@@ -1,21 +1,74 @@
 package models;
-import core.CacheService;
+
 import core.helper.JsonHelper;
-import java.util.UUID;
+import core.enums.ObjectStatus;
+import core.helper.JsonTemplate;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.experimental.SuperBuilder;
+import org.json.JSONObject;
 
-/**
- * Наследники данного класса получают возможность взаимодействовать с CacheService.class
- */
-public abstract class Entity {
+@NoArgsConstructor
+@SuperBuilder
+public abstract class Entity implements AutoCloseable {
+
     public String objectClassName;
-    public String objectUid;
 
+    public abstract Entity init();
 
-    protected transient JsonHelper jsonHelper = new JsonHelper();
-    protected transient CacheService cacheService = new CacheService();
+    public abstract JSONObject toJson();
 
-    public void setObjectParams(String className) {
-        this.objectClassName = className;
-        this.objectUid = UUID.randomUUID().toString();
+    public JsonTemplate getTemplate(){
+        return new JsonTemplate(toJson());
     }
+
+    protected abstract void create();
+
+    protected void delete() {
+    }
+
+    @Builder.Default
+    protected transient JsonHelper jsonHelper = new JsonHelper();
+    public String uuid;
+
+    public void save() {
+        ObjectPoolService.saveEntity(this);
+    }
+
+    @Override
+    public void close() {
+        ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
+        objectPoolEntity.release();
+    }
+
+    @SneakyThrows
+    public void deleteObject() {
+        ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
+        if (objectPoolEntity.getStatus() == ObjectStatus.DELETED)
+            return;
+        if(objectPoolEntity.getStatus() == ObjectStatus.FAILED_DELETE)
+            throw objectPoolEntity.getError();
+        try {
+            delete();
+            objectPoolEntity.setStatus(ObjectStatus.DELETED);
+        } catch (Throwable e) {
+            objectPoolEntity.setError(e);
+            objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
+        }
+    }
+
+
+    public <T extends Entity> T createObject() {
+        return createObject(false);
+    }
+
+    private <T extends Entity> T createObject(boolean exclusiveAccess) {
+        return ObjectPoolService.create(this, exclusiveAccess);
+    }
+
+    public <T extends Entity> T createObjectExclusiveAccess() {
+        return createObject(true);
+    }
+
 }

@@ -1,0 +1,35 @@
+{
+  "id": "",
+  "version": "",
+  "name": "NegativeAction",
+  "title": "NegativeAction",
+  "description": "NegativeAction",
+  "icon": "",
+  "required_order_statuses": [
+    "new"
+  ],
+  "required_item_statuses": [
+    "on"
+  ],
+  "type": "delete",
+  "data_config_path": "",
+  "data_config_key": "",
+  "data_config_fields": [],
+  "available_without_money": false,
+  "auto_removing_if_failed": false,
+  "skip_on_prebilling": false,
+  "event_type": [
+    "bm"
+  ],
+  "event_provider": [
+    "nginx"
+  ],
+  "config_restriction": "",
+  "graph_id": "7adbcad7-6184-4efc-9c63-d0ea7e0a551b",
+  "graph_version": "",
+  "graph_version_pattern": "",
+  "allowed_groups": [],
+  "allowed_paths": [],
+  "restricted_groups": [],
+  "restricted_paths": []
+}

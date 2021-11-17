@@ -1,11 +1,15 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -13,16 +17,17 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Action;
 import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
 
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
+@NoArgsConstructor
+@SuperBuilder
 public class Windows extends IProduct {
     @ToString.Include
     String segment;
@@ -33,43 +38,44 @@ public class Windows extends IProduct {
     String osVersion;
     public String domain;
     Flavor flavor;
-    private static String ADD_DISK = "data.find{it.type=='vm'}.config.extra_disks.any{it.path=='%s'}";
+    private static String ADD_DISK_PATH = "data.find{it.type=='vm'}.config.extra_disks.any{it.path=='%s'}";
     private static String DISK_SIZE = "data.find{it.type=='vm'}.config.extra_disks.find{it.path=='%s'}.size";
+    public static String ADD_DISK = "Добавить диск";
 
     @Override
-    public void order() {
-        JSONObject template = getJsonParametrizedTemplate();
+    @Step("Заказ продукта")
+    protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
-    }
-
-    public Windows() {
-        jsonTemplate = "/orders/windows_server.json";
-        productName = "Windows server";
+        compareCostOrderAndPrice();
     }
 
     @Override
-    public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
+    public Entity init() {
+        jsonTemplate = "/orders/windows_server.json";
+        productName = "Windows server";
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        if (projectId == null) {
+            projectId = project.getId();
+        }
         if (productId == null) {
-            projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
+        return this;
+    }
+
+    //    @Override
+    public JSONObject toJson() {
+        Project project = Project.builder().id(projectId).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -80,52 +86,53 @@ public class Windows extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
+                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .build();
     }
 
     //Добавить диск
-    @Action("windows_add_disk")
-    public void addDisk(String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 10, file_system: \"ntfs\"}"));
-        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK, "I")));
+    public void addDisk(String disk) {
+        orderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"" + disk + "\", size: 10, file_system: \"ntfs\"}"));
+        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, "I")));
     }
 
     //Расширить диск
-    @Override
-    @Action("windows_expand_disk")
-    public void expandMountPoint(String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject("{path: \"I\", size: 1}"));
+    public void expandMountPoint(String disk) {
+        orderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 1}"));
         Assert.assertEquals(11, orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, "I")));
     }
 
+
     //Перезагрузить по питанию
-    @Override
-    @Action("reset_vm")
-    public void restart(String action) {
-        super.restart(action);
+    public void restart() {
+        restart("reset_vm");
     }
 
     //Выключить принудительно
-    @Override
-    @Action("stop_vm_hard")
-    public void stopHard(String action){super.stopHard(action);}
+    public void stopHard() {
+        stopHard("stop_vm_hard");
+    }
 
     //Выключить
-    @Override
-    @Action("stop_vm_soft")
-    public void stopSoft(String action){super.stopSoft(action);}
+    public void stopSoft() {
+        stopSoft("stop_vm_soft");
+    }
 
     //Включить
-    @Override
-    @Action("start_vm")
-    public void start(String action){super.start(action);}
+    public void start() {
+        start("start_vm");
+    }
 
-    //Удалить
+    public void resize() {
+        resize("resize_vm");
+    }
+
+    @Step("Удаление продукта")
     @Override
-    @Action("delete_vm")
-    public void delete(String action){super.delete(action);}
+    protected void delete() {
+        delete("delete_vm");
+    }
 
 }

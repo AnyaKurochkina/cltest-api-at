@@ -1,16 +1,21 @@
 package models.tarifficator;
 
 import core.CacheService;
+import core.helper.Configure;
+import core.helper.Http;
+import core.helper.StringUtils;
+import io.qameta.allure.Step;
 import lombok.*;
 import models.Entity;
 import org.json.JSONObject;
+import steps.tarifficator.TariffPlanSteps;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-@Data
 @Builder
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true)
 public class TariffPlan extends Entity {
     Boolean base;
     String baseTariffPlanId;
@@ -24,15 +29,43 @@ public class TariffPlan extends Entity {
     TariffPlanStatus status;
     List<TariffClass> tariffClasses;
     @EqualsAndHashCode.Include
+    @ToString.Include
     String title;
     Boolean updateOrders;
     Date updatedAt;
 
-    public JSONObject serialize() {
+    @Builder.Default
+    transient TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
+
+
+    public JSONObject toJson() {
         return new JSONObject("{\"tariff_plan\":" + CacheService.toJson(this) + "}");
     }
 
-    public static TariffPlan deserialize(String object) {
-        return CacheService.getCustomGson().fromJson(object, TariffPlan.class);
+
+    @Override
+    public Entity init() {
+        if(title == null)
+            title = "AT " + new Date();
+        if(base == null)
+            base = true;
+        if(oldTariffPlanId == null) {
+            TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
+            oldTariffPlanId = activeTariff.getId();
+        }
+        return this;
     }
+
+    @Override
+    @Step("Создание тарифного плана")
+    protected void create() {
+        String object = new Http(Configure.TarifficatorURL)
+                .post("tariff_plans", toJson())
+                .assertStatus(201)
+                .toString();
+        StringUtils.copyAvailableFields(tariffPlanSteps.deserialize(object), this);
+    }
+
+
+
 }

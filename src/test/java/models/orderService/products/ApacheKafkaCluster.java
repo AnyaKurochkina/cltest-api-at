@@ -2,11 +2,12 @@ package models.orderService.products;
 
 import core.CacheService;
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
@@ -14,19 +15,21 @@ import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import models.subModels.KafkaTopic;
 import org.json.JSONObject;
-import org.junit.Action;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
-
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
-@EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@SuperBuilder
 public class ApacheKafkaCluster extends IProduct {
     @ToString.Include
     String segment;
@@ -36,43 +39,44 @@ public class ApacheKafkaCluster extends IProduct {
     @ToString.Include
     String kafkaVersion;
     String domain;
+    @Builder.Default
     public List<KafkaTopic> topics = new ArrayList<>();
     Flavor flavor;
     String osVersion;
 
-    public static final String KAFKA_CREATE_TOPIC = "Создать Topic Kafka";
-
     @Override
-    public void order() {
-        JSONObject template = getJsonParametrizedTemplate();
+    @Step("Заказ продукта")
+    protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
-    }
-
-    public ApacheKafkaCluster() {
-        jsonTemplate = "/orders/apache_kafka_cluster.json";
-        productName = "Apache Kafka Cluster";
+        compareCostOrderAndPrice();
     }
 
     @Override
-    public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
+    public Entity init() {
+        jsonTemplate = "/orders/apache_kafka_cluster.json";
+        productName = "Apache Kafka Cluster";
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        if(projectId == null) {
+            projectId = project.getId();
+        }
         if(productId == null) {
-            projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
+        return this;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        Project project = Project.builder().id(projectId).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -82,119 +86,80 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                //.set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
+                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .build();
     }
 
-    //Перезагрузить
-    @Override
-    @Action("restart_kafka")
-    public void restart(String action) {
-        super.restart(action);
-    }
-
-    //Выключить
-    @Override
-    @Action("stop_kafka")
-    public void stopSoft(String action) {
-        super.stopSoft(action);
-    }
-
-    public void createTopic(KafkaTopic kafkaTopic) {
-        orderServiceSteps.executeAction(KAFKA_CREATE_TOPIC, this, new JSONObject(CacheService.toJson(kafkaTopic)));
-        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, kafkaTopic.getTopicName())));
-        topics.add(kafkaTopic);
-        cacheService.saveEntity(this);
-    }
-
-    public void createTopic(List<String> names, String action) {
+    public void createTopics(List<String> names) {
         List<KafkaTopic> kafkaTopics = new ArrayList<>();
         for(String name : names)
             kafkaTopics.add(new KafkaTopic("delete", 1, 1, 1, 1800000, name));
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"topics\": " + CacheService.toJson(kafkaTopics) + "}"));
+        orderServiceSteps.executeAction("kafka_create_topics", this, new JSONObject("{\"topics\": " + CacheService.toJson(kafkaTopics) + "}"));
         for(String name : names)
             Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         topics.addAll(kafkaTopics);
-        cacheService.saveEntity(this);
+        save();
     }
 
-    @Deprecated
-    @Action(KAFKA_CREATE_TOPIC)
-    public void createTopicTest(String action) {
-        createTopic(new KafkaTopic("delete", 1, 1, 1, 1800000, "TopicName"));
-    }
-
-    //Пакетное создание Topic-ов Kafka
-    @Action("kafka_create_topics")
-    public void createTopicsTest(String action) {
-        createTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), action);
-    }
-
-    //Пакетное удаление Topic-ов Kafka
-    @Action("kafka_delete_topics")
-    public void deleteTopicsTest(String action) {
-        deleteTopic(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"), action);
-    }
-
-    public void deleteTopic(List<String> names, String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"topics\": " + CacheService.toJson(names) + "}"));
+    public void deleteTopics(List<String> names) {
+        orderServiceSteps.executeAction("kafka_delete_topics", this, new JSONObject("{\"topics\": " + CacheService.toJson(names) + "}"));
         for(String name : names)
             Assert.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         for(String name : names)
             topics.removeIf(topic -> topic.getTopicName().equals(name));
-        cacheService.saveEntity(this);
+        save();
     }
 
-    public void deleteTopic(String name, String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"topic_name\": \"" + name + "\"}"));
-        Assert.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
-        topics.removeIf(topic -> topic.getTopicName().equals(name));
-        cacheService.saveEntity(this);
-    }
-
-    @Deprecated
-    @Action("kafka_delete_topic")
-    public void deleteTopicTest(String action) {
-        deleteTopic("TopicName", action);
-    }
-
-    public void createAcl(String topicNameRegex, String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}"));
-        cacheService.saveEntity(this);
+    public void createAcl(String topicNameRegex) {
+        orderServiceSteps.executeAction("kafka_create_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}"));
+        save();
         Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)));
     }
 
-    public void createAclTransaction(String transactionRegex, String action) {
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\""+ transactionRegex +"\"}"));
-        cacheService.saveEntity(this);
+    public void createAclTransaction(String transactionRegex) {
+        orderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\""+ transactionRegex +"\"}"));
+        save();
         Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)));
     }
 
-    //Создать ACL Kafka
-    @Action("kafka_create_acl")
-    public void createAclTest(String action) {
-        createAcl("*", action);
+    public void start() {
+        start("start_kafka");
     }
 
-    //Создание ACL на транзакцию Kafka
-    @Action("kafka_create_transaction_acl")
-    public void createAclTransactionTest(String action) {
-        createAclTransaction("*", action);
+    public void updateCerts(){
+        Date dateBeforeUpdate = new Date();
+        Date dateAfterUpdate = new Date();
+        super.updateCerts("kafka_update_certs");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+            dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate),
+                String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
 
-    //Включить кластер Kafka
+    public void expandMountPoint(){
+        expandMountPoint("expand_mount_point");
+    }
+
+    public void restart() {
+        restart("restart_kafka");
+    }
+
+    public void stopSoft() {
+        stopSoft("stop_kafka");
+    }
+
     @Override
-    @Action("start_kafka")
-    public void start(String action) {
-        super.start(action);
+    @Step("Удаление продукта")
+    protected void delete(){
+        delete("delete_two_layer");
     }
-
-    @Override
-    @Action("kafka_update_certs")
-    public void updateCerts(String action){super.updateCerts(action);}
 
 }

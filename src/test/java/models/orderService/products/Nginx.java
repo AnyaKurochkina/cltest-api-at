@@ -1,11 +1,15 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
@@ -13,15 +17,16 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Action;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
 
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
 @Data
+@NoArgsConstructor
+@SuperBuilder
 public class Nginx extends IProduct {
     @ToString.Include
     String segment;
@@ -34,39 +39,39 @@ public class Nginx extends IProduct {
     Flavor flavor;
 
     @Override
-    public void order() {
-        JSONObject template = getJsonParametrizedTemplate();
+    @Step("Заказ продукта")
+    protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = new Http(OrderServiceSteps.URL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", template)
+                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
-        cacheService.saveEntity(this);
-    }
-
-    public Nginx() {
-        jsonTemplate = "/orders/nginx.json";
-        productName = "Nginx";
+        compareCostOrderAndPrice();
     }
 
     @Override
-    public JSONObject getJsonParametrizedTemplate() {
-        Project project = cacheService.entity(Project.class)
-                .withField("env", env)
-                .forOrders(true)
-                .getEntity();
+    public Entity init() {
+        jsonTemplate = "/orders/nginx.json";
+        productName = "Nginx";
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        if(projectId == null) {
+            projectId = project.getId();
+        }
         if(productId == null) {
-            projectId = project.id;
             productId = orderServiceSteps.getProductId(this);
         }
-        AccessGroup accessGroup = cacheService.entity(AccessGroup.class)
-                .withField("projectName", project.id)
-                .getEntity();
+        return this;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        Project project = Project.builder().id(projectId).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         return jsonHelper.getJsonTemplate(jsonTemplate)
@@ -76,10 +81,40 @@ public class Nginx extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.name)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.on_support", ((ProjectEnvironment) cacheService.entity(ProjectEnvironment.class).withField("env", project.env).getEntity()).envType.contains("TEST"))
+                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .build();
+    }
+
+    public void resize() {
+        resize("resize_vm");
+    }
+
+    public void restart() {
+        restart("reset_two_layer");
+    }
+
+    public void stopSoft() {
+        stopSoft("stop_two_layer");
+    }
+
+    public void start() {
+        start("start_two_layer");
+    }
+
+    public void stopHard() {
+        stopHard("stop_hard_two_layer");
+    }
+
+    public void expandMountPoint(){
+        expandMountPoint("expand_mount_point");
+    }
+
+    @Step("Удаление продукта")
+    @Override
+    protected void delete() {
+        delete("delete_two_layer");
     }
 }

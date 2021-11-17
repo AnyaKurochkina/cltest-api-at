@@ -1,15 +1,69 @@
 package models.authorizer;
 
+import core.helper.Configure;
+import core.helper.Http;
+import core.random.string.RandomStringGenerator;
+import io.qameta.allure.Step;
 import lombok.Builder;
+import lombok.Getter;
 import models.Entity;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
+@Getter
 public class AccessGroup extends Entity {
-    public String name;
-    public String projectName;
-    public String user;
+    String name;
+    String projectName;
     @Builder.Default
-    public boolean isDeleted = false;
-    @Builder.Default
-    public boolean isForOrders = false;
+    List<String> users = new ArrayList<>();
+    Boolean isForOrders;
+
+    public void addUser(String user){
+        users.add(user);
+        save();
+    }
+
+    public void removeUser(String user){
+        users.remove(user);
+        save();
+    }
+
+    @Override
+    public Entity init() {
+        if (name == null)
+            name = new RandomStringGenerator().generateByRegex("[a-z]{5,15}");
+        if (projectName == null)
+            projectName = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
+        return this;
+    }
+
+    public JSONObject toJson() {
+        return jsonHelper.getJsonTemplate("/accessGroup/accessGroup.json")
+                .set("$.access_group.name", name)
+                .set("$.access_group.project_name", projectName)
+                .build();
+    }
+
+    @Override
+    @Step("Создание группы доступа")
+    protected void create() {
+        name = new Http(Configure.PortalBackURL)
+                .post(String.format("projects/%s/access_groups", projectName), toJson())
+                .assertStatus(201)
+                .jsonPath()
+                .getString("name");
+    }
+
+    @Override
+    @Step("Удаление группы доступа")
+    protected void delete() {
+        new Http(Configure.PortalBackURL)
+                .delete(String.format("projects/%s/access_groups/%s", projectName, name))
+                .assertStatus(204)
+                .jsonPath();
+    }
+
 }

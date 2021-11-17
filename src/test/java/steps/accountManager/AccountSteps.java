@@ -10,6 +10,8 @@ import models.authorizer.Folder;
 import models.authorizer.Organization;
 import steps.Steps;
 
+import java.util.Objects;
+
 @Log4j2
 public class AccountSteps extends Steps {
     private static final String URL = Configure.getAppProp("host_kong");
@@ -28,8 +30,8 @@ public class AccountSteps extends Steps {
         //Запрос на создание счета для папки с получением account ID
         String accountId = jsonHelper.getJsonTemplate("/accountManager/accountTemplate.json")
                 .set("$.parent_id", getAccountIdByContext(folder.parentId))
-                .set("$.name", String.format("%s (%s)", folderName, folder.id))
-                .set("$.folder_uid", folder.id)
+                .set("$.name", String.format("%s (%s)", folderName, folder.getName()))
+                .set("$.folder_uid", folder.getName())
                 .send(URL)
                 .post("accountmanager/api/v1/organizations/vtb/accounts")
                 .assertStatus(200)
@@ -38,18 +40,40 @@ public class AccountSteps extends Steps {
         //Получение счёта по его account ID
         Account account = Account.builder()
                 .accountId(accountId)
-                .folderId(folder.id)
+                .folderId(folder.getName())
                 .build();
         //Сохранение счёта в память
         cacheService.saveEntity(account);
     }
 
-    @Step("Перевод со счета организации {sourceContext} на счет папки {targetContext} суммы {amount}")
-    public void transferMoneyFromOrganizationToFolder(String org, String targetContext, String amount) {
-        Organization organization = cacheService.entity(Organization.class)
-                .withField("title", org)
-                .getEntity();
-        transferMoneyFromAccountToFolder(organization.name, targetContext, amount);
+//    @Step("Перевод со счета организации {sourceContext} на счет папки {targetContext} суммы {amount}")
+//    public void transferMoneyFromOrganizationToFolder(String org, String targetContext, String amount) {
+//        Organization organization = cacheService.entity(Organization.class)
+//                .withField("title", org)
+//                .getEntity();
+//        transferMoneyFromAccountToFolder(organization.name, targetContext, amount);
+//    }
+
+    @Step("Перевод со счета {from} на счет {to} суммы {amount} c комментарием {comment}")
+    public void transferMoney(String from, String to, String amount, String reason) {
+        jsonHelper.getJsonTemplate("/accountManager/transaction.json")
+                .set("$.from_account_id", from)
+                .set("$.to_account_id", to)
+                .set("$.amount", amount)
+                .set("$.reason", reason)
+                .send(URL)
+                .post("accountmanager/api/v1/organizations/vtb/accounts/transfers")
+                .assertStatus(200);
+    }
+
+    @Step("Запрос текущего баланса для папки {folderId}")
+    public Float getCurrentBalance(String folderId) {
+        String res = new Http(URL)
+                .get(String.format("accountmanager/api/v1/folders/%s/accounts", folderId))
+                .assertStatus(200)
+                .jsonPath()
+                .getString("account.current_balance");
+        return Float.valueOf(Objects.requireNonNull(res));
     }
 
     @Step("Перевод со счета {sourceContext} на счет папки {targetContext} проекта {amount}")
@@ -57,7 +81,7 @@ public class AccountSteps extends Steps {
         Folder folder = cacheService.entity(Folder.class)
                 .withField("name", sourceContext)
                 .getEntity();
-        transferMoneyFromAccountToFolder(folder.id, targetContext, amount);
+        transferMoneyFromAccountToFolder(folder.getName(), targetContext, amount);
     }
 
     private void transferMoneyFromAccountToFolder(String sourceContext, String targetContext, String amount) {
@@ -65,7 +89,7 @@ public class AccountSteps extends Steps {
                 .withField("name", targetContext)
                 .getEntity();
         String sourceAccountId = getAccountIdByContext(sourceContext);
-        String targetAccountId = getAccountIdByContext(folder.id);
+        String targetAccountId = getAccountIdByContext(folder.getName());
         log.info(String.format("Отправка запроса на перевод денег со счета %s папки %s на счет %s папки %s", sourceAccountId, sourceContext, targetAccountId, targetContext));
 
         jsonHelper.getJsonTemplate("/accountManager/transaction.json")
@@ -114,16 +138,16 @@ public class AccountSteps extends Steps {
                 .getEntity();
         //Получение счета по ID папки
         Account account = cacheService.entity(Account.class)
-                .withField("folderId", folder.id)
+                .withField("folderId", folder.getName())
                 .getEntity();
-        log.info(String.format("Удаление счета %s для папки %s", account.accountId, folder.id));
+        log.info(String.format("Удаление счета %s для папки %s", account.accountId, folder.getName()));
         //Запрос на удаление
         JsonPath jsonPath = new Http(URL)
                 .delete(String.format("accountmanager/api/v1/organizations/%s/accounts/%s?force_unlink=1", organization.name, account.accountId))
                 .assertStatus(200)
                 .jsonPath();
         //Выставление флага "Счёт удалён"
-        account.isDeleted = true;
+//        account.isDeleted = true;
         //Сохранение счёта
         cacheService.saveEntity(account);
     }
