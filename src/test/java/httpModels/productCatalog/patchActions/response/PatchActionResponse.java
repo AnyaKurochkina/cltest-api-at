@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PatchResponse{
+public class PatchActionResponse {
 
 	@JsonProperty("available_without_money")
 	private Boolean availableWithoutMoney;
