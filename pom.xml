@@ -21,10 +21,35 @@
         <junit.version>5.8.0-M1</junit.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>libs-release</name>
+            <url>http://nexus.corp.dev.vtb/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <snapshots/>
+            <id>snapshots</id>
+            <name>libs-snapshot</name>
+            <url>http://nexus.corp.dev.vtb/repository/maven-public/</url>
+        </repository>
+    </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>nexus.corp.dev.vtb</id>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
             <name>plugins-release</name>
+            <url>http://nexus.corp.dev.vtb/repository/maven-public/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <snapshots/>
+            <id>snapshots</id>
+            <name>plugins-snapshot</name>
             <url>http://nexus.corp.dev.vtb/repository/maven-public/</url>
         </pluginRepository>
     </pluginRepositories>
