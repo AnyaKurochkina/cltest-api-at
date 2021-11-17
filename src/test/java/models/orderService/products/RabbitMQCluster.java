@@ -116,17 +116,14 @@ public class RabbitMQCluster extends IProduct {
         delete("delete_two_layer");
     }
 
-    public void updateCerts(){
-        Date dateBeforeUpdate = new Date();
-        Date dateAfterUpdate = new Date();
+    @SneakyThrows
+    public void updateCerts() {
+        Date dateBeforeUpdate;
+        Date dateAfterUpdate;
         super.updateCerts("rabbitmq_update_certs");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        try {
-            dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
-            dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+        dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate),
                 String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
@@ -151,7 +148,7 @@ public class RabbitMQCluster extends IProduct {
         stopHard("stop_hard_two_layer");
     }
 
-    public void expandMountPoint(){
+    public void expandMountPoint() {
         expandMountPoint("expand_mount_point");
     }
 }

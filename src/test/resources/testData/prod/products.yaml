@@ -138,10 +138,10 @@ ApacheKafkaCluster:
   - options:
       - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
       - { platform: "Nutanix", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
 
 Ubuntu:
   - actions:
