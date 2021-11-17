@@ -225,7 +225,6 @@
                 <artifactId>allure-maven</artifactId>
                 <version>2.10.0</version>
                 <configuration>
-<!--                    <reportDirectory>${project.build.directory}/allure-reports</reportDirectory>-->
                     <reportVersion>2.13.8</reportVersion>
                 </configuration>
             </plugin>
