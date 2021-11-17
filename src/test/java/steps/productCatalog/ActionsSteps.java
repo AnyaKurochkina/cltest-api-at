@@ -34,6 +34,7 @@ public class ActionsSteps {
     }
 
     @SneakyThrows
+    @Step("Поиск ID экшена по имени с использованием multiSearch")
     public String getActionByNameWithMultiSearch(String actionName) {
         String actionId = null;
         String object = new Http(Configure.ProductCatalog)
@@ -76,6 +77,7 @@ public class ActionsSteps {
     }
 
     @SneakyThrows
+    @Step("Создание экшена")
     public Http.Response createAction(JSONObject body) {
         return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
@@ -83,6 +85,7 @@ public class ActionsSteps {
     }
 
     @SneakyThrows
+    @Step("Обновление экшена")
     public Http.Response patchActionRow(JSONObject body, String actionId) {
         return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
@@ -90,6 +93,7 @@ public class ActionsSteps {
     }
 
     @SneakyThrows
+    @Step("Обновление экшена")
     public PatchResponse patchAction(String actionName, String graphId, String actionId) {
         String response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
@@ -101,6 +105,7 @@ public class ActionsSteps {
     }
 
     @SneakyThrows
+    @Step("Удаление экшена")
     public void deleteAction(String id) {
         new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
