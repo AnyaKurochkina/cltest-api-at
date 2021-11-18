@@ -22,6 +22,9 @@ import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
@@ -100,8 +103,10 @@ public class Windows extends IProduct {
 
     //Расширить диск
     public void expandMountPoint(String disk) {
+        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
         orderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 1}"));
-        Assert.assertEquals(11, orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, "I")));
+        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
+        assertEquals("sizeBefore >= sizeAfter", sizeBefore, sizeAfter - 1);
     }
 
 

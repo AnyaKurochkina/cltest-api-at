@@ -105,10 +105,7 @@ public class PostgresSQLCluster extends IProduct {
 
     //Расширить
     public void expandMountPoint() {
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        orderServiceSteps.executeAction("expand_mount_point", this, new JSONObject("{\"size\": 10, \"mount\": \"/pg_data\"}"));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        assertTrue(sizeBefore < sizeAfter);
+        expandMountPoint("expand_mount_point", "/pg_data", 10);
     }
 
     public void createDb(String dbName) {
