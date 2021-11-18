@@ -147,9 +147,10 @@ public class PostgreSQL extends IProduct {
     }
 
     //Сбросить пароль владельца
-    public void resetDbOwnerPassword() {
+    public void resetDbOwnerPassword(String dbName) {
+        assertTrue(String.format("Базы %s не существует", dbName), database.stream().anyMatch(db -> db.getNameDB().equals(dbName)));
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction("reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password)));
+        orderServiceSteps.executeAction("reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName + "_admin", password)));
     }
 
     //Удалить пользователя

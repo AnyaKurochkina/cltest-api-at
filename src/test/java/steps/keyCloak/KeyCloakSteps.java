@@ -22,7 +22,7 @@ public class KeyCloakSteps {
     @Step("Получение нового UserToken")
     public static synchronized String getNewUserToken() {
         //Получение сервис из памяти
-        Service service = Service.builder().build().createObject();
+//        Service service = Service.builder().build().createObject();
         //Получение пользователя из памяти
         User user = User.builder().build().createObject();
         //Отправка запроса на получение токена

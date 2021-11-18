@@ -40,7 +40,6 @@ public class CalculatorTest extends Tests {
     @ParameterizedTest(name = "Списание средств за продукт {0}")
     @DisplayName("Списание средств за продукт")
     public void expenseAccount(OpenShiftProject resource) {
-        //Todo: внести прожектЕнваерменты в прод шаре
         try (OpenShiftProject product = resource.createObjectExclusiveAccess()) {
             Project projectSource = Project.builder().id(product.getProjectId()).build().createObject();
             String parentFolderId = authorizerSteps.getParentProject(product.getProjectId());

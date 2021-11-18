@@ -4,6 +4,7 @@ import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
+import models.orderService.products.PostgreSQL;
 import models.orderService.products.PostgresPro;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -59,6 +60,15 @@ public class PostgresProTest extends Tests {
             postgresPro.createDb("createdbforreset3");
             postgresPro.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
             postgresPro.resetPassword("chelikforreset1");
+        }
+    }
+    @Tag("owner")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Сбросить пароль владельца {0}")
+    void resetDbOwnerPassword(PostgresPro product) {
+        try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
+            postgresPro.createDb("createdbforreset8");
+            postgresPro.resetDbOwnerPassword("createdbforreset8");
         }
     }
 
