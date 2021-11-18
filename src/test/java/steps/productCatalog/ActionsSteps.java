@@ -3,8 +3,7 @@ package steps.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.createAction.response.CreateActionResponse;
-import httpModels.productCatalog.patchActions.response.PatchResponse;
+import httpModels.productCatalog.patchActions.response.PatchActionResponse;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import httpModels.productCatalog.getActions.response.ActionResponse;
@@ -34,6 +33,7 @@ public class ActionsSteps {
     }
 
     @SneakyThrows
+    @Step("Поиск ID экшена по имени с использованием multiSearch")
     public String getActionByNameWithMultiSearch(String actionName) {
         String actionId = null;
         String object = new Http(Configure.ProductCatalog)
@@ -76,6 +76,7 @@ public class ActionsSteps {
     }
 
     @SneakyThrows
+    @Step("Создание экшена")
     public Http.Response createAction(JSONObject body) {
         return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
@@ -83,6 +84,7 @@ public class ActionsSteps {
     }
 
     @SneakyThrows
+    @Step("Обновление экшена")
     public Http.Response patchActionRow(JSONObject body, String actionId) {
         return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
@@ -90,17 +92,19 @@ public class ActionsSteps {
     }
 
     @SneakyThrows
-    public PatchResponse patchAction(String actionName, String graphId, String actionId) {
+    @Step("Обновление экшена")
+    public PatchActionResponse patchAction(String actionName, String graphId, String actionId) {
         String response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .patch("actions/" + actionId + "/", toJson("productCatalog/actions/createAction.json", actionName, graphId))
                 .assertStatus(200)
                 .toString();
 
-        return convertResponseOnClass(response, PatchResponse.class);
+        return convertResponseOnClass(response, PatchActionResponse.class);
     }
 
     @SneakyThrows
+    @Step("Удаление экшена")
     public void deleteAction(String id) {
         new Http(Configure.ProductCatalog)
                 .setContentType("application/json")

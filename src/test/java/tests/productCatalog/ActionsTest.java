@@ -1,7 +1,7 @@
 package tests.productCatalog;
 
 import core.helper.Deleted;
-import httpModels.productCatalog.patchActions.response.PatchResponse;
+import httpModels.productCatalog.patchActions.response.PatchActionResponse;
 import models.productCatalog.Action;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ActionsTest extends Tests {
     ActionsSteps actionsSteps = new ActionsSteps();
     Action action;
@@ -54,8 +55,8 @@ public class ActionsTest extends Tests {
     @DisplayName("Обновление экшена без указания версии, вресия должна инкрементироваться")
     @Test
     public void patchTest() {
-        PatchResponse patchResponse = actionsSteps.patchAction("TestObjectAT", action.getGraphId(), action.getActionId());
-        Assertions.assertEquals("1.1.2", patchResponse.getLastVersion());
+        PatchActionResponse patchActionResponse = actionsSteps.patchAction("TestObjectAT", action.getGraphId(), action.getActionId());
+        Assertions.assertEquals("1.1.2", patchActionResponse.getLastVersion());
     }
 
     @Order(5)

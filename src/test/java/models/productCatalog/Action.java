@@ -79,6 +79,6 @@ public class Action extends Entity {
 
         ActionsSteps actionsSteps = new ActionsSteps();
         actionId = actionsSteps.getActionId(actionName);
-        Assertions.assertNull(actionId, String.format("Экшен с именем: %s не найден", actionName));
+        Assertions.assertNull(actionId, String.format("Экшен с именем: %s не удалился", actionName));
     }
 }
