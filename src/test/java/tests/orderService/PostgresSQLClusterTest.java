@@ -75,7 +75,6 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
-    @Tag("owner")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgresSQLCluster product) {

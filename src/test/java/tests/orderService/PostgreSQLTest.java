@@ -65,7 +65,7 @@ public class PostgreSQLTest extends Tests {
             postgreSQL.resetPassword("chelikforreset1");
         }
     }
-    @Tag("owner")
+
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgreSQL product) {
