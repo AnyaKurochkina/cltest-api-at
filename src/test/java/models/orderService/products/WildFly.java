@@ -103,10 +103,7 @@ public class WildFly extends IProduct {
     }
 
     public void expandMountPoint() {
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        orderServiceSteps.executeAction("expand_mount_point", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/app\"}"));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
+        expandMountPoint("expand_mount_point", "/app/app", 10);
     }
 
     public void restart() {

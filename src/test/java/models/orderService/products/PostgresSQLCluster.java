@@ -105,10 +105,7 @@ public class PostgresSQLCluster extends IProduct {
 
     //Расширить
     public void expandMountPoint() {
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        orderServiceSteps.executeAction("expand_mount_point", this, new JSONObject("{\"size\": 10, \"mount\": \"/pg_data\"}"));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        assertTrue(sizeBefore < sizeAfter);
+        expandMountPoint("expand_mount_point", "/pg_data", 10);
     }
 
     public void createDb(String dbName) {
@@ -147,9 +144,10 @@ public class PostgresSQLCluster extends IProduct {
     }
 
     //Сбросить пароль владельца
-    public void resetDbOwnerPassword() {
+    public void resetDbOwnerPassword(String dbName) {
+        assertTrue(String.format("Базы %s не существует", dbName), database.stream().anyMatch(db -> db.getNameDB().equals(dbName)));
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction("postgresql_cluster_reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password)));
+        orderServiceSteps.executeAction("postgresql_cluster_reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", dbName + "_admin", password)));
     }
 
     //Удалить пользователя

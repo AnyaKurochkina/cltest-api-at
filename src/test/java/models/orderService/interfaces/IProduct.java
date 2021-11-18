@@ -26,7 +26,8 @@ import static org.junit.Assert.assertTrue;
 @ToString(onlyExplicitlyIncluded = true, includeFieldNames = false)
 @Log4j2
 public abstract class IProduct extends Entity {
-    public static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
+//    public static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
+    private static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_mounts.find{it.mount=='%s'}.size";
     public static final String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
     public static final String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
     public static final String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.config.topics.any{it.topic_name=='%s'}";
@@ -73,7 +74,7 @@ public abstract class IProduct extends Entity {
     }
 
     @Step("Сравнение стоимости продукта с ценой предбиллинга")
-    protected void compareCostOrderAndPrice(){
+    protected void compareCostOrderAndPrice() {
         CostSteps costSteps = new CostSteps();
         Float preBillingCost = costSteps.getPreBillingCost(this);
         Float currentCost = costSteps.getCurrentCost(this);
@@ -114,7 +115,7 @@ public abstract class IProduct extends Entity {
         setStatus(ProductStatus.CREATED);
     }
 
-    public void checkPreconditionStatusProduct(ProductStatus status){
+    public void checkPreconditionStatusProduct(ProductStatus status) {
 //        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
         assertEquals(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus(), status);
     }
@@ -141,11 +142,11 @@ public abstract class IProduct extends Entity {
     }
 
     //Расширить
-    protected void expandMountPoint(String action) {
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": 10, \"mount\": \"/app\"}"));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
+    protected void expandMountPoint(String action, String mount, int size) {
+        float sizeBefore = (Float) orderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount));
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}"));
+        float sizeAfter = (Float) orderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount));
+        assertEquals("sizeBefore >= sizeAfter", sizeBefore, sizeAfter - size, 0.05);
     }
 
 //    @Step

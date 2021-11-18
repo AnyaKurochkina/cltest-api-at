@@ -103,7 +103,7 @@ public class Astra extends IProduct {
         restart("reset_vm");
     }
     public void expandMountPoint(){
-        expandMountPoint("expand_mount_point");
+        expandMountPoint("expand_mount_point", "/app", 10);
     }
     public void resize() {
         resize("resize_vm");
