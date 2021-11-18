@@ -169,10 +169,12 @@
                 <configuration>
                     <namespace>API</namespace>
                     <apiToken>Rkp0SjVqMVZlNEhnS2dtOEF3</apiToken>
-                    <testRunName>Test new platform for API tests</testRunName>
                     <debug>true</debug>
                     <projectId>23</projectId>
                     <testRunName>PROD 0.21.0/ DEV + TEST</testRunName>
+                    <testSuiteName>API</testSuiteName>
+                    <testPlanName>OpenSheft API test</testPlanName>
+                    <testRunConfigurationName>IFT</testRunConfigurationName>
                     <infrastructureFailReasonExceptions>
                         <exception>ConnectionClosedException</exception>
                     </infrastructureFailReasonExceptions>
