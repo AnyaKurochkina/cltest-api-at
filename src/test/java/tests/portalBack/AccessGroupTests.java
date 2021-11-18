@@ -15,7 +15,7 @@ import tests.Tests;
 
 @Epic("Управление")
 @Feature("Группы доступа")
-@Tags({@Tag("regress"), @Tag("orgStructure"), @Tag("smoke")})
+@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class AccessGroupTests extends Tests {
