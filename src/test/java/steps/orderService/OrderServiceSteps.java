@@ -292,7 +292,7 @@ public class OrderServiceSteps extends Steps {
                 break;
             }
         }
-        Assertions.assertNotNull(product_id, String.format("ID продукта: %s, не найден", product.getProductName()));
+        Assert.assertNotNull(product_id, String.format("ID продукта: %s, не найден", product.getProductName()));
         return product_id;
     }
 
@@ -349,6 +349,9 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath();
         s = jsonPath.get(path);
         log.info(String.format("getFiledProduct return: %s", s));
+//        if(s == null){
+//            System.out.println(1);
+//        }
         Assert.assertNotNull("По path '" + path + "' не найден объект в response " + jsonPath.prettify(), s);
         return s;
     }

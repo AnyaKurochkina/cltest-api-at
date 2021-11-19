@@ -4,6 +4,8 @@ package models;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import core.exception.CalculateException;
+import core.exception.CreateEntityException;
 import core.helper.DataFileHelper;
 import core.enums.ObjectStatus;
 import io.qameta.allure.AllureLifecycle;
@@ -36,15 +38,17 @@ public class ObjectPoolService {
     public static final List<String> deleteClassesName = Collections.synchronizedList(new ArrayList<>());
     public static final List<String> createdEntities = Collections.synchronizedList(new ArrayList<>());
 
+    @SneakyThrows
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess) {
         ObjectPoolEntity objectPoolEntity = createObjectPoolEntity(e);
         objectPoolEntity.lock();
-        if (objectPoolEntity.getStatus() == ObjectStatus.FAILED) {
+        if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
             objectPoolEntity.release();
-//            Assume.assumeFalse("Object is failed", objectPoolEntity.getStatus() == ObjectStatus.FAILED);
-            Assertions.assertNotEquals(objectPoolEntity.getStatus(), ObjectStatus.FAILED,
-                    String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой",
-                            objectPoolEntity.getClazz().getSimpleName()));
+//            Assertions.assertNotEquals(objectPoolEntity.getStatus(), ObjectStatus.FAILED,
+//                    String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой",
+//                            objectPoolEntity.getClazz().getSimpleName()));
+                throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой",
+                        objectPoolEntity.getClazz().getSimpleName()));
         }
         if (objectPoolEntity.getStatus() == ObjectStatus.NOT_CREATED) {
             try {
@@ -55,9 +59,15 @@ public class ObjectPoolService {
                 if (!deleteClassesName.contains(e.getClass().getName()))
                     deleteClassesName.add(0, e.getClass().getName());
             } catch (Throwable throwable) {
-                objectPoolEntity.setStatus(ObjectStatus.FAILED);
-                objectPoolEntity.release();
-                throw throwable;
+                if (throwable instanceof CalculateException) {
+                    objectPoolEntity.setStatus(ObjectStatus.CREATED);
+                    objectPoolEntity.release();
+                    throw throwable;
+                } else {
+                    objectPoolEntity.setStatus(ObjectStatus.FAILED);
+                    objectPoolEntity.release();
+                    throw throwable;
+                }
             }
             objectPoolEntity.setStatus(ObjectStatus.CREATED);
         }
@@ -66,10 +76,16 @@ public class ObjectPoolService {
         }
         T entity = objectPoolEntity.get();
         toStringProductStep(entity);
+
+        if (Objects.nonNull(objectPoolEntity.getError())) {
+            throw objectPoolEntity.getError();
+        }
+
         return entity;
     }
 
     private static final List<ObjectPoolEntity> listObject = new ArrayList<>();
+
     public static synchronized ObjectPoolEntity createObjectPoolEntity(Entity e) {
         listObject.clear();
         listObject.addAll(entities.values());
