@@ -82,7 +82,7 @@ public class PostgreSQL extends IProduct {
         return this;
     }
 
-    //    @Override
+    @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
@@ -110,10 +110,7 @@ public class PostgreSQL extends IProduct {
     }
 
     public void expandMountPoint() {
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        orderServiceSteps.executeAction("expand_mount_point", this, new JSONObject("{\"size\": 10, \"mount\": \"/pg_data\"}"));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        assertTrue(sizeBefore < sizeAfter);
+        expandMountPoint("expand_mount_point", "/pg_data", 10);
     }
 
     public void createDb(String dbName) {
@@ -150,9 +147,10 @@ public class PostgreSQL extends IProduct {
     }
 
     //Сбросить пароль владельца
-    public void resetDbOwnerPassword() {
+    public void resetDbOwnerPassword(String dbName) {
+        assertTrue(String.format("Базы %s не существует", dbName), database.stream().anyMatch(db -> db.getNameDB().equals(dbName)));
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction("reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", database.get(0).getNameDB() + "_admin", password)));
+        orderServiceSteps.executeAction("reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName + "_admin", password)));
     }
 
     //Удалить пользователя

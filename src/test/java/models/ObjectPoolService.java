@@ -9,6 +9,7 @@ import core.enums.ObjectStatus;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
+import io.restassured.internal.common.assertion.Assertion;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.jupiter.api.Assertions;
 
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
@@ -40,7 +42,9 @@ public class ObjectPoolService {
         if (objectPoolEntity.getStatus() == ObjectStatus.FAILED) {
             objectPoolEntity.release();
 //            Assume.assumeFalse("Object is failed", objectPoolEntity.getStatus() == ObjectStatus.FAILED);
-            Assert.assertNotSame("Object is failed", objectPoolEntity.getStatus(), ObjectStatus.FAILED);
+            Assertions.assertNotEquals(objectPoolEntity.getStatus(), ObjectStatus.FAILED,
+                    String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой",
+                            objectPoolEntity.getClazz().getSimpleName()));
         }
         if (objectPoolEntity.getStatus() == ObjectStatus.NOT_CREATED) {
             try {

@@ -110,7 +110,7 @@ public class ApacheKafka extends IProduct {
     }
 
     public void expandMountPoint(){
-        expandMountPoint("expand_mount_point");
+        expandMountPoint("expand_mount_point", "/app", 10);
     }
 
     @Step("Удаление продукта")

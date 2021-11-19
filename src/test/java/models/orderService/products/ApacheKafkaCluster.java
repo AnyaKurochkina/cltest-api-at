@@ -65,10 +65,10 @@ public class ApacheKafkaCluster extends IProduct {
         jsonTemplate = "/orders/apache_kafka_cluster.json";
         productName = "Apache Kafka Cluster";
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
+        if (projectId == null) {
             projectId = project.getId();
         }
-        if(productId == null) {
+        if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
         return this;
@@ -95,10 +95,10 @@ public class ApacheKafkaCluster extends IProduct {
 
     public void createTopics(List<String> names) {
         List<KafkaTopic> kafkaTopics = new ArrayList<>();
-        for(String name : names)
+        for (String name : names)
             kafkaTopics.add(new KafkaTopic("delete", 1, 1, 1, 1800000, name));
         orderServiceSteps.executeAction("kafka_create_topics", this, new JSONObject("{\"topics\": " + CacheService.toJson(kafkaTopics) + "}"));
-        for(String name : names)
+        for (String name : names)
             Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         topics.addAll(kafkaTopics);
         save();
@@ -106,9 +106,9 @@ public class ApacheKafkaCluster extends IProduct {
 
     public void deleteTopics(List<String> names) {
         orderServiceSteps.executeAction("kafka_delete_topics", this, new JSONObject("{\"topics\": " + CacheService.toJson(names) + "}"));
-        for(String name : names)
+        for (String name : names)
             Assert.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
-        for(String name : names)
+        for (String name : names)
             topics.removeIf(topic -> topic.getTopicName().equals(name));
         save();
     }
@@ -120,7 +120,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void createAclTransaction(String transactionRegex) {
-        orderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\""+ transactionRegex +"\"}"));
+        orderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}"));
         save();
         Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)));
     }
@@ -129,23 +129,20 @@ public class ApacheKafkaCluster extends IProduct {
         start("start_kafka");
     }
 
-    public void updateCerts(){
-        Date dateBeforeUpdate = new Date();
-        Date dateAfterUpdate = new Date();
+    @SneakyThrows
+    public void updateCerts() {
+        Date dateBeforeUpdate;
+        Date dateAfterUpdate;
         super.updateCerts("kafka_update_certs");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        try {
-            dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
-            dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+        dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate),
                 String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
 
-    public void expandMountPoint(){
-        expandMountPoint("expand_mount_point");
+    public void expandMountPoint() {
+        expandMountPoint("expand_mount_point", "/app", 10);
     }
 
     public void restart() {
@@ -158,7 +155,7 @@ public class ApacheKafkaCluster extends IProduct {
 
     @Override
     @Step("Удаление продукта")
-    protected void delete(){
+    protected void delete() {
         delete("delete_two_layer");
     }
 

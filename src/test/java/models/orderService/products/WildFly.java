@@ -3,10 +3,7 @@ package models.orderService.products;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -72,7 +69,7 @@ public class WildFly extends IProduct {
         return this;
     }
 
-    //    @Override
+    @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
@@ -94,26 +91,19 @@ public class WildFly extends IProduct {
     }
 
     //Обновить сертификаты
+    @SneakyThrows
     public void updateCerts() {
-        Date dateBeforeUpdate = new Date();
-        Date dateAfterUpdate = new Date();
+        Date dateBeforeUpdate;
+        Date dateAfterUpdate;
         super.updateCerts("wildfly_update_certs");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        try {
-            dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
-            dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate),
-                "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
+        dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+        dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
     }
 
     public void expandMountPoint() {
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        orderServiceSteps.executeAction("expand_mount_point", this, new JSONObject("{\"size\": 10, \"mount\": \"/app/app\"}"));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, EXPAND_MOUNT_SIZE);
-        assertTrue("sizeBefore >= sizeAfter", sizeBefore < sizeAfter);
+        expandMountPoint("expand_mount_point", "/app/app", 10);
     }
 
     public void restart() {

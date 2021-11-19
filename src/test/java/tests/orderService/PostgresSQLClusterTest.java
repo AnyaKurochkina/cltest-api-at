@@ -4,6 +4,7 @@ import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
+import models.orderService.products.PostgresPro;
 import models.orderService.products.PostgresSQLCluster;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -75,10 +76,11 @@ public class PostgresSQLClusterTest extends Tests {
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль пользователя {0}")
+    @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.resetDbOwnerPassword();
+            postgres.createDb("createdbforreset8");
+            postgres.resetDbOwnerPassword("createdbforreset8");
         }
     }
 
