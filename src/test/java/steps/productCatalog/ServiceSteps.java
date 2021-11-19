@@ -7,7 +7,6 @@ import httpModels.productCatalog.copyService.response.CopyServiceResponse;
 import httpModels.productCatalog.createService.response.CreateServiceResponse;
 import httpModels.productCatalog.getService.response.GetServiceResponse;
 import io.qameta.allure.Step;
-import models.productCatalog.Services;
 import org.json.JSONObject;
 
 import static core.helper.JsonHelper.convertResponseOnClass;

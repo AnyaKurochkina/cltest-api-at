@@ -85,14 +85,4 @@ public class Services extends Entity {
         serviceId = productsSteps.getProductId(serviceName);
         Assertions.assertNull(serviceId, String.format("Сервис с именем: %s не удалился", serviceName));
     }
-
-    @Step("Обновление сервиса")
-    public void updateProduct() {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .patch("services/" + serviceId + "/",
-                        this.getTemplate()
-                                .set("$.description", "Update desc").build())
-                .assertStatus(200);
-    }
 }
