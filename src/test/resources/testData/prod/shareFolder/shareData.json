@@ -227,5 +227,39 @@
         "objectClassName": "models.authorizer.InformationSystem",
         "id": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
         "isForOrders":true
+    },
+    {
+        "objectClassName": "models.authorizer.Project",
+        "isDeleted": false,
+        "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+        "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
+        "id": "proj-67nljbzjtt",
+        "projectName": "OLD_PROJECT",
+        "projectEnvironment": {
+            "env": "IFT",
+            "envType": "TEST",
+            "id": "92f2acb2-aa33-4317-9352-dc1553e0097f"
+        },
+        "isForOrders": true
+    },
+    {
+        "objectClassName": "models.orderService.products.PostgreSQL",
+        "database": [],
+        "productId": "3b3807a6-9ad0-4ca6-930a-a37efffcc605",
+        "osVersion": "8.4",
+        "segment": "dev-srv-app",
+        "domain": "corp.dev.vtb",
+        "postgresqlVersion": "12",
+        "env": "DSO",
+        "actions": [
+            "create_db",
+            "create_dbms_user",
+            "remove_dbms_user",
+            "remove_db"
+        ],
+        "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219b8",
+        "platform": "Nutanix",
+        "users": [],
+        "dataCentre": "5"
     }
 ]
