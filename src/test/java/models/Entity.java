@@ -39,6 +39,8 @@ public abstract class Entity implements AutoCloseable {
     @Override
     public void close() {
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
+        if(objectPoolEntity.getStatus() == ObjectStatus.FAILED)
+            return;
         objectPoolEntity.release();
     }
 

@@ -85,7 +85,6 @@ public class ObjectPoolEntity {
             }
             if (entry.getValue().isArray() && entry.getValue().isEmpty()) {
                 node.remove();
-                continue;
             }
         }
     }
