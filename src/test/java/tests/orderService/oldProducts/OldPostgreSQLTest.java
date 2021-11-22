@@ -9,148 +9,136 @@ import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.PostgreSQL;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
-@Epic("Продукты")
+@Epic("Старые продукты")
 @Feature("PostgreSQL old")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_postgresql"), @Tag("prod")})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Execution(ExecutionMode.SAME_THREAD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgreSQLTest extends Tests {
 
-    //TODO: добавить сброс пароля владельца
     protected CacheService cacheService = new CacheService();
+    PostgreSQL postgreSQL = PostgreSQL.builder()
+            .projectId("proj-67nljbzjtt")
+            .productId("3b3807a6-9ad0-4ca6-930a-a37efffcc605")
+            .orderId("f6dd249c-b124-40b0-a99a-a40e55d5b5ce")
+            .build();
 
+    @Order(1)
+    @DisplayName("Расширить")
     @Test
-    void create() {
-        PostgreSQL postgreSQL = PostgreSQL.builder()
-                .projectId("proj-67nljbzjtt")
-                .productId("3b3807a6-9ad0-4ca6-930a-a37efffcc605")
-                .orderId("f6dd249c-b124-40b0-a99a-a40e55d5b5ce")
-                .build();
+    void expandMountPoint() {
+        postgreSQL.start();
+        postgreSQL.expandMountPoint();
+
+    }
+
+    @Order(2)
+    @DisplayName("Создать БД")
+    @Test
+    void createDb() {
+        postgreSQL.createDb("createdb1");
+
         postgreSQL.removeDb("createdb1");
+
     }
 
+    @Order(3)
+    @DisplayName("Создать пользователя БД")
     @Test
-    void expandMountPoint(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.expandMountPoint();
-        }
+    void createDbmsUser() {
+        postgreSQL.createDb("createdbforuser2");
+        postgreSQL.createDbmsUser("chelik1", "user", "createdbforuser2");
+
+        postgreSQL.removeDbmsUser("chelik1", "createdbforuser2");
+        postgreSQL.removeDb("createdbforuser2");
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить БД {0}")
-    void createDb(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdb1");
-        }
+    @Order(4)
+    @DisplayName("Сбросить пароль пользователя БД")
+    @Test
+    void resetPassword() {
+        postgreSQL.createDb("createdbforreset3");
+        postgreSQL.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
+        postgreSQL.resetPassword("chelikforreset1");
+
+        postgreSQL.removeDbmsUser("chelikforreset1", "createdbforreset3");
+        postgreSQL.removeDb("createdbforreset3");
+
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить пользователя {0}")
-    void createDbmsUser(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdbforuser2");
-            postgreSQL.createDbmsUser("chelik1", "user", "createdbforuser2");
-        }
+    @Order(5)
+    @DisplayName("Сбросить пароль владельца БД")
+    @Test
+    void resetDbOwnerPassword() {
+        postgreSQL.createDb("createdbforreset8");
+        postgreSQL.resetDbOwnerPassword("createdbforreset8");
+
+        postgreSQL.removeDb("createdbforreset8");
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль {0}")
-    void resetPassword(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdbforreset3");
-            postgreSQL.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
-            postgreSQL.resetPassword("chelikforreset1");
-        }
+    @Order(6)
+    @DisplayName("Удалить пользователя БД")
+    @Test
+    void removeDbmsUser() {
+        postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
+        postgreSQL.createDb("createdbforremove4");
+        postgreSQL.createDbmsUser("chelikforreset2", "user", "createdbforremove4");
+        postgreSQL.removeDbmsUser("chelikforreset2", "createdbforremove4");
+
+        postgreSQL.removeDb("createdbforremove4");
+
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль владельца {0}")
-    void resetDbOwnerPassword(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdbforreset8");
-            postgreSQL.resetDbOwnerPassword("createdbforreset8");
-        }
+    @Order(7)
+    @DisplayName("Перезагрузить")
+    @Test
+    void restart() {
+        postgreSQL.restart();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить пользователя {0}")
-    void removeDbmsUser(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.createDb("createdbforremove4");
-            postgreSQL.createDbmsUser("chelikforreset2", "user", "createdbforremove4");
-            postgreSQL.removeDbmsUser("chelikforreset2", "createdbforremove4");
-        }
+    @Order(8)
+    @DisplayName("Удалить БД")
+    @Test
+    void removeDb() {
+        postgreSQL.createDb("createdbforremove5");
+        postgreSQL.removeDb("createdbforremove5");
+
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
-    void restart(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.restart();
-        }
+    @Order(9)
+    @DisplayName("Выключить")
+    @Test
+    void stopSoft() {
+        postgreSQL.stopSoft();
+        postgreSQL.start();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить БД {0}")
-    void removeDb(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("createdbforremove5");
-            postgreSQL.removeDb("createdbforremove5");
-        }
+    @Order(10)
+    @DisplayName("Изменить конфигурацию")
+    @Test
+    void resize() {
+        postgreSQL.resize();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
-    void stopSoft(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.stopSoft();
-            postgreSQL.start();
-        }
+    @Order(11)
+    @DisplayName("Включить")
+    @Test
+    void start() {
+        postgreSQL.stopHard();
+        postgreSQL.start();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
-    void resize(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.resize();
-        }
-    }
-
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.stopHard();
-            postgreSQL.start();
-        }
-    }
-
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
-    void stopHard(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.stopHard();
-            postgreSQL.start();
-        }
-    }
-
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
-    void delete(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.deleteObject();
-        }
+    @Order(12)
+    @DisplayName("Выключить принудительно")
+    @Test
+    void stopHard() {
+        postgreSQL.stopHard();
     }
 }
