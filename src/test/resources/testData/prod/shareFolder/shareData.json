@@ -1,6 +1,13 @@
 [
     {
         "objectClassName": "models.authorizer.ServiceAccount",
+        "secret": "54837bc31c00d952c01ab4e359c81007",
+        "name": "sa_proj-67nljbzjtt-7h",
+        "projectId": "proj-67nljbzjtt",
+        "isForOrders":true
+    },
+    {
+        "objectClassName": "models.authorizer.ServiceAccount",
         "secret": "085c9e288ff24a68541aecdccde30447",
         "name": "sa_proj-frybyv41jh-4b",
         "projectId": "proj-frybyv41jh",
@@ -231,16 +238,16 @@
     {
         "objectClassName": "models.authorizer.Project",
         "isDeleted": false,
-        "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+        "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
         "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
         "id": "proj-67nljbzjtt",
         "projectName": "OLD_PROJECT",
         "projectEnvironment": {
-            "env": "IFT",
-            "envType": "TEST",
-            "id": "92f2acb2-aa33-4317-9352-dc1553e0097f"
+            "env": "DEV",
+            "id": "ce11798a-e5f6-4e54-9582-78770f15b52a",
+            "envType": "DEV"
         },
-        "isForOrders": true
+        "isForOrders":true
     },
     {
         "objectClassName": "models.orderService.products.PostgreSQL",
@@ -250,7 +257,10 @@
         "segment": "dev-srv-app",
         "domain": "corp.dev.vtb",
         "postgresqlVersion": "12",
+        "productName": "PostgreSQL",
         "env": "DSO",
+        "projectId": "proj-67nljbzjtt",
+        "orderId": "f6dd249c-b124-40b0-a99a-a40e55d5b5ce",
         "actions": [
             "create_db",
             "create_dbms_user",
