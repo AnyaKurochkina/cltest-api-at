@@ -195,7 +195,6 @@ public class OrderServiceSteps extends Steps {
                 Assert.assertNotNull("Стоимость списания равна null", cost);
                 Assert.assertEquals("Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action, costPreBilling, cost, 0.00001);
             }
-
         } catch (Throwable e) {
             exception.addException(e, product.getOrderId());
         }

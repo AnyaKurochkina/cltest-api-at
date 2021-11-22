@@ -70,6 +70,7 @@ public class ObjectPoolService {
     }
 
     private static final List<ObjectPoolEntity> listObject = new ArrayList<>();
+
     public static synchronized ObjectPoolEntity createObjectPoolEntity(Entity e) {
         listObject.clear();
         listObject.addAll(entities.values());
@@ -88,11 +89,17 @@ public class ObjectPoolService {
     }
 
     public static void saveEntity(Entity entity) {
-        getObjectPoolEntity(entity).set(entity);
+        ObjectPoolEntity objectPoolEntity = getObjectPoolEntity(entity);
+        if (objectPoolEntity == null) {
+            return;
+        } else {
+            objectPoolEntity.set(entity);
+        }
     }
 
     public static ObjectPoolEntity getObjectPoolEntity(Entity entity) {
         return entities.get(entity.uuid);
+
     }
 
     private static ObjectPoolEntity writeEntityToMap(Entity entity) {

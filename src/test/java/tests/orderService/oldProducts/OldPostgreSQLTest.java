@@ -29,12 +29,11 @@ public class OldPostgreSQLTest extends Tests {
                 .projectId("proj-67nljbzjtt")
                 .productId("3b3807a6-9ad0-4ca6-930a-a37efffcc605")
                 .orderId("f6dd249c-b124-40b0-a99a-a40e55d5b5ce")
-                .build().createObject();
-        postgreSQL.createDb("createdb1");
+                .build();
+        postgreSQL.removeDb("createdb1");
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @Test
     void expandMountPoint(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
