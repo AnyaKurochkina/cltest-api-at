@@ -16,6 +16,7 @@ import models.orderService.interfaces.ProductStatus;
 import models.subModels.Role;
 import org.json.JSONObject;
 import org.junit.Assert;
+import ru.testit.services.StepAspect;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.Collections;
@@ -55,15 +56,17 @@ public class OpenShiftProject extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        JsonPath array = new Http(OrderServiceSteps.URL)
-                .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
-                .assertStatus(201)
-                .jsonPath();
-        orderId = array.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        setStatus(ProductStatus.CREATED);
-        compareCostOrderAndPrice();
+        StepAspect.step("Заказ продукта", "desc", () -> {
+            JsonPath array = new Http(OrderServiceSteps.URL)
+                    .setProjectId(projectId)
+                    .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
+                    .assertStatus(201)
+                    .jsonPath();
+            orderId = array.get("[0].id");
+            orderServiceSteps.checkOrderStatus("success", this);
+            setStatus(ProductStatus.CREATED);
+            compareCostOrderAndPrice();
+        });
     }
 
     @SneakyThrows

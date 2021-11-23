@@ -12,6 +12,8 @@ import org.junit.CustomDisplayNameGenerator;
 import org.junit.TmsLinkExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import ru.testit.annotations.Title;
+import ru.testit.junit5.JUnit5EventListener;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -21,6 +23,7 @@ import java.util.*;
 import static io.qameta.allure.Allure.getLifecycle;
 
 @ExtendWith(TmsLinkExtension.class)
+@ExtendWith(JUnit5EventListener.class)
 @DisplayNameGeneration(CustomDisplayNameGenerator.class)
 public class Tests {
 //    private static final ThreadLocal<StringBuilder> testLog = new ThreadLocal<>();
@@ -28,10 +31,11 @@ public class Tests {
 
     @BeforeEach
     @SneakyThrows
+    @Title("beforeScenarios")
     public void beforeScenarios(TestInfo testInfo){
         String className = testInfo.getTestClass().orElseThrow(Exception::new).getSimpleName();
         String methodName = testInfo.getTestMethod().orElseThrow(Exception::new).getName();
-        Allure.tms(className + "#" + methodName, "");
+        Allure.tms(className + "-" + methodName, "");
     }
 
     public static void putAttachLog(String text) {

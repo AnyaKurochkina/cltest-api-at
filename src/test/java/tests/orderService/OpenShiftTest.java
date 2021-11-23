@@ -10,7 +10,12 @@ import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import ru.testit.annotations.DisplayName;
+import ru.testit.annotations.ExternalId;
+import ru.testit.annotations.Title;
+import ru.testit.annotations.WorkItemId;
 import tests.Tests;
 
 
@@ -27,14 +32,20 @@ public class OpenShiftTest extends Tests {
         openShift.close();
     }
 
-    @Link(type="manual", value = "377741")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменение проекта {0}")
-    void change(OpenShiftProject product) {
-        try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {
-            openShift.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            openShift.changeProject();
-        }
+//    @Link(type="manual", value = "377741")
+    @WorkItemId("376495")
+    @ExternalId("OpenShiftTest.change")
+    @Test
+    @Title("test")
+    @DisplayName("Изменение проекта {0}")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Изменение проекта {0}")
+    void change(/*OpenShiftProject product*/) {
+//        try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {
+//            openShift.checkPreconditionStatusProduct(ProductStatus.CREATED);
+//            openShift.changeProject();
+//        }
+        OpenShiftProject.builder().build().createObjectExclusiveAccess().close();
     }
 
     @Link(type="manual", value = "377740")
