@@ -1,18 +1,12 @@
 package tests.orderService.oldProducts;
 
-import core.CacheService;
-import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.authorizer.Folder;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.PostgreSQL;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 @Epic("Старые продукты")
@@ -23,7 +17,6 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgreSQLTest extends Tests {
 
-    protected CacheService cacheService = new CacheService();
     PostgreSQL postgreSQL = PostgreSQL.builder()
             .projectId("proj-67nljbzjtt")
             .productId("3b3807a6-9ad0-4ca6-930a-a37efffcc605")

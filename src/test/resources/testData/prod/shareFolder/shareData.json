@@ -260,13 +260,13 @@
     "platform": "Nutanix"
   },
   {
-    "objectClassName": "models.orderService.products.PostgreSQL",
-    "productId": "3b3807a6-9ad0-4ca6-930a-a37efffcc605",
-    "productName": "PostgreSQL",
+    "objectClassName": "models.orderService.products.ClickHouse",
+    "productId": "93fbf58f-bf5b-4f2b-a491-3c382c9837fd",
+    "productName": "ClickHouse",
     "env": "DEV",
     "projectId": "proj-67nljbzjtt",
-    "orderId": "405bd7b2-b6c1-4cec-998e-844004ff3486",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219b9",
+    "orderId": "e75ff7b3-5bc9-4c61-a445-b4caba970606",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l1",
     "platform": "Nutanix"
   }
 ]
