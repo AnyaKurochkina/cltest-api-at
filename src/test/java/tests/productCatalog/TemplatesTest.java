@@ -23,7 +23,7 @@ public class TemplatesTest extends Tests {
     @Test
     public void createTemplate() {
         template = Template.builder()
-                .templateName("TemplateForAT")
+                .templateName("TemplateForAT1")
                 .build()
                 .createObject();
     }
@@ -34,7 +34,7 @@ public class TemplatesTest extends Tests {
     @Deleted
     public void deleteTemplate() {
         try (Template template = Template.builder()
-                .templateName("TemplateForAT")
+                .templateName("TemplateForAT1")
                 .build()
                 .createObjectExclusiveAccess()) {
             template.deleteObject();

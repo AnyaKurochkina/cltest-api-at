@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @AllArgsConstructor
-public class PrintedOutput{
+public class ExtraData{
 
 }

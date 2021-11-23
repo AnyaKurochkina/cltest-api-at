@@ -75,19 +75,19 @@ public class Template extends Entity {
         CreateTemplateResponse createTemplateResponse = convertResponseOnClass(response, CreateTemplateResponse.class);
         templateId = createTemplateResponse.getId();
         Assertions.assertNotNull(templateId, "Шаблон с именем: " + templateName + ", не создался");
-
+        System.out.println(templateId);
     }
 
     @Override
     protected void delete() {
-        new Http(Configure.ProductCatalog)
+         new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
+                .setWithoutToken()
                 .delete("templates/" + templateId + "/")
                 .assertStatus(204);
 
         TemplateSteps templateSteps = new TemplateSteps();
-        templateId = templateSteps.getTemplateIdByName(templateName);
+        templateId = templateSteps.getTemplateIdByNameMultiSearch(templateName);
         Assertions.assertNull(templateId, String.format("Шаблон с именем: %s не удалился", templateName));
-
     }
 }
