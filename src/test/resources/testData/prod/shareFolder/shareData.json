@@ -268,5 +268,55 @@
     "orderId": "e75ff7b3-5bc9-4c61-a445-b4caba970606",
     "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l1",
     "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.Podman",
+    "productId": "91025447-e6d3-4b91-be18-a84d62402825",
+    "productName": "Podman",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "faaa9d8d-d3e8-4778-b14d-24be995ec878",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l1",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.PostgresPro",
+    "productId": "0da09981-c1ac-45b6-ba3b-7bfe52fd45bc",
+    "productName": "PostgresPro",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "fff78d59-f584-4fec-a93e-a258b4b68240",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l2",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.Rhel",
+    "productId": "c422069e-8f01-4328-b9dc-4a9e5dafd44e",
+    "productName": "PostgresPro",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "fa58784b-69c8-4b2e-b42b-4f704e5bbf2c",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l3",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.Ubuntu",
+    "productId": "9d87b2b4-4145-401a-b1b1-edac6bb0c5e4",
+    "productName": "Ubuntu",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "f474dac0-1e37-4826-b4ba-1c9effbfa045",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l4",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.Nginx",
+    "productId": "ebe832bd-ed1c-4998-8a58-6c4d16db1d60",
+    "productName": "Nginx",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "ef57bd15-2f61-4c34-8460-bf77d7312808",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l5",
+    "platform": "Nutanix"
   }
 ]

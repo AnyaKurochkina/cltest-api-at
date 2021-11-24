@@ -8,76 +8,57 @@ import models.orderService.products.Podman;
 import models.orderService.products.PostgreSQL;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
-@Epic("Продукты")
-@Feature("Podman")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("podman"), @Tag("prod")})
+@Epic("Старые продукты")
+@Feature("Podman old")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_podman"), @Tag("prod")})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Execution(ExecutionMode.SAME_THREAD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPodmanTest extends Tests {
 
     Podman podman = Podman.builder()
             .projectId("proj-67nljbzjtt")
-            .productId("3b3807a6-9ad0-4ca6-930a-a37efffcc605")
-            .orderId("f6dd249c-b124-40b0-a99a-a40e55d5b5ce")
+            .productId("91025447-e6d3-4b91-be18-a84d62402825")
+            .orderId("faaa9d8d-d3e8-4778-b14d-24be995ec878")
             .build();
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
-    void expandMountPoint(Podman product) {
-            podman.expandMountPoint();
+    @Order(1)
+    @Test
+    @DisplayName("Расширить Podman Old")
+    void expandMountPoint() {
+        podman.start();
+        podman.expandMountPoint();
     }
 
-//    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "Перезагрузить {0}")
-//    void restart(Podman product) {
-//        try (Podman podman = product.createObjectExclusiveAccess()) {
-//            podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
-//            podman.restart();
-//        }
-//    }
-
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
-    void stopSoft(Podman product) {
-            podman.stopSoft();
-            podman.start();
+    @Order(2)
+    @Test
+    @DisplayName("Выключить Podman Old")
+    void stopSoft() {
+        podman.stopSoft();
+        podman.start();
     }
 
-//    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "Изменить конфигурацию {0}")
-//    void resize(Podman product) {
-//        try (Podman podman = product.createObjectExclusiveAccess()) {
-//            podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
-//            podman.stopHard();
-//            try {
-//                podman.resize();
-//            } finally {
-//                podman.start();
-//            }
-//        }
-//    }
-
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(Podman product) {
+    @Order(3)
+    @Test
+    @DisplayName("Включить Podman Old")
+    void start() {
+        try {
             podman.stopHard();
+        } finally {
             podman.start();
+        }
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
-    void stopHard(Podman product) {
-            podman.stopHard();
-            podman.start();
-    }
-
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
-    void delete(Podman product) {
-            podman.deleteObject();
+    @Order(4)
+    @Test
+    @DisplayName("Выключить принудительно Podman Old")
+    void stopHard() {
+        podman.stopHard();
     }
 }
