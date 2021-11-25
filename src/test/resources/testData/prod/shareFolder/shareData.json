@@ -318,5 +318,15 @@
     "orderId": "ef57bd15-2f61-4c34-8460-bf77d7312808",
     "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l5",
     "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.WildFly",
+    "productId": "972a66f1-cd45-437f-b920-676bad68e594",
+    "productName": "WildFly",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "da58d2c6-bc47-4a52-8aaa-85de22916a89",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l6",
+    "platform": "Nutanix"
   }
 ]
