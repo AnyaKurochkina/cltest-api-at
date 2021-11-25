@@ -2,26 +2,26 @@ package org.junit;
 
 
 import core.helper.Configure;
+import core.helper.DataFileHelper;
+import core.utils.Encrypt;
 import models.ObjectPoolService;
-import io.qameta.allure.TmsLink;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 
 
-import java.io.File;
-import java.io.FileWriter;
-import java.lang.reflect.Method;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Base64;
 
 import static core.helper.Configure.ENV;
 
 @Log4j2
 public class TestsExecutionListener implements TestExecutionListener {
 
+    @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
 //        List<Class<?>> classes = ClassFinder.find("tests");
 //        Set<Float> values = new HashSet<>();
@@ -38,10 +38,20 @@ public class TestsExecutionListener implements TestExecutionListener {
 //            }
 //        }
 //        log.info("tmsLink max {}", Math.round(Collections.max(values)));
-        String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/secret.json";
+        String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
         if (Files.exists(Paths.get(fileSecret)))
-            ObjectPoolService.loadEntities(fileSecret);
-        ObjectPoolService.loadEntities(Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json");
+            ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
+        loadSecretJson();
+    }
+
+    public void loadSecretJson() throws Exception {
+        String secret = System.getProperty("secret");
+        if(secret == null)
+            secret = Configure.getAppProp("secret");
+        String file = Configure.getAppProp("data.folder") + "/shareFolder/" + "secret.bin";
+        if (!Files.exists(Paths.get(file)) || secret == null)
+            return;
+        ObjectPoolService.loadEntities(Encrypt.Aes256Decode(Base64.getDecoder().decode(DataFileHelper.read(file)), secret));
     }
 
     @SneakyThrows

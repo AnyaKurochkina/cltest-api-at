@@ -185,11 +185,9 @@ public class ObjectPoolService {
         return new Gson().fromJson(json, (Type) classOfT);
     }
 
-    public static void loadEntities(String file) {
+    public static void loadEntities(String content) {
         try {
-            if (Files.exists(Paths.get(file))) {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(fileInputStream, new TypeReference<List<LinkedHashMap<String, Object>>>() {
+                List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(content, new TypeReference<List<LinkedHashMap<String, Object>>>() {
                 });
                 listEntities.forEach(v -> {
                             ObjectPoolEntity objectPoolEntity = writeEntityToMap(fromJson(new JSONObject(v).toString(), getClassByName(v.get("objectClassName").toString())));
@@ -197,7 +195,6 @@ public class ObjectPoolService {
 //                            objectPoolEntity.setMock(true);
                         }
                 );
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

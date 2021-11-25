@@ -21,9 +21,11 @@ import org.junit.Assert;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -39,11 +41,25 @@ public class Windows extends IProduct {
     String platform;
     @ToString.Include
     String osVersion;
+    String role;
     public String domain;
     Flavor flavor;
     private static String ADD_DISK_PATH = "data.find{it.type=='vm'}.config.extra_disks.any{it.path=='%s'}";
     private static String DISK_SIZE = "data.find{it.type=='vm'}.config.extra_disks.find{it.path=='%s'}.size";
     public static String ADD_DISK = "Добавить диск";
+
+    private final static Map<String, String> roles = Stream.of(new String[][] {
+            { "generic_application", "ap" },
+            { "microsoft_sql_server", "sq" },
+            { "frontend_web_service", "we" },
+            { "mock_server", "mk" },
+            { "rep_point", "rp" },
+            { "security_tools", "se" },
+            { "autotest_scripts", "as" },
+            { "proxy_server", "px" },
+            { "generic_gateway", "gw" },
+    }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
 
     @Override
     @Step("Заказ продукта")
@@ -72,6 +88,9 @@ public class Windows extends IProduct {
         if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
+        if(role == null){
+            role = (String) roles.keySet().toArray()[(int) (Math.random() * roles.size())];
+        }
         return this;
     }
 
@@ -88,6 +107,7 @@ public class Windows extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.os_version", osVersion)
+                .set("$.order.attrs.role", role)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", project.id)
