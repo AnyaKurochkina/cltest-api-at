@@ -5,6 +5,8 @@ import core.helper.Http;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.copyService.response.CopyServiceResponse;
 import httpModels.productCatalog.createService.response.CreateServiceResponse;
+import httpModels.productCatalog.getService.response.ListItem;
+import httpModels.productCatalog.getService.response.GetServiceListResponse;
 import httpModels.productCatalog.getService.response.GetServiceResponse;
 import io.qameta.allure.Step;
 import org.json.JSONObject;
@@ -65,5 +67,25 @@ public class ServiceSteps {
                                 .set("$.description", "Update desc")
                                 .build())
                 .assertStatus(200);
+    }
+
+    @Step("Получение ID сервиса по его имени: {serviceName}")
+    public String getServiceIdByName(String serviceName) {
+        String serviceId = null;
+        String object = new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .get("services/")
+                .assertStatus(200)
+                .toString();
+
+        GetServiceListResponse response = convertResponseOnClass(object, GetServiceListResponse.class);
+
+        for (ListItem listItem : response.getList()) {
+            if (listItem.getName().equals(serviceName)) {
+                serviceId = listItem.getId();
+                break;
+            }
+        }
+        return serviceId;
     }
 }

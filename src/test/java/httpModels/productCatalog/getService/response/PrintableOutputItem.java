@@ -10,11 +10,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataSource{
 
-	@JsonProperty("inventory_tags")
-	private InventoryTags inventoryTags;
+public class PrintableOutputItem{
 
-	@JsonProperty("test")
-	private Boolean test;
+	@JsonProperty("node_name")
+	private String nodeName;
+
+	@JsonProperty("type")
+	private String type;
+
+	@JsonProperty("data_path")
+	private String dataPath;
 }

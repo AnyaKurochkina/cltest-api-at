@@ -6,15 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataSource{
 
-	@JsonProperty("inventory_tags")
-	private InventoryTags inventoryTags;
+public class GetServiceListResponse{
 
-	@JsonProperty("test")
-	private Boolean test;
+	@JsonProperty("meta")
+	private Meta meta;
+
+	@JsonProperty("list")
+	private List<ListItem> list;
 }
