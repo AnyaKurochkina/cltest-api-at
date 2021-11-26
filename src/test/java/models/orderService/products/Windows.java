@@ -75,6 +75,8 @@ public class Windows extends IProduct {
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
         compareCostOrderAndPrice();
+        String host = (String) orderServiceSteps.getProductsField(this, "product_data[0].hostname");
+        Assert.assertTrue(host.contains("-" + roles.get(role)));
     }
 
     @Override
@@ -94,7 +96,7 @@ public class Windows extends IProduct {
         return this;
     }
 
-    //    @Override
+    @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();

@@ -2,8 +2,8 @@ OpenShiftProject:
   - actions:
       [ 'update_openshift_project' ]
   - options:
-      - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo" }
-      - { env: "DSO", resourcePoolLabel: "d0-oscp.corp.dev.vtb - VTB-DSO" }
+      - { env: "DSO", resourcePoolLabel: "ds0-bank01 - Demo", segment: "dev-srv-app", dataCentre: "5" }
+      - { env: "DSO", resourcePoolLabel: "d0-oscp.corp.dev.vtb - VTB-DSO", segment: "dev-srv-app", dataCentre: "5" }
 
 Rhel:
   - actions:
@@ -52,24 +52,24 @@ Redis:
   - options:
       - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
-#Ubuntu:
-#  - actions:
-#      ['expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'resize_vm', 'start_two_layer', 'stop_hard_two_layer' ]
-#  - options:
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
+Ubuntu:
+  - actions:
+      ['expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'resize_vm', 'start_two_layer', 'stop_hard_two_layer' ]
+  - options:
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "20.04" }
 
-#Astra:
-#  - actions:
-#      ['expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'resize_vm', 'start_two_layer', 'stop_hard_two_layer' ]
-#  - options:
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+Astra:
+  - actions:
+      ['expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'resize_vm', 'start_two_layer', 'stop_hard_two_layer' ]
+  - options:
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
 
-#PostgresPro:
-#  - actions:
-#      ['expand_mount_point', 'create_db', 'create_dbms_user', 'reset_db_user_password', 'reset_db_owner_password', 'reset_two_layer', 'remove_dbms_user', 'remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
-#  - options:
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", postgresproVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", postgresproVersion: "13", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+PostgresPro:
+  - actions:
+      ['expand_mount_point', 'create_db', 'create_dbms_user', 'reset_db_user_password', 'reset_db_owner_password', 'reset_two_layer', 'remove_dbms_user', 'remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
+  - options:
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", postgresproVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", postgresproVersion: "13", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2.12" }
 
 ApacheKafka:
   - actions:
@@ -77,17 +77,24 @@ ApacheKafka:
   - options:
       - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1", osVersion: "7.9" }
 
-ClickHouse:
-  - actions:
-      [ 'expand_mount_point', 'clickhouse_create_db', 'clickhouse_create_dbms_user', 'clickhouse_reset_db_user_password', 'reset_two_layer', 'clickhouse_remove_dbms_user', 'clickhouse_remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
-  - options:
-      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+#ClickHouse:
+#  - actions:
+#      [ 'expand_mount_point', 'clickhouse_create_db', 'clickhouse_create_dbms_user', 'clickhouse_reset_db_user_password', 'reset_two_layer', 'clickhouse_remove_dbms_user', 'clickhouse_remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
+#  - options:
+#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 Podman:
   - actions:
       ['expand_mount_point', 'reset_two_layer', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
   - options:
       - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+
+#PostgresSQLCluster:
+#  - actions:
+#      [ 'expand_mount_point', 'postgresql_cluster_create_db', 'postgresql_cluster_create_dbms_user', 'postgresql_cluster_reset_db_user_password', 'postgresql_cluster_remove_dbms_user', 'postgresql_cluster_reset_db_owner_password', 'reset_two_layer', 'postgresql_cluster_remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresqlVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", postgresqlVersion: "11", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
 #Elasticsearch:
 #  - actions:
