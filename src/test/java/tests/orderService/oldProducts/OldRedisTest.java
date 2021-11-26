@@ -19,7 +19,7 @@ public class OldRedisTest extends Tests {
     Redis redis = Redis.builder()
             .projectId("proj-67nljbzjtt")
             .productId("6662a03d-20ce-4a83-a684-ddec48393516")
-            .orderId("ad4f9bf5-ca89-4d20-bc98-b29644a9fd40")
+            .orderId("b29c6a04-c92f-4b52-90c1-4172ae93fe19")//b29c6a04-c92f-4b52-90c1-4172ae93fe19 создал новый(старый бажный)
             .productName("Redis")
             .build();
 

@@ -336,7 +336,37 @@
     "env": "DEV",
     "projectId": "proj-67nljbzjtt",
     "orderId": "ad4f9bf5-ca89-4d20-bc98-b29644a9fd40",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l6",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l7",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.ApacheKafka",
+    "productId": "3b3807a6-9ad0-4ca6-930a-a37efffcc605",
+    "productName": "ApacheKafka",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "70212faf-5d9f-40bc-b7b1-9c32ae29d721",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l8",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.PostgresSQLCluster",
+    "productId": "9c97f55c-ab21-4724-be4d-cb90b8a815c6",
+    "productName": "PostgreSQL Cluster",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "885a5cd0-31c6-421c-8de4-70583f9c938c",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l9",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.Rhel",
+    "productId": "0da09981-c1ac-45b6-ba3b-7bfe52fd45bc",
+    "productName": "Rhel",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "b29c6a04-c92f-4b52-90c1-4172ae93fe19",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k1",
     "platform": "Nutanix"
   }
 ]

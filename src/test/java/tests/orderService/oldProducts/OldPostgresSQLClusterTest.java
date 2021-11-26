@@ -1,142 +1,125 @@
 package tests.orderService.oldProducts;
 
-import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.PostgresSQLCluster;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 @Epic("Старые Продукты")
 @Feature("PostgresSQL Cluster OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_postgressqlcluster"), @Tag("prod"), @Tag("old")})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Execution(ExecutionMode.SAME_THREAD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgresSQLClusterTest extends Tests {
+    //НЕТ СТАРОГО ПРОДУКТА
+    PostgresSQLCluster postgres = PostgresSQLCluster.builder()
+            .projectId("proj-67nljbzjtt")
+            .productId("9c97f55c-ab21-4724-be4d-cb90b8a815c6")
+            .orderId("885a5cd0-31c6-421c-8de4-70583f9c938c")
+            .productName("PostgreSQL Cluster")
+            .build();
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
-    void create(PostgresSQLCluster product) {
-        PostgresSQLCluster postgres = product.createObjectExclusiveAccess();
-        postgres.close();
+    @Order(1)
+    @DisplayName("Расширить PostgreSQLCluster OLD")
+    @Test
+    void expandMountPoint() {
+        postgres.start();
+        postgres.expandMountPoint();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
-    void expandMountPoint(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgres.expandMountPoint();
-        }
+    @Order(2)
+    @DisplayName("Создать бд PostgreSQLCluster OLD")
+    @Test
+    void createDb() {
+        postgres.createDb("dbcreate1");
+
+        postgres.removeDb("dbcreate1");
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить БД {0}")
-    void createDb(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgres.createDb("dbcreate1");
-        }
+    @Order(3)
+    @DisplayName("Создать пользователя PostgreSQLCluster OLD")
+    @Test
+    void createDbmsUser() {
+        postgres.createDb("dbforuser2");
+        postgres.createDbmsUser("testchelik1", "user", "dbforuser2");
+
+        postgres.removeDb("dbforuser2");
+        postgres.removeDbmsUser("testchelik1", "dbforuser2");
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить пользователя {0}")
-    void createDbmsUser(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgres.createDb("dbforuser2");
-            postgres.createDbmsUser("testchelik1", "user", "dbforuser2");
-        }
-    }
+    @Order(4)
+    @DisplayName("Сбросить пароль пользователя PostgreSQLCluster OLD")
+    @Test
+    void resetPassword() {
+        postgres.createDb("createdbforreset3");
+        postgres.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
+        postgres.resetPassword("chelikforreset1");
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль пользователя {0}")
-    void resetPassword(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("createdbforreset3");
-            postgres.createDbmsUser("chelikforreset1", "user","createdbforreset3");
-            postgres.resetPassword("chelikforreset1");
-        }
+        postgres.removeDb("createdbforreset3");
+        postgres.removeDbmsUser("chelikforreset1", "createdbforreset3");
     }
 
     @Tag("remove")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить пользователя {0}")
-    void removeDbmsUser(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("createdbforremove4");
-            postgres.createDbmsUser("chelikforremove2", "user", "createdbforremove4");
-            postgres.removeDbmsUser("chelikforremove2", "createdbforremove4");
-            postgres.removeDb("createdbforremove4");
-        }
+    @Order(5)
+    @DisplayName("Удалить пользователя PostgreSQLCluster OLD")
+    @Test
+    void removeDbmsUser() {
+        postgres.createDb("createdbforremove4");
+        postgres.createDbmsUser("chelikforremove2", "user", "createdbforremove4");
+        postgres.removeDbmsUser("chelikforremove2", "createdbforremove4");
+
+        postgres.removeDb("createdbforremove4");
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль владельца {0}")
-    void resetDbOwnerPassword(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("createdbforreset8");
-            postgres.resetDbOwnerPassword("createdbforreset8");
-        }
+    @Order(6)
+    @DisplayName("Сбросить пароль владельца PostgreSQLCluster OLD")
+    @Test
+    void resetDbOwnerPassword() {
+        postgres.createDb("createdbforreset8");
+        postgres.resetDbOwnerPassword("createdbforreset8");
+
+        postgres.removeDb("createdbforreset8");
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить БД {0}")
-    void removeDb(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("createdbforremove5");
-            postgres.removeDb("createdbforremove5");
-        }
+    @Order(7)
+    @DisplayName("Удалить бд PostgreSQLCluster OLD")
+    @Test
+    void removeDb() {
+        postgres.createDb("createdbforremove5");
+        postgres.removeDb("createdbforremove5");
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
-    void restart(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgres.restart();
-        }
+    @Order(8)
+    @DisplayName("Перезагрузить PostgreSQLCluster OLD")
+    @Test
+    void restart() {
+        postgres.restart();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
-    void stopSoft(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgres.stopSoft();
-            postgres.start();
-        }
+    @Order(9)
+    @DisplayName("Выключить PostgreSQLCluster OLD")
+    @Test
+    void stopSoft() {
+        postgres.stopSoft();
+        postgres.start();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgres.stopHard();
-            postgres.start();
-        }
+    @Order(10)
+    @DisplayName("Включить PostgreSQLCluster OLD")
+    @Test
+    void start() {
+        postgres.stopHard();
+        postgres.start();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
-    void stopHard(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgres.stopHard();
-            postgres.start();
-        }
-    }
-
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
-    void delete(PostgresSQLCluster product) {
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.deleteObject();
-        }
+    @Order(11)
+    @DisplayName("Выключить принудительно PostgreSQLCluster OLD")
+    @Test
+    void stopHard() {
+        postgres.stopHard();
     }
 }
