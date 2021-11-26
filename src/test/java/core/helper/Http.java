@@ -257,7 +257,7 @@ public class Http {
 //                Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
 //            }
             if (s != status())
-                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nResponse: %s\nRequest: %s\n%s\n", s, status(), responseMessage, host + path, body));
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nResponse: %s\nRequest: %s\n%s\n", s, status(), method, responseMessage, host + path, body));
             return this;
         }
 
