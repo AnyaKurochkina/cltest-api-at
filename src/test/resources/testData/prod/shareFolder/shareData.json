@@ -368,5 +368,35 @@
     "orderId": "b29c6a04-c92f-4b52-90c1-4172ae93fe19",
     "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k1",
     "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.RabbitMQCluster",
+    "productId": "cee004ec-136d-4605-98e1-da4dac466151",
+    "productName": "RabbitMQCluster",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "43c2f7f3-74e2-4f78-beef-aae28107b6a1",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k2",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.Windows",
+    "productId": "28bed880-2714-4317-a967-d000d492bd9d",
+    "productName": "Windows",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "1aa46ece-0d88-4ba6-b0d1-00becd1f7ea6",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k3",
+    "platform": "Nutanix"
+  } ,
+  {
+    "objectClassName": "models.orderService.products.Astra",
+    "productId": "b5998259-ccab-4a98-949d-801b115ec180",
+    "productName": "Astra",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "b5998259-ccab-4a98-949d-801b115ec180",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k4",
+    "platform": "Nutanix"
   }
 ]

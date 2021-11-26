@@ -1,102 +1,84 @@
 package tests.orderService.oldProducts;
 
-import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.RabbitMQCluster;
-import models.orderService.products.Rhel;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 @Epic("Старые продукты")
 @Feature("RabbitMQCluster OLD")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_rabbitmqcluster"), @Tag("prod"),  @Tag("old")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_rabbitmqcluster"), @Tag("prod"), @Tag("old")})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Execution(ExecutionMode.SAME_THREAD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldRabbitMQClusterTest extends Tests {
-//не готов
-    RabbitMQCluster rabbitMQCluster = RabbitMQCluster.builder()
+
+    RabbitMQCluster rabbit = RabbitMQCluster.builder()
             .projectId("proj-67nljbzjtt")
-            .productId("9c121d8f-3d9d-49e3-9e64-9d5c0c067e53")
-            .orderId("c5e4c8e4-55b4-4cf7-b975-49f7eb3cae9a")//c5e4c8e4-55b4-4cf7-b975-49f7eb3cae9a создал новый(старый бажный)
+            .productId("cee004ec-136d-4605-98e1-da4dac466151")
+            .orderId("43c2f7f3-74e2-4f78-beef-aae28107b6a1")//43c2f7f3-74e2-4f78-beef-aae28107b6a1 создал новый(старый бажный)
             .productName("RabbitMQCluster")
             .build();
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
-    void expandMountPoint(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.expandMountPoint();
-        }
+    @Order(1)
+    @DisplayName("Расширить RabbitMQCluster OLD")
+    @Test
+    void expandMountPoint() {
+        rabbit.start();
+        rabbit.expandMountPoint();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
-    void restart(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.restart();
-        }
+    @Order(2)
+    @DisplayName("Перезагрузить RabbitMQCluster OLD")
+    @Test
+    void restart() {
+        rabbit.restart();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
-    void stopSoft(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.stopSoft();
-            rabbit.start();
-        }
+    @Order(3)
+    @DisplayName("Выключить RabbitMQCluster OLD")
+    @Test
+    void stopSoft() {
+        rabbit.stopSoft();
+        rabbit.start();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать пользователя RabbitMQ {0}")
-    void resize(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.rabbitmqCreateUser();
-        }
+    @Order(4)
+    @DisplayName("Создать пользователя RabbitMQCluster OLD")
+    @Test
+    void createUser() {
+        rabbit.rabbitmqCreateUser();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.stopHard();
-            rabbit.start();
-        }
+    @Order(5)
+    @DisplayName("Изменить конфигурацию RabbitMQCluster OLD")
+    @Test
+    void resize() {
+        rabbit.resize();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить сертификаты {0}")
-    void updateCerts(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbitMQCluster = product.createObjectExclusiveAccess()) {
-            rabbitMQCluster.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbitMQCluster.updateCerts();
-        }
+    @Order(6)
+    @DisplayName("Включить RabbitMQCluster OLD")
+    @Test
+    void start() {
+        rabbit.stopHard();
+        rabbit.start();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
-    void stopHard(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            rabbit.stopHard();
-            rabbit.start();
-        }
+    @Order(7)
+    @DisplayName("Обновить сертификаты RabbitMQCluster OLD")
+    @Test
+    void updateCerts() {
+        rabbit.updateCerts();
     }
 
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
-    void delete(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.deleteObject();
-        }
+    @Order(8)
+    @DisplayName("Выключить принудительно RabbitMQCluster OLD")
+    @Test
+    void stopHard() {
+        rabbit.stopHard();
     }
 }
