@@ -14,11 +14,11 @@ import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
-import steps.productCatalog.ProductsSteps;
-
-import static core.helper.JsonHelper.convertResponseOnClass;
+import steps.productCatalog.ServiceSteps;
 
 import java.util.List;
+
+import static core.helper.JsonHelper.convertResponseOnClass;
 
 @Log4j2
 @Builder
@@ -81,8 +81,8 @@ public class Services extends Entity {
                 .delete("services/" + serviceId + "/")
                 .assertStatus(204);
 
-        ProductsSteps productsSteps = new ProductsSteps();
-        serviceId = productsSteps.getProductId(serviceName);
+        ServiceSteps serviceSteps = new ServiceSteps();
+        serviceId = serviceSteps.getServiceIdByName(serviceName);
         Assertions.assertNull(serviceId, String.format("Сервис с именем: %s не удалился", serviceName));
     }
 }
