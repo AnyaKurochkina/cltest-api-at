@@ -19,7 +19,6 @@ import models.orderService.interfaces.IProduct;
 import models.subModels.Item;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 import steps.calculator.CalcCostSteps;
@@ -57,7 +56,7 @@ public class OrderServiceSteps extends Steps {
 
 //            if(res.status() == 504)
 //                continue;
-            Assert.assertEquals("Статус ответа не равен ожидаемому", 200, res.status());
+            Assertions.assertEquals(200, res.status(), "Статус ответа не равен ожидаемому");
             orderStatus = res.jsonPath().get("status");
 
             log.info("orderStatus = " + orderStatus);
@@ -72,7 +71,7 @@ public class OrderServiceSteps extends Steps {
                 e.printStackTrace();
                 log.error("Ошибка в GetErrorFromOrch " + e);
             }
-            Assert.fail(String.format("Ошибка заказа продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product, orderStatus, error));
+            Assertions.fail(String.format("Ошибка заказа продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product, orderStatus, error));
         }
     }
 
@@ -161,7 +160,7 @@ public class OrderServiceSteps extends Steps {
         Float costPreBilling = null;
         try {
             costPreBilling = costSteps.getCostAction(item.name, item.id, product, jsonData);
-            Assert.assertTrue("Стоимость после action отрицательная", costPreBilling >= 0);
+            Assertions.assertTrue(costPreBilling >= 0, "Стоимость после action отрицательная");
         } catch (Throwable e) {
             exception.addException(e, product.getOrderId());
         }
@@ -192,8 +191,8 @@ public class OrderServiceSteps extends Steps {
                         continue;
                     break;
                 }
-                Assert.assertNotNull("Стоимость списания равна null", cost);
-                Assert.assertEquals("Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action, costPreBilling, cost, 0.00001);
+                Assertions.assertNotNull(cost, "Стоимость списания равна null");
+                Assertions.assertEquals(costPreBilling, cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
             }
 
         } catch (Throwable e) {
@@ -224,7 +223,7 @@ public class OrderServiceSteps extends Steps {
 
 //                if(res.status() == 504)
 //                    continue;
-                Assert.assertEquals("Статус ответа не равен ожидаемому", 200, res.status());
+                Assertions.assertEquals(200, res.status(), "Статус ответа не равен ожидаемому");
                 actionStatus = res.jsonPath().get("status");
 
 
@@ -241,7 +240,7 @@ public class OrderServiceSteps extends Steps {
             } catch (Throwable e) {
                 e.printStackTrace();
             }
-            Assert.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product.toString(), actionStatus, error));
+            Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product.toString(), actionStatus, error));
         }
     }
 
@@ -292,7 +291,7 @@ public class OrderServiceSteps extends Steps {
                 break;
             }
         }
-        Assert.assertNotNull(product_id, String.format("ID продукта: %s, не найден", product.getProductName()));
+        Assertions.assertNotNull(product_id, String.format("ID продукта: %s, не найден", product.getProductName()));
         return product_id;
     }
 
@@ -321,7 +320,7 @@ public class OrderServiceSteps extends Steps {
             item.name = jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.actions.find{it.name.contains('%s')}.name", action, action));
         }
 
-        Assert.assertNotNull("Action '" + action + "' не найден у продукта " + product.getProductName(), item.id);
+        Assertions.assertNotNull(item.id, "Action '" + action + "' не найден у продукта " + product.getProductName());
         return item;
     }
 
@@ -352,7 +351,7 @@ public class OrderServiceSteps extends Steps {
 //        if(s == null){
 //            System.out.println(1);
 //        }
-        Assert.assertNotNull("По path '" + path + "' не найден объект в response " + jsonPath.prettify(), s);
+        Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
         return s;
     }
 

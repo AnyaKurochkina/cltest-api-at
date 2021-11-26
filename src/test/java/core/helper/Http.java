@@ -1,21 +1,17 @@
 package core.helper;
 
-import io.qameta.allure.Allure;
 import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.core.util.Assert;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.Assert;
+//import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.keyCloak.KeyCloakSteps;
 
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.*;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -29,7 +25,7 @@ import java.security.cert.X509Certificate;
 import java.util.concurrent.Semaphore;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
-import static org.junit.Assert.fail;
+//import static org.junit.Assert.fail;
 import static tests.Tests.putAttachLog;
 //import static tests.Tests.putLog;
 
@@ -66,7 +62,7 @@ public class Http {
             HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
         try {
             Field methodsField = HttpURLConnection.class.getDeclaredField("methods");
@@ -231,7 +227,7 @@ public class Http {
             putAttachLog(sbLog.toString());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
+            Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
         }
         return new Response(status, responseMessage);
     }

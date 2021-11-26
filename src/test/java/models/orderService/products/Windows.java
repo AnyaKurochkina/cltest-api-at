@@ -17,15 +17,13 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.junit.Assert.assertEquals;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -76,7 +74,7 @@ public class Windows extends IProduct {
         setStatus(ProductStatus.CREATED);
         compareCostOrderAndPrice();
         String host = (String) orderServiceSteps.getProductsField(this, "product_data[0].hostname");
-        Assert.assertTrue(host.contains("-" + roles.get(role)));
+        Assertions.assertTrue(host.contains("-" + roles.get(role)));
     }
 
     @Override
@@ -120,7 +118,7 @@ public class Windows extends IProduct {
     //Добавить диск
     public void addDisk(String disk) {
         orderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"" + disk + "\", size: 10, file_system: \"ntfs\"}"));
-        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk)));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk)));
     }
 
     //Расширить диск
@@ -128,7 +126,7 @@ public class Windows extends IProduct {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
         orderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 1}"));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
-        assertEquals("sizeBefore >= sizeAfter", sizeBefore, sizeAfter - 1);
+        Assertions.assertEquals(sizeBefore, sizeAfter - 1, "sizeBefore >= sizeAfter");
     }
 
 

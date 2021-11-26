@@ -11,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
@@ -20,7 +19,6 @@ import steps.tarifficator.CostSteps;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 
 @SuperBuilder
 @NoArgsConstructor
@@ -88,7 +86,7 @@ public abstract class IProduct extends Entity {
                     continue;
                 break;
             }
-            Assert.assertEquals("Стоимость предбиллинга отличается от стоимости продукта " + this, preBillingCost, currentCost, 0.00001);
+            Assertions.assertEquals(preBillingCost, currentCost, 0.00001, "Стоимость предбиллинга отличается от стоимости продукта " + this);
         } catch (Throwable e) {
             throw new CalculateException(e);
         }
@@ -135,19 +133,19 @@ public abstract class IProduct extends Entity {
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         orderServiceSteps.executeAction(action, this, null);
         setStatus(ProductStatus.DELETED);
-        Assert.assertEquals("Стоимость после удаления заказа больше 0.0", 0.0F, calcCostSteps.getCostByUid(this), 0.0F);
+        Assertions.assertEquals(0.0F, calcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
     }
 
     //Изменить конфигурацию
     protected void resize(String action) {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
-        Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
+        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
         int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
-        assertEquals("Конфигурация cpu не изменилась или изменилась неверно", flavor.data.cpus, cpusAfter);
-        assertEquals("Конфигурация ram не изменилась или изменилась неверно", flavor.data.memory, memoryAfter);
+        Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
+        Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
     }
 
     //Расширить
@@ -155,10 +153,10 @@ public abstract class IProduct extends Entity {
         Float sizeBefore = (Float) orderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount, mount));
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}"));
         float sizeAfter = (Float) orderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
-        assertEquals("sizeBefore >= sizeAfter", sizeBefore, sizeAfter - size, 0.05);
+        Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }
 
-//    @Step
+
 //    @SneakyThrows
 //    public void toStringProductStep() {
 //        AllureLifecycle allureLifecycle = Allure.getLifecycle();

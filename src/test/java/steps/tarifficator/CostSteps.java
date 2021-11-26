@@ -12,7 +12,6 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 import steps.orderService.OrderServiceSteps;
@@ -58,7 +57,7 @@ public class CostSteps extends Steps {
 
     @Step("Получение текущего расхода для заказа")
     public Float getCurrentCost(IProduct product) {
-        Assert.assertSame("Продукт " + product + " не был заказан", ProductStatus.CREATED, product.getStatus());
+        Assertions.assertSame(ProductStatus.CREATED, product.getStatus(), "Продукт " + product + " не был заказан");
         Float consumption = null;
         for (int i = 0; i < 15; i++) {
             Waiting.sleep(20000);
@@ -76,7 +75,7 @@ public class CostSteps extends Steps {
             }
             break;
         }
-        Assert.assertNotNull("Расход заказа равна null", consumption);
+        Assertions.assertNotNull(consumption, "Расход заказа равна null");
         log.debug("Расход для заказа: " + consumption);
         return consumption;
     }
