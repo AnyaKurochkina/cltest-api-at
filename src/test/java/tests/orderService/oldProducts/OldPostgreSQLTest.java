@@ -10,8 +10,8 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 @Epic("Старые продукты")
-@Feature("PostgreSQL old")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_postgresql"), @Tag("prod")})
+@Feature("PostgreSQL OLD")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_postgresql"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -24,7 +24,7 @@ public class OldPostgreSQLTest extends Tests {
             .build();
 
     @Order(1)
-    @DisplayName("Расширить")
+    @DisplayName("Расширить PorstgreSQL OLD")
     @Test
     void expandMountPoint() {
         postgreSQL.start();
@@ -33,7 +33,7 @@ public class OldPostgreSQLTest extends Tests {
     }
 
     @Order(2)
-    @DisplayName("Создать БД")
+    @DisplayName("Создать БД PorstgreSQL OLD")
     @Test
     void createDb() {
         postgreSQL.createDb("createdb1");
@@ -43,7 +43,7 @@ public class OldPostgreSQLTest extends Tests {
     }
 
     @Order(3)
-    @DisplayName("Создать пользователя БД")
+    @DisplayName("Создать пользователя БД PorstgreSQL OLD")
     @Test
     void createDbmsUser() {
         postgreSQL.createDb("createdbforuser2");
@@ -54,7 +54,7 @@ public class OldPostgreSQLTest extends Tests {
     }
 
     @Order(4)
-    @DisplayName("Сбросить пароль пользователя БД")
+    @DisplayName("Сбросить пароль пользователя БД PorstgreSQL OLD")
     @Test
     void resetPassword() {
         postgreSQL.createDb("createdbforreset3");
@@ -67,7 +67,7 @@ public class OldPostgreSQLTest extends Tests {
     }
 
     @Order(5)
-    @DisplayName("Сбросить пароль владельца БД")
+    @DisplayName("Сбросить пароль владельца БД PorstgreSQL OLD")
     @Test
     void resetDbOwnerPassword() {
         postgreSQL.createDb("createdbforreset8");
@@ -77,7 +77,7 @@ public class OldPostgreSQLTest extends Tests {
     }
 
     @Order(6)
-    @DisplayName("Удалить пользователя БД")
+    @DisplayName("Удалить пользователя БД PorstgreSQL OLD")
     @Test
     void removeDbmsUser() {
         postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
@@ -90,7 +90,7 @@ public class OldPostgreSQLTest extends Tests {
     }
 
     @Order(7)
-    @DisplayName("Перезагрузить")
+    @DisplayName("Перезагрузить PorstgreSQL OLD")
     @Test
     void restart() {
         postgreSQL.restart();
@@ -106,7 +106,7 @@ public class OldPostgreSQLTest extends Tests {
     }
 
     @Order(9)
-    @DisplayName("Выключить")
+    @DisplayName("Выключить PorstgreSQL OLD")
     @Test
     void stopSoft() {
         postgreSQL.stopSoft();
@@ -114,14 +114,14 @@ public class OldPostgreSQLTest extends Tests {
     }
 
     @Order(10)
-    @DisplayName("Изменить конфигурацию")
+    @DisplayName("Изменить конфигурацию PorstgreSQL OLD")
     @Test
     void resize() {
         postgreSQL.resize();
     }
 
     @Order(11)
-    @DisplayName("Включить")
+    @DisplayName("Включить PorstgreSQL OLD")
     @Test
     void start() {
         postgreSQL.stopHard();
@@ -129,7 +129,7 @@ public class OldPostgreSQLTest extends Tests {
     }
 
     @Order(12)
-    @DisplayName("Выключить принудительно")
+    @DisplayName("Выключить принудительно PorstgreSQL OLD")
     @Test
     void stopHard() {
         postgreSQL.stopHard();

@@ -9,8 +9,8 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 @Epic("Старые продукты")
-@Feature("Rhel old")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_rhel"), @Tag("prod")})
+@Feature("Rhel OLD")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_rhel"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

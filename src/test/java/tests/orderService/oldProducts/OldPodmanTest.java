@@ -15,8 +15,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 @Epic("Старые продукты")
-@Feature("Podman old")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_podman"), @Tag("prod")})
+@Feature("Podman OLD")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_podman"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -30,7 +30,7 @@ public class OldPodmanTest extends Tests {
 
     @Order(1)
     @Test
-    @DisplayName("Расширить Podman Old")
+    @DisplayName("Расширить Podman OLD")
     void expandMountPoint() {
         podman.start();
         podman.expandMountPoint();
@@ -38,7 +38,7 @@ public class OldPodmanTest extends Tests {
 
     @Order(2)
     @Test
-    @DisplayName("Выключить Podman Old")
+    @DisplayName("Выключить Podman OLD")
     void stopSoft() {
         podman.stopSoft();
         podman.start();
@@ -46,7 +46,7 @@ public class OldPodmanTest extends Tests {
 
     @Order(3)
     @Test
-    @DisplayName("Включить Podman Old")
+    @DisplayName("Включить Podman OLD")
     void start() {
         try {
             podman.stopHard();
@@ -57,7 +57,7 @@ public class OldPodmanTest extends Tests {
 
     @Order(4)
     @Test
-    @DisplayName("Выключить принудительно Podman Old")
+    @DisplayName("Выключить принудительно Podman OLD")
     void stopHard() {
         podman.stopHard();
     }

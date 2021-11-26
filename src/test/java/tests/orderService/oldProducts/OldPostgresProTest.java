@@ -9,8 +9,8 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 @Epic("Старые продукты")
-@Feature("PostgresPRO old")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_postgrespro"), @Tag("prod")})
+@Feature("PostgresPRO OLD")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_postgrespro"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -24,7 +24,7 @@ public class OldPostgresProTest extends Tests {
             .build();
 
     @Order(1)
-    @DisplayName("Расширить PostgresPRO Old")
+    @DisplayName("Расширить PostgresPRO OLD")
     @Test
     void expandMountPoint() {
         try {
@@ -35,7 +35,7 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Order(2)
-    @DisplayName("Добавить БД PostgresPRO Old")
+    @DisplayName("Добавить БД PostgresPRO OLD")
     @Test
     void createDb() {
         postgresPro.createDb("createdb1");
@@ -44,7 +44,7 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Order(3)
-    @DisplayName("Добавить пользователя PostgresPRO Old")
+    @DisplayName("Добавить пользователя PostgresPRO OLD")
     @Test
     void createDbmsUser() {
         postgresPro.createDb("createdbforuser2");
@@ -55,7 +55,7 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Order(4)
-    @DisplayName("Сбросить пароль PostgresPRO Old")
+    @DisplayName("Сбросить пароль PostgresPRO OLD")
     @Test
     void resetPassword() {
         postgresPro.createDb("createdbforreset3");
@@ -67,7 +67,7 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Order(5)
-    @DisplayName("Сбросить пароль владельца PostgresPRO Old")
+    @DisplayName("Сбросить пароль владельца PostgresPRO OLD")
     @Test
     void resetDbOwnerPassword() {
         postgresPro.createDb("createdbforreset8");
@@ -77,7 +77,7 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Order(6)
-    @DisplayName("Удалить пользователя PostgresPRO Old")
+    @DisplayName("Удалить пользователя PostgresPRO OLD")
     @Test
     void removeDbmsUser() {
         postgresPro.createDb("createdbforreset4");
@@ -88,7 +88,7 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Order(7)
-    @DisplayName("Перезагрузить PostgresPRO Old")
+    @DisplayName("Перезагрузить PostgresPRO OLD")
     @Test
     void restart() {
         postgresPro.restart();
@@ -103,7 +103,7 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Order(9)
-    @DisplayName("Выключить PostgresPRO Old")
+    @DisplayName("Выключить PostgresPRO OLD")
     @Test
     void stopSoft() {
         postgresPro.stopSoft();
@@ -118,7 +118,7 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Order(11)
-    @DisplayName("Включить PostgresPRO Old")
+    @DisplayName("Включить PostgresPRO OLD")
     @Test
     void start() {
         postgresPro.stopHard();
@@ -126,7 +126,7 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Order(12)
-    @DisplayName("Выключить принудительно PostgresPRO Old")
+    @DisplayName("Выключить принудительно PostgresPRO OLD")
     @Test
     void stopHard() {
         postgresPro.stopHard();

@@ -15,8 +15,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 @Epic("Старые продукты")
-@Feature("Ubuntu old")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_ubuntu"), @Tag("prod")})
+@Feature("Ubuntu OLD")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_ubuntu"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -29,7 +29,7 @@ public class OldUbuntuTest extends Tests {
             .build();
 
     @Order(1)
-    @DisplayName("Расширить ")
+    @DisplayName("Расширить Ubuntu OLD")
     @Test
     void expandMountPoint() {
         try {
@@ -40,7 +40,7 @@ public class OldUbuntuTest extends Tests {
     }
 
     @Order(2)
-    @DisplayName("Перезагрузить ")
+    @DisplayName("Перезагрузить Ubuntu OLD")
     @Test
     void restart() {
         ubuntu.restart();
@@ -55,7 +55,7 @@ public class OldUbuntuTest extends Tests {
     }
 
     @Order(4)
-    @DisplayName("Изменить конфигурацию ")
+    @DisplayName("Изменить конфигурацию Ubuntu OLD")
     @Test
     void resize() {
         ubuntu.stopHard();
@@ -67,7 +67,7 @@ public class OldUbuntuTest extends Tests {
     }
 
     @Order(5)
-    @DisplayName("Включить ")
+    @DisplayName("Включить Ubuntu OLD")
     @Test
     void start() {
         ubuntu.stopHard();
@@ -75,7 +75,7 @@ public class OldUbuntuTest extends Tests {
     }
 
     @Order(6)
-    @DisplayName("Выключить принудительно ")
+    @DisplayName("Выключить принудительно Ubuntu OLD")
     @Test
     void stopHard() {
         ubuntu.stopHard();

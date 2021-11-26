@@ -9,9 +9,9 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
-@Epic("Продукты")
+@Epic("Старые продукты")
 @Feature("Nginx OLD")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_nginx"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_nginx"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

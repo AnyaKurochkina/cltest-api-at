@@ -14,9 +14,9 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
-@Epic("Продукты")
+@Epic("Старые продукты")
 @Feature("WildFly OLD")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_wildfly"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("old_wildfly"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -30,7 +30,7 @@ public class OldWildFlyTest extends Tests {
             .build();
 
     @Order(1)
-    @DisplayName("Расширить")
+    @DisplayName("Расширить WildFly OLD")
     @Test
     void expandMountPoint() {
         wildFly.start();
@@ -38,7 +38,7 @@ public class OldWildFlyTest extends Tests {
     }
 
     @Order(2)
-    @DisplayName("Перезагрузить")
+    @DisplayName("Перезагрузить WildFly OLD")
     @Test
     void restart() {
         wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
@@ -46,7 +46,7 @@ public class OldWildFlyTest extends Tests {
     }
 
     @Order(3)
-    @DisplayName("Выключить")
+    @DisplayName("Выключить WildFly OLD")
     @Test
     void stopSoft() {
         wildFly.stopSoft();
@@ -54,7 +54,7 @@ public class OldWildFlyTest extends Tests {
     }
 
     @Order(4)
-    @DisplayName("Изменить конфигурацию")
+    @DisplayName("Изменить конфигурацию WildFly OLD")
     @Test
     void resize() {
         wildFly.stopHard();
@@ -66,7 +66,7 @@ public class OldWildFlyTest extends Tests {
     }
 
     @Order(5)
-    @DisplayName("Включить")
+    @DisplayName("Включить WildFly OLD")
     @Test
     void start() {
         wildFly.stopHard();
@@ -74,14 +74,14 @@ public class OldWildFlyTest extends Tests {
     }
 
     @Order(6)
-    @DisplayName("Обновить сертификаты")
+    @DisplayName("Обновить сертификаты WildFly OLD")
     @Test
     void updateCerts() {
         wildFly.updateCerts();
     }
 
     @Order(7)
-    @DisplayName("Выключить принудительно")
+    @DisplayName("Выключить принудительно WildFly OLD")
     @Test
     void stopHard() {
         wildFly.stopHard();

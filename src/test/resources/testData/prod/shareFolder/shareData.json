@@ -328,5 +328,15 @@
     "orderId": "da58d2c6-bc47-4a52-8aaa-85de22916a89",
     "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l6",
     "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.Redis",
+    "productId": "6662a03d-20ce-4a83-a684-ddec48393516",
+    "productName": "Redis",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "ad4f9bf5-ca89-4d20-bc98-b29644a9fd40",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l6",
+    "platform": "Nutanix"
   }
 ]
