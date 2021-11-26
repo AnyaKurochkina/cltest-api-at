@@ -21,6 +21,7 @@ public class OldPostgreSQLTest extends Tests {
             .projectId("proj-67nljbzjtt")
             .productId("3b3807a6-9ad0-4ca6-930a-a37efffcc605")
             .orderId("f6dd249c-b124-40b0-a99a-a40e55d5b5ce")
+            .productName("PostgreSQL")
             .build();
 
     @Order(1)

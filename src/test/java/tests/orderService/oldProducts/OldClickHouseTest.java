@@ -21,6 +21,7 @@ public class OldClickHouseTest extends Tests {
             .projectId("proj-67nljbzjtt")
             .productId("93fbf58f-bf5b-4f2b-a491-3c382c9837fd")
             .orderId("e75ff7b3-5bc9-4c61-a445-b4caba970606")
+            .productName("ClickHouse")
             .build();
 
     @Order(1)

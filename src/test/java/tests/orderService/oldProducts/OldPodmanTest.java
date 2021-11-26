@@ -26,6 +26,7 @@ public class OldPodmanTest extends Tests {
             .projectId("proj-67nljbzjtt")
             .productId("91025447-e6d3-4b91-be18-a84d62402825")
             .orderId("faaa9d8d-d3e8-4778-b14d-24be995ec878")
+            .productName("Podman")
             .build();
 
     @Order(1)

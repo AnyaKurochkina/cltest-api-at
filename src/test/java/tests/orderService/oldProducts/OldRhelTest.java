@@ -20,6 +20,7 @@ public class OldRhelTest extends Tests {
             .projectId("proj-67nljbzjtt")
             .productId("0da09981-c1ac-45b6-ba3b-7bfe52fd45bc")
             .orderId("fa58784b-69c8-4b2e-b42b-4f704e5bbf2c")
+            .productName("Rhel")
             .build();
 
     @Order(1)
