@@ -8,7 +8,7 @@ import tests.Tests;
 
 @Epic("Авторизация на портале")
 @Tags({@Tag("regress"), @Tag("teamcity")})
-public class KeyCloakTests extends Tests {
+public class KeyCloakTest extends Tests {
 
     @Test
     //@Link(type="manual", value = "271850")

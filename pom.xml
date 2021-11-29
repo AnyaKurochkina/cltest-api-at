@@ -196,7 +196,7 @@
                 <configuration>
                     <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
                     <includes>
-                        <include>**/*.java</include>
+                        <include>**/*Test.java</include>
                     </includes>
                     <!--                    <groups>smoke</groups>-->
                     <!--                    <parallel>methods</parallel>-->

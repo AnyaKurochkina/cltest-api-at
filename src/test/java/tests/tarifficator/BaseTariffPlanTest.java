@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @Tags({@Tag("regress"), @Tag("tariff")})
-public class BaseTariffPlanTests extends Tests {
+public class BaseTariffPlanTest extends Tests {
     TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
 
     @Test

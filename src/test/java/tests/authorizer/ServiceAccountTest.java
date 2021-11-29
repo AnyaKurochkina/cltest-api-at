@@ -13,7 +13,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
-public class ServiceAccountTests extends Tests {
+public class ServiceAccountTest extends Tests {
 
     @Test
     @Order(1)
