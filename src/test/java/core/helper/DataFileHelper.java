@@ -50,9 +50,9 @@ public class DataFileHelper {
      */
     public static String read(String fileName) throws IOException {
         StringBuilder sb = new StringBuilder();
-        List<String> fileStr = Files.readAllLines(Paths.get(fileName), Charset.forName("UTF-8"));
+        List<String> fileStr = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
         fileStr.stream().map(str -> str + "\n").forEach(sb::append);
-        return sb.toString();
+        return sb.toString().trim();
     }
 
 }

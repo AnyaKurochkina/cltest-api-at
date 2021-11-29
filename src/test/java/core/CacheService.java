@@ -7,8 +7,8 @@ import core.helper.DataFileHelper;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.junit.Assume;
+//import org.json.simple.parser.JSONParser;
+//import org.junit.Assume;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.io.FileInputStream;
@@ -124,19 +124,19 @@ public class CacheService {
         return null;
     }
 
-    @ResourceLock(value = "entities", mode = READ_WRITE)
-    public static void saveEntities(String file) {
-        try {
-            JSONArray array = new JSONArray();
-            JSONParser parser = new JSONParser();
-            for (String entity : entities.values()) {
-                array.put(parser.parse(entity));
-            }
-            DataFileHelper.write(file, array.toString(4));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @ResourceLock(value = "entities", mode = READ_WRITE)
+//    public static void saveEntities(String file) {
+//        try {
+//            JSONArray array = new JSONArray();
+//            JSONParser parser = new JSONParser();
+//            for (String entity : entities.values()) {
+//                array.put(parser.parse(entity));
+//            }
+//            DataFileHelper.write(file, array.toString(4));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @ResourceLock(value = "entities", mode = READ)
     public static void loadEntities(String file) {

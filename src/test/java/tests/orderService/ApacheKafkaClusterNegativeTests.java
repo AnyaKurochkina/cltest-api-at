@@ -5,7 +5,7 @@ import io.qameta.allure.Allure;
 import models.orderService.products.ApacheKafkaCluster;
 import models.subModels.KafkaTopic;
 import org.json.JSONObject;
-import org.junit.Assume;
+//import org.junit.Assume;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -32,7 +32,7 @@ public class ApacheKafkaClusterNegativeTests extends Tests {
         Allure.tms("40." + tmsId, "");
         ApacheKafkaCluster apacheKafkaCluster = cacheService.entity(ApacheKafkaCluster.class)
                 .getEntityWithoutAssert();
-        Assume.assumeNotNull("Не найден ApacheKafkaCluster для тестов", apacheKafkaCluster);
+        Assumptions.assumeTrue(apacheKafkaCluster != null, "Не найден ApacheKafkaCluster для тестов");
         orderServiceSteps.sendAction("Создать Topic Kafka", apacheKafkaCluster, new JSONObject(CacheService.toJson(kafkaTopic)))
                 .assertStatus(422);
     }

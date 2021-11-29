@@ -16,15 +16,11 @@ import models.subModels.Db;
 import models.subModels.DbUser;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -116,8 +112,7 @@ public class PostgresPro extends IProduct {
 
     public void createDb(String dbName) {
         orderServiceSteps.executeAction("create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
-        Assert.assertTrue("База данных не создалась c именем" + dbName,
-                (Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем" + dbName);
         database.add(new Db(dbName, false));
         log.info("database = " + database);
         save();
@@ -126,7 +121,7 @@ public class PostgresPro extends IProduct {
     //Удалить БД
     public void removeDb(String dbName) {
         orderServiceSteps.executeAction("remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
-        Assert.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
     }
@@ -151,7 +146,7 @@ public class PostgresPro extends IProduct {
 
     //Сбросить пароль владельца
     public void resetDbOwnerPassword(String dbName) {
-        assertTrue(String.format("Базы %s не существует", dbName), database.stream().anyMatch(db -> db.getNameDB().equals(dbName)));
+        Assertions.assertTrue(database.stream().anyMatch(db -> db.getNameDB().equals(dbName)), String.format("Базы %s не существует", dbName));
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         orderServiceSteps.executeAction("reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName + "_admin", password)));
     }
@@ -169,13 +164,13 @@ public class PostgresPro extends IProduct {
     //Изменить конфигурацию
     public void resize() {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
-        Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
+        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
         orderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}"));
         int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
-        assertEquals(flavor.data.cpus, cpusAfter);
-        assertEquals(flavor.data.memory, memoryAfter);
+        Assertions.assertEquals(flavor.data.cpus, cpusAfter);
+        Assertions.assertEquals(flavor.data.memory, memoryAfter);
     }
 
     public void restart() {
