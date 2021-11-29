@@ -21,34 +21,19 @@ public class OldWindowsTest extends Tests {
             .build();
 
     @Order(1)
-    @DisplayName("Добавить диск Windows OLD")
+    @DisplayName("Перезагрузить Windows OLD")
     @Test
-    void addDisk() {
+    void restart() {
         try {
             windows.start();
         } catch (Throwable t) {
             t.getStackTrace();
         } finally {
-            windows.addDisk("A");
+            windows.restart();
         }
     }
 
     @Order(2)
-    @DisplayName("Расширить диск Windows OLD")
-    @Test
-    void expandMountPoint() {
-        windows.addDisk("I");
-        windows.expandMountPoint("I");
-    }
-
-    @Order(3)
-    @DisplayName("Перезагрузить Windows OLD")
-    @Test
-    void restart() {
-        windows.restart();
-    }
-
-    @Order(4)
     @DisplayName("Выключить Windows OLD")
     @Test
     void stopSoft() {
@@ -56,7 +41,7 @@ public class OldWindowsTest extends Tests {
         windows.start();
     }
 
-    @Order(5)
+    @Order(3)
     @DisplayName("Изменить конфигурацию Windows OLD")
     @Test
     void resize() {
@@ -68,7 +53,7 @@ public class OldWindowsTest extends Tests {
         }
     }
 
-    @Order(6)
+    @Order(4)
     @DisplayName("Включить Windows OLD")
     @Test
     void start() {
@@ -76,7 +61,7 @@ public class OldWindowsTest extends Tests {
         windows.start();
     }
 
-    @Order(7)
+    @Order(5)
     @DisplayName("Выключить принудительно Windows OLD")
     @Test
     void stopHard() {
