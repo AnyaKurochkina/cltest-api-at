@@ -7,9 +7,9 @@ import io.restassured.path.json.JsonPath;
 import models.authorizer.InformationSystem;
 import models.authorizer.ProjectEnvironment;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Assert;
 import models.authorizer.Folder;
 import models.authorizer.Project;
+import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 
 import java.util.LinkedHashMap;
@@ -108,7 +108,7 @@ public class ProjectSteps extends Steps {
             i = rand.nextInt(prefix_list.size());
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
-            Assert.fail("Количество префиксов <=0");
+            Assertions.fail("Количество префиксов <=0");
         }
         return jsonPath.get("list[" + i + "].id");
     }

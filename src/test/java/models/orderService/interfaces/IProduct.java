@@ -1,6 +1,8 @@
 package models.orderService.interfaces;
 
 import core.CacheService;
+import core.exception.CalculateException;
+import core.exception.CreateEntityException;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.*;
@@ -9,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
@@ -18,8 +19,6 @@ import steps.tarifficator.CostSteps;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @SuperBuilder
 @NoArgsConstructor
@@ -27,7 +26,8 @@ import static org.junit.Assert.assertTrue;
 @Log4j2
 public abstract class IProduct extends Entity {
 //    public static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
-    private static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_mounts.find{it.mount=='%s'}.size";
+    private static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm' && it.config.extra_mounts.find{it.mount=='%s'}}.config.extra_mounts.find{it.mount=='%s'}.size";
+    private static final String CHECK_EXPAND_MOUNT_SIZE = "data.find{it.type=='vm' && it.config.extra_mounts.find{it.mount=='%s'}}.config.extra_mounts.find{it.mount=='%s' && it.size>%d}.size";
     public static final String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
     public static final String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
     public static final String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.config.topics.any{it.topic_name=='%s'}";
@@ -73,18 +73,23 @@ public abstract class IProduct extends Entity {
         save();
     }
 
-    @Step("Сравнение стоимости продукта с ценой предбиллинга")
+    @SneakyThrows
+    @Step("Сравнение стоимости продукта с ценой предбиллинга при заказе")
     protected void compareCostOrderAndPrice() {
-        CostSteps costSteps = new CostSteps();
-        Float preBillingCost = costSteps.getPreBillingCost(this);
-        Float currentCost = costSteps.getCurrentCost(this);
-        for (int i = 0; i < 15; i++) {
-            Waiting.sleep(20000);
-            if (Float.compare(currentCost, preBillingCost) > 0.00001)
-                continue;
-            break;
+        try {
+            CostSteps costSteps = new CostSteps();
+            Float preBillingCost = costSteps.getPreBillingCost(this);
+            Float currentCost = costSteps.getCurrentCost(this);
+            for (int i = 0; i < 15; i++) {
+                Waiting.sleep(20000);
+                if (Float.compare(currentCost, preBillingCost) > 0.00001)
+                    continue;
+                break;
+            }
+            Assertions.assertEquals(preBillingCost, currentCost, 0.00001, "Стоимость предбиллинга отличается от стоимости продукта " + this);
+        } catch (Throwable e) {
+            throw new CalculateException(e);
         }
-        Assertions.assertEquals(preBillingCost, currentCost, 0.00001, "Стоимость предбиллинга отличается от стоимости продукта " + this);
     }
 
     //Обновить сертификаты
@@ -115,9 +120,11 @@ public abstract class IProduct extends Entity {
         setStatus(ProductStatus.CREATED);
     }
 
+    @SneakyThrows
     public void checkPreconditionStatusProduct(ProductStatus status) {
 //        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
-        assertEquals(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus(), status);
+        if(!status.equals(getStatus()))
+            throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status));
     }
 
     //Удалить рекурсивно
@@ -126,30 +133,30 @@ public abstract class IProduct extends Entity {
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         orderServiceSteps.executeAction(action, this, null);
         setStatus(ProductStatus.DELETED);
-        Assert.assertEquals("Стоимость после удаления заказа больше 0.0", 0.0F, calcCostSteps.getCostByUid(this), 0.0F);
+        Assertions.assertEquals(0.0F, calcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
     }
 
     //Изменить конфигурацию
     protected void resize(String action) {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
-        Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
+        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
         int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
-        assertEquals("Конфигурация cpu не изменилась или изменилась неверно", flavor.data.cpus, cpusAfter);
-        assertEquals("Конфигурация ram не изменилась или изменилась неверно", flavor.data.memory, memoryAfter);
+        Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
+        Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
     }
 
     //Расширить
     protected void expandMountPoint(String action, String mount, int size) {
-        float sizeBefore = (Float) orderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount));
+        Float sizeBefore = (Float) orderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount, mount));
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}"));
-        float sizeAfter = (Float) orderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount));
-        assertEquals("sizeBefore >= sizeAfter", sizeBefore, sizeAfter - size, 0.05);
+        float sizeAfter = (Float) orderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
+        Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }
 
-//    @Step
+
 //    @SneakyThrows
 //    public void toStringProductStep() {
 //        AllureLifecycle allureLifecycle = Allure.getLifecycle();

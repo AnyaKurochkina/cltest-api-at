@@ -17,13 +17,11 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -90,14 +88,14 @@ public class Redis extends IProduct {
     //Изменить конфигурацию
     public void resize() {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
-        Assert.assertTrue("У продукта меньше 2 flavors", list.size() > 1);
+        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
         orderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}"));
         int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
         System.out.println();
-        assertEquals("Конфигурация cpu не изменилась или изменилась неверно", flavor.data.cpus, cpusAfter);
-        assertEquals("Конфигурация ram не изменилась или изменилась неверно", flavor.data.memory, memoryAfter);
+        Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
+        Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
     }
 
     //Расширить

@@ -15,7 +15,7 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Role;
 import org.json.JSONObject;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.Collections;
@@ -33,6 +33,9 @@ public class OpenShiftProject extends IProduct {
     public String resourcePoolLabel;
     @Singular
     public List<Role> roles;
+    @ToString.Include
+    String segment;
+    String dataCentre;
 
     @Override
     public Entity init() {
@@ -77,6 +80,8 @@ public class OpenShiftProject extends IProduct {
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", projectId)
+                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.net_segment", segment)
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
                 .build();
     }
@@ -91,10 +96,10 @@ public class OpenShiftProject extends IProduct {
         roles.get(0).setName("view");
         orderServiceSteps.executeAction("update_openshift_project", this, new JSONObject(data));
         save();
-        Assert.assertEquals("Память не изменилась", 2, orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.memory"));
-        Assert.assertEquals("Роль не изменилась", "view", orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.roles[0].role"));
+        Assertions.assertEquals(2, orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.memory"), "Память не изменилась");
+        Assertions.assertEquals("view", orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.roles[0].role"), "Роль не изменилась");
         if (shdQuoteValue.equals("1")){
-            Assert.assertEquals("СХД не изменился на 1", 1, orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"));
+            Assertions.assertEquals(1, orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"), "СХД не изменился на 1");
         }
     }
 

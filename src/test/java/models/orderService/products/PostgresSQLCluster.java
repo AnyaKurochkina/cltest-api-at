@@ -16,15 +16,12 @@ import models.subModels.Db;
 import models.subModels.DbUser;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -110,8 +107,7 @@ public class PostgresSQLCluster extends IProduct {
 
     public void createDb(String dbName) {
         orderServiceSteps.executeAction("postgresql_cluster_create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
-        Assert.assertTrue("База данных не создалась c именем" + dbName,
-                (Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем" + dbName);
         database.add(new Db(dbName, false));
         log.info("database = " + database);
         save();
@@ -120,7 +116,7 @@ public class PostgresSQLCluster extends IProduct {
     //Удалить БД
     public void removeDb(String dbName) {
         orderServiceSteps.executeAction("postgresql_cluster_remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
-        Assert.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
     }
@@ -145,7 +141,7 @@ public class PostgresSQLCluster extends IProduct {
 
     //Сбросить пароль владельца
     public void resetDbOwnerPassword(String dbName) {
-        assertTrue(String.format("Базы %s не существует", dbName), database.stream().anyMatch(db -> db.getNameDB().equals(dbName)));
+        Assertions.assertTrue(database.stream().anyMatch(db -> db.getNameDB().equals(dbName)), String.format("Базы %s не существует", dbName));
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         orderServiceSteps.executeAction("postgresql_cluster_reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", dbName + "_admin", password)));
     }

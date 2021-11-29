@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -107,7 +106,7 @@ public class RabbitMQCluster extends IProduct {
         String user = "testapiuser";
         orderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
         String username = (String) orderServiceSteps.getProductsField(this, RABBITMQ_USER);
-        assertEquals(user, username);
+        Assertions.assertEquals(user, username);
     }
 
     @Step("Удаление продукта")
