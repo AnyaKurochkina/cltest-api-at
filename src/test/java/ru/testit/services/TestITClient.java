@@ -2,6 +2,7 @@ package ru.testit.services;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -14,6 +15,7 @@ import org.apache.http.impl.client.*;
 import org.apache.commons.lang3.*;
 import ru.testit.utils.*;
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -28,7 +30,7 @@ import org.slf4j.*;
 
 import javax.net.ssl.*;
 
-import static org.junit.Assert.fail;
+
 
 @Log4j2
 public class TestITClient
@@ -39,7 +41,7 @@ public class TestITClient
     private StartLaunchResponse startLaunchResponse;
     
     public TestITClient() {
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = new ObjectMapper().setTimeZone(TimeZone.getTimeZone("GMT+3"));
     }
     
     public static String getProjectID() {
@@ -71,9 +73,15 @@ public class TestITClient
             try {
                 final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
                 try {
-                    this.startLaunchResponse = (StartLaunchResponse)this.objectMapper.readValue(EntityUtils.toString(response.getEntity()), (Class)StartLaunchResponse.class);
+
+                    //////////////////
+                    String str = EntityUtils.toString(response.getEntity());
+                    TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
+                            " :: " + requestEntity + " :: " + str);
+                    //////////////////
+
+                    this.startLaunchResponse = (StartLaunchResponse)this.objectMapper.readValue(str, (Class)StartLaunchResponse.class);
                     if (response != null) {
-                        TestITClient.log.info(post + " :: " + request + " :: " + response);
                         response.close();
                     }
                 }
@@ -113,6 +121,7 @@ public class TestITClient
         for (final CreateTestItemRequest createTestRequest : createTestRequests) {
             final GetTestItemResponse getTestItemResponse = this.getTestItem(createTestRequest);
             if (getTestItemResponse == null || StringUtils.isBlank((CharSequence)getTestItemResponse.getId())) {
+                createTestRequest.setExternalId(createTestRequest.getExternalId().replaceAll("#(\\d+)$", ""));
                 this.createTestItem(createTestRequest);
             }
             else {
@@ -136,6 +145,10 @@ public class TestITClient
     }
     
     public GetTestItemResponse getTestItem(final CreateTestItemRequest createTestItemRequest) {
+
+        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
+
+
         final HttpGet get = new HttpGet(TestITClient.properties.getUrl() + "/api/v2/autoTests?projectId=" + TestITClient.properties.getProjectID() + "&externalId=" + createTestItemRequest.getExternalId());
         get.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         GetTestItemResponse getTestItemResponse = null;
@@ -144,14 +157,19 @@ public class TestITClient
             try {
                 final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)get);
                 try {
+
+                    //////////////////
+                    String str = EntityUtils.toString(response.getEntity());
+                    TestITClient.log.info(get + " :: " + str);
+                    //////////////////
+
                     final TypeFactory typeFactory = this.objectMapper.getTypeFactory();
                     final CollectionType collectionType = typeFactory.constructCollectionType((Class)List.class, (Class)GetTestItemResponse.class);
-                    final List<GetTestItemResponse> listTestItems = (List<GetTestItemResponse>)this.objectMapper.readValue(EntityUtils.toString(response.getEntity()), (JavaType)collectionType);
+                    final List<GetTestItemResponse> listTestItems = (List<GetTestItemResponse>)this.objectMapper.readValue(str, (JavaType)collectionType);
                     if (!listTestItems.isEmpty()) {
                         getTestItemResponse = listTestItems.get(0);
                     }
                     if (response != null) {
-                        TestITClient.log.info(get + " : " + response);
                         response.close();
                     }
                 }
@@ -189,6 +207,7 @@ public class TestITClient
     }
     
     public void createTestItem(final CreateTestItemRequest createTestItemRequest) {
+        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
         final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/autoTests");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         CreateTestItemResponse createTestItemResponse = null;
@@ -199,9 +218,15 @@ public class TestITClient
             try {
                 final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
                 try {
-                    createTestItemResponse = (CreateTestItemResponse)this.objectMapper.readValue(EntityUtils.toString(response.getEntity()), (Class)CreateTestItemResponse.class);
+
+                    //////////////////
+                    String str = EntityUtils.toString(response.getEntity());
+                    TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
+                            " :: " + requestEntity + " :: " + str);
+                    //////////////////
+
+                    createTestItemResponse = (CreateTestItemResponse)this.objectMapper.readValue(str, (Class)CreateTestItemResponse.class);
                     if (response != null) {
-                        TestITClient.log.info(post + " :: " + requestEntity + " :: " + response);
                         response.close();
                     }
                 }
@@ -241,6 +266,7 @@ public class TestITClient
     }
     
     public void updatePostItem(final CreateTestItemRequest createTestItemRequest, final String testId) {
+        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
         createTestItemRequest.setId(testId);
         final HttpPut put = new HttpPut(TestITClient.properties.getUrl() + "/api/v2/autoTests");
         put.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
@@ -251,11 +277,19 @@ public class TestITClient
             final CloseableHttpClient httpClient = getHttpClient();
             try {
                 final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)put);
+
+                //////////
+                String res = response.toString();
+                if(response.getEntity() != null)
+                    res += EntityUtils.toString(response.getEntity());
+                TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
+                        " :: " + requestEntity + " :: " + res);
+                ///////////
+
                 final Throwable t2 = null;
                 if (response != null) {
                     if (t2 != null) {
                         try {
-                            TestITClient.log.info(put + " :: " + requestEntity + " :: " + response);
                             response.close();
                         }
                         catch (Throwable t3) {
@@ -299,11 +333,20 @@ public class TestITClient
             final CloseableHttpClient httpClient = getHttpClient();
             try {
                 final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
+
+                //////////////
+                String res = response.toString();
+                if(response.getEntity() != null)
+                    res += EntityUtils.toString(response.getEntity());
+                TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
+                        " :: " + requestEntity + " :: " + res);
+                /////////////
+
+
                 final Throwable t2 = null;
                 if (response != null) {
                     if (t2 != null) {
                         try {
-                            TestITClient.log.info(post + " :: " + requestEntity + " :: " + response);
                             response.close();
                         }
                         catch (Throwable t3) {
@@ -344,16 +387,28 @@ public class TestITClient
         final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + this.startLaunchResponse.getId() + "/testResults");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         try {
-            final StringEntity requestEntity = new StringEntity(this.objectMapper.writeValueAsString((Object)request.getTestResults()), ContentType.APPLICATION_JSON);
+            List<TestResultRequest> list = request.getTestResults();
+            for (TestResultRequest req: list) {
+                req.setAutoTestExternalId(req.getAutoTestExternalId().replaceAll("#(\\d+)$", ""));
+            }
+            final StringEntity requestEntity = new StringEntity(this.objectMapper.writeValueAsString((Object)list), ContentType.APPLICATION_JSON);
             post.setEntity((HttpEntity)requestEntity);
             final CloseableHttpClient httpClient = getHttpClient();
             try {
                 final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
+
+                /////////////////
+                String res = response.toString();
+                if(response.getEntity() != null)
+                    res += EntityUtils.toString(response.getEntity());
+                TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
+                        " :: " + requestEntity + " :: " + res);
+                ////////////////
+
                 final Throwable t2 = null;
                 if (response != null) {
                     if (t2 != null) {
                         try {
-                            TestITClient.log.info(post + " :: " + requestEntity + " :: " + response);
                             response.close();
                         }
                         catch (Throwable t3) {
@@ -394,11 +449,19 @@ public class TestITClient
             final CloseableHttpClient httpClient = getHttpClient();
             try {
                 final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
+
+                /////////////////
+                String res = response.toString();
+                if(response.getEntity() != null)
+                    res += EntityUtils.toString(response.getEntity());
+                TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
+                        " :: " + requestEntity + " :: " + res);
+                ////////////////
+
                 final Throwable t2 = null;
                 if (response != null) {
                     if (t2 != null) {
                         try {
-                            TestITClient.log.info(post + " :: " + requestEntity + " :: " + response);
                             response.close();
                         }
                         catch (Throwable t3) {

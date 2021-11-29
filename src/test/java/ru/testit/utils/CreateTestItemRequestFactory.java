@@ -1,6 +1,9 @@
 package ru.testit.utils;
 
 import java.lang.reflect.*;
+
+import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import ru.testit.services.*;
 import ru.testit.junit5.*;
 import ru.testit.model.request.*;
@@ -15,12 +18,12 @@ public class CreateTestItemRequestFactory
         this.createTestItemRequests = new HashMap<String, CreateTestItemRequest>();
     }
     
-    public void processTest(final Method method) {
+    public void processTest(final Method method, String displayName, String subId) {
         final CreateTestItemRequest createTestItemRequest = new CreateTestItemRequest();
-        final String externalId = this.extractExternalID(method);
+        final String externalId = this.extractExternalID(method, subId);
         createTestItemRequest.setExternalId(externalId);
         createTestItemRequest.setProjectId(TestITClient.getProjectID());
-        createTestItemRequest.setName(this.extractDisplayName(method));
+        createTestItemRequest.setName(displayName);
         createTestItemRequest.setClassName(method.getDeclaringClass().getSimpleName());
         createTestItemRequest.setNameSpace((method.getDeclaringClass().getPackage() == null) ? null : method.getDeclaringClass().getPackage().getName());
         createTestItemRequest.setTestPlanId(this.extractTestPlanId(method));
@@ -84,9 +87,18 @@ public class CreateTestItemRequestFactory
         }
     }
     
-    private String extractExternalID(final Method atomicTest) {
-        final ExternalId annotation = atomicTest.getAnnotation(ExternalId.class);
-        return (annotation != null) ? annotation.value() : null;
+//    private String extractExternalID(final Method atomicTest) {
+//        final ExternalId annotation = atomicTest.getAnnotation(ExternalId.class);
+//        return (annotation != null) ? annotation.value() : null;
+//    }
+
+    private String extractExternalID(final Method currentTest, @Nullable String subId) {
+        String className = currentTest.getDeclaringClass().getSimpleName();
+        String methodName = currentTest.getName();
+        String postfix = "";
+        if(Objects.nonNull(subId))
+            postfix = "#" + subId;
+        return className + "." + methodName + postfix;
     }
     
     private String extractDisplayName(final Method atomicTest) {

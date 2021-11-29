@@ -2,6 +2,11 @@ package ru.testit.junit5;
 
 import java.lang.reflect.*;
 import java.util.*;
+
+import core.helper.StringUtils;
+import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import ru.testit.services.*;
 import ru.testit.utils.*;
 import ru.testit.annotations.*;
@@ -35,18 +40,18 @@ public class RunningHandler
         this.testITClient.finishLaunch(this.testResultRequestFactory.getTestResultRequest());
     }
     
-    public void startTest(final Method currentTest) {
-        this.createTestItemRequestFactory.processTest(currentTest);
+    public void startTest(Method currentTest, String displayName, String subId) {
+        this.createTestItemRequestFactory.processTest(currentTest, displayName, subId);
         final StepNode parentStep = new StepNode();
-        parentStep.setTitle(this.extractTitle(currentTest));
+        parentStep.setTitle(displayName);
         parentStep.setDescription(this.extractDescription(currentTest));
         parentStep.setStartedOn(new Date());
-        this.includedTests.put(this.extractExternalID(currentTest), parentStep);
+        this.includedTests.put(this.extractExternalID(currentTest, subId), parentStep);
         StepAspect.setStepNodes(parentStep);
     }
     
-    public void finishTest(final Method atomicTest, final Throwable thrown) {
-        final String externalId = this.extractExternalID(atomicTest);
+    public void finishTest(final Method atomicTest, final Throwable thrown, String subId) {
+        final String externalId = this.extractExternalID(atomicTest, subId);
         if (this.alreadyFinished.contains(externalId)) {
             return;
         }
@@ -87,8 +92,12 @@ public class RunningHandler
         return (annotation != null) ? annotation.value() : null;
     }
     
-    private String extractExternalID(final Method currentTest) {
-        final ExternalId annotation = currentTest.getAnnotation(ExternalId.class);
-        return (annotation != null) ? annotation.value() : null;
+    private String extractExternalID(final Method currentTest, @Nullable String subId) {
+        String className = currentTest.getDeclaringClass().getSimpleName();
+        String methodName = currentTest.getName();
+        String postfix = "";
+        if(Objects.nonNull(subId))
+            postfix = "#" + subId;
+        return className + "." + methodName + postfix;
     }
 }
