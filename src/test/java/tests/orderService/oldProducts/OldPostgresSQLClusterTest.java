@@ -26,8 +26,13 @@ public class OldPostgresSQLClusterTest extends Tests {
     @DisplayName("Расширить PostgreSQLCluster OLD")
     @Test
     void expandMountPoint() {
-        postgres.start();
-        postgres.expandMountPoint();
+        try {
+            postgres.start();
+        }catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            postgres.expandMountPoint();
+        }
     }
 
     @Order(2)

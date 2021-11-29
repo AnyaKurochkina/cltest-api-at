@@ -26,8 +26,13 @@ public class OldElasticsearchTest extends Tests {
     @DisplayName("Расширить Elasticsearch OLD")
     @Test
     void expandMountPoint() {
-        elastic.start();
-        elastic.expandMountPoint();
+        try {
+            elastic.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            elastic.expandMountPoint();
+        }
     }
 
     @Order(2)

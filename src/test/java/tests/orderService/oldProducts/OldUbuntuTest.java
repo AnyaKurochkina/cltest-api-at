@@ -34,6 +34,8 @@ public class OldUbuntuTest extends Tests {
     void expandMountPoint() {
         try {
             ubuntu.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
         } finally {
             ubuntu.expandMountPoint();
         }

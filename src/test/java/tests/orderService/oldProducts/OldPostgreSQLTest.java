@@ -27,9 +27,13 @@ public class OldPostgreSQLTest extends Tests {
     @DisplayName("Расширить PorstgreSQL OLD")
     @Test
     void expandMountPoint() {
-        postgreSQL.start();
-        postgreSQL.expandMountPoint();
-
+        try {
+            postgreSQL.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            postgreSQL.expandMountPoint();
+        }
     }
 
     @Order(2)

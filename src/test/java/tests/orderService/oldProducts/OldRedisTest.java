@@ -26,8 +26,13 @@ public class OldRedisTest extends Tests {
     @DisplayName("Расширить Redis OLD")
     @Test
     void expandMountPoint() {
-        redis.start();
-        redis.expandMountPoint();
+        try {
+            redis.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            redis.expandMountPoint();
+        }
     }
 
     @Order(2)

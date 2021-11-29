@@ -26,8 +26,13 @@ public class OldApacheKafkaTest extends Tests {
     @DisplayName("Расширить ApacheKafka OLD")
     @Test
     void expandMountPoint() {
-        kafka.start();
-        kafka.expandMountPoint();
+        try {
+            kafka.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            kafka.expandMountPoint();
+        }
     }
 
     @Order(2)

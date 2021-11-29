@@ -15,7 +15,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Продуктовый каталог: направления")
 //@Tag("product_сatalog")
-public class OrgDirectionTests extends Tests {
+public class OrgDirectionTest extends Tests {
 
     OrgDirection orgDirection;
     OrgDirectionSteps orgSteps = new OrgDirectionSteps();

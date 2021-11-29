@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 //@Tags({@Tag("regress"), @Tag("negative"), @Tag("prod")})
 //@OrderLabel("tests.orderService.ApacheKafkaClusterNegativeTests")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ApacheKafkaClusterNegativeTests extends Tests {
+public class ApacheKafkaClusterNegativeTest extends Tests {
     CacheService cacheService = new CacheService();
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 

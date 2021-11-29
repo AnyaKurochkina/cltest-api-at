@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @Tag("OTP")
-public class OrganizationTariffPlansTests extends Tests {
+public class OrganizationTariffPlansTest extends Tests {
     TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
     CacheService cacheService = new CacheService();
 

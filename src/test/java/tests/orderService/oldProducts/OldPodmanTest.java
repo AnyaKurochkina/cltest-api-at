@@ -32,8 +32,13 @@ public class OldPodmanTest extends Tests {
     @Test
     @DisplayName("Расширить Podman OLD")
     void expandMountPoint() {
-        podman.start();
-        podman.expandMountPoint();
+        try {
+            podman.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            podman.expandMountPoint();
+        }
     }
 
     @Order(2)

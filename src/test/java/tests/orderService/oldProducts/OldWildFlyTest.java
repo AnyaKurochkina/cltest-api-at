@@ -32,8 +32,13 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Расширить WildFly OLD")
     @Test
     void expandMountPoint() {
-        wildFly.start();
-        wildFly.expandMountPoint();
+        try {
+            wildFly.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            wildFly.expandMountPoint();
+        }
     }
 
     @Order(2)

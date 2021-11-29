@@ -27,8 +27,13 @@ public class OldClickHouseTest extends Tests {
     @DisplayName("Расширить CLickHouse OLD")
     @Test
     void expandMountPoint() {
-        clickHouse.start();
-        clickHouse.expandMountPoint();
+        try {
+            clickHouse.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            clickHouse.expandMountPoint();
+        }
     }
 
     @Order(2)

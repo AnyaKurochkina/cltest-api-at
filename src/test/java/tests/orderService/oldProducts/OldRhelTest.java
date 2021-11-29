@@ -28,6 +28,8 @@ public class OldRhelTest extends Tests {
     void expandMountPoint() {
         try {
             rhel.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
         } finally {
             rhel.expandMountPoint();
         }

@@ -28,6 +28,8 @@ public class OldPostgresProTest extends Tests {
     void expandMountPoint() {
         try {
             postgresPro.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
         } finally {
             postgresPro.expandMountPoint();
         }

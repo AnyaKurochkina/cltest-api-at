@@ -1,17 +1,9 @@
 package tests.orderService.oldProducts;
 
-import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.interfaces.ProductStatus;
-import models.orderService.products.RabbitMQCluster;
 import models.orderService.products.Windows;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 @Epic("Старые продукты")
@@ -24,7 +16,7 @@ public class OldWindowsTest extends Tests {
     Windows windows = Windows.builder()
             .projectId("proj-67nljbzjtt")
             .productId("28bed880-2714-4317-a967-d000d492bd9d")
-            .orderId("1aa46ece-0d88-4ba6-b0d1-00becd1f7ea6")
+            .orderId("9125747a-7197-42f0-9b32-aa5ccb4cefd4")
             .productName("Windows")
             .build();
 
@@ -32,8 +24,13 @@ public class OldWindowsTest extends Tests {
     @DisplayName("Добавить диск Windows OLD")
     @Test
     void addDisk() {
-        windows.start();
-        windows.addDisk("K");
+        try {
+            windows.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            windows.addDisk("A");
+        }
     }
 
     @Order(2)

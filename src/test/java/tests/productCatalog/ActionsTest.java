@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("product_сatalog")})
+@Tags({@Tag("p")})
 public class ActionsTest extends Tests {
     ActionsSteps actionsSteps = new ActionsSteps();
     Action action;

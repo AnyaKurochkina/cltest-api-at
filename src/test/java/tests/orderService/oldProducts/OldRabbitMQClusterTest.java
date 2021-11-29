@@ -26,8 +26,13 @@ public class OldRabbitMQClusterTest extends Tests {
     @DisplayName("Расширить RabbitMQCluster OLD")
     @Test
     void expandMountPoint() {
-        rabbit.start();
-        rabbit.expandMountPoint();
+        try {
+            rabbit.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            rabbit.expandMountPoint();
+        }
     }
 
     @Order(2)
@@ -53,13 +58,6 @@ public class OldRabbitMQClusterTest extends Tests {
     }
 
     @Order(5)
-    @DisplayName("Изменить конфигурацию RabbitMQCluster OLD")
-    @Test
-    void resize() {
-        rabbit.resize();
-    }
-
-    @Order(6)
     @DisplayName("Включить RabbitMQCluster OLD")
     @Test
     void start() {
@@ -67,14 +65,14 @@ public class OldRabbitMQClusterTest extends Tests {
         rabbit.start();
     }
 
-    @Order(7)
+    @Order(6)
     @DisplayName("Обновить сертификаты RabbitMQCluster OLD")
     @Test
     void updateCerts() {
         rabbit.updateCerts();
     }
 
-    @Order(8)
+    @Order(7)
     @DisplayName("Выключить принудительно RabbitMQCluster OLD")
     @Test
     void stopHard() {

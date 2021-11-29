@@ -4,8 +4,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.products.ApacheKafkaCluster;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 import java.util.Arrays;
@@ -29,8 +27,13 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Расширить Apache Kafka Cluster OLD")
     @Test
     void expandMountPoint() {
-        kafka.start();
-        kafka.expandMountPoint();
+        try {
+            kafka.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            kafka.expandMountPoint();
+        }
     }
 
     @Order(2)
@@ -45,6 +48,7 @@ public class OldApacheKafkaClusterTest extends Tests {
     @Test
     void createTopic() {
         kafka.createTopics(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"));
+        kafka.deleteTopics(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"));
     }
 
     @Order(4)
@@ -52,7 +56,7 @@ public class OldApacheKafkaClusterTest extends Tests {
     @Test
     void deleteTopic() {
         kafka.createTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
-        kafka.deleteTopics(Arrays.asList("PacketTopicName01", "PacketTopicName03"));
+        kafka.deleteTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
     }
 
     @Order(5)
@@ -61,16 +65,41 @@ public class OldApacheKafkaClusterTest extends Tests {
     void createAcl() {
         kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
         kafka.createAcl("*");
+
+        kafka.deleteAcl("*");
+        kafka.deleteTopics(Collections.singletonList("PacketTopicNameForAcl"));
     }
 
     @Order(6)
+    @DisplayName("Удалить ACL Apache Kafka Cluster OLD")
+    @Test
+    void deleteAcl() {
+        kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl1"));
+        kafka.createAcl("*");
+
+        kafka.deleteAcl("*");
+        kafka.deleteTopics(Collections.singletonList("PacketTopicNameForAcl1"));
+    }
+
+    @Order(7)
+    @DisplayName("Удалить ACL транзакцию Apache Kafka Cluster OLD")
+    @Test
+    void deleteAclTransaction() {
+        kafka.createAclTransaction("*");
+
+        kafka.deleteAclTransaction("*");
+    }
+
+    @Order(8)
     @DisplayName("Создать ACL транзакцию Apache Kafka Cluster OLD")
     @Test
     void createAclTransaction() {
         kafka.createAclTransaction("*");
+
+        kafka.deleteAclTransaction("*");
     }
 
-    @Order(7)
+    @Order(9)
     @DisplayName("Включить Apache Kafka Cluster OLD")
     @Test
     void start() {
@@ -78,14 +107,14 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.start();
     }
 
-    @Order(8)
+    @Order(10)
     @DisplayName("Изменить конфигурацию Apache Kafka Cluster OLD")
     @Test
     void resize() {
         kafka.restart();
     }
 
-    @Order(9)
+    @Order(11)
     @DisplayName("Выключить Apache Kafka Cluster OLD")
     @Test
     void stopSoft() {

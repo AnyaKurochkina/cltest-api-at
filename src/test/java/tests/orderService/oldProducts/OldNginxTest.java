@@ -27,8 +27,13 @@ public class OldNginxTest extends Tests {
     @DisplayName("Расширить Nginx OLD")
     @Test
     void expandMountPoint() {
-        nginx.start();
-        nginx.expandMountPoint();
+        try {
+            nginx.start();
+        } catch (Throwable t) {
+            t.getStackTrace();
+        } finally {
+            nginx.expandMountPoint();
+        }
     }
 
     @Order(2)
