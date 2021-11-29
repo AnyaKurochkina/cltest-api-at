@@ -14,7 +14,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
-public class FoldersTests extends Tests {
+public class FoldersTest extends Tests {
 
     @Test
     @Order(1)
