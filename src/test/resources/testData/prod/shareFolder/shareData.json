@@ -388,7 +388,7 @@
     "orderId": "1aa46ece-0d88-4ba6-b0d1-00becd1f7ea6",
     "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k3",
     "platform": "Nutanix"
-  } ,
+  },
   {
     "objectClassName": "models.orderService.products.Astra",
     "productId": "b5998259-ccab-4a98-949d-801b115ec180",
@@ -397,6 +397,36 @@
     "projectId": "proj-67nljbzjtt",
     "orderId": "b5998259-ccab-4a98-949d-801b115ec180",
     "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k4",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.ApacheKafkaCluster",
+    "productId": "d46dd919-defc-4ec6-a55b-2017b3981258",
+    "productName": "Apache Kafka Cluster",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "62758afa-911e-4ee8-abd2-a59892e3426f",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k5",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.Elasticsearch",
+    "productId": "f7aec597-14d5-48c8-a4fe-25af4f19e5d5",
+    "productName": "Elasticsearch X-pack cluster",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "c3a941a5-1e9f-4409-b661-ad655fcc4a71",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k6",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.OpenShiftProject",
+    "productId": "10000003-1111-2222-b9dc-4a9e5dafd44e",
+    "productName": "OpenShift project",
+    "env": "DEV",
+    "projectId": "proj-67nljbzjtt",
+    "orderId": "a4335c3c-fa1a-49ba-b528-170885e06605",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k7",
     "platform": "Nutanix"
   }
 ]
