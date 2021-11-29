@@ -12,7 +12,6 @@ import tests.Tests;
 @Feature("RabbitMQCluster OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_rabbitmqcluster"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldRabbitMQClusterTest extends Tests {
 

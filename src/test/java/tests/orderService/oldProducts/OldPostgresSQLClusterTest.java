@@ -12,7 +12,6 @@ import tests.Tests;
 @Feature("PostgresSQL Cluster OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_postgressqlcluster"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgresSQLClusterTest extends Tests {
     //НЕТ СТАРОГО ПРОДУКТА

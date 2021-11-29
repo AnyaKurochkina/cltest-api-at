@@ -12,9 +12,8 @@ import tests.Tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("productCatalogActions")
+@Tags({@Tag("product_сatalog")})
 public class ActionsTest extends Tests {
     ActionsSteps actionsSteps = new ActionsSteps();
     Action action;

@@ -1,20 +1,18 @@
 package tests.orderService.oldProducts;
 
-import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.interfaces.ProductStatus;
-import models.orderService.products.ApacheKafkaCluster;
 import models.orderService.products.Elasticsearch;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 @Epic("Старые продукты")
 @Feature("ElasticSearch OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_elasticsearch"), @Tag("prod"), @Tag("old")})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldElasticsearchTest extends Tests {
 
     Elasticsearch elastic = Elasticsearch.builder()
@@ -49,14 +47,6 @@ public class OldElasticsearchTest extends Tests {
     }
 
     @Order(4)
-    @DisplayName("Выключить принудительно Elasticsearch OLD")
-    @Test
-    void stopHard() {
-        elastic.stopHard();
-        elastic.start();
-    }
-
-    @Order(5)
     @DisplayName("Изменить конфигурацию Elasticsearch OLD")
     @Test
     void resize() {
@@ -68,10 +58,17 @@ public class OldElasticsearchTest extends Tests {
         }
     }
 
-    @Order(6)
+    @Order(5)
     @DisplayName("Перезагрузить Elasticsearch OLD")
     @Test
     void restart() {
         elastic.restart();
+    }
+
+    @Order(6)
+    @DisplayName("Выключить принудительно Elasticsearch OLD")
+    @Test
+    void stopHard() {
+        elastic.stopHard();
     }
 }

@@ -12,7 +12,6 @@ import tests.Tests;
 @Feature("Redis OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_redis"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldRedisTest extends Tests {
 
