@@ -28,6 +28,7 @@ public class OldAstraTest extends Tests {
     @DisplayName("Расширить Astra OLD")
     @Test
     void expandMountPoint() {
+        astra.start();
         astra.expandMountPoint();
     }
 
@@ -71,6 +72,5 @@ public class OldAstraTest extends Tests {
     @Test
     void stopHard() {
         astra.stopHard();
-        astra.start();
     }
 }
