@@ -14,7 +14,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <aspectj.version>1.8.10</aspectj.version>
         <allure.version>2.13.2</allure.version>
-        <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
+        <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
         <maven-compiler-plugin-version>3.8.1</maven-compiler-plugin-version>
         <allure-maven-version>2.10.0</allure-maven-version>
         <rest-assured-version>4.4.0</rest-assured-version>
@@ -72,12 +72,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-runner</artifactId>
-            <version>1.8.0-M1</version>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.junit.platform</groupId>-->
+<!--            <artifactId>junit-platform-runner</artifactId>-->
+<!--            <version>1.8.0-M1</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>io.qameta.allure</groupId>
@@ -99,11 +99,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20180813</version>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
         </dependency>
         <!--LOGGING-->
         <dependency>
@@ -146,7 +141,11 @@
             <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk16</artifactId>
+            <version>1.46</version>
+        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -195,6 +194,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
+                    <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
                     <includes>
                         <include>**/*.java</include>
                     </includes>
@@ -203,9 +203,11 @@
                     <!--                    <threadCount>2</threadCount>-->
                     <!--                    <perCoreThreadCount>true</perCoreThreadCount>-->
                     <!--                    <useUnlimitedThreads>true</useUnlimitedThreads>-->
-                    <forkCount>0</forkCount>
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                    <reportsDirectory>target/surefire-reports-${surefire.forkNumber}</reportsDirectory>
+<!--                    <forkCount>0</forkCount>-->
+<!--                    <reuseForks>true</reuseForks>-->
+<!--                    <useSystemClassLoader>false</useSystemClassLoader>-->
+<!--                    <reportsDirectory>target/surefire-reports-${surefire.forkNumber}</reportsDirectory>-->
+
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>

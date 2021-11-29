@@ -5,16 +5,12 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Rhel;
-import org.junit.Ignore;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
-
-import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("Rhel")

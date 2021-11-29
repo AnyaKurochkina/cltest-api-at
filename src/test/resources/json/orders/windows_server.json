@@ -21,6 +21,7 @@
 			"extra_nics": [],
 			"on_support": false,
 			"os_version": "Microsoft Windows Server 2016 Datacenter",
+			"role": "rep_point",
 			"data_center": "5",
 			"default_nic": {
 				"net_segment": "dev-srv-app"

@@ -17,13 +17,13 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -39,11 +39,25 @@ public class Windows extends IProduct {
     String platform;
     @ToString.Include
     String osVersion;
+    String role;
     public String domain;
     Flavor flavor;
     private static String ADD_DISK_PATH = "data.find{it.type=='vm'}.config.extra_disks.any{it.path=='%s'}";
     private static String DISK_SIZE = "data.find{it.type=='vm'}.config.extra_disks.find{it.path=='%s'}.size";
     public static String ADD_DISK = "Добавить диск";
+
+    private final static Map<String, String> roles = Stream.of(new String[][] {
+            { "generic_application", "ap" },
+            { "microsoft_sql_server", "sq" },
+            { "frontend_web_service", "we" },
+            { "mock_server", "mk" },
+            { "rep_point", "rp" },
+            { "security_tools", "se" },
+            { "autotest_scripts", "as" },
+            { "proxy_server", "px" },
+            { "generic_gateway", "gw" },
+    }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
 
     @Override
     @Step("Заказ продукта")
@@ -59,6 +73,8 @@ public class Windows extends IProduct {
         orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
         compareCostOrderAndPrice();
+        String host = (String) orderServiceSteps.getProductsField(this, "product_data[0].hostname");
+        Assertions.assertTrue(host.contains("-" + roles.get(role)));
     }
 
     @Override
@@ -72,10 +88,13 @@ public class Windows extends IProduct {
         if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
+        if(role == null){
+            role = (String) roles.keySet().toArray()[(int) (Math.random() * roles.size())];
+        }
         return this;
     }
 
-    //    @Override
+    @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
@@ -88,6 +107,7 @@ public class Windows extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.os_version", osVersion)
+                .set("$.order.attrs.role", role)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", project.id)
@@ -98,7 +118,7 @@ public class Windows extends IProduct {
     //Добавить диск
     public void addDisk(String disk) {
         orderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"" + disk + "\", size: 10, file_system: \"ntfs\"}"));
-        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk)));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk)));
     }
 
     //Расширить диск
@@ -106,7 +126,7 @@ public class Windows extends IProduct {
         int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
         orderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 1}"));
         int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
-        assertEquals("sizeBefore >= sizeAfter", sizeBefore, sizeAfter - 1);
+        Assertions.assertEquals(sizeBefore, sizeAfter - 1, "sizeBefore >= sizeAfter");
     }
 
 

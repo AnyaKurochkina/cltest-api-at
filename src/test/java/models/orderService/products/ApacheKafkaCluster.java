@@ -15,7 +15,6 @@ import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import models.subModels.KafkaTopic;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
@@ -99,7 +98,7 @@ public class ApacheKafkaCluster extends IProduct {
             kafkaTopics.add(new KafkaTopic("delete", 1, 1, 1, 1800000, name));
         orderServiceSteps.executeAction("kafka_create_topics", this, new JSONObject("{\"topics\": " + CacheService.toJson(kafkaTopics) + "}"));
         for (String name : names)
-            Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
+            Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         topics.addAll(kafkaTopics);
         save();
     }
@@ -107,7 +106,7 @@ public class ApacheKafkaCluster extends IProduct {
     public void deleteTopics(List<String> names) {
         orderServiceSteps.executeAction("kafka_delete_topics", this, new JSONObject("{\"topics\": " + CacheService.toJson(names) + "}"));
         for (String name : names)
-            Assert.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
+            Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         for (String name : names)
             topics.removeIf(topic -> topic.getTopicName().equals(name));
         save();
@@ -116,13 +115,13 @@ public class ApacheKafkaCluster extends IProduct {
     public void createAcl(String topicNameRegex) {
         orderServiceSteps.executeAction("kafka_create_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}"));
         save();
-        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)));
     }
 
     public void createAclTransaction(String transactionRegex) {
         orderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}"));
         save();
-        Assert.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)));
     }
 
     public void start() {

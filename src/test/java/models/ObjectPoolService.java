@@ -4,30 +4,22 @@ package models;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import core.enums.ObjectStatus;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
 import core.helper.DataFileHelper;
-import core.enums.ObjectStatus;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
-import io.restassured.internal.common.assertion.Assertion;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.jupiter.api.Assertions;
 
-import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 import static io.qameta.allure.Allure.getLifecycle;
@@ -167,9 +159,8 @@ public class ObjectPoolService {
     public static void saveEntities(String file) {
         try {
             JSONArray array = new JSONArray();
-            JSONParser parser = new JSONParser();
             for (ObjectPoolEntity objectPoolEntity : entities.values()) {
-                array.put(parser.parse(objectPoolEntity.toString()));
+                array.put(new JSONObject(objectPoolEntity.toString()));
             }
             DataFileHelper.write(file, array.toString(4));
         } catch (Exception e) {
@@ -185,11 +176,9 @@ public class ObjectPoolService {
         return new Gson().fromJson(json, (Type) classOfT);
     }
 
-    public static void loadEntities(String file) {
+    public static void loadEntities(String content) {
         try {
-            if (Files.exists(Paths.get(file))) {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(fileInputStream, new TypeReference<List<LinkedHashMap<String, Object>>>() {
+                List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(content, new TypeReference<List<LinkedHashMap<String, Object>>>() {
                 });
                 listEntities.forEach(v -> {
                             ObjectPoolEntity objectPoolEntity = writeEntityToMap(fromJson(new JSONObject(v).toString(), getClassByName(v.get("objectClassName").toString())));
@@ -197,7 +186,6 @@ public class ObjectPoolService {
 //                            objectPoolEntity.setMock(true);
                         }
                 );
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
