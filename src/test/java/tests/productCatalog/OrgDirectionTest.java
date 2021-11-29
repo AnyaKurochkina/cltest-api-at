@@ -15,7 +15,7 @@ import tests.Tests;
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Продуктовый каталог: направления")
-public class OrgDirectionTests extends Tests {
+public class OrgDirectionTest extends Tests {
 
     OrgDirection orgDirection;
     OrgDirectionSteps orgSteps = new OrgDirectionSteps();

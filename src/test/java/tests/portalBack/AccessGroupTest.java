@@ -18,7 +18,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
-public class AccessGroupTests extends Tests {
+public class AccessGroupTest extends Tests {
 
     @Test
     @Order(1)

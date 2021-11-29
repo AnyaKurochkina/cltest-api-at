@@ -13,8 +13,7 @@
 *.log.1
 *.log.gz
 
-**/environment.properties
-**/ilya
+**/application.properties
 /test/resources/logs/
 /cltest-api-at-junit5.iml
 **/logData.json
