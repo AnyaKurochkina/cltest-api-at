@@ -14,7 +14,6 @@ import tests.Tests;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Продуктовый каталог: направления")
-//@Tag("product_сatalog")
 public class OrgDirectionTest extends Tests {
 
     OrgDirection orgDirection;
