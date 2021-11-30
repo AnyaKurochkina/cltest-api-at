@@ -13,7 +13,6 @@ import java.util.Collections;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Продуктовый каталог: продукты")
-//@Tag("product_сatalog")
 public class ProductsTest extends Tests {
 
     Product product;

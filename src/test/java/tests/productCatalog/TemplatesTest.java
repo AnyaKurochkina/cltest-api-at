@@ -12,7 +12,6 @@ import tests.Tests;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Продуктовый каталог: шаблоны")
-//@Tag("product_сatalog")
 public class TemplatesTest extends Tests {
 
     Template template;
