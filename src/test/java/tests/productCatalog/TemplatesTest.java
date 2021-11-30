@@ -10,7 +10,6 @@ import steps.productCatalog.TemplateSteps;
 import tests.Tests;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Продуктовый каталог: шаблоны")
 public class TemplatesTest extends Tests {

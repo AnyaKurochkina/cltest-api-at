@@ -57,7 +57,7 @@ public class RabbitMQClusterTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать пользователя RabbitMQ {0}")
-    void resize(RabbitMQCluster product) {
+    void createUser(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rabbit.rabbitmqCreateUser();

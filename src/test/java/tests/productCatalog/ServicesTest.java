@@ -15,7 +15,6 @@ import tests.Tests;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Продуктовый каталог: сервисы")
 public class ServicesTest extends Tests {

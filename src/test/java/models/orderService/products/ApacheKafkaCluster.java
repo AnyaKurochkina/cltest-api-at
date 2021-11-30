@@ -124,6 +124,25 @@ public class ApacheKafkaCluster extends IProduct {
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)));
     }
 
+    /**
+     * @param aclName имя Acl, Если в aclName передать "*" то удалятся все Acl
+     */
+    public void deleteAcl(String aclName) {
+        orderServiceSteps.executeAction("kafka_delete_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + aclName + "\"}]}}"));
+        save();
+        //TODO: Написать проверку удаления Acl
+    }
+
+    /**
+     *
+     * @param aclTransactionName имя Acl транзакции, Если в aclTransactionName передать "*" то удалятся все Acl транзакции
+     */
+    public void deleteAclTransaction(String aclTransactionName) {
+        orderServiceSteps.executeAction("kafka_delete_transaction_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + aclTransactionName + "\"}]}}"));
+        save();
+        //TODO: Написать проверку удаления Acl transaction
+    }
+
     public void start() {
         start("start_kafka");
     }
