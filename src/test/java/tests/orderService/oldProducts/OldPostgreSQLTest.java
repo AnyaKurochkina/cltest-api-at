@@ -84,7 +84,6 @@ public class OldPostgreSQLTest extends Tests {
     @DisplayName("Удалить пользователя БД PorstgreSQL OLD")
     @Test
     void removeDbmsUser() {
-        postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
         postgreSQL.createDb("createdbforremove4");
         postgreSQL.createDbmsUser("chelikforreset2", "user", "createdbforremove4");
         postgreSQL.removeDbmsUser("chelikforreset2", "createdbforremove4");

@@ -23,23 +23,16 @@ public class OldRhelTest extends Tests {
             .build();
 
     @Order(1)
-    @DisplayName("Расширить Rhel OLD")
+    @DisplayName("Перезагрузить Rhel OLD")
     @Test
-    void expandMountPoint() {
+    void restart() {
         try {
             rhel.start();
         } catch (Throwable t) {
             t.getStackTrace();
         } finally {
-            rhel.expandMountPoint();
+            rhel.restart();
         }
-    }
-
-    @Order(2)
-    @DisplayName("Перезагрузить Rhel OLD")
-    @Test
-    void restart() {
-        rhel.restart();
     }
 
     @Order(3)

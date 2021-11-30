@@ -83,7 +83,6 @@ public class OldClickHouseTest extends Tests {
     @Test
     @DisplayName("Перезагрузить CLickHouse OLD")
     void restart() {
-        clickHouse.checkPreconditionStatusProduct(ProductStatus.CREATED);
         clickHouse.restart();
     }
 

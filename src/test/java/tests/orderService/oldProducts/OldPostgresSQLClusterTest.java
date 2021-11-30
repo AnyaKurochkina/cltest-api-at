@@ -14,11 +14,11 @@ import tests.Tests;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgresSQLClusterTest extends Tests {
-    //НЕТ СТАРОГО ПРОДУКТА
+
     PostgresSQLCluster postgres = PostgresSQLCluster.builder()
             .projectId("proj-67nljbzjtt")
             .productId("9c97f55c-ab21-4724-be4d-cb90b8a815c6")
-            .orderId("885a5cd0-31c6-421c-8de4-70583f9c938c")
+            .orderId("985858eb-7d78-4ce5-9134-20cdb610be5e")
             .productName("PostgreSQL Cluster")
             .build();
 
