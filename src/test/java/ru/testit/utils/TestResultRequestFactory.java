@@ -10,12 +10,13 @@ public class TestResultRequestFactory
 {
     private TestResultsRequest request;
     
-    public void processFinishLaunch(final HashMap<MethodType, StepNode> utilsMethodSteps, final HashMap<String, StepNode> includedTests) {
+    public void processFinishLaunch(final HashMap<MethodType, StepNode> utilsMethodSteps, final HashMap<UniqueTest, StepNode> includedTests) {
         this.request = new TestResultsRequest();
-        for (final String externalId : includedTests.keySet()) {
+        for (final UniqueTest test : includedTests.keySet()) {
+            final String externalId = test.getExternalId();
             final TestResultRequest currentTest = new TestResultRequest();
             currentTest.setAutoTestExternalId(externalId);
-            this.processTestSteps(currentTest, includedTests.get(externalId));
+            this.processTestSteps(currentTest, includedTests.get(test));
             this.processUtilsMethodsSteps(currentTest, utilsMethodSteps);
             this.request.getTestResults().add(currentTest);
         }

@@ -121,7 +121,7 @@ public class TestITClient
         for (final CreateTestItemRequest createTestRequest : createTestRequests) {
             final GetTestItemResponse getTestItemResponse = this.getTestItem(createTestRequest);
             if (getTestItemResponse == null || StringUtils.isBlank((CharSequence)getTestItemResponse.getId())) {
-                createTestRequest.setExternalId(createTestRequest.getExternalId().replaceAll("#(\\d+)$", ""));
+//                createTestRequest.setExternalId(createTestRequest.getExternalId().replaceAll("#(\\d+)$", ""));
                 this.createTestItem(createTestRequest);
             }
             else {
@@ -146,7 +146,7 @@ public class TestITClient
     
     public GetTestItemResponse getTestItem(final CreateTestItemRequest createTestItemRequest) {
 
-        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
+//        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
 
 
         final HttpGet get = new HttpGet(TestITClient.properties.getUrl() + "/api/v2/autoTests?projectId=" + TestITClient.properties.getProjectID() + "&externalId=" + createTestItemRequest.getExternalId());
@@ -207,7 +207,7 @@ public class TestITClient
     }
     
     public void createTestItem(final CreateTestItemRequest createTestItemRequest) {
-        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
+//        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
         final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/autoTests");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         CreateTestItemResponse createTestItemResponse = null;
@@ -266,7 +266,7 @@ public class TestITClient
     }
     
     public void updatePostItem(final CreateTestItemRequest createTestItemRequest, final String testId) {
-        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
+//        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
         createTestItemRequest.setId(testId);
         final HttpPut put = new HttpPut(TestITClient.properties.getUrl() + "/api/v2/autoTests");
         put.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
@@ -388,9 +388,9 @@ public class TestITClient
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         try {
             List<TestResultRequest> list = request.getTestResults();
-            for (TestResultRequest req: list) {
-                req.setAutoTestExternalId(req.getAutoTestExternalId().replaceAll("#(\\d+)$", ""));
-            }
+//            for (TestResultRequest req: list) {
+//                req.setAutoTestExternalId(req.getAutoTestExternalId().replaceAll("#(\\d+)$", ""));
+//            }
             final StringEntity requestEntity = new StringEntity(this.objectMapper.writeValueAsString((Object)list), ContentType.APPLICATION_JSON);
             post.setEntity((HttpEntity)requestEntity);
             final CloseableHttpClient httpClient = getHttpClient();

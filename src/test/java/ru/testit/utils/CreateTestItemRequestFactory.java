@@ -12,15 +12,15 @@ import java.util.*;
 
 public class CreateTestItemRequestFactory
 {
-    private Map<String, CreateTestItemRequest> createTestItemRequests;
+    private Map<UniqueTest, CreateTestItemRequest> createTestItemRequests;
     
     public CreateTestItemRequestFactory() {
-        this.createTestItemRequests = new HashMap<String, CreateTestItemRequest>();
+        this.createTestItemRequests = new HashMap<UniqueTest, CreateTestItemRequest>();
     }
     
     public void processTest(final Method method, String displayName, String subId) {
         final CreateTestItemRequest createTestItemRequest = new CreateTestItemRequest();
-        final String externalId = this.extractExternalID(method, subId);
+        final String externalId = this.extractExternalID(method, null);
         createTestItemRequest.setExternalId(externalId);
         createTestItemRequest.setProjectId(TestITClient.getProjectID());
         createTestItemRequest.setName(displayName);
@@ -29,13 +29,13 @@ public class CreateTestItemRequestFactory
         createTestItemRequest.setTestPlanId(this.extractTestPlanId(method));
         createTestItemRequest.setLinks(this.extractLinks(method));
         createTestItemRequest.setLabels(this.extractLabels(method));
-        this.createTestItemRequests.put(externalId, createTestItemRequest);
+        this.createTestItemRequests.put(new UniqueTest(externalId, subId), createTestItemRequest);
     }
     
-    public void processFinishLaunch(final HashMap<MethodType, StepNode> utilsMethodSteps, final HashMap<String, StepNode> includedTests) {
-        for (final String externalId : this.createTestItemRequests.keySet()) {
-            final CreateTestItemRequest createTestItemRequest = this.createTestItemRequests.get(externalId);
-            final StepNode testParentStepNode = includedTests.get(externalId);
+    public void processFinishLaunch(final HashMap<MethodType, StepNode> utilsMethodSteps, final HashMap<UniqueTest, StepNode> includedTests) {
+        for (UniqueTest test : this.createTestItemRequests.keySet()) {
+            final CreateTestItemRequest createTestItemRequest = this.createTestItemRequests.get(test);
+            final StepNode testParentStepNode = includedTests.get(test);
             createTestItemRequest.setOutcome(Outcome.getByValue(testParentStepNode.getOutcome()));
             this.processTestSteps(createTestItemRequest, testParentStepNode);
             this.processUtilsSteps(createTestItemRequest, utilsMethodSteps);
