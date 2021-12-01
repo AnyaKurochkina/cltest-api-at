@@ -53,7 +53,6 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     public void interceptTestTemplateMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Exception {
         JUnit5EventListener.HANDLER.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), getSubId(extensionContext));
         try {
-            log.debug("--- {}",extensionContext.getDisplayName());
             invocation.proceed();
         }
         catch (Throwable throwable) {

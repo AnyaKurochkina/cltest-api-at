@@ -19,11 +19,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import ru.testit.properties.TestProperties;
+import ru.testit.utils.Configuration;
 import steps.Steps;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,37 +43,48 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
     private final static List<IProduct> orders = getProductList();
     private int variableName;
 
+    @SneakyThrows
     @Override
     public Stream provideArguments(ExtensionContext context) {
+
         List<Arguments> list = new ArrayList<>();
         if (variableName == PRODUCTS) {
             if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
 
-                Map <String, String> confMap = TestProperties.getInstance().getConfigMap(context.getRequiredTestMethod());
+                List<Configuration> confMap = TestProperties.getInstance().getConfigMapsByTest(context.getRequiredTestMethod());
+                Class<?> argument = Arrays.stream(context.getRequiredTestMethod().getParameterTypes())
+                        .filter(m -> Entity.class.isAssignableFrom((Class<?>) m)).findFirst().orElseThrow(Exception::new);
 
-                Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
-                Class<?> clazz = null;
-                for (Class<?> m : params) {
-                    if (Entity.class.isAssignableFrom(m)) {
-                        clazz = m;
-                        break;
-                    }
+                for(Configuration configuration : confMap) {
+                    Entity entity = ObjectPoolService.fromJson(new JSONObject(configuration.getConfMap()).toString(), argument);
+                    entity.setConfigurationId(configuration.getId());
+                    list.add(Arguments.of(entity));
                 }
-                Class<?> finalClazz = clazz;
-                orders.forEach(entity -> {
-                    Class<?> c = entity.getClass();
-                    if (finalClazz.isInstance(entity)){
-                        String object = ObjectPoolService.toJson(entity);
-                        DocumentContext jsonPath = JsonPath.parse(object);
-                        boolean approved = true;
-                        for (Map.Entry<String, String> entry : confMap.entrySet()) {
-                            if(((JSONArray)jsonPath.read("$[?(@." + entry.getKey() + " =~ /.*" + entry.getValue() + "*/i)]")).isEmpty())
-                                approved = false;
-                        }
-                        if(approved)
-                            list.add(Arguments.of(ObjectPoolService.fromJson(object, c)));
-                    }
-                });
+//                System.out.println(1);
+
+//                Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
+//                Class<?> clazz = null;
+//                for (Class<?> m : params) {
+//                    if (Entity.class.isAssignableFrom(m)) {
+//                        clazz = m;
+//                        break;
+//                    }
+//                }
+//                Class<?> finalClazz = clazz;
+//                orders.forEach(entity -> {
+//                    Class<?> c = entity.getClass();
+//                    if (finalClazz.isInstance(entity)){
+//                        String object = ObjectPoolService.toJson(entity);
+//                        DocumentContext jsonPath = JsonPath.parse(object);
+//                        boolean approved = true;
+//                        for (Map.Entry<String, String> entry : confMap.entrySet()) {
+//                            if(((JSONArray)jsonPath.read("$[?(@." + entry.getKey() + " =~ /.*" + entry.getValue() + "*/i)]")).isEmpty())
+//                                approved = false;
+//                        }
+//                        if(approved)
+//                            list.add(Arguments.of(ObjectPoolService.fromJson(object, c)));
+//                    }
+//                });
             } else {
                 orders.forEach(entity -> {
                     list.add(Arguments.of(new IProductMock(entity.toString())));

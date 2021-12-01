@@ -7,6 +7,7 @@ import core.helper.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import ru.testit.model.response.StartLaunchResponse;
 import ru.testit.services.*;
 import ru.testit.utils.*;
 import ru.testit.annotations.*;
@@ -30,6 +31,12 @@ public class RunningHandler
     }
     
     public void startLaunch() {
+        String testRunId = System.getProperty("testrun");
+        if(Objects.nonNull(testRunId)){
+            TestITClient.startLaunchResponse = new StartLaunchResponse();
+            TestITClient.startLaunchResponse.setId(testRunId);
+            return;
+        }
         this.testITClient.startLaunch();
     }
     

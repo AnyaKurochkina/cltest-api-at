@@ -40,7 +40,7 @@ public class TestITClient
 //    private static final Logger log;
     public static AppProperties properties;
     private final ObjectMapper objectMapper;
-    private StartLaunchResponse startLaunchResponse;
+    public static StartLaunchResponse startLaunchResponse;
     
     public TestITClient() {
         this.objectMapper = new ObjectMapper().setTimeZone(TimeZone.getTimeZone("GMT+3"));
@@ -450,7 +450,7 @@ public class TestITClient
     }
     
     private void sendTestResult(final TestResultsRequest request) {
-        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + this.startLaunchResponse.getId() + "/testResults");
+        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/testResults");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         try {
             List<TestResultRequest> list = request.getTestResults();
@@ -507,7 +507,7 @@ public class TestITClient
     }
     
     private void sendCompleteTestRun() {
-        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + this.startLaunchResponse.getId() + "/complete");
+        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/complete");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         try {
             final StringEntity requestEntity = new StringEntity(this.objectMapper.writeValueAsString((Object)""), ContentType.APPLICATION_JSON);

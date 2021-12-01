@@ -5,6 +5,8 @@ import lombok.extern.log4j.Log4j2;
 import ru.testit.junit5.RunningHandler;
 import ru.testit.model.response.ConfigurationResponse;
 import ru.testit.services.TestITClient;
+import ru.testit.utils.Configuration;
+import ru.testit.utils.UniqueTest;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 public class TestProperties
 {
     private List<String> testProps = new ArrayList<>();
-    final private Map<String, ConfigurationResponse> configurations = new HashMap<>();
+    final private Map<UniqueTest, ConfigurationResponse> configurations = new HashMap<>();
     private static volatile TestProperties instance;
 
     public static TestProperties getInstance() {
@@ -42,10 +44,12 @@ public class TestProperties
                 TestITClient client = new TestITClient();
                 for(String line : testProps){
                     String[] parseLine = line.split("=");
-                    if(!configurations.containsKey(parseLine[0])) {
-                        ConfigurationResponse response = client.getConfiguration(parseLine[1].trim());
-                        configurations.put(parseLine[0], response);
+                    UniqueTest uniqueTest = new UniqueTest(parseLine[0].trim(), parseLine[1].trim());
+                    if(!configurations.containsKey(uniqueTest)) {
+                        ConfigurationResponse response = client.getConfiguration(uniqueTest.getConfigurationId());
+                        configurations.put(uniqueTest, response);
                     }
+                    else log.error("{} уже существует", uniqueTest);
                 }
             }
         } catch (IOException e) {
@@ -53,8 +57,18 @@ public class TestProperties
         }
     }
 
-    public Map<String, String> getConfigMap(Method method){
-        return configurations.get(RunningHandler.extractExternalID(method, null)).getCapabilities();
+    public List<Configuration> getConfigMapsByTest(Method method){
+        String externalId = RunningHandler.extractExternalID(method, null);
+        List<String> configurationIds = getConfigurationIds(externalId);
+        List<Configuration> configurationList = new ArrayList<>();
+        for(String id : configurationIds){
+            UniqueTest uniqueTest = new UniqueTest(externalId, id);
+            Configuration configuration = new Configuration();
+            configuration.setId(id);
+            configuration.setConfMap(configurations.get(uniqueTest).getCapabilities());
+            configurationList.add(configuration);
+        }
+        return configurationList;
     }
     
     private List<String> getConfigurationIds(String externalId) {

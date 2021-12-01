@@ -3,9 +3,7 @@ package models;
 import core.helper.JsonHelper;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.json.JSONObject;
 
@@ -31,6 +29,9 @@ public abstract class Entity implements AutoCloseable {
     @Builder.Default
     protected transient JsonHelper jsonHelper = new JsonHelper();
     public String uuid;
+    @Setter
+    @Getter
+    String configurationId;
 
     public void save() {
         ObjectPoolService.saveEntity(this);
