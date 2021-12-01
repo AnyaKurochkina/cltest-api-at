@@ -16,7 +16,7 @@
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
-    "name": "sa_proj-ie2s5l0ycr-4d",
+    "id": "sa_proj-ie2s5l0ycr-4d",
     "secret": "3e747bdfd4c07dbde85e0bda902a0860",
     "isDeleted": false,
     "projectId": "proj-ie2s5l0ycr",
@@ -58,7 +58,7 @@
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
-    "name": "sa_proj-xazpppulba-4c",
+    "id": "sa_proj-xazpppulba-4c",
     "secret": "fe59d63715acaef33cbbcda160619f3e",
     "isDeleted": false,
     "projectId": "proj-xazpppulba",
