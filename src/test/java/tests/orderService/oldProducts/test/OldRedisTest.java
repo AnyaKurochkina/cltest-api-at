@@ -1,11 +1,9 @@
-package tests.orderService.oldProducts;
+package tests.orderService.oldProducts.test;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.products.Redis;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 @Epic("Старые продукты")
@@ -16,9 +14,9 @@ import tests.Tests;
 public class OldRedisTest extends Tests {
 
     Redis redis = Redis.builder()
-            .projectId("proj-67nljbzjtt")
+            .projectId("proj-juh8ynkvtn")
             .productId("6662a03d-20ce-4a83-a684-ddec48393516")
-            .orderId("b29c6a04-c92f-4b52-90c1-4172ae93fe19")//b29c6a04-c92f-4b52-90c1-4172ae93fe19 создал новый(старый бажный)
+            .orderId("af3dd005-a86f-41c2-be43-12b2a21cdac4")
             .productName("Redis")
             .build();
 

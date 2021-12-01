@@ -1,4 +1,4 @@
-package tests.orderService.oldProducts;
+package tests.orderService.oldProducts.dev;
 
 import core.helper.Deleted;
 import io.qameta.allure.Epic;
