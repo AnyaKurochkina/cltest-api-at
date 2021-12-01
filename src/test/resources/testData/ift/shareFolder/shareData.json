@@ -1,23 +1,12 @@
 [
   {
-    "objectClassName": "models.keyCloak.Service",
-    "objectUid": "4087706b-e9b7-48ef-969d-000000000001",
-    "clientId": "cloud_autotest",
-    "clientSecret": "8c1f5278-f237-48ed-b439-1363bc21eb2b"
-  },
-  {
-    "objectClassName": "models.authorizer.User",
-    "objectUid": "4087706b-e9b7-48ef-969d-000000000002",
-    "username": "portal_admin_at",
-    "password": "portal_admin_at"
-  },
-  {
     "objectClassName": "models.authorizer.Project",
     "isDeleted": false,
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
     "id": "proj-ie2s5l0ycr",
     "projectName": "PROJECT_TEST",
+    "prefix": "df8e9a1f-7bc2-4ada-9f92-005c1b5e59b3",
     "projectEnvironment": {
       "env": "IFT",
       "envType": "TEST",
@@ -50,6 +39,7 @@
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
     "id": "proj-xazpppulba",
     "projectName": "PROJECT_DEV",
+    "prefix": "2636779e-2ddc-4446-8cc4-ae1a71a23cd1",
     "projectEnvironment": {
       "env": "DSO",
       "envType": "DEV",

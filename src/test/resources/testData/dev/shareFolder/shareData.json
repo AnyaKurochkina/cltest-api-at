@@ -1,15 +1,5 @@
 [
   {
-    "objectClassName": "models.keyCloak.Service",
-    "clientId": "cloud_autotest",
-    "clientSecret": "1b365e15669fc8315245f844c84c4970"
-  },
-  {
-    "objectClassName": "models.authorizer.User",
-    "username": "portal_admin_at",
-    "password": "portal_admin_at"
-  },
-  {
     "objectClassName": "models.authorizer.Project",
     "isDeleted": false,
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",

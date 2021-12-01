@@ -17,9 +17,9 @@ import java.util.List;
 public class AccessGroup extends Entity {
     String name;
     String projectName;
+    String description;
     @Builder.Default
     List<String> users = new ArrayList<>();
-    Boolean isForOrders;
 
     public void addUser(String user){
         users.add(user);
@@ -37,12 +37,15 @@ public class AccessGroup extends Entity {
             name = new RandomStringGenerator().generateByRegex("[a-z]{5,15}");
         if (projectName == null)
             projectName = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
+        if (description == null)
+            description = projectName;
         return this;
     }
 
     public JSONObject toJson() {
         return jsonHelper.getJsonTemplate("/accessGroup/accessGroup.json")
                 .set("$.access_group.name", name)
+                .set("$.access_group.description", description)
                 .set("$.access_group.project_name", projectName)
                 .build();
     }

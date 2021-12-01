@@ -30,7 +30,7 @@ public class ServiceAccountSteps extends Steps {
                 .jsonPath();
         //Создание сервисного аккаунта с параметрами полученными выше
         ServiceAccount serviceAccount = ServiceAccount.builder()
-                .name(jsonPath.get("data.name"))
+                .id(jsonPath.get("data.name"))
                 .projectId(project.id)
                 .secret(jsonPath.get("data.client_secret"))
                 .build();
@@ -54,7 +54,7 @@ public class ServiceAccountSteps extends Steps {
                 .getEntity();
         //Отправка запроса на удаление сервисного аккаунта
         new Http(URL)
-                .delete(String.format("authorizer/api/v1/projects/%s/service_accounts/%s", project.id, serviceAccount.name))
+                .delete(String.format("authorizer/api/v1/projects/%s/service_accounts/%s", project.id, serviceAccount.getId()))
                 .assertStatus(204);
         //Проставление флага "Сервисный аккаунт удалён"
 //        serviceAccount.isDeleted = true;
