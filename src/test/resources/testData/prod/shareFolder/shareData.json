@@ -3,71 +3,61 @@
     "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "1496e1a70381040818ac021175292766",
     "name": "sa_proj-juh8ynkvtn-7w",
-    "projectId": "proj-juh8ynkvtn",
-    "isForOrders": true
+    "projectId": "proj-juh8ynkvtn"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "54837bc31c00d952c01ab4e359c81007",
     "name": "sa_proj-67nljbzjtt-7h",
-    "projectId": "proj-67nljbzjtt",
-    "isForOrders": true
+    "projectId": "proj-67nljbzjtt"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "085c9e288ff24a68541aecdccde30447",
     "name": "sa_proj-frybyv41jh-4b",
-    "projectId": "proj-frybyv41jh",
-    "isForOrders": true
+    "projectId": "proj-frybyv41jh"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "03b471bd39ecb69cafeebeb63fcc2723",
     "name": "sa_proj-b7iigm67tk-4c",
-    "projectId": "proj-b7iigm67tk",
-    "isForOrders": true
+    "projectId": "proj-b7iigm67tk"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "beaa651f52a682f6b77a29b1c7572c33",
     "name": "sa_proj-rr4ncna00e-4d",
-    "projectId": "proj-rr4ncna00e",
-    "isForOrders": true
+    "projectId": "proj-rr4ncna00e"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "d6ca8c09f18e417b59689ea4fca83257",
     "name": "sa_proj-7ll0yy5zsc-4e",
-    "projectId": "proj-7ll0yy5zsc",
-    "isForOrders": true
+    "projectId": "proj-7ll0yy5zsc"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "e7a6b6941d13c7d2b2a741027354261e",
     "name": "sa_proj-j5uzlpvbjz-4f",
-    "projectId": "proj-j5uzlpvbjz",
-    "isForOrders": true
+    "projectId": "proj-j5uzlpvbjz"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "9eb9bbfbdc8a266e77dbcbf0dd4723a4",
     "name": "sa_proj-sdt56df8rr-4g",
-    "projectId": "proj-sdt56df8rr",
-    "isForOrders": true
+    "projectId": "proj-sdt56df8rr"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "ecf9d4727f6d2c47732afe3e6da69646",
     "name": "sa_proj-aiqk5zzot4-4h",
-    "projectId": "proj-aiqk5zzot4",
-    "isForOrders": true
+    "projectId": "proj-aiqk5zzot4"
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "2c7602ac734551ac62c6c79dad6ea6d2",
     "name": "sa_proj-ovkcqq41d3-4i",
-    "projectId": "proj-ovkcqq41d3",
-    "isForOrders": true
+    "projectId": "proj-ovkcqq41d3"
   },
   {
     "objectClassName": "models.authorizer.Project",
@@ -178,64 +168,56 @@
     "name": "cloud-edzorg-edugroup",
     "user": "",
     "isDeleted": false,
-    "projectName": "proj-b7iigm67tk",
-    "isForOrders": true
+    "projectName": "proj-b7iigm67tk"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-hfzorg-hotfix-group",
     "user": "",
     "isDeleted": false,
-    "projectName": "proj-rr4ncna00e",
-    "isForOrders": true
+    "projectName": "proj-rr4ncna00e"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-mtzorg-migr-group",
     "user": "",
     "isDeleted": false,
-    "projectName": "proj-sdt56df8rr",
-    "isForOrders": true
+    "projectName": "proj-sdt56df8rr"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-rrzorg-preprod-group",
     "user": "",
     "isDeleted": false,
-    "projectName": "proj-aiqk5zzot4",
-    "isForOrders": true
+    "projectName": "proj-aiqk5zzot4"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-stzorg-st-group",
     "user": "",
     "isDeleted": false,
-    "projectName": "proj-ovkcqq41d3",
-    "isForOrders": true
+    "projectName": "proj-ovkcqq41d3"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-ifzorg-ift-group",
     "user": "",
     "isDeleted": false,
-    "projectName": "proj-7ll0yy5zsc",
-    "isForOrders": true
+    "projectName": "proj-7ll0yy5zsc"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-d5zorg-dev-group",
     "user": "",
     "isDeleted": false,
-    "projectName": "proj-frybyv41jh",
-    "isForOrders": true
+    "projectName": "proj-frybyv41jh"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-ltzorg-lt-group",
     "user": "",
     "isDeleted": false,
-    "projectName": "proj-j5uzlpvbjz",
-    "isForOrders": true
+    "projectName": "proj-j5uzlpvbjz"
   },
   {
     "objectClassName": "models.authorizer.InformationSystem",
@@ -253,191 +235,8 @@
       "env": "DEV",
       "id": "ce11798a-e5f6-4e54-9582-78770f15b52a",
       "envType": "DEV"
-    },
-    "isForOrders": true
+    }
   },
-  {
-    "objectClassName": "models.orderService.products.PostgreSQL",
-    "productId": "3b3807a6-9ad0-4ca6-930a-a37efffcc605",
-    "productName": "PostgreSQL",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "f6dd249c-b124-40b0-a99a-a40e55d5b5ce",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219b8",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.ClickHouse",
-    "productId": "93fbf58f-bf5b-4f2b-a491-3c382c9837fd",
-    "productName": "ClickHouse",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "e75ff7b3-5bc9-4c61-a445-b4caba970606",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l1",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.Podman",
-    "productId": "91025447-e6d3-4b91-be18-a84d62402825",
-    "productName": "Podman",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "faaa9d8d-d3e8-4778-b14d-24be995ec878",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l1",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.PostgresPro",
-    "productId": "0da09981-c1ac-45b6-ba3b-7bfe52fd45bc",
-    "productName": "PostgresPro",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "fff78d59-f584-4fec-a93e-a258b4b68240",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l2",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.Rhel",
-    "productId": "c422069e-8f01-4328-b9dc-4a9e5dafd44e",
-    "productName": "PostgresPro",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "fa58784b-69c8-4b2e-b42b-4f704e5bbf2c",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l3",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.Ubuntu",
-    "productId": "9d87b2b4-4145-401a-b1b1-edac6bb0c5e4",
-    "productName": "Ubuntu",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "f474dac0-1e37-4826-b4ba-1c9effbfa045",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l4",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.Nginx",
-    "productId": "ebe832bd-ed1c-4998-8a58-6c4d16db1d60",
-    "productName": "Nginx",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "ef57bd15-2f61-4c34-8460-bf77d7312808",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l5",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.WildFly",
-    "productId": "972a66f1-cd45-437f-b920-676bad68e594",
-    "productName": "WildFly",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "da58d2c6-bc47-4a52-8aaa-85de22916a89",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l6",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.Redis",
-    "productId": "6662a03d-20ce-4a83-a684-ddec48393516",
-    "productName": "Redis",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "ad4f9bf5-ca89-4d20-bc98-b29644a9fd40",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l7",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.ApacheKafka",
-    "productId": "3b3807a6-9ad0-4ca6-930a-a37efffcc605",
-    "productName": "ApacheKafka",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "70212faf-5d9f-40bc-b7b1-9c32ae29d721",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l8",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.PostgresSQLCluster",
-    "productId": "9c97f55c-ab21-4724-be4d-cb90b8a815c6",
-    "productName": "PostgreSQL Cluster",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "985858eb-7d78-4ce5-9134-20cdb610be5e",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219l9",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.Rhel",
-    "productId": "0da09981-c1ac-45b6-ba3b-7bfe52fd45bc",
-    "productName": "Rhel",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "b29c6a04-c92f-4b52-90c1-4172ae93fe19",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k1",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.RabbitMQCluster",
-    "productId": "cee004ec-136d-4605-98e1-da4dac466151",
-    "productName": "RabbitMQCluster",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "43c2f7f3-74e2-4f78-beef-aae28107b6a1",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k2",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.Windows",
-    "productId": "28bed880-2714-4317-a967-d000d492bd9d",
-    "productName": "Windows",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "9125747a-7197-42f0-9b32-aa5ccb4cefd4",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k3",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.Astra",
-    "productId": "b5998259-ccab-4a98-949d-801b115ec180",
-    "productName": "Astra",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "b5998259-ccab-4a98-949d-801b115ec180",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k4",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.ApacheKafkaCluster",
-    "productId": "d46dd919-defc-4ec6-a55b-2017b3981258",
-    "productName": "Apache Kafka Cluster",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "62758afa-911e-4ee8-abd2-a59892e3426f",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k5",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.Elasticsearch",
-    "productId": "f7aec597-14d5-48c8-a4fe-25af4f19e5d5",
-    "productName": "Elasticsearch X-pack cluster",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "c3a941a5-1e9f-4409-b661-ad655fcc4a71",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k6",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.OpenShiftProject",
-    "productId": "10000003-1111-2222-b9dc-4a9e5dafd44e",
-    "productName": "OpenShift project",
-    "env": "DEV",
-    "projectId": "proj-67nljbzjtt",
-    "orderId": "a4335c3c-fa1a-49ba-b528-170885e06605",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k7",
-    "platform": "Nutanix"
-  },
-
-
   {
     "objectClassName": "models.authorizer.Project",
     "isDeleted": false,
@@ -449,57 +248,6 @@
       "env": "PREPROD",
       "id": "df4d904e-f0b1-4c74-877e-fec4576666f3",
       "envType": "TEST"
-    },
-    "isForOrders": true
-  },
-  {
-    "objectClassName": "models.orderService.products.PostgreSQL",
-    "productId": "3b3807a6-9ad0-4ca6-930a-a37efffcc605",
-    "productName": "PostgreSQL",
-    "env": "TEST",
-    "projectId": "proj-juh8ynkvtn",
-    "orderId": "ff75d654-c851-4cf0-8acc-95473afe9c36",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219z1",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.Windows",
-    "productId": "28bed880-2714-4317-a967-d000d492bd9d",
-    "productName": "Windows",
-    "env": "TEST",
-    "projectId": "proj-juh8ynkvtn",
-    "orderId": "ced7ea99-79af-4ff4-aaf7-7ef32b722d18",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219z2",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.WildFly",
-    "productId": "972a66f1-cd45-437f-b920-676bad68e594",
-    "productName": "WildFly",
-    "env": "TEST",
-    "projectId": "proj-juh8ynkvtn",
-    "orderId": "05e157b1-b9ae-4b23-9e16-74d5e6071db4",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219z3",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.Redis",
-    "productId": "6662a03d-20ce-4a83-a684-ddec48393516",
-    "productName": "Redis",
-    "env": "TEST",
-    "projectId": "proj-juh8ynkvtn",
-    "orderId": "af3dd005-a86f-41c2-be43-12b2a21cdac4",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219z4",
-    "platform": "Nutanix"
-  },
-  {
-    "objectClassName": "models.orderService.products.ApacheKafkaCluster",
-    "productId": "d46dd919-defc-4ec6-a55b-2017b3981258",
-    "productName": "Apache Kafka Cluster",
-    "env": "TEST",
-    "projectId": "proj-juh8ynkvtn",
-    "orderId": "df835386-d7ea-4ad7-8d06-05d64d0b2acb",
-    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219z5",
-    "platform": "Nutanix"
+    }
   }
 ]

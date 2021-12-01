@@ -1,5 +1,6 @@
 package tests.authorizer;
 
+import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.authorizer.ServiceAccount;
@@ -19,14 +20,15 @@ public class ServiceAccountTest extends Tests {
     @Order(1)
     @DisplayName("Создание сервисного аккаунта")
     void createServiceAccount() {
-        ServiceAccount.builder().isForOrders(false).build().createObject();
+        ServiceAccount.builder().title("deleteServiceAccount").build().createObject();
     }
 
     @Test
     @Order(2)
+    @Deleted
     @DisplayName("Удаление сервисного аккаунта")
     void deleteServiceAccount() {
-        ServiceAccount.builder().isForOrders(false).build().createObject();
+        ServiceAccount.builder().title("deleteServiceAccount").build().createObject().deleteObject();
     }
 
 }

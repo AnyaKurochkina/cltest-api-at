@@ -10,6 +10,7 @@ import models.authorizer.Folder;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.orderService.products.OpenShiftProject;
+import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -39,8 +40,8 @@ public class CalculatorTest extends Tests {
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Списание средств за продукт {0}")
     @DisplayName("Списание средств за продукт")
-    public void expenseAccount(OpenShiftProject resource) {
-        try (OpenShiftProject product = resource.createObjectExclusiveAccess()) {
+    public void expenseAccount(Rhel resource) {
+        try (Rhel product = resource.createObjectExclusiveAccess()) {
             Project projectSource = Project.builder().id(product.getProjectId()).build().createObject();
             String parentFolderId = authorizerSteps.getParentProject(product.getProjectId());
             Folder folderTarget = Folder.builder()

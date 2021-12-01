@@ -16,17 +16,18 @@ import java.util.List;
 @Builder
 @Getter
 public class ServiceAccount extends Entity {
-    public String projectId;
-    public String secret;
-    public String name;
+    String projectId;
+    String secret;
+    String id;
+    String title;
+
     @Singular
     public List<String> roles;
-    public Boolean isForOrders;
 
     @Override
     public Entity init() {
-        if (name == null)
-            name = new RandomStringGenerator().generateByRegex("[a-z]{5,18}");
+        if (id == null)
+            id = new RandomStringGenerator().generateByRegex("[a-z]{5,18}");
         if (projectId == null)
             projectId = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
         return this;
@@ -34,7 +35,7 @@ public class ServiceAccount extends Entity {
 
     public JSONObject toJson() {
         return jsonHelper.getJsonTemplate("/accessGroup/accessGroup.json")
-                .set("$.service_account.title", name)
+                .set("$.service_account.title", title)
                 .build();
     }
 
@@ -47,7 +48,7 @@ public class ServiceAccount extends Entity {
                 .post(String.format("projects/%s/service_accounts", projectId))
                 .assertStatus(201)
                 .jsonPath();
-        name = jsonPath.get("data.name");
+        id = jsonPath.get("data.name");
         secret = jsonPath.get("data.client_secret");
     }
 
@@ -55,7 +56,7 @@ public class ServiceAccount extends Entity {
     @Step("Удаление сервисного аккаунта")
     protected void delete() {
         new Http(Configure.AuthorizerURL)
-                .delete(String.format("projects/%s/service_accounts/%s", projectId, name))
+                .delete(String.format("projects/%s/service_accounts/%s", projectId, id))
                 .assertStatus(204);
     }
 }
