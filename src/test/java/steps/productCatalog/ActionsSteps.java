@@ -3,11 +3,11 @@ package steps.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.patchActions.response.PatchActionResponse;
+import httpModels.productCatalog.Action.patchAction.response.PatchActionResponse;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
-import httpModels.productCatalog.getActions.response.ActionResponse;
-import httpModels.productCatalog.getActions.response.ListItem;
+import httpModels.productCatalog.Action.getAction.response.ActionResponse;
+import httpModels.productCatalog.Action.getAction.response.ListItem;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 

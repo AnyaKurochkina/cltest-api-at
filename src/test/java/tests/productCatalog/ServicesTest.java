@@ -2,9 +2,9 @@ package tests.productCatalog;
 
 import core.helper.Deleted;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.copyService.response.CopyServiceResponse;
-import httpModels.productCatalog.createService.response.CreateServiceResponse;
-import httpModels.productCatalog.getService.response.GetServiceResponse;
+import httpModels.productCatalog.Service.copyService.response.CopyServiceResponse;
+import httpModels.productCatalog.Service.createService.response.CreateServiceResponse;
+import httpModels.productCatalog.Service.getService.response.GetServiceResponse;
 import io.qameta.allure.Feature;
 import models.productCatalog.Services;
 import org.junit.jupiter.api.*;

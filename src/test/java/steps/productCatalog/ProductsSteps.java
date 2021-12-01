@@ -2,8 +2,8 @@ package steps.productCatalog;
 
 import core.helper.Configure;
 import core.helper.Http;
-import httpModels.productCatalog.getProducts.response.GetProductsResponse;
-import httpModels.productCatalog.getProducts.response.ListItem;
+import httpModels.productCatalog.Product.getProducts.response.GetProductsResponse;
+import httpModels.productCatalog.Product.getProducts.response.ListItem;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 

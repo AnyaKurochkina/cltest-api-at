@@ -5,7 +5,7 @@ import java.util.List;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.createProduct.response.CreateProductResponse;
+import httpModels.productCatalog.Product.createProduct.response.CreateProductResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;

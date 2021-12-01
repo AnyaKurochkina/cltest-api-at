@@ -38,7 +38,7 @@ public class ProductsTest extends Tests {
 
     @Order(100)
     @Test
-    @DisplayName("Удаление экшена")
+    @DisplayName("Удаление продукта")
     @Deleted
     public void deleteAction() {
         try (Product product = Product.builder()
