@@ -1,34 +1,36 @@
 package ru.testit.services;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.*;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustAllStrategy;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
-import ru.testit.properties.*;
-import org.apache.http.entity.*;
-import org.apache.http.*;
-import org.apache.http.util.*;
-import java.io.*;
-import org.apache.http.impl.client.*;
-import org.apache.commons.lang3.*;
-import ru.testit.utils.*;
-
-import java.nio.charset.StandardCharsets;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
-import java.util.*;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.type.*;
-import ru.testit.model.response.*;
-import org.apache.http.client.methods.*;
+import org.apache.http.util.EntityUtils;
 import ru.testit.model.request.*;
-import org.slf4j.*;
+import ru.testit.model.response.ConfigurationResponse;
+import ru.testit.model.response.CreateTestItemResponse;
+import ru.testit.model.response.GetTestItemResponse;
+import ru.testit.model.response.StartLaunchResponse;
+import ru.testit.properties.AppProperties;
+import ru.testit.utils.Outcome;
 
-import javax.net.ssl.*;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.List;
+import java.util.TimeZone;
 
 
 
@@ -36,7 +38,7 @@ import javax.net.ssl.*;
 public class TestITClient
 {
 //    private static final Logger log;
-    private static AppProperties properties;
+    public static AppProperties properties;
     private final ObjectMapper objectMapper;
     private StartLaunchResponse startLaunchResponse;
     
@@ -143,7 +145,71 @@ public class TestITClient
             }
         }
     }
-    
+
+
+
+    public ConfigurationResponse getConfiguration(String configurationId) {
+        final HttpGet get = new HttpGet(TestITClient.properties.getUrl() + "/api/v2/configurations/" + configurationId);
+        get.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
+        ConfigurationResponse configurationResponse = null;
+        try {
+            final CloseableHttpClient httpClient = getHttpClient();
+            try {
+                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)get);
+                try {
+
+                    //////////////////
+                    String str = EntityUtils.toString(response.getEntity());
+                    TestITClient.log.info(get + " :: " + str);
+                    //////////////////
+
+                    configurationResponse = (ConfigurationResponse)this.objectMapper.readValue(str, (Class)ConfigurationResponse.class);
+                    if (response != null) {
+                        response.close();
+                    }
+                }
+                catch (Throwable t) {
+                    if (response != null) {
+                        try {
+                            response.close();
+                        }
+                        catch (Throwable t2) {
+                            t.addSuppressed(t2);
+                        }
+                    }
+                    throw t;
+                }
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+            }
+            catch (Throwable t3) {
+                if (httpClient != null) {
+                    try {
+                        httpClient.close();
+                    }
+                    catch (Throwable t4) {
+                        t3.addSuppressed(t4);
+                    }
+                }
+                throw t3;
+            }
+        }
+        catch (IOException e) {
+            TestITClient.log.error("Exception while sending test item", (Throwable)e);
+        }
+//        if (configurationResponse != null && StringUtils.isNotBlank((CharSequence)createTestItemResponse.getId())) {
+//            this.linkAutoTestWithTestCase(createTestItemResponse.getId(), new LinkAutoTestRequest(createTestItemRequest.getTestPlanId()));
+//        }
+        return configurationResponse;
+    }
+
+
+
+
+
+
+
     public GetTestItemResponse getTestItem(final CreateTestItemRequest createTestItemRequest) {
 
 //        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));

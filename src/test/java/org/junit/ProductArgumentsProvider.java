@@ -4,16 +4,21 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import models.ObjectPoolService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.IProductMock;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.support.AnnotationConsumer;
+import ru.testit.properties.TestProperties;
 import steps.Steps;
 
 import java.io.File;
@@ -41,6 +46,9 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         List<Arguments> list = new ArrayList<>();
         if (variableName == PRODUCTS) {
             if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
+
+                Map <String, String> confMap = TestProperties.getInstance().getConfigMap(context.getRequiredTestMethod());
+
                 Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
                 Class<?> clazz = null;
                 for (Class<?> m : params) {
@@ -52,8 +60,17 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                 Class<?> finalClazz = clazz;
                 orders.forEach(entity -> {
                     Class<?> c = entity.getClass();
-                    if (finalClazz.isInstance(entity))
-                        list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
+                    if (finalClazz.isInstance(entity)){
+                        String object = ObjectPoolService.toJson(entity);
+                        DocumentContext jsonPath = JsonPath.parse(object);
+                        boolean approved = true;
+                        for (Map.Entry<String, String> entry : confMap.entrySet()) {
+                            if(((JSONArray)jsonPath.read("$[?(@." + entry.getKey() + " =~ /.*" + entry.getValue() + "*/i)]")).isEmpty())
+                                approved = false;
+                        }
+                        if(approved)
+                            list.add(Arguments.of(ObjectPoolService.fromJson(object, c)));
+                    }
                 });
             } else {
                 orders.forEach(entity -> {

@@ -6,11 +6,15 @@
 package org.junit.platform.engine.support.hierarchical;
 
 
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import core.helper.Deleted;
 import models.ObjectPoolService;
 import core.helper.StringUtils;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.ProductArgumentsProvider;
 import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
@@ -22,6 +26,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
+import ru.testit.properties.TestProperties;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Constructor;
@@ -142,9 +147,29 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 Map<String, List<Map>> products = ProductArgumentsProvider.getProductListMap();
                 for (Map.Entry<String, List<Map>> e : products.entrySet()) {
                     if(e.getKey().endsWith(match)){
-                    List listProduct = ProductArgumentsProvider.findListInMapByKey("options", e.getValue());
-                    if(listProduct == null)
+                    List<Map<String, Object>> listProduct = ProductArgumentsProvider.findListInMapByKey("options", e.getValue());
+
+                    Map <String, String> confMap = TestProperties.getInstance().getConfigMap(((MethodBasedTestDescriptor) testDescriptor).getTestMethod());
+                    Iterator itr = listProduct.iterator();
+                    while(itr.hasNext()) {
+                        Map<String, Object> map = (Map<String, Object>) itr.next();
+                        DocumentContext jsonPath = JsonPath.parse(new JSONObject(map));
+                        boolean approved = true;
+                        for (Map.Entry<String, String> entry : confMap.entrySet()) {
+                            if (((JSONArray) jsonPath.read("$[?(@." + entry.getKey() + " =~ /.*" + entry.getValue() + "*/i)]")).isEmpty())
+                                approved = false;
+                        }
+                        if(!approved)
+                            itr.remove();
+                    }
+
+                    if(listProduct == null) {
                         skipTests.add(testDescriptor);
+                        return;
+                    }
+                    if(listProduct.isEmpty())
+                        skipTests.add(testDescriptor);
+
                     return;
                     }
                 }

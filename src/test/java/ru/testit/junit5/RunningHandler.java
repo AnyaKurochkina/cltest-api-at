@@ -94,7 +94,7 @@ public class RunningHandler
         return (annotation != null) ? annotation.value() : null;
     }
     
-    private String extractExternalID(final Method currentTest, @Nullable String subId) {
+    public static String extractExternalID(final Method currentTest, @Nullable String subId) {
         String className = currentTest.getDeclaringClass().getSimpleName();
         String methodName = currentTest.getName();
         String postfix = "";
