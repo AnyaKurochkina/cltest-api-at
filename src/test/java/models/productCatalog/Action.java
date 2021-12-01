@@ -3,7 +3,7 @@ package models.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.createAction.response.CreateActionResponse;
+import httpModels.productCatalog.Action.createAction.response.CreateActionResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
