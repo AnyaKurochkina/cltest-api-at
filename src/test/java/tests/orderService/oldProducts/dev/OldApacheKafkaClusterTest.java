@@ -1,4 +1,4 @@
-package tests.orderService.oldProducts;
+package tests.orderService.oldProducts.dev;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;

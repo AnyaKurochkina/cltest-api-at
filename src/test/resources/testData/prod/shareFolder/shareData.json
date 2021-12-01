@@ -1,6 +1,13 @@
 [
   {
     "objectClassName": "models.authorizer.ServiceAccount",
+    "secret": "1496e1a70381040818ac021175292766",
+    "name": "sa_proj-juh8ynkvtn-7w",
+    "projectId": "proj-juh8ynkvtn",
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "54837bc31c00d952c01ab4e359c81007",
     "name": "sa_proj-67nljbzjtt-7h",
     "projectId": "proj-67nljbzjtt",
@@ -427,6 +434,72 @@
     "projectId": "proj-67nljbzjtt",
     "orderId": "a4335c3c-fa1a-49ba-b528-170885e06605",
     "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219k7",
+    "platform": "Nutanix"
+  },
+
+
+  {
+    "objectClassName": "models.authorizer.Project",
+    "isDeleted": false,
+    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+    "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d4",
+    "id": "proj-juh8ynkvtn",
+    "projectName": "OLD_PROJECT_TEST",
+    "projectEnvironment": {
+      "env": "PREPROD",
+      "id": "df4d904e-f0b1-4c74-877e-fec4576666f3",
+      "envType": "TEST"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.orderService.products.PostgreSQL",
+    "productId": "3b3807a6-9ad0-4ca6-930a-a37efffcc605",
+    "productName": "PostgreSQL",
+    "env": "TEST",
+    "projectId": "proj-juh8ynkvtn",
+    "orderId": "ff75d654-c851-4cf0-8acc-95473afe9c36",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219z1",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.Windows",
+    "productId": "28bed880-2714-4317-a967-d000d492bd9d",
+    "productName": "Windows",
+    "env": "TEST",
+    "projectId": "proj-juh8ynkvtn",
+    "orderId": "ced7ea99-79af-4ff4-aaf7-7ef32b722d18",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219z2",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.WildFly",
+    "productId": "972a66f1-cd45-437f-b920-676bad68e594",
+    "productName": "WildFly",
+    "env": "TEST",
+    "projectId": "proj-juh8ynkvtn",
+    "orderId": "05e157b1-b9ae-4b23-9e16-74d5e6071db4",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219z3",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.Redis",
+    "productId": "6662a03d-20ce-4a83-a684-ddec48393516",
+    "productName": "Redis",
+    "env": "TEST",
+    "projectId": "proj-juh8ynkvtn",
+    "orderId": "af3dd005-a86f-41c2-be43-12b2a21cdac4",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219z4",
+    "platform": "Nutanix"
+  },
+  {
+    "objectClassName": "models.orderService.products.ApacheKafkaCluster",
+    "productId": "d46dd919-defc-4ec6-a55b-2017b3981258",
+    "productName": "Apache Kafka Cluster",
+    "env": "TEST",
+    "projectId": "proj-juh8ynkvtn",
+    "orderId": "df835386-d7ea-4ad7-8d06-05d64d0b2acb",
+    "uuid": "95aaaec9-3cd3-4276-8ddf-690ec86219z5",
     "platform": "Nutanix"
   }
 ]

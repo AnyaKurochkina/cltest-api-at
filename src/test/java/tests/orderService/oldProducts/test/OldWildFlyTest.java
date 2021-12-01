@@ -1,17 +1,10 @@
-package tests.orderService.oldProducts;
+package tests.orderService.oldProducts.test;
 
-import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
-import models.orderService.products.Nginx;
 import models.orderService.products.WildFly;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 @Epic("Старые продукты")
@@ -22,9 +15,9 @@ import tests.Tests;
 public class OldWildFlyTest extends Tests {
 
     WildFly wildFly = WildFly.builder()
-            .projectId("proj-67nljbzjtt")
+            .projectId("proj-juh8ynkvtn")
             .productId("972a66f1-cd45-437f-b920-676bad68e594")
-            .orderId("da58d2c6-bc47-4a52-8aaa-85de22916a89")
+            .orderId("05e157b1-b9ae-4b23-9e16-74d5e6071db4")
             .productName("WildFly")
             .build();
 
