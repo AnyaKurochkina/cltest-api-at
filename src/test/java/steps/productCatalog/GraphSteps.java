@@ -3,8 +3,8 @@ package steps.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.getGraphs.response.GetGraphsResponse;
-import httpModels.productCatalog.getGraphs.response.ListItem;
+import httpModels.productCatalog.Graphs.getGraphs.response.GetGraphsResponse;
+import httpModels.productCatalog.Graphs.getGraphs.response.ListItem;
 import org.json.JSONObject;
 
 import static core.helper.JsonHelper.convertResponseOnClass;

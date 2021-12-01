@@ -61,7 +61,7 @@ public class KeyCloakSteps {
     //    @Step("Получение ServiceAccountToken")
     public static synchronized String getServiceAccountToken(String projectId) {
         ServiceAccount serviceAccount = ServiceAccount.builder().projectId(projectId).build().createObject();
-        ServiceAccountToken saToken = ServiceAccountToken.builder().serviceAccountName(serviceAccount.name).build().createObject();
+        ServiceAccountToken saToken = ServiceAccountToken.builder().serviceAccountName(serviceAccount.getId()).build().createObject();
         long currentTime = System.currentTimeMillis() / 1000L;
         if (currentTime - saToken.time > TOKEN_LIFETIME_SEC) {
             saToken.token = getNewServiceAccountToken(serviceAccount);
@@ -78,7 +78,7 @@ public class KeyCloakSteps {
                 .setWithoutToken()
                 .post("auth/realms/Portal/protocol/openid-connect/token",
                         String.format("client_id=%s&client_secret=%s&grant_type=client_credentials",
-                                serviceAccount.name, serviceAccount.secret))
+                                serviceAccount.getId(), serviceAccount.getSecret()))
                 .assertStatus(200)
                 .jsonPath()
                 .get("access_token");

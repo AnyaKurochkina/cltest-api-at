@@ -11,7 +11,6 @@ import tests.Tests;
 import java.util.Collections;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Продуктовый каталог: продукты")
 public class ProductsTest extends Tests {
@@ -39,7 +38,7 @@ public class ProductsTest extends Tests {
 
     @Order(100)
     @Test
-    @DisplayName("Удаление экшена")
+    @DisplayName("Удаление продукта")
     @Deleted
     public void deleteAction() {
         try (Product product = Product.builder()

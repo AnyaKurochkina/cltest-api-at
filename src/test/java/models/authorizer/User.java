@@ -8,6 +8,7 @@ import org.json.JSONObject;
 public class User extends Entity {
     public String username;
     public String password;
+    public String role;
 
     @Override
     public Entity init() {

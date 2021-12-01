@@ -24,7 +24,7 @@ public class ServiceAccountToken extends Entity {
 
     @Override
     protected void create() {
-        ServiceAccount serviceAccount = ServiceAccount.builder().name(serviceAccountName).build().createObject();
+        ServiceAccount serviceAccount = ServiceAccount.builder().id(serviceAccountName).build().createObject();
         token = KeyCloakSteps.getNewServiceAccountToken(serviceAccount);
         time = System.currentTimeMillis() / 1000L;
     }

@@ -3,7 +3,7 @@ package steps.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.getTemplate.response.GetTemplateResponse;
+import httpModels.productCatalog.Template.getListTemplate.GetTemplateListResponse;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 
@@ -78,7 +78,7 @@ public class TemplateSteps {
                 .assertStatus(200)
                 .toString();
 
-        GetTemplateResponse response = convertResponseOnClass(object, GetTemplateResponse.class);
+        GetTemplateListResponse response = convertResponseOnClass(object, GetTemplateListResponse.class);
         if (response.getList().size() == 0) {
             log.info("ID не найден, будет возвращён NULL");
             return null;

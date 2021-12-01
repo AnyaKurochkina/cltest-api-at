@@ -24,7 +24,7 @@ public class AccessGroupTest extends Tests {
     @Order(1)
     @DisplayName("Создание Группы доступа")
     void createAccessGroup() {
-        AccessGroup.builder().isForOrders(false).build().createObject();
+        AccessGroup.builder().name("accessgroup").build().createObject();
     }
 
     @Test
@@ -33,7 +33,7 @@ public class AccessGroupTest extends Tests {
     void addUserAccessGroup() {
         AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
         PortalBackSteps portalBackSteps = new PortalBackSteps();
-        AccessGroup accessGroup = AccessGroup.builder().isForOrders(false).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").build().createObject();
         Project project = Project.builder().id(accessGroup.getProjectName()).build().createObject();
         accessGroupSteps.addUsersToGroup(accessGroup, portalBackSteps.getUsers(project, "VTB4043473"));
     }
@@ -44,7 +44,7 @@ public class AccessGroupTest extends Tests {
     void deleteUserAccessGroup() {
         AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
         PortalBackSteps portalBackSteps = new PortalBackSteps();
-        AccessGroup accessGroup = AccessGroup.builder().isForOrders(false).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").build().createObject();
         Project project = Project.builder().id(accessGroup.getProjectName()).build().createObject();
         String user = portalBackSteps.getUsers(project, "VTB4043473");
         accessGroupSteps.addUsersToGroup(accessGroup, user);
@@ -56,6 +56,6 @@ public class AccessGroupTest extends Tests {
     @Deleted
     @DisplayName("Удаление Группы доступа")
     void deleteAccessGroup() {
-        AccessGroup.builder().isForOrders(false).build().createObject().deleteObject();
+        AccessGroup.builder().description("accessgroup").build().createObject().deleteObject();
     }
 }
