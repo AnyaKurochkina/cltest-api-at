@@ -23,8 +23,8 @@ public class NginxTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Nginx product) {
-        Nginx nginx = product.createObjectExclusiveAccess();
-        nginx.close();
+        //noinspection EmptyTryBlock
+        try (Nginx nginx = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

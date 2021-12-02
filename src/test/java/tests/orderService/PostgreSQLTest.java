@@ -26,8 +26,8 @@ public class PostgreSQLTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(PostgreSQL product) {
-        PostgreSQL postgreSQL = product.createObjectExclusiveAccess();
-        postgreSQL.close();
+        //noinspection EmptyTryBlock
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

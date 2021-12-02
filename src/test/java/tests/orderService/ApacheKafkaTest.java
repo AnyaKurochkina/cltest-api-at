@@ -20,8 +20,8 @@ public class ApacheKafkaTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(ApacheKafka product) {
-        ApacheKafka kafka = product.createObjectExclusiveAccess();
-        kafka.close();
+        //noinspection EmptyTryBlock
+        try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

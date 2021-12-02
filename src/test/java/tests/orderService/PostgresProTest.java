@@ -23,8 +23,8 @@ public class PostgresProTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(PostgresPro product) {
-        PostgresPro postgresPro = product.createObjectExclusiveAccess();
-        postgresPro.close();
+        //noinspection EmptyTryBlock
+        try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -21,8 +21,8 @@ public class PostgresSQLClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(PostgresSQLCluster product) {
-        PostgresSQLCluster postgres = product.createObjectExclusiveAccess();
-        postgres.close();
+        //noinspection EmptyTryBlock
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -23,8 +23,8 @@ public class WindowsTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Windows product) {
-        Windows windows = product.createObjectExclusiveAccess();
-        windows.close();
+        //noinspection EmptyTryBlock
+        try (Windows windows = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

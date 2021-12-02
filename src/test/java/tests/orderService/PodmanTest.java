@@ -20,8 +20,8 @@ public class PodmanTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Podman product) {
-        Podman podman = product.createObjectExclusiveAccess();
-        podman.close();
+        //noinspection EmptyTryBlock
+        try (Podman podman = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -23,8 +23,8 @@ public class RabbitMQClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(RabbitMQCluster product) {
-        RabbitMQCluster rabbit = product.createObjectExclusiveAccess();
-        rabbit.close();
+        //noinspection EmptyTryBlock
+        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

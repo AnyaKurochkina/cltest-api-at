@@ -3,9 +3,9 @@ OpenShiftProject:
   - actions:
       [ 'update_openshift_project' ]
   - options:
-#      - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP" }
-#      - { env: "DEV", resourcePoolLabel: "ds1-lpad01.corp.dev.vtb - DEV-SRV-APP" }
-      - { env: "IFT", resourcePoolLabel: "ss1-genr01.test.vtb.ru - TEST-SRV-SYNT" }
+#      - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app", dataCentre: "5" }
+#      - { env: "DEV", resourcePoolLabel: "ds1-lpad01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app", dataCentre: "5" }
+####      - { env: "IFT", resourcePoolLabel: "ss1-genr01.test.vtb.ru - TEST-SRV-SYNT" }
 #      - { env: "LT", resourcePoolLabel: "ls1-genr01.test.vtb.ru - TEST-SRV-PERF" }
 
 ClickHouse:
@@ -13,7 +13,7 @@ ClickHouse:
       [ 'expand_mount_point', 'clickhouse_create_db', 'clickhouse_create_dbms_user', 'clickhouse_reset_db_user_password', 'reset_two_layer', 'clickhouse_remove_dbms_user', 'clickhouse_remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer']
   - options:
 #      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-        - { platform: "Nutanix", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+####        - { platform: "Nutanix", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
 #      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }

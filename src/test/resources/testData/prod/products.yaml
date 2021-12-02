@@ -3,8 +3,8 @@ OpenShiftProject:
   - actions:
       [ 'update_openshift_project' ]
   - options:
-      - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP" }
-      - { env: "DEV", resourcePoolLabel: "ds1-lpad01.corp.dev.vtb - DEV-SRV-APP" }
+      - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app", dataCentre: "5" }
+      - { env: "DEV", resourcePoolLabel: "ds1-lpad01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app", dataCentre: "5" }
       - { env: "IFT", resourcePoolLabel: "ss1-genr01.test.vtb.ru - TEST-SRV-SYNT" }
       - { env: "LT", resourcePoolLabel: "ls1-genr01.test.vtb.ru - TEST-SRV-PERF" }
 
@@ -125,17 +125,18 @@ Redis:
       - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
-ApacheKafka:
-  - actions:
-      ['expand_mount_point', 'reset_two_layer_kafka', 'stop_two_layer_kafka', 'resize_vm', 'start_two_layer_kafka', 'stop_hard_two_layer_kafka']
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1", osVersion: "7.9" }
+#ApacheKafka:
+#  - actions:
+#      ['expand_mount_point', 'reset_two_layer_kafka', 'stop_two_layer_kafka', 'resize_vm', 'start_two_layer_kafka', 'stop_hard_two_layer_kafka']
+#  - options:
+#      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", kafkaVersion: "2.13-2.4.1", osVersion: "7.9" }
 
 ApacheKafkaCluster:
   - actions:
       ['kafka_update_certs', 'kafka_create_topics', 'kafka_delete_topics', 'kafka_create_acl', 'kafka_create_transaction_acl', 'stop_kafka', 'start_kafka', 'restart_kafka', 'expand_mount_point']
   - options:
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
       - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
       - { platform: "Nutanix", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
       - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }

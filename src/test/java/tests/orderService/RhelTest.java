@@ -20,8 +20,8 @@ public class RhelTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Rhel product) {
-        Rhel rhel = product.createObjectExclusiveAccess();
-        rhel.close();
+        //noinspection EmptyTryBlock
+        try (Rhel rhel = product.createObjectExclusiveAccess()){}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
