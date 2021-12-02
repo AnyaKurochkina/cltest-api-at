@@ -39,8 +39,8 @@ public class ObjectPoolService {
 //            Assertions.assertNotEquals(objectPoolEntity.getStatus(), ObjectStatus.FAILED,
 //                    String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой",
 //                            objectPoolEntity.getClazz().getSimpleName()));
-                throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой",
-                        objectPoolEntity.getClazz().getSimpleName()));
+                throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой:\n%s",
+                        objectPoolEntity.getClazz().getSimpleName(), objectPoolEntity.getError()));
         }
         if (objectPoolEntity.getStatus() == ObjectStatus.NOT_CREATED) {
             try {
