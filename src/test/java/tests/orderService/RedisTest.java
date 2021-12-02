@@ -23,8 +23,8 @@ public class RedisTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Redis product) {
-        Redis redis = product.createObjectExclusiveAccess();
-        redis.close();
+        //noinspection EmptyTryBlock
+        try (Redis redis = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
