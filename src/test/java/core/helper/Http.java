@@ -205,8 +205,6 @@ public class Http {
             else
                 responseMessage = IOUtils.toString(is, StandardCharsets.UTF_8);
             http.disconnect();
-            if (path.endsWith("/cost") || path.contains("order-service"))
-                SEMAPHORE.release();
             if (responseMessage.length() > 10000)
                 log(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
             else
@@ -228,6 +226,10 @@ public class Http {
         } catch (Exception e) {
             e.printStackTrace();
             Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
+        }
+        finally {
+            if (path.endsWith("/cost") || path.contains("order-service"))
+                SEMAPHORE.release();
         }
         return new Response(status, responseMessage);
     }
