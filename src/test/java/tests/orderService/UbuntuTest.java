@@ -20,8 +20,8 @@ public class UbuntuTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Ubuntu product) {
-        Ubuntu ubuntu = product.createObjectExclusiveAccess();
-        ubuntu.close();
+        //noinspection EmptyTryBlock
+        try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

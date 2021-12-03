@@ -21,8 +21,8 @@ public class AstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Astra product) {
-        Astra astra = product.createObjectExclusiveAccess();
-        astra.close();
+        //noinspection EmptyTryBlock
+        try (Astra astra = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

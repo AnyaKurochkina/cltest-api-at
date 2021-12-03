@@ -23,8 +23,8 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(ApacheKafkaCluster product) {
-        ApacheKafkaCluster kafka = product.createObjectExclusiveAccess();
-        kafka.close();
+        //noinspection EmptyTryBlock
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

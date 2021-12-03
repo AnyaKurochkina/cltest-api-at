@@ -24,8 +24,8 @@ public class WildFlyTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(WildFly product) {
-        WildFly wildFly = product.createObjectExclusiveAccess();
-        wildFly.close();
+        //noinspection EmptyTryBlock
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -28,8 +28,8 @@ public class OpenShiftTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание проекта {0}")
     void create(OpenShiftProject product) {
-        OpenShiftProject openShift = product.createObjectExclusiveAccess();
-        openShift.close();
+        //noinspection EmptyTryBlock
+        try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {}
     }
 
 //    @Link(type="manual", value = "377741")

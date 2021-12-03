@@ -21,8 +21,8 @@ public class ClickHouseTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(ClickHouse product) {
-        ClickHouse clickHouse = product.createObjectExclusiveAccess();
-        clickHouse.close();
+        //noinspection EmptyTryBlock
+        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)

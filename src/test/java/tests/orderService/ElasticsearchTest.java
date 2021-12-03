@@ -20,8 +20,8 @@ public class ElasticsearchTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Elasticsearch product) {
-        Elasticsearch elastic = product.createObjectExclusiveAccess();
-        elastic.close();
+        //noinspection EmptyTryBlock
+        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
