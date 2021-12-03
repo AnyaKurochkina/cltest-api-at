@@ -47,30 +47,30 @@ public class RunningHandler
         this.testITClient.finishLaunch(this.testResultRequestFactory.getTestResultRequest());
     }
     
-    public void startTest(Method currentTest, String displayName, String subId) {
-        this.createTestItemRequestFactory.processTest(currentTest, displayName, subId);
+    public void startTest(Method currentTest, String displayName, String configurationId) {
+        this.createTestItemRequestFactory.processTest(currentTest, displayName, configurationId);
         final StepNode parentStep = new StepNode();
         parentStep.setTitle(displayName);
         parentStep.setDescription(this.extractDescription(currentTest));
         parentStep.setStartedOn(new Date());
 
         //TODO: UUID
-        this.includedTests.put(new UniqueTest(this.extractExternalID(currentTest, null), subId), parentStep);
+        this.includedTests.put(new UniqueTest(extractExternalID(currentTest, null), configurationId), parentStep);
         StepAspect.setStepNodes(parentStep);
     }
     
-    public void finishTest(final Method atomicTest, final Throwable thrown, String subId) {
-        final String externalId = this.extractExternalID(atomicTest, subId);
-        if (this.alreadyFinished.contains(new UniqueTest(this.extractExternalID(atomicTest, null), subId))) {
+    public void finishTest(final Method atomicTest, final Throwable thrown, String configurationId) {
+//        final String externalId = extractExternalID(atomicTest, subId);
+        if (this.alreadyFinished.contains(new UniqueTest(extractExternalID(atomicTest, null), configurationId))) {
             return;
         }
-        final StepNode parentStep = this.includedTests.get(new UniqueTest(this.extractExternalID(atomicTest, null), subId));
+        final StepNode parentStep = this.includedTests.get(new UniqueTest(extractExternalID(atomicTest, null), configurationId));
         if (parentStep != null) {
             parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
             parentStep.setFailureReason(thrown);
             parentStep.setCompletedOn(new Date());
         }
-        this.alreadyFinished.add(new UniqueTest(this.extractExternalID(atomicTest, null), subId));
+        this.alreadyFinished.add(new UniqueTest(extractExternalID(atomicTest, null), configurationId));
     }
     
     public void startUtilMethod(final MethodType currentMethod, final Method method) {

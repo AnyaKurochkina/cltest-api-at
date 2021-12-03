@@ -2,9 +2,12 @@ package ru.testit.junit5;
 
 import core.helper.StringUtils;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
+import ru.testit.services.TestITClient;
+
 import java.lang.reflect.*;
 import java.util.Objects;
 
@@ -32,14 +35,14 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     }
     
     public void interceptTestMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Exception {
-        String className = extensionContext.getRequiredTestMethod().getDeclaringClass().getSimpleName();
-        String methodName = extensionContext.getRequiredTestMethod().getName();
-        JUnit5EventListener.HANDLER.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), getSubId(extensionContext));
+//        String className = extensionContext.getRequiredTestMethod().getDeclaringClass().getSimpleName();
+//        String methodName = extensionContext.getRequiredTestMethod().getName();
+        JUnit5EventListener.HANDLER.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), /*getSubId(extensionContext)*/ TestITClient.getConfigurationId());
         try {
             invocation.proceed();
         }
         catch (Throwable throwable) {
-            JUnit5EventListener.HANDLER.finishTest(extensionContext.getRequiredTestMethod(), throwable, getSubId(extensionContext));
+            JUnit5EventListener.HANDLER.finishTest(extensionContext.getRequiredTestMethod(), throwable, /*getSubId(extensionContext)*/ TestITClient.getConfigurationId());
             throw new Exception(throwable.getMessage());
         }
     }
@@ -51,7 +54,8 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     }
 
     public void interceptTestTemplateMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Exception {
-        JUnit5EventListener.HANDLER.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), getSubId(extensionContext));
+        Entity entity = (Entity) invocationContext.getArguments().stream().filter(o -> Entity.class.isAssignableFrom(o.getClass())).findFirst().orElseThrow(Exception::new);
+        JUnit5EventListener.HANDLER.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), entity.getConfigurationId());
         try {
             invocation.proceed();
         }

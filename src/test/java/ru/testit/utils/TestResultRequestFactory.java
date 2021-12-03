@@ -16,6 +16,7 @@ public class TestResultRequestFactory
             final String externalId = test.getExternalId();
             final TestResultRequest currentTest = new TestResultRequest();
             currentTest.setAutoTestExternalId(externalId);
+            currentTest.setConfigurationId(test.getConfigurationId());
             this.processTestSteps(currentTest, includedTests.get(test));
             this.processUtilsMethodsSteps(currentTest, utilsMethodSteps);
             this.request.getTestResults().add(currentTest);
@@ -34,7 +35,7 @@ public class TestResultRequestFactory
     }
     
     public void processTestSteps(final TestResultRequest testResult, final StepNode parentStep) {
-        testResult.setConfigurationId(TestITClient.getConfigurationId());
+//        testResult.setConfigurationId(TestITClient.getConfigurationId());
         final Date startedOn = parentStep.getStartedOn();
         final Date completedOn = parentStep.getCompletedOn();
         testResult.setStartedOn(startedOn);

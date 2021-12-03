@@ -18,7 +18,7 @@ public class CreateTestItemRequestFactory
         this.createTestItemRequests = new HashMap<UniqueTest, CreateTestItemRequest>();
     }
     
-    public void processTest(final Method method, String displayName, String subId) {
+    public void processTest(final Method method, String displayName, String configurationId) {
         final CreateTestItemRequest createTestItemRequest = new CreateTestItemRequest();
         final String externalId = this.extractExternalID(method, null);
         createTestItemRequest.setExternalId(externalId);
@@ -29,7 +29,7 @@ public class CreateTestItemRequestFactory
         createTestItemRequest.setTestPlanId(this.extractTestPlanId(method));
         createTestItemRequest.setLinks(this.extractLinks(method));
         createTestItemRequest.setLabels(this.extractLabels(method));
-        this.createTestItemRequests.put(new UniqueTest(externalId, subId), createTestItemRequest);
+        this.createTestItemRequests.put(new UniqueTest(externalId, configurationId), createTestItemRequest);
     }
     
     public void processFinishLaunch(final HashMap<MethodType, StepNode> utilsMethodSteps, final HashMap<UniqueTest, StepNode> includedTests) {
