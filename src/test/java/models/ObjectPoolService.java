@@ -57,6 +57,7 @@ public class ObjectPoolService {
                     throw throwable;
                 } else {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED);
+                    objectPoolEntity.setError(throwable);
                     objectPoolEntity.release();
                     throw throwable;
                 }

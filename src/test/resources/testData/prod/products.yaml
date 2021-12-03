@@ -5,8 +5,8 @@ OpenShiftProject:
   - options:
       - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app", dataCentre: "5" }
       - { env: "DEV", resourcePoolLabel: "ds1-lpad01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app", dataCentre: "5" }
-      - { env: "IFT", resourcePoolLabel: "ss1-genr01.test.vtb.ru - TEST-SRV-SYNT" }
-      - { env: "LT", resourcePoolLabel: "ls1-genr01.test.vtb.ru - TEST-SRV-PERF" }
+      - { env: "IFT", resourcePoolLabel: "ss1-genr01.test.vtb.ru - TEST-SRV-SYNT", segment: "test-srv-synt", dataCentre: "5"  }
+      - { env: "LT", resourcePoolLabel: "ls1-genr01.test.vtb.ru - TEST-SRV-PERF", segment: "test-srv-perf", dataCentre: "5"  }
 
 ClickHouse:
   - actions:
