@@ -19,25 +19,22 @@ public class GraphSteps {
     }
 
     public void createGraph(String graphName) {
-        String object = new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .post("graphs/?save_as_next_version=true", toJson("/productCatalog/graphs/createGraph.json", graphName))
-                .assertStatus(201)
-                .toString();
+                .assertStatus(201);
     }
 
-    public String getGraphId(String graphName){
+    public String getGraphId(String graphName) {
         String graphId = null;
-        String object = new Http(Configure.ProductCatalog)
+        GetGraphsResponse response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("graphs/?include=total_count&page=1&per_page=10")
                 .assertStatus(200)
-                .toString();
+                .extractAs(GetGraphsResponse.class);
 
-        GetGraphsResponse response = convertResponseOnClass(object, GetGraphsResponse.class);
-
-        for(ListItem listItem: response.getList()){
-            if (listItem.getName().equals(graphName)){
+        for (ListItem listItem : response.getList()) {
+            if (listItem.getName().equals(graphName)) {
                 graphId = listItem.getId();
             }
         }

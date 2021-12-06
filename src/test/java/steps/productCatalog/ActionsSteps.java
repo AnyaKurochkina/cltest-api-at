@@ -36,13 +36,11 @@ public class ActionsSteps {
     @Step("Поиск ID экшена по имени с использованием multiSearch")
     public String getActionByNameWithMultiSearch(String actionName) {
         String actionId = null;
-        String object = new Http(Configure.ProductCatalog)
+        ActionResponse response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("actions/?include=total_count&page=1&per_page=10&multisearch=" + actionName)
                 .assertStatus(200)
-                .toString();
-
-        ActionResponse response = convertResponseOnClass(object, ActionResponse.class);
+                .extractAs(ActionResponse.class);
 
         for (ListItem listItem : response.getList()) {
             if (listItem.getName().equals(actionName)) {
@@ -58,13 +56,11 @@ public class ActionsSteps {
     @Step("Получение ID экшена  по его имени: {actionName}")
     public String getActionId(String actionName) {
         String actionId = null;
-        String object = new Http(Configure.ProductCatalog)
+        ActionResponse response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("actions/")
                 .assertStatus(200)
-                .toString();
-
-        ActionResponse response = convertResponseOnClass(object, ActionResponse.class);
+                .extractAs(ActionResponse.class);
 
         for (ListItem listItem : response.getList()) {
             if (listItem.getName().equals(actionName)) {
@@ -94,13 +90,12 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Обновление экшена")
     public PatchActionResponse patchAction(String actionName, String graphId, String actionId) {
-        String response = new Http(Configure.ProductCatalog)
+       return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .patch("actions/" + actionId + "/", toJson("productCatalog/actions/createAction.json", actionName, graphId))
                 .assertStatus(200)
-                .toString();
+                .extractAs(PatchActionResponse.class);
 
-        return convertResponseOnClass(response, PatchActionResponse.class);
     }
 
     @SneakyThrows

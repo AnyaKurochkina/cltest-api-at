@@ -15,13 +15,11 @@ public class ProductsSteps {
     @Step("Получение ID продукта по его имени: {actionName}")
     public String getProductId(String productName) {
         String productsId = null;
-        String object = new Http(Configure.ProductCatalog)
+        GetProductsResponse response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("products/")
                 .assertStatus(200)
-                .toString();
-
-        GetProductsResponse response = convertResponseOnClass(object, GetProductsResponse.class);
+                .extractAs(GetProductsResponse.class);
 
         for (ListItem listItem : response.getList()) {
             if (listItem.getName().equals(productName)) {

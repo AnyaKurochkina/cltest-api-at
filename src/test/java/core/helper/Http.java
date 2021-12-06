@@ -1,5 +1,6 @@
 package core.helper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -259,6 +260,8 @@ public class Http {
             return this;
         }
 
+
+
         public int status() {
             return status;
         }
@@ -289,6 +292,13 @@ public class Http {
 
         public String toString() {
             return responseMessage;
+        }
+
+        @SneakyThrows
+        public <T> T extractAs(Class<T> clazz){
+            JSONObject jsonObject = new JSONObject(responseMessage);
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.convertValue(jsonObject.toMap(), clazz);
         }
 
     }

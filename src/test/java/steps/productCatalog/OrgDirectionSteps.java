@@ -19,23 +19,23 @@ public class OrgDirectionSteps {
 
     @Step("Получение списка направлений")
     public List<ListItem> getOrgDirectionList() {
-        String object = new Http(Configure.ProductCatalog)
+        GetOrgDirectionListResponse response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("org_direction/")
                 .assertStatus(200)
-                .toString();
-        GetOrgDirectionListResponse response = convertResponseOnClass(object, GetOrgDirectionListResponse.class);
+                .extractAs(GetOrgDirectionListResponse.class);
+
         return response.getList();
     }
 
     @Step("Проверка существования направления")
     public boolean isExist(String name) {
-        String object = new Http(Configure.ProductCatalog)
+        ExistsOrgDirectionResponse response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("org_direction/exists/?name=" + name)
                 .assertStatus(200)
-                .toString();
-        ExistsOrgDirectionResponse response = convertResponseOnClass(object, ExistsOrgDirectionResponse.class);
+                .extractAs(ExistsOrgDirectionResponse.class);
+
         return response.getExists();
     }
 
@@ -49,12 +49,11 @@ public class OrgDirectionSteps {
 
     @Step("Получение направлеия по Id")
     public GetOrgDirectionResponse getOrgDirectionById(String id) {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("org_direction/" + id + "/")
                 .assertStatus(200)
-                .toString();
-        return convertResponseOnClass(object, GetOrgDirectionResponse.class);
+                .extractAs(GetOrgDirectionResponse.class);
     }
 
     @Step("Обновление направления по Id")
@@ -93,11 +92,10 @@ public class OrgDirectionSteps {
 
     @Step ("Экспорт направления по Id")
     public ExportOrgDirectionResponse exportOrgDirectionById(String id) {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("org_direction/" + id + "/obj_export/")
                 .assertStatus(200)
-                .toString();
-        return convertResponseOnClass(object, ExportOrgDirectionResponse.class);
+                .extractAs(ExportOrgDirectionResponse.class);
     }
 }

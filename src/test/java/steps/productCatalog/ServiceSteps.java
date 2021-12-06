@@ -16,11 +16,10 @@ import static core.helper.JsonHelper.convertResponseOnClass;
 public class ServiceSteps {
 
     public CreateServiceResponse createService(JSONObject body) {
-        String serviceObject = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .post("services/", body)
-                .toString();
-        return convertResponseOnClass(serviceObject, CreateServiceResponse.class);
+                .extractAs(CreateServiceResponse.class);
     }
 
     public void existService(String nameService) {
@@ -32,12 +31,11 @@ public class ServiceSteps {
 
     @Step("Получение сервиса по Id")
     public GetServiceResponse getServiceById(String id) {
-        String serviceObject = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("services/" + id + "/")
                 .assertStatus(200)
-                .toString();
-        return convertResponseOnClass(serviceObject, GetServiceResponse.class);
+                .extractAs(GetServiceResponse.class);
     }
 
     @Step("Удаление сервиса по Id")
@@ -50,12 +48,11 @@ public class ServiceSteps {
 
     @Step("Копирование сервиса по Id")
     public CopyServiceResponse copyServiceById(String id) {
-        String serviceObject = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .post("services/" + id + "/copy/")
                 .assertStatus(200)
-                .toString();
-        return convertResponseOnClass(serviceObject, CopyServiceResponse.class);
+                .extractAs(CopyServiceResponse.class);
     }
 
     @Step("Обновление сервиса")
@@ -72,13 +69,11 @@ public class ServiceSteps {
     @Step("Получение ID сервиса по его имени: {serviceName}")
     public String getServiceIdByName(String serviceName) {
         String serviceId = null;
-        String object = new Http(Configure.ProductCatalog)
+        GetServiceListResponse response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("services/")
                 .assertStatus(200)
-                .toString();
-
-        GetServiceListResponse response = convertResponseOnClass(object, GetServiceListResponse.class);
+                .extractAs(GetServiceListResponse.class);
 
         for (ListItem listItem : response.getList()) {
             if (listItem.getName().equals(serviceName)) {
