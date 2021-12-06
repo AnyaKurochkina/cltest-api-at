@@ -41,11 +41,10 @@ public class OpenShiftTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменение проекта {0}")
     void change(OpenShiftProject product) {
-//        try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {
-//            openShift.checkPreconditionStatusProduct(ProductStatus.CREATED);
-//            openShift.changeProject();
-//        }
-        OpenShiftProject.builder().build().createObjectExclusiveAccess().close();
+        try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {
+            openShift.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            openShift.changeProject();
+        }
     }
 
     @Link(type="manual", value = "377740")

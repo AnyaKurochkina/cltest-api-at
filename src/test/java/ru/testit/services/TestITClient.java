@@ -39,12 +39,16 @@ public class TestITClient
 {
 //    private static final Logger log;
     public static AppProperties properties;
-    private final ObjectMapper objectMapper;
     public static StartLaunchResponse startLaunchResponse;
     
     public TestITClient() {
-        this.objectMapper = new ObjectMapper().setTimeZone(TimeZone.getTimeZone("GMT+3"));
     }
+    
+    private static ObjectMapper getObjectMapper(){
+        return  new ObjectMapper().setTimeZone(TimeZone.getTimeZone("GMT+3"));
+    }
+    
+    
     
     public static String getProjectID() {
         return TestITClient.properties.getProjectID();
@@ -69,7 +73,7 @@ public class TestITClient
         try {
             final StartTestRunRequest request = new StartTestRunRequest();
             request.setProjectId(getProjectID());
-            final StringEntity requestEntity = new StringEntity(this.objectMapper.writeValueAsString((Object)request), ContentType.APPLICATION_JSON);
+            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)request), ContentType.APPLICATION_JSON);
             post.setEntity((HttpEntity)requestEntity);
             final CloseableHttpClient httpClient = getHttpClient();
             try {
@@ -82,7 +86,7 @@ public class TestITClient
                             " :: " + requestEntity + " :: " + str);
                     //////////////////
 
-                    this.startLaunchResponse = (StartLaunchResponse)this.objectMapper.readValue(str, (Class)StartLaunchResponse.class);
+                    this.startLaunchResponse = (StartLaunchResponse)getObjectMapper().readValue(str, (Class)StartLaunchResponse.class);
                     if (response != null) {
                         response.close();
                     }
@@ -119,8 +123,34 @@ public class TestITClient
         }
     }
     
-    public void sendTestItems(final Collection<CreateTestItemRequest> createTestRequests) {
-        for (final CreateTestItemRequest createTestRequest : createTestRequests) {
+//    public void sendTestItems(final Collection<CreateTestItemRequest> createTestRequests) {
+//        for (final CreateTestItemRequest createTestRequest : createTestRequests) {
+//            final GetTestItemResponse getTestItemResponse = this.getTestItem(createTestRequest);
+//            if (getTestItemResponse == null || StringUtils.isBlank((CharSequence)getTestItemResponse.getId())) {
+////                createTestRequest.setExternalId(createTestRequest.getExternalId().replaceAll("#(\\d+)$", ""));
+//                this.createTestItem(createTestRequest);
+//            }
+//            else {
+//                if (createTestRequest.getOutcome().equals(Outcome.FAILED)) {
+//                    createTestRequest.setId(getTestItemResponse.getId());
+//                    createTestRequest.setName(getTestItemResponse.getName());
+//                    createTestRequest.setExternalId(getTestItemResponse.getExternalId());
+//                    createTestRequest.setDescription(getTestItemResponse.getDescription());
+//                    createTestRequest.setNameSpace(getTestItemResponse.getNameSpace());
+//                    createTestRequest.setClassName(getTestItemResponse.getClassName());
+//                    createTestRequest.setLabels(getTestItemResponse.getLabels());
+//                    createTestRequest.setSetUp(getTestItemResponse.getSetUp());
+//                    createTestRequest.setSteps(getTestItemResponse.getSteps());
+//                    createTestRequest.setTearDown(getTestItemResponse.getTearDown());
+//                    createTestRequest.setProjectId(getTestItemResponse.getProjectId());
+//                    createTestRequest.setTitle(getTestItemResponse.getTitle());
+//                }
+//                this.updatePostItem(createTestRequest, getTestItemResponse.getId());
+//            }
+//        }
+//    }
+
+    public void sendTestItemsUniqueTest(final CreateTestItemRequest createTestRequest) {
             final GetTestItemResponse getTestItemResponse = this.getTestItem(createTestRequest);
             if (getTestItemResponse == null || StringUtils.isBlank((CharSequence)getTestItemResponse.getId())) {
 //                createTestRequest.setExternalId(createTestRequest.getExternalId().replaceAll("#(\\d+)$", ""));
@@ -143,10 +173,7 @@ public class TestITClient
                 }
                 this.updatePostItem(createTestRequest, getTestItemResponse.getId());
             }
-        }
     }
-
-
 
     public ConfigurationResponse getConfiguration(String configurationId) {
         final HttpGet get = new HttpGet(TestITClient.properties.getUrl() + "/api/v2/configurations/" + configurationId);
@@ -163,7 +190,7 @@ public class TestITClient
                     TestITClient.log.info(get + " :: " + str);
                     //////////////////
 
-                    configurationResponse = (ConfigurationResponse)this.objectMapper.readValue(str, (Class)ConfigurationResponse.class);
+                    configurationResponse = (ConfigurationResponse)getObjectMapper().readValue(str, (Class)ConfigurationResponse.class);
                     if (response != null) {
                         response.close();
                     }
@@ -229,9 +256,9 @@ public class TestITClient
                     TestITClient.log.info(get + " :: " + str);
                     //////////////////
 
-                    final TypeFactory typeFactory = this.objectMapper.getTypeFactory();
+                    final TypeFactory typeFactory = getObjectMapper().getTypeFactory();
                     final CollectionType collectionType = typeFactory.constructCollectionType((Class)List.class, (Class)GetTestItemResponse.class);
-                    final List<GetTestItemResponse> listTestItems = (List<GetTestItemResponse>)this.objectMapper.readValue(str, (JavaType)collectionType);
+                    final List<GetTestItemResponse> listTestItems = (List<GetTestItemResponse>)getObjectMapper().readValue(str, (JavaType)collectionType);
                     if (!listTestItems.isEmpty()) {
                         getTestItemResponse = listTestItems.get(0);
                     }
@@ -278,7 +305,7 @@ public class TestITClient
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         CreateTestItemResponse createTestItemResponse = null;
         try {
-            final StringEntity requestEntity = new StringEntity(this.objectMapper.writeValueAsString((Object)createTestItemRequest), ContentType.APPLICATION_JSON);
+            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)createTestItemRequest), ContentType.APPLICATION_JSON);
             post.setEntity((HttpEntity)requestEntity);
             final CloseableHttpClient httpClient = getHttpClient();
             try {
@@ -291,7 +318,7 @@ public class TestITClient
                             " :: " + requestEntity + " :: " + str);
                     //////////////////
 
-                    createTestItemResponse = (CreateTestItemResponse)this.objectMapper.readValue(str, (Class)CreateTestItemResponse.class);
+                    createTestItemResponse = (CreateTestItemResponse)getObjectMapper().readValue(str, (Class)CreateTestItemResponse.class);
                     if (response != null) {
                         response.close();
                     }
@@ -338,7 +365,7 @@ public class TestITClient
         put.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         final CreateTestItemResponse createTestItemResponse = null;
         try {
-            final StringEntity requestEntity = new StringEntity(this.objectMapper.writeValueAsString((Object)createTestItemRequest), ContentType.APPLICATION_JSON);
+            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)createTestItemRequest), ContentType.APPLICATION_JSON);
             put.setEntity((HttpEntity)requestEntity);
             final CloseableHttpClient httpClient = getHttpClient();
             try {
@@ -394,7 +421,7 @@ public class TestITClient
         final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/autoTests/" + autoTestId + "/workItems");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         try {
-            final StringEntity requestEntity = new StringEntity(this.objectMapper.writeValueAsString((Object)linkAutoTestRequest), ContentType.APPLICATION_JSON);
+            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)linkAutoTestRequest), ContentType.APPLICATION_JSON);
             post.setEntity((HttpEntity)requestEntity);
             final CloseableHttpClient httpClient = getHttpClient();
             try {
@@ -445,19 +472,16 @@ public class TestITClient
     }
     
     public void finishLaunch(final TestResultsRequest request) {
-        this.sendTestResult(request);
+//        this.sendTestResult(request);
         this.sendCompleteTestRun();
     }
     
-    private void sendTestResult(final TestResultsRequest request) {
+    public static void sendTestResult(final TestResultsRequest request) {
         final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/testResults");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         try {
             List<TestResultRequest> list = request.getTestResults();
-//            for (TestResultRequest req: list) {
-//                req.setAutoTestExternalId(req.getAutoTestExternalId().replaceAll("#(\\d+)$", ""));
-//            }
-            final StringEntity requestEntity = new StringEntity(this.objectMapper.writeValueAsString((Object)list), ContentType.APPLICATION_JSON);
+            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)list), ContentType.APPLICATION_JSON);
             post.setEntity((HttpEntity)requestEntity);
             final CloseableHttpClient httpClient = getHttpClient();
             try {
@@ -506,11 +530,11 @@ public class TestITClient
         }
     }
     
-    private void sendCompleteTestRun() {
+    public void sendCompleteTestRun() {
         final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/complete");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         try {
-            final StringEntity requestEntity = new StringEntity(this.objectMapper.writeValueAsString((Object)""), ContentType.APPLICATION_JSON);
+            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)""), ContentType.APPLICATION_JSON);
             post.setEntity((HttpEntity)requestEntity);
             final CloseableHttpClient httpClient = getHttpClient();
             try {

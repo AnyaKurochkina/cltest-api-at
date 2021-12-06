@@ -41,10 +41,11 @@ public class RunningHandler
     }
     
     public void finishLaunch() {
-        this.createTestItemRequestFactory.processFinishLaunch(this.utilsMethodSteps, this.includedTests);
-        this.testITClient.sendTestItems(this.createTestItemRequestFactory.getCreateTestRequests());
+//        this.createTestItemRequestFactory.processFinishLaunch(this.utilsMethodSteps, this.includedTests);
+//        this.testITClient.sendTestItems(this.createTestItemRequestFactory.getCreateTestRequests());
         this.testResultRequestFactory.processFinishLaunch(this.utilsMethodSteps, this.includedTests);
-        this.testITClient.finishLaunch(this.testResultRequestFactory.getTestResultRequest());
+//        this.testITClient.finishLaunch(this.testResultRequestFactory.getTestResultRequest());
+        this.testITClient.sendCompleteTestRun();
     }
     
     public void startTest(Method currentTest, String displayName, String configurationId) {
@@ -61,7 +62,8 @@ public class RunningHandler
     
     public void finishTest(final Method atomicTest, final Throwable thrown, String configurationId) {
 //        final String externalId = extractExternalID(atomicTest, subId);
-        if (this.alreadyFinished.contains(new UniqueTest(extractExternalID(atomicTest, null), configurationId))) {
+        UniqueTest test = new UniqueTest(extractExternalID(atomicTest, null), configurationId);
+        if (this.alreadyFinished.contains(test)) {
             return;
         }
         final StepNode parentStep = this.includedTests.get(new UniqueTest(extractExternalID(atomicTest, null), configurationId));
@@ -70,7 +72,10 @@ public class RunningHandler
             parentStep.setFailureReason(thrown);
             parentStep.setCompletedOn(new Date());
         }
-        this.alreadyFinished.add(new UniqueTest(extractExternalID(atomicTest, null), configurationId));
+        this.alreadyFinished.add(test);
+        this.createTestItemRequestFactory.processFinishLaunchUniqueTest(this.utilsMethodSteps, this.includedTests, test);
+        this.testITClient.sendTestItemsUniqueTest(this.createTestItemRequestFactory.getCreateTestRequests(test));
+        this.testResultRequestFactory.processFinishLaunchUniqueTest(test, this.utilsMethodSteps, this.includedTests);
     }
     
     public void startUtilMethod(final MethodType currentMethod, final Method method) {

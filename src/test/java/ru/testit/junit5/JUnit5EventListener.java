@@ -15,6 +15,7 @@ import java.util.Objects;
 public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterAllCallback, InvocationInterceptor, TestWatcher
 {
     private static final RunningHandler HANDLER;
+    private static final ExtensionContext.Namespace configurationSpace = ExtensionContext.Namespace.create(JUnit5EventListener.class);
     
     public void beforeAll(final ExtensionContext context) {
         JUnit5EventListener.HANDLER.startLaunch();
@@ -38,6 +39,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
 //        String className = extensionContext.getRequiredTestMethod().getDeclaringClass().getSimpleName();
 //        String methodName = extensionContext.getRequiredTestMethod().getName();
         JUnit5EventListener.HANDLER.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), /*getSubId(extensionContext)*/ TestITClient.getConfigurationId());
+        extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), TestITClient.getConfigurationId());
         try {
             invocation.proceed();
         }
@@ -53,28 +55,32 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         return null;
     }
 
-    public void interceptTestTemplateMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Exception {
+    public void interceptTestTemplateMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Throwable {
         Entity entity = (Entity) invocationContext.getArguments().stream().filter(o -> Entity.class.isAssignableFrom(o.getClass())).findFirst().orElseThrow(Exception::new);
         JUnit5EventListener.HANDLER.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), entity.getConfigurationId());
+        extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), entity.getConfigurationId());
         try {
             invocation.proceed();
         }
         catch (Throwable throwable) {
-            JUnit5EventListener.HANDLER.finishTest(extensionContext.getRequiredTestMethod(), throwable, getSubId(extensionContext));
-            throw new Exception(throwable.getMessage());
+            JUnit5EventListener.HANDLER.finishTest(extensionContext.getRequiredTestMethod(), throwable, entity.getConfigurationId());
+            throw throwable;
         }
     }
     
     public void testSuccessful(final ExtensionContext context) {
-        JUnit5EventListener.HANDLER.finishTest(context.getRequiredTestMethod(), null, getSubId(context));
+        String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
+        JUnit5EventListener.HANDLER.finishTest(context.getRequiredTestMethod(), null, configurationId);
     }
     
     public void testAborted(final ExtensionContext context, final Throwable cause) {
-        JUnit5EventListener.HANDLER.finishTest(context.getRequiredTestMethod(), cause, getSubId(context));
+        String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
+        JUnit5EventListener.HANDLER.finishTest(context.getRequiredTestMethod(), cause, configurationId);
     }
     
     public void testFailed(final ExtensionContext context, final Throwable cause) {
-        JUnit5EventListener.HANDLER.finishTest(context.getRequiredTestMethod(), cause, getSubId(context));
+        String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
+        JUnit5EventListener.HANDLER.finishTest(context.getRequiredTestMethod(), cause, configurationId);
     }
     
     public void interceptAfterEachMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Exception {
