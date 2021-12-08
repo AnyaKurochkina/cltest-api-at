@@ -1,4 +1,4 @@
-package httpModels.productCatalog.Graphs.getGraphs.response;
+package httpModels.productCatalog.Graphs.getGraphsList.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
