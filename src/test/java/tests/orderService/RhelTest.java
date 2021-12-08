@@ -36,12 +36,12 @@ public class RhelTest extends Tests {
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "Проверка создания {0}")
+    @ParameterizedTest(name = "Проверка создания {0}")
     void checkCreate(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             AccessGroup accessGroup = AccessGroup.builder().projectName(rhel.getProjectId()).build().createObject();
-            Assertions.assertTrue(accessGroup.getUsers().size() < 1, String.format("Нет пользователей в группе %s", accessGroup.getName()));
+            Assertions.assertTrue(accessGroup.getUsers().size() > 0, String.format("Нет пользователей в группе %s", accessGroup.getName()));
             rhel.checkCreateUseSsh(accessGroup.getUsers().get(0));
         }
     }
