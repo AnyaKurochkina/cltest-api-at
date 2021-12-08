@@ -1,7 +1,6 @@
 package ru.testit.properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.SneakyThrows;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,18 +9,13 @@ import java.util.Properties;
 
 public class AppProperties
 {
-    private static final Logger log;
     private Properties appProps;
     
+    @SneakyThrows
     public AppProperties() {
         final String appConfigPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("testit.properties")).getPath();
         this.appProps = new Properties();
-        try {
-            this.appProps.load(new FileInputStream(appConfigPath));
-        }
-        catch (IOException e) {
-            AppProperties.log.error("Exception while read properties", e);
-        }
+        this.appProps.load(new FileInputStream(appConfigPath));
     }
     
     public String getProjectID() {
@@ -38,9 +32,5 @@ public class AppProperties
     
     public String getConfigurationId() {
         return String.valueOf(this.appProps.get("ConfigurationId"));
-    }
-    
-    static {
-        log = LoggerFactory.getLogger((Class)AppProperties.class);
     }
 }

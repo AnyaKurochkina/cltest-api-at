@@ -4,7 +4,7 @@ import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.core.util.Assert;
+//import org.apache.logging.log4j.core.util.Assert;
 import org.json.JSONArray;
 import org.json.JSONObject;
 //import org.junit.Assert;
