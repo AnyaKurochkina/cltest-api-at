@@ -47,7 +47,7 @@ public class OrgDirectionSteps {
                 .assertStatus(201);
     }
 
-    @Step("Получение направлеия по Id")
+    @Step("Получение направления по Id")
     public GetOrgDirectionResponse getOrgDirectionById(String id) {
         String object = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
@@ -88,7 +88,6 @@ public class OrgDirectionSteps {
                 .setContentType("application/json")
                 .post("org_direction/" + id + "/copy/")
                 .assertStatus(200);
-
     }
 
     @Step ("Экспорт направления по Id")

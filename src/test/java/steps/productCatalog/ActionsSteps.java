@@ -3,38 +3,28 @@ package steps.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
+import httpModels.productCatalog.Action.existsAction.response.ExistsActionResponse;
+import httpModels.productCatalog.Action.getAction.response.GetActionResponse;
+import httpModels.productCatalog.Action.getActionList.response.ActionResponse;
+import httpModels.productCatalog.Action.getActionList.response.ListItem;
 import httpModels.productCatalog.Action.patchAction.response.PatchActionResponse;
 import io.qameta.allure.Step;
+import io.restassured.response.Response;
 import lombok.SneakyThrows;
-import httpModels.productCatalog.Action.getAction.response.ActionResponse;
-import httpModels.productCatalog.Action.getAction.response.ListItem;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
+import java.io.File;
+import java.util.List;
+
 import static core.helper.JsonHelper.convertResponseOnClass;
+import static io.restassured.RestAssured.given;
 
 public class ActionsSteps {
 
-    private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {
-        JsonHelper jsonHelper = new JsonHelper();
-        //productCatalog/actions/createAction.json
-        return jsonHelper.getJsonTemplate(pathToJsonBody)
-                .set("$.name", actionName)
-                .set("$.title", actionName)
-                .set("$.description", actionName)
-                .set("$.graph_id", graphId)
-//                .set("$.graph_version", "1.0.0")
-                .set("$.graph_version_pattern", "1.")
-//                .set("$.required_order_statuses[0]", "success")
-//                .set("$.event_type[0]", "bm")
-//                .set("$.event_provider[0]", "s3")
-//                .set("$.type", "deleted")
-                .build();
-    }
-
     @SneakyThrows
     @Step("Поиск ID экшена по имени с использованием multiSearch")
-    public String getActionByNameWithMultiSearch(String actionName) {
+    public String getActionIdByNameWithMultiSearch(String actionName) {
         String actionId = null;
         String object = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
@@ -104,11 +94,98 @@ public class ActionsSteps {
     }
 
     @SneakyThrows
+    @Step("Получение списка действий")
+    public List<ListItem> getActionList() {
+        String response = new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .get("actions/")
+                .assertStatus(200).toString();
+        ActionResponse actionResponse = convertResponseOnClass(response, ActionResponse.class);
+        return actionResponse.getList();
+    }
+
+    @SneakyThrows
+    @Step("Проверка существования действия по имени")
+    public boolean isExist(String name) {
+        String object = new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .get("actions/exists/?name=" + name)
+                .assertStatus(200)
+                .toString();
+        ExistsActionResponse response = convertResponseOnClass(object, ExistsActionResponse.class);
+        return response.getExists();
+    }
+
+    @SneakyThrows
+    @Step("Импорт действия")
+    public void importAction(String pathName) {
+        Response response = given()
+                .contentType("multipart/form-data")
+                .multiPart("file", new File(pathName))
+                .when()
+                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/actions/obj_import/");
+        Assertions.assertEquals(200, response.getStatusCode());
+    }
+
+    @SneakyThrows
+    @Step("Получение действия по Id")
+    public GetActionResponse getActionById(String id) {
+        String object = new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .get("actions/" + id + "/")
+                .assertStatus(200)
+                .toString();
+        return convertResponseOnClass(object, GetActionResponse.class);
+    }
+
+    @SneakyThrows
+    @Step("Копирование действия по Id")
+    public void copyActionById(String id) {
+        new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .post("actions/" + id + "/copy/")
+                .assertStatus(200);
+    }
+
+    @SneakyThrows
+    @Step("Экспорт действия по Id")
+    public void exportActionById(String id) {
+        new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .get("actions/" + id + "/obj_export/")
+                .assertStatus(200);
+    }
+
+    @SneakyThrows
     @Step("Удаление экшена")
     public void deleteAction(String id) {
         new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .delete("actions/" + id + "/")
                 .assertStatus(204);
+    }
+
+    @Step("Создание JSON объекта по действиям")
+    public JSONObject createJsonObject(String name) {
+        return new JsonHelper()
+                .getJsonTemplate("productCatalog/actions/createAction.json")
+                .set("$.name", name)
+                .build();
+    }
+
+    @Step("Удаление действия по имени")
+    public void deleteActionByName(String name) {
+        deleteAction(getActionIdByNameWithMultiSearch(name));
+    }
+
+    private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {
+        JsonHelper jsonHelper = new JsonHelper();
+        return jsonHelper.getJsonTemplate(pathToJsonBody)
+                .set("$.name", actionName)
+                .set("$.title", actionName)
+                .set("$.description", actionName)
+                .set("$.graph_id", graphId)
+                .set("$.graph_version_pattern", "1.")
+                .build();
     }
 }

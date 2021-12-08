@@ -8,8 +8,6 @@ import httpModels.productCatalog.Service.getService.response.GetServiceResponse;
 import io.qameta.allure.Feature;
 import models.productCatalog.Services;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.productCatalog.ServiceSteps;
 import tests.Tests;
 
@@ -27,7 +25,7 @@ public class ServicesTest extends Tests {
     @Test
     public void createService() {
         service = Services.builder()
-                .serviceName("ServiceATtest")
+                .serviceName("service_test")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
@@ -40,8 +38,6 @@ public class ServicesTest extends Tests {
         CreateServiceResponse serviceResponse = serviceSteps.createService(new JsonHelper()
                 .getJsonTemplate("productCatalog/services/createServices.json")
                 .build());
-        serviceSteps.deleteServiceById(serviceResponse.getId());
-        Assertions.assertNotEquals(serviceResponse.getName(), service.getServiceName());
     }
 
     @Order(3)
@@ -76,7 +72,7 @@ public class ServicesTest extends Tests {
     @Deleted
     public void deleteService() {
         try (Services service = Services.builder()
-                .serviceName("ServiceATtest")
+                .serviceName("service_test")
                 .build()
                 .createObjectExclusiveAccess()) {
             service.deleteObject();
