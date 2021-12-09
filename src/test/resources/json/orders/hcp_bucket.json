@@ -10,7 +10,7 @@
         "enabled": false,
         "pruneDays": 10
       },
-      "bucket_name": "testbuket1",
+      "bucket_name": "HCP bucket",
       "data_center": "5",
       "net_segment": "dev-srv-app",
       "replication": false,

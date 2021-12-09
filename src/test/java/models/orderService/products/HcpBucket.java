@@ -37,11 +37,11 @@ public class HcpBucket extends IProduct {
     private String servicePlan;
     private boolean replication;
     /*
-    delete_bucket_acls - Изменить ACL
-    create_or_change_bucket_acls - настроить acl
+    delete_bucket_acls - Изменить ACL -no
+    create_or_change_bucket_acls - настроить acl -no
     change_bucket_versioning - Измененить параметры версионирования {"item_id":"bd3128c3-fb9e-42d0-9f8f-e49f7091c614","order":{"data":{"bucket":{"versioning":{"prune":true,"enabled":true,"pruneDays":10}}}}}
     change_bucket_config - Измененить конфигурацию бакета {"item_id":"bd3128c3-fb9e-42d0-9f8f-e49f7091c614","order":{"data":{"bucket":{"hard_quota":20,"service_plan":"Cold","replication_enabled":false}}}}
-    delete_bucket_acls - Удалить ACL
+    delete_bucket_acls - Удалить ACL -no
     remove_bucket_product - Удалить бакет
     * */
 
@@ -64,14 +64,10 @@ public class HcpBucket extends IProduct {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         return jsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.order.bucket_name", bucketName)
-                .set("$.order.product_id", productId)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.net_segment", segment)
-                .set("$.order.attrs.replication", replication)
                 .set("$.order.attrs.platform", platform)
-                .set("$.order.attrs.hard_quota", hardQuota)
                 .set("$.order.attrs.service_plan", servicePlan)
                 .build();
     }
@@ -90,33 +86,19 @@ public class HcpBucket extends IProduct {
         compareCostOrderAndPrice();
     }
 
-    public void stopHard() {
-        stopHard("stop_vm_hard");
+    @Step("Измененить параметры версионирования")
+    private void changeBucketVersioning(){
+        orderServiceSteps.executeAction("change_bucket_versioning", this, new JSONObject("{\"item_id\":\"bd3128c3-fb9e-42d0-9f8f-e49f7091c614\",\"order\":{\"data\":{\"bucket\":{\"versioning\":{\"prune\":true,\"enabled\":true,\"pruneDays\":10}}}}}"));
     }
 
-    public void stopSoft() {
-        stopSoft("stop_vm_soft");
-    }
-
-    public void start() {
-        start("start_vm");
-    }
-
-    public void restart() {
-        restart("reset_vm");
-    }
-
-    public void expandMountPoint() {
-        expandMountPoint("expand_mount_point", "/app", 10);
-    }
-
-    public void resize() {
-        resize("resize_vm");
+    @Step("Измененить параметры версионирования")
+    private void changeBucketConfig(){
+        orderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"item_id\":\"bd3128c3-fb9e-42d0-9f8f-e49f7091c614\",\"order\":{\"data\":{\"bucket\":{\"hard_quota\":20,\"service_plan\":\"Cold\",\"replication_enabled\":false}}}}"));
     }
 
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_vm");
+        delete("remove_bucket_product");
     }
 }
