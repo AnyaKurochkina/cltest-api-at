@@ -31,7 +31,7 @@ public class GraphTest {
     @Order(3)
     @DisplayName("Проверка существования графа по имени")
     @Test
-    public void isGraphExists() {
+    public void checkGraphExists() {
         Assertions.assertTrue(graphSteps.isExist("AtTestGraph"));
         Assertions.assertFalse(graphSteps.isExist("NoExistsAction"));
     }

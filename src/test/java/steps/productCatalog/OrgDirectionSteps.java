@@ -13,30 +13,26 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import static core.helper.JsonHelper.convertResponseOnClass;
-
 public class OrgDirectionSteps {
 
     @Step("Получение списка направлений")
     public List<ListItem> getOrgDirectionList() {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("org_direction/")
                 .assertStatus(200)
-                .toString();
-        GetOrgDirectionListResponse response = convertResponseOnClass(object, GetOrgDirectionListResponse.class);
-        return response.getList();
+                .extractAs(GetOrgDirectionListResponse.class)
+                .getList();
     }
 
     @Step("Проверка существования направления")
-    public boolean isExist(String name) {
-        String object = new Http(Configure.ProductCatalog)
+    public boolean isProductExists(String name) {
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("org_direction/exists/?name=" + name)
                 .assertStatus(200)
-                .toString();
-        ExistsOrgDirectionResponse response = convertResponseOnClass(object, ExistsOrgDirectionResponse.class);
-        return response.getExists();
+                .extractAs(ExistsOrgDirectionResponse.class)
+                .getExists();
     }
 
     @Step("Ипорт направления")
@@ -49,12 +45,11 @@ public class OrgDirectionSteps {
 
     @Step("Получение направления по Id")
     public GetOrgDirectionResponse getOrgDirectionById(String id) {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("org_direction/" + id + "/")
                 .assertStatus(200)
-                .toString();
-        return convertResponseOnClass(object, GetOrgDirectionResponse.class);
+                .extractAs(GetOrgDirectionResponse.class);
     }
 
     @Step("Обновление направления по Id")
@@ -92,11 +87,10 @@ public class OrgDirectionSteps {
 
     @Step ("Экспорт направления по Id")
     public ExportOrgDirectionResponse exportOrgDirectionById(String id) {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("org_direction/" + id + "/obj_export/")
                 .assertStatus(200)
-                .toString();
-        return convertResponseOnClass(object, ExportOrgDirectionResponse.class);
+                .extractAs(ExportOrgDirectionResponse.class);
     }
 }

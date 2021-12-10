@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.util.List;
 
-import static core.helper.JsonHelper.convertResponseOnClass;
 import static io.restassured.RestAssured.given;
 
 public class GraphSteps {
@@ -36,18 +35,16 @@ public class GraphSteps {
                 .toString();
     }
 
-    public String getGraphId(String graphName){
+    public String getGraphId(String graphName) {
         String graphId = null;
-        String object = new Http(Configure.ProductCatalog)
+        GetGraphsListResponse response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("graphs/?include=total_count&page=1&per_page=10")
                 .assertStatus(200)
-                .toString();
+                .extractAs(GetGraphsListResponse.class);
 
-        GetGraphsListResponse response = convertResponseOnClass(object, GetGraphsListResponse.class);
-
-        for(ListItem listItem: response.getList()){
-            if (listItem.getName().equals(graphName)){
+        for (ListItem listItem : response.getList()) {
+            if (listItem.getName().equals(graphName)) {
                 graphId = listItem.getId();
             }
         }
@@ -57,23 +54,21 @@ public class GraphSteps {
     @SneakyThrows
     @Step("Получение списка графов")
     public List<ListItem> getGraphsList() {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("graphs/")
-                .assertStatus(200).toString();
-        GetGraphsListResponse getGraphsListResponse = convertResponseOnClass(object, GetGraphsListResponse.class);
-        return getGraphsListResponse.getList();
+                .assertStatus(200).extractAs(GetGraphsListResponse.class).getList();
     }
+
     @SneakyThrows
     @Step("Проверка существования графа по имени")
     public boolean isExist(String name) {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("graphs/exists/?name=" + name)
                 .assertStatus(200)
-                .toString();
-        ExistsGraphsResponse response = convertResponseOnClass(object, ExistsGraphsResponse.class);
-        return response.isExists();
+                .extractAs(ExistsGraphsResponse.class)
+                .isExists();
     }
 
     @SneakyThrows
@@ -90,12 +85,11 @@ public class GraphSteps {
     @SneakyThrows
     @Step("Получение графа по Id")
     public GetGraphResponse getGraphById(String id) {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("graphs/" + id + "/")
                 .assertStatus(200)
-                .toString();
-        return convertResponseOnClass(object, GetGraphResponse.class);
+                .extractAs(GetGraphResponse.class);
     }
 
     @SneakyThrows
@@ -106,6 +100,7 @@ public class GraphSteps {
                 .post("graphs/" + id + "/copy/")
                 .assertStatus(200);
     }
+
     @SneakyThrows
     @Step("Частичное обновление графа по Id")
     public void partialUpdateGraphById(String id, String key, String value) {

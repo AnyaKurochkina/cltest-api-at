@@ -1,5 +1,6 @@
 package httpModels.productCatalog.Service.getServiceList.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreType
 public class DataSource{
 
 	@JsonProperty("inventory_tags")

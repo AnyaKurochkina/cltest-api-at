@@ -39,9 +39,9 @@ public class ActionsTest extends Tests {
     @Order(3)
     @DisplayName("Проверка существования действия по имени")
     @Test
-    public void isActionExists() {
-        Assertions.assertTrue(actionsSteps.isExist(action.getActionName()));
-        Assertions.assertFalse(actionsSteps.isExist("NoExistsAction"));
+    public void checkActionExists() {
+        Assertions.assertTrue(actionsSteps.isActionExists(action.getActionName()));
+        Assertions.assertFalse(actionsSteps.isActionExists("NoExistsAction"));
     }
 
     @Order(4)
@@ -51,9 +51,9 @@ public class ActionsTest extends Tests {
         String data = new JsonHelper().getStringFromFile("/productCatalog/actions/importAction.json");
         String actionName = new JsonPath(data).get("Action.json.name");
         actionsSteps.importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
-        Assertions.assertTrue(actionsSteps.isExist(actionName));
+        Assertions.assertTrue(actionsSteps.isActionExists(actionName));
         actionsSteps.deleteActionByName(actionName);
-        Assertions.assertFalse(actionsSteps.isExist(actionName));
+        Assertions.assertFalse(actionsSteps.isActionExists(actionName));
     }
 
     @Order(5)
@@ -70,9 +70,9 @@ public class ActionsTest extends Tests {
     public void copyActionById() {
         String cloneName = action.getActionName() + "-clone";
         actionsSteps.copyActionById(action.getActionId());
-        Assertions.assertTrue(actionsSteps.isExist(cloneName));
+        Assertions.assertTrue(actionsSteps.isActionExists(cloneName));
         actionsSteps.deleteActionByName(cloneName);
-        Assertions.assertFalse(actionsSteps.isExist(cloneName));
+        Assertions.assertFalse(actionsSteps.isActionExists(cloneName));
     }
 
     @Order(7)
@@ -97,11 +97,11 @@ public class ActionsTest extends Tests {
     @Test
     public void doubleVersionTest() {
         Http.Response resp = actionsSteps.createAction(Action.builder().actionName("negative_object").build().init().getTemplate()
-                .set("$.version", "1.1.1")
-                .set("$.graph_version", "1.0.0")
-                .set("$.graph_version_pattern", "1.")
-                .build());
-        Assertions.assertEquals(500, resp.status());
+                        .set("$.version", "1.1.1")
+                        .set("$.graph_version", "1.0.0")
+                        .set("$.graph_version_pattern", "1.")
+                        .build())
+                .assertStatus(500);
     }
 
     @Order(10)
@@ -125,8 +125,7 @@ public class ActionsTest extends Tests {
     @DisplayName("Негативный тест на создание действия с существующим именем")
     @Test
     public void createActionWithSameName() {
-        Http.Response response = actionsSteps.createAction(actionsSteps.createJsonObject(action.getActionName()));
-        Assertions.assertEquals(400, response.status());
+        actionsSteps.createAction(actionsSteps.createJsonObject(action.getActionName())).assertStatus(400);
     }
 
     @Order(13)
@@ -134,8 +133,7 @@ public class ActionsTest extends Tests {
     @Test
     public void createActionWithEngWordInUppercase() {
         JSONObject nameWithUppercase = actionsSteps.createJsonObject("NameWithUppercase");
-        Http.Response response = actionsSteps.createAction(nameWithUppercase);
-        Assertions.assertEquals(400, response.status());
+        actionsSteps.createAction(nameWithUppercase).assertStatus(400);
     }
 
     @Order(14)
@@ -144,8 +142,8 @@ public class ActionsTest extends Tests {
     public void createActionWithEngWordInUppercaseInMiddle() {
         String objectName = "nameWithUppercaseInMiddle";
         JSONObject nameWithUppercaseInMiddle = actionsSteps.createJsonObject(objectName);
-        Http.Response response = actionsSteps.createAction(nameWithUppercaseInMiddle);
-        Assertions.assertEquals(400, response.status());
+        actionsSteps.createAction(nameWithUppercaseInMiddle).assertStatus(400);
+
 
     }
 
@@ -155,8 +153,7 @@ public class ActionsTest extends Tests {
     public void createActionWithRusWordInLowCase() {
         String objectName = "имя";
         JSONObject nameWithRusWordInLowCase = actionsSteps.createJsonObject(objectName);
-        Http.Response response = actionsSteps.createAction(nameWithRusWordInLowCase);
-        Assertions.assertEquals(400, response.status());
+        actionsSteps.createAction(nameWithRusWordInLowCase).assertStatus(400);
     }
 
     @Order(16)
@@ -164,8 +161,7 @@ public class ActionsTest extends Tests {
     @Test
     public void createActionWithRusWordInUppercase() {
         JSONObject nameWithRusWordInUppercase = actionsSteps.createJsonObject("Имя");
-        Http.Response response = actionsSteps.createAction(nameWithRusWordInUppercase);
-        Assertions.assertEquals(400, response.status());
+        actionsSteps.createAction(nameWithRusWordInUppercase).assertStatus(400);
     }
 
     @Order(17)

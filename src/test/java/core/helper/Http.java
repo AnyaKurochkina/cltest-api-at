@@ -1,13 +1,12 @@
 package core.helper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.core.util.Assert;
 import org.json.JSONArray;
 import org.json.JSONObject;
-//import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import steps.keyCloak.KeyCloakSteps;
 
@@ -25,7 +24,6 @@ import java.security.cert.X509Certificate;
 import java.util.concurrent.Semaphore;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
-//import static org.junit.Assert.fail;
 import static tests.Tests.putAttachLog;
 //import static tests.Tests.putLog;
 
@@ -255,7 +253,7 @@ public class Http {
 //                Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
 //            }
             if (s != status())
-                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nResponse: %s\nRequest: %s\n%s\n", s, status(), method, responseMessage, host + path, body));
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nResponse: %s\nRequest: %s\n%s\n", s, status(), method, token, responseMessage, host + path, body));
             return this;
         }
 
@@ -285,6 +283,13 @@ public class Http {
             } catch (Exception e) {
                 throw new Error(e.getMessage());
             }
+        }
+
+        @SneakyThrows
+        public <T> T extractAs(Class<T> clazz){
+            JSONObject jsonObject = new JSONObject(responseMessage);
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.convertValue(jsonObject.toMap(), clazz);
         }
 
         public String toString() {

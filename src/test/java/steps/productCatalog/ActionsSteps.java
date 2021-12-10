@@ -9,7 +9,6 @@ import httpModels.productCatalog.Action.getActionList.response.ActionResponse;
 import httpModels.productCatalog.Action.getActionList.response.ListItem;
 import httpModels.productCatalog.Action.patchAction.response.PatchActionResponse;
 import io.qameta.allure.Step;
-import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -26,13 +25,10 @@ public class ActionsSteps {
     @Step("Поиск ID экшена по имени с использованием multiSearch")
     public String getActionIdByNameWithMultiSearch(String actionName) {
         String actionId = null;
-        String object = new Http(Configure.ProductCatalog)
+        ActionResponse response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("actions/?include=total_count&page=1&per_page=10&multisearch=" + actionName)
-                .assertStatus(200)
-                .toString();
-
-        ActionResponse response = convertResponseOnClass(object, ActionResponse.class);
+                .assertStatus(200).extractAs(ActionResponse.class);
 
         for (ListItem listItem : response.getList()) {
             if (listItem.getName().equals(actionName)) {
@@ -48,13 +44,11 @@ public class ActionsSteps {
     @Step("Получение ID экшена  по его имени: {actionName}")
     public String getActionId(String actionName) {
         String actionId = null;
-        String object = new Http(Configure.ProductCatalog)
+        ActionResponse response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("actions/")
                 .assertStatus(200)
-                .toString();
-
-        ActionResponse response = convertResponseOnClass(object, ActionResponse.class);
+                .extractAs(ActionResponse.class);
 
         for (ListItem listItem : response.getList()) {
             if (listItem.getName().equals(actionName)) {
@@ -84,29 +78,27 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Обновление экшена")
     public PatchActionResponse patchAction(String actionName, String graphId, String actionId) {
-        String response = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .patch("actions/" + actionId + "/", toJson("productCatalog/actions/createAction.json", actionName, graphId))
                 .assertStatus(200)
-                .toString();
-
-        return convertResponseOnClass(response, PatchActionResponse.class);
+                .extractAs(PatchActionResponse.class);
     }
 
     @SneakyThrows
     @Step("Получение списка действий")
     public List<ListItem> getActionList() {
-        String response = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("actions/")
-                .assertStatus(200).toString();
-        ActionResponse actionResponse = convertResponseOnClass(response, ActionResponse.class);
-        return actionResponse.getList();
+                .assertStatus(200)
+                .extractAs(ActionResponse.class)
+                .getList();
     }
 
     @SneakyThrows
     @Step("Проверка существования действия по имени")
-    public boolean isExist(String name) {
+    public boolean isActionExists(String name) {
         String object = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("actions/exists/?name=" + name)
@@ -119,23 +111,23 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Импорт действия")
     public void importAction(String pathName) {
-        Response response = given()
+        given()
                 .contentType("multipart/form-data")
                 .multiPart("file", new File(pathName))
                 .when()
-                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/actions/obj_import/");
-        Assertions.assertEquals(200, response.getStatusCode());
+                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/actions/obj_import/")
+                .then()
+                .statusCode(200);
     }
 
     @SneakyThrows
     @Step("Получение действия по Id")
     public GetActionResponse getActionById(String id) {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("actions/" + id + "/")
                 .assertStatus(200)
-                .toString();
-        return convertResponseOnClass(object, GetActionResponse.class);
+                .extractAs(GetActionResponse.class);
     }
 
     @SneakyThrows

@@ -6,8 +6,6 @@ import io.qameta.allure.Feature;
 import models.productCatalog.OrgDirection;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.productCatalog.OrgDirectionSteps;
 import tests.Tests;
 
@@ -24,7 +22,7 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void createOrgDirection() {
         orgDirection = OrgDirection.builder()
-                .orgDirectionName("OrgDirectionAtTest")
+                .orgDirectionName("org_direction_at_test")
                 .build()
                 .createObject();
     }
@@ -37,21 +35,21 @@ public class OrgDirectionTest extends Tests {
     }
 
     @Order(3)
-    @DisplayName("Проверка существования направления с таким именем")
+    @DisplayName("Проверка существования направления по имени")
     @Test
     public void checkOrgDirectionExists() {
-        Assertions.assertTrue(orgSteps.isExist(orgDirection.getOrgDirectionName()));
-        Assertions.assertFalse(orgSteps.isExist("NotExistName"));
+        Assertions.assertTrue(orgSteps.isProductExists(orgDirection.getOrgDirectionName()));
+        Assertions.assertFalse(orgSteps.isProductExists("NotExistName"));
     }
 
     @Order(4)
-    @DisplayName("Импортирование направления")
+    @DisplayName("Импорт направления")
     @Test
-    public void importOrgDescription() {
+    public void importOrgDirection() {
         String name = "ImportOrgDirection";
         JSONObject jsonObject = orgSteps.createJsonObject(name, "description");
         orgSteps.importOrgDirection(jsonObject);
-        Assertions.assertTrue(orgSteps.isExist(name));
+        Assertions.assertTrue(orgSteps.isProductExists(name));
     }
 
     @Order(5)
@@ -79,7 +77,7 @@ public class OrgDirectionTest extends Tests {
     public void copyOrgDirectionById() {
         String cloneName = orgDirection.getOrgDirectionName() + "-clone";
         orgSteps.copyOrgDirectionById(orgDirection.getOrgDirectionId());
-        Assertions.assertTrue(orgSteps.isExist(cloneName));
+        Assertions.assertTrue(orgSteps.isProductExists(cloneName));
     }
 
     @Order(8)
@@ -95,11 +93,11 @@ public class OrgDirectionTest extends Tests {
     @Deleted
     public void deleteOrgDirection() {
         try (OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("OrgDirectionAtTest")
+                .orgDirectionName("org_direction_at_test")
                 .build()
                 .createObjectExclusiveAccess()) {
             orgDirection.deleteObject();
         }
-        Assertions.assertFalse(orgSteps.isExist("OrgDirectionAtTest"));
+        Assertions.assertFalse(orgSteps.isProductExists("org_direction_at_test"));
     }
 }

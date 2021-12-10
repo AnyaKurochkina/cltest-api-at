@@ -1,10 +1,12 @@
 package tests.productCatalog;
 
+import core.helper.Configure;
 import core.helper.Deleted;
+import core.helper.JsonHelper;
 import httpModels.productCatalog.Product.getProduct.response.GetProductResponse;
 import io.qameta.allure.Feature;
+import io.restassured.path.json.JsonPath;
 import models.productCatalog.Product;
-import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductsSteps;
 import tests.Tests;
@@ -25,7 +27,7 @@ public class ProductsTest extends Tests {
     @Test
     public void createProduct() {
         product = Product.builder()
-                .productName("AtTestApiProduct")
+                .productName("at_test_api_product55")
                 .title("AtTestApiProduct")
                 .envs(Collections.singletonList("dev"))
                 .build()
@@ -40,7 +42,7 @@ public class ProductsTest extends Tests {
     }
 
     @Order(3)
-    @DisplayName("Проверка существования продукта с таким именем")
+    @DisplayName("Проверка существования продукта по имени")
     @Test
     public void checkProductExists() {
         Assertions.assertTrue(productsSteps.isProductExist(product.getProductName()));
@@ -48,13 +50,15 @@ public class ProductsTest extends Tests {
     }
 
     @Order(4)
-    @DisplayName("Импорт пролукта")
+    @DisplayName("Импорт продукта")
     @Test
     public void importProduct() {
-        String name = "ImportProduct";
-        JSONObject jsonObject = productsSteps.createJsonObject(name);
-        productsSteps.importProduct(jsonObject);
-        Assertions.assertTrue(productsSteps.isProductExist(name));
+        String data = new JsonHelper().getStringFromFile("/productCatalog/products/importProduct.json");
+        String actionName = new JsonPath(data).get("Product.json.name");
+        productsSteps.importProduct(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProduct.json");
+        Assertions.assertTrue(productsSteps.isProductExist(actionName));
+        productsSteps.deleteProductByName(actionName);
+        Assertions.assertFalse(productsSteps.isProductExist(actionName));
     }
 
     @Order(5)
@@ -86,9 +90,9 @@ public class ProductsTest extends Tests {
     @Test
     @DisplayName("Удаление продукта")
     @Deleted
-    public void deleteAction() {
+    public void deleteProduct() {
         try (Product product = Product.builder()
-                .productName("AtTestApiProduct")
+                .productName("at_test_api_product55")
                 .title("AtTestApiProduct")
                 .envs(Collections.singletonList("dev"))
                 .build()

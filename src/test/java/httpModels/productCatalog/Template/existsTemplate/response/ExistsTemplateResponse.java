@@ -1,4 +1,4 @@
-package httpModels.productCatalog.Service.copyService.response;
+package httpModels.productCatalog.Template.existsTemplate.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataSource{
+public class ExistsTemplateResponse{
 
-	@JsonProperty("test")
-	private Boolean test;
+	@JsonProperty("exists")
+	private Boolean exists;
 }

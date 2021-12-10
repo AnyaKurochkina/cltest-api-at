@@ -11,9 +11,10 @@ import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.List;
 
-import static core.helper.JsonHelper.convertResponseOnClass;
+import static io.restassured.RestAssured.given;
 
 public class ProductsSteps {
 
@@ -32,33 +33,33 @@ public class ProductsSteps {
 
     @Step("Получение списка продуктов")
     public List<ListItem> getProductList() {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("products/")
                 .assertStatus(200)
-                .toString();
-
-        GetProductsResponse response = convertResponseOnClass(object, GetProductsResponse.class);
-        return response.getList();
+                .extractAs(GetProductsResponse.class)
+                .getList();
     }
 
-    @Step("Проверка существования продукта с таким именем")
+    @Step("Проверка существования действия по имени")
     public boolean isProductExist(String name) {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("/products/exists/?name=" + name)
                 .assertStatus(200)
-                .toString();
-        ExistsOrgDirectionResponse response = convertResponseOnClass(object, ExistsOrgDirectionResponse.class);
-        return response.getExists();
+                .extractAs(ExistsOrgDirectionResponse.class)
+                .getExists();
     }
 
     @Step("Ипорт продукта")
-    public void importProduct(JSONObject jsonObject) {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("/products/obj_import/", jsonObject)
-                .assertStatus(201);
+    public void importProduct(String pathName) {
+        given()
+                .contentType("multipart/form-data")
+                .multiPart("file", new File(pathName))
+                .when()
+                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/products/obj_import/")
+                .then()
+                .statusCode(200);
     }
 
     @Step("Создание JSON объекта по продуктам")
@@ -71,12 +72,11 @@ public class ProductsSteps {
 
     @Step("Получение продукта по Id")
     public GetProductResponse getProductById(String id) {
-        String object = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("products/" + id + "/")
                 .assertStatus(200)
-                .toString();
-        return convertResponseOnClass(object, GetProductResponse.class);
+                .extractAs(GetProductResponse.class);
     }
 
     @Step("Частичное обновление продукта")
@@ -85,5 +85,16 @@ public class ProductsSteps {
                 .setContentType("application/json")
                 .patch("products/" + id + "/", new JSONObject().put(key, value))
                 .assertStatus(200);
+    }
+
+    public void deleteProductByName(String actionName) {
+        deleteProductById(getProductId(actionName));
+    }
+
+    public void deleteProductById(String productId) {
+        new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .delete("products/" + productId + "/")
+                .assertStatus(204);
     }
 }
