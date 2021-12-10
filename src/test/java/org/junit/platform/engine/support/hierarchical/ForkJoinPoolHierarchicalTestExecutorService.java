@@ -317,7 +317,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 //            tasks.addAll(deleteTests.values());
 //        }
         first.set(false);
-        System.out.println(tasks2.size());
 //        ArrayList<TestTask> tasks = new ArrayList<>();
 //        if(mapTests.containsKey("0")) {
 //            tasks.add(mapTests.get("0"));

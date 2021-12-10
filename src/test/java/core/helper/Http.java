@@ -6,7 +6,6 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-//import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import steps.keyCloak.KeyCloakSteps;
 
@@ -24,9 +23,7 @@ import java.security.cert.X509Certificate;
 import java.util.concurrent.Semaphore;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
-//import static org.junit.Assert.fail;
 import static tests.Tests.putAttachLog;
-//import static tests.Tests.putLog;
 
 @Log4j2
 public class Http {
@@ -280,10 +277,6 @@ public class Http {
         }
 
         public Response assertStatus(int s) {
-//            if (s != status() || (path.endsWith("/orders") && method.equals("POST"))) {
-//                Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
-//                Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
-//            }
             if (s != status())
                 throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nResponse: %s\nRequest: %s\n%s\n", s, status(), method, responseMessage, host + path, body));
             return this;
