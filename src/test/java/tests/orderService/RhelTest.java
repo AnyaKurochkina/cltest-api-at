@@ -9,6 +9,7 @@ import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,6 +38,7 @@ public class RhelTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания {0}")
+    @Disabled
     void checkCreate(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
