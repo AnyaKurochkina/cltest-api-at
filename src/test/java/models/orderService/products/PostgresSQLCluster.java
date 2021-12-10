@@ -31,9 +31,7 @@ import java.util.List;
 @SuperBuilder
 public class PostgresSQLCluster extends IProduct {
     private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.any{it.db_name=='%s'}";
-//    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
     private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
-//    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -106,9 +104,11 @@ public class PostgresSQLCluster extends IProduct {
     }
 
     public void createDb(String dbName) {
+        if(database.contains(new Db(dbName)))
+            return;
         orderServiceSteps.executeAction("postgresql_cluster_create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем" + dbName);
-        database.add(new Db(dbName, false));
+        database.add(new Db(dbName));
         log.info("database = " + database);
         save();
     }

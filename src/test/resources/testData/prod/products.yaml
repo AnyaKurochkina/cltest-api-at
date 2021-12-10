@@ -1,4 +1,3 @@
-#
 OpenShiftProject:
   - actions:
       [ 'update_openshift_project' ]

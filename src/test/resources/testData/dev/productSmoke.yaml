@@ -1,6 +1,0 @@
-Rhel:
-  - actions:
-      [ 'Расширить', 'Перезагрузить', 'Выключить', 'Изменить конфигурацию', 'Включить', 'Выключить принудительно' ]
-  - options:
-    - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4", productName: "RHEL" }
-

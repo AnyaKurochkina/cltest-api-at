@@ -174,56 +174,60 @@
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-edzorg-edugroup",
-    "user": "",
+    "users": [],
     "isDeleted": false,
     "projectName": "proj-b7iigm67tk"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-hfzorg-hotfix-group",
-    "user": "",
+    "users": [],
     "isDeleted": false,
     "projectName": "proj-rr4ncna00e"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-mtzorg-migr-group",
-    "user": "",
+    "users": [],
     "isDeleted": false,
     "projectName": "proj-sdt56df8rr"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-rrzorg-preprod-group",
-    "user": "",
+    "users": [],
     "isDeleted": false,
     "projectName": "proj-aiqk5zzot4"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-stzorg-st-group",
-    "user": "",
+    "users": [],
     "isDeleted": false,
     "projectName": "proj-ovkcqq41d3"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-ifzorg-ift-group",
-    "user": "",
+    "users": [
+      "check_admin"
+    ],
     "isDeleted": false,
     "projectName": "proj-7ll0yy5zsc"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-d5zorg-dev-group",
-    "user": "",
+    "users": [
+      "check_admin"
+    ],
     "isDeleted": false,
     "projectName": "proj-frybyv41jh"
   },
   {
     "objectClassName": "models.authorizer.AccessGroup",
     "name": "cloud-ltzorg-lt-group",
-    "user": "",
+    "users": [],
     "isDeleted": false,
     "projectName": "proj-j5uzlpvbjz"
   },

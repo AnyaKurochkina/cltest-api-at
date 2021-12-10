@@ -18,8 +18,7 @@ public class AccessGroup extends Entity {
     String name;
     String projectName;
     String description;
-    @Builder.Default
-    List<String> users = new ArrayList<>();
+    List<String> users;
 
     public void addUser(String user){
         users.add(user);
@@ -39,6 +38,8 @@ public class AccessGroup extends Entity {
             projectName = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
         if (description == null)
             description = projectName;
+        if(users == null)
+            users = new ArrayList<>();
         return this;
     }
 
