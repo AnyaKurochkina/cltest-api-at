@@ -199,7 +199,7 @@ public class Http {
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
-            log(String.format("URL: %s\n", (host + path)));
+            log(String.format("%s URL: %s\n", method, (host + path)));
             if (field.length() > 0) {
                 addFilePart(http.getOutputStream(), file);
             } else {
