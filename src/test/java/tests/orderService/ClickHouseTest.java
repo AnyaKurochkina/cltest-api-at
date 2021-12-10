@@ -38,7 +38,7 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("db_1");
+            clickHouse.createDb("cached_bd");
         }
     }
 
@@ -46,8 +46,8 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("createdbforuser");
-            clickHouse.createDbmsUser("chelik1", "user", "createdbforuser");
+            clickHouse.createDb("cached_bd");
+            clickHouse.createDbmsUser("chelik1", "user", "cached_bd");
         }
     }
 
@@ -55,8 +55,8 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("createdbforreset1");
-            clickHouse.createDbmsUser("chelikforreset1", "user", "createdbforreset1");
+            clickHouse.createDb("cached_bd");
+            clickHouse.createDbmsUser("chelikforreset1", "user", "cached_bd");
             clickHouse.resetPassword("chelikforreset1");
         }
     }
@@ -65,9 +65,9 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("createdbforreset2");
-            clickHouse.createDbmsUser("chelikforreset2", "user", "createdbforreset2");
-            clickHouse.removeDbmsUser("chelikforreset2", "createdbforreset2");
+            clickHouse.createDb("cached_bd");
+            clickHouse.createDbmsUser("chelikforreset2", "user", "cached_bd");
+            clickHouse.removeDbmsUser("chelikforreset2", "cached_bd");
         }
     }
 
@@ -84,8 +84,8 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("createdbforremove3");
-            clickHouse.removeDb("createdbforremove3");
+            clickHouse.createDb("cached_bd");
+            clickHouse.removeDb("cached_bd");
         }
     }
 
