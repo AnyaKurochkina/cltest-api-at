@@ -11,8 +11,8 @@ import steps.authorizer.AuthorizerSteps;
 @Builder
 @Getter
 public class Organization extends Entity {
-    public String title;
-    public String name;
+    String title;
+    String name;
 
     @Override
     public Entity init() {

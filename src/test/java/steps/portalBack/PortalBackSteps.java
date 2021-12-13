@@ -19,7 +19,7 @@ public class PortalBackSteps extends Steps {
         Organization organization = cacheService.entity(Organization.class)
                 .getEntity();
         JsonPath jsonPath = new Http(URL)
-                .get(String.format("portal/api/v1/organizations/%s/information_systems?page=1&per_page=100&include=total_count", organization.name))
+                .get(String.format("portal/api/v1/organizations/%s/information_systems?page=1&per_page=100&include=total_count", organization.getName()))
                 .assertStatus(200)
                 .jsonPath();
 
@@ -27,7 +27,7 @@ public class PortalBackSteps extends Steps {
 
         for (int i = 1; i <=countOfIteration; i++){
             JsonPath jsonPathInCycle = new Http(URL)
-                    .get(String.format("portal/api/v1/organizations/%s/information_systems?page=%s&per_page=100&include=total_count", organization.name, i))
+                    .get(String.format("portal/api/v1/organizations/%s/information_systems?page=%s&per_page=100&include=total_count", organization.getName(), i))
                     .assertStatus(200)
                     .jsonPath();
 

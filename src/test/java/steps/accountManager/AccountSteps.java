@@ -143,7 +143,7 @@ public class AccountSteps extends Steps {
         log.info(String.format("Удаление счета %s для папки %s", account.accountId, folder.getName()));
         //Запрос на удаление
         JsonPath jsonPath = new Http(URL)
-                .delete(String.format("accountmanager/api/v1/organizations/%s/accounts/%s?force_unlink=1", organization.name, account.accountId))
+                .delete(String.format("accountmanager/api/v1/organizations/%s/accounts/%s?force_unlink=1", organization.getName(), account.accountId))
                 .assertStatus(200)
                 .jsonPath();
         //Выставление флага "Счёт удалён"
