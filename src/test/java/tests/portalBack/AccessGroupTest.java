@@ -1,6 +1,6 @@
 package tests.portalBack;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.authorizer.AccessGroup;
@@ -53,7 +53,7 @@ public class AccessGroupTest extends Tests {
 
     @Test
     @Order(4)
-    @Deleted
+    @MarkDelete
     @DisplayName("Удаление Группы доступа")
     void deleteAccessGroup() {
         AccessGroup.builder().description("accessgroup").build().createObject().deleteObject();

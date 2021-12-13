@@ -1,13 +1,11 @@
 package tests.productCatalog;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import httpModels.productCatalog.OrgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import io.qameta.allure.Feature;
 import models.productCatalog.OrgDirection;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.productCatalog.OrgDirectionSteps;
 import tests.Tests;
 
@@ -92,7 +90,7 @@ public class OrgDirectionTest extends Tests {
     @Order(100)
     @Test
     @DisplayName("Удаление направления")
-    @Deleted
+    @MarkDelete
     public void deleteOrgDirection() {
         try (OrgDirection orgDirection = OrgDirection.builder()
                 .orgDirectionName("OrgDirectionAtTest")

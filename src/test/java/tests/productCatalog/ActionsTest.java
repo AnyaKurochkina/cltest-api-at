@@ -1,11 +1,9 @@
 package tests.productCatalog;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import httpModels.productCatalog.patchActions.response.PatchActionResponse;
 import models.productCatalog.Action;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.productCatalog.ActionsSteps;
 import tests.Tests;
 
@@ -70,7 +68,7 @@ public class ActionsTest extends Tests {
     @Order(100)
     @Test
     @DisplayName("Удаление экшена")
-    @Deleted
+    @MarkDelete
     public void deleteAction() {
         try (Action action = Action.builder().actionName("TestObjectAT").build().createObjectExclusiveAccess()) {
             action.deleteObject();

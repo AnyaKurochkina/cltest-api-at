@@ -1,6 +1,6 @@
 package tests.accountManager;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.accountManager.Account;
@@ -58,7 +58,7 @@ public class AccountTest extends Tests {
 
     @Test
     @Order(5)
-    @Deleted
+    @MarkDelete
     @DisplayName("Удаление счета для папки")
     public void DeleteAccount() {
         Folder folder = Folder.builder().kind(Folder.DEFAULT).build().createObject();
@@ -67,7 +67,7 @@ public class AccountTest extends Tests {
 
     @Test
     @Order(6)
-    @Deleted
+    @MarkDelete
     @DisplayName("Удаление счета для папки Department")
     public void DeleteAccountDepartment() {
         Folder folder = Folder.builder().kind(Folder.DEPARTMENT).build().createObject();
@@ -76,7 +76,7 @@ public class AccountTest extends Tests {
 
     @Test
     @Order(7)
-    @Deleted
+    @MarkDelete
     @DisplayName("Удаление счета для папки Business Block")
     public void DeleteAccountBusinessBlock() {
         Folder folder = Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject();

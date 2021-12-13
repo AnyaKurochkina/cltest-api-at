@@ -1,6 +1,6 @@
 package tests.productCatalog;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.copyService.response.CopyServiceResponse;
 import httpModels.productCatalog.createService.response.CreateServiceResponse;
@@ -8,8 +8,6 @@ import httpModels.productCatalog.getService.response.GetServiceResponse;
 import io.qameta.allure.Feature;
 import models.productCatalog.Services;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.productCatalog.ServiceSteps;
 import tests.Tests;
 
@@ -73,7 +71,7 @@ public class ServicesTest extends Tests {
     @Order(100)
     @Test
     @DisplayName("Удаление сервиса")
-    @Deleted
+    @MarkDelete
     public void deleteService() {
         try (Services service = Services.builder()
                 .serviceName("ServiceATtest")

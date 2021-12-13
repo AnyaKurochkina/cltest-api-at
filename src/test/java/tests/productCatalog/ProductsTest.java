@@ -1,11 +1,9 @@
 package tests.productCatalog;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Feature;
 import models.productCatalog.Product;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 import java.util.Collections;
@@ -39,7 +37,7 @@ public class ProductsTest extends Tests {
     @Order(100)
     @Test
     @DisplayName("Удаление экшена")
-    @Deleted
+    @MarkDelete
     public void deleteAction() {
         try (Product product = Product.builder()
                 .productName("AtTestApiProduct")
