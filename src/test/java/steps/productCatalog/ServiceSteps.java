@@ -98,16 +98,24 @@ public class ServiceSteps {
         return serviceId;
     }
 
+//    @SneakyThrows
+//    @Step("Импорт сервиса")
+//    public void importService(String pathName) {
+//        ValidatableResponse response = given()
+//                .contentType("multipart/form-data")
+//                .multiPart("file", new File(pathName))
+//                .when()
+//                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/services/obj_import/")
+//                .then()
+//                .statusCode(200);
+//    }
+
     @SneakyThrows
     @Step("Импорт сервиса")
     public void importService(String pathName) {
-        ValidatableResponse response = given()
-                .contentType("multipart/form-data")
-                .multiPart("file", new File(pathName))
-                .when()
-                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/services/obj_import/")
-                .then()
-                .statusCode(200);
+        new Http(Configure.ProductCatalogURL)
+                .multiPart("services/obj_import/", "file", new File(pathName))
+                .assertStatus(200);
     }
 
     @Step("Создание JSON объекта по сервисам")

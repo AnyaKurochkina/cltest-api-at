@@ -5,7 +5,7 @@ import core.helper.Http;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
 import httpModels.productCatalog.Action.getAction.response.GetActionResponse;
-import httpModels.productCatalog.patchActions.response.PatchActionResponse;
+import httpModels.productCatalog.Action.patchAction.response.PatchActionResponse;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
 import org.json.JSONObject;

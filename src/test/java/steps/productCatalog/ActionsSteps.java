@@ -88,7 +88,7 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Получение списка действий")
     public List<ListItem> getActionList() {
-        return new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("actions/")
                 .assertStatus(200)
@@ -99,7 +99,7 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Проверка существования действия по имени")
     public boolean isActionExists(String name) {
-        String object = new Http(Configure.ProductCatalog)
+        String object = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("actions/exists/?name=" + name)
                 .assertStatus(200)
@@ -123,7 +123,7 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Получение действия по Id")
     public GetActionResponse getActionById(String id) {
-        return new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("actions/" + id + "/")
                 .assertStatus(200)
@@ -133,7 +133,7 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Копирование действия по Id")
     public void copyActionById(String id) {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .post("actions/" + id + "/copy/")
                 .assertStatus(200);
@@ -142,7 +142,7 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Экспорт действия по Id")
     public void exportActionById(String id) {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("actions/" + id + "/obj_export/")
                 .assertStatus(200);
