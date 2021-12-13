@@ -125,22 +125,22 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     /**
-     * @param aclName имя Acl, Если в aclName передать "*" то удалятся все Acl
+     * @param topicNameRegex имя Acl, Если в aclName передать "*" то удалятся все Acl
      */
-    public void deleteAcl(String aclName) {
-        orderServiceSteps.executeAction("kafka_delete_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + aclName + "\"}]}}"));
+    public void deleteAcl(String topicNameRegex) {
+        orderServiceSteps.executeAction("kafka_delete_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}]}}"));
         save();
-        //TODO: Написать проверку удаления Acl
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)));
     }
 
     /**
      *
-     * @param aclTransactionName имя Acl транзакции, Если в aclTransactionName передать "*" то удалятся все Acl транзакции
+     * @param transactionRegex имя Acl транзакции, Если в aclTransactionName передать "*" то удалятся все Acl транзакции
      */
-    public void deleteAclTransaction(String aclTransactionName) {
-        orderServiceSteps.executeAction("kafka_delete_transaction_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + aclTransactionName + "\"}]}}"));
+    public void deleteAclTransaction(String transactionRegex) {
+        orderServiceSteps.executeAction("kafka_delete_transaction_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}]}}"));
         save();
-        //TODO: Написать проверку удаления Acl transaction
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)));
     }
 
     public void start() {
