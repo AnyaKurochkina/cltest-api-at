@@ -81,14 +81,13 @@ public class TemplateSteps {
 
     @Step("Получение ID шаблона по его имени: {templateName} с использованием multiSearch")
     public Integer getTemplateIdByNameMultiSearch(String templateName) {
-        String object = new Http(Configure.ProductCatalog)
+        GetTemplateListResponse response = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .setWithoutToken()
                 .get("templates/?multisearch=" + templateName)
                 .assertStatus(200)
-                .toString();
+                .extractAs(GetTemplateListResponse.class);
 
-        GetTemplateListResponse response = convertResponseOnClass(object, GetTemplateListResponse.class);
         if (response.getList().size() == 0) {
             log.info("ID не найден, будет возвращён NULL");
             return null;

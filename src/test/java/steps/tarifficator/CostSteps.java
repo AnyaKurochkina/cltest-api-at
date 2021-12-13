@@ -140,7 +140,7 @@ public class CostSteps extends Steps {
     public Float getCostAction(String action, String itemId, IProduct product, JSONObject data) {
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
                 .isForOrders(true).build().createObject();
-        log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
+        log.info("Отправка запроса на получение стоимости экшена: "+ action +", у продукта " + product.getProductName());
         return jsonHelper.getJsonTemplate("/tarifficator/costAction.json")
                 .set("$.params.project_name", project.id)
                 .set("$.params.item_id", itemId)
@@ -158,9 +158,9 @@ public class CostSteps extends Steps {
     @Step("Сравниение тарифов заказываемого продукта с тарфиным планом")
     public void compareTariffs(HashMap<String, Double> activeTariffPlanPrice, JSONArray items) {
         //Создаем 3 прайса ON, OFF, REBOOT
-        HashMap<String, Double> priceListOn = new HashMap();
-        HashMap<String, Double> priceListOff = new HashMap();
-        HashMap<String, Double> priceListReboot = new HashMap();
+        HashMap<String, Double> priceListOn = new HashMap<>();
+        HashMap<String, Double> priceListOff = new HashMap<>();
+        HashMap<String, Double> priceListReboot = new HashMap<>();
         //Наполняем прайс для состояния ON
         generatePriceForState(priceListOn, items, "on");
         //Наполняем прайс для состояния OFF
@@ -183,7 +183,7 @@ public class CostSteps extends Steps {
                 .toJson()
                 .getJSONArray("tariff_classes");
 
-        HashMap<String, Double> priceList = new HashMap();
+        HashMap<String, Double> priceList = new HashMap<>();
         for (Object object : consumption) {
             priceList.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
         }
