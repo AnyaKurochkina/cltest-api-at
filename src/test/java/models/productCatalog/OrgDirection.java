@@ -45,7 +45,7 @@ public class OrgDirection extends Entity {
     @Override
     @Step("Создание направления")
     protected void create() {
-        String response = new Http(Configure.ProductCatalog)
+        String response = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .post("org_direction/", toJson())
                 .assertStatus(201)

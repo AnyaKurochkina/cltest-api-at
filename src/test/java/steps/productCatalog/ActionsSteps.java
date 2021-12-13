@@ -36,7 +36,7 @@ public class ActionsSteps {
     @Step("Поиск ID экшена по имени с использованием multiSearch")
     public String getActionByNameWithMultiSearch(String actionName) {
         String actionId = null;
-        String object = new Http(Configure.ProductCatalog)
+        String object = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("actions/?include=total_count&page=1&per_page=10&multisearch=" + actionName)
                 .assertStatus(200)
@@ -58,7 +58,7 @@ public class ActionsSteps {
     @Step("Получение ID экшена  по его имени: {actionName}")
     public String getActionId(String actionName) {
         String actionId = null;
-        String object = new Http(Configure.ProductCatalog)
+        String object = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("actions/")
                 .assertStatus(200)
@@ -78,7 +78,7 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Создание экшена")
     public Http.Response createAction(JSONObject body) {
-        return new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .post("actions/", body);
     }
@@ -86,7 +86,7 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Обновление экшена")
     public Http.Response patchActionRow(JSONObject body, String actionId) {
-        return new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .patch("actions/" + actionId + "/", body);
     }
@@ -94,9 +94,9 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Обновление экшена")
     public PatchActionResponse patchAction(String actionName, String graphId, String actionId) {
-        String response = new Http(Configure.ProductCatalog)
+        String response = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
-                .patch("actions/" + actionId + "/", toJson("productCatalog/actions/createAction.json", actionName, graphId))
+                .patch("actions/" + actionId + "/", toJson("actions/createAction.json", actionName, graphId))
                 .assertStatus(200)
                 .toString();
 
@@ -106,7 +106,7 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Удаление экшена")
     public void deleteAction(String id) {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .delete("actions/" + id + "/")
                 .assertStatus(204);

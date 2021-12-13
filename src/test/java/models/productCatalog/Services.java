@@ -63,7 +63,7 @@ public class Services extends Entity {
     @Override
     @Step("Создание сервиса")
     protected void create() {
-        String response = new Http(Configure.ProductCatalog)
+        String response = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .post("services/", toJson())
                 .assertStatus(201)
@@ -76,7 +76,7 @@ public class Services extends Entity {
     @Override
     @Step("Удаление сервиса")
     protected void delete() {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .delete("services/" + serviceId + "/")
                 .assertStatus(204);

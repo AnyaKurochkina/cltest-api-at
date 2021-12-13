@@ -16,7 +16,7 @@ import static core.helper.JsonHelper.convertResponseOnClass;
 public class ServiceSteps {
 
     public CreateServiceResponse createService(JSONObject body) {
-        String serviceObject = new Http(Configure.ProductCatalog)
+        String serviceObject = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .post("services/", body)
                 .toString();
@@ -24,7 +24,7 @@ public class ServiceSteps {
     }
 
     public void existService(String nameService) {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("services/" + "exist/" + nameService)
                 .assertStatus(200);
@@ -32,7 +32,7 @@ public class ServiceSteps {
 
     @Step("Получение сервиса по Id")
     public GetServiceResponse getServiceById(String id) {
-        String serviceObject = new Http(Configure.ProductCatalog)
+        String serviceObject = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("services/" + id + "/")
                 .assertStatus(200)
@@ -42,7 +42,7 @@ public class ServiceSteps {
 
     @Step("Удаление сервиса по Id")
     public void deleteServiceById(String id) {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .delete("services/" + id + "/")
                 .assertStatus(204);
@@ -50,7 +50,7 @@ public class ServiceSteps {
 
     @Step("Копирование сервиса по Id")
     public CopyServiceResponse copyServiceById(String id) {
-        String serviceObject = new Http(Configure.ProductCatalog)
+        String serviceObject = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .post("services/" + id + "/copy/")
                 .assertStatus(200)
@@ -60,7 +60,7 @@ public class ServiceSteps {
 
     @Step("Обновление сервиса")
     public void updateServiceById(String id) {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .patch("services/" + id + "/",
                         new JsonHelper().getJsonTemplate("productCatalog/services/createServices.json")
@@ -72,7 +72,7 @@ public class ServiceSteps {
     @Step("Получение ID сервиса по его имени: {serviceName}")
     public String getServiceIdByName(String serviceName) {
         String serviceId = null;
-        String object = new Http(Configure.ProductCatalog)
+        String object = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("services/")
                 .assertStatus(200)

@@ -8,6 +8,8 @@ import models.Entity;
 import org.json.JSONObject;
 import steps.authorizer.AuthorizerSteps;
 
+import static core.helper.Configure.AuthorizerURL;
+
 @Builder
 @Getter
 public class Organization extends Entity {
@@ -29,8 +31,8 @@ public class Organization extends Entity {
     @Override
     @Step("Получение организации")
     protected void create() {
-        name = new Http(AuthorizerSteps.URL)
-                .get("authorizer/api/v1/organizations?page=1&per_page=25")
+        name = new Http(AuthorizerURL)
+                .get("organizations?page=1&per_page=25")
                 .assertStatus(200)
                 .jsonPath()
                 .getString(String.format("data.find{it.title=='%s'}.name", title));

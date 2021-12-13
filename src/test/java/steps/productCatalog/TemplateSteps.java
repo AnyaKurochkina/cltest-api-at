@@ -14,7 +14,7 @@ public class TemplateSteps {
 
     @Step("Получение списка шиблонов")
     public void getTemplateList() {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("templates/")
                 .assertStatus(200);
@@ -22,7 +22,7 @@ public class TemplateSteps {
 
     @Step("Проверка на существование шаблона")
     public void existTemplateByName(String templateName) {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .setWithoutToken()
                 .get("templates/exists/?name=" + templateName + "/")
@@ -31,7 +31,7 @@ public class TemplateSteps {
 
     @Step("Получение шаблона по Id")
     public void getTemplateById(Integer id) {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .setWithoutToken()
                 .get("templates/" + id + "/")
@@ -40,7 +40,7 @@ public class TemplateSteps {
 
     @Step("Копирование шаблона по ID")
     public void copyTemplateById(Integer id) {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .setWithoutToken()
                 .post("templates/" + id + "/copy/")
@@ -50,7 +50,7 @@ public class TemplateSteps {
     @Step("Удаление клона шаблона по имени")
     public void deleteTemplateByName(String name) {
         Integer id = getTemplateIdByNameMultiSearch(name);
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .setWithoutToken()
                 .delete("templates/" + id + "/")
@@ -59,7 +59,7 @@ public class TemplateSteps {
 
     @Step("Обновление параметра color у шаблона.")
     public void updateTemplateById(String color, String name, Integer id) {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .setWithoutToken()
                 .patch("templates/" + id + "/", new JsonHelper()
@@ -71,7 +71,7 @@ public class TemplateSteps {
 
     @Step("Получение ID шаблона по его имени: {templateName} с использованием multiSearch")
     public Integer getTemplateIdByNameMultiSearch(String templateName) {
-        String object = new Http(Configure.ProductCatalog)
+        String object = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .setWithoutToken()
                 .get("templates/?multisearch=" + templateName)

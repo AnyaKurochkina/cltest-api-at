@@ -1,6 +1,9 @@
 package core.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
@@ -45,6 +48,18 @@ public class JsonHelper {
                 return EnumSet.noneOf(Option.class);
             }
         });
+    }
+
+    public static String toJson(Object e) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        return gsonBuilder.create().toJson(e, e.getClass());
+    }
+
+    public static Gson getCustomGson()  {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        return gsonBuilder.create();
     }
 
     @SneakyThrows

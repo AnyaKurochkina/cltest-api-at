@@ -15,7 +15,7 @@ public class ProductsSteps {
     @Step("Получение ID продукта по его имени: {actionName}")
     public String getProductId(String productName) {
         String productsId = null;
-        String object = new Http(Configure.ProductCatalog)
+        String object = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("products/")
                 .assertStatus(200)

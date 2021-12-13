@@ -23,6 +23,8 @@ import steps.orderService.OrderServiceSteps;
 import java.util.ArrayList;
 import java.util.List;
 
+import static core.helper.Configure.OrderServiceURL;
+
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -55,9 +57,9 @@ public class PostgreSQL extends IProduct {
     protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = new Http(OrderServiceSteps.URL)
+        JsonPath array = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
+                .post("projects/" + projectId + "/orders", toJson())
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");

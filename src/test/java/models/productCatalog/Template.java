@@ -67,7 +67,7 @@ public class Template extends Entity {
 
     @Override
     protected void create() {
-        String response = new Http(Configure.ProductCatalog)
+        String response = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .post("templates/", toJson())
                 .assertStatus(201)
@@ -80,7 +80,7 @@ public class Template extends Entity {
 
     @Override
     protected void delete() {
-         new Http(Configure.ProductCatalog)
+         new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .setWithoutToken()
                 .delete("templates/" + templateId + "/")

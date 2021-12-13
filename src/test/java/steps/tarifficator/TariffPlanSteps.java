@@ -1,26 +1,25 @@
 package steps.tarifficator;
 
 import com.google.gson.reflect.TypeToken;
-import core.CacheService;
-import core.helper.Configure;
 import core.helper.Http;
+import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import models.tarifficator.TariffPlan;
 import org.json.JSONArray;
 import steps.Steps;
 
 import java.lang.reflect.Type;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static core.helper.Configure.TarifficatorURL;
 
 @Log4j2
 public class TariffPlanSteps extends Steps {
-    public static final String URL = Configure.getAppProp("host_kong") + "tarifficator/api/v1/";
 
     public TariffPlan deserialize(String object) {
-        return CacheService.getCustomGson().fromJson(object, TariffPlan.class);
+        return JsonHelper.getCustomGson().fromJson(object, TariffPlan.class);
     }
 
     /**
@@ -31,7 +30,7 @@ public class TariffPlanSteps extends Steps {
      */
     @Step("Создание тарифного плана {tariffPlan}")
     public TariffPlan createTariffPlan(TariffPlan tariffPlan) {
-        String object = new Http(URL)
+        String object = new Http(TarifficatorURL)
                 .post("tariff_plans", tariffPlan.toJson())
                 .assertStatus(201)
                 .toString();
@@ -52,7 +51,7 @@ public class TariffPlanSteps extends Steps {
         List<Object> responseList;
         int i = 1;
         do {
-            responseList = new Http(URL)
+            responseList = new Http(TarifficatorURL)
                     .get(String.format("tariff_plans?page=%d&per_page=100&%s", i, urlParameters))
                     .assertStatus(200)
                     .jsonPath()
@@ -60,7 +59,7 @@ public class TariffPlanSteps extends Steps {
             allResponseList.addAll(responseList);
             i++;
         } while (responseList.size() > 0);
-        return CacheService.getCustomGson().fromJson(new JSONArray(allResponseList).toString(), type);
+        return JsonHelper.getCustomGson().fromJson(new JSONArray(allResponseList).toString(), type);
     }
 
     /**
@@ -71,7 +70,7 @@ public class TariffPlanSteps extends Steps {
      */
     @Step("Получение тарифного плана {tariffPlanId}")
     public TariffPlan getTariffPlan(String tariffPlanId) {
-        String object = new Http(URL)
+        String object = new Http(TarifficatorURL)
                 .get(String.format("tariff_plans/%s?include=tariff_classes", tariffPlanId))
                 .assertStatus(200)
                 .toString();
@@ -86,7 +85,7 @@ public class TariffPlanSteps extends Steps {
      */
     @Step("Редактирование тарифного плана {tariffPlan}")
     public TariffPlan editTariffPlan(TariffPlan tariffPlan) {
-        String object = new Http(URL)
+        String object = new Http(TarifficatorURL)
                 .patch(String.format("tariff_plans/%s", tariffPlan.getId()), tariffPlan.toJson())
                 .assertStatus(200)
                 .toString();

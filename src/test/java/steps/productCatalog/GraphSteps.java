@@ -19,7 +19,7 @@ public class GraphSteps {
     }
 
     public void createGraph(String graphName) {
-        String object = new Http(Configure.ProductCatalog)
+        String object = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .post("graphs/?save_as_next_version=true", toJson("/productCatalog/graphs/createGraph.json", graphName))
                 .assertStatus(201)
@@ -28,7 +28,7 @@ public class GraphSteps {
 
     public String getGraphId(String graphName){
         String graphId = null;
-        String object = new Http(Configure.ProductCatalog)
+        String object = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("graphs/?include=total_count&page=1&per_page=10")
                 .assertStatus(200)

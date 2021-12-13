@@ -1,6 +1,5 @@
 package models.orderService.interfaces;
 
-import core.CacheService;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
 import core.utils.Waiting;
@@ -45,8 +44,6 @@ public abstract class IProduct extends Entity {
     protected transient OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
     @Builder.Default
     protected transient ReferencesStep referencesStep = new ReferencesStep();
-    @Builder.Default
-    protected transient CacheService cacheService = new CacheService();
     protected String jsonTemplate;
     @Setter
     protected List<String> actions;

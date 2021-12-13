@@ -86,7 +86,7 @@ public class Product extends Entity {
 
     @Override
     protected void create() {
-        String response = new Http(Configure.ProductCatalog)
+        String response = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .post("products/", toJson())
                 .assertStatus(201)
@@ -99,7 +99,7 @@ public class Product extends Entity {
 
     @Step("Обновление продукта")
     public void updateProduct() {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .patch("products/" + productId + "/",
                         this.getTemplate()
@@ -109,7 +109,7 @@ public class Product extends Entity {
 
     @Override
     protected void delete() {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .delete("products/" + productId + "/")
                 .assertStatus(204);

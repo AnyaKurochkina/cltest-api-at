@@ -58,7 +58,7 @@ public class Action extends Entity {
     @Override
     @Step("Создание экшена")
     protected void create() {
-        String response = new Http(Configure.ProductCatalog)
+        String response = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .post("actions/", toJson())
                 .assertStatus(201)
@@ -72,7 +72,7 @@ public class Action extends Entity {
     @Override
     @Step("Удаление экшена")
     protected void delete() {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .delete("actions/" + actionId + "/")
                 .assertStatus(204);
