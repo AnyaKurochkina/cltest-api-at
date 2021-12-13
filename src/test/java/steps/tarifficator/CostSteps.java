@@ -187,7 +187,7 @@ public class CostSteps extends Steps {
         for (Object object : consumption) {
             priceList.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
         }
-        System.out.println(priceList);
+        log.info(priceList);
         return priceList;
     }
 

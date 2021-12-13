@@ -3,9 +3,14 @@ package steps.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.Template.getListTemplate.GetTemplateListResponse;
+import httpModels.productCatalog.Template.existsTemplate.response.ExistsTemplateResponse;
+import httpModels.productCatalog.Template.getListTemplate.response.GetTemplateListResponse;
+import httpModels.productCatalog.Template.getListTemplate.response.ListItem;
 import io.qameta.allure.Step;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+
+import java.util.List;
 
 import static core.helper.JsonHelper.convertResponseOnClass;
 
@@ -13,20 +18,25 @@ import static core.helper.JsonHelper.convertResponseOnClass;
 public class TemplateSteps {
 
     @Step("Получение списка шиблонов")
-    public void getTemplateList() {
-        new Http(Configure.ProductCatalog)
+    public List<ListItem> getTemplateList() {
+        String object = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("templates/")
-                .assertStatus(200);
+                .assertStatus(200).toString();
+        GetTemplateListResponse getTemplateListResponse = convertResponseOnClass(object, GetTemplateListResponse.class);
+        return getTemplateListResponse.getList();
     }
 
-    @Step("Проверка на существование шаблона")
-    public void existTemplateByName(String templateName) {
-        new Http(Configure.ProductCatalog)
+    @SneakyThrows
+    @Step("Проверка на существование шаблона по имени")
+    public boolean isExist(String name) {
+        String object = new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
-                .setWithoutToken()
-                .get("templates/exists/?name=" + templateName + "/")
-                .assertStatus(200);
+                .get("templates/exists/?name=" + name)
+                .assertStatus(200)
+                .toString();
+        ExistsTemplateResponse response = convertResponseOnClass(object, ExistsTemplateResponse.class);
+        return response.getExists();
     }
 
     @Step("Получение шаблона по Id")

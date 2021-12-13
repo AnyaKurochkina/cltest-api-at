@@ -42,6 +42,7 @@ public class ApacheKafkaCluster extends IProduct {
     public List<KafkaTopic> topics = new ArrayList<>();
     Flavor flavor;
     String osVersion;
+    public static final String KAFKA_CREATE_TOPICS = "kafka_create_topics";
 
     @Override
     @Step("Заказ продукта")
@@ -96,7 +97,7 @@ public class ApacheKafkaCluster extends IProduct {
         List<KafkaTopic> kafkaTopics = new ArrayList<>();
         for (String name : names)
             kafkaTopics.add(new KafkaTopic("delete", 1, 1, 1, 1800000, name));
-        orderServiceSteps.executeAction("kafka_create_topics", this, new JSONObject("{\"topics\": " + CacheService.toJson(kafkaTopics) + "}"));
+        orderServiceSteps.executeAction(KAFKA_CREATE_TOPICS, this, new JSONObject("{\"topics\": " + CacheService.toJson(kafkaTopics) + "}"));
         for (String name : names)
             Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         topics.addAll(kafkaTopics);

@@ -368,7 +368,6 @@ public class OrderServiceSteps extends Steps {
 
         for (String order : orders) {
             try {
-                System.out.println("order_id = " + order);
                 JsonPath jsonPath = new Http(URL)
                         .setProjectId(project.id)
                         .get("order-service/api/v1/projects/" + project.id + "/orders/" + order)

@@ -9,45 +9,48 @@ import httpModels.productCatalog.OrgDirection.getOrgDirection.response.GetOrgDir
 import httpModels.productCatalog.OrgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import httpModels.productCatalog.OrgDirection.getOrgDirectionList.response.ListItem;
 import io.qameta.allure.Step;
+import io.restassured.response.ValidatableResponse;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.List;
 
-import static core.helper.JsonHelper.convertResponseOnClass;
+import static io.restassured.RestAssured.given;
 
 public class OrgDirectionSteps {
 
     @Step("Получение списка направлений")
     public List<ListItem> getOrgDirectionList() {
-        GetOrgDirectionListResponse response = new Http(Configure.ProductCatalog)
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("org_direction/")
                 .assertStatus(200)
-                .extractAs(GetOrgDirectionListResponse.class);
-
-        return response.getList();
+                .extractAs(GetOrgDirectionListResponse.class)
+                .getList();
     }
 
     @Step("Проверка существования направления")
-    public boolean isExist(String name) {
-        ExistsOrgDirectionResponse response = new Http(Configure.ProductCatalog)
+    public boolean isProductExists(String name) {
+        return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
                 .get("org_direction/exists/?name=" + name)
                 .assertStatus(200)
-                .extractAs(ExistsOrgDirectionResponse.class);
-
-        return response.getExists();
+                .extractAs(ExistsOrgDirectionResponse.class)
+                .getExists();
     }
 
     @Step("Ипорт направления")
-    public void importOrgDirection(JSONObject jsonObject) {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("org_direction/obj_import/", jsonObject)
-                .assertStatus(201);
+    public void importOrgDirection(String pathName) {
+        ValidatableResponse response = given()
+                .contentType("multipart/form-data")
+                .multiPart("file", new File(pathName))
+                .when()
+                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/org_direction/obj_import/")
+                .then()
+                .statusCode(200);
     }
 
-    @Step("Получение направлеия по Id")
+    @Step("Получение направления по Id")
     public GetOrgDirectionResponse getOrgDirectionById(String id) {
         return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
@@ -87,7 +90,6 @@ public class OrgDirectionSteps {
                 .setContentType("application/json")
                 .post("org_direction/" + id + "/copy/")
                 .assertStatus(200);
-
     }
 
     @Step ("Экспорт направления по Id")

@@ -1,14 +1,16 @@
 package models.authorizer;
 
 import lombok.Builder;
+import lombok.Getter;
 import models.Entity;
 import org.json.JSONObject;
 
 @Builder
+@Getter
 public class User extends Entity {
-    public String username;
-    public String password;
-    public String role;
+    String username;
+    String password;
+    String role;
 
     @Override
     public Entity init() {
