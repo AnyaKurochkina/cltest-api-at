@@ -20,7 +20,7 @@ public class TemplatesTest extends Tests {
     @Test
     public void createTemplate() {
         template = Template.builder()
-                .templateName("TemplateForAT1")
+                .templateName("template_for_at1")
                 .build()
                 .createObject();
     }
@@ -29,14 +29,15 @@ public class TemplatesTest extends Tests {
     @DisplayName("Получение списка шаблонов")
     @Test
     public void getTemplateList() {
-        templateSteps.getTemplateList();
+        Assertions.assertTrue(templateSteps.getTemplateList().size() > 0);
     }
 
     @Order(3)
     @DisplayName("Проверка на существование шаблона по имени")
     @Test
     public void existTemplateByName() {
-        templateSteps.existTemplateByName(template.getTemplateName());
+        Assertions.assertTrue(templateSteps.isExist(template.getTemplateName()));
+        Assertions.assertFalse(templateSteps.isExist("NoExistsAction"));
     }
 
     @Order(4)
@@ -67,7 +68,7 @@ public class TemplatesTest extends Tests {
     @MarkDelete
     public void deleteTemplate() {
         try (Template template = Template.builder()
-                .templateName("TemplateForAT1")
+                .templateName("template_for_at1")
                 .build()
                 .createObjectExclusiveAccess()) {
             template.deleteObject();

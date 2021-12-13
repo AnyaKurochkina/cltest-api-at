@@ -1,0 +1,5 @@
+HcpBucket:
+  - actions:
+      [ 'expand_mount_point', 'create_db', 'create_dbms_user', 'remove_dbms_user', 'reset_db_owner_password', 'reset_two_layer', 'remove_db', 'stop_two_layer', 'start_two_layer', 'stop_hard_two_layer' ]
+  - options:
+      - { platform: "hcp",env: "DEV", servicePlan: "Cold", segment: "dev-srv-app", dataCentre: "5" }

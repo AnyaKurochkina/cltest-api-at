@@ -1,0 +1,58 @@
+{
+  "model_name": "Product",
+  "Product": {
+    "id": 196,
+    "create_dt": "2021-11-17T10:21:07.024823",
+    "user": {
+      "id": null,
+      "is_staff": false,
+      "username": "",
+      "is_active": false,
+      "is_superuser": false
+    },
+    "json": {
+      "id": "5537ee4a-7881-475d-89b8-714161d6dd57",
+      "envs": [
+        "dev"
+      ],
+      "icon": "",
+      "name": "test_at_product",
+      "title": "TestAtProduct",
+      "author": "Morozov_ILya",
+      "number": 1,
+      "is_open": false,
+      "category": "vm",
+      "graph_id": "",
+      "max_count": 1,
+      "description": "",
+      "allowed_paths": [],
+      "graph_version": "",
+      "allowed_groups": [],
+      "restricted_paths": [],
+      "restricted_groups": [],
+      "information_systems": [
+        "c9fd31c7-25a5-45ca-863c-18425d1ae927"
+      ],
+      "graph_version_pattern": ""
+    },
+    "hash": "0e804bd4d430e85b9f06a41b2c777462",
+    "version_arr": [
+      1,
+      0,
+      0
+    ],
+    "used_graph": {
+      "graph": {},
+      "object_info": {
+        "id": "5537ee4a-7881-475d-89b8-714161d6dd57",
+        "name": "TestAtProduct",
+        "type": "Product",
+        "version": "1.0.0"
+      }
+    },
+    "product": "5537ee4a-7881-475d-89b8-714161d6dd57"
+  },
+  "rel_foreign_models": {},
+  "dump_version": 4.0,
+  "dump_date": "2021-12-09 18:10:31"
+}

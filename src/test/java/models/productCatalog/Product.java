@@ -1,11 +1,9 @@
 package models.productCatalog;
 
-import java.util.List;
-
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.createProduct.response.CreateProductResponse;
+import httpModels.productCatalog.Product.createProduct.response.CreateProductResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +15,8 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import steps.productCatalog.ProductsSteps;
 
+import java.util.List;
+
 import static core.helper.JsonHelper.convertResponseOnClass;
 
 @Log4j2
@@ -25,45 +25,25 @@ import static core.helper.JsonHelper.convertResponseOnClass;
 public class Product extends Entity {
 
     private List<Object> allowedPaths;
-
     private Boolean isOpen;
-
     private String author;
-
     private List<String> informationSystems;
-
     private String icon;
-
     private String description;
-
     private String graphVersion;
-
     private List<String> envs;
-
     private List<Object> restrictedGroups;
-
     private String title;
-
     private String graphId;
-
     private String version;
-
     private Integer maxCount;
-
     private String productName;
-
     private List<Object> restrictedPaths;
-
     private String graphVersionPattern;
-
     private List<Object> allowedGroups;
-
     private String productId;
-
     private String category;
-
     private String jsonTemplate;
-
 
     @Override
     public Entity init() {
