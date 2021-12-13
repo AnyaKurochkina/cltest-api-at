@@ -9,9 +9,13 @@ import httpModels.productCatalog.OrgDirection.getOrgDirection.response.GetOrgDir
 import httpModels.productCatalog.OrgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import httpModels.productCatalog.OrgDirection.getOrgDirectionList.response.ListItem;
 import io.qameta.allure.Step;
+import io.restassured.response.ValidatableResponse;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.List;
+
+import static io.restassured.RestAssured.given;
 
 public class OrgDirectionSteps {
 
@@ -36,11 +40,14 @@ public class OrgDirectionSteps {
     }
 
     @Step("Ипорт направления")
-    public void importOrgDirection(JSONObject jsonObject) {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("org_direction/obj_import/", jsonObject)
-                .assertStatus(201);
+    public void importOrgDirection(String pathName) {
+        ValidatableResponse response = given()
+                .contentType("multipart/form-data")
+                .multiPart("file", new File(pathName))
+                .when()
+                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/org_direction/obj_import/")
+                .then()
+                .statusCode(200);
     }
 
     @Step("Получение направления по Id")

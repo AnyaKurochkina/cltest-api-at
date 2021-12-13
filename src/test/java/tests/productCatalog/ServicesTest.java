@@ -51,9 +51,11 @@ public class ServicesTest extends Tests {
     @DisplayName("Импорт сервиса")
     @Test
     public void importService() {
+        System.out.println(serviceSteps.getServicesList().size());
         String data = new JsonHelper().getStringFromFile("/productCatalog/services/importService.json");
         String serviceName = new JsonPath(data).get("Service.json.name");
         serviceSteps.importService(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
+        System.out.println(serviceSteps.getServicesList().size());
         Assertions.assertTrue(serviceSteps.isServiceExist(serviceName));
         serviceSteps.deleteServiceById(serviceSteps.getServiceIdByName(serviceName));
         Assertions.assertFalse(serviceSteps.isServiceExist(serviceName));
@@ -89,6 +91,14 @@ public class ServicesTest extends Tests {
     @Test
     public void updateServiceDescription() {
         serviceSteps.updateServiceById(service.getServiceId());
+    }
+
+    @Order(9)
+    @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
+    @Test
+    public void getKeyGraphVersionCalculatedInResponse() {
+        GetServiceResponse getServiceResponse = serviceSteps.getServiceById(service.getServiceId());
+        Assertions.assertNotNull(getServiceResponse.getGraphVersionCalculated());
     }
 
     @Order(100)

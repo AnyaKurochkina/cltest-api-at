@@ -79,6 +79,14 @@ public class ProductsTest extends Tests {
         Assertions.assertEquals(expectedValue, actual);
     }
 
+    @Order(7)
+    @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
+    @Test
+    public void getKeyGraphVersionCalculatedInResponse() {
+        GetProductResponse getProductResponse = productsSteps.getProductById(product.getProductId());
+        Assertions.assertNotNull(getProductResponse.getGraphVersionCalculated());
+    }
+
     @Order(10)
     @DisplayName("Обновление продукта")
     @Test

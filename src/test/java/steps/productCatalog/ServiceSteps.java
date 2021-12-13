@@ -33,7 +33,6 @@ public class ServiceSteps {
     public List<ListItem> getServicesList() {
         return new Http(Configure.ProductCatalog)
                 .setContentType("application/json")
-                .setWithoutToken()
                 .get("services/")
                 .assertStatus(200)
                 .extractAs(GetServiceListResponse.class)

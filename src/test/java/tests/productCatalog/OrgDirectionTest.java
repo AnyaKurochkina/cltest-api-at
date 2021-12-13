@@ -1,8 +1,11 @@
 package tests.productCatalog;
 
+import core.helper.Configure;
 import core.helper.Deleted;
+import core.helper.JsonHelper;
 import httpModels.productCatalog.OrgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import io.qameta.allure.Feature;
+import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
@@ -46,10 +49,11 @@ public class OrgDirectionTest extends Tests {
     @DisplayName("Импорт направления")
     @Test
     public void importOrgDirection() {
-        String name = "ImportOrgDirection";
-        JSONObject jsonObject = orgSteps.createJsonObject(name, "description");
-        orgSteps.importOrgDirection(jsonObject);
-        Assertions.assertTrue(orgSteps.isProductExists(name));
+        String data = new JsonHelper().getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
+        String orgDirectionName = new JsonPath(data).get("OrgDirection.name");
+        orgSteps.importOrgDirection(Configure.RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirection.json");
+        Assertions.assertTrue(orgSteps.isProductExists(orgDirectionName));
+// добавить шаг на удаление по имени.
     }
 
     @Order(5)
@@ -78,6 +82,7 @@ public class OrgDirectionTest extends Tests {
         String cloneName = orgDirection.getOrgDirectionName() + "-clone";
         orgSteps.copyOrgDirectionById(orgDirection.getOrgDirectionId());
         Assertions.assertTrue(orgSteps.isProductExists(cloneName));
+     //добавить шаг на удаление копии.
     }
 
     @Order(8)

@@ -143,8 +143,6 @@ public class ActionsTest extends Tests {
         String objectName = "nameWithUppercaseInMiddle";
         JSONObject nameWithUppercaseInMiddle = actionsSteps.createJsonObject(objectName);
         actionsSteps.createAction(nameWithUppercaseInMiddle).assertStatus(400);
-
-
     }
 
     @Order(15)
