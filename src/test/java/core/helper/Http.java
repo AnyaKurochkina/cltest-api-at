@@ -1,5 +1,6 @@
 package core.helper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -278,7 +279,7 @@ public class Http {
 
         public Response assertStatus(int s) {
             if (s != status())
-                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nResponse: %s\nRequest: %s\n%s\n", s, status(), method, responseMessage, host + path, body));
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nResponse: %s\nRequest: %s\n%s\n", s, status(), method, token, responseMessage, host + path, body));
             return this;
         }
 
@@ -308,6 +309,13 @@ public class Http {
             } catch (Exception e) {
                 throw new Error(e.getMessage());
             }
+        }
+
+        @SneakyThrows
+        public <T> T extractAs(Class<T> clazz){
+            JSONObject jsonObject = new JSONObject(responseMessage);
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.convertValue(jsonObject.toMap(), clazz);
         }
 
         public String toString() {

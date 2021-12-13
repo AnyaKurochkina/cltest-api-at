@@ -1,4 +1,4 @@
-package httpModels.productCatalog.Action.getAction.response;
+package httpModels.productCatalog.Action.getActionList.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

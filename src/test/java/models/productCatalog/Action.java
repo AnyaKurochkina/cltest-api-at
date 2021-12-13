@@ -32,9 +32,6 @@ public class Action extends Entity {
     public Entity init() {
         jsonTemplate = "productCatalog/actions/createAction.json";
         GraphSteps graphSteps = new GraphSteps();
-//        if(graph == null){
-//            graph = Graph.builder().build().createObject();
-//        }
         graphId = graphSteps.getGraphId("AtTestGraph");
         return this;
     }
@@ -48,10 +45,6 @@ public class Action extends Entity {
                 .set("$.description", actionName)
                 .set("$.graph_id", graphId)
                 .set("$.version", "1.1.1")
-//                .set("$.required_order_statuses[0]", "success")
-//                .set("$.event_type[0]", "bm")
-//                .set("$.event_provider[0]", "s3")
-//                .set("$.type", "deleted")
                 .build();
     }
 

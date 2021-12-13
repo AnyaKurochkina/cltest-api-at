@@ -1,4 +1,4 @@
-package httpModels.productCatalog.Service.copyService.response;
+package httpModels.productCatalog.Action.exportAction.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataSource{
+public class ExportActionResponse{
 
-	@JsonProperty("test")
-	private Boolean test;
+	@JsonProperty("err")
+	private String err;
+
+	@JsonProperty("data")
+	private String data;
 }

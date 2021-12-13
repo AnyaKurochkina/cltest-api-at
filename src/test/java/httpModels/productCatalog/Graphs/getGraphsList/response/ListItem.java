@@ -1,4 +1,4 @@
-package httpModels.productCatalog.Graphs.getGraphs.response;
+package httpModels.productCatalog.Graphs.getGraphsList.response;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;

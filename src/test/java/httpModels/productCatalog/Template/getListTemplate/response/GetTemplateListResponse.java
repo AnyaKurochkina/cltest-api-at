@@ -1,4 +1,4 @@
-package httpModels.productCatalog.Action.getAction.response;
+package httpModels.productCatalog.Template.getListTemplate.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActionResponse{
+public class GetTemplateListResponse{
 
 	@JsonProperty("meta")
 	private Meta meta;

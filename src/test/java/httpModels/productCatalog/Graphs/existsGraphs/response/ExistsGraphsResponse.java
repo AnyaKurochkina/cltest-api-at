@@ -1,6 +1,5 @@
-package httpModels.productCatalog.Graphs.getGraphs.response;
+package httpModels.productCatalog.Graphs.existsGraphs.response;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,11 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetGraphsResponse{
+public class ExistsGraphsResponse{
 
-	@JsonProperty("meta")
-	private Meta meta;
+	@JsonProperty("exists")
+	private boolean exists;
 
-	@JsonProperty("list")
-	private List<ListItem> list;
+	public boolean isExists(){
+		return exists;
+	}
 }
