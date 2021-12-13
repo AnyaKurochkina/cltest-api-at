@@ -35,7 +35,7 @@ public class KeyCloakSteps {
 //                                service.clientId, service.clientSecret, user.username, user.password))
                 .post("auth/realms/Portal/protocol/openid-connect/token",
                         String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
-                                 user.username, user.password))
+                                 user.getUsername(), user.getPassword()))
                 .assertStatus(200)
                 .jsonPath()
                 .get("access_token");

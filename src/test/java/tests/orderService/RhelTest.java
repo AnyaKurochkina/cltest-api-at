@@ -3,10 +3,13 @@ package tests.orderService;
 import core.helper.Deleted;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import models.authorizer.AccessGroup;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,6 +33,18 @@ public class RhelTest extends Tests {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.expandMountPoint();
+        }
+    }
+
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка создания {0}")
+    @Disabled
+    void checkCreate(Rhel product) {
+        try (Rhel rhel = product.createObjectExclusiveAccess()) {
+            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            AccessGroup accessGroup = AccessGroup.builder().projectName(rhel.getProjectId()).build().createObject();
+            Assertions.assertTrue(accessGroup.getUsers().size() > 0, String.format("Нет пользователей в группе %s", accessGroup.getName()));
+            rhel.checkCreateUseSsh(accessGroup.getUsers().get(0));
         }
     }
 

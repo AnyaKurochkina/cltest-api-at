@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.keyCloak.KeyCloakSteps;
 
 import javax.net.ssl.*;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
@@ -25,7 +25,6 @@ import java.util.concurrent.Semaphore;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
 import static tests.Tests.putAttachLog;
-//import static tests.Tests.putLog;
 
 @Log4j2
 public class Http {
@@ -34,10 +33,13 @@ public class Http {
     private String body = "";
     private String method;
     private String token = "";
+    private String field = "";
     private String contentType = "application/json";
     private boolean isUsedToken = true;
     private boolean isLogged = true;
     private static final Semaphore SEMAPHORE = new Semaphore(1, true);
+    private static final String boundary = "===KhdMbdyfgJSTmdmjBYJNmKstdrB===";
+    private File file;
 
     static {
         try {
@@ -126,6 +128,13 @@ public class Http {
         return post(path);
     }
 
+    public Response multiPart(String path, String field, File file) {
+        contentType = "multipart/form-data; boundary=" + boundary;
+        this.field = field;
+        this.file = file;
+        return post(path);
+    }
+
     public Response post(String path, String body) {
         this.body = body;
         return post(path);
@@ -160,8 +169,9 @@ public class Http {
     }
 
     private final StringBuilder sbLog = new StringBuilder();
-    private void log(String str){
-        if(isLogged)
+
+    private void log(String str) {
+        if (isLogged)
             sbLog.append(str);
     }
 
@@ -187,10 +197,14 @@ public class Http {
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
-            log(String.format("URL: %s\n", (host + path)));
-            if (body.length() > 0) {
-                log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
-                http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
+            log(String.format("%s URL: %s\n", method, (host + path)));
+            if (field.length() > 0) {
+                addFilePart(http.getOutputStream(), file);
+            } else {
+                if (body.length() > 0) {
+                    log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
+                    http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
+                }
             }
             InputStream is;
             if (http.getResponseCode() >= 400)
@@ -208,24 +222,11 @@ public class Http {
             else
                 log(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
             log.debug(sbLog.toString());
-//            AllureLifecycle allureLifecycle = getLifecycle();
-//            Attachment attachment = new Attachment().setSource(sbLog.toString()).setName(String.valueOf(new Date()));
-//            allureLifecycle.getCurrentTestCaseOrStep().ifPresent(id -> allureLifecycle.updateStep(id, s -> s.getAttachments().add(attachment)));
-//            Allure.getLifecycle().updateTestCase((t) -> {
-//                StatusDetails  statusDetails = t.getStatusDetails();
-//                if(statusDetails == null)
-//                    statusDetails = new StatusDetails();
-//                String message = statusDetails.getMessage();
-//                if(message == null)
-//                    message = "";
-//                t.setStatusDetails( statusDetails.setMessage(message + sbLog));
-//            });
             putAttachLog(sbLog.toString());
         } catch (Exception e) {
             e.printStackTrace();
             Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
-        }
-        finally {
+        } finally {
             if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
         }
@@ -238,6 +239,35 @@ public class Http {
         }
     }
 
+    @SneakyThrows
+    public void addFilePart(OutputStream outputStream, File uploadFile) {
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8), true);
+        String fileName = uploadFile.getName();
+        writer.append("--" + boundary)
+                .append("\r\n")
+                .append("Content-Disposition: form-data; name=\"")
+                .append(field)
+                .append("\"; filename=\"")
+                .append(fileName)
+                .append("\"\r\n")
+                .append("Content-Type: ")
+                .append(URLConnection.guessContentTypeFromName(fileName))
+                .append("\r\n")
+                .append("Content-Transfer-Encoding: binary\r\n\r\n")
+                .flush();
+
+        FileInputStream inputStream = new FileInputStream(uploadFile);
+        byte[] buffer = new byte[4096];
+        int bytesRead = -1;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        outputStream.flush();
+        inputStream.close();
+        writer.append("\r\n");
+        writer.flush();
+    }
+
     public class Response {
         int status;
         String responseMessage;
@@ -248,10 +278,6 @@ public class Http {
         }
 
         public Response assertStatus(int s) {
-//            if (s != status() || (path.endsWith("/orders") && method.equals("POST"))) {
-//                Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
-//                Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
-//            }
             if (s != status())
                 throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nResponse: %s\nRequest: %s\n%s\n", s, status(), method, token, responseMessage, host + path, body));
             return this;

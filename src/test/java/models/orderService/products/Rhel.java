@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
@@ -13,6 +14,7 @@ import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
+import models.authorizer.User;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
@@ -119,5 +121,12 @@ public class Rhel extends IProduct {
     @Override
     protected void delete() {
         delete("delete_vm");
+    }
+
+    public void checkCreateUseSsh(String userName) {
+        User user = User.builder().username(userName).build().createObject();
+        String host = (String) orderServiceSteps.getProductsField(this, "product_data.find{it.type=='vm'}.hostname");
+        SshClient ssh = new SshClient(host, user.getUsername(), user.getPassword());
+        ssh.connectAndExecuteListCommand("ls");
     }
 }

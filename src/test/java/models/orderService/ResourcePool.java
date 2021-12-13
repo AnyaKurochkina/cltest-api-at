@@ -4,8 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-//py -m pip install testit-allure-adaptor
-// py -m pip install --upgrade certifi
+
 @EqualsAndHashCode(callSuper = false)
 @Data
 @Builder
