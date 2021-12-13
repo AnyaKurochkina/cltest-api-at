@@ -283,8 +283,6 @@ public class Http {
             return this;
         }
 
-
-
         public int status() {
             return status;
         }
