@@ -29,6 +29,7 @@ import java.util.List;
 @SuperBuilder
 public class HcpBucket extends IProduct {
 
+//    private String projectName;
     private String bucketName;
     private String segment;
     private String platform;
@@ -87,13 +88,13 @@ public class HcpBucket extends IProduct {
     }
 
     @Step("Измененить параметры версионирования")
-    private void changeBucketVersioning(){
-        orderServiceSteps.executeAction("change_bucket_versioning", this, new JSONObject("{\"item_id\":\"bd3128c3-fb9e-42d0-9f8f-e49f7091c614\",\"order\":{\"data\":{\"bucket\":{\"versioning\":{\"prune\":true,\"enabled\":true,\"pruneDays\":10}}}}}"));
+    public void changeBucketVersioning(){
+        orderServiceSteps.executeAction("change_bucket_versioning", this, new JSONObject("{\"bucket\":{\"versioning\":{\"prune\":true,\"enabled\":true,\"pruneDays\":10}}}"));
     }
 
-    @Step("Измененить параметры версионирования")
+    @Step("Измененить конфигурацию бакета")
     private void changeBucketConfig(){
-        orderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"item_id\":\"bd3128c3-fb9e-42d0-9f8f-e49f7091c614\",\"order\":{\"data\":{\"bucket\":{\"hard_quota\":20,\"service_plan\":\"Cold\",\"replication_enabled\":false}}}}"));
+        orderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20,\"service_plan\":\"Cold\",\"replication_enabled\":false}}"));
     }
 
     @Step("Удаление продукта")
