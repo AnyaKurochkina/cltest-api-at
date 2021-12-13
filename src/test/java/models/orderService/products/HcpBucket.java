@@ -17,6 +17,7 @@ import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
@@ -90,11 +91,15 @@ public class HcpBucket extends IProduct {
     @Step("Измененить параметры версионирования")
     public void changeBucketVersioning(){
         orderServiceSteps.executeAction("change_bucket_versioning", this, new JSONObject("{\"bucket\":{\"versioning\":{\"prune\":true,\"enabled\":true,\"pruneDays\":10}}}"));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.prune"), "Очистка не активирована");
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.enabled"), "Версионирование не активировалось");
     }
 
     @Step("Измененить конфигурацию бакета")
-    private void changeBucketConfig(){
+    public void changeBucketConfig(){
         orderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20,\"service_plan\":\"Cold\",\"replication_enabled\":false}}"));
+        Integer hardQuota = (Integer) orderServiceSteps.getProductsField(this, "data[0].config.bucket.hard_quota");
+        Assertions.assertEquals(hardQuota, 20, "Макс. объем не изменился! Макс. объем = " + hardQuota);
     }
 
     @Step("Удаление продукта")

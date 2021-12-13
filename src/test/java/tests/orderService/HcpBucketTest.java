@@ -37,7 +37,7 @@ public class HcpBucketTest extends Tests {
     void changeBucketConfig(HcpBucket product) {
         try (HcpBucket hcpBucket = product.createObjectExclusiveAccess()) {
             hcpBucket.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            hcpBucket.changeBucketVersioning();
+            hcpBucket.changeBucketConfig();
         }
     }
 }

@@ -324,13 +324,6 @@ public class Http {
             return responseMessage;
         }
 
-        @SneakyThrows
-        public <T> T extractAs(Class<T> clazz){
-            JSONObject jsonObject = new JSONObject(responseMessage);
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.convertValue(jsonObject.toMap(), clazz);
-        }
-
     }
 
 
