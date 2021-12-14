@@ -1,6 +1,6 @@
 package tests.orderService;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
@@ -85,7 +85,7 @@ public class ElasticsearchTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
+    @MarkDelete
     void delete(Elasticsearch product) {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             elastic.deleteObject();

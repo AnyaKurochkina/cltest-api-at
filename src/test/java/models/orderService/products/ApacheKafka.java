@@ -21,6 +21,8 @@ import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
 
+import static core.helper.Configure.OrderServiceURL;
+
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
@@ -44,9 +46,10 @@ public class ApacheKafka extends IProduct {
     protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath jsonPath = new Http(OrderServiceSteps.URL)
+        JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");

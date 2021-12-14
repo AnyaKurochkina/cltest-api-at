@@ -1,6 +1,6 @@
 package tests.orderService;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.authorizer.AccessGroup;
@@ -103,7 +103,7 @@ public class RhelTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
+    @MarkDelete
     void delete(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.deleteObject();

@@ -1,9 +1,9 @@
 package tests.productCatalog;
 
 import core.helper.Configure;
-import core.helper.Deleted;
 import core.helper.Http;
 import core.helper.JsonHelper;
+import core.helper.MarkDelete;
 import httpModels.productCatalog.Action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.Action.patchAction.response.PatchActionResponse;
 import io.restassured.path.json.JsonPath;
@@ -163,7 +163,7 @@ public class ActionsTest extends Tests {
     @Order(100)
     @Test
     @DisplayName("Удаление экшена")
-    @Deleted
+    @MarkDelete
     public void deleteAction() {
         try (Action action = Action.builder().actionName("test_object_at2021").build().createObjectExclusiveAccess()) {
             action.deleteObject();

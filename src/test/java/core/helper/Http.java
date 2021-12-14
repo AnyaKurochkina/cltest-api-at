@@ -21,6 +21,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.Formatter;
+import java.util.Objects;
 import java.util.concurrent.Semaphore;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
@@ -90,32 +92,28 @@ public class Http {
         return this;
     }
 
-    public Response get(String path) {
+    private static String format(String str, Object ... args){
+        for (Object arg : args)
+            str = str.replaceFirst("\\{\\}", Objects.requireNonNull(arg).toString());
+        return str;
+    }
+
+    public Response get(String path, Object ... args) {
         this.method = "GET";
-        this.path = path;
+        this.path = format(path, args);
         return request();
     }
 
-    public Response get(String path, String body) {
-        this.body = body;
-        return get(path);
-    }
-
-    public Response delete(String path) {
+    public Response delete(String path, Object ... args) {
         this.method = "DELETE";
-        this.path = path;
+        this.path = format(path, args);
         return request();
     }
 
-    public Response patch(String path) {
+    public Response patch(String path, Object ... args) {
         this.method = "PATCH";
-        this.path = path;
+        this.path = format(path, args);
         return request();
-    }
-
-    public Response patch(String path, JSONObject body) {
-        this.body = body.toString();
-        return patch(path);
     }
 
     public Http setContentType(String contentType) {
@@ -123,20 +121,15 @@ public class Http {
         return this;
     }
 
-    public Response post(String path, JSONObject body) {
+    public Http body(Object body) {
         this.body = body.toString();
-        return post(path);
+        return this;
     }
 
     public Response multiPart(String path, String field, File file) {
         contentType = "multipart/form-data; boundary=" + boundary;
         this.field = field;
         this.file = file;
-        return post(path);
-    }
-
-    public Response post(String path, String body) {
-        this.body = body;
         return post(path);
     }
 
@@ -258,7 +251,7 @@ public class Http {
 
         FileInputStream inputStream = new FileInputStream(uploadFile);
         byte[] buffer = new byte[4096];
-        int bytesRead = -1;
+        int bytesRead;
         while ((bytesRead = inputStream.read(buffer)) != -1) {
             outputStream.write(buffer, 0, bytesRead);
         }

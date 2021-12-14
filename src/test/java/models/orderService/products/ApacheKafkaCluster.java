@@ -1,7 +1,7 @@
 package models.orderService.products;
 
-import core.CacheService;
 import core.helper.Http;
+import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
@@ -16,12 +16,13 @@ import models.subModels.Flavor;
 import models.subModels.KafkaTopic;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static core.helper.Configure.OrderServiceURL;
 
 @Log4j2
 @Data
@@ -49,9 +50,10 @@ public class ApacheKafkaCluster extends IProduct {
     protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath jsonPath = new Http(OrderServiceSteps.URL)
+        JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
@@ -97,7 +99,7 @@ public class ApacheKafkaCluster extends IProduct {
         List<KafkaTopic> kafkaTopics = new ArrayList<>();
         for (String name : names)
             kafkaTopics.add(new KafkaTopic("delete", 1, 1, 1, 1800000, name));
-        orderServiceSteps.executeAction(KAFKA_CREATE_TOPICS, this, new JSONObject("{\"topics\": " + CacheService.toJson(kafkaTopics) + "}"));
+        orderServiceSteps.executeAction(KAFKA_CREATE_TOPICS, this, new JSONObject("{\"topics\": " + JsonHelper.toJson(kafkaTopics) + "}"));
         for (String name : names)
             Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         topics.addAll(kafkaTopics);
@@ -105,7 +107,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void deleteTopics(List<String> names) {
-        orderServiceSteps.executeAction("kafka_delete_topics", this, new JSONObject("{\"topics\": " + CacheService.toJson(names) + "}"));
+        orderServiceSteps.executeAction("kafka_delete_topics", this, new JSONObject("{\"topics\": " + JsonHelper.toJson(names) + "}"));
         for (String name : names)
             Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         for (String name : names)

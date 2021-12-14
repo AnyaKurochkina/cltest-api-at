@@ -41,8 +41,8 @@ public class ProductsSteps {
 
     @Step("Получение списка продуктов")
     public List<ListItem> getProductList() {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        return new Http(Configure.ProductCatalogURL)
+                
                 .get("products/")
                 .assertStatus(200)
                 .extractAs(GetProductsResponse.class)
@@ -51,8 +51,8 @@ public class ProductsSteps {
 
     @Step("Проверка существования действия по имени")
     public boolean isProductExist(String name) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        return new Http(Configure.ProductCatalogURL)
+                
                 .get("/products/exists/?name=" + name)
                 .assertStatus(200)
                 .extractAs(ExistsOrgDirectionResponse.class)
@@ -80,8 +80,8 @@ public class ProductsSteps {
 
     @Step("Получение продукта по Id")
     public GetProductResponse getProductById(String id) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        return new Http(Configure.ProductCatalogURL)
+                
                 .get("products/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetProductResponse.class);
@@ -89,9 +89,9 @@ public class ProductsSteps {
 
     @Step("Частичное обновление продукта")
     public void partialUpdateProduct(String id, String key, String value) {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .patch("products/" + id + "/", new JSONObject().put(key, value))
+        new Http(Configure.ProductCatalogURL)
+                .body(new JSONObject().put(key, value))
+                .patch("products/" + id + "/")
                 .assertStatus(200);
     }
 
@@ -100,8 +100,8 @@ public class ProductsSteps {
     }
 
     public void deleteProductById(String productId) {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        new Http(Configure.ProductCatalogURL)
+                
                 .delete("products/" + productId + "/")
                 .assertStatus(204);
     }

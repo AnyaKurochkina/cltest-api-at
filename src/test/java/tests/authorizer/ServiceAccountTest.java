@@ -1,6 +1,6 @@
 package tests.authorizer;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.authorizer.ServiceAccount;
@@ -25,7 +25,7 @@ public class ServiceAccountTest extends Tests {
 
     @Test
     @Order(2)
-    @Deleted
+    @MarkDelete
     @DisplayName("Удаление сервисного аккаунта")
     void deleteServiceAccount() {
         ServiceAccount.builder().title("deleteServiceAccount").build().createObject().deleteObject();

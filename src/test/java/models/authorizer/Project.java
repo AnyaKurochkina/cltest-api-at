@@ -57,7 +57,8 @@ public class Project extends Entity {
     @Step("Создание проекта")
     protected void create() {
         id = new Http(Configure.AuthorizerURL)
-                .post(String.format("folders/%s/projects", folderName), toJson())
+                .body(toJson())
+                .post(String.format("folders/%s/projects", folderName))
                 .assertStatus(201)
                 .jsonPath()
                 .getString("data.name");

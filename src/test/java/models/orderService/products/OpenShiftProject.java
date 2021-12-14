@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import static core.helper.Configure.OrderServiceURL;
+
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
@@ -58,9 +60,10 @@ public class OpenShiftProject extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        JsonPath array = new Http(OrderServiceSteps.URL)
+        JsonPath array = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
@@ -111,9 +114,9 @@ public class OpenShiftProject extends IProduct {
 
     //Проверка на наличие СХД у продукта
     private boolean hasShdQuote() {
-        String jsonArray = new Http(OrderServiceSteps.URL)
+        String jsonArray = new Http(OrderServiceURL)
                 .setProjectId(getProjectId())
-                .get(String.format("order-service/api/v1/products/resource_pools?category=container&project_name=%s&quota[storage][sc-nfs-netapp-q]=1",
+                .get(String.format("products/resource_pools?category=container&project_name=%s&quota[storage][sc-nfs-netapp-q]=1",
                         getProjectId()))
                 .assertStatus(200)
                 .toJson()

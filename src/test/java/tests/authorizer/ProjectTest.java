@@ -1,6 +1,6 @@
 package tests.authorizer;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.*;
 import models.authorizer.Project;
 import org.junit.jupiter.api.*;
@@ -25,7 +25,7 @@ public class ProjectTest extends Tests {
     @Order(2)
     @Test
     @DisplayName("Удаление проекта")
-    @Deleted
+    @MarkDelete
     void deleteProject() {
         Project.builder().isForOrders(false).build().createObject().deleteObject();
     }

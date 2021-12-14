@@ -1,10 +1,9 @@
 package tests.orderService;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
-import models.orderService.products.Astra;
 import models.orderService.products.Astra;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -89,7 +88,7 @@ public class AstraTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
+    @MarkDelete
     void delete(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.deleteObject();

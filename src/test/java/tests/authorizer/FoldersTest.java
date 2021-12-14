@@ -1,6 +1,6 @@
 package tests.authorizer;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.authorizer.Folder;
@@ -40,7 +40,7 @@ public class FoldersTest extends Tests {
     @Test
     @Order(4)
     @DisplayName("Удаление Папки")
-    @Deleted
+    @MarkDelete
     public void deleteFolder() {
         Folder.builder().kind(Folder.DEFAULT).build().createObject().deleteObject();
     }
@@ -48,7 +48,7 @@ public class FoldersTest extends Tests {
     @Test
     @Order(5)
     @DisplayName("Удаление Департамента")
-    @Deleted
+    @MarkDelete
     public void deleteDepartmentBlock() {
         Folder.builder().kind(Folder.DEPARTMENT).build().createObject().deleteObject();
     }
@@ -56,7 +56,7 @@ public class FoldersTest extends Tests {
     @Test
     @Order(6)
     @DisplayName("Удаление Бизнес-блока")
-    @Deleted
+    @MarkDelete
     public void deleteBusinessBlock() {
         Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject().deleteObject();
     }

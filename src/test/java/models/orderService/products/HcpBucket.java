@@ -1,5 +1,6 @@
 package models.orderService.products;
 
+import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -77,9 +78,10 @@ public class HcpBucket extends IProduct {
     @Override
     protected void create() {
         log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = new Http(OrderServiceSteps.URL)
+        JsonPath array = new Http(Configure.OrderServiceURL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");

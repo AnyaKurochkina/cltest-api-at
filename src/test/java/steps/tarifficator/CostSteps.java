@@ -1,6 +1,5 @@
 package steps.tarifficator;
 
-import core.helper.Configure;
 import core.helper.Http;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -20,17 +19,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static core.helper.Configure.CalculatorURL;
+import static core.helper.Configure.TarifficatorURL;
+
 @Log4j2
 public class CostSteps extends Steps {
-    private static final String URL = Configure.getAppProp("host_kong");
 
     @Step("Получение суммы расхода для продуктов")
     public Float getConsumptionSumOfProducts(List<String> productsId) {
         Float consumptionOfOneProduct;
         float consumption = 0F;
         for (String product : productsId) {
-            consumptionOfOneProduct = new Http(URL)
-                    .get("calculator/orders/cost/?uuid__in=" + product)
+            consumptionOfOneProduct = new Http(CalculatorURL)
+                    .get("orders/cost/?uuid__in=" + product)
                     .assertStatus(200)
                     .jsonPath()
                     .get("cost");
@@ -46,8 +47,8 @@ public class CostSteps extends Steps {
 
     @Step("Получение расхода для папки/проекта")
     public double getConsumptionByPath(String path) {
-        double consumption = new Http(URL)
-                .get("calculator/orders/cost/?folder__startswith=" + path)
+        double consumption = new Http(CalculatorURL)
+                .get("orders/cost/?folder__startswith=" + path)
                 .assertStatus(200)
                 .jsonPath()
                 .getDouble("cost");
@@ -61,9 +62,9 @@ public class CostSteps extends Steps {
         Float consumption = null;
         for (int i = 0; i < 15; i++) {
             Waiting.sleep(20000);
-            consumption = new Http(URL)
+            consumption = new Http(CalculatorURL)
                     .setProjectId(product.getProjectId())
-                    .get("calculator/orders/cost/?uuid__in=" + product.getOrderId())
+                    .get("orders/cost/?uuid__in=" + product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()
                     .get("cost");
@@ -101,9 +102,10 @@ public class CostSteps extends Steps {
         template.put("project_name", project.id);
         template.put("product_id", productId);
 
-        JsonPath response = new Http(OrderServiceSteps.URL)
+        JsonPath response = new Http(TarifficatorURL)
                 .setProjectId(project.id)
-                .post("tarifficator/api/v1/cost", template)
+                .body(template)
+                .post("cost")
                 .assertStatus(200)
                 .jsonPath();
 
@@ -128,9 +130,10 @@ public class CostSteps extends Steps {
         template.put("project_name", project.id);
         template.put("product_id", productId);
 
-        return new Http(OrderServiceSteps.URL)
+        return new Http(TarifficatorURL)
                 .setProjectId(project.id)
-                .post("tarifficator/api/v1/cost", template)
+                .body(template)
+                .post("cost")
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("items");
@@ -147,9 +150,9 @@ public class CostSteps extends Steps {
                 .set("$.params.action_name", action)
                 .set("$.params.id", product.getOrderId())
                 .set("$.params.order.data", data)
-                .send(OrderServiceSteps.URL)
+                .send(TarifficatorURL)
                 .setProjectId(project.id)
-                .post("tarifficator/api/v1/cost")
+                .post("cost")
                 .assertStatus(200)
                 .jsonPath()
                 .get("total_price");
@@ -177,8 +180,8 @@ public class CostSteps extends Steps {
 
     @Step("Запрос цен по ID тарифного плана")
     public HashMap<String, Double> getPrices(String tariffPlanId) {
-        JSONArray consumption = new Http(URL)
-                .get("tarifficator/api/v1/tariff_plans/" + tariffPlanId + "?include=tariff_classes")
+        JSONArray consumption = new Http(TarifficatorURL)
+                .get("tariff_plans/" + tariffPlanId + "?include=tariff_classes")
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("tariff_classes");
@@ -193,8 +196,8 @@ public class CostSteps extends Steps {
 
     @Step("Получение ID активного тарифного плана")
     public String getActiveTariffId() {
-        return new Http(URL)
-                .get("tarifficator/api/v1/tariff_plans?include=total_count&page=1&per_page=10&f[base]=false&f[organization_name]=vtb&sort=status&acc=up&f[status][]=active")
+        return new Http(TarifficatorURL)
+                .get("tariff_plans?include=total_count&page=1&per_page=10&f[base]=false&f[organization_name]=vtb&sort=status&acc=up&f[status][]=active")
                 .assertStatus(200)
                 .jsonPath()
                 .get("list[0].id");

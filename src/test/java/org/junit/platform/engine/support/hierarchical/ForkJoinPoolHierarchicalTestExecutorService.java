@@ -6,7 +6,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import models.ObjectPoolService;
 import core.helper.StringUtils;
 import org.apiguardian.api.API;
@@ -279,7 +279,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                         addNode(testDescriptor);
                     }
                     if (testDescriptor instanceof MethodBasedTestDescriptor) {
-                        Deleted deleted = ((MethodBasedTestDescriptor) testDescriptor).getTestMethod().getAnnotation(Deleted.class);
+                        MarkDelete deleted = ((MethodBasedTestDescriptor) testDescriptor).getTestMethod().getAnnotation(MarkDelete.class);
                         if (deleted != null) {
                             deleteTests.put(testTask/*, deleted.value().getName()*/, "null");
                             var1.remove();

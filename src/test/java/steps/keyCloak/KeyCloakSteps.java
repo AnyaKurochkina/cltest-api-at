@@ -33,9 +33,9 @@ public class KeyCloakSteps {
 //                .post("auth/realms/Portal/protocol/openid-connect/token",
 //                        String.format("client_id=%s&client_secret=%s&grant_type=password&username=%s&password=%s",
 //                                service.clientId, service.clientSecret, user.username, user.password))
-                .post("auth/realms/Portal/protocol/openid-connect/token",
-                        String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
-                                 user.getUsername(), user.getPassword()))
+                .body(String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
+                        user.getUsername(), user.getPassword()))
+                .post("auth/realms/Portal/protocol/openid-connect/token")
                 .assertStatus(200)
                 .jsonPath()
                 .get("access_token");
@@ -76,9 +76,9 @@ public class KeyCloakSteps {
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()
-                .post("auth/realms/Portal/protocol/openid-connect/token",
-                        String.format("client_id=%s&client_secret=%s&grant_type=client_credentials",
-                                serviceAccount.getId(), serviceAccount.getSecret()))
+                .body(String.format("client_id=%s&client_secret=%s&grant_type=client_credentials",
+                        serviceAccount.getId(), serviceAccount.getSecret()))
+                .post("auth/realms/Portal/protocol/openid-connect/token")
                 .assertStatus(200)
                 .jsonPath()
                 .get("access_token");

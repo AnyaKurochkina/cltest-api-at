@@ -55,7 +55,8 @@ public class AccessGroup extends Entity {
     @Step("Создание группы доступа")
     protected void create() {
         name = new Http(Configure.PortalBackURL)
-                .post(String.format("projects/%s/access_groups", projectName), toJson())
+                .body(toJson())
+                .post(String.format("projects/%s/access_groups", projectName))
                 .assertStatus(201)
                 .jsonPath()
                 .getString("name");
