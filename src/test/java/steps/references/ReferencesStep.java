@@ -11,6 +11,7 @@ import models.subModels.Flavor;
 import java.lang.reflect.Type;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static core.helper.Configure.ReferencesURL;
@@ -20,8 +21,8 @@ public class ReferencesStep {
     @Step("Получение списка flavors для продукта {product}")
     public List<Flavor> getProductFlavorsLinkedList(IProduct product) {
         String jsonArray = new Http(ReferencesURL)
-                .setProjectId(product.getProjectId())
-                .get("pages/?directory__name=flavors&tags=" + product.getProductId())
+                .setProjectId(Objects.requireNonNull(product.getProjectId()))
+                .get("pages/?directory__name=flavors&tags={}", product.getProductId())
                 .assertStatus(200)
                 .toString();
 
@@ -35,8 +36,8 @@ public class ReferencesStep {
     @Step("Получение списка flavors по page_filter {pageFilter}")
     public List<Flavor> getFlavorsByPageFilterLinkedList(IProduct product, String pageFilter) {
         String jsonArray = new Http(ReferencesURL)
-                .setProjectId(product.getProjectId())
-                .get("pages/?page_filter=" + pageFilter)
+                .setProjectId(Objects.requireNonNull(product).getProjectId())
+                .get("pages/?page_filter={}", pageFilter)
                 .assertStatus(200)
                 .toString();
 
