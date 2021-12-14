@@ -66,7 +66,7 @@ public class OrgDirectionSteps {
 
     @Step("Создание JSON объекта по направлениям")
     public JSONObject createJsonObject(String name, String description) {
-        return new JsonHelper()
+        return JsonHelper
                 .getJsonTemplate("productCatalog/orgDirection/orgDirection.json")
                 .set("$.name", name)
                 .set("$.description", description)

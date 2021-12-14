@@ -38,8 +38,7 @@ public class Action extends Entity {
 
     @Override
     public JSONObject toJson() {
-        JsonHelper jsonHelper = new JsonHelper();
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", actionName)
                 .set("$.title", actionName)
                 .set("$.description", actionName)

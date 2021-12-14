@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
@@ -75,7 +76,7 @@ public class Redis extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)

@@ -1,6 +1,7 @@
 package steps.accountManager;
 
 import core.helper.Http;
+import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import steps.Steps;
@@ -14,7 +15,7 @@ public class AccountSteps extends Steps {
 
     @Step("Перевод со счета {from} на счет {to} суммы {amount} c комментарием {comment}")
     public void transferMoney(String from, String to, String amount, String reason) {
-        jsonHelper.getJsonTemplate("/accountManager/transaction.json")
+        JsonHelper.getJsonTemplate("/accountManager/transaction.json")
                 .set("$.from_account_id", Objects.requireNonNull(from))
                 .set("$.to_account_id", Objects.requireNonNull(to))
                 .set("$.amount", Objects.requireNonNull(amount))

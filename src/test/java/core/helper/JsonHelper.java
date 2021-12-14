@@ -69,7 +69,7 @@ public class JsonHelper {
         return objectMapper.convertValue(jsonObject.toMap(), clazz);
     }
 
-    public String getStringFromFile(String s) {
+    public static String getStringFromFile(String s) {
         try {
             File file = new File(dataJson + s);
             return FileUtils.readFileToString(file, "UTF-8");
@@ -79,7 +79,7 @@ public class JsonHelper {
         }
     }
 
-    public JSONObject getJsonFromFile(String file) {
+    public static JSONObject getJsonFromFile(String file) {
         try {
             return new JSONObject(getStringFromFile(file));
         } catch (Exception ex) {
@@ -101,7 +101,7 @@ public class JsonHelper {
         return text;
     }
 
-    public JsonTemplate getJsonTemplate(String file) {
+    public static JsonTemplate getJsonTemplate(String file) {
         return new JsonTemplate(getJsonFromFile(file));
     }
 
