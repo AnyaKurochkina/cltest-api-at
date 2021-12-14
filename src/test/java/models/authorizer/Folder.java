@@ -74,7 +74,8 @@ public class Folder extends Entity {
     protected void create() {
         String url = kind.equals(BUSINESS_BLOCK) ? "organizations/vtb/folders" : String.format("folders/%s/folders", parentId);
         name = new Http(Configure.AuthorizerURL)
-                .post(url, toJson())
+                .body(toJson())
+                .post(url)
                 .assertStatus(201)
                 .jsonPath()
                 .getString("data.name");

@@ -1,6 +1,6 @@
 package tests.orderService;
 
-import core.CacheService;
+import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
@@ -9,7 +9,6 @@ import models.subModels.KafkaTopic;
 import org.json.JSONObject;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class ApacheKafkaClusterNegativeTest extends Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
-    @DisplayName("Негативные тесты создания топика")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Негативные тесты создания топика над {0}")
     public void negativeCreateKafkaTopic(ApacheKafkaCluster product) {
@@ -52,7 +50,7 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
     }
 
     public void checkIncorrectTopic(ApacheKafkaCluster kafkaCluster, KafkaTopic topic){
-        orderServiceSteps.sendAction(KAFKA_CREATE_TOPICS, kafkaCluster, new JSONObject("{\"topics\": " + CacheService.toJson(topic) + "}"))
+        orderServiceSteps.sendAction(KAFKA_CREATE_TOPICS, kafkaCluster, new JSONObject("{\"topics\": " + JsonHelper.toJson(topic) + "}"))
                 .assertStatus(422);
     }
 

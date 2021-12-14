@@ -13,14 +13,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static core.helper.Configure.ReferencesURL;
+
 public class ReferencesStep {
-    public static final String URL = Configure.getAppProp("host_kong");
 
     @Step("Получение списка flavors для продукта {product}")
     public List<Flavor> getProductFlavorsLinkedList(IProduct product) {
-        String jsonArray = new Http(URL)
+        String jsonArray = new Http(ReferencesURL)
                 .setProjectId(product.getProjectId())
-                .get("references/api/v1/pages/?directory__name=flavors&tags=" + product.getProductId())
+                .get("pages/?directory__name=flavors&tags=" + product.getProductId())
                 .assertStatus(200)
                 .toString();
 
@@ -33,9 +34,9 @@ public class ReferencesStep {
 
     @Step("Получение списка flavors по page_filter {pageFilter}")
     public List<Flavor> getFlavorsByPageFilterLinkedList(IProduct product, String pageFilter) {
-        String jsonArray = new Http(URL)
+        String jsonArray = new Http(ReferencesURL)
                 .setProjectId(product.getProjectId())
-                .get("references/api/v1/pages/?page_filter=" + pageFilter)
+                .get("pages/?page_filter=" + pageFilter)
                 .assertStatus(200)
                 .toString();
 

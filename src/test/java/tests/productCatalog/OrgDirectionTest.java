@@ -1,8 +1,8 @@
 package tests.productCatalog;
 
 import core.helper.Configure;
-import core.helper.Deleted;
 import core.helper.JsonHelper;
+import core.helper.MarkDelete;
 import httpModels.productCatalog.OrgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
@@ -95,7 +95,7 @@ public class OrgDirectionTest extends Tests {
     @Order(100)
     @Test
     @DisplayName("Удаление направления")
-    @Deleted
+    @MarkDelete
     public void deleteOrgDirection() {
         try (OrgDirection orgDirection = OrgDirection.builder()
                 .orgDirectionName("org_direction_at_test")

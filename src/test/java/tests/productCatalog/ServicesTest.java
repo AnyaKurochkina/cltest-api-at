@@ -1,8 +1,8 @@
 package tests.productCatalog;
 
 import core.helper.Configure;
-import core.helper.Deleted;
 import core.helper.JsonHelper;
+import core.helper.MarkDelete;
 import httpModels.productCatalog.Service.copyService.response.CopyServiceResponse;
 import httpModels.productCatalog.Service.getService.response.GetServiceResponse;
 import io.qameta.allure.Feature;
@@ -104,7 +104,7 @@ public class ServicesTest extends Tests {
     @Order(100)
     @Test
     @DisplayName("Удаление сервиса")
-    @Deleted
+    @MarkDelete
     public void deleteService() {
         try (Services service = Services.builder()
                 .serviceName("service_test")

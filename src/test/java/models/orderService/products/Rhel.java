@@ -23,6 +23,8 @@ import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
 
+import static core.helper.Configure.OrderServiceURL;
+
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
@@ -62,9 +64,10 @@ public class Rhel extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        JsonPath array = new Http(OrderServiceSteps.URL)
+        JsonPath array = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");

@@ -4,10 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import models.ObjectPoolService;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.ObjectPoolService;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.IProductMock;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -37,7 +36,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
     private int variableName;
 
     @Override
-    public Stream provideArguments(ExtensionContext context) {
+    public Stream<Arguments> provideArguments(ExtensionContext context) {
         List<Arguments> list = new ArrayList<>();
         if (variableName == PRODUCTS) {
             if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
@@ -86,9 +85,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
             orders.stream()
                     .filter(distinctByKey(IProduct::getEnv))
                     .collect(Collectors.toList())
-                    .forEach(entity -> {
-                        list.add(Arguments.arguments(entity.getEnv(), String.valueOf(i.getAndIncrement())));
-                    });
+                    .forEach(entity -> list.add(Arguments.arguments(entity.getEnv(), String.valueOf(i.getAndIncrement()))));
         }
         return list.stream();
     }

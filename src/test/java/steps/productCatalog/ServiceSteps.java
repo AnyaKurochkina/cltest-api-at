@@ -23,16 +23,17 @@ public class ServiceSteps {
     @SneakyThrows
     @Step("Создание сервиса")
     public Http.Response createService(JSONObject body) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("services/", body);
+        return new Http(Configure.ProductCatalogURL)
+                
+                .body(body)
+                .post("services/");
     }
 
     @SneakyThrows
     @Step("Получение списка сервисов")
     public List<ListItem> getServicesList() {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        return new Http(Configure.ProductCatalogURL)
+                
                 .get("services/")
                 .assertStatus(200)
                 .extractAs(GetServiceListResponse.class)
@@ -40,8 +41,8 @@ public class ServiceSteps {
     }
 
     public boolean isServiceExist(String name) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        return new Http(Configure.ProductCatalogURL)
+                
                 .get("services/exists/?name=" + name)
                 .assertStatus(200)
                 .extractAs(ExistsServiceResponse.class)
@@ -50,8 +51,8 @@ public class ServiceSteps {
 
     @Step("Получение сервиса по Id")
     public GetServiceResponse getServiceById(String id) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        return new Http(Configure.ProductCatalogURL)
+                
                 .get("services/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetServiceResponse.class);
@@ -59,16 +60,16 @@ public class ServiceSteps {
 
     @Step("Удаление сервиса по Id")
     public void deleteServiceById(String id) {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        new Http(Configure.ProductCatalogURL)
+                
                 .delete("services/" + id + "/")
                 .assertStatus(204);
     }
 
     @Step("Копирование сервиса по Id")
     public CopyServiceResponse copyServiceById(String id) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        return new Http(Configure.ProductCatalogURL)
+                
                 .post("services/" + id + "/copy/")
                 .assertStatus(200)
                 .extractAs(CopyServiceResponse.class);
@@ -76,12 +77,11 @@ public class ServiceSteps {
 
     @Step("Обновление сервиса")
     public void updateServiceById(String id) {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .patch("services/" + id + "/",
-                        new JsonHelper().getJsonTemplate("productCatalog/services/createServices.json")
-                                .set("$.description", "Update desc")
-                                .build())
+        new Http(Configure.ProductCatalogURL)
+                .body(new JsonHelper().getJsonTemplate("productCatalog/services/createServices.json")
+                        .set("$.description", "Update desc")
+                        .build())
+                .patch("services/" + id + "/")
                 .assertStatus(200);
     }
 

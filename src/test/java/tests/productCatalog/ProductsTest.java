@@ -1,8 +1,8 @@
 package tests.productCatalog;
 
 import core.helper.Configure;
-import core.helper.Deleted;
 import core.helper.JsonHelper;
+import core.helper.MarkDelete;
 import httpModels.productCatalog.Product.getProduct.response.GetProductResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
@@ -97,7 +97,7 @@ public class ProductsTest extends Tests {
     @Order(100)
     @Test
     @DisplayName("Удаление продукта")
-    @Deleted
+    @MarkDelete
     public void deleteProduct() {
         try (Product product = Product.builder()
                 .productName("at_test_api_product55")

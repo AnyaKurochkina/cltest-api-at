@@ -1,6 +1,6 @@
 package tests.productCatalog;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Feature;
 import models.productCatalog.Template;
 import org.junit.jupiter.api.*;
@@ -65,7 +65,7 @@ public class TemplatesTest extends Tests {
     @Order(100)
     @Test
     @DisplayName("Удаление шаблона")
-    @Deleted
+    @MarkDelete
     public void deleteTemplate() {
         try (Template template = Template.builder()
                 .templateName("template_for_at1")

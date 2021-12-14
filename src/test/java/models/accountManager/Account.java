@@ -51,7 +51,8 @@ public class Account extends Entity {
     @Step("Создание счета")
     protected void create() {
         accountId = new Http(Configure.AccountManagerURL)
-                .post(String.format("organizations/%s/accounts", organization), toJson())
+                .body(toJson())
+                .post(String.format("organizations/%s/accounts", organization))
                 .assertStatus(200)
                 .jsonPath()
                 .getString("account.account_id");

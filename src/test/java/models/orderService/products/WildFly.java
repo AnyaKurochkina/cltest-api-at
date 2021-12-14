@@ -21,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static core.helper.Configure.OrderServiceURL;
+
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -43,9 +45,10 @@ public class WildFly extends IProduct {
     @Step("Заказ продукта")
     protected void create() {
         log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = new Http(OrderServiceSteps.URL)
+        JsonPath array = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");

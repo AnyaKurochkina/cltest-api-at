@@ -25,8 +25,7 @@ public class ActionsSteps {
     @Step("Поиск ID экшена по имени с использованием multiSearch")
     public String getActionIdByNameWithMultiSearch(String actionName) {
         String actionId = null;
-        ActionResponse response = new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        ActionResponse response = new Http(Configure.ProductCatalogURL)
                 .get("actions/?include=total_count&page=1&per_page=10&multisearch=" + actionName)
                 .assertStatus(200).extractAs(ActionResponse.class);
 
@@ -44,8 +43,7 @@ public class ActionsSteps {
     @Step("Получение ID экшена  по его имени: {actionName}")
     public String getActionId(String actionName) {
         String actionId = null;
-        ActionResponse response = new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        ActionResponse response = new Http(Configure.ProductCatalogURL)
                 .get("actions/")
                 .assertStatus(200)
                 .extractAs(ActionResponse.class);
@@ -62,25 +60,25 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Создание экшена")
     public Http.Response createAction(JSONObject body) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("actions/", body);
+        return new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .post("actions/");
     }
 
     @SneakyThrows
     @Step("Обновление экшена")
     public Http.Response patchActionRow(JSONObject body, String actionId) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .patch("actions/" + actionId + "/", body);
+        return new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .patch("actions/" + actionId + "/");
     }
 
     @SneakyThrows
     @Step("Обновление экшена")
     public PatchActionResponse patchAction(String actionName, String graphId, String actionId) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .patch("actions/" + actionId + "/", toJson("productCatalog/actions/createAction.json", actionName, graphId))
+        return new Http(Configure.ProductCatalogURL)
+                .body(toJson("actions/createAction.json", actionName, graphId))
+                .patch("actions/" + actionId + "/")
                 .assertStatus(200)
                 .extractAs(PatchActionResponse.class);
     }
@@ -88,8 +86,7 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Получение списка действий")
     public List<ListItem> getActionList() {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        return new Http(Configure.ProductCatalogURL)
                 .get("actions/")
                 .assertStatus(200)
                 .extractAs(ActionResponse.class)
@@ -99,8 +96,7 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Проверка существования действия по имени")
     public boolean isActionExists(String name) {
-        String object = new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        String object = new Http(Configure.ProductCatalogURL)
                 .get("actions/exists/?name=" + name)
                 .assertStatus(200)
                 .toString();
@@ -123,8 +119,7 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Получение действия по Id")
     public GetActionResponse getActionById(String id) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        return new Http(Configure.ProductCatalogURL)
                 .get("actions/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetActionResponse.class);
@@ -133,8 +128,8 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Копирование действия по Id")
     public void copyActionById(String id) {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        new Http(Configure.ProductCatalogURL)
+
                 .post("actions/" + id + "/copy/")
                 .assertStatus(200);
     }
@@ -142,8 +137,8 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Экспорт действия по Id")
     public void exportActionById(String id) {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        new Http(Configure.ProductCatalogURL)
+
                 .get("actions/" + id + "/obj_export/")
                 .assertStatus(200);
     }
@@ -151,8 +146,8 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Удаление экшена")
     public void deleteAction(String id) {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        new Http(Configure.ProductCatalogURL)
+
                 .delete("actions/" + id + "/")
                 .assertStatus(204);
     }

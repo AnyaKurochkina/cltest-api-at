@@ -16,7 +16,11 @@ public class Configure {
     public static String AccountManagerURL;
     public static String PortalBackURL;
     public static String TarifficatorURL;
-    public static String ProductCatalog;
+    public static String ProductCatalogURL;
+    public static String CalculatorURL;
+    public static String StateServiceURL;
+    public static String OrderServiceURL;
+    public static String ReferencesURL;
 
     static {
         try {
@@ -37,8 +41,11 @@ public class Configure {
             AccountManagerURL = kongURL + "accountmanager/api/v1/";
             PortalBackURL = kongURL + "portal/api/v1/";
             TarifficatorURL = kongURL + "tarifficator/api/v1/";
-            ProductCatalog = kongURL + "product-catalog/";
-
+            CalculatorURL = kongURL + "calculator/";
+            ProductCatalogURL = kongURL + "product-catalog/";
+            OrderServiceURL = kongURL + "order-service/api/v1/";
+            StateServiceURL = kongURL + "state-service/api/v1/";
+            ReferencesURL = kongURL + "references/api/v1/";
         } catch (Exception e) {
             e.printStackTrace();
         }
