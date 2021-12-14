@@ -132,9 +132,9 @@ public class Http {
         return post(path);
     }
 
-    public Response post(String path) {
+    public Response post(String path, Object ... args) {
         this.method = "POST";
-        this.path = path;
+        this.path = format(path, args);
         return request();
     }
 

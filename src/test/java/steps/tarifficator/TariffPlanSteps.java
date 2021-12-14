@@ -53,7 +53,7 @@ public class TariffPlanSteps extends Steps {
         int i = 1;
         do {
             responseList = new Http(TarifficatorURL)
-                    .get(String.format("tariff_plans?page=%d&per_page=100&%s", i, urlParameters))
+                    .get("tariff_plans?page={}&per_page=100&{}", i, urlParameters)
                     .assertStatus(200)
                     .jsonPath()
                     .getList("list");
@@ -72,7 +72,7 @@ public class TariffPlanSteps extends Steps {
     @Step("Получение тарифного плана {tariffPlanId}")
     public TariffPlan getTariffPlan(String tariffPlanId) {
         String object = new Http(TarifficatorURL)
-                .get(String.format("tariff_plans/%s?include=tariff_classes", tariffPlanId))
+                .get("tariff_plans/{}?include=tariff_classes", tariffPlanId)
                 .assertStatus(200)
                 .toString();
         return deserialize(object);
@@ -88,24 +88,10 @@ public class TariffPlanSteps extends Steps {
     public TariffPlan editTariffPlan(TariffPlan tariffPlan) {
         String object = new Http(TarifficatorURL)
                 .body(tariffPlan.toJson())
-                .patch(String.format("tariff_plans/%s", tariffPlan.getId()))
+                .patch("tariff_plans/{}", tariffPlan.getId())
                 .assertStatus(200)
                 .toString();
         return deserialize(object);
     }
-
-//    @Step("Редактирование статуса тарифного плана {tariffPlan}")
-//    public String editTariffPlansStatus(TariffPlan tariffPlan) {
-//        LocalDateTime.now();
-//
-//        JsonPath jsonPath =  jsonHelper.getJsonTemplate("/accessGroup/changeStatusTariffPlan.json")
-//                .set("$.status", "planned")
-//                .set("$.begin_date", "2021-09-30T18:27:00+03:00")
-//                .send(URL)
-//                .patch(String.format("tariff_plans/%s", tariffPlan.getId()))
-//                .assertStatus(200)
-//                .jsonPath();
-//        return jsonPath.getString("status");
-//    }
 
 }
