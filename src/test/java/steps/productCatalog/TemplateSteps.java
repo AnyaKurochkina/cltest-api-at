@@ -109,8 +109,8 @@ public class TemplateSteps {
     @SneakyThrows
     @Step("Создание шаблона")
     public Http.Response createProduct(JSONObject body) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("templates/", body);
+        return new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .post("templates/");
     }
 }

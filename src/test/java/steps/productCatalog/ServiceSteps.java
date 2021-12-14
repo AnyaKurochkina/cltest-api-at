@@ -24,7 +24,6 @@ public class ServiceSteps {
     @Step("Создание сервиса")
     public Http.Response createService(JSONObject body) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .body(body)
                 .post("services/");
     }
@@ -33,7 +32,6 @@ public class ServiceSteps {
     @Step("Получение списка сервисов")
     public List<ListItem> getServicesList() {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("services/")
                 .assertStatus(200)
                 .extractAs(GetServiceListResponse.class)
@@ -42,7 +40,6 @@ public class ServiceSteps {
 
     public boolean isServiceExist(String name) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("services/exists/?name=" + name)
                 .assertStatus(200)
                 .extractAs(ExistsServiceResponse.class)
@@ -52,7 +49,6 @@ public class ServiceSteps {
     @Step("Получение сервиса по Id")
     public GetServiceResponse getServiceById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("services/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetServiceResponse.class);
@@ -61,7 +57,6 @@ public class ServiceSteps {
     @Step("Удаление сервиса по Id")
     public void deleteServiceById(String id) {
         new Http(Configure.ProductCatalogURL)
-                
                 .delete("services/" + id + "/")
                 .assertStatus(204);
     }
@@ -69,7 +64,6 @@ public class ServiceSteps {
     @Step("Копирование сервиса по Id")
     public CopyServiceResponse copyServiceById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .post("services/" + id + "/copy/")
                 .assertStatus(200)
                 .extractAs(CopyServiceResponse.class);

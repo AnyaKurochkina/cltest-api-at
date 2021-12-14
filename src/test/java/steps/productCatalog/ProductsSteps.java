@@ -34,15 +34,14 @@ public class ProductsSteps {
     @SneakyThrows
     @Step("Создание продукта")
     public Http.Response createProduct(JSONObject body) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("products/", body);
+        return new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .post("products/");
     }
 
     @Step("Получение списка продуктов")
     public List<ListItem> getProductList() {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("products/")
                 .assertStatus(200)
                 .extractAs(GetProductsResponse.class)
@@ -52,7 +51,6 @@ public class ProductsSteps {
     @Step("Проверка существования действия по имени")
     public boolean isProductExist(String name) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("/products/exists/?name=" + name)
                 .assertStatus(200)
                 .extractAs(ExistsOrgDirectionResponse.class)
@@ -81,7 +79,6 @@ public class ProductsSteps {
     @Step("Получение продукта по Id")
     public GetProductResponse getProductById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("products/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetProductResponse.class);
@@ -101,7 +98,6 @@ public class ProductsSteps {
 
     public void deleteProductById(String productId) {
         new Http(Configure.ProductCatalogURL)
-                
                 .delete("products/" + productId + "/")
                 .assertStatus(204);
     }
@@ -109,7 +105,7 @@ public class ProductsSteps {
     @SneakyThrows
     @Step("Копирование действия по Id")
     public void copyProductById(String id) {
-        new Http(Configure.ProductCatalog)
+        new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .post("products/" + id + "/copy/")
                 .assertStatus(200);

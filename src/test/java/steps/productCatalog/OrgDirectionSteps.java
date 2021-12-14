@@ -32,9 +32,9 @@ public class OrgDirectionSteps {
     @SneakyThrows
     @Step("Создание экшена")
     public Http.Response createOrgDirection(JSONObject body) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("org_direction/", body);
+        return new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .post("org_direction/");
     }
 
     @Step("Проверка существования направления")
@@ -116,7 +116,7 @@ public class OrgDirectionSteps {
     @Step("Поиск ID направления по имени с использованием multiSearch")
     public String getOrgDirectionIdByNameWithMultiSearch(String orgDirectionName) {
         String orgDirectionId = null;
-        GetOrgDirectionListResponse response = new Http(Configure.ProductCatalog)
+        GetOrgDirectionListResponse response = new Http(Configure.ProductCatalogURL)
                 .setContentType("application/json")
                 .get("org_direction/?include=total_count&page=1&per_page=10&multisearch=" + orgDirectionName)
                 .assertStatus(200).extractAs(GetOrgDirectionListResponse.class);
