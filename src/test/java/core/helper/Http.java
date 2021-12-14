@@ -21,7 +21,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.Formatter;
 import java.util.Objects;
 import java.util.concurrent.Semaphore;
 
