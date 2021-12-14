@@ -54,7 +54,7 @@ public class ServiceAccount extends Entity {
     public void createStaticKey() {
         JsonPath jsonPath = new Http(Configure.AuthorizerURL)
                 .body(new JSONObject("{\"access_key\":{\"description\":\"Ключ\",\"password\":\"JP1mD3rlh67Hek@zb%ClSCFUxvUj4q6Z0ZfjfnK3VQhXt5xMLplE$B7237FPHu\"}}"))
-                .post(String.format("projects/%s/service_accounts/%s/access_keys", projectId, id))
+                .post("projects/{}/service_accounts/{}/access_keys", projectId, id)
                 .assertStatus(201)
                 .jsonPath();
 
@@ -65,9 +65,8 @@ public class ServiceAccount extends Entity {
     @Step("Удаление статического ключа досутпа hcp bucket")
     public void deleteStaticKey() {
         new Http(Configure.AuthorizerURL)
-                .delete(String.format("projects/%s/service_accounts/%s/access_keys/%s", projectId, id, id))
-                .assertStatus(204)
-                .jsonPath();
+                .delete("projects/{}/service_accounts/{}/access_keys/{}", projectId, id, id)
+                .assertStatus(204);
 
         String keyStatus = "";
         int counter = 60;
@@ -76,7 +75,7 @@ public class ServiceAccount extends Entity {
         while ((keyStatus.equals("deleting") || keyStatus.equals("")) && counter > 0) {
             Waiting.sleep(30000);
             jsonPath = new Http(Configure.AuthorizerURL)
-                    .get(String.format("projects/%s/service_accounts/%s/access_keys", projectId, id))
+                    .get("projects/{}/service_accounts/{}/access_keys", projectId, id)
                     .assertStatus(200)
                     .jsonPath();
 
@@ -103,7 +102,7 @@ public class ServiceAccount extends Entity {
                 .set("$.service_account.policy.bindings.[0].role", "viewer")
                 .set("$.service_account.title", title)
                 .send(Configure.AuthorizerURL)
-                .patch(String.format("projects/%s/service_accounts/%s", projectId, id))
+                .patch("projects/{}/service_accounts/{}", projectId, id)
                 .assertStatus(200)
                 .jsonPath();
 
@@ -115,7 +114,7 @@ public class ServiceAccount extends Entity {
     protected void create() {
         JsonPath jsonPath = new Http(Configure.AuthorizerURL)
                 .body(toJson())
-                .post(String.format("projects/%s/service_accounts", projectId))
+                .post("projects/{}/service_accounts", projectId)
                 .assertStatus(201)
                 .jsonPath();
 
@@ -128,7 +127,7 @@ public class ServiceAccount extends Entity {
     @Step("Удаление сервисного аккаунта")
     protected void delete() {
         new Http(Configure.AuthorizerURL)
-                .delete(String.format("projects/%s/service_accounts/%s", projectId, id))
+                .delete("projects/{}/service_accounts/{}", projectId, id)
                 .assertStatus(204);
     }
 }
