@@ -142,6 +142,16 @@ public class ActionsTest extends Tests {
         actionsSteps.createAction(object).assertStatus(400);
     }
 
+    private static Stream<Arguments> dataName() {
+        return Stream.of(
+                Arguments.of("NameWithUppercase"),
+                Arguments.of("nameWithUppercaseInMiddle"),
+                Arguments.of("имя"),
+                Arguments.of("Имя"),
+                Arguments.of("a&b&c")
+        );
+    }
+
     @Order(17)
     @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
     @Test
@@ -158,16 +168,6 @@ public class ActionsTest extends Tests {
         try (Action action = Action.builder().actionName("test_object_at2021").build().createObjectExclusiveAccess()) {
             action.deleteObject();
         }
-    }
-
-    private static Stream<Arguments> dataName() {
-        return Stream.of(
-                Arguments.of("NameWithUppercase"),
-                Arguments.of("nameWithUppercaseInMiddle"),
-                Arguments.of("имя"),
-                Arguments.of("Имя"),
-                Arguments.of("a&b&c")
-        );
     }
 }
 

@@ -108,6 +108,16 @@ public class OrgDirectionTest extends Tests {
         orgSteps.createOrgDirection(object).assertStatus(400);
     }
 
+    private static Stream<Arguments> dataName() {
+        return Stream.of(
+                Arguments.of("NameWithUppercase"),
+                Arguments.of("nameWithUppercaseInMiddle"),
+                Arguments.of("имя"),
+                Arguments.of("Имя"),
+                Arguments.of("a&b&c")
+        );
+    }
+
     @Order(100)
     @Test
     @DisplayName("Удаление направления")
@@ -120,15 +130,5 @@ public class OrgDirectionTest extends Tests {
             orgDirection.deleteObject();
         }
         Assertions.assertFalse(orgSteps.isProductExists("org_direction_at_test"));
-    }
-
-    private static Stream<Arguments> dataName() {
-        return Stream.of(
-                Arguments.of("NameWithUppercase"),
-                Arguments.of("nameWithUppercaseInMiddle"),
-                Arguments.of("имя"),
-                Arguments.of("Имя"),
-                Arguments.of("a&b&c")
-        );
     }
 }

@@ -114,6 +114,16 @@ public class ServicesTest extends Tests {
         serviceSteps.createService(object).assertStatus(400);
     }
 
+    private static Stream<Arguments> dataName() {
+        return Stream.of(
+                Arguments.of("NameWithUppercase"),
+                Arguments.of("nameWithUppercaseInMiddle"),
+                Arguments.of("имя"),
+                Arguments.of("Имя"),
+                Arguments.of("a&b&c")
+        );
+    }
+
     @Order(100)
     @Test
     @DisplayName("Удаление сервиса")
@@ -125,15 +135,5 @@ public class ServicesTest extends Tests {
                 .createObjectExclusiveAccess()) {
             service.deleteObject();
         }
-    }
-
-    private static Stream<Arguments> dataName() {
-        return Stream.of(
-                Arguments.of("NameWithUppercase"),
-                Arguments.of("nameWithUppercaseInMiddle"),
-                Arguments.of("имя"),
-                Arguments.of("Имя"),
-                Arguments.of("a&b&c")
-        );
     }
 }

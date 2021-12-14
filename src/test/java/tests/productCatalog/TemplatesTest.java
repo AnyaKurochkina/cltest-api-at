@@ -84,6 +84,16 @@ public class TemplatesTest extends Tests {
         templateSteps.createProduct(object).assertStatus(400);
     }
 
+    private static Stream<Arguments> dataName() {
+        return Stream.of(
+                Arguments.of("NameWithUppercase"),
+                Arguments.of("nameWithUppercaseInMiddle"),
+                Arguments.of("имя"),
+                Arguments.of("Имя"),
+                Arguments.of("a&b&c")
+        );
+    }
+
     @Order(100)
     @Test
     @DisplayName("Удаление шаблона")
@@ -95,15 +105,5 @@ public class TemplatesTest extends Tests {
                 .createObjectExclusiveAccess()) {
             template.deleteObject();
         }
-    }
-
-    private static Stream<Arguments> dataName() {
-        return Stream.of(
-                Arguments.of("NameWithUppercase"),
-                Arguments.of("nameWithUppercaseInMiddle"),
-                Arguments.of("имя"),
-                Arguments.of("Имя"),
-                Arguments.of("a&b&c")
-        );
     }
 }
