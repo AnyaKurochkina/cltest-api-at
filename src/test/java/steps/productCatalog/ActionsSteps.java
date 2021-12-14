@@ -26,7 +26,6 @@ public class ActionsSteps {
     public String getActionIdByNameWithMultiSearch(String actionName) {
         String actionId = null;
         ActionResponse response = new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
                 .get("actions/?include=total_count&page=1&per_page=10&multisearch=" + actionName)
                 .assertStatus(200).extractAs(ActionResponse.class);
 
@@ -45,7 +44,6 @@ public class ActionsSteps {
     public String getActionId(String actionName) {
         String actionId = null;
         ActionResponse response = new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
                 .get("actions/")
                 .assertStatus(200)
                 .extractAs(ActionResponse.class);
@@ -63,24 +61,24 @@ public class ActionsSteps {
     @Step("Создание экшена")
     public Http.Response createAction(JSONObject body) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
-                .post("actions/", body);
+                .body(body)
+                .post("actions/");
     }
 
     @SneakyThrows
     @Step("Обновление экшена")
     public Http.Response patchActionRow(JSONObject body, String actionId) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
-                .patch("actions/" + actionId + "/", body);
+                .body(body)
+                .patch("actions/" + actionId + "/");
     }
 
     @SneakyThrows
     @Step("Обновление экшена")
     public PatchActionResponse patchAction(String actionName, String graphId, String actionId) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
-                .patch("actions/" + actionId + "/", toJson("actions/createAction.json", actionName, graphId))
+                .body(toJson("actions/createAction.json", actionName, graphId))
+                .patch("actions/" + actionId + "/")
                 .assertStatus(200)
                 .extractAs(PatchActionResponse.class);
     }
@@ -89,7 +87,6 @@ public class ActionsSteps {
     @Step("Получение списка действий")
     public List<ListItem> getActionList() {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
                 .get("actions/")
                 .assertStatus(200)
                 .extractAs(ActionResponse.class)
@@ -100,7 +97,6 @@ public class ActionsSteps {
     @Step("Проверка существования действия по имени")
     public boolean isActionExists(String name) {
         String object = new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
                 .get("actions/exists/?name=" + name)
                 .assertStatus(200)
                 .toString();
@@ -124,7 +120,6 @@ public class ActionsSteps {
     @Step("Получение действия по Id")
     public GetActionResponse getActionById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
                 .get("actions/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetActionResponse.class);
@@ -134,7 +129,7 @@ public class ActionsSteps {
     @Step("Копирование действия по Id")
     public void copyActionById(String id) {
         new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+
                 .post("actions/" + id + "/copy/")
                 .assertStatus(200);
     }
@@ -143,7 +138,7 @@ public class ActionsSteps {
     @Step("Экспорт действия по Id")
     public void exportActionById(String id) {
         new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+
                 .get("actions/" + id + "/obj_export/")
                 .assertStatus(200);
     }
@@ -152,7 +147,7 @@ public class ActionsSteps {
     @Step("Удаление экшена")
     public void deleteAction(String id) {
         new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+
                 .delete("actions/" + id + "/")
                 .assertStatus(204);
     }

@@ -76,7 +76,8 @@ public class OrganizationTariffPlanTest extends Tests {
                 .build()
                 .toJson();
         new Http(Configure.TarifficatorURL)
-                .post("tariff_plans", object)
+                .body(object)
+                .post("tariff_plans")
                 .assertStatus(422);
     }
 

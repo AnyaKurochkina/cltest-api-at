@@ -29,8 +29,9 @@ public class GraphSteps {
 
     public void createGraph(String graphName) {
         String object = new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
-                .post("graphs/?save_as_next_version=true", toJson("/productCatalog/graphs/createGraph.json", graphName))
+                
+                .body(toJson("/productCatalog/graphs/createGraph.json", graphName))
+                .post("graphs/?save_as_next_version=true")
                 .assertStatus(201)
                 .toString();
     }
@@ -38,7 +39,7 @@ public class GraphSteps {
     public String getGraphId(String graphName) {
         String graphId = null;
         GetGraphsListResponse response = new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+                
                 .get("graphs/?include=total_count&page=1&per_page=10")
                 .assertStatus(200)
                 .extractAs(GetGraphsListResponse.class);
@@ -55,7 +56,7 @@ public class GraphSteps {
     @Step("Получение списка графов")
     public List<ListItem> getGraphsList() {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+                
                 .get("graphs/")
                 .assertStatus(200).extractAs(GetGraphsListResponse.class).getList();
     }
@@ -64,7 +65,7 @@ public class GraphSteps {
     @Step("Проверка существования графа по имени")
     public boolean isExist(String name) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+                
                 .get("graphs/exists/?name=" + name)
                 .assertStatus(200)
                 .extractAs(ExistsGraphsResponse.class)
@@ -86,7 +87,7 @@ public class GraphSteps {
     @Step("Получение графа по Id")
     public GetGraphResponse getGraphById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+                
                 .get("graphs/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetGraphResponse.class);
@@ -96,7 +97,7 @@ public class GraphSteps {
     @Step("Копирование графа по Id")
     public void copyGraphById(String id) {
         new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+                
                 .post("graphs/" + id + "/copy/")
                 .assertStatus(200);
     }
@@ -105,8 +106,8 @@ public class GraphSteps {
     @Step("Частичное обновление графа по Id")
     public void partialUpdateGraphById(String id, String key, String value) {
         new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
-                .patch("graphs/" + id + "/", new JSONObject().put(key, value))
+                .body(new JSONObject().put(key, value))
+                .patch("graphs/" + id + "/")
                 .assertStatus(200);
     }
 }

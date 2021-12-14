@@ -31,7 +31,8 @@ public class TariffPlanSteps extends Steps {
     @Step("Создание тарифного плана {tariffPlan}")
     public TariffPlan createTariffPlan(TariffPlan tariffPlan) {
         String object = new Http(TarifficatorURL)
-                .post("tariff_plans", tariffPlan.toJson())
+                .body(tariffPlan.toJson())
+                .post("tariff_plans")
                 .assertStatus(201)
                 .toString();
         return deserialize(object);
@@ -86,7 +87,8 @@ public class TariffPlanSteps extends Steps {
     @Step("Редактирование тарифного плана {tariffPlan}")
     public TariffPlan editTariffPlan(TariffPlan tariffPlan) {
         String object = new Http(TarifficatorURL)
-                .patch(String.format("tariff_plans/%s", tariffPlan.getId()), tariffPlan.toJson())
+                .body(tariffPlan.toJson())
+                .patch(String.format("tariff_plans/%s", tariffPlan.getId()))
                 .assertStatus(200)
                 .toString();
         return deserialize(object);

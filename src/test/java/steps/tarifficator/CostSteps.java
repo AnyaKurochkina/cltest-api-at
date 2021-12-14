@@ -104,7 +104,8 @@ public class CostSteps extends Steps {
 
         JsonPath response = new Http(TarifficatorURL)
                 .setProjectId(project.id)
-                .post("cost", template)
+                .body(template)
+                .post("cost")
                 .assertStatus(200)
                 .jsonPath();
 
@@ -131,7 +132,8 @@ public class CostSteps extends Steps {
 
         return new Http(TarifficatorURL)
                 .setProjectId(project.id)
-                .post("cost", template)
+                .body(template)
+                .post("cost")
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("items");

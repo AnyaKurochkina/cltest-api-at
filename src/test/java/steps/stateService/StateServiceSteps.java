@@ -13,7 +13,7 @@ import static core.helper.Configure.StateServiceURL;
 @Log4j2
 public class StateServiceSteps extends Steps {
 
-    public String GetErrorFromStateService(IProduct product) throws JsonPathException {
+    public String GetErrorFromStateService(IProduct product) {
         List<String> traceback = null;
         try {
             traceback = new Http(StateServiceURL)

@@ -24,15 +24,16 @@ public class ServiceSteps {
     @Step("Создание сервиса")
     public Http.Response createService(JSONObject body) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
-                .post("services/", body);
+                
+                .body(body)
+                .post("services/");
     }
 
     @SneakyThrows
     @Step("Получение списка сервисов")
     public List<ListItem> getServicesList() {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+                
                 .get("services/")
                 .assertStatus(200)
                 .extractAs(GetServiceListResponse.class)
@@ -41,7 +42,7 @@ public class ServiceSteps {
 
     public boolean isServiceExist(String name) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+                
                 .get("services/exists/?name=" + name)
                 .assertStatus(200)
                 .extractAs(ExistsServiceResponse.class)
@@ -51,7 +52,7 @@ public class ServiceSteps {
     @Step("Получение сервиса по Id")
     public GetServiceResponse getServiceById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+                
                 .get("services/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetServiceResponse.class);
@@ -60,7 +61,7 @@ public class ServiceSteps {
     @Step("Удаление сервиса по Id")
     public void deleteServiceById(String id) {
         new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+                
                 .delete("services/" + id + "/")
                 .assertStatus(204);
     }
@@ -68,7 +69,7 @@ public class ServiceSteps {
     @Step("Копирование сервиса по Id")
     public CopyServiceResponse copyServiceById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
+                
                 .post("services/" + id + "/copy/")
                 .assertStatus(200)
                 .extractAs(CopyServiceResponse.class);
@@ -77,11 +78,10 @@ public class ServiceSteps {
     @Step("Обновление сервиса")
     public void updateServiceById(String id) {
         new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
-                .patch("services/" + id + "/",
-                        new JsonHelper().getJsonTemplate("productCatalog/services/createServices.json")
-                                .set("$.description", "Update desc")
-                                .build())
+                .body(new JsonHelper().getJsonTemplate("productCatalog/services/createServices.json")
+                        .set("$.description", "Update desc")
+                        .build())
+                .patch("services/" + id + "/")
                 .assertStatus(200);
     }
 

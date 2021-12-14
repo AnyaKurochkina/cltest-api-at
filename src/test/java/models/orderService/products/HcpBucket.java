@@ -80,7 +80,8 @@ public class HcpBucket extends IProduct {
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath array = new Http(Configure.OrderServiceURL)
                 .setProjectId(projectId)
-                .post("projects/" + projectId + "/orders", toJson())
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");

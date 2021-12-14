@@ -1,6 +1,5 @@
 package steps.authorizer;
 
-import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
@@ -17,7 +16,7 @@ public class AuthorizerSteps extends Steps {
     @Step("Получить все проекты папки")
     public void getAllProjectFromFolder(String folderId) {
         ArrayList<String> projectId = new Http(AuthorizerURL)
-                .get("folders/" + folderId + "/children")
+                .get("folders/" + Objects.requireNonNull(folderId) + "/children")
                 .assertStatus(200)
                 .jsonPath()
                 .get("data.name");
@@ -27,7 +26,7 @@ public class AuthorizerSteps extends Steps {
     @Step("Получение пути до папки/проекта")
     public String getPathToFolder(String target) {
         String url;
-        if (target.startsWith("fold")) {
+        if (Objects.requireNonNull(target).startsWith("fold")) {
             url = "folders/" + target + "/path";
         } else if (target.startsWith("proj")) {
             url = "projects/" + target + "/path";
@@ -47,7 +46,7 @@ public class AuthorizerSteps extends Steps {
     @Step("Получение родителя папки/проекта")
     public String getParentProject(String target) {
         String url;
-        if (target.startsWith("fold")) {
+        if (Objects.requireNonNull(target).startsWith("fold")) {
             url = "folders/" + target + "/ancestors";
         } else if (target.startsWith("proj")) {
             url = "projects/" + target + "/ancestors";

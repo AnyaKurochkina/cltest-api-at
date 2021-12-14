@@ -1,13 +1,8 @@
 package steps.accountManager;
 
-import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
-import models.accountManager.Account;
-import models.authorizer.Folder;
-import models.authorizer.Organization;
 import steps.Steps;
 
 import java.util.Objects;
@@ -20,10 +15,10 @@ public class AccountSteps extends Steps {
     @Step("Перевод со счета {from} на счет {to} суммы {amount} c комментарием {comment}")
     public void transferMoney(String from, String to, String amount, String reason) {
         jsonHelper.getJsonTemplate("/accountManager/transaction.json")
-                .set("$.from_account_id", from)
-                .set("$.to_account_id", to)
-                .set("$.amount", amount)
-                .set("$.reason", reason)
+                .set("$.from_account_id", Objects.requireNonNull(from))
+                .set("$.to_account_id", Objects.requireNonNull(to))
+                .set("$.amount", Objects.requireNonNull(amount))
+                .set("$.reason", Objects.requireNonNull(reason))
                 .send(AccountManagerURL)
                 .post("organizations/vtb/accounts/transfers")
                 .assertStatus(200);
@@ -32,7 +27,7 @@ public class AccountSteps extends Steps {
     @Step("Запрос текущего баланса для папки {folderId}")
     public Float getCurrentBalance(String folderId) {
         String res = new Http(AccountManagerURL)
-                .get(String.format("folders/%s/accounts", folderId))
+                .get("folders/{}/accounts", folderId)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("account.current_balance");
@@ -40,7 +35,7 @@ public class AccountSteps extends Steps {
     }
 
     public String getAccountIdByContext(String context) {
-        log.info("Получение account_id для контекста - " + context);
+        log.info("Получение account_id для контекста - " + Objects.requireNonNull(context));
         String account_id = null;
         int total_count = new Http(AccountManagerURL)
                 .get("organizations/vtb/accounts")

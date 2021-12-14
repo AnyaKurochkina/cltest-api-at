@@ -48,7 +48,8 @@ public class ApacheKafka extends IProduct {
         log.info("Отправка запроса на создание заказа для " + productName);
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .post("projects/" + projectId + "/orders", toJson())
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");

@@ -22,7 +22,6 @@ public class OrgDirectionSteps {
     @Step("Получение списка направлений")
     public List<ListItem> getOrgDirectionList() {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
                 .get("org_direction/")
                 .assertStatus(200)
                 .extractAs(GetOrgDirectionListResponse.class)
@@ -32,7 +31,6 @@ public class OrgDirectionSteps {
     @Step("Проверка существования направления")
     public boolean isProductExists(String name) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
                 .get("org_direction/exists/?name=" + name)
                 .assertStatus(200)
                 .extractAs(ExistsOrgDirectionResponse.class)
@@ -53,7 +51,6 @@ public class OrgDirectionSteps {
     @Step("Получение направления по Id")
     public GetOrgDirectionResponse getOrgDirectionById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
                 .get("org_direction/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetOrgDirectionResponse.class);
@@ -62,8 +59,8 @@ public class OrgDirectionSteps {
     @Step("Обновление направления по Id")
     public void updateOrgDirectionById(String id, JSONObject jsonObject) {
         new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
-                .patch("org_direction/" + id + "/", jsonObject)
+                .body(jsonObject)
+                .patch("org_direction/" + id + "/")
                 .assertStatus(200);
     }
 
@@ -79,7 +76,6 @@ public class OrgDirectionSteps {
     @Step ("Удаление направления по Id")
     public void deleteOrgDirectoryById(String id) {
         new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
                 .delete("org_direction/" + id + "/")
                 .assertStatus(204);
     }
@@ -87,7 +83,6 @@ public class OrgDirectionSteps {
     @Step ("Копирование направления по Id")
     public void copyOrgDirectionById(String id) {
         new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
                 .post("org_direction/" + id + "/copy/")
                 .assertStatus(200);
     }
@@ -95,7 +90,6 @@ public class OrgDirectionSteps {
     @Step ("Экспорт направления по Id")
     public ExportOrgDirectionResponse exportOrgDirectionById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                .setContentType("application/json")
                 .get("org_direction/" + id + "/obj_export/")
                 .assertStatus(200)
                 .extractAs(ExportOrgDirectionResponse.class);

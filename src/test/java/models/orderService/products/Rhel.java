@@ -66,7 +66,8 @@ public class Rhel extends IProduct {
     protected void create() {
         JsonPath array = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .post("projects/" + projectId + "/orders", toJson())
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
