@@ -7,11 +7,16 @@ import httpModels.productCatalog.Product.getProduct.response.GetProductResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Product;
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.ProductsSteps;
 import tests.Tests;
 
 import java.util.Collections;
+import java.util.stream.Stream;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -20,7 +25,6 @@ public class ProductsTest extends Tests {
 
     Product product;
     ProductsSteps productsSteps = new ProductsSteps();
-
 
     @Order(1)
     @DisplayName("Создание продукта в продуктовом каталоге")
@@ -46,7 +50,7 @@ public class ProductsTest extends Tests {
     @Test
     public void checkProductExists() {
         Assertions.assertTrue(productsSteps.isProductExist(product.getProductName()));
-        Assertions.assertFalse(productsSteps.isProductExist("NotExistName"));
+        Assertions.assertFalse(productsSteps.isProductExist("not_exists_name"));
     }
 
     @Order(4)
@@ -87,11 +91,38 @@ public class ProductsTest extends Tests {
         Assertions.assertNotNull(getProductResponse.getGraphVersionCalculated());
     }
 
+    @Order(8)
+    @DisplayName("Копирование продукта по Id")
+    @Test
+    public void copyProductById() {
+        String cloneName = product.getProductName() + "-clone";
+        productsSteps.copyProductById(product.getProductId());
+        Assertions.assertTrue(productsSteps.isProductExist(cloneName));
+        productsSteps.deleteProductByName(cloneName);
+        Assertions.assertFalse(productsSteps.isProductExist(cloneName));
+    }
+
     @Order(10)
     @DisplayName("Обновление продукта")
     @Test
     public void updateProduct() {
         product.updateProduct();
+    }
+
+    @Order(12)
+    @DisplayName("Негативный тест на создание продукта с существующим именем")
+    @Test
+    public void createProductWithSameName() {
+        productsSteps.createProduct(productsSteps.createJsonObject(product.getProductName())).assertStatus(400);
+    }
+
+    @Order(13)
+    @ParameterizedTest
+    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
+    @MethodSource("dataName")
+    public void createProductWithInvalidCharacters(String name) {
+        JSONObject object = productsSteps.createJsonObject(name);
+        productsSteps.createProduct(object).assertStatus(400);
     }
 
     @Order(100)
@@ -107,5 +138,15 @@ public class ProductsTest extends Tests {
                 .createObjectExclusiveAccess()) {
             product.deleteObject();
         }
+    }
+
+    private static Stream<Arguments> dataName() {
+        return Stream.of(
+                Arguments.of("NameWithUppercase"),
+                Arguments.of("nameWithUppercaseInMiddle"),
+                Arguments.of("имя"),
+                Arguments.of("Имя"),
+                Arguments.of("a&b&c")
+        );
     }
 }

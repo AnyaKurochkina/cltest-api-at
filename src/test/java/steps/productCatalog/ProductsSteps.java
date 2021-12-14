@@ -31,6 +31,14 @@ public class ProductsSteps {
         return productsId;
     }
 
+    @SneakyThrows
+    @Step("Создание продукта")
+    public Http.Response createProduct(JSONObject body) {
+        return new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .post("products/", body);
+    }
+
     @Step("Получение списка продуктов")
     public List<ListItem> getProductList() {
         return new Http(Configure.ProductCatalog)
@@ -96,5 +104,14 @@ public class ProductsSteps {
                 .setContentType("application/json")
                 .delete("products/" + productId + "/")
                 .assertStatus(204);
+    }
+
+    @SneakyThrows
+    @Step("Копирование действия по Id")
+    public void copyProductById(String id) {
+        new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .post("products/" + id + "/copy/")
+                .assertStatus(200);
     }
 }

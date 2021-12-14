@@ -18,7 +18,7 @@ public class GraphTest {
     @DisplayName("Создание графа")
     @Test
     public void createGraph() {
-        graphSteps.createGraph("AtTestGraph");
+        graphSteps.createGraph("at_test_graph");
     }
 
     @Order(2)

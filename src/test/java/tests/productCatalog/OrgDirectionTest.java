@@ -9,8 +9,13 @@ import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.OrgDirectionSteps;
 import tests.Tests;
+
+import java.util.stream.Stream;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -25,7 +30,7 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void createOrgDirection() {
         orgDirection = OrgDirection.builder()
-                .orgDirectionName("org_direction_at_test")
+                .orgDirectionName("org_direction_at_test2021")
                 .build()
                 .createObject();
     }
@@ -53,7 +58,8 @@ public class OrgDirectionTest extends Tests {
         String orgDirectionName = new JsonPath(data).get("OrgDirection.name");
         orgSteps.importOrgDirection(Configure.RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirection.json");
         Assertions.assertTrue(orgSteps.isProductExists(orgDirectionName));
-// добавить шаг на удаление по имени.
+        orgSteps.deleteOrgDirectionByName(orgDirectionName);
+        Assertions.assertFalse(orgSteps.isProductExists(orgDirectionName));
     }
 
     @Order(5)
@@ -82,7 +88,8 @@ public class OrgDirectionTest extends Tests {
         String cloneName = orgDirection.getOrgDirectionName() + "-clone";
         orgSteps.copyOrgDirectionById(orgDirection.getOrgDirectionId());
         Assertions.assertTrue(orgSteps.isProductExists(cloneName));
-     //добавить шаг на удаление копии.
+        orgSteps.deleteOrgDirectionByName(cloneName);
+        Assertions.assertFalse(orgSteps.isProductExists(cloneName));
     }
 
     @Order(8)
@@ -90,6 +97,15 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void exportOrgDirectionById() {
     orgSteps.exportOrgDirectionById(orgDirection.getOrgDirectionId());
+    }
+
+    @Order(13)
+    @ParameterizedTest
+    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
+    @MethodSource("dataName")
+    public void createActionWithInvalidCharacters(String name) {
+        JSONObject object = orgSteps.createJsonObject(name);
+        orgSteps.createOrgDirection(object).assertStatus(400);
     }
 
     @Order(100)
@@ -104,5 +120,15 @@ public class OrgDirectionTest extends Tests {
             orgDirection.deleteObject();
         }
         Assertions.assertFalse(orgSteps.isProductExists("org_direction_at_test"));
+    }
+
+    private static Stream<Arguments> dataName() {
+        return Stream.of(
+                Arguments.of("NameWithUppercase"),
+                Arguments.of("nameWithUppercaseInMiddle"),
+                Arguments.of("имя"),
+                Arguments.of("Имя"),
+                Arguments.of("a&b&c")
+        );
     }
 }

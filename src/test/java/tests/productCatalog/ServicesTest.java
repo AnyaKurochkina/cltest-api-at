@@ -8,9 +8,15 @@ import httpModels.productCatalog.Service.getService.response.GetServiceResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Services;
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.ServiceSteps;
 import tests.Tests;
+
+import java.util.stream.Stream;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -44,18 +50,16 @@ public class ServicesTest extends Tests {
     @Test
     public void checkServiceExists() {
         Assertions.assertTrue(serviceSteps.isServiceExist(service.getServiceName()));
-        Assertions.assertFalse(serviceSteps.isServiceExist("NotExistName"));
+        Assertions.assertFalse(serviceSteps.isServiceExist("not_exist_name"));
     }
 
     @Order(4)
     @DisplayName("Импорт сервиса")
     @Test
     public void importService() {
-        System.out.println(serviceSteps.getServicesList().size());
         String data = new JsonHelper().getStringFromFile("/productCatalog/services/importService.json");
         String serviceName = new JsonPath(data).get("Service.json.name");
         serviceSteps.importService(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
-        System.out.println(serviceSteps.getServicesList().size());
         Assertions.assertTrue(serviceSteps.isServiceExist(serviceName));
         serviceSteps.deleteServiceById(serviceSteps.getServiceIdByName(serviceName));
         Assertions.assertFalse(serviceSteps.isServiceExist(serviceName));
@@ -101,6 +105,15 @@ public class ServicesTest extends Tests {
         Assertions.assertNotNull(getServiceResponse.getGraphVersionCalculated());
     }
 
+    @Order(13)
+    @ParameterizedTest
+    @DisplayName("Негативный тест на создание сервиса с недопустимыми символами в имени.")
+    @MethodSource("dataName")
+    public void createServiceWithInvalidCharacters(String name) {
+        JSONObject object = serviceSteps.createJsonObject(name);
+        serviceSteps.createService(object).assertStatus(400);
+    }
+
     @Order(100)
     @Test
     @DisplayName("Удаление сервиса")
@@ -112,5 +125,15 @@ public class ServicesTest extends Tests {
                 .createObjectExclusiveAccess()) {
             service.deleteObject();
         }
+    }
+
+    private static Stream<Arguments> dataName() {
+        return Stream.of(
+                Arguments.of("NameWithUppercase"),
+                Arguments.of("nameWithUppercaseInMiddle"),
+                Arguments.of("имя"),
+                Arguments.of("Имя"),
+                Arguments.of("a&b&c")
+        );
     }
 }

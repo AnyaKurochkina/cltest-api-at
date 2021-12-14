@@ -9,6 +9,7 @@ import httpModels.productCatalog.Template.getListTemplate.response.ListItem;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -94,5 +95,21 @@ public class TemplateSteps {
         } else {
             return response.getList().get(0).getId();
         }
+    }
+
+    @Step("Создание JSON объекта по шаблонам")
+    public JSONObject createJsonObject(String name) {
+        return new JsonHelper()
+                .getJsonTemplate("productCatalog/templates/createTemplate.json")
+                .set("$.name", name)
+                .build();
+    }
+
+    @SneakyThrows
+    @Step("Создание шаблона")
+    public Http.Response createProduct(JSONObject body) {
+        return new Http(Configure.ProductCatalog)
+                .setContentType("application/json")
+                .post("templates/", body);
     }
 }
