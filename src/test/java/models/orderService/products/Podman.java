@@ -2,6 +2,7 @@ package models.orderService.products;
 
 import core.helper.Http;
 import io.qameta.allure.Step;
+import core.helper.JsonHelper;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -78,7 +79,7 @@ public class Podman extends IProduct {
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
         boolean isTestEnv = project.getProjectEnvironment().getEnvType().contains("TEST");
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)

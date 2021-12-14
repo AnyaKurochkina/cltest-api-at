@@ -1,6 +1,7 @@
 package steps.portalBack;
 
 import core.helper.Http;
+import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -23,7 +24,7 @@ public class AccessGroupSteps extends Steps {
     @Step("Добавление пользователя в группу доступа для проекта среды {env}")
     public void addUsersToGroup(AccessGroup group, String username) {
         String[] arr = new String[]{username};
-        jsonHelper.getJsonTemplate("/accessGroup/users.json")
+        JsonHelper.getJsonTemplate("/accessGroup/users.json")
                 .set("$.users", arr)
                 .send(PortalBackURL)
                 .post("projects/{}/access_groups/{}/group_users", group.getProjectName(), group.getName())

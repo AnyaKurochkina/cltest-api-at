@@ -154,7 +154,7 @@ public class ActionsSteps {
 
     @Step("Создание JSON объекта по действиям")
     public JSONObject createJsonObject(String name) {
-        return new JsonHelper()
+        return JsonHelper
                 .getJsonTemplate("productCatalog/actions/createAction.json")
                 .set("$.name", name)
                 .build();
@@ -166,8 +166,7 @@ public class ActionsSteps {
     }
 
     private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {
-        JsonHelper jsonHelper = new JsonHelper();
-        return jsonHelper.getJsonTemplate(pathToJsonBody)
+        return JsonHelper.getJsonTemplate(pathToJsonBody)
                 .set("$.name", actionName)
                 .set("$.title", actionName)
                 .set("$.description", actionName)

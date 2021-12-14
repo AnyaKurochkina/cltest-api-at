@@ -21,8 +21,7 @@ import static io.restassured.RestAssured.given;
 public class GraphSteps {
 
     private JSONObject toJson(String pathToJsonBody, String graphName) {
-        JsonHelper jsonHelper = new JsonHelper();
-        return jsonHelper.getJsonTemplate(pathToJsonBody)
+        return JsonHelper.getJsonTemplate(pathToJsonBody)
                 .set("$.name", graphName)
                 .build();
     }

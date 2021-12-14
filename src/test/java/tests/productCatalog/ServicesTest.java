@@ -52,7 +52,7 @@ public class ServicesTest extends Tests {
     @Test
     public void importService() {
         System.out.println(serviceSteps.getServicesList().size());
-        String data = new JsonHelper().getStringFromFile("/productCatalog/services/importService.json");
+        String data = JsonHelper.getStringFromFile("/productCatalog/services/importService.json");
         String serviceName = new JsonPath(data).get("Service.json.name");
         serviceSteps.importService(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
         System.out.println(serviceSteps.getServicesList().size());

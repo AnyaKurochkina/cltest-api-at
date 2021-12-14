@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import core.helper.JsonHelper;
 import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -79,7 +80,7 @@ public class Rhel extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(getProjectId()).build().createObject();
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))

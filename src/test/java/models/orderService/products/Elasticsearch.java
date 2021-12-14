@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
@@ -79,7 +80,7 @@ public class Elasticsearch extends IProduct {
         flavorData = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_data:DEV").get(0);
         flavorMaster = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_master:DEV").get(0);
         flavorKibana = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_kibana:DEV").get(0);
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.flavor_data", new JSONObject(flavorData.toString()))

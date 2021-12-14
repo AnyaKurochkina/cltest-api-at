@@ -40,7 +40,7 @@ public class GraphTest {
     @DisplayName("Импорт графа")
     @Test
     public void importGraph() {
-        String data = new JsonHelper().getStringFromFile("/productCatalog/actions/importGraph.json");
+        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importGraph.json");
         String graphName = new JsonPath(data).get("Action.json.name");
         graphSteps.importGraph(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importGraph.json");
         Assertions.assertTrue(graphSteps.isExist(graphName));

@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
@@ -79,7 +80,7 @@ public class OpenShiftProject extends IProduct {
         List<ResourcePool> resourcePoolList = orderServiceSteps.getResourcesPoolList("container", projectId);
         ResourcePool resourcePool = resourcePoolList.stream().
                 filter(r -> r.getLabel().equals(resourcePoolLabel)).findFirst().orElseThrow(NoSuchFieldException::new);
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", projectId)
