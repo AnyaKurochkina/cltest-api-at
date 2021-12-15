@@ -79,7 +79,7 @@ public class ServiceAccount extends Entity {
                     .assertStatus(200)
                     .jsonPath();
 
-            log.info(jsonPath.get("data.status").toString());
+            log.info("Статус статического ключа: " + jsonPath.get("data.status").toString());
             keyStatus = jsonPath.get("data.status").toString();
 
             log.info("key status = " + keyStatus);
