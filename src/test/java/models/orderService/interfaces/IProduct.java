@@ -45,8 +45,6 @@ public abstract class IProduct extends Entity {
     @Builder.Default
     protected transient ReferencesStep referencesStep = new ReferencesStep();
     protected String jsonTemplate;
-    @Setter
-    protected List<String> actions;
 
     @Getter
     private ProductStatus status;

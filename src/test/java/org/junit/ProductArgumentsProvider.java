@@ -121,14 +121,11 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         for (Map.Entry<String, List<Map>> e : products.entrySet()) {
             try {
                 Class<?> c = Class.forName("models.orderService.products." + e.getKey());
-                List<String> listAction = findListInMapByKey("actions", e.getValue());
                 List listProduct = findListInMapByKey("options", e.getValue());
                 if (listProduct == null)
                     continue;
                 for (Object orderObj : listProduct) {
                     IProduct product = (IProduct) objectMapper.convertValue(orderObj, c);
-                    if (listAction != null)
-                        product.setActions(listAction);
                     list.add(product);
                 }
             } catch (Exception x) {

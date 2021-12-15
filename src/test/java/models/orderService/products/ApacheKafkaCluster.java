@@ -36,12 +36,12 @@ public class ApacheKafkaCluster extends IProduct {
     String dataCentre;
     @ToString.Include
     String platform;
-    @ToString.Include
     String kafkaVersion;
     String domain;
     @Builder.Default
     public List<KafkaTopic> topics = new ArrayList<>();
     Flavor flavor;
+    @ToString.Include
     String osVersion;
     public static final String KAFKA_CREATE_TOPICS = "kafka_create_topics";
 
