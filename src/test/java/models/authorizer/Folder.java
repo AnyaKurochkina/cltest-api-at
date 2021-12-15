@@ -1,6 +1,7 @@
 package models.authorizer;
 
 import core.helper.Configure;
+import core.helper.JsonHelper;
 import core.helper.Http;
 import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
@@ -61,7 +62,7 @@ public class Folder extends Entity {
 
     //    @Override
     public JSONObject toJson() {
-        return jsonHelper.getJsonTemplate("/structure/create_folder.json")
+        return JsonHelper.getJsonTemplate("/structure/create_folder.json")
                 .set("$.folder.kind", kind)
                 .set("$.folder.title", title)
                 .set("$.folder.name", name)

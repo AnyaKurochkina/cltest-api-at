@@ -54,7 +54,7 @@ public class OrgDirectionTest extends Tests {
     @DisplayName("Импорт направления")
     @Test
     public void importOrgDirection() {
-        String data = new JsonHelper().getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
+        String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
         String orgDirectionName = new JsonPath(data).get("OrgDirection.name");
         orgSteps.importOrgDirection(Configure.RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirection.json");
         Assertions.assertTrue(orgSteps.isProductExists(orgDirectionName));

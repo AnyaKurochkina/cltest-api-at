@@ -6,9 +6,10 @@ import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
 import models.authorizer.User;
-import models.keyCloak.Service;
 import models.keyCloak.ServiceAccountToken;
 import models.keyCloak.UserToken;
+
+import java.util.Objects;
 
 @Log4j2
 public class KeyCloakSteps {
@@ -34,7 +35,7 @@ public class KeyCloakSteps {
 //                        String.format("client_id=%s&client_secret=%s&grant_type=password&username=%s&password=%s",
 //                                service.clientId, service.clientSecret, user.username, user.password))
                 .body(String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
-                        user.getUsername(), user.getPassword()))
+                                Objects.requireNonNull(user.getUsername()), Objects.requireNonNull(user.getPassword())))
                 .post("auth/realms/Portal/protocol/openid-connect/token")
                 .assertStatus(200)
                 .jsonPath()
@@ -77,7 +78,7 @@ public class KeyCloakSteps {
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()
                 .body(String.format("client_id=%s&client_secret=%s&grant_type=client_credentials",
-                        serviceAccount.getId(), serviceAccount.getSecret()))
+                                Objects.requireNonNull(serviceAccount.getId()), Objects.requireNonNull(serviceAccount.getSecret())))
                 .post("auth/realms/Portal/protocol/openid-connect/token")
                 .assertStatus(200)
                 .jsonPath()

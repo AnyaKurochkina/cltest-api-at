@@ -2,6 +2,7 @@ package models.authorizer;
 
 import core.helper.Configure;
 import core.helper.Http;
+import core.helper.JsonHelper;
 import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
 import lombok.Builder;
@@ -44,7 +45,7 @@ public class AccessGroup extends Entity {
     }
 
     public JSONObject toJson() {
-        return jsonHelper.getJsonTemplate("/accessGroup/accessGroup.json")
+        return JsonHelper.getJsonTemplate("/accessGroup/accessGroup.json")
                 .set("$.access_group.name", name)
                 .set("$.access_group.description", description)
                 .set("$.access_group.project_name", projectName)

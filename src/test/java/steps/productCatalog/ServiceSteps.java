@@ -72,7 +72,7 @@ public class ServiceSteps {
     @Step("Обновление сервиса")
     public void updateServiceById(String id) {
         new Http(Configure.ProductCatalogURL)
-                .body(new JsonHelper().getJsonTemplate("productCatalog/services/createServices.json")
+                .body(JsonHelper.getJsonTemplate("productCatalog/services/createServices.json")
                         .set("$.description", "Update desc")
                         .build())
                 .patch("services/" + id + "/")
@@ -106,7 +106,7 @@ public class ServiceSteps {
 
     @Step("Создание JSON объекта по сервисам")
     public JSONObject createJsonObject(String name) {
-        return new JsonHelper()
+        return JsonHelper
                 .getJsonTemplate("productCatalog/services/createServices.json")
                 .set("$.name", name)
                 .build();

@@ -6,6 +6,8 @@ import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import steps.Steps;
 
+import java.util.Objects;
+
 import static core.helper.Configure.CalculatorURL;
 
 @Log4j2
@@ -18,7 +20,7 @@ public class CalcCostSteps extends Steps {
     @Step("Получение расхода для папки/проекта")
     public Float getCostByPath(String path) {
         Float cost = new Http(CalculatorURL)
-                .get("orders/cost/?folder__startswith=" + path)
+                .get("orders/cost/?folder__startswith={}", path)
                 .assertStatus(200)
                 .jsonPath()
                 .get("cost");
@@ -34,7 +36,7 @@ public class CalcCostSteps extends Steps {
     public Float getCostByUid(IProduct product) {
         Float cost = new Http(CalculatorURL)
                     .setProjectId(product.getProjectId())
-                    .get("orders/cost/?uuid__in=" + product.getOrderId())
+                    .get("orders/cost/?uuid__in={}", product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()
                     .get("cost");

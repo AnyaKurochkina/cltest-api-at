@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import core.exception.DeferredException;
 import core.helper.Http;
+import core.helper.JsonHelper;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -42,7 +43,7 @@ public class OrderServiceSteps extends Steps {
             Waiting.sleep(30000);
             Http.Response res = new Http(OrderServiceURL)
                     .setProjectId(product.getProjectId())
-                    .get("projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
+                    .get("projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
                     .assertStatus(200);
             orderStatus = res.jsonPath().get("status");
             log.info("orderId={} orderStatus={}", product.getOrderId(), orderStatus);
@@ -89,7 +90,7 @@ public class OrderServiceSteps extends Steps {
             String endPoint = String.format("projects/%s/orders?include=total_count&page=" +
                             i + "&per_page=20&f" +
                             statusParams,
-                    projectId);
+                    Objects.requireNonNull(projectId));
             //удалить &f если параметры statuses пустые, так как эндпоинт с &f не работает
             if (statuses.length == 0) {
                 endPoint = endPoint.substring(0, endPoint.length() - 2);
@@ -110,7 +111,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Отправка action {action}")
     public Http.Response sendAction(String action, IProduct product, JSONObject jsonData) {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
-        return jsonHelper.getJsonTemplate("/actions/template.json")
+        return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.id)
                 .set("$.order.data", jsonData)
                 .send(OrderServiceURL)
@@ -235,7 +236,7 @@ public class OrderServiceSteps extends Steps {
      * @return - возвращаем ID проудкта
      */
     public String getProductId(IProduct product) {
-        log.info("Получение id для продукта " + product.getProductName());
+        log.info("Получение id для продукта " + Objects.requireNonNull(product).getProductName());
         //Получение информационной сисетмы
         InformationSystem informationSystem = InformationSystem.builder().isForOrders(true).build().createObject();
         String product_id = "";
@@ -277,10 +278,10 @@ public class OrderServiceSteps extends Steps {
      * @return - возвращаем ID айтема
      */
     public Item getItemIdByOrderIdAndActionTitle(String action, IProduct product) {
-        log.info("Получение item_id для " + action);
+        log.info("Получение item_id для " + Objects.requireNonNull(action));
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
-                .setProjectId(product.getProjectId())
+                .setProjectId(Objects.requireNonNull(product).getProjectId())
                 .get("projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
@@ -320,7 +321,7 @@ public class OrderServiceSteps extends Steps {
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
-                .get("projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
+                .get("projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
         s = jsonPath.get(path);
@@ -331,7 +332,8 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Удаление всех заказов")
     public void deleteOrders(String env) {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(Objects.requireNonNull(env)))
+                .isForOrders(true).build().createObject();
         List<String> orders = new Http(OrderServiceURL)
                 .setProjectId(project.id)
                 .get("projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success", project.id)
@@ -350,7 +352,7 @@ public class OrderServiceSteps extends Steps {
                 log.trace("item_id = " + itemId);
                 log.trace("action = " + action);
 
-                jsonHelper.getJsonTemplate("/actions/template.json")
+                JsonHelper.getJsonTemplate("/actions/template.json")
                         .set("$.item_id", itemId)
                         .send(OrderServiceURL)
                         .setProjectId(project.id)

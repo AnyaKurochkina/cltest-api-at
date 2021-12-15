@@ -70,7 +70,7 @@ public class ProductsSteps {
 
     @Step("Создание JSON объекта по продуктам")
     public JSONObject createJsonObject(String name) {
-        return new JsonHelper()
+        return JsonHelper
                 .getJsonTemplate("productCatalog/products/createProduct.json")
                 .set("$.name", name)
                 .build();

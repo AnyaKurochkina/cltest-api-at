@@ -60,7 +60,7 @@ public class Template extends Entity {
 
     @Override
     public JSONObject toJson() {
-        return new JsonHelper().getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", templateName)
                 .build();
     }

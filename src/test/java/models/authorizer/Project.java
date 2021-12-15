@@ -2,6 +2,7 @@ package models.authorizer;
 
 import core.helper.Configure;
 import core.helper.Http;
+import core.helper.JsonHelper;
 import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
 import lombok.Builder;
@@ -45,7 +46,7 @@ public class Project extends Entity {
     }
 
     public JSONObject toJson() {
-        return jsonHelper.getJsonTemplate("/structure/create_project.json")
+        return JsonHelper.getJsonTemplate("/structure/create_project.json")
                 .set("$.project.title", projectName)
                 .set("$.project.information_system_id", informationSystem)
                 .set("$.project.project_environment_id", projectEnvironment.getId())
