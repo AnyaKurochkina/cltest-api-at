@@ -3,15 +3,11 @@ package tests.productCatalog;
 import core.helper.MarkDelete;
 import io.qameta.allure.Feature;
 import models.productCatalog.Template;
-import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.TemplateSteps;
 import tests.Tests;
 
-import java.util.stream.Stream;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -76,21 +72,15 @@ public class TemplatesTest extends Tests {
     }
 
     @Order(13)
-    @ParameterizedTest
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
-    @MethodSource("dataName")
-    public void createTemplateWithInvalidCharacters(String name) {
-        JSONObject object = templateSteps.createJsonObject(name);
-        templateSteps.createProduct(object).assertStatus(400);
-    }
-
-    private static Stream<Arguments> dataName() {
-        return Stream.of(
-                Arguments.of("NameWithUppercase"),
-                Arguments.of("nameWithUppercaseInMiddle"),
-                Arguments.of("имя"),
-                Arguments.of("Имя"),
-                Arguments.of("a&b&c")
+    @Test
+    public void createTemplateWithInvalidCharacters() {
+        assertAll(
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("имя")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("a&b&c")).assertStatus(400)
         );
     }
 

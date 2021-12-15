@@ -79,4 +79,7 @@ public class GetServiceResponse{
 
 	@JsonProperty("direction")
 	private String direction;
+
+	@JsonProperty("last_version")
+	private String lastVersion;
 }

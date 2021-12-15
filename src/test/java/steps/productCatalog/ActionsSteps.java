@@ -76,7 +76,7 @@ public class ActionsSteps {
     @Step("Обновление экшена")
     public PatchActionResponse patchAction(String actionName, String graphId, String actionId) {
         return new Http(Configure.ProductCatalogURL)
-                .body(toJson("actions/createAction.json", actionName, graphId))
+                .body(toJson("productCatalog/actions/createAction.json", actionName, graphId))
                 .patch("actions/" + actionId + "/")
                 .assertStatus(200)
                 .extractAs(PatchActionResponse.class);
@@ -126,7 +126,6 @@ public class ActionsSteps {
     @Step("Копирование действия по Id")
     public void copyActionById(String id) {
         new Http(Configure.ProductCatalogURL)
-
                 .post("actions/" + id + "/copy/")
                 .assertStatus(200);
     }

@@ -2,6 +2,7 @@ package tests.productCatalog;
 
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
+import core.helper.StringUtils;
 import httpModels.productCatalog.Action.createAction.response.CreateActionResponse;
 import httpModels.productCatalog.Graphs.createGraph.response.CreateGraphResponse;
 import httpModels.productCatalog.Graphs.deleteGraph.response.DeleteGraphResponse;
@@ -11,15 +12,10 @@ import httpModels.productCatalog.Service.createService.response.CreateServiceRes
 import models.productCatalog.Graph;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.ActionsSteps;
 import steps.productCatalog.GraphSteps;
 import steps.productCatalog.ProductsSteps;
 import steps.productCatalog.ServiceSteps;
-
-import java.util.stream.Stream;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -83,7 +79,7 @@ public class GraphTest {
         graphSteps.copyGraphById(graph.getGraphId());
         Assertions.assertTrue(graphSteps.isExist(cloneName));
         graphSteps.deleteGraphByName(cloneName);
-        Assertions.assertTrue(graphSteps.isExist(cloneName));
+        Assertions.assertFalse(graphSteps.isExist(cloneName));
     }
 
     @Order(7)
@@ -107,44 +103,27 @@ public class GraphTest {
         graphSteps.createGraphResponse(graphSteps.createJsonObject(graph.getName())).assertStatus(400);
     }
 
-    @Order(13)
-    @ParameterizedTest
-    @DisplayName("Негативный тест на создание графа с недопустимыми символами в имени.")
-    @MethodSource("dataName")
-    public void createGraphWithInvalidCharacters(String name) {
-        graphSteps.createGraphResponse(graphSteps.createJsonObject(name)).assertStatus(400);
-    }
-
-    private static Stream<Arguments> dataName() {
-        return Stream.of(
-                Arguments.of("NameWithUppercase"),
-                Arguments.of("nameWithUppercaseInMiddle"),
-                Arguments.of("имя"),
-                Arguments.of("Имя"),
-                Arguments.of("a&b&c")
-        );
-    }
-
     @Order(99)
     @Test
     @DisplayName("Попытка удаления графа используемого в продукте, действии и сервисе")
     public void deleteUsedGraph() {
         CreateGraphResponse mainGraph = graphSteps.createGraph(graphSteps.createJsonObject("mainGraph"));
         String mainGraphId = mainGraph.getId();
-        graphSteps.createGraph(graphSteps.createJsonObject("secondGraph"));
+        CreateGraphResponse secondGraph = graphSteps.createGraph(graphSteps.createJsonObject("secondGraph"));
+        String secondGraphId= secondGraph.getId();
         graphSteps.partialUpdateGraphById(mainGraphId, new JSONObject().put("description", "updateVersion2.0")
                 .put("version", "2.0.0"));
         graphSteps.partialUpdateGraphById(mainGraphId, new JSONObject().put("description", "updateVersion3.0")
                 .put("version", "3.0.0"));
-        CreateProductResponse createProductResponse = productsSteps.createProduct(new JsonHelper().getJsonTemplate("productCatalog/products/createProduct.json")
+        CreateProductResponse createProductResponse = productsSteps.createProduct(JsonHelper.getJsonTemplate("productCatalog/products/createProduct.json")
                 .set("name", "product_for_graph_test_api")
                 .set("graph_id", mainGraphId)
                 .build()).extractAs(CreateProductResponse.class);
-        CreateServiceResponse createServiceResponse = serviceSteps.createService(new JsonHelper().getJsonTemplate("productCatalog/services/createServices.json")
+        CreateServiceResponse createServiceResponse = serviceSteps.createService(JsonHelper.getJsonTemplate("productCatalog/services/createServices.json")
                 .set("name", "service_for_graph_test_api")
                 .set("graph_id", mainGraphId)
                 .build()).extractAs(CreateServiceResponse.class);
-        CreateActionResponse createActionResponse = actionsSteps.createAction(new JsonHelper().getJsonTemplate("productCatalog/actions/createAction.json")
+        CreateActionResponse createActionResponse = actionsSteps.createAction(JsonHelper.getJsonTemplate("productCatalog/actions/createAction.json")
                 .set("name", "action_for_graph_test_api")
                 .set("graph_id", mainGraphId)
                 .build()).extractAs(CreateActionResponse.class);
@@ -152,9 +131,13 @@ public class GraphTest {
                 .assertStatus(400)
                 .extractAs(DeleteGraphResponse.class)
                 .getErr();
+        String version = StringUtils.findByRegex("version: ([0-9.]+)\\)", deleteResponse);
+        Assertions.assertEquals("1.0.0", version);
         productsSteps.deleteProductById(createProductResponse.getId());
         serviceSteps.deleteServiceById(createServiceResponse.getId());
         actionsSteps.deleteActionById(createActionResponse.getId());
+        graphSteps.deleteGraphResponse(mainGraphId);
+        graphSteps.deleteGraphResponse(secondGraphId);
     }
 
     @Order(100)

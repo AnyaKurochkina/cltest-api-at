@@ -63,7 +63,6 @@ public class Services extends Entity {
     @Step("Создание сервиса")
     protected void create() {
         String response = new Http(Configure.ProductCatalogURL)
-                
                 .body(toJson())
                 .post("services/")
                 .assertStatus(201)
@@ -77,7 +76,6 @@ public class Services extends Entity {
     @Step("Удаление сервиса")
     protected void delete() {
         new Http(Configure.ProductCatalogURL)
-                
                 .delete("services/" + serviceId + "/")
                 .assertStatus(204);
 

@@ -93,7 +93,7 @@ public class GraphSteps {
 
     @Step("Создание JSON объекта по графам")
     public JSONObject createJsonObject(String name) {
-        return new JsonHelper()
+        return   JsonHelper
                 .getJsonTemplate("productCatalog/graphs/createGraph.json")
                 .set("$.name", name)
                 .build();

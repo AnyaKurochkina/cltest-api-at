@@ -8,15 +8,9 @@ import httpModels.productCatalog.Action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.Action.patchAction.response.PatchActionResponse;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
-import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.ActionsSteps;
 import tests.Tests;
-
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -134,21 +128,15 @@ public class ActionsTest extends Tests {
     }
 
     @Order(13)
-    @ParameterizedTest
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
-    @MethodSource("dataName")
-    public void createActionWithInvalidCharacters(String name) {
-        JSONObject object = actionsSteps.createJsonObject(name);
-        actionsSteps.createAction(object).assertStatus(400);
-    }
-
-    private static Stream<Arguments> dataName() {
-        return Stream.of(
-                Arguments.of("NameWithUppercase"),
-                Arguments.of("nameWithUppercaseInMiddle"),
-                Arguments.of("имя"),
-                Arguments.of("Имя"),
-                Arguments.of("a&b&c")
+    @Test
+    public void createActionWithInvalidCharacters() {
+        assertAll(
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("имя")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("a&b&c")).assertStatus(400)
         );
     }
 

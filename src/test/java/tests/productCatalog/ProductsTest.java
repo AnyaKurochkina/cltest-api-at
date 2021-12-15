@@ -7,16 +7,13 @@ import httpModels.productCatalog.Product.getProduct.response.GetProductResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Product;
-import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.ProductsSteps;
 import tests.Tests;
 
 import java.util.Collections;
-import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -117,21 +114,15 @@ public class ProductsTest extends Tests {
     }
 
     @Order(13)
-    @ParameterizedTest
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
-    @MethodSource("dataName")
-    public void createProductWithInvalidCharacters(String name) {
-        JSONObject object = productsSteps.createJsonObject(name);
-        productsSteps.createProduct(object).assertStatus(400);
-    }
-
-    private static Stream<Arguments> dataName() {
-        return Stream.of(
-                Arguments.of("NameWithUppercase"),
-                Arguments.of("nameWithUppercaseInMiddle"),
-                Arguments.of("имя"),
-                Arguments.of("Имя"),
-                Arguments.of("a&b&c")
+    @Test
+    public void createProductWithInvalidCharacters() {
+        assertAll(
+                () -> productsSteps.createProduct(productsSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> productsSteps.createProduct(productsSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> productsSteps.createProduct(productsSteps.createJsonObject("имя")).assertStatus(400),
+                () -> productsSteps.createProduct(productsSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> productsSteps.createProduct(productsSteps.createJsonObject("a&b&c")).assertStatus(400)
         );
     }
 

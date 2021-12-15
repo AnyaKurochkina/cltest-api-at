@@ -9,13 +9,10 @@ import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.OrgDirectionSteps;
 import tests.Tests;
 
-import java.util.stream.Stream;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -96,25 +93,19 @@ public class OrgDirectionTest extends Tests {
     @DisplayName("Экспорт направления по Id")
     @Test
     public void exportOrgDirectionById() {
-    orgSteps.exportOrgDirectionById(orgDirection.getOrgDirectionId());
+        orgSteps.exportOrgDirectionById(orgDirection.getOrgDirectionId());
     }
 
-    @Order(13)
-    @ParameterizedTest
+    @Order(9)
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
-    @MethodSource("dataName")
-    public void createActionWithInvalidCharacters(String name) {
-        JSONObject object = orgSteps.createJsonObject(name);
-        orgSteps.createOrgDirection(object).assertStatus(400);
-    }
-
-    private static Stream<Arguments> dataName() {
-        return Stream.of(
-                Arguments.of("NameWithUppercase"),
-                Arguments.of("nameWithUppercaseInMiddle"),
-                Arguments.of("имя"),
-                Arguments.of("Имя"),
-                Arguments.of("a&b&c")
+    @Test
+    public void createActionWithInvalidCharacters() {
+        assertAll(
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("имя")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("a&b&c")).assertStatus(400)
         );
     }
 

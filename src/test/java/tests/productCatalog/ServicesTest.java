@@ -8,15 +8,11 @@ import httpModels.productCatalog.Service.getService.response.GetServiceResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Services;
-import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.ServiceSteps;
 import tests.Tests;
 
-import java.util.stream.Stream;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -57,7 +53,7 @@ public class ServicesTest extends Tests {
     @DisplayName("Импорт сервиса")
     @Test
     public void importService() {
-        String data = new JsonHelper().getStringFromFile("/productCatalog/services/importService.json");
+        String data =JsonHelper.getStringFromFile("/productCatalog/services/importService.json");
         String serviceName = new JsonPath(data).get("Service.json.name");
         serviceSteps.importService(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
         Assertions.assertTrue(serviceSteps.isServiceExist(serviceName));
@@ -105,22 +101,16 @@ public class ServicesTest extends Tests {
         Assertions.assertNotNull(getServiceResponse.getGraphVersionCalculated());
     }
 
-    @Order(13)
-    @ParameterizedTest
+    @Order(10)
     @DisplayName("Негативный тест на создание сервиса с недопустимыми символами в имени.")
-    @MethodSource("dataName")
-    public void createServiceWithInvalidCharacters(String name) {
-        JSONObject object = serviceSteps.createJsonObject(name);
-        serviceSteps.createService(object).assertStatus(400);
-    }
-
-    private static Stream<Arguments> dataName() {
-        return Stream.of(
-                Arguments.of("NameWithUppercase"),
-                Arguments.of("nameWithUppercaseInMiddle"),
-                Arguments.of("имя"),
-                Arguments.of("Имя"),
-                Arguments.of("a&b&c")
+    @Test
+    public void createServiceWithInvalidCharacters() {
+        assertAll(
+                () -> serviceSteps.createService(serviceSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> serviceSteps.createService(serviceSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> serviceSteps.createService(serviceSteps.createJsonObject("имя")).assertStatus(400),
+                () -> serviceSteps.createService(serviceSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> serviceSteps.createService(serviceSteps.createJsonObject("a&b&c")).assertStatus(400)
         );
     }
 

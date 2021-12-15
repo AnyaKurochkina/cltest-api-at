@@ -23,11 +23,11 @@ public class GetActionResponse{
 	@JsonProperty("icon")
 	private String icon;
 
-	@JsonProperty("description")
-	private String description;
-
 	@JsonProperty("graph_version")
 	private String graphVersion;
+
+	@JsonProperty("description")
+	private String description;
 
 	@JsonProperty("skip_on_prebilling")
 	private Boolean skipOnPrebilling;
@@ -38,20 +38,20 @@ public class GetActionResponse{
 	@JsonProperty("auto_removing_if_failed")
 	private Boolean autoRemovingIfFailed;
 
-	@JsonProperty("type")
-	private String type;
-
 	@JsonProperty("title")
 	private String title;
+
+	@JsonProperty("type")
+	private String type;
 
 	@JsonProperty("event_type")
 	private List<Object> eventType;
 
-	@JsonProperty("data_config_path")
-	private String dataConfigPath;
-
 	@JsonProperty("required_item_statuses")
 	private List<Object> requiredItemStatuses;
+
+	@JsonProperty("data_config_path")
+	private String dataConfigPath;
 
 	@JsonProperty("restricted_paths")
 	private List<Object> restrictedPaths;
@@ -68,9 +68,6 @@ public class GetActionResponse{
 	@JsonProperty("event_provider")
 	private List<Object> eventProvider;
 
-	@JsonProperty("version_create_dt")
-	private String versionCreateDt;
-
 	@JsonProperty("restricted_groups")
 	private List<Object> restrictedGroups;
 
@@ -80,11 +77,11 @@ public class GetActionResponse{
 	@JsonProperty("version")
 	private String version;
 
+	@JsonProperty("last_version")
+	private String lastVersion;
+
 	@JsonProperty("config_restriction")
 	private String configRestriction;
-
-	@JsonProperty("version_changed_by_user")
-	private String versionChangedByUser;
 
 	@JsonProperty("data_config_key")
 	private String dataConfigKey;
