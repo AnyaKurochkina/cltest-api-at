@@ -87,7 +87,6 @@ public class ActionsSteps {
     @Step("Получение списка действий")
     public List<ListItem> getActionList() {
         return new Http(Configure.ProductCatalogURL)
-                .setWithoutToken()
                 .get("actions/")
                 .assertStatus(200)
                 .extractAs(ActionResponse.class)
