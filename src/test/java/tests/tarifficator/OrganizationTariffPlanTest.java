@@ -42,7 +42,7 @@ public class OrganizationTariffPlanTest extends Tests {
     @DisplayName("Создание тарифного плана")
     public void createOrganizationTariffPlanFromActive() {
         Organization organization = Organization.builder().build().createObject();
-        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[status][]=active").get(0);
+        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=true&f[status][]=active").get(0);
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(false)
                 .oldTariffPlanId(activeTariff.getId())
@@ -64,15 +64,18 @@ public class OrganizationTariffPlanTest extends Tests {
     @Order(2)
     @DisplayName("Создание базового тарифного плана с существующим именем")
     void duplicateNameBaseTariffPlan() {
+        Organization organization = Organization.builder().build().createObject();
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(false)
                 .status(TariffPlanStatus.draft)
+                .organizationName(organization.getName())
                 .build()
                 .createObject();
         JSONObject object = TariffPlan.builder()
                 .title(tariffPlan.getTitle())
                 .base(false)
                 .oldTariffPlanId(tariffPlan.getOldTariffPlanId())
+                .organizationName(organization.getName())
                 .build()
                 .toJson();
         new Http(Configure.TarifficatorURL)
@@ -132,7 +135,8 @@ public class OrganizationTariffPlanTest extends Tests {
                 .status(TariffPlanStatus.draft)
                 .build()
                 .createObject();
-        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[status][]=active").get(0);
+        Organization organization = Organization.builder().build().createObject();
+        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[organization_name]=" + organization.getName() + "&f[status][]=active").get(0);
 
         tariffPlan.setStatus(TariffPlanStatus.planned);
         tariffPlan.setBeginDate(date);
@@ -156,9 +160,11 @@ public class OrganizationTariffPlanTest extends Tests {
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(false)
                 .status(TariffPlanStatus.draft)
+                .updateOrders(true)
                 .build()
                 .createObject();
-        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[status][]=active").get(0);
+        Organization organization = Organization.builder().build().createObject();
+        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[organization_name]=" + organization.getName() + "&f[status][]=active").get(0);
 
         tariffPlan.setStatus(TariffPlanStatus.planned);
         tariffPlan.setBeginDate(date);

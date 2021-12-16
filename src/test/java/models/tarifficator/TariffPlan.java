@@ -29,6 +29,7 @@ public class TariffPlan extends Entity {
     String organizationName;
     TariffPlanStatus status;
     List<TariffClass> tariffClasses;
+    List<TariffPlanServices> tariffPlanServices;
     @EqualsAndHashCode.Include
     @ToString.Include
     String title;
