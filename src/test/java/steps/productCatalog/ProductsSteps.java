@@ -59,13 +59,10 @@ public class ProductsSteps {
 
     @Step("Ипорт продукта")
     public void importProduct(String pathName) {
-        given()
-                .contentType("multipart/form-data")
-                .multiPart("file", new File(pathName))
-                .when()
-                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/products/obj_import/")
-                .then()
-                .statusCode(200);
+        new Http(Configure.ProductCatalogURL)
+                .setWithoutToken()
+                .multiPart("products/obj_import/", "file", new File(pathName))
+                .assertStatus(200);
     }
 
     @Step("Создание JSON объекта по продуктам")
