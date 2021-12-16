@@ -25,7 +25,7 @@ public class KeyCloakSteps {
         //Получение сервис из памяти
 //        Service service = Service.builder().build().createObject();
         //Получение пользователя из памяти
-        User user = User.builder().build().createObject();
+        User user = User.builder().role("admin").build().createObject();
         //Отправка запроса на получение токена
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")

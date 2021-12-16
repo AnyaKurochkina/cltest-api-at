@@ -122,9 +122,9 @@ public class OrganizationTariffPlanTest extends Tests {
     @Order(5)
     @ParameterizedTest(name = "Активация и Архивация (без update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    public void activateTariffPlanWithoutUpdateOrders(Rhel rhel) {
+    public void activateTariffPlanWithoutUpdateOrders(Rhel product) {
         String tariffPlanIdPath = "attrs.tariff_plan_id";
-        rhel.createObject();
+        Rhel rhel = product.createObject();
         String tariffPlanId = ((String) orderServiceSteps.getProductsField(rhel, tariffPlanIdPath));
         Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
         TariffPlan tariffPlan = TariffPlan.builder()
@@ -148,9 +148,9 @@ public class OrganizationTariffPlanTest extends Tests {
     @Order(6)
     @ParameterizedTest(name = "Активация и Архивация (с update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    public void activateTariffPlanWithUpdateOrders(Rhel rhel) {
+    public void activateTariffPlanWithUpdateOrders(Rhel product) {
         String tariffPlanIdPath = "attrs.tariff_plan_id";
-        rhel.createObject();
+        Rhel rhel = product.createObject();
         String tariffPlanId = ((String) orderServiceSteps.getProductsField(rhel, tariffPlanIdPath));
         Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
         TariffPlan tariffPlan = TariffPlan.builder()

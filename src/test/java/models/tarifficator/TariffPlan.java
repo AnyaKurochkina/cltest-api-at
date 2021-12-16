@@ -50,7 +50,7 @@ public class TariffPlan extends Entity {
         if(base == null)
             base = true;
         if(oldTariffPlanId == null) {
-            TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
+            TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("f[base]=" + base + "&f[status][]=active").get(0);
             oldTariffPlanId = activeTariff.getId();
         }
         return this;

@@ -51,14 +51,14 @@ public class OrderServiceSteps extends Steps {
         }
         log.info("Итоговый статус заказа " + orderStatus);
         if (!orderStatus.equals(exp_status.toLowerCase())) {
-            String error = null;
+            String error = "null";
             try {
                 error = stateServiceSteps.GetErrorFromStateService(product);
             } catch (Throwable e) {
                 e.printStackTrace();
                 log.error("Ошибка в GetErrorFromStateService " + e);
             }
-            if (Objects.isNull(error))
+            if (error.equals("null"))
                 error = "Продукт не развернулся по таймауту";
             Assertions.fail(String.format("Ошибка заказа продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product, orderStatus, error));
         }
@@ -198,7 +198,7 @@ public class OrderServiceSteps extends Steps {
         String actionStatus = "";
         int counter = 20;
         log.info("Проверка статуса выполнения действия");
-        while ((actionStatus.equals("pending") || actionStatus.equals("")) && counter > 0) {
+        while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.equals("")) && counter > 0) {
             Waiting.sleep(30000);
             actionStatus = new Http(OrderServiceURL)
                     .setProjectId(product.getProjectId())
