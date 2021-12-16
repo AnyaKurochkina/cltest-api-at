@@ -7,6 +7,7 @@ import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import lombok.*;
 import models.Entity;
+import models.authorizer.Organization;
 import org.json.JSONObject;
 import steps.tarifficator.TariffPlanSteps;
 
@@ -50,8 +51,11 @@ public class TariffPlan extends Entity {
         if(base == null)
             base = true;
         if(oldTariffPlanId == null) {
-            TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("f[base]=" + base + "&f[status][]=active").get(0);
+            TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
             oldTariffPlanId = activeTariff.getId();
+        }
+        if(!base && organizationName == null) {
+            organizationName = ((Organization) Organization.builder().build().createObject()).getName();
         }
         return this;
     }

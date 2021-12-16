@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class ApacheKafkaClusterNegativeTest extends Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Негативные тесты создания топика над {0}")
     public void negativeCreateKafkaTopic(ApacheKafkaCluster product) {

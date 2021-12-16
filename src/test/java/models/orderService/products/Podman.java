@@ -96,8 +96,8 @@ public class Podman extends IProduct {
         expandMountPoint("expand_mount_point", "/app", 10);
     }
 
-    public void resize() {
-        resize("resize_vm");
+    public void restart() {
+        restart("reset_two_layer");
     }
 
     public void stopSoft() {

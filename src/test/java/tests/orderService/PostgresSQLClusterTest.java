@@ -24,6 +24,7 @@ public class PostgresSQLClusterTest extends Tests {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(PostgresSQLCluster product) {
@@ -33,6 +34,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(PostgresSQLCluster product) {
@@ -42,6 +44,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(PostgresSQLCluster product) {
@@ -52,6 +55,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль пользователя {0}")
     void resetPassword(PostgresSQLCluster product) {
@@ -62,7 +66,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
-    @Tag("remove")
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(PostgresSQLCluster product) {
@@ -74,6 +78,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgresSQLCluster product) {
@@ -83,6 +88,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(PostgresSQLCluster product) {
@@ -92,6 +98,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(PostgresSQLCluster product) {
@@ -101,6 +108,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(PostgresSQLCluster product) {
@@ -111,6 +119,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(PostgresSQLCluster product) {
@@ -121,6 +130,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(PostgresSQLCluster product) {

@@ -24,6 +24,7 @@ public class RabbitMQClusterTest extends Tests {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(RabbitMQCluster product) {
@@ -33,6 +34,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(RabbitMQCluster product) {
@@ -42,6 +44,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(RabbitMQCluster product) {
@@ -52,6 +55,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать пользователя RabbitMQ {0}")
     void createUser(RabbitMQCluster product) {
@@ -61,6 +65,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(RabbitMQCluster product) {
@@ -71,6 +76,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(RabbitMQCluster product) {
@@ -80,6 +86,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(RabbitMQCluster product) {

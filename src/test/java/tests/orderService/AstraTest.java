@@ -17,6 +17,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("astra"), @Tag("prod")})
 public class AstraTest extends Tests {
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Astra product) {
@@ -24,6 +25,7 @@ public class AstraTest extends Tests {
         try (Astra astra = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Astra product) {
@@ -33,6 +35,7 @@ public class AstraTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Astra product) {
@@ -42,6 +45,7 @@ public class AstraTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Astra product) {
@@ -52,6 +56,7 @@ public class AstraTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Astra product) {
@@ -66,6 +71,7 @@ public class AstraTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(Astra product) {
@@ -76,6 +82,7 @@ public class AstraTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Astra product) {

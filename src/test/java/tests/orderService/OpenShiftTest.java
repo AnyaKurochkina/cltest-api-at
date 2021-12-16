@@ -27,6 +27,7 @@ public class OpenShiftTest extends Tests {
         try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Link(type="manual", value = "377741")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменение проекта {0}")
