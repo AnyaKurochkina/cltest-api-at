@@ -48,7 +48,7 @@ public class ActionsTest extends Tests {
     @DisplayName("Импорт действия")
     @Test
     public void importAction() {
-        String data = new JsonHelper().getStringFromFile("/productCatalog/actions/importAction.json");
+        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
         String actionName = new JsonPath(data).get("Action.json.name");
         actionsSteps.importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
         Assertions.assertTrue(actionsSteps.isActionExists(actionName));

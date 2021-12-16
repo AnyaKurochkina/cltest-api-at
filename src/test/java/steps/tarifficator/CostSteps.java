@@ -1,6 +1,7 @@
 package steps.tarifficator;
 
 import core.helper.Http;
+import core.helper.JsonHelper;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -91,7 +92,7 @@ public class CostSteps extends Steps {
                 .createObject();
         String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
-        JSONObject template = jsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
+        JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
         template.put("params", attrs);
         template.put("project_name", project.id);
@@ -119,7 +120,7 @@ public class CostSteps extends Steps {
                 .createObject();
         String productId = orderServiceSteps.getProductId(product);
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
-        JSONObject template = jsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
+        JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
         template.put("params", attrs);
         template.put("project_name", project.id);
@@ -139,7 +140,7 @@ public class CostSteps extends Steps {
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
                 .isForOrders(true).build().createObject();
         log.info("Отправка запроса на получение стоимости экшена: "+ action +", у продукта " + product.getProductName());
-        return jsonHelper.getJsonTemplate("/tarifficator/costAction.json")
+        return JsonHelper.getJsonTemplate("/tarifficator/costAction.json")
                 .set("$.params.project_name", project.id)
                 .set("$.params.item_id", itemId)
                 .set("$.params.action_name", action)

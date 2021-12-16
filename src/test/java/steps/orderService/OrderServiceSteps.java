@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import core.exception.DeferredException;
 import core.helper.Http;
+import core.helper.JsonHelper;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -110,7 +111,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Отправка action {action}")
     public Http.Response sendAction(String action, IProduct product, JSONObject jsonData) {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
-        return jsonHelper.getJsonTemplate("/actions/template.json")
+        return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.id)
                 .set("$.order.data", jsonData)
                 .send(OrderServiceURL)
@@ -351,7 +352,7 @@ public class OrderServiceSteps extends Steps {
                 log.trace("item_id = " + itemId);
                 log.trace("action = " + action);
 
-                jsonHelper.getJsonTemplate("/actions/template.json")
+                JsonHelper.getJsonTemplate("/actions/template.json")
                         .set("$.item_id", itemId)
                         .send(OrderServiceURL)
                         .setProjectId(project.id)

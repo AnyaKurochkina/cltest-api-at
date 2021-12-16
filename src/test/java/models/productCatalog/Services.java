@@ -53,8 +53,7 @@ public class Services extends Entity {
 
     @Override
     public JSONObject toJson() {
-        JsonHelper jsonHelper = new JsonHelper();
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", serviceName)
                 .set("$.graph_id", graphId)
                 .build();

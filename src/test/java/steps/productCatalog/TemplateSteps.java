@@ -72,7 +72,7 @@ public class TemplateSteps {
         new Http(Configure.ProductCatalogURL)
                 
                 .setWithoutToken()
-                .body(new JsonHelper()
+                .body(JsonHelper
                         .getJsonTemplate("productCatalog/templates/createTemplate.json")
                         .set("$.name", name)
                         .set("$.color", color)

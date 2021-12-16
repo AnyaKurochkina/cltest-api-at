@@ -53,7 +53,7 @@ public class ProductsTest extends Tests {
     @DisplayName("Импорт продукта")
     @Test
     public void importProduct() {
-        String data = new JsonHelper().getStringFromFile("/productCatalog/products/importProduct.json");
+        String data = JsonHelper.getStringFromFile("/productCatalog/products/importProduct.json");
         String actionName = new JsonPath(data).get("Product.json.name");
         productsSteps.importProduct(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProduct.json");
         Assertions.assertTrue(productsSteps.isProductExist(actionName));

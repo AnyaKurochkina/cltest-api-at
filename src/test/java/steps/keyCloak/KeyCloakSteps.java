@@ -6,7 +6,6 @@ import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
 import models.authorizer.User;
-import models.keyCloak.Service;
 import models.keyCloak.ServiceAccountToken;
 import models.keyCloak.UserToken;
 

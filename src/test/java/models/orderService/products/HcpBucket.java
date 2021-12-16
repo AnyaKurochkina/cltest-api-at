@@ -2,6 +2,7 @@ package models.orderService.products;
 
 import core.helper.Configure;
 import core.helper.Http;
+import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
@@ -66,7 +67,7 @@ public class HcpBucket extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.net_segment", segment)
