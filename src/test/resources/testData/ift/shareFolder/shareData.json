@@ -1,0 +1,74 @@
+[
+  {
+    "objectClassName": "models.authorizer.Project",
+    "isDeleted": false,
+    "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
+    "id": "proj-ie2s5l0ycr",
+    "projectName": "PROJECT_TEST",
+    "prefix": "df8e9a1f-7bc2-4ada-9f92-005c1b5e59b3",
+    "projectEnvironment": {
+      "env": "IFT",
+      "envType": "TEST",
+      "id": "92f2acb2-aa33-4317-9352-dc1553e0097f"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "id": "sa_proj-ie2s5l0ycr-4d",
+    "secret": "3e747bdfd4c07dbde85e0bda902a0860",
+    "isDeleted": false,
+    "projectId": "proj-ie2s5l0ycr",
+    "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e64",
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.AccessGroup",
+    "name": "cloud-ifplux-test-acces-group",
+    "user": "",
+    "isDeleted": false,
+    "projectName": "proj-ie2s5l0ycr",
+    "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f576",
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "isDeleted": false,
+    "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
+    "id": "proj-xazpppulba",
+    "projectName": "PROJECT_DEV",
+    "prefix": "2636779e-2ddc-4446-8cc4-ae1a71a23cd1",
+    "projectEnvironment": {
+      "env": "DSO",
+      "envType": "DEV",
+      "id": "395a0a01-e83a-4ede-80a5-7354f2a8db39"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.AccessGroup",
+    "name": "cloud-d2plux-xazppulba",
+    "user": "",
+    "isDeleted": false,
+    "projectName": "proj-xazpppulba",
+    "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f575",
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "id": "sa_proj-xazpppulba-4c",
+    "secret": "fe59d63715acaef33cbbcda160619f3e",
+    "isDeleted": false,
+    "projectId": "proj-xazpppulba",
+    "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e63",
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.InformationSystem",
+    "objectUid": "cafa1b9d-5702-459a-bfff-7ee70df2651d",
+    "id": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "isForOrders": true
+  }
+]

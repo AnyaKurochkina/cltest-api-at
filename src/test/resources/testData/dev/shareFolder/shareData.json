@@ -1,0 +1,32 @@
+[
+  {
+    "objectClassName": "models.authorizer.Project",
+    "isDeleted": false,
+    "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "id": "proj-3d1jt57gm3",
+    "projectName": "DSO_AUTOTEST",
+    "isForOrders":true,
+    "env": "DSO"
+  },
+  {
+    "objectClassName": "models.authorizer.AccessGroup",
+    "name": "cloud-crux-proj-3d1jt57gm3",
+    "user": "",
+    "isDeleted": false,
+    "projectName": "proj-3d1jt57gm3",
+    "isForOrders":true
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "id": "sa_proj-3d1jt57gm3-ez",
+    "secret": "c83a5f3a35ec9bb29c0a409414fde2bf",
+    "isDeleted": false,
+    "projectId": "proj-3d1jt57gm3",
+    "isForOrders":true
+  },
+  {
+    "objectClassName": "models.authorizer.InformationSystem",
+    "id": "c9fd31c7-25a5-45ca-863c-18425d1ae927",
+    "isForOrders":true
+  }
+]

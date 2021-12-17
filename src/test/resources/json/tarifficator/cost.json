@@ -1,0 +1,42 @@
+{
+  "product_id": "c422069e-8f01-4328-b9dc-4a9e5dafd44e",
+  "project_name": "proj-0p1rtz9mq9",
+  "params": {
+    "domain": "corp.dev.vtb",
+    "flavor": {
+      "cpus": 1,
+      "name": "c1m1",
+      "uuid": "d46ef6b2-1d14-472b-990b-82a124de309c",
+      "memory": 1
+    },
+    "platform": "Nutanix",
+    "boot_disk": {
+      "size": 30
+    },
+    "extra_nics": [],
+    "on_support": false,
+    "os_version": "8.latest",
+    "data_center": "5",
+    "default_nic": {
+      "net_segment": "dev-srv-app"
+    },
+    "extra_mounts": [
+      {
+        "path": "/app",
+        "size": 10,
+        "file_system": "xfs"
+      }
+    ],
+    "ad_integration": true,
+    "ad_logon_grants": [
+      {
+        "role": "superuser",
+        "groups": [
+          "cloud-stcrux-dfg"
+        ]
+      }
+    ]
+  },
+  "count": 1,
+  "include": "price_info"
+}

@@ -1,0 +1,22 @@
+{
+  "order": {
+    "project_name": "proj-67nljbzjtt",
+    "product_id": "626ddc69-9fd3-4302-96c1-674a9429af10",
+    "attrs": {
+      "platform": "hcp",
+      "hard_quota": 10.24,
+      "versioning": {
+        "prune": false,
+        "enabled": false,
+        "pruneDays": 10
+      },
+      "bucket_name": "hcpbucket",
+      "data_center": "5",
+      "net_segment": "dev-srv-app",
+      "replication": false,
+      "service_plan": "Cold"
+    },
+    "count": 1,
+    "label": "HCP bucket"
+  }
+}

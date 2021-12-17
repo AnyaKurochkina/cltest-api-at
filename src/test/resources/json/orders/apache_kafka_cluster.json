@@ -1,0 +1,36 @@
+{
+  "order": {
+    "project_name": "proj-hnsmiuaqg2",
+    "product_id": "fe7dadab-1c48-4fb7-817b-88305ab4b3e6",
+    "attrs": {
+      "domain": "test.vtb.ru",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "platform": "vsphere",
+      "on_support": true,
+      "os_version": "7.9",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "test-srv-synt"
+      },
+      "cluster_name": "kafka-clust-0003",
+      "extra_mounts": [
+        {
+          "path": "/app",
+          "size": 25,
+          "file_system": "xfs"
+        }
+      ],
+      "kafka_version": "2.13-2.4.1",
+      "ad_integration": true,
+      "kafka_node_number": 1,
+      "kafka_log_retention_minutes": 30
+    },
+    "count": 1,
+    "label": "Apache Kafka Cluster"
+  }
+}

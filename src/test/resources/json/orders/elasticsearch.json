@@ -1,0 +1,64 @@
+{
+  "order": {
+    "project_name": "proj-frybyv41jh",
+    "product_id": "f7aec597-14d5-48c8-a4fe-25af4f19e5d5",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "platform": "OpenStack",
+      "boot_disk": {
+        "size": 30
+      },
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "8.4",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "flavor_data": {
+        "cpus": 4,
+        "name": "c4m8",
+        "uuid": "1498c9c9-5f20-4c1e-8d53-683bb8c2c205",
+        "memory": 8
+      },
+      "nodes_count": "1,2",
+      "cluster_name": "elastic1",
+      "flavor_master": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "ad_integration": true,
+      "admin_password": "YZazjckWJ257GwHbL3A",
+      "install_kibana": false,
+      "kibana_password": "xGeGr2DBbh0TqvwXtG",
+      "fluentd_password": "ro6tL6JqHSRnDGmxv7FIOCtPnl",
+      "data_extra_mounts": [
+        {
+          "path": "/app/",
+          "size": 100,
+          "file_system": "xfs"
+        }
+      ],
+      "master_extra_mounts": [
+        {
+          "path": "/app/",
+          "size": 100,
+          "file_system": "xfs"
+        }
+      ],
+      "elasticsearch_version": "7.9.2 + Exporter 1.1.0",
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-d5zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "Elasticsearch X-pack cluster"
+  }
+}

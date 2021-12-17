@@ -1,4 +1,0 @@
-include:
-  - project: 'vtb_cc_2_0/devops/libs_test'
-    ref: 'master'
-    file: 'sazan_core.yml'

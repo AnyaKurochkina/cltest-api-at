@@ -1,0 +1,25 @@
+{
+  "id": "",
+  "name": "TestAtProduct",
+  "title": "TestAtProduct",
+  "icon": "",
+  "description": "",
+  "category": "vm",
+  "graph_id": "9f52e51a-5972-4f60-bfcc-c8c7f0fef376",
+  "graph_version": "",
+  "graph_version_pattern": "",
+  "author": "AtTestAuthor",
+  "envs": [
+    "dev"
+  ],
+  "information_systems": [
+    "c9fd31c7-25a5-45ca-863c-18425d1ae927"
+  ],
+  "is_open": false,
+  "max_count": 1,
+  "version": "",
+  "allowed_groups": [],
+  "allowed_paths": [],
+  "restricted_groups": [],
+  "restricted_paths": []
+}
