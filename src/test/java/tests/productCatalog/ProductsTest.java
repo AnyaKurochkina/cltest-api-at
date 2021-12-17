@@ -117,7 +117,7 @@ public class ProductsTest extends Tests {
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
     @Test
     public void createProductWithInvalidCharacters() {
-        assertAll(
+        assertAll("Продукт создался с недопустимым именем",
                 () -> productsSteps.createProduct(productsSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
                 () -> productsSteps.createProduct(productsSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
                 () -> productsSteps.createProduct(productsSteps.createJsonObject("имя")).assertStatus(400),

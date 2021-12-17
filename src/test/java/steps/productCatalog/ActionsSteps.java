@@ -16,8 +16,6 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
-
 public class ActionsSteps {
 
     @SneakyThrows
@@ -104,13 +102,9 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Импорт действия")
     public void importAction(String pathName) {
-        given()
-                .contentType("multipart/form-data")
-                .multiPart("file", new File(pathName))
-                .when()
-                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/actions/obj_import/")
-                .then()
-                .statusCode(200);
+        new Http(Configure.ProductCatalogURL)
+                .multiPart("actions/obj_import/", "file", new File(pathName))
+                .assertStatus(200);
     }
 
     @SneakyThrows

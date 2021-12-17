@@ -1,8 +1,8 @@
 {
   "model_name": "Action",
   "Action": {
-    "id": 695,
-    "create_dt": "2021-12-03T13:26:25.991405",
+    "id": 917,
+    "create_dt": "2021-12-16T09:58:03.527857",
     "user": {
       "id": null,
       "is_staff": false,
@@ -11,11 +11,11 @@
       "is_superuser": false
     },
     "json": {
-      "id": "442045e1-c27b-49af-a4e4-53cfbf697ed5",
+      "id": "603fcfb1-cedc-42c7-a698-2743d907fea9",
       "icon": "",
-      "name": "test33",
+      "name": "import_action_test_api",
       "type": "",
-      "title": "ATtest333",
+      "title": "import_action_test_api",
       "graph_id": "7adbcad7-6184-4efc-9c63-d0ea7e0a551b",
       "event_type": [],
       "description": "",
@@ -37,11 +37,11 @@
       "available_without_money": false,
       "required_order_statuses": []
     },
-    "hash": "a913b4c3bac87ad93d1ac5c10eee5fd3",
+    "hash": "96f90cb08a5d2699165880b2f0c933d9",
     "version_arr": [
       1,
       0,
-      2
+      0
     ],
     "used_graph": {
       "graph": {
@@ -50,13 +50,13 @@
         "graph_version_pattern": ""
       },
       "object_info": {
-        "id": "442045e1-c27b-49af-a4e4-53cfbf697ed5",
-        "name": "test33",
+        "id": "603fcfb1-cedc-42c7-a698-2743d907fea9",
+        "name": "import_action_test_api",
         "type": "Action",
-        "version": "1.0.2"
+        "version": "1.0.0"
       }
     },
-    "action": "442045e1-c27b-49af-a4e4-53cfbf697ed5"
+    "action": "603fcfb1-cedc-42c7-a698-2743d907fea9"
   },
   "rel_foreign_models": {
     "graph": {
@@ -236,5 +236,5 @@
     }
   },
   "dump_version": 4.0,
-  "dump_date": "2021-12-03 15:42:25"
+  "dump_date": "2021-12-16 12:33:42"
 }

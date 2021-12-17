@@ -9,14 +9,11 @@ import httpModels.productCatalog.Service.getService.response.GetServiceResponse;
 import httpModels.productCatalog.Service.getServiceList.response.GetServiceListResponse;
 import httpModels.productCatalog.Service.getServiceList.response.ListItem;
 import io.qameta.allure.Step;
-import io.restassured.response.ValidatableResponse;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
-
-import static io.restassured.RestAssured.given;
 
 public class ServiceSteps {
 
@@ -95,13 +92,9 @@ public class ServiceSteps {
     @SneakyThrows
     @Step("Импорт сервиса")
     public void importService(String pathName) {
-        ValidatableResponse response = given()
-                .contentType("multipart/form-data")
-                .multiPart("file", new File(pathName))
-                .when()
-                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/services/obj_import/")
-                .then()
-                .statusCode(200);
+        new Http(Configure.ProductCatalogURL)
+                .multiPart("services/obj_import/", "file", new File(pathName))
+                .assertStatus(200);
     }
 
     @Step("Создание JSON объекта по сервисам")

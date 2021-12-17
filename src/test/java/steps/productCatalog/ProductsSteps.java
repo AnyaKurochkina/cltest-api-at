@@ -14,8 +14,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
-
 public class ProductsSteps {
 
     @SneakyThrows
@@ -60,7 +58,6 @@ public class ProductsSteps {
     @Step("Ипорт продукта")
     public void importProduct(String pathName) {
         new Http(Configure.ProductCatalogURL)
-                .setWithoutToken()
                 .multiPart("products/obj_import/", "file", new File(pathName))
                 .assertStatus(200);
     }
