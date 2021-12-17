@@ -47,7 +47,7 @@ public class BaseTariffPlanTest extends Tests {
                 () -> assertEquals(activeTariff.getId(), tariffPlan.getOldTariffPlanId()),
                 () -> assertEquals(TariffPlanStatus.draft, tariffPlan.getStatus()),
                 () -> assertEquals(activeTariff.getTariffClasses().size(), tariffPlan.getTariffClasses().size()),
-                () -> AssertUtils.AssertDate(new Date(), tariffPlan.getCreatedAt(), 300));
+                () -> AssertUtils.AssertDate(new Date(), tariffPlan.getCreatedAt(), 300, "Время создания ТП не соответствует текущему"));
     }
 
     @Test
@@ -128,8 +128,8 @@ public class BaseTariffPlanTest extends Tests {
         TariffPlan updatedTariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
         TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
 
-        Assertions.assertAll(
-                () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15),
+        Assertions.assertAll("Проверка полей активного и архивного ТП",
+                () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15, "Время архивации ТП не соответствует действительному"),
                 () -> assertEquals(TariffPlanStatus.active, updatedTariffPlan.getStatus(), "Тарифный план не перешел в статус активный"),
                 () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"));
     }

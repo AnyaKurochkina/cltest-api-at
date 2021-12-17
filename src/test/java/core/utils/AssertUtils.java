@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 public class AssertUtils {
 
-    public static void AssertDate(Date expected, Date actual, int deltaSec){
+    public static void AssertDate(Date expected, Date actual, int deltaSec, String message){
         long diff = TimeUnit.SECONDS.convert(Math.abs(expected.getTime() - actual.getTime()), TimeUnit.MILLISECONDS);
-        Assertions.assertTrue(diff <= deltaSec);
+        Assertions.assertTrue(diff <= deltaSec, message);
     }
 }
