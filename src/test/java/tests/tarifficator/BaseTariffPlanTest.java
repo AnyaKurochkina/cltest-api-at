@@ -132,8 +132,10 @@ public class BaseTariffPlanTest extends Tests {
         Waiting.sleep(15 * 60 * 1000);
         tariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
 
+        TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
+        AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15);
         assertEquals(TariffPlanStatus.active, tariffPlan.getStatus(), "Тарифный план не перешел в статус активный");
-        assertEquals(TariffPlanStatus.archived, tariffPlanSteps.getTariffPlan(activeTariff.getId()).getStatus(), "Тарифный план не перешел в статус архивный");
+        assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный");
     }
 
 }

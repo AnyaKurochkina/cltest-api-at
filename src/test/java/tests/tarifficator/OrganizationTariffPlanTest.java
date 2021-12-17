@@ -144,8 +144,10 @@ public class OrganizationTariffPlanTest extends Tests {
         Waiting.sleep(15 * 60 * 1000);
         tariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
 
+        TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
+        AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15);
         assertEquals(TariffPlanStatus.active, tariffPlan.getStatus(), "Тарифный план не перешел в статус активный");
-        assertEquals(TariffPlanStatus.archived, tariffPlanSteps.getTariffPlan(activeTariff.getId()).getStatus(), "Тарифный план не перешел в статус архивный");
+        assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный");
         assertEquals(tariffPlanId, orderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта изменился");
     }
 
@@ -160,20 +162,22 @@ public class OrganizationTariffPlanTest extends Tests {
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(false)
                 .status(TariffPlanStatus.draft)
-                .updateOrders(true)
                 .build()
                 .createObject();
         Organization organization = Organization.builder().build().createObject();
         TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[organization_name]=" + organization.getName() + "&f[status][]=active").get(0);
 
         tariffPlan.setStatus(TariffPlanStatus.planned);
+        tariffPlan.setUpdateOrders(true);
         tariffPlan.setBeginDate(date);
         tariffPlan = tariffPlanSteps.editTariffPlan(tariffPlan);
         Waiting.sleep(15 * 60 * 1000);
         tariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
 
+        TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
+        AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15);
         assertEquals(TariffPlanStatus.active, tariffPlan.getStatus(), "Тарифный план не перешел в статус активный");
-        assertEquals(TariffPlanStatus.archived, tariffPlanSteps.getTariffPlan(activeTariff.getId()).getStatus(), "Тарифный план не перешел в статус архивный");
+        assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный");
         assertNotEquals(tariffPlanId, orderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта не изменился");
     }
 }
