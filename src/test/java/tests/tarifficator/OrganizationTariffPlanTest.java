@@ -7,7 +7,6 @@ import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import io.qameta.allure.TmsLink;
 import models.authorizer.Organization;
 import models.orderService.products.Rhel;
 import models.tarifficator.TariffPlan;
@@ -42,7 +41,7 @@ public class OrganizationTariffPlanTest extends Tests {
     @DisplayName("Создание тарифного плана")
     public void createOrganizationTariffPlanFromActive() {
         Organization organization = Organization.builder().build().createObject();
-        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[status][]=active").get(0);
+        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=true&f[status][]=active").get(0);
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(false)
                 .oldTariffPlanId(activeTariff.getId())
@@ -57,22 +56,25 @@ public class OrganizationTariffPlanTest extends Tests {
                 () -> assertEquals(activeTariff.getId(), tariffPlan.getOldTariffPlanId()),
                 () -> assertEquals(TariffPlanStatus.draft, tariffPlan.getStatus()),
                 () -> assertEquals(activeTariff.getTariffClasses().size(), tariffPlan.getTariffClasses().size()),
-                () -> AssertUtils.AssertDate(new Date(), tariffPlan.getCreatedAt(), 300));
+                () -> AssertUtils.AssertDate(new Date(), tariffPlan.getCreatedAt(), 300, "Время создания ТП не соответствует текущему"));
     }
 
     @Test
     @Order(2)
     @DisplayName("Создание базового тарифного плана с существующим именем")
     void duplicateNameBaseTariffPlan() {
+        Organization organization = Organization.builder().build().createObject();
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(false)
                 .status(TariffPlanStatus.draft)
+                .organizationName(organization.getName())
                 .build()
                 .createObject();
         JSONObject object = TariffPlan.builder()
                 .title(tariffPlan.getTitle())
                 .base(false)
                 .oldTariffPlanId(tariffPlan.getOldTariffPlanId())
+                .organizationName(organization.getName())
                 .build()
                 .toJson();
         new Http(Configure.TarifficatorURL)
@@ -122,9 +124,9 @@ public class OrganizationTariffPlanTest extends Tests {
     @Order(5)
     @ParameterizedTest(name = "Активация и Архивация (без update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    public void activateTariffPlanWithoutUpdateOrders(Rhel rhel) {
+    public void activateTariffPlanWithoutUpdateOrders(Rhel product) {
         String tariffPlanIdPath = "attrs.tariff_plan_id";
-        rhel.createObject();
+        Rhel rhel = product.createObject();
         String tariffPlanId = ((String) orderServiceSteps.getProductsField(rhel, tariffPlanIdPath));
         Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
         TariffPlan tariffPlan = TariffPlan.builder()
@@ -132,25 +134,29 @@ public class OrganizationTariffPlanTest extends Tests {
                 .status(TariffPlanStatus.draft)
                 .build()
                 .createObject();
-        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[status][]=active").get(0);
+        Organization organization = Organization.builder().build().createObject();
+        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[organization_name]=" + organization.getName() + "&f[status][]=active").get(0);
 
         tariffPlan.setStatus(TariffPlanStatus.planned);
         tariffPlan.setBeginDate(date);
         tariffPlan = tariffPlanSteps.editTariffPlan(tariffPlan);
         Waiting.sleep(15 * 60 * 1000);
-        tariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
+        TariffPlan updatedTariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
+        TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
 
-        assertEquals(TariffPlanStatus.active, tariffPlan.getStatus(), "Тарифный план не перешел в статус активный");
-        assertEquals(TariffPlanStatus.archived, tariffPlanSteps.getTariffPlan(activeTariff.getId()).getStatus(), "Тарифный план не перешел в статус архивный");
-        assertEquals(tariffPlanId, orderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта изменился");
+        Assertions.assertAll("Проверка полей активного и архивного ТП",
+                () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15, "Время архивации ТП не соответствует действительному"),
+                () -> assertEquals(TariffPlanStatus.active, updatedTariffPlan.getStatus(), "Тарифный план не перешел в статус активный"),
+                () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"),
+                () -> assertEquals(tariffPlanId, orderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта изменился"));
     }
 
     @Order(6)
     @ParameterizedTest(name = "Активация и Архивация (с update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    public void activateTariffPlanWithUpdateOrders(Rhel rhel) {
+    public void activateTariffPlanWithUpdateOrders(Rhel product) {
         String tariffPlanIdPath = "attrs.tariff_plan_id";
-        rhel.createObject();
+        Rhel rhel = product.createObject();
         String tariffPlanId = ((String) orderServiceSteps.getProductsField(rhel, tariffPlanIdPath));
         Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
         TariffPlan tariffPlan = TariffPlan.builder()
@@ -158,16 +164,21 @@ public class OrganizationTariffPlanTest extends Tests {
                 .status(TariffPlanStatus.draft)
                 .build()
                 .createObject();
-        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[status][]=active").get(0);
+        Organization organization = Organization.builder().build().createObject();
+        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[organization_name]=" + organization.getName() + "&f[status][]=active").get(0);
 
         tariffPlan.setStatus(TariffPlanStatus.planned);
+        tariffPlan.setUpdateOrders(true);
         tariffPlan.setBeginDate(date);
         tariffPlan = tariffPlanSteps.editTariffPlan(tariffPlan);
         Waiting.sleep(15 * 60 * 1000);
-        tariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
+        TariffPlan updatedTariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
+        TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
 
-        assertEquals(TariffPlanStatus.active, tariffPlan.getStatus(), "Тарифный план не перешел в статус активный");
-        assertEquals(TariffPlanStatus.archived, tariffPlanSteps.getTariffPlan(activeTariff.getId()).getStatus(), "Тарифный план не перешел в статус архивный");
-        assertNotEquals(tariffPlanId, orderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта не изменился");
+        Assertions.assertAll("Проверка полей активного и архивного ТП",
+                () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15, "Время архивации ТП не соответствует действительному"),
+                () -> assertEquals(TariffPlanStatus.active, updatedTariffPlan.getStatus(), "Тарифный план не перешел в статус активный"),
+                () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"),
+                () -> assertNotEquals(tariffPlanId, orderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта не изменился"));
     }
 }

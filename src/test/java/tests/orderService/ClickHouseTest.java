@@ -24,6 +24,7 @@ public class ClickHouseTest extends Tests {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(ClickHouse product) {
@@ -33,6 +34,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(ClickHouse product) {
@@ -41,6 +43,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(ClickHouse product) {
@@ -50,6 +53,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(ClickHouse product) {
@@ -60,6 +64,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(ClickHouse product) {
@@ -70,6 +75,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(ClickHouse product) {
@@ -79,6 +85,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(ClickHouse product) {
@@ -88,6 +95,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(ClickHouse product) {
@@ -98,6 +106,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(ClickHouse product) {
@@ -108,6 +117,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(ClickHouse product) {

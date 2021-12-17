@@ -54,7 +54,7 @@ public class Windows extends IProduct {
             { "microsoft_sql_server", "sq" },
             { "frontend_web_service", "we" },
             { "mock_server", "mk" },
-            { "rep_point", "rp" },
+            { "reporting_point", "rp" },
             { "security_tools", "se" },
             { "autotest_scripts", "as" },
             { "proxy_server", "px" },

@@ -7,17 +7,12 @@ import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.products.Rhel;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
 import org.json.JSONObject;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.params.ParameterizedTest;
-import steps.orderService.OrderServiceSteps;
 import steps.tarifficator.TariffPlanSteps;
 import tests.Tests;
 
@@ -52,7 +47,7 @@ public class BaseTariffPlanTest extends Tests {
                 () -> assertEquals(activeTariff.getId(), tariffPlan.getOldTariffPlanId()),
                 () -> assertEquals(TariffPlanStatus.draft, tariffPlan.getStatus()),
                 () -> assertEquals(activeTariff.getTariffClasses().size(), tariffPlan.getTariffClasses().size()),
-                () -> AssertUtils.AssertDate(new Date(), tariffPlan.getCreatedAt(), 300));
+                () -> AssertUtils.AssertDate(new Date(), tariffPlan.getCreatedAt(), 300, "Время создания ТП не соответствует текущему"));
     }
 
     @Test
@@ -130,10 +125,13 @@ public class BaseTariffPlanTest extends Tests {
         tariffPlan.setBeginDate(date);
         tariffPlan = tariffPlanSteps.editTariffPlan(tariffPlan);
         Waiting.sleep(15 * 60 * 1000);
-        tariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
+        TariffPlan updatedTariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
+        TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
 
-        assertEquals(TariffPlanStatus.active, tariffPlan.getStatus(), "Тарифный план не перешел в статус активный");
-        assertEquals(TariffPlanStatus.archived, tariffPlanSteps.getTariffPlan(activeTariff.getId()).getStatus(), "Тарифный план не перешел в статус архивный");
+        Assertions.assertAll("Проверка полей активного и архивного ТП",
+                () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15, "Время архивации ТП не соответствует действительному"),
+                () -> assertEquals(TariffPlanStatus.active, updatedTariffPlan.getStatus(), "Тарифный план не перешел в статус активный"),
+                () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"));
     }
 
 }

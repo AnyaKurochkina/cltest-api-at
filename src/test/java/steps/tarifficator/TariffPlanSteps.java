@@ -91,6 +91,7 @@ public class TariffPlanSteps extends Steps {
                 .patch("tariff_plans/{}", tariffPlan.getId())
                 .assertStatus(200)
                 .toString();
+        tariffPlan.save();
         return deserialize(object);
     }
 

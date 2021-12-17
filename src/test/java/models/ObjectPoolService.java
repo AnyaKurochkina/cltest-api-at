@@ -225,7 +225,10 @@ public class ObjectPoolService {
             if (field.get(entity) != null) {
                 Parameter parameter = new Parameter();
                 parameter.setName(field.getName());
-                parameter.setValue(field.get(entity).toString());
+                if(field.getName().equals("password"))
+                    parameter.setValue("<password>");
+                else
+                    parameter.setValue(field.get(entity).toString());
                 list.add(parameter);
             }
         }

@@ -24,6 +24,7 @@ public class ElasticsearchTest extends Tests {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Elasticsearch product) {
@@ -33,6 +34,7 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(Elasticsearch product) {
@@ -44,6 +46,7 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Elasticsearch product) {
@@ -53,6 +56,7 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Elasticsearch product) {
@@ -62,6 +66,7 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Elasticsearch product) {
@@ -75,6 +80,7 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить по питанию {0}")
     void restart(Elasticsearch product) {

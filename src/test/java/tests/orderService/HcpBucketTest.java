@@ -1,8 +1,10 @@
 package tests.orderService;
 
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
+import models.orderService.products.Elasticsearch;
 import models.orderService.products.HcpBucket;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -23,6 +25,7 @@ public class HcpBucketTest extends Tests {
         try (HcpBucket hcpBucket = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Измененить параметры версионирования {0}")
     void changeBucketVersioning(HcpBucket product) {
@@ -32,12 +35,22 @@ public class HcpBucketTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Измененить конфигурацию бакета {0}")
     void changeBucketConfig(HcpBucket product) {
         try (HcpBucket hcpBucket = product.createObjectExclusiveAccess()) {
             hcpBucket.checkPreconditionStatusProduct(ProductStatus.CREATED);
             hcpBucket.changeBucketConfig();
+        }
+    }
+
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Удалить {0}")
+    @MarkDelete
+    void delete(HcpBucket product) {
+        try (HcpBucket bucket = product.createObjectExclusiveAccess()) {
+            bucket.deleteObject();
         }
     }
 }
