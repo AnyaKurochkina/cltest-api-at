@@ -8,7 +8,6 @@ import httpModels.productCatalog.Action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.Action.patchAction.response.PatchActionResponse;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
-import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ActionsSteps;
 import tests.Tests;
@@ -129,37 +128,16 @@ public class ActionsTest extends Tests {
     }
 
     @Order(13)
-    @DisplayName("Негативный тест на создание действия с именем содержащее латинскую букву в верхнем регистре")
+    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
     @Test
-    public void createActionWithEngWordInUppercase() {
-        JSONObject nameWithUppercase = actionsSteps.createJsonObject("NameWithUppercase");
-        actionsSteps.createAction(nameWithUppercase).assertStatus(400);
-    }
-
-    @Order(14)
-    @DisplayName("Негативный тест на создание действия с именем содержащее латинскую букву в верхнем регистре в середине имени")
-    @Test
-    public void createActionWithEngWordInUppercaseInMiddle() {
-        String objectName = "nameWithUppercaseInMiddle";
-        JSONObject nameWithUppercaseInMiddle = actionsSteps.createJsonObject(objectName);
-        actionsSteps.createAction(nameWithUppercaseInMiddle).assertStatus(400);
-    }
-
-    @Order(15)
-    @DisplayName("Негативный тест на создание действия с именем на русском языке в нижнем регистре")
-    @Test
-    public void createActionWithRusWordInLowCase() {
-        String objectName = "имя";
-        JSONObject nameWithRusWordInLowCase = actionsSteps.createJsonObject(objectName);
-        actionsSteps.createAction(nameWithRusWordInLowCase).assertStatus(400);
-    }
-
-    @Order(16)
-    @DisplayName("Негативный тест на создание действия с именем нарусском языке с буквой в верхнем регистре")
-    @Test
-    public void createActionWithRusWordInUppercase() {
-        JSONObject nameWithRusWordInUppercase = actionsSteps.createJsonObject("Имя");
-        actionsSteps.createAction(nameWithRusWordInUppercase).assertStatus(400);
+    public void createActionWithInvalidCharacters() {
+        assertAll(
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("имя")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("a&b&c")).assertStatus(400)
+        );
     }
 
     @Order(17)

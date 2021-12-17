@@ -92,6 +92,9 @@ public class ListItem{
 	@JsonProperty("allowed_groups")
 	private List<Object> allowedGroups;
 
+	@JsonProperty("graph_version_calculated")
+	private String graphVersionCalculated;
+
 	@JsonProperty("data_config_fields")
 	private List<Object> dataConfigFields;
 

@@ -97,4 +97,7 @@ public class PatchActionResponse{
 
 	@JsonProperty("required_order_statuses")
 	private List<Object> requiredOrderStatuses;
+
+	@JsonProperty("graph_version_calculated")
+	private String graphVersionCalculated;
 }

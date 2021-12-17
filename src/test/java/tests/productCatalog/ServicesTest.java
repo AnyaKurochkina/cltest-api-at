@@ -12,6 +12,8 @@ import org.junit.jupiter.api.*;
 import steps.productCatalog.ServiceSteps;
 import tests.Tests;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -44,18 +46,16 @@ public class ServicesTest extends Tests {
     @Test
     public void checkServiceExists() {
         Assertions.assertTrue(serviceSteps.isServiceExist(service.getServiceName()));
-        Assertions.assertFalse(serviceSteps.isServiceExist("NotExistName"));
+        Assertions.assertFalse(serviceSteps.isServiceExist("not_exist_name"));
     }
 
     @Order(4)
     @DisplayName("Импорт сервиса")
     @Test
     public void importService() {
-        System.out.println(serviceSteps.getServicesList().size());
-        String data = JsonHelper.getStringFromFile("/productCatalog/services/importService.json");
+        String data =JsonHelper.getStringFromFile("/productCatalog/services/importService.json");
         String serviceName = new JsonPath(data).get("Service.json.name");
         serviceSteps.importService(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
-        System.out.println(serviceSteps.getServicesList().size());
         Assertions.assertTrue(serviceSteps.isServiceExist(serviceName));
         serviceSteps.deleteServiceById(serviceSteps.getServiceIdByName(serviceName));
         Assertions.assertFalse(serviceSteps.isServiceExist(serviceName));
@@ -99,6 +99,19 @@ public class ServicesTest extends Tests {
     public void getKeyGraphVersionCalculatedInResponse() {
         GetServiceResponse getServiceResponse = serviceSteps.getServiceById(service.getServiceId());
         Assertions.assertNotNull(getServiceResponse.getGraphVersionCalculated());
+    }
+
+    @Order(10)
+    @DisplayName("Негативный тест на создание сервиса с недопустимыми символами в имени.")
+    @Test
+    public void createServiceWithInvalidCharacters() {
+        assertAll(
+                () -> serviceSteps.createService(serviceSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> serviceSteps.createService(serviceSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> serviceSteps.createService(serviceSteps.createJsonObject("имя")).assertStatus(400),
+                () -> serviceSteps.createService(serviceSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> serviceSteps.createService(serviceSteps.createJsonObject("a&b&c")).assertStatus(400)
+        );
     }
 
     @Order(100)

@@ -12,6 +12,8 @@ import org.junit.jupiter.api.*;
 import steps.productCatalog.OrgDirectionSteps;
 import tests.Tests;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Продуктовый каталог: направления")
@@ -25,7 +27,7 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void createOrgDirection() {
         orgDirection = OrgDirection.builder()
-                .orgDirectionName("org_direction_at_test")
+                .orgDirectionName("org_direction_at_test2021")
                 .build()
                 .createObject();
     }
@@ -53,7 +55,8 @@ public class OrgDirectionTest extends Tests {
         String orgDirectionName = new JsonPath(data).get("OrgDirection.name");
         orgSteps.importOrgDirection(Configure.RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirection.json");
         Assertions.assertTrue(orgSteps.isProductExists(orgDirectionName));
-// добавить шаг на удаление по имени.
+        orgSteps.deleteOrgDirectionByName(orgDirectionName);
+        Assertions.assertFalse(orgSteps.isProductExists(orgDirectionName));
     }
 
     @Order(5)
@@ -82,14 +85,28 @@ public class OrgDirectionTest extends Tests {
         String cloneName = orgDirection.getOrgDirectionName() + "-clone";
         orgSteps.copyOrgDirectionById(orgDirection.getOrgDirectionId());
         Assertions.assertTrue(orgSteps.isProductExists(cloneName));
-     //добавить шаг на удаление копии.
+        orgSteps.deleteOrgDirectionByName(cloneName);
+        Assertions.assertFalse(orgSteps.isProductExists(cloneName));
     }
 
     @Order(8)
     @DisplayName("Экспорт направления по Id")
     @Test
     public void exportOrgDirectionById() {
-    orgSteps.exportOrgDirectionById(orgDirection.getOrgDirectionId());
+        orgSteps.exportOrgDirectionById(orgDirection.getOrgDirectionId());
+    }
+
+    @Order(9)
+    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
+    @Test
+    public void createActionWithInvalidCharacters() {
+        assertAll(
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("имя")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("a&b&c")).assertStatus(400)
+        );
     }
 
     @Order(100)

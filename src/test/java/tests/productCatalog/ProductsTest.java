@@ -13,6 +13,8 @@ import tests.Tests;
 
 import java.util.Collections;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Продуктовый каталог: продукты")
@@ -20,7 +22,6 @@ public class ProductsTest extends Tests {
 
     Product product;
     ProductsSteps productsSteps = new ProductsSteps();
-
 
     @Order(1)
     @DisplayName("Создание продукта в продуктовом каталоге")
@@ -46,7 +47,7 @@ public class ProductsTest extends Tests {
     @Test
     public void checkProductExists() {
         Assertions.assertTrue(productsSteps.isProductExist(product.getProductName()));
-        Assertions.assertFalse(productsSteps.isProductExist("NotExistName"));
+        Assertions.assertFalse(productsSteps.isProductExist("not_exists_name"));
     }
 
     @Order(4)
@@ -87,11 +88,42 @@ public class ProductsTest extends Tests {
         Assertions.assertNotNull(getProductResponse.getGraphVersionCalculated());
     }
 
+    @Order(8)
+    @DisplayName("Копирование продукта по Id")
+    @Test
+    public void copyProductById() {
+        String cloneName = product.getProductName() + "-clone";
+        productsSteps.copyProductById(product.getProductId());
+        Assertions.assertTrue(productsSteps.isProductExist(cloneName));
+        productsSteps.deleteProductByName(cloneName);
+        Assertions.assertFalse(productsSteps.isProductExist(cloneName));
+    }
+
     @Order(10)
     @DisplayName("Обновление продукта")
     @Test
     public void updateProduct() {
         product.updateProduct();
+    }
+
+    @Order(12)
+    @DisplayName("Негативный тест на создание продукта с существующим именем")
+    @Test
+    public void createProductWithSameName() {
+        productsSteps.createProduct(productsSteps.createJsonObject(product.getProductName())).assertStatus(400);
+    }
+
+    @Order(13)
+    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
+    @Test
+    public void createProductWithInvalidCharacters() {
+        assertAll(
+                () -> productsSteps.createProduct(productsSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> productsSteps.createProduct(productsSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> productsSteps.createProduct(productsSteps.createJsonObject("имя")).assertStatus(400),
+                () -> productsSteps.createProduct(productsSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> productsSteps.createProduct(productsSteps.createJsonObject("a&b&c")).assertStatus(400)
+        );
     }
 
     @Order(100)

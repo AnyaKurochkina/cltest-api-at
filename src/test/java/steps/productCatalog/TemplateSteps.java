@@ -9,6 +9,7 @@ import httpModels.productCatalog.Template.getListTemplate.response.ListItem;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class TemplateSteps {
     @Step("Получение списка шиблонов")
     public List<ListItem> getTemplateList() {
         String object = new Http(Configure.ProductCatalogURL)
-                
+
                 .get("templates/")
                 .assertStatus(200).toString();
         GetTemplateListResponse getTemplateListResponse = convertResponseOnClass(object, GetTemplateListResponse.class);
@@ -31,7 +32,7 @@ public class TemplateSteps {
     @Step("Проверка на существование шаблона по имени")
     public boolean isExist(String name) {
         String object = new Http(Configure.ProductCatalogURL)
-                
+
                 .get("templates/exists/?name=" + name)
                 .assertStatus(200)
                 .toString();
@@ -42,7 +43,7 @@ public class TemplateSteps {
     @Step("Получение шаблона по Id")
     public void getTemplateById(Integer id) {
         new Http(Configure.ProductCatalogURL)
-                
+
                 .setWithoutToken()
                 .get("templates/" + id + "/")
                 .assertStatus(200);
@@ -51,7 +52,7 @@ public class TemplateSteps {
     @Step("Копирование шаблона по ID")
     public void copyTemplateById(Integer id) {
         new Http(Configure.ProductCatalogURL)
-                
+
                 .setWithoutToken()
                 .post("templates/" + id + "/copy/")
                 .assertStatus(200);
@@ -61,7 +62,7 @@ public class TemplateSteps {
     public void deleteTemplateByName(String name) {
         Integer id = getTemplateIdByNameMultiSearch(name);
         new Http(Configure.ProductCatalogURL)
-                
+
                 .setWithoutToken()
                 .delete("templates/" + id + "/")
                 .assertStatus(204);
@@ -70,7 +71,7 @@ public class TemplateSteps {
     @Step("Обновление параметра color у шаблона.")
     public void updateTemplateById(String color, String name, Integer id) {
         new Http(Configure.ProductCatalogURL)
-                
+
                 .setWithoutToken()
                 .body(JsonHelper
                         .getJsonTemplate("productCatalog/templates/createTemplate.json")
@@ -83,7 +84,7 @@ public class TemplateSteps {
     @Step("Получение ID шаблона по его имени: {templateName} с использованием multiSearch")
     public Integer getTemplateIdByNameMultiSearch(String templateName) {
         GetTemplateListResponse response = new Http(Configure.ProductCatalogURL)
-                
+
                 .setWithoutToken()
                 .get("templates/?multisearch=" + templateName)
                 .assertStatus(200)
@@ -95,5 +96,21 @@ public class TemplateSteps {
         } else {
             return response.getList().get(0).getId();
         }
+    }
+
+    @Step("Создание JSON объекта по шаблонам")
+    public JSONObject createJsonObject(String name) {
+        return JsonHelper
+                .getJsonTemplate("productCatalog/templates/createTemplate.json")
+                .set("$.name", name)
+                .build();
+    }
+
+    @SneakyThrows
+    @Step("Создание шаблона")
+    public Http.Response createProduct(JSONObject body) {
+        return new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .post("templates/");
     }
 }

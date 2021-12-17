@@ -1,11 +1,21 @@
 package tests.productCatalog;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.helper.MarkDelete;
+import core.helper.StringUtils;
+import httpModels.productCatalog.Action.createAction.response.CreateActionResponse;
+import httpModels.productCatalog.Graphs.createGraph.response.CreateGraphResponse;
+import httpModels.productCatalog.Graphs.deleteGraph.response.DeleteGraphResponse;
 import httpModels.productCatalog.Graphs.getGraph.response.GetGraphResponse;
-import io.restassured.path.json.JsonPath;
+import httpModels.productCatalog.Product.createProduct.response.CreateProductResponse;
+import httpModels.productCatalog.Service.createService.response.CreateServiceResponse;
+import models.productCatalog.Graph;
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
+import steps.productCatalog.ActionsSteps;
 import steps.productCatalog.GraphSteps;
+import steps.productCatalog.ProductsSteps;
+import steps.productCatalog.ServiceSteps;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -13,12 +23,17 @@ import steps.productCatalog.GraphSteps;
 public class GraphTest {
 
     GraphSteps graphSteps = new GraphSteps();
+    ProductsSteps productsSteps = new ProductsSteps();
+    ActionsSteps actionsSteps = new ActionsSteps();
+    ServiceSteps serviceSteps = new ServiceSteps();
+
+    Graph graph;
 
     @Order(1)
     @DisplayName("Создание графа")
     @Test
     public void createGraph() {
-        graphSteps.createGraph("AtTestGraph");
+        graph = Graph.builder().name("at_test_graph_api").build().createObject();
     }
 
     @Order(2)
@@ -32,46 +47,106 @@ public class GraphTest {
     @DisplayName("Проверка существования графа по имени")
     @Test
     public void checkGraphExists() {
-        Assertions.assertTrue(graphSteps.isExist("AtTestGraph"));
+        Assertions.assertTrue(graphSteps.isExist(graph.getName()));
         Assertions.assertFalse(graphSteps.isExist("NoExistsAction"));
     }
 
-    @Order(4)
-    @DisplayName("Импорт графа")
-    @Test
-    public void importGraph() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importGraph.json");
-        String graphName = new JsonPath(data).get("Action.json.name");
-        graphSteps.importGraph(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importGraph.json");
-        Assertions.assertTrue(graphSteps.isExist(graphName));
-        //   graphSteps.deleteActionByName(actionName);
-     //   Assertions.assertFalse(graphSteps.isExist(graphName));
-    }
+//    @Order(4)
+//    @DisplayName("Импорт графа")
+//    @Test
+//    public void importGraph() {
+//        String data = new JsonHelper().getStringFromFile("/productCatalog/graphs/importGraph.json");
+//        String graphName = new JsonPath(data).get("Graphs.json.name");
+//        graphSteps.importGraph(Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json");
+//        Assertions.assertTrue(graphSteps.isExist(graphName));
+//        //   graphSteps.deleteActionByName(actionName);
+//     //   Assertions.assertFalse(graphSteps.isExist(graphName));
+//    }
 
     @Order(5)
     @DisplayName("Получение графа по Id")
     @Test
     public void getGraphById() {
-        GetGraphResponse graphById = graphSteps.getGraphById("7adbcad7-6184-4efc-9c63-d0ea7e0a551b");
-        Assertions.assertEquals("AtTestGraph", graphById.getName());
+        GetGraphResponse graphById = graphSteps.getGraphById(graph.getGraphId());
+        Assertions.assertEquals(graph.getName(), graphById.getName());
     }
 
     @Order(6)
     @DisplayName("Копирование графа по Id")
     @Test
     public void copyActionById() {
-        String cloneName = "AtTestGraph-clone";
-        graphSteps.copyGraphById("7adbcad7-6184-4efc-9c63-d0ea7e0a551b");
+        String cloneName = graph.getName() + "-clone";
+        graphSteps.copyGraphById(graph.getGraphId());
         Assertions.assertTrue(graphSteps.isExist(cloneName));
+        graphSteps.deleteGraphByName(cloneName);
+        Assertions.assertFalse(graphSteps.isExist(cloneName));
     }
 
     @Order(7)
     @DisplayName("Частичное обновление графа по Id")
     @Test
     public void partialUpdateGraph() {
-        String expectedValue = "UpdateDescription";
-        graphSteps.partialUpdateGraphById("38926af8-c30a-46c0-bb0c-907852dd6ed0", "description", expectedValue);
-        String actual = graphSteps.getGraphById("38926af8-c30a-46c0-bb0c-907852dd6ed0").getDescription();
-        Assertions.assertEquals(expectedValue, actual);
+        String expectedDescription = "UpdateDescription";
+        String oldGraphVersion = graph.getVersion();
+        graphSteps.partialUpdateGraphById(graph.getGraphId(), new JSONObject().put("description", expectedDescription));
+        GetGraphResponse getGraphResponse = graphSteps.getGraphById(graph.getGraphId());
+        String actualDescription = getGraphResponse.getDescription();
+        String newGraphVersion = getGraphResponse.getVersion();
+        Assertions.assertEquals(expectedDescription, actualDescription);
+        Assertions.assertNotEquals(oldGraphVersion, newGraphVersion);
+    }
+
+    @Order(12)
+    @DisplayName("Негативный тест на создание графа с существующим именем")
+    @Test
+    public void createGraphWithSameName() {
+        graphSteps.createGraphResponse(graphSteps.createJsonObject(graph.getName())).assertStatus(400);
+    }
+
+    @Order(99)
+    @Test
+    @DisplayName("Попытка удаления графа используемого в продукте, действии и сервисе")
+    public void deleteUsedGraph() {
+        CreateGraphResponse mainGraph = graphSteps.createGraph(graphSteps.createJsonObject("mainGraph"));
+        String mainGraphId = mainGraph.getId();
+        CreateGraphResponse secondGraph = graphSteps.createGraph(graphSteps.createJsonObject("secondGraph"));
+        String secondGraphId= secondGraph.getId();
+        graphSteps.partialUpdateGraphById(mainGraphId, new JSONObject().put("description", "updateVersion2.0")
+                .put("version", "2.0.0"));
+        graphSteps.partialUpdateGraphById(mainGraphId, new JSONObject().put("description", "updateVersion3.0")
+                .put("version", "3.0.0"));
+        CreateProductResponse createProductResponse = productsSteps.createProduct(JsonHelper.getJsonTemplate("productCatalog/products/createProduct.json")
+                .set("name", "product_for_graph_test_api")
+                .set("graph_id", mainGraphId)
+                .build()).extractAs(CreateProductResponse.class);
+        CreateServiceResponse createServiceResponse = serviceSteps.createService(JsonHelper.getJsonTemplate("productCatalog/services/createServices.json")
+                .set("name", "service_for_graph_test_api")
+                .set("graph_id", mainGraphId)
+                .build()).extractAs(CreateServiceResponse.class);
+        CreateActionResponse createActionResponse = actionsSteps.createAction(JsonHelper.getJsonTemplate("productCatalog/actions/createAction.json")
+                .set("name", "action_for_graph_test_api")
+                .set("graph_id", mainGraphId)
+                .build()).extractAs(CreateActionResponse.class);
+        String deleteResponse = graphSteps.deleteGraphResponse(mainGraphId)
+                .assertStatus(400)
+                .extractAs(DeleteGraphResponse.class)
+                .getErr();
+        String version = StringUtils.findByRegex("version: ([0-9.]+)\\)", deleteResponse);
+        Assertions.assertEquals("1.0.0", version);
+        productsSteps.deleteProductById(createProductResponse.getId());
+        serviceSteps.deleteServiceById(createServiceResponse.getId());
+        actionsSteps.deleteActionById(createActionResponse.getId());
+        graphSteps.deleteGraphResponse(mainGraphId);
+        graphSteps.deleteGraphResponse(secondGraphId);
+    }
+
+    @Order(100)
+    @Test
+    @DisplayName("Удаление графа")
+    @MarkDelete
+    public void deleteAction() {
+        try (Graph graph = Graph.builder().name("at_test_graph_api").build().createObjectExclusiveAccess()) {
+            graph.deleteObject();
+        }
     }
 }

@@ -3,6 +3,7 @@ package steps.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
+import httpModels.productCatalog.Graphs.createGraph.response.CreateGraphResponse;
 import httpModels.productCatalog.Graphs.existsGraphs.response.ExistsGraphsResponse;
 import httpModels.productCatalog.Graphs.getGraph.response.GetGraphResponse;
 import httpModels.productCatalog.Graphs.getGraphsList.response.GetGraphsListResponse;
@@ -20,25 +21,9 @@ import static io.restassured.RestAssured.given;
 
 public class GraphSteps {
 
-    private JSONObject toJson(String pathToJsonBody, String graphName) {
-        return JsonHelper.getJsonTemplate(pathToJsonBody)
-                .set("$.name", graphName)
-                .build();
-    }
-
-    public void createGraph(String graphName) {
-        String object = new Http(Configure.ProductCatalogURL)
-                
-                .body(toJson("/productCatalog/graphs/createGraph.json", graphName))
-                .post("graphs/?save_as_next_version=true")
-                .assertStatus(201)
-                .toString();
-    }
-
     public String getGraphId(String graphName) {
         String graphId = null;
         GetGraphsListResponse response = new Http(Configure.ProductCatalogURL)
-                
                 .get("graphs/?include=total_count&page=1&per_page=10")
                 .assertStatus(200)
                 .extractAs(GetGraphsListResponse.class);
@@ -55,7 +40,6 @@ public class GraphSteps {
     @Step("Получение списка графов")
     public List<ListItem> getGraphsList() {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("graphs/")
                 .assertStatus(200).extractAs(GetGraphsListResponse.class).getList();
     }
@@ -64,7 +48,6 @@ public class GraphSteps {
     @Step("Проверка существования графа по имени")
     public boolean isExist(String name) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("graphs/exists/?name=" + name)
                 .assertStatus(200)
                 .extractAs(ExistsGraphsResponse.class)
@@ -86,7 +69,6 @@ public class GraphSteps {
     @Step("Получение графа по Id")
     public GetGraphResponse getGraphById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("graphs/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetGraphResponse.class);
@@ -96,17 +78,62 @@ public class GraphSteps {
     @Step("Копирование графа по Id")
     public void copyGraphById(String id) {
         new Http(Configure.ProductCatalogURL)
-                
                 .post("graphs/" + id + "/copy/")
                 .assertStatus(200);
     }
 
     @SneakyThrows
     @Step("Частичное обновление графа по Id")
-    public void partialUpdateGraphById(String id, String key, String value) {
+    public void partialUpdateGraphById(String id, JSONObject object) {
         new Http(Configure.ProductCatalogURL)
-                .body(new JSONObject().put(key, value))
+                .body(object)
                 .patch("graphs/" + id + "/")
                 .assertStatus(200);
+    }
+
+    @Step("Создание JSON объекта по графам")
+    public JSONObject createJsonObject(String name) {
+        return   JsonHelper
+                .getJsonTemplate("productCatalog/graphs/createGraph.json")
+                .set("$.name", name)
+                .build();
+    }
+
+    @SneakyThrows
+    @Step("Создание графа")
+    public CreateGraphResponse createGraph(JSONObject body) {
+        return new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .post("graphs/")
+                .assertStatus(201)
+                .extractAs(CreateGraphResponse.class);
+    }
+
+    @SneakyThrows
+    @Step("Создание графа")
+    public Http.Response createGraphResponse(JSONObject body) {
+        return new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .post("graphs/");
+    }
+
+    @SneakyThrows
+    @Step("Удаление графа")
+    public void deleteGraph(String id) {
+        new Http(Configure.ProductCatalogURL)
+                .delete("graphs/" + id + "/")
+                .assertStatus(200);
+    }
+
+    @SneakyThrows
+    @Step("Удаление графа")
+    public Http.Response deleteGraphResponse(String id) {
+        return new Http(Configure.ProductCatalogURL)
+                .delete("graphs/" + id + "/");
+    }
+
+    @Step("Удаление графа по имени")
+    public void deleteGraphByName(String name) {
+        deleteGraph(getGraphId(name));
     }
 }

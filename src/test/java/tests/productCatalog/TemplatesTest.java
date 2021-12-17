@@ -7,6 +7,8 @@ import org.junit.jupiter.api.*;
 import steps.productCatalog.TemplateSteps;
 import tests.Tests;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Продуктовый каталог: шаблоны")
@@ -60,6 +62,26 @@ public class TemplatesTest extends Tests {
     @Test
     public void updateTemplateById() {
         templateSteps.updateTemplateById("Black", template.getTemplateName(), template.getTemplateId());
+    }
+
+    @Order(12)
+    @DisplayName("Негативный тест на создание действия с существующим именем")
+    @Test
+    public void createActionWithSameName() {
+        templateSteps.createProduct(templateSteps.createJsonObject(template.getTemplateName())).assertStatus(400);
+    }
+
+    @Order(13)
+    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
+    @Test
+    public void createTemplateWithInvalidCharacters() {
+        assertAll(
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("имя")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("a&b&c")).assertStatus(400)
+        );
     }
 
     @Order(100)
