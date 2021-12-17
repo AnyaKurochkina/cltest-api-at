@@ -7,17 +7,12 @@ import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.products.Rhel;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
 import org.json.JSONObject;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.params.ParameterizedTest;
-import steps.orderService.OrderServiceSteps;
 import steps.tarifficator.TariffPlanSteps;
 import tests.Tests;
 
@@ -130,12 +125,13 @@ public class BaseTariffPlanTest extends Tests {
         tariffPlan.setBeginDate(date);
         tariffPlan = tariffPlanSteps.editTariffPlan(tariffPlan);
         Waiting.sleep(15 * 60 * 1000);
-        tariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
-
+        TariffPlan updatedTariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
         TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
-        AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15);
-        assertEquals(TariffPlanStatus.active, tariffPlan.getStatus(), "Тарифный план не перешел в статус активный");
-        assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный");
+
+        Assertions.assertAll(
+                () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15),
+                () -> assertEquals(TariffPlanStatus.active, updatedTariffPlan.getStatus(), "Тарифный план не перешел в статус активный"),
+                () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"));
     }
 
 }
