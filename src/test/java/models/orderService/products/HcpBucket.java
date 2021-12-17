@@ -36,10 +36,10 @@ public class HcpBucket extends IProduct {
     private String bucketName;
     private String segment;
     private String platform;
-    private int hardQuota;
+    private Double hardQuota;
     private String dataCentre;
     private String servicePlan;
-    private boolean replication;
+    private Boolean replication;
     /*
     delete_bucket_acls - Изменить ACL -no
     create_or_change_bucket_acls - настроить acl -no
@@ -100,7 +100,7 @@ public class HcpBucket extends IProduct {
 
     @Step("Измененить конфигурацию бакета")
     public void changeBucketConfig(){
-        orderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20,\"service_plan\":\"Cold\",\"replication_enabled\":false}}"));
+        orderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20.48,\"service_plan\":\"Cold\",\"replication_enabled\":false}}"));
         Integer hardQuota = (Integer) orderServiceSteps.getProductsField(this, "data[0].config.bucket.hard_quota");
         Assertions.assertEquals(hardQuota, 20, "Макс. объем не изменился! Макс. объем = " + hardQuota);
     }

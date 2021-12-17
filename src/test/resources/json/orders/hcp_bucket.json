@@ -4,7 +4,7 @@
     "product_id": "626ddc69-9fd3-4302-96c1-674a9429af10",
     "attrs": {
       "platform": "hcp",
-      "hard_quota": 10,
+      "hard_quota": 10.24,
       "versioning": {
         "prune": false,
         "enabled": false,
