@@ -9,6 +9,7 @@ import httpModels.productCatalog.Graphs.getGraph.response.GetGraphResponse;
 import httpModels.productCatalog.Graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.Graphs.getGraphsList.response.ListItem;
 import io.qameta.allure.Step;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
@@ -93,7 +94,7 @@ public class GraphSteps {
 
     @Step("Создание JSON объекта по графам")
     public JSONObject createJsonObject(String name) {
-        return   JsonHelper
+        return JsonHelper
                 .getJsonTemplate("productCatalog/graphs/createGraph.json")
                 .set("$.name", name)
                 .build();
@@ -132,8 +133,17 @@ public class GraphSteps {
                 .delete("graphs/" + id + "/");
     }
 
+    @SneakyThrows
     @Step("Удаление графа по имени")
     public void deleteGraphByName(String name) {
         deleteGraph(getGraphId(name));
+    }
+
+    @SneakyThrows
+    @Step("Получение массива объектов используещих граф")
+    public JsonPath getUsedGraphArray(String id) {
+        return new Http(Configure.ProductCatalogURL)
+                .get("graphs/" + id + "/used/")
+                .assertStatus(200).jsonPath();
     }
 }

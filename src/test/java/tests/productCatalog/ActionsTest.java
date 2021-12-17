@@ -117,7 +117,7 @@ public class ActionsTest extends Tests {
     public void sameVersionTest() {
         actionsSteps.patchActionRow(Action.builder().actionName("test_object_at2021").build().init().getTemplate()
                 .set("$.version", "1.1.2")
-                .build(), action.getActionId()).assertStatus(404);
+                .build(), action.getActionId()).assertStatus(500);
     }
 
     @Order(12)
@@ -131,7 +131,7 @@ public class ActionsTest extends Tests {
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
     @Test
     public void createActionWithInvalidCharacters() {
-        assertAll(
+        assertAll("Действие создался с недопустимым именем",
                 () -> actionsSteps.createAction(actionsSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
                 () -> actionsSteps.createAction(actionsSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
                 () -> actionsSteps.createAction(actionsSteps.createJsonObject("имя")).assertStatus(400),

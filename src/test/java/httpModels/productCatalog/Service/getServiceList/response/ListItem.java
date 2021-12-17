@@ -76,4 +76,8 @@ public class ListItem{
 
 	@JsonProperty("graph_version_calculated")
 	private String graphVersionCalculated;
+
+	@JsonProperty("title")
+	private String title;
+
 }

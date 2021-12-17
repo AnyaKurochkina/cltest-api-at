@@ -82,4 +82,7 @@ public class GetServiceResponse{
 
 	@JsonProperty("last_version")
 	private String lastVersion;
+
+	@JsonProperty("title")
+	private String title;
 }
