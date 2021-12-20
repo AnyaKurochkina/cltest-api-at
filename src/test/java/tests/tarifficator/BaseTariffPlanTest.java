@@ -1,8 +1,10 @@
 package tests.tarifficator;
 
 import core.helper.Configure;
+import core.helper.CustomDate;
 import core.helper.Http;
 import core.utils.AssertUtils;
+import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.tarifficator.TariffPlan;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.tarifficator.TariffPlanSteps;
 import tests.Tests;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +31,7 @@ public class BaseTariffPlanTest extends Tests {
 
     @Test
     @Order(1)
-    @DisplayName("Создание тарифного плана на базе активного")
+    @DisplayName("Создание тарифного плана")
     void createBaseTariffPlanFromActive() {
         TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=true&f[status][]=active").get(0);
         TariffPlan tariffPlan = TariffPlan.builder()
@@ -44,7 +47,7 @@ public class BaseTariffPlanTest extends Tests {
                 () -> assertEquals(activeTariff.getId(), tariffPlan.getOldTariffPlanId()),
                 () -> assertEquals(TariffPlanStatus.draft, tariffPlan.getStatus()),
                 () -> assertEquals(activeTariff.getTariffClasses().size(), tariffPlan.getTariffClasses().size()),
-                () -> AssertUtils.AssertDate(new Date(), tariffPlan.getCreatedAt(), 300));
+                () -> AssertUtils.AssertDate(new Date(), tariffPlan.getCreatedAt(), 300, "Время создания ТП не соответствует текущему"));
     }
 
     @Test
@@ -63,13 +66,14 @@ public class BaseTariffPlanTest extends Tests {
                 .build()
                 .toJson();
         new Http(Configure.TarifficatorURL)
-                .post("tariff_plans", object)
+                .body(object)
+                .post("tariff_plans")
                 .assertStatus(422);
     }
 
     @Test
     @Order(3)
-    @DisplayName("Изменение имени базового тарифного плана в статусе черновик")
+    @DisplayName("Черновик. Изменение имени тарифного плана")
     public void renameBaseTariffPlan() {
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(true)
@@ -84,6 +88,50 @@ public class BaseTariffPlanTest extends Tests {
         tariffPlanSteps.editTariffPlan(updateTariff);
         updateTariff = tariffPlanSteps.getTariffPlan(updateTariff.getId());
         assertEquals(tariffName, updateTariff.getTitle());
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Черновик -> Планируемый")
+    public void tariffPlanToPlanned() {
+        Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
+        TariffPlan tariffPlan = TariffPlan.builder()
+                .base(true)
+                .status(TariffPlanStatus.draft)
+                .build()
+                .createObject();
+        tariffPlan.setStatus(TariffPlanStatus.planned);
+        tariffPlan.setBeginDate(date);
+        tariffPlan = tariffPlanSteps.editTariffPlan(tariffPlan);
+        Assertions.assertEquals(TariffPlanStatus.planned, tariffPlan.getStatus(), String.format("Статус тарифного: %s, плана не соответсвует ожидаемому", tariffPlan.getStatus()));
+
+        tariffPlan.setStatus(TariffPlanStatus.draft);
+        tariffPlanSteps.editTariffPlan(tariffPlan);
+    }
+
+    @Order(5)
+    @Test
+    @DisplayName("Активация и Архивация")
+    public void activateBaseTariffPlan() {
+        Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
+        TariffPlan tariffPlan = TariffPlan.builder()
+                .base(true)
+                .status(TariffPlanStatus.draft)
+                .build()
+                .createObject();
+        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=true&f[status][]=active").get(0);
+
+        tariffPlan.setStatus(TariffPlanStatus.planned);
+        tariffPlan.setBeginDate(date);
+        tariffPlan = tariffPlanSteps.editTariffPlan(tariffPlan);
+        Waiting.sleep(15 * 60 * 1000);
+        TariffPlan updatedTariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
+        TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
+
+        Assertions.assertAll("Проверка полей активного и архивного ТП",
+                () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15, "Время архивации ТП не соответствует действительному"),
+                () -> assertEquals(TariffPlanStatus.active, updatedTariffPlan.getStatus(), "Тарифный план не перешел в статус активный"),
+                () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"));
     }
 
 }

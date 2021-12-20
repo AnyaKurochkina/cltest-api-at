@@ -2,6 +2,7 @@ package models.accountManager;
 
 import core.helper.Configure;
 import core.helper.Http;
+import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,7 +41,7 @@ public class Account extends Entity {
     }
 
     public JSONObject toJson() {
-        return jsonHelper.getJsonTemplate("/accountManager/accountTemplate.json")
+        return JsonHelper.getJsonTemplate("/accountManager/accountTemplate.json")
                 .set("$.parent_id", parentId)
                 .set("$.name", String.format("%s (%s)", folder.getTitle(), folderId))
                 .set("$.folder_uid", folderId)
@@ -51,7 +52,8 @@ public class Account extends Entity {
     @Step("Создание счета")
     protected void create() {
         accountId = new Http(Configure.AccountManagerURL)
-                .post(String.format("organizations/%s/accounts", organization), toJson())
+                .body(toJson())
+                .post(String.format("organizations/%s/accounts", organization))
                 .assertStatus(200)
                 .jsonPath()
                 .getString("account.account_id");

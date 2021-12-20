@@ -1,20 +1,16 @@
 package tests.orderService;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
-import models.orderService.products.Nginx;
 import models.orderService.products.WildFly;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
-
-import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("WildFly")
@@ -28,6 +24,7 @@ public class WildFlyTest extends Tests {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(WildFly product) {
@@ -37,6 +34,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(WildFly product) {
@@ -46,6 +44,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(WildFly product) {
@@ -56,6 +55,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(WildFly product) {
@@ -70,6 +70,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(WildFly product) {
@@ -80,6 +81,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(WildFly product) {
@@ -90,6 +92,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(WildFly product) {
@@ -101,7 +104,7 @@ public class WildFlyTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
+    @MarkDelete
     void delete(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.deleteObject();

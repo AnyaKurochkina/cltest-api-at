@@ -1,0 +1,22 @@
+{
+  "name": "NameWithUppercase",
+  "type": "action",
+  "graph": [],
+  "title": "AtTestGraph55",
+  "author": "Morozov Ilya",
+  "output": {},
+  "ui_schema": {},
+  "description": "for at tests22",
+  "json_schema": {},
+  "static_data": {},
+  "modifications": [],
+  "printed_output": {},
+  "damage_order_on_error": false,
+  "version": "3.0.0",
+  "version_create_dt": "2021-12-14T11:04:22.214022Z",
+  "version_changed_by_user": "",
+  "version_list": [
+    "1.0.0",
+    "2.0.0"
+  ]
+}

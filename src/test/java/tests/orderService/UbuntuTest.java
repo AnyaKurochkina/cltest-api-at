@@ -1,6 +1,6 @@
 package tests.orderService;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
@@ -24,6 +24,7 @@ public class UbuntuTest extends Tests {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Ubuntu product) {
@@ -33,6 +34,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Ubuntu product) {
@@ -42,6 +44,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Ubuntu product) {
@@ -52,6 +55,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Ubuntu product) {
@@ -66,6 +70,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(Ubuntu product) {
@@ -76,6 +81,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Ubuntu product) {
@@ -86,9 +92,10 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
+    @MarkDelete
     void delete(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.deleteObject();

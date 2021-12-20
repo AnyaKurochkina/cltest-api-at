@@ -1,13 +1,16 @@
 package tests.productCatalog;
 
-import core.helper.Deleted;
+import core.helper.Configure;
+import core.helper.JsonHelper;
+import core.helper.MarkDelete;
 import io.qameta.allure.Feature;
+import io.restassured.path.json.JsonPath;
 import models.productCatalog.Template;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.productCatalog.TemplateSteps;
 import tests.Tests;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -22,7 +25,7 @@ public class TemplatesTest extends Tests {
     @Test
     public void createTemplate() {
         template = Template.builder()
-                .templateName("TemplateForAT1")
+                .templateName("template_for_at1")
                 .build()
                 .createObject();
     }
@@ -31,14 +34,15 @@ public class TemplatesTest extends Tests {
     @DisplayName("Получение списка шаблонов")
     @Test
     public void getTemplateList() {
-        templateSteps.getTemplateList();
+        Assertions.assertTrue(templateSteps.getTemplateList().size() > 0);
     }
 
     @Order(3)
     @DisplayName("Проверка на существование шаблона по имени")
     @Test
     public void existTemplateByName() {
-        templateSteps.existTemplateByName(template.getTemplateName());
+        Assertions.assertTrue(templateSteps.isExist(template.getTemplateName()));
+        Assertions.assertFalse(templateSteps.isExist("NoExistsAction"));
     }
 
     @Order(4)
@@ -63,13 +67,45 @@ public class TemplatesTest extends Tests {
         templateSteps.updateTemplateById("Black", template.getTemplateName(), template.getTemplateId());
     }
 
+    @Order(12)
+    @DisplayName("Негативный тест на создание действия с существующим именем")
+    @Test
+    public void createActionWithSameName() {
+        templateSteps.createProduct(templateSteps.createJsonObject(template.getTemplateName())).assertStatus(400);
+    }
+
+    @Order(13)
+    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
+    @Test
+    public void createTemplateWithInvalidCharacters() {
+        assertAll("Шаблон создался с недопустимым именем",
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("имя")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> templateSteps.createProduct(templateSteps.createJsonObject("a&b&c")).assertStatus(400)
+        );
+    }
+
+    @Order(14)
+    @DisplayName("Импорт шаблона")
+    @Test
+    public void importTemplate() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/templates/importTemplate.json");
+        String templateName = new JsonPath(data).get("Template.json.name");
+        templateSteps.importTemplate(Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplate.json");
+        Assertions.assertTrue(templateSteps.isExist(templateName));
+        templateSteps.deleteTemplateByName(templateName);
+        Assertions.assertFalse(templateSteps.isExist(templateName));
+    }
+
     @Order(100)
     @Test
     @DisplayName("Удаление шаблона")
-    @Deleted
+    @MarkDelete
     public void deleteTemplate() {
         try (Template template = Template.builder()
-                .templateName("TemplateForAT1")
+                .templateName("template_for_at1")
                 .build()
                 .createObjectExclusiveAccess()) {
             template.deleteObject();

@@ -6,9 +6,10 @@ import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
 import models.authorizer.User;
-import models.keyCloak.Service;
 import models.keyCloak.ServiceAccountToken;
 import models.keyCloak.UserToken;
+
+import java.util.Objects;
 
 @Log4j2
 public class KeyCloakSteps {
@@ -24,7 +25,7 @@ public class KeyCloakSteps {
         //Получение сервис из памяти
 //        Service service = Service.builder().build().createObject();
         //Получение пользователя из памяти
-        User user = User.builder().build().createObject();
+        User user = User.builder().role("admin").build().createObject();
         //Отправка запроса на получение токена
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
@@ -33,9 +34,9 @@ public class KeyCloakSteps {
 //                .post("auth/realms/Portal/protocol/openid-connect/token",
 //                        String.format("client_id=%s&client_secret=%s&grant_type=password&username=%s&password=%s",
 //                                service.clientId, service.clientSecret, user.username, user.password))
-                .post("auth/realms/Portal/protocol/openid-connect/token",
-                        String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
-                                 user.username, user.password))
+                .body(String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
+                                Objects.requireNonNull(user.getUsername()), Objects.requireNonNull(user.getPassword())))
+                .post("auth/realms/Portal/protocol/openid-connect/token")
                 .assertStatus(200)
                 .jsonPath()
                 .get("access_token");
@@ -76,9 +77,9 @@ public class KeyCloakSteps {
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()
-                .post("auth/realms/Portal/protocol/openid-connect/token",
-                        String.format("client_id=%s&client_secret=%s&grant_type=client_credentials",
-                                serviceAccount.getId(), serviceAccount.getSecret()))
+                .body(String.format("client_id=%s&client_secret=%s&grant_type=client_credentials",
+                                Objects.requireNonNull(serviceAccount.getId()), Objects.requireNonNull(serviceAccount.getSecret())))
+                .post("auth/realms/Portal/protocol/openid-connect/token")
                 .assertStatus(200)
                 .jsonPath()
                 .get("access_token");

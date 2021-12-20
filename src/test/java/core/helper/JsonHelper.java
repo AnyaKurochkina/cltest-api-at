@@ -1,6 +1,9 @@
 package core.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
@@ -47,6 +50,18 @@ public class JsonHelper {
         });
     }
 
+    public static String toJson(Object e) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        return gsonBuilder.create().toJson(e, e.getClass());
+    }
+
+    public static Gson getCustomGson()  {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        return gsonBuilder.create();
+    }
+
     @SneakyThrows
     public static <T> T convertResponseOnClass(String rawJson, Class<T> clazz){
         JSONObject jsonObject = new JSONObject(rawJson);
@@ -54,7 +69,7 @@ public class JsonHelper {
         return objectMapper.convertValue(jsonObject.toMap(), clazz);
     }
 
-    public String getStringFromFile(String s) {
+    public static String getStringFromFile(String s) {
         try {
             File file = new File(dataJson + s);
             return FileUtils.readFileToString(file, "UTF-8");
@@ -64,7 +79,7 @@ public class JsonHelper {
         }
     }
 
-    public JSONObject getJsonFromFile(String file) {
+    public static JSONObject getJsonFromFile(String file) {
         try {
             return new JSONObject(getStringFromFile(file));
         } catch (Exception ex) {
@@ -86,7 +101,7 @@ public class JsonHelper {
         return text;
     }
 
-    public JsonTemplate getJsonTemplate(String file) {
+    public static JsonTemplate getJsonTemplate(String file) {
         return new JsonTemplate(getJsonFromFile(file));
     }
 

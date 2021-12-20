@@ -1,0 +1,240 @@
+{
+  "model_name": "Action",
+  "Action": {
+    "id": 917,
+    "create_dt": "2021-12-16T09:58:03.527857",
+    "user": {
+      "id": null,
+      "is_staff": false,
+      "username": "",
+      "is_active": false,
+      "is_superuser": false
+    },
+    "json": {
+      "id": "603fcfb1-cedc-42c7-a698-2743d907fea9",
+      "icon": "",
+      "name": "import_action_test_api",
+      "type": "",
+      "title": "import_action_test_api",
+      "graph_id": "7adbcad7-6184-4efc-9c63-d0ea7e0a551b",
+      "event_type": [],
+      "description": "",
+      "allowed_paths": [],
+      "graph_version": "",
+      "allowed_groups": [],
+      "event_provider": [],
+      "data_config_key": "",
+      "data_config_path": "",
+      "item_restriction": null,
+      "restricted_paths": [],
+      "restricted_groups": [],
+      "config_restriction": "",
+      "data_config_fields": [],
+      "skip_on_prebilling": false,
+      "graph_version_pattern": "",
+      "required_item_statuses": [],
+      "auto_removing_if_failed": false,
+      "available_without_money": false,
+      "required_order_statuses": []
+    },
+    "hash": "96f90cb08a5d2699165880b2f0c933d9",
+    "version_arr": [
+      1,
+      0,
+      0
+    ],
+    "used_graph": {
+      "graph": {
+        "graph_id": "7adbcad7-6184-4efc-9c63-d0ea7e0a551b",
+        "graph_version": "",
+        "graph_version_pattern": ""
+      },
+      "object_info": {
+        "id": "603fcfb1-cedc-42c7-a698-2743d907fea9",
+        "name": "import_action_test_api",
+        "type": "Action",
+        "version": "1.0.0"
+      }
+    },
+    "action": "603fcfb1-cedc-42c7-a698-2743d907fea9"
+  },
+  "rel_foreign_models": {
+    "graph": {
+      "model_name": "Graph",
+      "Graph": {
+        "id": 5514,
+        "create_dt": "2021-12-03T06:47:33.499918",
+        "user": {
+          "id": null,
+          "is_staff": false,
+          "username": "",
+          "is_active": false,
+          "is_superuser": false
+        },
+        "json": {
+          "id": "7adbcad7-6184-4efc-9c63-d0ea7e0a551b",
+          "name": "AtTestGraph",
+          "type": "action",
+          "title": "AtTestGraph",
+          "author": "Morozov Ilya",
+          "output": {},
+          "ui_schema": {},
+          "description": "for at tests",
+          "json_schema": {},
+          "static_data": {},
+          "printed_output": {},
+          "damage_order_on_error": false
+        },
+        "hash": "e309c03850795b560441390836580680",
+        "version_arr": [
+          1,
+          0,
+          33
+        ],
+        "orchestrator_json": {
+          "id": "7adbcad7-6184-4efc-9c63-d0ea7e0a551b",
+          "graph": [
+            {
+              "run": "rpc_http_manager:cmd",
+              "icon": "",
+              "name": "test",
+              "color": "",
+              "input": {},
+              "output": {},
+              "depends": [],
+              "timeout": 30,
+              "coords_x": 0.0,
+              "coords_y": 0.0,
+              "priority": 0,
+              "template": "http_request",
+              "log_level": null,
+              "description": "test",
+              "allowed_paths": [],
+              "on_prebilling": false,
+              "allowed_groups": [],
+              "printed_output": {},
+              "restricted_paths": [],
+              "template_version": "",
+              "restricted_groups": [],
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "log_can_be_overridden": false,
+              "template_version_pattern": "",
+              "priority_can_be_overridden": false,
+              "printed_output_can_be_overridden": false
+            }
+          ],
+          "ui_schema": {},
+          "action_ids": [
+            "4e3c4755-8375-476f-b889-6b10e72d76df",
+            "981e95d2-fa51-4bbc-8de9-17f03a5f420b",
+            "5b7e89c1-5797-459d-ae06-09c039d217f7",
+            "fa4b715f-d3bc-4835-a994-52cf4d7dd85d"
+          ],
+          "json_schema": {},
+          "product_ids": [],
+          "static_data": {},
+          "modifications": [],
+          "damage_order_on_error": false
+        },
+        "orchestrator_hash": "c85fa96fd4a5f91b124deb1b1d6b658d",
+        "used_graph": {
+          "graph": [],
+          "object_info": {
+            "id": "7adbcad7-6184-4efc-9c63-d0ea7e0a551b",
+            "name": "AtTestGraph",
+            "type": "Graph",
+            "version": "1.0.33"
+          }
+        },
+        "graph": "7adbcad7-6184-4efc-9c63-d0ea7e0a551b"
+      },
+      "rel_foreign_models": {},
+      "rel_revers_models": {
+        "nodes": [
+          {
+            "model_name": "Node",
+            "Node": {
+              "icon": "",
+              "name": "test",
+              "color": "",
+              "count": null,
+              "input": {},
+              "number": 1,
+              "output": {},
+              "depends": [],
+              "timeout": 30,
+              "coords_x": 0.0,
+              "coords_y": 0.0,
+              "for_each": null,
+              "priority": null,
+              "condition": "",
+              "log_level": null,
+              "extra_data": null,
+              "description": "test",
+              "subgraph_id": null,
+              "template_id": "'107'",
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "",
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": ""
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "id": 1,
+                  "create_dt": "2021-11-25T13:24:44.244096",
+                  "user": {},
+                  "json": {
+                    "id": 107,
+                    "run": "rpc_http_manager:cmd",
+                    "icon": "",
+                    "name": "http_request",
+                    "color": "",
+                    "input": {},
+                    "output": {},
+                    "timeout": 30,
+                    "coords_x": 0.0,
+                    "coords_y": 0.0,
+                    "priority": 0,
+                    "rollback": null,
+                    "log_level": null,
+                    "extra_data": null,
+                    "description": "",
+                    "allowed_paths": [],
+                    "allowed_groups": [],
+                    "printed_output": {},
+                    "additional_input": false,
+                    "restricted_paths": [],
+                    "additional_output": false,
+                    "restricted_groups": [],
+                    "log_can_be_overridden": false,
+                    "priority_can_be_overridden": false,
+                    "printed_output_can_be_overridden": false
+                  },
+                  "hash": "12e606580151e85795df830404aeb7dc",
+                  "version_arr": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "template": 107
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          }
+        ],
+        "modifications": []
+      }
+    }
+  },
+  "dump_version": 4.0,
+  "dump_date": "2021-12-16 12:33:42"
+}

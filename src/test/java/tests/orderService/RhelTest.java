@@ -1,12 +1,15 @@
 package tests.orderService;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import models.authorizer.AccessGroup;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,6 +27,7 @@ public class RhelTest extends Tests {
         try (Rhel rhel = product.createObjectExclusiveAccess()){}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Rhel product) {
@@ -33,6 +37,20 @@ public class RhelTest extends Tests {
         }
     }
 
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка создания {0}")
+    @Disabled
+    void checkCreate(Rhel product) {
+        try (Rhel rhel = product.createObjectExclusiveAccess()) {
+            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            AccessGroup accessGroup = AccessGroup.builder().projectName(rhel.getProjectId()).build().createObject();
+            Assertions.assertTrue(accessGroup.getUsers().size() > 0, String.format("Нет пользователей в группе %s", accessGroup.getName()));
+            rhel.checkCreateUseSsh(accessGroup.getUsers().get(0));
+        }
+    }
+
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Rhel product) {
@@ -42,6 +60,7 @@ public class RhelTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Rhel product) {
@@ -52,6 +71,7 @@ public class RhelTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Rhel product) {
@@ -66,6 +86,7 @@ public class RhelTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(Rhel product) {
@@ -76,6 +97,7 @@ public class RhelTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Rhel product) {
@@ -88,7 +110,7 @@ public class RhelTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
+    @MarkDelete
     void delete(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.deleteObject();

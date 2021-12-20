@@ -1,19 +1,16 @@
 package tests.orderService;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.RabbitMQCluster;
-import models.orderService.products.WildFly;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
-
-import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("RabbitMQCluster")
@@ -27,6 +24,7 @@ public class RabbitMQClusterTest extends Tests {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(RabbitMQCluster product) {
@@ -36,6 +34,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(RabbitMQCluster product) {
@@ -45,6 +44,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(RabbitMQCluster product) {
@@ -55,6 +55,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать пользователя RabbitMQ {0}")
     void createUser(RabbitMQCluster product) {
@@ -64,6 +65,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(RabbitMQCluster product) {
@@ -74,6 +76,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(RabbitMQCluster product) {
@@ -83,6 +86,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(RabbitMQCluster product) {
@@ -95,7 +99,7 @@ public class RabbitMQClusterTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
+    @MarkDelete
     void delete(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             rabbit.deleteObject();

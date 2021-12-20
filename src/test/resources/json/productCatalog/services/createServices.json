@@ -1,6 +1,7 @@
 {
   "id": "",
-  "name": "ServiceATtest",
+  "name": "service_test",
+  "title": "title",
   "direction": "Windows",
   "direction_id": "2f804be7-0fd6-4f70-9ff2-9e8d51fbe032",
   "description": "ServiceForAT",

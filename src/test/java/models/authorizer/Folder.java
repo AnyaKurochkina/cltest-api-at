@@ -1,6 +1,7 @@
 package models.authorizer;
 
 import core.helper.Configure;
+import core.helper.JsonHelper;
 import core.helper.Http;
 import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
@@ -61,7 +62,7 @@ public class Folder extends Entity {
 
     //    @Override
     public JSONObject toJson() {
-        return jsonHelper.getJsonTemplate("/structure/create_folder.json")
+        return JsonHelper.getJsonTemplate("/structure/create_folder.json")
                 .set("$.folder.kind", kind)
                 .set("$.folder.title", title)
                 .set("$.folder.name", name)
@@ -74,7 +75,8 @@ public class Folder extends Entity {
     protected void create() {
         String url = kind.equals(BUSINESS_BLOCK) ? "organizations/vtb/folders" : String.format("folders/%s/folders", parentId);
         name = new Http(Configure.AuthorizerURL)
-                .post(url, toJson())
+                .body(toJson())
+                .post(url)
                 .assertStatus(201)
                 .jsonPath()
                 .getString("data.name");

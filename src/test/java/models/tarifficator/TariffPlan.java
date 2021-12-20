@@ -1,12 +1,13 @@
 package models.tarifficator;
 
-import core.CacheService;
 import core.helper.Configure;
 import core.helper.Http;
+import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import lombok.*;
 import models.Entity;
+import models.authorizer.Organization;
 import org.json.JSONObject;
 import steps.tarifficator.TariffPlanSteps;
 
@@ -28,6 +29,7 @@ public class TariffPlan extends Entity {
     String organizationName;
     TariffPlanStatus status;
     List<TariffClass> tariffClasses;
+    List<TariffPlanServices> tariffPlanServices;
     @EqualsAndHashCode.Include
     @ToString.Include
     String title;
@@ -39,7 +41,7 @@ public class TariffPlan extends Entity {
 
 
     public JSONObject toJson() {
-        return new JSONObject("{\"tariff_plan\":" + CacheService.toJson(this) + "}");
+        return new JSONObject("{\"tariff_plan\":" + JsonHelper.toJson(this) + "}");
     }
 
 
@@ -53,6 +55,9 @@ public class TariffPlan extends Entity {
             TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
             oldTariffPlanId = activeTariff.getId();
         }
+        if(!base && organizationName == null) {
+            organizationName = ((Organization) Organization.builder().build().createObject()).getName();
+        }
         return this;
     }
 
@@ -60,7 +65,8 @@ public class TariffPlan extends Entity {
     @Step("Создание тарифного плана")
     protected void create() {
         String object = new Http(Configure.TarifficatorURL)
-                .post("tariff_plans", toJson())
+                .body(toJson())
+                .post("tariff_plans")
                 .assertStatus(201)
                 .toString();
         StringUtils.copyAvailableFields(tariffPlanSteps.deserialize(object), this);

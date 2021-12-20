@@ -6,9 +6,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import models.ObjectPoolService;
 import core.helper.StringUtils;
 import org.apiguardian.api.API;
@@ -26,7 +24,6 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
-//import ru.testit.properties.TestProperties;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Constructor;
@@ -169,7 +166,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                     }
                     if(listProduct.isEmpty())
                         skipTests.add(testDescriptor);
-
                     return;
                     }
                 }
@@ -304,7 +300,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                         addNode(testDescriptor);
                     }
                     if (testDescriptor instanceof MethodBasedTestDescriptor) {
-                        Deleted deleted = ((MethodBasedTestDescriptor) testDescriptor).getTestMethod().getAnnotation(Deleted.class);
+                        MarkDelete deleted = ((MethodBasedTestDescriptor) testDescriptor).getTestMethod().getAnnotation(MarkDelete.class);
                         if (deleted != null) {
                             deleteTests.put(testTask/*, deleted.value().getName()*/, "null");
                             var1.remove();
@@ -342,7 +338,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 //            tasks.addAll(deleteTests.values());
 //        }
         first.set(false);
-        System.out.println(tasks2.size());
 //        ArrayList<TestTask> tasks = new ArrayList<>();
 //        if(mapTests.containsKey("0")) {
 //            tasks.add(mapTests.get("0"));

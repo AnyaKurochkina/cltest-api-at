@@ -35,8 +35,7 @@ public class OrgDirection extends Entity {
 
     @Override
     public JSONObject toJson() {
-        JsonHelper jsonHelper = new JsonHelper();
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", orgDirectionName)
                 .set("$.description", description)
                 .build();
@@ -45,9 +44,9 @@ public class OrgDirection extends Entity {
     @Override
     @Step("Создание направления")
     protected void create() {
-        String response = new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("org_direction/", toJson())
+        String response = new Http(Configure.ProductCatalogURL)
+                .body(toJson())
+                .post("org_direction/")
                 .assertStatus(201)
                 .toString();
         CreateOrgDirectionResponse createOrgDirectionResponse = convertResponseOnClass(response, CreateOrgDirectionResponse.class);

@@ -53,8 +53,7 @@ public class Services extends Entity {
 
     @Override
     public JSONObject toJson() {
-        JsonHelper jsonHelper = new JsonHelper();
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", serviceName)
                 .set("$.graph_id", graphId)
                 .build();
@@ -63,9 +62,9 @@ public class Services extends Entity {
     @Override
     @Step("Создание сервиса")
     protected void create() {
-        String response = new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("services/", toJson())
+        String response = new Http(Configure.ProductCatalogURL)
+                .body(toJson())
+                .post("services/")
                 .assertStatus(201)
                 .toString();
         CreateServiceResponse createServiceResponse = convertResponseOnClass(response, CreateServiceResponse.class);
@@ -76,8 +75,7 @@ public class Services extends Entity {
     @Override
     @Step("Удаление сервиса")
     protected void delete() {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        new Http(Configure.ProductCatalogURL)
                 .delete("services/" + serviceId + "/")
                 .assertStatus(204);
 

@@ -1,0 +1,19 @@
+{
+  "id": "",
+  "name": "service_test",
+  "title": "title",
+  "direction": "Windows",
+  "direction_id": "2f804be7-0fd6-4f70-9ff2-9e8d51fbe032",
+  "description": "ServiceForAT",
+  "number": 1,
+  "graph_id": null,
+  "graph_version": "",
+  "graph_version_pattern": "",
+  "is_published": false,
+  "data_source": {},
+  "extra_data": {},
+  "allowed_groups": [],
+  "restricted_groups": [],
+  "allowed_paths": [],
+  "restricted_paths": []
+}

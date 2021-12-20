@@ -1,0 +1,562 @@
+{
+  "model_name": "Product",
+  "Product": {
+    "id": 377,
+    "create_dt": "2021-12-15T08:11:48.291655",
+    "user": {
+      "id": null,
+      "is_staff": false,
+      "username": "",
+      "is_active": false,
+      "is_superuser": false
+    },
+    "json": {
+      "id": "7f0bef70-164a-470c-80f4-f465bebcdc8b",
+      "envs": [],
+      "icon": "",
+      "name": "import_product_test_api",
+      "title": "import_product_test_api",
+      "author": "Airat Muzafarov",
+      "number": 1,
+      "is_open": false,
+      "category": "vm",
+      "graph_id": "d197668b-da7e-488f-921e-8393913614d3",
+      "max_count": 1,
+      "description": "",
+      "allowed_paths": [],
+      "graph_version": "",
+      "allowed_groups": [],
+      "restricted_paths": [],
+      "restricted_groups": [],
+      "information_systems": [],
+      "graph_version_pattern": ""
+    },
+    "hash": "f150aa42006a9609b40341eeb3544067",
+    "version_arr": [
+      1,
+      0,
+      0
+    ],
+    "used_graph": {
+      "graph": {
+        "graph_id": "d197668b-da7e-488f-921e-8393913614d3",
+        "graph_version": "",
+        "graph_version_pattern": ""
+      },
+      "object_info": {
+        "id": "7f0bef70-164a-470c-80f4-f465bebcdc8b",
+        "name": "import_product_test_api",
+        "type": "Product",
+        "version": "1.0.0"
+      }
+    },
+    "product": "7f0bef70-164a-470c-80f4-f465bebcdc8b"
+  },
+  "rel_foreign_models": {
+    "graph": {
+      "model_name": "Graph",
+      "Graph": {
+        "id": 5421,
+        "create_dt": "2021-12-01T10:49:35.086183",
+        "user": {
+          "id": null,
+          "is_staff": false,
+          "username": "",
+          "is_active": false,
+          "is_superuser": false
+        },
+        "json": {
+          "id": "d197668b-da7e-488f-921e-8393913614d3",
+          "name": "actualize_vm_config",
+          "type": "creating",
+          "title": "\u041f\u043e\u0434\u0433\u0440\u0430\u0444 \u0430\u043a\u0442\u0443\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u0438 \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u0438 VM",
+          "author": "Vladislav Steshenko",
+          "output": {},
+          "ui_schema": {},
+          "description": "",
+          "json_schema": {},
+          "static_data": {
+            "directory_name": "flavors",
+            "set_flavor_template": "{% set _ = resolved_item.data.config.update({'flavor': {'name': flavor['name'], 'uuid': flavor['id'], 'cpus': flavor['data']['cpus'], 'memory': flavor['data']['memory']}}) %}{{ resolved_item | tojson }}",
+            "relative_url_flavors": "/api/v1/pages/"
+          },
+          "printed_output": {},
+          "damage_order_on_error": false
+        },
+        "hash": "e48a95c5417aaa85ff16746be6e2c31a",
+        "version_arr": [
+          1,
+          0,
+          16
+        ],
+        "orchestrator_json": {
+          "id": "d197668b-da7e-488f-921e-8393913614d3",
+          "graph": [
+            {
+              "run": "internal",
+              "icon": "",
+              "name": "get_flavor",
+              "color": "",
+              "input": {
+                "params": "{'directory__name': directory_name, 'name': item_config['flavor']['name']}",
+                "relative_url": "relative_url_flavors"
+              },
+              "output": {
+                "status": "status",
+                "response": "response"
+              },
+              "depends": [],
+              "timeout": 30,
+              "coords_x": 135.1285956920268,
+              "coords_y": 70.06725792255708,
+              "priority": 0,
+              "template": "references_service_http_request",
+              "condition": "resolved_item['data']['config']['flavor']['name'] != item_config['flavor']['name']",
+              "log_level": "short",
+              "description": "\u043f\u043e\u043b\u0443\u0447\u0438\u0442\u044c flavor \u0438\u0437 \u0441\u0435\u0440\u0432\u0438\u0441\u0430 \u0441\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a\u043e\u0432",
+              "allowed_paths": [],
+              "on_prebilling": false,
+              "allowed_groups": [],
+              "printed_output": {},
+              "restricted_paths": [],
+              "template_version": "",
+              "restricted_groups": [],
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "log_can_be_overridden": true,
+              "template_version_pattern": "",
+              "priority_can_be_overridden": false,
+              "printed_output_can_be_overridden": true
+            },
+            {
+              "run": "internal",
+              "icon": "",
+              "name": "set_new_flavor",
+              "color": "",
+              "input": {
+                "flavor": "response[0]",
+                "template": "set_flavor_template",
+                "from_json": "True",
+                "resolved_item": "resolved_item"
+              },
+              "output": {
+                "formatted": "resolved_item"
+              },
+              "depends": [
+                "get_flavor"
+              ],
+              "timeout": 10,
+              "coords_x": 140.0,
+              "coords_y": 254.0,
+              "priority": 0,
+              "template": "jinja2_format",
+              "condition": "resolved_item['data']['config']['flavor']['name'] != item_config['flavor']['name']",
+              "log_level": "full",
+              "description": "\u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u043d\u043e\u0432\u043e\u0433\u043e flavor \u043a \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u0438",
+              "allowed_paths": [],
+              "on_prebilling": false,
+              "allowed_groups": [],
+              "printed_output": [
+                {
+                  "type": "text",
+                  "data_path": "data",
+                  "node_state": "completed"
+                },
+                {
+                  "type": "text",
+                  "data_path": "data.formatted",
+                  "node_state": "completed"
+                }
+              ],
+              "restricted_paths": [],
+              "template_version": "",
+              "restricted_groups": [],
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "log_can_be_overridden": true,
+              "template_version_pattern": "",
+              "priority_can_be_overridden": false,
+              "printed_output_can_be_overridden": true
+            },
+            {
+              "run": "internal",
+              "icon": "",
+              "name": "update_vm_config",
+              "color": "",
+              "input": {
+                "data": "{**resolved_item['data']['config'], 'hostname': item_config['hostname']}",
+                "type": "enums.EventType.VM.value",
+                "item_id": "item_id",
+                "subtype": "enums.EventSubType.CONFIG.value"
+              },
+              "output": {
+                "data": ""
+              },
+              "depends": [
+                "set_new_flavor"
+              ],
+              "timeout": 30,
+              "coords_x": 140.0,
+              "coords_y": 440.0,
+              "priority": 0,
+              "template": "add_event",
+              "log_level": null,
+              "description": "\u043e\u0431\u043d\u043e\u0432\u043b\u044f\u0435\u043c \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044e \u0412\u041c \u0432 \u0441\u0435\u0440\u0432\u0438\u0441\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0439",
+              "allowed_paths": [],
+              "on_prebilling": false,
+              "allowed_groups": [],
+              "printed_output": {},
+              "restricted_paths": [],
+              "template_version": "",
+              "restricted_groups": [],
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "log_can_be_overridden": false,
+              "template_version_pattern": "",
+              "priority_can_be_overridden": false,
+              "printed_output_can_be_overridden": false
+            }
+          ],
+          "ui_schema": {},
+          "action_ids": [],
+          "json_schema": {},
+          "product_ids": [],
+          "static_data": {
+            "directory_name": "flavors",
+            "set_flavor_template": "{% set _ = resolved_item.data.config.update({'flavor': {'name': flavor['name'], 'uuid': flavor['id'], 'cpus': flavor['data']['cpus'], 'memory': flavor['data']['memory']}}) %}{{ resolved_item | tojson }}",
+            "relative_url_flavors": "/api/v1/pages/"
+          },
+          "modifications": [],
+          "damage_order_on_error": false
+        },
+        "orchestrator_hash": "978a6ff037bae4cdad9c04bdf2022fbc",
+        "used_graph": {
+          "graph": [],
+          "object_info": {
+            "id": "d197668b-da7e-488f-921e-8393913614d3",
+            "name": "actualize_vm_config",
+            "type": "Graph",
+            "version": "1.0.16"
+          }
+        },
+        "graph": "d197668b-da7e-488f-921e-8393913614d3"
+      },
+      "rel_foreign_models": {},
+      "rel_revers_models": {
+        "nodes": [
+          {
+            "model_name": "Node",
+            "Node": {
+              "icon": "",
+              "name": "get_flavor",
+              "color": "",
+              "count": null,
+              "input": {
+                "params": "{'directory__name': directory_name, 'name': item_config['flavor']['name']}",
+                "relative_url": "relative_url_flavors"
+              },
+              "number": 1,
+              "output": {
+                "status": "status",
+                "response": "response"
+              },
+              "depends": [],
+              "timeout": 30,
+              "coords_x": 135.1285956920268,
+              "coords_y": 70.06725792255708,
+              "for_each": null,
+              "priority": null,
+              "condition": "resolved_item['data']['config']['flavor']['name'] != item_config['flavor']['name']",
+              "log_level": null,
+              "extra_data": null,
+              "description": "\u043f\u043e\u043b\u0443\u0447\u0438\u0442\u044c flavor \u0438\u0437 \u0441\u0435\u0440\u0432\u0438\u0441\u0430 \u0441\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a\u043e\u0432",
+              "subgraph_id": null,
+              "template_id": "'100'",
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "",
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": ""
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "id": 37,
+                  "create_dt": "2021-11-25T13:24:44.612690",
+                  "user": {},
+                  "json": {
+                    "id": 100,
+                    "run": "internal",
+                    "icon": "",
+                    "name": "references_service_http_request",
+                    "color": "",
+                    "input": {
+                      "params": {},
+                      "relative_url": {}
+                    },
+                    "output": {
+                      "status": {},
+                      "response": {}
+                    },
+                    "timeout": 30,
+                    "coords_x": 0.0,
+                    "coords_y": 0.0,
+                    "priority": 0,
+                    "rollback": null,
+                    "log_level": "short",
+                    "extra_data": null,
+                    "description": "",
+                    "allowed_paths": [],
+                    "allowed_groups": [],
+                    "printed_output": {},
+                    "additional_input": true,
+                    "restricted_paths": [],
+                    "additional_output": false,
+                    "restricted_groups": [],
+                    "log_can_be_overridden": true,
+                    "priority_can_be_overridden": false,
+                    "printed_output_can_be_overridden": true
+                  },
+                  "hash": "4421b3871996d253a2fc3c6640719605",
+                  "version_arr": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "template": 100
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          },
+          {
+            "model_name": "Node",
+            "Node": {
+              "icon": "",
+              "name": "set_new_flavor",
+              "color": "",
+              "count": null,
+              "input": {
+                "flavor": "response[0]",
+                "template": "set_flavor_template",
+                "from_json": "True",
+                "resolved_item": "resolved_item"
+              },
+              "number": 1,
+              "output": {
+                "formatted": "resolved_item"
+              },
+              "depends": [
+                "get_flavor"
+              ],
+              "timeout": 10,
+              "coords_x": 140.0,
+              "coords_y": 254.0,
+              "for_each": null,
+              "priority": null,
+              "condition": "resolved_item['data']['config']['flavor']['name'] != item_config['flavor']['name']",
+              "log_level": null,
+              "extra_data": null,
+              "description": "\u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u043d\u043e\u0432\u043e\u0433\u043e flavor \u043a \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u0438",
+              "subgraph_id": null,
+              "template_id": "'40'",
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "",
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": ""
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "id": 65,
+                  "create_dt": "2021-11-25T13:24:44.823568",
+                  "user": {},
+                  "json": {
+                    "id": 40,
+                    "run": "internal",
+                    "icon": "",
+                    "name": "jinja2_format",
+                    "color": "",
+                    "input": {
+                      "domain": {},
+                      "mounts": {},
+                      "feature": {},
+                      "machine": {},
+                      "hostname": {},
+                      "os_users": {},
+                      "template": {
+                        "required": true
+                      },
+                      "from_json": {},
+                      "prime_user": {},
+                      "default_nic": {},
+                      "kafka_version": {},
+                      "postgresql_db": {},
+                      "redis_version": {},
+                      "ad_integration": {},
+                      "os_local_users": {},
+                      "redis_password": {},
+                      "ad_logon_grants": {},
+                      "postgresql_user": {},
+                      "postgresql_version": {},
+                      "prime_user_init_passwd": {}
+                    },
+                    "output": {
+                      "formatted": {}
+                    },
+                    "timeout": 10,
+                    "coords_x": 0.0,
+                    "coords_y": 0.0,
+                    "priority": 0,
+                    "rollback": null,
+                    "log_level": "full",
+                    "extra_data": null,
+                    "description": "\u0444\u043e\u0440\u043c\u0430\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0434\u0430\u043d\u043d\u044b\u0445 \u0441 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435\u043c jinja2 \u0448\u0430\u0431\u043b\u043e\u043d\u0430",
+                    "allowed_paths": [],
+                    "allowed_groups": [],
+                    "printed_output": [
+                      {
+                        "type": "text",
+                        "data_path": "data",
+                        "node_state": "completed"
+                      },
+                      {
+                        "type": "text",
+                        "data_path": "data.formatted",
+                        "node_state": "completed"
+                      }
+                    ],
+                    "additional_input": true,
+                    "restricted_paths": [],
+                    "additional_output": false,
+                    "restricted_groups": [],
+                    "log_can_be_overridden": true,
+                    "priority_can_be_overridden": false,
+                    "printed_output_can_be_overridden": true
+                  },
+                  "hash": "ff8d62ed9e9fb2d2836a45888d04a1fa",
+                  "version_arr": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "template": 40
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          },
+          {
+            "model_name": "Node",
+            "Node": {
+              "icon": "",
+              "name": "update_vm_config",
+              "color": "",
+              "count": null,
+              "input": {
+                "data": "{**resolved_item['data']['config'], 'hostname': item_config['hostname']}",
+                "type": "enums.EventType.VM.value",
+                "item_id": "item_id",
+                "subtype": "enums.EventSubType.CONFIG.value"
+              },
+              "number": 1,
+              "output": {
+                "data": ""
+              },
+              "depends": [
+                "set_new_flavor"
+              ],
+              "timeout": 30,
+              "coords_x": 140.0,
+              "coords_y": 440.0,
+              "for_each": null,
+              "priority": null,
+              "condition": "",
+              "log_level": null,
+              "extra_data": null,
+              "description": "\u043e\u0431\u043d\u043e\u0432\u043b\u044f\u0435\u043c \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044e \u0412\u041c \u0432 \u0441\u0435\u0440\u0432\u0438\u0441\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0439",
+              "subgraph_id": null,
+              "template_id": "'45'",
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "",
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": ""
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "id": 10,
+                  "create_dt": "2021-11-25T13:24:44.339480",
+                  "user": {},
+                  "json": {
+                    "id": 45,
+                    "run": "internal",
+                    "icon": "",
+                    "name": "add_event",
+                    "color": "",
+                    "input": {
+                      "data": {},
+                      "type": {},
+                      "status": {},
+                      "item_id": {},
+                      "subtype": {}
+                    },
+                    "output": {
+                      "data": {}
+                    },
+                    "timeout": 30,
+                    "coords_x": 0.0,
+                    "coords_y": 0.0,
+                    "priority": 0,
+                    "rollback": null,
+                    "log_level": null,
+                    "extra_data": null,
+                    "description": "\u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u0435 Event \u0432 \u0441\u0435\u0440\u0432\u0438\u0441 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0439",
+                    "allowed_paths": [],
+                    "allowed_groups": [],
+                    "printed_output": {},
+                    "additional_input": true,
+                    "restricted_paths": [],
+                    "additional_output": true,
+                    "restricted_groups": [],
+                    "log_can_be_overridden": false,
+                    "priority_can_be_overridden": false,
+                    "printed_output_can_be_overridden": false
+                  },
+                  "hash": "995f561c1e99def35fb0363fb3613df8",
+                  "version_arr": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "template": 45
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          }
+        ],
+        "modifications": []
+      }
+    }
+  },
+  "dump_version": 4.0,
+  "dump_date": "2021-12-15 09:23:31"
+}

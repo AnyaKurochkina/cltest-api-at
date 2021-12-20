@@ -10,32 +10,35 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateGraphResponse {
+public class CreateGraphResponse{
 
-    @JsonProperty("author")
-    private String author;
+	@JsonProperty("author")
+	private String author;
 
-    @JsonProperty("json_schema")
-    private JsonSchema jsonSchema;
+	@JsonProperty("json_schema")
+	private JsonSchema jsonSchema;
 
-    @JsonProperty("name")
-    private String name;
+	@JsonProperty("name")
+	private String name;
 
-    @JsonProperty("description")
-    private String description;
+	@JsonProperty("description")
+	private String description;
 
-    @JsonProperty("static_data")
-    private StaticData staticData;
+	@JsonProperty("static_data")
+	private StaticData staticData;
 
-    @JsonProperty("id")
-    private String id;
+	@JsonProperty("id")
+	private String id;
 
-    @JsonProperty("title")
-    private String title;
+	@JsonProperty("title")
+	private String title;
 
-    @JsonProperty("type")
-    private String type;
+	@JsonProperty("type")
+	private String type;
 
-    @JsonProperty("ui_schema")
-    private UiSchema uiSchema;
+	@JsonProperty("version")
+	private String version;
+
+	@JsonProperty("ui_schema")
+	private UiSchema uiSchema;
 }

@@ -1,6 +1,6 @@
 package tests.orderService;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
@@ -27,6 +27,7 @@ public class ApacheKafkaClusterTest extends Tests {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(ApacheKafkaCluster product) {
@@ -36,6 +37,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Пакетное создание Topic-ов Kafka {0}")
     void createTopic(ApacheKafkaCluster product) {
@@ -45,6 +47,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Пакетное удаление Topic-ов Kafka {0}")
     void deleteTopic(ApacheKafkaCluster product) {
@@ -55,6 +58,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать ACL Kafka {0}")
     void createAcl(ApacheKafkaCluster product) {
@@ -65,6 +69,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание ACL на транзакцию Kafka {0}")
     void createAclTransaction(ApacheKafkaCluster product) {
@@ -74,6 +79,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить кластер Kafka {0}")
     void stopSoft(ApacheKafkaCluster product) {
@@ -84,6 +90,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить кластер Kafka {0}")
     void resize(ApacheKafkaCluster product) {
@@ -93,6 +100,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить кластер Kafka {0}")
     void start(ApacheKafkaCluster product) {
@@ -103,6 +111,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(ApacheKafkaCluster product) {
@@ -114,7 +123,7 @@ public class ApacheKafkaClusterTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
+    @MarkDelete
     void delete(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.deleteObject();

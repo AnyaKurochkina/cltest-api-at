@@ -1,6 +1,6 @@
 package tests.orderService;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Link;
@@ -32,6 +32,7 @@ public class OpenShiftTest extends Tests {
         try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
 //    @Link(type="manual", value = "377741")
     @WorkItemId("376495")
 //    @ExternalId("OpenShiftTest.change")
@@ -50,7 +51,7 @@ public class OpenShiftTest extends Tests {
     @Link(type="manual", value = "377740")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удаление проекта {0}")
-    @Deleted
+    @MarkDelete
     void delete(OpenShiftProject product) {
         try (OpenShiftProject openShift = product.createObjectExclusiveAccess()) {
             openShift.deleteObject();

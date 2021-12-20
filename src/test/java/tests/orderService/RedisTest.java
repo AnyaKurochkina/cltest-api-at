@@ -1,19 +1,16 @@
 package tests.orderService;
 
-import core.helper.Deleted;
+import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Redis;
-import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
-
-import static models.orderService.interfaces.IProduct.*;
 
 @Epic("Продукты")
 @Feature("Redis")
@@ -27,6 +24,7 @@ public class RedisTest extends Tests {
         try (Redis redis = product.createObjectExclusiveAccess()) {}
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Redis product) {
@@ -36,6 +34,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(Redis product) {
@@ -45,6 +44,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Redis product) {
@@ -54,6 +54,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Redis product) {
@@ -64,6 +65,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Redis product) {
@@ -73,6 +75,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(Redis product) {
@@ -83,6 +86,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Redis product) {
@@ -95,7 +99,7 @@ public class RedisTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
-    @Deleted
+    @MarkDelete
     void delete(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.deleteObject();

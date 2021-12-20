@@ -1,11 +1,14 @@
 package models.subModels;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@AllArgsConstructor
 @Data
+@EqualsAndHashCode
 public class Db {
     String nameDB;
-    public boolean isDeleted = false;
+
+    public Db(String nameDB) {
+        this.nameDB = nameDB;
+    }
 }

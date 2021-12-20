@@ -10,6 +10,7 @@ import models.ObjectPoolService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.ObjectPoolService;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.IProductMock;
 import org.json.JSONArray;
@@ -45,7 +46,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
 
     @SneakyThrows
     @Override
-    public Stream provideArguments(ExtensionContext context) {
+    public Stream<Arguments> provideArguments(ExtensionContext context) {
 
         List<Arguments> list = new ArrayList<>();
         if (variableName == PRODUCTS) {
@@ -116,9 +117,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
             orders.stream()
                     .filter(distinctByKey(IProduct::getEnv))
                     .collect(Collectors.toList())
-                    .forEach(entity -> {
-                        list.add(Arguments.arguments(entity.getEnv(), String.valueOf(i.getAndIncrement())));
-                    });
+                    .forEach(entity -> list.add(Arguments.arguments(entity.getEnv(), String.valueOf(i.getAndIncrement()))));
         }
         return list.stream();
     }
@@ -154,14 +153,11 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         for (Map.Entry<String, List<Map>> e : products.entrySet()) {
             try {
                 Class<?> c = Class.forName("models.orderService.products." + e.getKey());
-                List<String> listAction = findListInMapByKey("actions", e.getValue());
                 List listProduct = findListInMapByKey("options", e.getValue());
                 if (listProduct == null)
                     continue;
                 for (Object orderObj : listProduct) {
                     IProduct product = (IProduct) objectMapper.convertValue(orderObj, c);
-                    if (listAction != null)
-                        product.setActions(listAction);
                     list.add(product);
                 }
             } catch (Exception x) {

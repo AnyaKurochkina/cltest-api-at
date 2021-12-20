@@ -1,6 +1,8 @@
 package models.orderService.products;
 
 import core.helper.Http;
+import core.helper.JsonHelper;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
@@ -13,6 +15,7 @@ import models.Entity;
 import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
+import models.authorizer.User;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
@@ -20,6 +23,8 @@ import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
+
+import static core.helper.Configure.OrderServiceURL;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -60,9 +65,10 @@ public class Rhel extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        JsonPath array = new Http(OrderServiceSteps.URL)
+        JsonPath array = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = array.get("[0].id");
@@ -74,7 +80,7 @@ public class Rhel extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(getProjectId()).build().createObject();
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
@@ -119,5 +125,12 @@ public class Rhel extends IProduct {
     @Override
     protected void delete() {
         delete("delete_vm");
+    }
+
+    public void checkCreateUseSsh(String userName) {
+        User user = User.builder().username(userName).build().createObject();
+        String host = (String) orderServiceSteps.getProductsField(this, "product_data.find{it.type=='vm'}.hostname");
+        SshClient ssh = new SshClient(host, user.getUsername(), user.getPassword());
+        ssh.connectAndExecuteListCommand("ls");
     }
 }

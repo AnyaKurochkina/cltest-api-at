@@ -1,5 +1,6 @@
 package httpModels.productCatalog.Service.getServiceList.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreType
 public class ExtraData{
 
 	@JsonProperty("service_info")

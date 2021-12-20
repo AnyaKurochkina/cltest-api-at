@@ -48,7 +48,7 @@ public class CreateActionResponse{
 	private List<Object> eventType;
 
 	@JsonProperty("required_item_statuses")
-	private List<String> requiredItemStatuses;
+	private List<Object> requiredItemStatuses;
 
 	@JsonProperty("data_config_path")
 	private String dataConfigPath;
@@ -92,9 +92,12 @@ public class CreateActionResponse{
 	@JsonProperty("allowed_groups")
 	private List<Object> allowedGroups;
 
+	@JsonProperty("graph_version_calculated")
+	private String graphVersionCalculated;
+
 	@JsonProperty("data_config_fields")
 	private List<Object> dataConfigFields;
 
 	@JsonProperty("required_order_statuses")
-	private List<String> requiredOrderStatuses;
+	private List<Object> requiredOrderStatuses;
 }

@@ -1,7 +1,7 @@
 package models.orderService.products;
 
-import core.CacheService;
 import core.helper.Http;
+import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
@@ -16,12 +16,13 @@ import models.subModels.Flavor;
 import models.subModels.KafkaTopic;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static core.helper.Configure.OrderServiceURL;
 
 @Log4j2
 @Data
@@ -35,22 +36,24 @@ public class ApacheKafkaCluster extends IProduct {
     String dataCentre;
     @ToString.Include
     String platform;
-    @ToString.Include
     String kafkaVersion;
     String domain;
     @Builder.Default
     public List<KafkaTopic> topics = new ArrayList<>();
     Flavor flavor;
+    @ToString.Include
     String osVersion;
+    public static final String KAFKA_CREATE_TOPICS = "kafka_create_topics";
 
     @Override
     @Step("Заказ продукта")
     protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
         log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath jsonPath = new Http(OrderServiceSteps.URL)
+        JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .post("order-service/api/v1/projects/" + projectId + "/orders", toJson())
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
@@ -78,7 +81,7 @@ public class ApacheKafkaCluster extends IProduct {
         Project project = Project.builder().id(projectId).build().createObject();
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
         flavor = flavorList.get(0);
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
@@ -96,7 +99,7 @@ public class ApacheKafkaCluster extends IProduct {
         List<KafkaTopic> kafkaTopics = new ArrayList<>();
         for (String name : names)
             kafkaTopics.add(new KafkaTopic("delete", 1, 1, 1, 1800000, name));
-        orderServiceSteps.executeAction("kafka_create_topics", this, new JSONObject("{\"topics\": " + CacheService.toJson(kafkaTopics) + "}"));
+        orderServiceSteps.executeAction(KAFKA_CREATE_TOPICS, this, new JSONObject("{\"topics\": " + JsonHelper.toJson(kafkaTopics) + "}"));
         for (String name : names)
             Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         topics.addAll(kafkaTopics);
@@ -104,7 +107,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void deleteTopics(List<String> names) {
-        orderServiceSteps.executeAction("kafka_delete_topics", this, new JSONObject("{\"topics\": " + CacheService.toJson(names) + "}"));
+        orderServiceSteps.executeAction("kafka_delete_topics", this, new JSONObject("{\"topics\": " + JsonHelper.toJson(names) + "}"));
         for (String name : names)
             Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         for (String name : names)
@@ -115,32 +118,32 @@ public class ApacheKafkaCluster extends IProduct {
     public void createAcl(String topicNameRegex) {
         orderServiceSteps.executeAction("kafka_create_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}"));
         save();
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)), "ACL топик не создался");
     }
 
     public void createAclTransaction(String transactionRegex) {
         orderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}"));
         save();
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)), "ACL транзакция не создалась");
     }
 
     /**
-     * @param aclName имя Acl, Если в aclName передать "*" то удалятся все Acl
+     * @param topicNameRegex имя Acl, Если в aclName передать "*" то удалятся все Acl
      */
-    public void deleteAcl(String aclName) {
-        orderServiceSteps.executeAction("kafka_delete_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + aclName + "\"}]}}"));
+    public void deleteAcl(String topicNameRegex) {
+        orderServiceSteps.executeAction("kafka_delete_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}]}}"));
         save();
-        //TODO: Написать проверку удаления Acl
+        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)), "ACL топики не удалились");
     }
 
     /**
      *
-     * @param aclTransactionName имя Acl транзакции, Если в aclTransactionName передать "*" то удалятся все Acl транзакции
+     * @param transactionRegex имя Acl транзакции, Если в aclTransactionName передать "*" то удалятся все Acl транзакции
      */
-    public void deleteAclTransaction(String aclTransactionName) {
-        orderServiceSteps.executeAction("kafka_delete_transaction_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + aclTransactionName + "\"}]}}"));
+    public void deleteAclTransaction(String transactionRegex) {
+        orderServiceSteps.executeAction("kafka_delete_transaction_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}]}}"));
         save();
-        //TODO: Написать проверку удаления Acl transaction
+        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)), "ACL транзакции не удалились");
     }
 
     public void start() {

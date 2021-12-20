@@ -26,8 +26,6 @@ public abstract class Entity implements AutoCloseable {
     protected void delete() {
     }
 
-    @Builder.Default
-    protected transient JsonHelper jsonHelper = new JsonHelper();
     public String uuid;
     @Setter
     @Getter

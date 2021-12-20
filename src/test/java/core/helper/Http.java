@@ -1,5 +1,6 @@
 package core.helper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -7,12 +8,11 @@ import org.apache.commons.io.IOUtils;
 //import org.apache.logging.log4j.core.util.Assert;
 import org.json.JSONArray;
 import org.json.JSONObject;
-//import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import steps.keyCloak.KeyCloakSteps;
 
 import javax.net.ssl.*;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
@@ -22,12 +22,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.Objects;
 import java.util.concurrent.Semaphore;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
-//import static org.junit.Assert.fail;
 import static tests.Tests.putAttachLog;
-//import static tests.Tests.putLog;
 
 @Log4j2
 public class Http {
@@ -36,10 +35,13 @@ public class Http {
     private String body = "";
     private String method;
     private String token = "";
+    private String field = "";
     private String contentType = "application/json";
     private boolean isUsedToken = true;
     private boolean isLogged = true;
     private static final Semaphore SEMAPHORE = new Semaphore(1, true);
+    private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
+    private File file;
 
     static {
         try {
@@ -90,32 +92,28 @@ public class Http {
         return this;
     }
 
-    public Response get(String path) {
+    private static String format(String str, Object ... args){
+        for (Object arg : args)
+            str = str.replaceFirst("\\{\\}", Objects.requireNonNull(arg).toString());
+        return str;
+    }
+
+    public Response get(String path, Object ... args) {
         this.method = "GET";
-        this.path = path;
+        this.path = format(path, args);
         return request();
     }
 
-    public Response get(String path, String body) {
-        this.body = body;
-        return get(path);
-    }
-
-    public Response delete(String path) {
+    public Response delete(String path, Object ... args) {
         this.method = "DELETE";
-        this.path = path;
+        this.path = format(path, args);
         return request();
     }
 
-    public Response patch(String path) {
+    public Response patch(String path, Object ... args) {
         this.method = "PATCH";
-        this.path = path;
+        this.path = format(path, args);
         return request();
-    }
-
-    public Response patch(String path, JSONObject body) {
-        this.body = body.toString();
-        return patch(path);
     }
 
     public Http setContentType(String contentType) {
@@ -123,19 +121,21 @@ public class Http {
         return this;
     }
 
-    public Response post(String path, JSONObject body) {
+    public Http body(Object body) {
         this.body = body.toString();
+        return this;
+    }
+
+    public Response multiPart(String path, String field, File file) {
+        contentType = "multipart/form-data; boundary=" + boundary;
+        this.field = field;
+        this.file = file;
         return post(path);
     }
 
-    public Response post(String path, String body) {
-        this.body = body;
-        return post(path);
-    }
-
-    public Response post(String path) {
+    public Response post(String path, Object ... args) {
         this.method = "POST";
-        this.path = path;
+        this.path = format(path, args);
         return request();
     }
 
@@ -162,8 +162,9 @@ public class Http {
     }
 
     private final StringBuilder sbLog = new StringBuilder();
-    private void log(String str){
-        if(isLogged)
+
+    private void log(String str) {
+        if (isLogged)
             sbLog.append(str);
     }
 
@@ -189,10 +190,14 @@ public class Http {
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
-            log(String.format("URL: %s\n", (host + path)));
-            if (body.length() > 0) {
-                log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
-                http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
+            log(String.format("%s URL: %s\n", method, (host + path)));
+            if (field.length() > 0) {
+                addFilePart(http.getOutputStream(), file);
+            } else {
+                if (body.length() > 0) {
+                    log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
+                    http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
+                }
             }
             InputStream is;
             if (http.getResponseCode() >= 400)
@@ -210,24 +215,11 @@ public class Http {
             else
                 log(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
             log.debug(sbLog.toString());
-//            AllureLifecycle allureLifecycle = getLifecycle();
-//            Attachment attachment = new Attachment().setSource(sbLog.toString()).setName(String.valueOf(new Date()));
-//            allureLifecycle.getCurrentTestCaseOrStep().ifPresent(id -> allureLifecycle.updateStep(id, s -> s.getAttachments().add(attachment)));
-//            Allure.getLifecycle().updateTestCase((t) -> {
-//                StatusDetails  statusDetails = t.getStatusDetails();
-//                if(statusDetails == null)
-//                    statusDetails = new StatusDetails();
-//                String message = statusDetails.getMessage();
-//                if(message == null)
-//                    message = "";
-//                t.setStatusDetails( statusDetails.setMessage(message + sbLog));
-//            });
             putAttachLog(sbLog.toString());
         } catch (Exception e) {
             e.printStackTrace();
             Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
-        }
-        finally {
+        } finally {
             if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
         }
@@ -240,6 +232,37 @@ public class Http {
         }
     }
 
+    @SneakyThrows
+    public void addFilePart(OutputStream outputStream, File uploadFile) {
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8), true);
+        String fileName = uploadFile.getName();
+        writer.append("--" + boundary)
+                .append("\r\n")
+                .append("Content-Disposition: form-data; name=\"")
+                .append(field)
+                .append("\"; filename=\"")
+                .append(fileName)
+                .append("\"\r\n")
+                .append("Content-Type: ")
+                .append(/*URLConnection.guessContentTypeFromName(fileName)*/ "application/octet-stream")
+                .append("\r\n")
+                .append("Content-Transfer-Encoding: binary\r\n\r\n")
+                .flush();
+
+        FileInputStream inputStream = new FileInputStream(uploadFile);
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        outputStream.flush();
+        inputStream.close();
+        writer.append("\r\n--")
+        .append(boundary)
+        .append("--")
+        .flush();
+    }
+
     public class Response {
         int status;
         String responseMessage;
@@ -250,12 +273,8 @@ public class Http {
         }
 
         public Response assertStatus(int s) {
-//            if (s != status() || (path.endsWith("/orders") && method.equals("POST"))) {
-//                Allure.addAttachment("REQUEST", host + path + "\n\n" + stringPrettyFormat(body));
-//                Allure.addAttachment("RESPONSE", stringPrettyFormat(responseMessage));
-//            }
             if (s != status())
-                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nResponse: %s\nRequest: %s\n%s\n", s, status(), method, responseMessage, host + path, body));
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nResponse: %s\nRequest: %s\n%s\n", s, status(), method, token, responseMessage, host + path, body));
             return this;
         }
 
@@ -285,6 +304,13 @@ public class Http {
             } catch (Exception e) {
                 throw new Error(e.getMessage());
             }
+        }
+
+        @SneakyThrows
+        public <T> T extractAs(Class<T> clazz){
+            JSONObject jsonObject = new JSONObject(responseMessage);
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.convertValue(jsonObject.toMap(), clazz);
         }
 
         public String toString() {

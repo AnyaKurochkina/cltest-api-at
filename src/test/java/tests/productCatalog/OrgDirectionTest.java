@@ -1,15 +1,18 @@
 package tests.productCatalog;
 
-import core.helper.Deleted;
+import core.helper.Configure;
+import core.helper.JsonHelper;
+import core.helper.MarkDelete;
 import httpModels.productCatalog.OrgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import io.qameta.allure.Feature;
+import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.productCatalog.OrgDirectionSteps;
 import tests.Tests;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -24,7 +27,7 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void createOrgDirection() {
         orgDirection = OrgDirection.builder()
-                .orgDirectionName("OrgDirectionAtTest")
+                .orgDirectionName("org_direction_at_test2021")
                 .build()
                 .createObject();
     }
@@ -37,21 +40,23 @@ public class OrgDirectionTest extends Tests {
     }
 
     @Order(3)
-    @DisplayName("Проверка существования направления с таким именем")
+    @DisplayName("Проверка существования направления по имени")
     @Test
     public void checkOrgDirectionExists() {
-        Assertions.assertTrue(orgSteps.isExist(orgDirection.getOrgDirectionName()));
-        Assertions.assertFalse(orgSteps.isExist("NotExistName"));
+        Assertions.assertTrue(orgSteps.isProductExists(orgDirection.getOrgDirectionName()));
+        Assertions.assertFalse(orgSteps.isProductExists("NotExistName"));
     }
 
     @Order(4)
-    @DisplayName("Импортирование направления")
+    @DisplayName("Импорт направления")
     @Test
-    public void importOrgDescription() {
-        String name = "ImportOrgDirection";
-        JSONObject jsonObject = orgSteps.createJsonObject(name, "description");
-        orgSteps.importOrgDirection(jsonObject);
-        Assertions.assertTrue(orgSteps.isExist(name));
+    public void importOrgDirection() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
+        String orgDirectionName = new JsonPath(data).get("OrgDirection.name");
+        orgSteps.importOrgDirection(Configure.RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirection.json");
+        Assertions.assertTrue(orgSteps.isProductExists(orgDirectionName));
+        orgSteps.deleteOrgDirectionByName(orgDirectionName);
+        Assertions.assertFalse(orgSteps.isProductExists(orgDirectionName));
     }
 
     @Order(5)
@@ -79,27 +84,42 @@ public class OrgDirectionTest extends Tests {
     public void copyOrgDirectionById() {
         String cloneName = orgDirection.getOrgDirectionName() + "-clone";
         orgSteps.copyOrgDirectionById(orgDirection.getOrgDirectionId());
-        Assertions.assertTrue(orgSteps.isExist(cloneName));
+        Assertions.assertTrue(orgSteps.isProductExists(cloneName));
+        orgSteps.deleteOrgDirectionByName(cloneName);
+        Assertions.assertFalse(orgSteps.isProductExists(cloneName));
     }
 
     @Order(8)
     @DisplayName("Экспорт направления по Id")
     @Test
     public void exportOrgDirectionById() {
-    orgSteps.exportOrgDirectionById(orgDirection.getOrgDirectionId());
+        orgSteps.exportOrgDirectionById(orgDirection.getOrgDirectionId());
+    }
+
+    @Order(9)
+    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
+    @Test
+    public void createActionWithInvalidCharacters() {
+        assertAll("Направление создалось с недопустимым именем",
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("имя")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("a&b&c")).assertStatus(400)
+        );
     }
 
     @Order(100)
     @Test
     @DisplayName("Удаление направления")
-    @Deleted
+    @MarkDelete
     public void deleteOrgDirection() {
         try (OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("OrgDirectionAtTest")
+                .orgDirectionName("org_direction_at_test")
                 .build()
                 .createObjectExclusiveAccess()) {
             orgDirection.deleteObject();
         }
-        Assertions.assertFalse(orgSteps.isExist("OrgDirectionAtTest"));
+        Assertions.assertFalse(orgSteps.isProductExists("org_direction_at_test"));
     }
 }

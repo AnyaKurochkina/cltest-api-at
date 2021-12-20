@@ -1,7 +1,5 @@
 package models.productCatalog;
 
-import java.util.List;
-
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
@@ -17,6 +15,8 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import steps.productCatalog.ProductsSteps;
 
+import java.util.List;
+
 import static core.helper.JsonHelper.convertResponseOnClass;
 
 @Log4j2
@@ -25,45 +25,25 @@ import static core.helper.JsonHelper.convertResponseOnClass;
 public class Product extends Entity {
 
     private List<Object> allowedPaths;
-
     private Boolean isOpen;
-
     private String author;
-
     private List<String> informationSystems;
-
     private String icon;
-
     private String description;
-
     private String graphVersion;
-
     private List<String> envs;
-
     private List<Object> restrictedGroups;
-
     private String title;
-
     private String graphId;
-
     private String version;
-
     private Integer maxCount;
-
     private String productName;
-
     private List<Object> restrictedPaths;
-
     private String graphVersionPattern;
-
     private List<Object> allowedGroups;
-
     private String productId;
-
     private String category;
-
     private String jsonTemplate;
-
 
     @Override
     public Entity init() {
@@ -75,8 +55,7 @@ public class Product extends Entity {
 
     @Override
     public JSONObject toJson() {
-        JsonHelper jsonHelper = new JsonHelper();
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", productName)
                 .set("$.title", title)
                 .set("$.graph_id", graphId)
@@ -86,9 +65,9 @@ public class Product extends Entity {
 
     @Override
     protected void create() {
-        String response = new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("products/", toJson())
+        String response = new Http(Configure.ProductCatalogURL)
+                .body(toJson())
+                .post("products/")
                 .assertStatus(201)
                 .toString();
 
@@ -99,21 +78,17 @@ public class Product extends Entity {
 
     @Step("Обновление продукта")
     public void updateProduct() {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .patch("products/" + productId + "/",
-                        this.getTemplate()
-                                .set("$.version", "1.1.1").build())
+        new Http(Configure.ProductCatalogURL)
+                .body(this.getTemplate().set("$.version", "1.1.1").build())
+                .patch("products/" + productId + "/")
                 .assertStatus(200);
     }
 
     @Override
     protected void delete() {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        new Http(Configure.ProductCatalogURL)
                 .delete("products/" + productId + "/")
                 .assertStatus(204);
-
         ProductsSteps productsSteps = new ProductsSteps();
         productId = productsSteps.getProductId(productName);
         Assertions.assertNull(productId, String.format("Продукт с именем: %s не удалился", productName));

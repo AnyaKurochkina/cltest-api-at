@@ -32,35 +32,28 @@ public class Action extends Entity {
     public Entity init() {
         jsonTemplate = "productCatalog/actions/createAction.json";
         GraphSteps graphSteps = new GraphSteps();
-//        if(graph == null){
-//            graph = Graph.builder().build().createObject();
-//        }
         graphId = graphSteps.getGraphId("AtTestGraph");
         return this;
     }
 
     @Override
     public JSONObject toJson() {
-        JsonHelper jsonHelper = new JsonHelper();
-        return jsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", actionName)
                 .set("$.title", actionName)
                 .set("$.description", actionName)
                 .set("$.graph_id", graphId)
                 .set("$.version", "1.1.1")
-//                .set("$.required_order_statuses[0]", "success")
-//                .set("$.event_type[0]", "bm")
-//                .set("$.event_provider[0]", "s3")
-//                .set("$.type", "deleted")
                 .build();
     }
 
     @Override
     @Step("Создание экшена")
     protected void create() {
-        String response = new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("actions/", toJson())
+        String response = new Http(Configure.ProductCatalogURL)
+                
+                .body(toJson())
+                .post("actions/")
                 .assertStatus(201)
                 .toString();
 
@@ -72,8 +65,8 @@ public class Action extends Entity {
     @Override
     @Step("Удаление экшена")
     protected void delete() {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        new Http(Configure.ProductCatalogURL)
+                
                 .delete("actions/" + actionId + "/")
                 .assertStatus(204);
 

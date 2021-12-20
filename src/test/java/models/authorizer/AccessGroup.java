@@ -2,6 +2,7 @@ package models.authorizer;
 
 import core.helper.Configure;
 import core.helper.Http;
+import core.helper.JsonHelper;
 import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
 import lombok.Builder;
@@ -18,8 +19,7 @@ public class AccessGroup extends Entity {
     String name;
     String projectName;
     String description;
-    @Builder.Default
-    List<String> users = new ArrayList<>();
+    List<String> users;
 
     public void addUser(String user){
         users.add(user);
@@ -39,11 +39,13 @@ public class AccessGroup extends Entity {
             projectName = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
         if (description == null)
             description = projectName;
+        if(users == null)
+            users = new ArrayList<>();
         return this;
     }
 
     public JSONObject toJson() {
-        return jsonHelper.getJsonTemplate("/accessGroup/accessGroup.json")
+        return JsonHelper.getJsonTemplate("/accessGroup/accessGroup.json")
                 .set("$.access_group.name", name)
                 .set("$.access_group.description", description)
                 .set("$.access_group.project_name", projectName)
@@ -54,7 +56,8 @@ public class AccessGroup extends Entity {
     @Step("Создание группы доступа")
     protected void create() {
         name = new Http(Configure.PortalBackURL)
-                .post(String.format("projects/%s/access_groups", projectName), toJson())
+                .body(toJson())
+                .post(String.format("projects/%s/access_groups", projectName))
                 .assertStatus(201)
                 .jsonPath()
                 .getString("name");

@@ -3,46 +3,28 @@ package steps.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
+import httpModels.productCatalog.Action.existsAction.response.ExistsActionResponse;
+import httpModels.productCatalog.Action.getAction.response.GetActionResponse;
+import httpModels.productCatalog.Action.getActionList.response.ActionResponse;
+import httpModels.productCatalog.Action.getActionList.response.ListItem;
 import httpModels.productCatalog.Action.patchAction.response.PatchActionResponse;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
-import httpModels.productCatalog.Action.getAction.response.ActionResponse;
-import httpModels.productCatalog.Action.getAction.response.ListItem;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
-import static core.helper.JsonHelper.convertResponseOnClass;
+import java.io.File;
+import java.util.List;
 
 public class ActionsSteps {
 
-    private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {
-        JsonHelper jsonHelper = new JsonHelper();
-        //productCatalog/actions/createAction.json
-        return jsonHelper.getJsonTemplate(pathToJsonBody)
-                .set("$.name", actionName)
-                .set("$.title", actionName)
-                .set("$.description", actionName)
-                .set("$.graph_id", graphId)
-//                .set("$.graph_version", "1.0.0")
-                .set("$.graph_version_pattern", "1.")
-//                .set("$.required_order_statuses[0]", "success")
-//                .set("$.event_type[0]", "bm")
-//                .set("$.event_provider[0]", "s3")
-//                .set("$.type", "deleted")
-                .build();
-    }
-
     @SneakyThrows
     @Step("Поиск ID экшена по имени с использованием multiSearch")
-    public String getActionByNameWithMultiSearch(String actionName) {
+    public String getActionIdByNameWithMultiSearch(String actionName) {
         String actionId = null;
-        String object = new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        ActionResponse response = new Http(Configure.ProductCatalogURL)
                 .get("actions/?include=total_count&page=1&per_page=10&multisearch=" + actionName)
-                .assertStatus(200)
-                .toString();
-
-        ActionResponse response = convertResponseOnClass(object, ActionResponse.class);
+                .assertStatus(200).extractAs(ActionResponse.class);
 
         for (ListItem listItem : response.getList()) {
             if (listItem.getName().equals(actionName)) {
@@ -58,13 +40,10 @@ public class ActionsSteps {
     @Step("Получение ID экшена  по его имени: {actionName}")
     public String getActionId(String actionName) {
         String actionId = null;
-        String object = new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+        ActionResponse response = new Http(Configure.ProductCatalogURL)
                 .get("actions/")
                 .assertStatus(200)
-                .toString();
-
-        ActionResponse response = convertResponseOnClass(object, ActionResponse.class);
+                .extractAs(ActionResponse.class);
 
         for (ListItem listItem : response.getList()) {
             if (listItem.getName().equals(actionName)) {
@@ -78,37 +57,109 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Создание экшена")
     public Http.Response createAction(JSONObject body) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .post("actions/", body);
+        return new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .post("actions/");
     }
 
     @SneakyThrows
     @Step("Обновление экшена")
     public Http.Response patchActionRow(JSONObject body, String actionId) {
-        return new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .patch("actions/" + actionId + "/", body);
+        return new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .patch("actions/" + actionId + "/");
     }
 
     @SneakyThrows
     @Step("Обновление экшена")
     public PatchActionResponse patchAction(String actionName, String graphId, String actionId) {
-        String response = new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
-                .patch("actions/" + actionId + "/", toJson("productCatalog/actions/createAction.json", actionName, graphId))
+        return new Http(Configure.ProductCatalogURL)
+                .body(toJson("productCatalog/actions/createAction.json", actionName, graphId))
+                .patch("actions/" + actionId + "/")
                 .assertStatus(200)
-                .toString();
+                .extractAs(PatchActionResponse.class);
+    }
 
-        return convertResponseOnClass(response, PatchActionResponse.class);
+    @SneakyThrows
+    @Step("Получение списка действий")
+    public List<ListItem> getActionList() {
+        return new Http(Configure.ProductCatalogURL)
+                .get("actions/")
+                .assertStatus(200)
+                .extractAs(ActionResponse.class)
+                .getList();
+    }
+
+    @SneakyThrows
+    @Step("Проверка существования действия по имени")
+    public boolean isActionExists(String name) {
+        return new Http(Configure.ProductCatalogURL)
+                .get("actions/exists/?name=" + name)
+                .assertStatus(200)
+                .extractAs(ExistsActionResponse.class).getExists();
+    }
+
+    @SneakyThrows
+    @Step("Импорт действия")
+    public void importAction(String pathName) {
+        new Http(Configure.ProductCatalogURL)
+                .multiPart("actions/obj_import/", "file", new File(pathName))
+                .assertStatus(200);
+    }
+
+    @SneakyThrows
+    @Step("Получение действия по Id")
+    public GetActionResponse getActionById(String id) {
+        return new Http(Configure.ProductCatalogURL)
+                .get("actions/" + id + "/")
+                .assertStatus(200)
+                .extractAs(GetActionResponse.class);
+    }
+
+    @SneakyThrows
+    @Step("Копирование действия по Id")
+    public void copyActionById(String id) {
+        new Http(Configure.ProductCatalogURL)
+                .post("actions/" + id + "/copy/")
+                .assertStatus(200);
+    }
+
+    @SneakyThrows
+    @Step("Экспорт действия по Id")
+    public void exportActionById(String id) {
+        new Http(Configure.ProductCatalogURL)
+                .get("actions/" + id + "/obj_export/")
+                .assertStatus(200);
     }
 
     @SneakyThrows
     @Step("Удаление экшена")
-    public void deleteAction(String id) {
-        new Http(Configure.ProductCatalog)
-                .setContentType("application/json")
+    public void deleteActionById(String id) {
+        new Http(Configure.ProductCatalogURL)
                 .delete("actions/" + id + "/")
                 .assertStatus(204);
+    }
+
+    @Step("Создание JSON объекта по действиям")
+    public JSONObject createJsonObject(String name) {
+        return JsonHelper
+                .getJsonTemplate("productCatalog/actions/createAction.json")
+                .set("$.name", name)
+                .build();
+    }
+
+    @Step("Удаление действия по имени")
+    public void deleteActionByName(String name) {
+        deleteActionById(getActionIdByNameWithMultiSearch(name));
+    }
+
+    private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {
+        return JsonHelper.getJsonTemplate(pathToJsonBody)
+                .set("$.name", actionName)
+                .set("$.title", actionName)
+                .set("$.description", actionName)
+                .set("$.graph_id", graphId)
+                .set("$.graph_version_pattern", "1.")
+                .build();
     }
 }
