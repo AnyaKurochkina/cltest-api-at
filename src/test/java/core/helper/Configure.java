@@ -44,7 +44,7 @@ public class Configure {
             CalculatorURL = kongURL + "calculator/";
             ProductCatalogURL = kongURL + "product-catalog/";
             OrderServiceURL = kongURL + "order-service/api/v1/";
-            StateServiceURL = kongURL + "state-service/api/v1/";
+            StateServiceURL = kongURL + "state-service/";
             ReferencesURL = kongURL + "references/api/v1/";
         } catch (Exception e) {
             e.printStackTrace();

@@ -14,15 +14,15 @@ import static core.helper.Configure.StateServiceURL;
 public class StateServiceSteps extends Steps {
 
     public String GetErrorFromStateService(IProduct product) {
-        List<String> traceback = null;
+        String traceback = null;
         try {
             traceback = new Http(StateServiceURL)
                     .setProjectId(product.getProjectId())
                     .get("actions/?order_id={}", product.getOrderId())
-                    .jsonPath().get("list.findAll{it.status.contains('error')}.data.traceback");
+                    .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {
             log.error(e.getMessage());
         }
-        return String.valueOf(traceback);
+        return traceback;
     }
 }
