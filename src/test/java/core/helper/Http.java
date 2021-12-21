@@ -273,7 +273,7 @@ public class Http {
 
         public Response assertStatus(int s) {
             if (s != status())
-                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nResponse: %s\nRequest: %s\n%s\n", s, status(), method, token, responseMessage, host + path, body));
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nRequest: %s\nResponse: %s\n%s\n", s, status(), method, token, host + path, responseMessage, body));
             return this;
         }
 
