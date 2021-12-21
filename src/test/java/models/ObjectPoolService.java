@@ -31,8 +31,9 @@ public class ObjectPoolService {
     public static final List<String> createdEntities = Collections.synchronizedList(new ArrayList<>());
 
     @SneakyThrows
-    public static <T extends Entity> T create(Entity e, boolean exclusiveAccess) {
+    public static <T extends Entity> T create(Entity e, boolean exclusiveAccess, boolean isPublic) {
         ObjectPoolEntity objectPoolEntity = createObjectPoolEntity(e);
+        objectPoolEntity.setPublic(isPublic);
         objectPoolEntity.lock();
         if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
             objectPoolEntity.release();
@@ -92,15 +93,13 @@ public class ObjectPoolService {
     }
 
 
-    public static <T extends Entity> T create(Entity e) {
-        return create(e, false);
-    }
+//    public static <T extends Entity> T create(Entity e) {
+//        return create(e, false);
+//    }
 
     public static void saveEntity(Entity entity) {
         ObjectPoolEntity objectPoolEntity = getObjectPoolEntity(entity);
-        if (objectPoolEntity == null) {
-            return;
-        } else {
+        if (objectPoolEntity != null) {
             objectPoolEntity.set(entity);
         }
     }
