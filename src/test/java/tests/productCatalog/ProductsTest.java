@@ -7,6 +7,7 @@ import httpModels.productCatalog.Product.getProduct.response.GetProductResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Product;
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductsSteps;
 import tests.Tests;
@@ -31,6 +32,7 @@ public class ProductsTest extends Tests {
                 .productName("at_test_api_product55")
                 .title("AtTestApiProduct")
                 .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
                 .build()
                 .createObject();
     }
@@ -75,12 +77,22 @@ public class ProductsTest extends Tests {
     @Test
     public void partialUpdateProduct() {
         String expectedValue = "UpdateDescription";
-        productsSteps.partialUpdateProduct(product.getProductId(), "description", expectedValue);
+        productsSteps.partialUpdateProduct(product.getProductId(), new JSONObject().put("description", expectedValue))
+                .assertStatus(200);
         String actual = productsSteps.getProductById(product.getProductId()).getDescription();
         Assertions.assertEquals(expectedValue, actual);
     }
 
     @Order(7)
+    @DisplayName("Негативный тест на попытку обновления продукта до текущей версии")
+    @Test
+    public void partialUpdateProductForCurrentVersion() {
+        String currentVersion = product.getVersion();
+        productsSteps.partialUpdateProduct(product.getProductId(), new JSONObject().put("description", "update")
+                .put("version", currentVersion)).assertStatus(500);
+    }
+
+    @Order(8)
     @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {
@@ -88,7 +100,7 @@ public class ProductsTest extends Tests {
         Assertions.assertNotNull(getProductResponse.getGraphVersionCalculated());
     }
 
-    @Order(8)
+    @Order(9)
     @DisplayName("Копирование продукта по Id")
     @Test
     public void copyProductById() {
@@ -114,7 +126,7 @@ public class ProductsTest extends Tests {
     }
 
     @Order(13)
-    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
+    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
     @Test
     public void createProductWithInvalidCharacters() {
         assertAll("Продукт создался с недопустимым именем",

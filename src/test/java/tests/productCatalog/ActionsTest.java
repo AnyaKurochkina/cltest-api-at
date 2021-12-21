@@ -22,7 +22,7 @@ public class ActionsTest extends Tests {
     Action action;
 
     @Order(1)
-    @DisplayName("Создание экшена в продуктовом каталоге")
+    @DisplayName("Создание действия в продуктовом каталоге")
     @Test
     public void createAction() {
         action = Action.builder().actionName("test_object_at2021").build().createObject();
@@ -82,7 +82,7 @@ public class ActionsTest extends Tests {
     }
 
     @Order(8)
-    @DisplayName("Поиск экшена по имени, с использованием multiSearch")
+    @DisplayName("Поиск действия по имени, с использованием multiSearch")
     @Test
     public void searchActionByName() {
         String actionIdWithMultiSearch = actionsSteps.getActionIdByNameWithMultiSearch(action.getActionName());
@@ -92,7 +92,7 @@ public class ActionsTest extends Tests {
     }
 
     @Order(9)
-    @DisplayName("Негативный тест на создание экшена с двумя параметрами одновременно graph_version_pattern и graph_version")
+    @DisplayName("Негативный тест на создание действия с двумя параметрами одновременно graph_version_pattern и graph_version")
     @Test
     public void doubleVersionTest() {
         Http.Response resp = actionsSteps.createAction(Action.builder().actionName("negative_object").build().init().getTemplate()
@@ -104,7 +104,7 @@ public class ActionsTest extends Tests {
     }
 
     @Order(10)
-    @DisplayName("Обновление экшена без указания версии, вресия должна инкрементироваться")
+    @DisplayName("Обновление действия без указания версии, версия должна инкрементироваться")
     @Test
     public void patchTest() {
         PatchActionResponse patchActionResponse = actionsSteps.patchAction("test_object_at2021", action.getGraphId(), action.getActionId());
@@ -112,7 +112,7 @@ public class ActionsTest extends Tests {
     }
 
     @Order(11)
-    @DisplayName("Негативный тест на обновление экшена до той же версии/текущей")
+    @DisplayName("Негативный тест на обновление действия до той же версии/текущей")
     @Test
     public void sameVersionTest() {
         actionsSteps.patchActionRow(Action.builder().actionName("test_object_at2021").build().init().getTemplate()
@@ -128,7 +128,7 @@ public class ActionsTest extends Tests {
     }
 
     @Order(13)
-    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
+    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
     @Test
     public void createActionWithInvalidCharacters() {
         assertAll("Действие создался с недопустимым именем",
@@ -150,7 +150,7 @@ public class ActionsTest extends Tests {
 
     @Order(100)
     @Test
-    @DisplayName("Удаление экшена")
+    @DisplayName("Удаление действия")
     @MarkDelete
     public void deleteAction() {
         try (Action action = Action.builder().actionName("test_object_at2021").build().createObjectExclusiveAccess()) {

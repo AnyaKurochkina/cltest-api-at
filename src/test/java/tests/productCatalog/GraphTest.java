@@ -37,7 +37,7 @@ public class GraphTest {
     @DisplayName("Создание графа")
     @Test
     public void createGraph() {
-        graph = Graph.builder().name("at_test_graph_api").build().createObject();
+        graph = Graph.builder().name("at_test_graph_api").version("1.0.0").build().createObject();
     }
 
     @Order(2)
@@ -92,7 +92,8 @@ public class GraphTest {
     public void partialUpdateGraph() {
         String expectedDescription = "UpdateDescription";
         String oldGraphVersion = graph.getVersion();
-        graphSteps.partialUpdateGraphById(graph.getGraphId(), new JSONObject().put("description", expectedDescription));
+        graphSteps.partialUpdateGraphById(graph.getGraphId(), new JSONObject().put("description", expectedDescription))
+                .assertStatus(200);
         GetGraphResponse getGraphResponse = graphSteps.getGraphById(graph.getGraphId());
         String actualDescription = getGraphResponse.getDescription();
         String newGraphVersion = getGraphResponse.getVersion();
@@ -101,13 +102,22 @@ public class GraphTest {
     }
 
     @Order(8)
+    @DisplayName("Негативный тест на попытку обновления графа до текущей версии")
+    @Test
+    public void partialUpdateForCurrentVersion() {
+        String currentVersion = graph.getVersion();
+        graphSteps.partialUpdateGraphById(graph.getGraphId(), new JSONObject().put("description", "update")
+                .put("version", currentVersion)).assertStatus(500);
+    }
+
+    @Order(9)
     @DisplayName("Негативный тест на создание графа с существующим именем")
     @Test
     public void createGraphWithSameName() {
         graphSteps.createGraphResponse(graphSteps.createJsonObject(graph.getName())).assertStatus(400);
     }
 
-    @Order(9)
+    @Order(10)
     @DisplayName("Получение списка объектов использующих граф")
     @Test
     public void getUsedGraphList() {

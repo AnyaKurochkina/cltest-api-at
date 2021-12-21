@@ -79,11 +79,10 @@ public class ProductsSteps {
     }
 
     @Step("Частичное обновление продукта")
-    public void partialUpdateProduct(String id, String key, String value) {
-        new Http(Configure.ProductCatalogURL)
-                .body(new JSONObject().put(key, value))
-                .patch("products/" + id + "/")
-                .assertStatus(200);
+    public Http.Response partialUpdateProduct(String id, JSONObject object) {
+        return new Http(Configure.ProductCatalogURL)
+                .body(object)
+                .patch("products/" + id + "/");
     }
 
     public void deleteProductByName(String actionName) {

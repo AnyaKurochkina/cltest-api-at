@@ -70,7 +70,7 @@ public class ServicesTest extends Tests {
     }
 
     @Order(6)
-    @DisplayName("Получение сервиса по ID")
+    @DisplayName("Получение сервиса по Id")
     @Test
     public void getServiceById() {
         GetServiceResponse serviceResponse = serviceSteps.getServiceById(service.getServiceId());
