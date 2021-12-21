@@ -49,6 +49,7 @@ public class Graph extends Entity {
                 .set("$.description", description)
                 .set("$.type", type)
                 .set("$.author", author)
+                .set("$.version", version)
                 .build();
     }
 

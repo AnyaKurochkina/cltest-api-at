@@ -85,11 +85,10 @@ public class GraphSteps {
 
     @SneakyThrows
     @Step("Частичное обновление графа по Id")
-    public void partialUpdateGraphById(String id, JSONObject object) {
-        new Http(Configure.ProductCatalogURL)
+    public Http.Response partialUpdateGraphById(String id, JSONObject object) {
+       return new Http(Configure.ProductCatalogURL)
                 .body(object)
-                .patch("graphs/" + id + "/")
-                .assertStatus(200);
+                .patch("graphs/" + id + "/");
     }
 
     @Step("Создание JSON объекта по графам")
