@@ -100,7 +100,7 @@ public class OrgDirectionTest extends Tests {
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
     @Test
     public void createActionWithInvalidCharacters() {
-        assertAll(
+        assertAll("Направление создалось с недопустимым именем",
                 () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
                 () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
                 () -> orgSteps.createOrgDirection(orgSteps.createJsonObject("имя")).assertStatus(400),

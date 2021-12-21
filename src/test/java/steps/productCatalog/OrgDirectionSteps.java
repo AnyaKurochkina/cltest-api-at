@@ -16,8 +16,6 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
-
 public class OrgDirectionSteps {
 
     @Step("Получение списка направлений")
@@ -48,13 +46,9 @@ public class OrgDirectionSteps {
 
     @Step("Ипорт направления")
     public void importOrgDirection(String pathName) {
-        given()
-                .contentType("multipart/form-data")
-                .multiPart("file", new File(pathName))
-                .when()
-                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/org_direction/obj_import/")
-                .then()
-                .statusCode(200);
+        new Http(Configure.ProductCatalogURL)
+                .multiPart("org_direction/obj_import/", "file", new File(pathName))
+                .assertStatus(200);
     }
 
     @Step("Получение направления по Id")

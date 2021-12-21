@@ -73,4 +73,7 @@ public class CopyServiceResponse{
 
 	@JsonProperty("direction")
 	private String direction;
+
+	@JsonProperty("title")
+	private String title;
 }

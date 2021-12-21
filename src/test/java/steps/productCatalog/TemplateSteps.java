@@ -11,6 +11,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.List;
 
 import static core.helper.JsonHelper.convertResponseOnClass;
@@ -112,5 +113,13 @@ public class TemplateSteps {
         return new Http(Configure.ProductCatalogURL)
                 .body(body)
                 .post("templates/");
+    }
+
+    @SneakyThrows
+    @Step("Импорт шаблона")
+    public void importTemplate(String pathName) {
+        new Http(Configure.ProductCatalogURL)
+                .multiPart("templates/obj_import/", "file", new File(pathName))
+                .assertStatus(200);
     }
 }

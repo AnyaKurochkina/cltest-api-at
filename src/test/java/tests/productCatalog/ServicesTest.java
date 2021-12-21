@@ -4,6 +4,7 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
 import httpModels.productCatalog.Service.copyService.response.CopyServiceResponse;
+import httpModels.productCatalog.Service.createService.response.CreateServiceResponse;
 import httpModels.productCatalog.Service.getService.response.GetServiceResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
@@ -28,7 +29,7 @@ public class ServicesTest extends Tests {
     @Test
     public void createService() {
         service = Services.builder()
-                .serviceName("service_test")
+                .serviceName("create_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
@@ -53,7 +54,7 @@ public class ServicesTest extends Tests {
     @DisplayName("Импорт сервиса")
     @Test
     public void importService() {
-        String data =JsonHelper.getStringFromFile("/productCatalog/services/importService.json");
+        String data = JsonHelper.getStringFromFile("/productCatalog/services/importService.json");
         String serviceName = new JsonPath(data).get("Service.json.name");
         serviceSteps.importService(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
         Assertions.assertTrue(serviceSteps.isServiceExist(serviceName));
@@ -102,15 +103,47 @@ public class ServicesTest extends Tests {
     }
 
     @Order(10)
-    @DisplayName("Негативный тест на создание сервиса с недопустимыми символами в имени.")
+    @DisplayName("Негативный тест на создание сервиса с недопустимыми символами в имени")
     @Test
     public void createServiceWithInvalidCharacters() {
-        assertAll(
+        assertAll("Сервис создался с недопустимым именем",
                 () -> serviceSteps.createService(serviceSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
                 () -> serviceSteps.createService(serviceSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
                 () -> serviceSteps.createService(serviceSteps.createJsonObject("имя")).assertStatus(400),
                 () -> serviceSteps.createService(serviceSteps.createJsonObject("Имя")).assertStatus(400),
                 () -> serviceSteps.createService(serviceSteps.createJsonObject("a&b&c")).assertStatus(400)
+        );
+    }
+
+    @Order(11)
+    @DisplayName("Создание сервиса со значением ключа graph_id равным null")
+    @Test
+    public void createServiceWithGraphIdNull() {
+        CreateServiceResponse createServiceResponse = serviceSteps
+                .createService(JsonHelper.getJsonTemplate("productCatalog/services/createServiceWithGraphIdNull.json")
+                        .set("name", "create_service_with_graph_id_null_test_api")
+                        .build()).extractAs(CreateServiceResponse.class);
+        Assertions.assertNull(createServiceResponse.getGraphId(), "GraphId не равен null");
+        serviceSteps.deleteServiceById(createServiceResponse.getId());
+    }
+
+    @Order(12)
+    @DisplayName("Негативный тест на создание сервиса с недопустимыми graph_id")
+    @Test
+    public void createServiceWithInvalidGraphId() {
+        assertAll("Создался сервис недопустимым graph_id",
+                () -> serviceSteps.createService(JsonHelper.getJsonTemplate("productCatalog/services/createServices.json")
+                        .set("name", "create_service_with_empty_graph_id")
+                        .set("graph_id", "")
+                        .build()).assertStatus(500),
+                () -> serviceSteps.createService(JsonHelper.getJsonTemplate("productCatalog/services/createServices.json")
+                        .set("name", "create_service_with_not_exist_graph_id")
+                        .set("graph_id", "dgdh-4565-dfgdf")
+                        .build()).assertStatus(500),
+                () -> serviceSteps.createService(JsonHelper.getJsonTemplate("productCatalog/services/createServices.json")
+                        .set("name", "create_service_with_not_exist_graph_id")
+                        .set("graph_id", 56564)
+                        .build()).assertStatus(500)
         );
     }
 
@@ -120,7 +153,7 @@ public class ServicesTest extends Tests {
     @MarkDelete
     public void deleteService() {
         try (Services service = Services.builder()
-                .serviceName("service_test")
+                .serviceName("create_service_test_api")
                 .build()
                 .createObjectExclusiveAccess()) {
             service.deleteObject();

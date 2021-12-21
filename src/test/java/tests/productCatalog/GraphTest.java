@@ -9,6 +9,7 @@ import httpModels.productCatalog.Graphs.deleteGraph.response.DeleteGraphResponse
 import httpModels.productCatalog.Graphs.getGraph.response.GetGraphResponse;
 import httpModels.productCatalog.Product.createProduct.response.CreateProductResponse;
 import httpModels.productCatalog.Service.createService.response.CreateServiceResponse;
+import io.restassured.path.json.JsonPath;
 import models.productCatalog.Graph;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
@@ -16,6 +17,9 @@ import steps.productCatalog.ActionsSteps;
 import steps.productCatalog.GraphSteps;
 import steps.productCatalog.ProductsSteps;
 import steps.productCatalog.ServiceSteps;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -96,11 +100,42 @@ public class GraphTest {
         Assertions.assertNotEquals(oldGraphVersion, newGraphVersion);
     }
 
-    @Order(12)
+    @Order(8)
     @DisplayName("Негативный тест на создание графа с существующим именем")
     @Test
     public void createGraphWithSameName() {
         graphSteps.createGraphResponse(graphSteps.createJsonObject(graph.getName())).assertStatus(400);
+    }
+
+    @Order(9)
+    @DisplayName("Получение списка объектов использующих граф")
+    @Test
+    public void getUsedGraphList() {
+        CreateGraphResponse usedGraphApi = graphSteps.createGraph(graphSteps.createJsonObject("used_graph_api"));
+        String usedGraphId = usedGraphApi.getId();
+        CreateProductResponse createProductResponse = productsSteps.createProduct(JsonHelper.getJsonTemplate("productCatalog/products/createProduct.json")
+                .set("name", "product_for_used_graph_test_api")
+                .set("graph_id", usedGraphId)
+                .build()).extractAs(CreateProductResponse.class);
+        CreateServiceResponse createServiceResponse = serviceSteps.createService(JsonHelper.getJsonTemplate("productCatalog/services/createServices.json")
+                .set("name", "service_for_used_graph_test_api")
+                .set("title", "service_title")
+                .set("graph_id", usedGraphId)
+                .build()).extractAs(CreateServiceResponse.class);
+        CreateActionResponse createActionResponse = actionsSteps.createAction(JsonHelper.getJsonTemplate("productCatalog/actions/createAction.json")
+                .set("name", "action_for_used_graph_test_api")
+                .set("graph_id", usedGraphId)
+                .build()).extractAs(CreateActionResponse.class);
+        JsonPath jsonPath = graphSteps.getUsedGraphArray(usedGraphId);
+        assertAll(
+                () -> assertEquals(createProductResponse.getId(), jsonPath.getString("id[0]")),
+                () -> assertEquals(createActionResponse.getId(), jsonPath.getString("id[1]")),
+                () -> assertEquals(createServiceResponse.getId(), jsonPath.getString("id[2]"))
+        );
+        productsSteps.deleteProductById(createProductResponse.getId());
+        serviceSteps.deleteServiceById(createServiceResponse.getId());
+        actionsSteps.deleteActionById(createActionResponse.getId());
+        graphSteps.deleteGraphResponse(usedGraphId);
     }
 
     @Order(99)
@@ -110,7 +145,7 @@ public class GraphTest {
         CreateGraphResponse mainGraph = graphSteps.createGraph(graphSteps.createJsonObject("mainGraph"));
         String mainGraphId = mainGraph.getId();
         CreateGraphResponse secondGraph = graphSteps.createGraph(graphSteps.createJsonObject("secondGraph"));
-        String secondGraphId= secondGraph.getId();
+        String secondGraphId = secondGraph.getId();
         graphSteps.partialUpdateGraphById(mainGraphId, new JSONObject().put("description", "updateVersion2.0")
                 .put("version", "2.0.0"));
         graphSteps.partialUpdateGraphById(mainGraphId, new JSONObject().put("description", "updateVersion3.0")

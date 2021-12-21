@@ -1,7 +1,10 @@
 package tests.productCatalog;
 
+import core.helper.Configure;
+import core.helper.JsonHelper;
 import core.helper.MarkDelete;
 import io.qameta.allure.Feature;
+import io.restassured.path.json.JsonPath;
 import models.productCatalog.Template;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.TemplateSteps;
@@ -75,13 +78,25 @@ public class TemplatesTest extends Tests {
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
     @Test
     public void createTemplateWithInvalidCharacters() {
-        assertAll(
+        assertAll("Шаблон создался с недопустимым именем",
                 () -> templateSteps.createProduct(templateSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
                 () -> templateSteps.createProduct(templateSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
                 () -> templateSteps.createProduct(templateSteps.createJsonObject("имя")).assertStatus(400),
                 () -> templateSteps.createProduct(templateSteps.createJsonObject("Имя")).assertStatus(400),
                 () -> templateSteps.createProduct(templateSteps.createJsonObject("a&b&c")).assertStatus(400)
         );
+    }
+
+    @Order(14)
+    @DisplayName("Импорт шаблона")
+    @Test
+    public void importTemplate() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/templates/importTemplate.json");
+        String templateName = new JsonPath(data).get("Template.json.name");
+        templateSteps.importTemplate(Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplate.json");
+        Assertions.assertTrue(templateSteps.isExist(templateName));
+        templateSteps.deleteTemplateByName(templateName);
+        Assertions.assertFalse(templateSteps.isExist(templateName));
     }
 
     @Order(100)
