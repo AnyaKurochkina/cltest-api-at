@@ -73,6 +73,7 @@ public class HcpBucket extends IProduct {
                 .set("$.order.attrs.net_segment", segment)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.service_plan", servicePlan)
+                .set("$.order.label", getLabel())
                 .build();
     }
 

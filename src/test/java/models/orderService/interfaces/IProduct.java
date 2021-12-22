@@ -17,6 +17,7 @@ import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @SuperBuilder
@@ -51,6 +52,9 @@ public abstract class IProduct extends Entity {
 
     @Getter
     protected String orderId;
+    @Getter
+    @Builder.Default
+    protected String label = UUID.randomUUID().toString();
     @Getter
     @Setter
     protected String projectId;

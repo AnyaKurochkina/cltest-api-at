@@ -87,6 +87,7 @@ public class OpenShiftProject extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.net_segment", segment)
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
+                .set("$.order.label", getLabel())
                 .build();
     }
 

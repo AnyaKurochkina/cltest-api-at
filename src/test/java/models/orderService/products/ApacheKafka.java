@@ -90,6 +90,7 @@ public class ApacheKafka extends IProduct {
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.project_name", project.id)
+                .set("$.order.label", getLabel())
                 .build();
     }
 

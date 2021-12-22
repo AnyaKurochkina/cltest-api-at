@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.keyCloak.KeyCloakSteps;
 
 import javax.net.ssl.*;
+import java.awt.image.AreaAveragingScaleFilter;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -21,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
@@ -169,6 +170,7 @@ public class Http {
 
     private Response filterRequest() {
         HttpURLConnection http;
+        List<String> headers = new ArrayList<>();
         String responseMessage = null;
         int status = 0;
         try {
@@ -208,6 +210,17 @@ public class Http {
                 responseMessage = "";
             else
                 responseMessage = IOUtils.toString(is, StandardCharsets.UTF_8);
+
+            for (Map.Entry<String, List<String>> entries : http.getHeaderFields().entrySet()) {
+                StringJoiner values = new StringJoiner(",");
+                for (String value : entries.getValue()) {
+                    values.add(value);
+                }
+                if(entries.getKey() == null)
+                    continue;
+                headers.add(String.format("\t\t%s: %s", entries.getKey(), values));
+            }
+
             http.disconnect();
             if (responseMessage.length() > 10000)
                 log(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
@@ -222,7 +235,7 @@ public class Http {
             if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
         }
-        return new Response(status, responseMessage);
+        return new Response(status, responseMessage, headers);
     }
 
     public static class StatusResponseException extends AssertionError {
@@ -263,15 +276,17 @@ public class Http {
     public class Response {
         int status;
         String responseMessage;
+        List<String> headers;
 
-        public Response(int status, String responseMessage) {
+        public Response(int status, String responseMessage, List<String> headers) {
             this.status = status;
             this.responseMessage = responseMessage;
+            this.headers = headers;
         }
 
         public Response assertStatus(int s) {
             if (s != status())
-                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nResponse: %s\nRequest: %s\n%s\n", s, status(), method, token, responseMessage, host + path, body));
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\nResponse: %s\n%s\n", s, status(), method, token, String.join("\n", headers), host + path, responseMessage, body));
             return this;
         }
 

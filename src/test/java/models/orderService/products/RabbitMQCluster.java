@@ -102,6 +102,7 @@ public class RabbitMQCluster extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.label", getLabel())
                 .build();
     }
 
