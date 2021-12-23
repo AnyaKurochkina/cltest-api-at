@@ -1,4 +1,4 @@
-package httpModels.productCatalog.Action.getActionList.response;
+package httpModels.productCatalog.Graphs.deleteGraph.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -6,16 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActionResponse{
+public class DeleteGraphResponse{
 
-	@JsonProperty("meta")
-	private Meta meta;
-
-	@JsonProperty("list")
-	private List<ListItem> list;
+	@JsonProperty("err")
+	private String err;
 }

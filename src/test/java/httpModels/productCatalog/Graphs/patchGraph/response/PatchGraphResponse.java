@@ -1,4 +1,4 @@
-package httpModels.productCatalog.Graphs.createGraph.response;
+package httpModels.productCatalog.Graphs.patchGraph.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateGraphResponse{
+public class PatchGraphResponse{
 
 	@JsonProperty("author")
 	private String author;

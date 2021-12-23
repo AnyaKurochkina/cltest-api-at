@@ -51,12 +51,10 @@ public class Action extends Entity {
     @Step("Создание экшена")
     protected void create() {
         String response = new Http(Configure.ProductCatalogURL)
-                
                 .body(toJson())
                 .post("actions/")
                 .assertStatus(201)
                 .toString();
-
         CreateActionResponse createActionResponse = convertResponseOnClass(response, CreateActionResponse.class);
         actionId = createActionResponse.getId();
         Assertions.assertNotNull(actionId, "Экшен с именем: " + actionName + ", не создался");
@@ -66,10 +64,8 @@ public class Action extends Entity {
     @Step("Удаление экшена")
     protected void delete() {
         new Http(Configure.ProductCatalogURL)
-                
                 .delete("actions/" + actionId + "/")
                 .assertStatus(204);
-
         ActionsSteps actionsSteps = new ActionsSteps();
         actionId = actionsSteps.getActionId(actionName);
         Assertions.assertNull(actionId, String.format("Экшен с именем: %s не удалился", actionName));

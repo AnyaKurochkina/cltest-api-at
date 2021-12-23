@@ -1,4 +1,4 @@
-package httpModels.productCatalog.Graphs.createGraph.response;
+package httpModels.productCatalog.Graphs.getUsedGraph.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,13 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateGraphResponse{
-
-	@JsonProperty("author")
-	private String author;
-
-	@JsonProperty("json_schema")
-	private JsonSchema jsonSchema;
+public class GetUsedGraphResponseItem{
 
 	@JsonProperty("name")
 	private String name;
@@ -24,21 +18,21 @@ public class CreateGraphResponse{
 	@JsonProperty("description")
 	private String description;
 
-	@JsonProperty("static_data")
-	private StaticData staticData;
+	@JsonProperty("graph_version")
+	private String graphVersion;
+
+	@JsonProperty("graph_version_pattern")
+	private String graphVersionPattern;
 
 	@JsonProperty("id")
 	private String id;
 
-	@JsonProperty("title")
-	private String title;
+	@JsonProperty("graph_version_calculated")
+	private String graphVersionCalculated;
 
 	@JsonProperty("type")
 	private String type;
 
 	@JsonProperty("version")
 	private String version;
-
-	@JsonProperty("ui_schema")
-	private UiSchema uiSchema;
 }

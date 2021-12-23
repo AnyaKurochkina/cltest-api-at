@@ -14,8 +14,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
-
 public class ProductsSteps {
 
     @SneakyThrows
@@ -31,10 +29,17 @@ public class ProductsSteps {
         return productsId;
     }
 
+    @SneakyThrows
+    @Step("Создание продукта")
+    public Http.Response createProduct(JSONObject body) {
+        return new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .post("products/");
+    }
+
     @Step("Получение списка продуктов")
     public List<ListItem> getProductList() {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("products/")
                 .assertStatus(200)
                 .extractAs(GetProductsResponse.class)
@@ -44,7 +49,6 @@ public class ProductsSteps {
     @Step("Проверка существования действия по имени")
     public boolean isProductExist(String name) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("/products/exists/?name=" + name)
                 .assertStatus(200)
                 .extractAs(ExistsOrgDirectionResponse.class)
@@ -53,13 +57,9 @@ public class ProductsSteps {
 
     @Step("Ипорт продукта")
     public void importProduct(String pathName) {
-        given()
-                .contentType("multipart/form-data")
-                .multiPart("file", new File(pathName))
-                .when()
-                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/products/obj_import/")
-                .then()
-                .statusCode(200);
+        new Http(Configure.ProductCatalogURL)
+                .multiPart("products/obj_import/", "file", new File(pathName))
+                .assertStatus(200);
     }
 
     @Step("Создание JSON объекта по продуктам")
@@ -73,18 +73,16 @@ public class ProductsSteps {
     @Step("Получение продукта по Id")
     public GetProductResponse getProductById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("products/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetProductResponse.class);
     }
 
     @Step("Частичное обновление продукта")
-    public void partialUpdateProduct(String id, String key, String value) {
-        new Http(Configure.ProductCatalogURL)
-                .body(new JSONObject().put(key, value))
-                .patch("products/" + id + "/")
-                .assertStatus(200);
+    public Http.Response partialUpdateProduct(String id, JSONObject object) {
+        return new Http(Configure.ProductCatalogURL)
+                .body(object)
+                .patch("products/" + id + "/");
     }
 
     public void deleteProductByName(String actionName) {
@@ -93,8 +91,16 @@ public class ProductsSteps {
 
     public void deleteProductById(String productId) {
         new Http(Configure.ProductCatalogURL)
-                
                 .delete("products/" + productId + "/")
                 .assertStatus(204);
+    }
+
+    @SneakyThrows
+    @Step("Копирование действия по Id")
+    public void copyProductById(String id) {
+        new Http(Configure.ProductCatalogURL)
+                .setContentType("application/json")
+                .post("products/" + id + "/copy/")
+                .assertStatus(200);
     }
 }

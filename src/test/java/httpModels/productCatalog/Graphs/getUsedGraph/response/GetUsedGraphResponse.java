@@ -1,4 +1,4 @@
-package httpModels.productCatalog.Action.getActionList.response;
+package httpModels.productCatalog.Graphs.getUsedGraph.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -7,15 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActionResponse{
+public class GetUsedGraphResponse{
 
-	@JsonProperty("meta")
-	private Meta meta;
-
-	@JsonProperty("list")
-	private List<ListItem> list;
+	@JsonProperty("GetUsedGraphResponse")
+	private List<GetUsedGraphResponseItem> getUsedGraphResponse;
 }

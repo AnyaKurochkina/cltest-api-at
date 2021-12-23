@@ -32,7 +32,6 @@ import java.util.List;
 @SuperBuilder
 public class HcpBucket extends IProduct {
 
-//    private String projectName;
     private String bucketName;
     private String segment;
     private String platform;
@@ -40,14 +39,6 @@ public class HcpBucket extends IProduct {
     private String dataCentre;
     private String servicePlan;
     private Boolean replication;
-    /*
-    delete_bucket_acls - Изменить ACL -no
-    create_or_change_bucket_acls - настроить acl -no
-    change_bucket_versioning - Измененить параметры версионирования {"item_id":"bd3128c3-fb9e-42d0-9f8f-e49f7091c614","order":{"data":{"bucket":{"versioning":{"prune":true,"enabled":true,"pruneDays":10}}}}}
-    change_bucket_config - Измененить конфигурацию бакета {"item_id":"bd3128c3-fb9e-42d0-9f8f-e49f7091c614","order":{"data":{"bucket":{"hard_quota":20,"service_plan":"Cold","replication_enabled":false}}}}
-    delete_bucket_acls - Удалить ACL -no
-    remove_bucket_product - Удалить бакет
-    * */
 
     @Override
     public Entity init() {
@@ -102,8 +93,14 @@ public class HcpBucket extends IProduct {
     @Step("Измененить конфигурацию бакета")
     public void changeBucketConfig(){
         orderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20.48,\"service_plan\":\"Cold\",\"replication_enabled\":false}}"));
-        Integer hardQuota = (Integer) orderServiceSteps.getProductsField(this, "data[0].config.bucket.hard_quota");
-        Assertions.assertEquals(hardQuota, 20, "Макс. объем не изменился! Макс. объем = " + hardQuota);
+        Float hardQuota = (Float) orderServiceSteps.getProductsField(this, "data[0].config.bucket.hard_quota");
+        Assertions.assertEquals(20.48F, hardQuota, "Макс. объем не изменился! Макс. объем = " + hardQuota);
+    }
+
+    @Step("Настроить ACL")
+    public void createOrChangeBucketAcls(String serviceAccId, String serviceAccTitle){
+        orderServiceSteps.executeAction("create_or_change_bucket_acls", this,
+                new JSONObject(String.format("{\"user_name\":{\"name\":\"%s\",\"title\":\"%s\"},\"permissions\":[\"READ\",\"READ_ACL\",\"WRITE\",\"WRITE_ACL\"]}", serviceAccId, serviceAccTitle)));
     }
 
     @Step("Удаление продукта")

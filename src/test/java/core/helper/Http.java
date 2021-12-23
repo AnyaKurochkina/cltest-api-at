@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Assertions;
 import steps.keyCloak.KeyCloakSteps;
 
 import javax.net.ssl.*;
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -40,7 +39,7 @@ public class Http {
     private boolean isUsedToken = true;
     private boolean isLogged = true;
     private static final Semaphore SEMAPHORE = new Semaphore(1, true);
-    private static final String boundary = "===KhdMbdyfgJSTmdmjBYJNmKstdrB===";
+    private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
     private File file;
 
     static {
@@ -256,7 +255,7 @@ public class Http {
                 .append(fileName)
                 .append("\"\r\n")
                 .append("Content-Type: ")
-                .append(URLConnection.guessContentTypeFromName(fileName))
+                .append(/*URLConnection.guessContentTypeFromName(fileName)*/ "application/octet-stream")
                 .append("\r\n")
                 .append("Content-Transfer-Encoding: binary\r\n\r\n")
                 .flush();
@@ -269,8 +268,10 @@ public class Http {
         }
         outputStream.flush();
         inputStream.close();
-        writer.append("\r\n");
-        writer.flush();
+        writer.append("\r\n--")
+        .append(boundary)
+        .append("--")
+        .flush();
     }
 
     public class Response {

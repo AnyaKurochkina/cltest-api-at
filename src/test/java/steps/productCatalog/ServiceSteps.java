@@ -9,14 +9,11 @@ import httpModels.productCatalog.Service.getService.response.GetServiceResponse;
 import httpModels.productCatalog.Service.getServiceList.response.GetServiceListResponse;
 import httpModels.productCatalog.Service.getServiceList.response.ListItem;
 import io.qameta.allure.Step;
-import io.restassured.response.ValidatableResponse;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
-
-import static io.restassured.RestAssured.given;
 
 public class ServiceSteps {
 
@@ -24,7 +21,6 @@ public class ServiceSteps {
     @Step("Создание сервиса")
     public Http.Response createService(JSONObject body) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .body(body)
                 .post("services/");
     }
@@ -33,7 +29,6 @@ public class ServiceSteps {
     @Step("Получение списка сервисов")
     public List<ListItem> getServicesList() {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("services/")
                 .assertStatus(200)
                 .extractAs(GetServiceListResponse.class)
@@ -42,7 +37,6 @@ public class ServiceSteps {
 
     public boolean isServiceExist(String name) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("services/exists/?name=" + name)
                 .assertStatus(200)
                 .extractAs(ExistsServiceResponse.class)
@@ -52,7 +46,6 @@ public class ServiceSteps {
     @Step("Получение сервиса по Id")
     public GetServiceResponse getServiceById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .get("services/" + id + "/")
                 .assertStatus(200)
                 .extractAs(GetServiceResponse.class);
@@ -61,7 +54,6 @@ public class ServiceSteps {
     @Step("Удаление сервиса по Id")
     public void deleteServiceById(String id) {
         new Http(Configure.ProductCatalogURL)
-                
                 .delete("services/" + id + "/")
                 .assertStatus(204);
     }
@@ -69,7 +61,6 @@ public class ServiceSteps {
     @Step("Копирование сервиса по Id")
     public CopyServiceResponse copyServiceById(String id) {
         return new Http(Configure.ProductCatalogURL)
-                
                 .post("services/" + id + "/copy/")
                 .assertStatus(200)
                 .extractAs(CopyServiceResponse.class);
@@ -101,13 +92,9 @@ public class ServiceSteps {
     @SneakyThrows
     @Step("Импорт сервиса")
     public void importService(String pathName) {
-        ValidatableResponse response = given()
-                .contentType("multipart/form-data")
-                .multiPart("file", new File(pathName))
-                .when()
-                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/services/obj_import/")
-                .then()
-                .statusCode(200);
+        new Http(Configure.ProductCatalogURL)
+                .multiPart("services/obj_import/", "file", new File(pathName))
+                .assertStatus(200);
     }
 
     @Step("Создание JSON объекта по сервисам")

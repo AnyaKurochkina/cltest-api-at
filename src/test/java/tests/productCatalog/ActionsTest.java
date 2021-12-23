@@ -8,7 +8,6 @@ import httpModels.productCatalog.Action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.Action.patchAction.response.PatchActionResponse;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
-import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ActionsSteps;
 import tests.Tests;
@@ -23,7 +22,7 @@ public class ActionsTest extends Tests {
     Action action;
 
     @Order(1)
-    @DisplayName("Создание экшена в продуктовом каталоге")
+    @DisplayName("Создание действия в продуктовом каталоге")
     @Test
     public void createAction() {
         action = Action.builder().actionName("test_object_at2021").build().createObject();
@@ -83,7 +82,7 @@ public class ActionsTest extends Tests {
     }
 
     @Order(8)
-    @DisplayName("Поиск экшена по имени, с использованием multiSearch")
+    @DisplayName("Поиск действия по имени, с использованием multiSearch")
     @Test
     public void searchActionByName() {
         String actionIdWithMultiSearch = actionsSteps.getActionIdByNameWithMultiSearch(action.getActionName());
@@ -93,7 +92,7 @@ public class ActionsTest extends Tests {
     }
 
     @Order(9)
-    @DisplayName("Негативный тест на создание экшена с двумя параметрами одновременно graph_version_pattern и graph_version")
+    @DisplayName("Негативный тест на создание действия с двумя параметрами одновременно graph_version_pattern и graph_version")
     @Test
     public void doubleVersionTest() {
         Http.Response resp = actionsSteps.createAction(Action.builder().actionName("negative_object").build().init().getTemplate()
@@ -105,7 +104,7 @@ public class ActionsTest extends Tests {
     }
 
     @Order(10)
-    @DisplayName("Обновление экшена без указания версии, вресия должна инкрементироваться")
+    @DisplayName("Обновление действия без указания версии, версия должна инкрементироваться")
     @Test
     public void patchTest() {
         PatchActionResponse patchActionResponse = actionsSteps.patchAction("test_object_at2021", action.getGraphId(), action.getActionId());
@@ -113,12 +112,12 @@ public class ActionsTest extends Tests {
     }
 
     @Order(11)
-    @DisplayName("Негативный тест на обновление экшена до той же версии/текущей")
+    @DisplayName("Негативный тест на обновление действия до той же версии/текущей")
     @Test
     public void sameVersionTest() {
         actionsSteps.patchActionRow(Action.builder().actionName("test_object_at2021").build().init().getTemplate()
                 .set("$.version", "1.1.2")
-                .build(), action.getActionId()).assertStatus(404);
+                .build(), action.getActionId()).assertStatus(500);
     }
 
     @Order(12)
@@ -129,37 +128,16 @@ public class ActionsTest extends Tests {
     }
 
     @Order(13)
-    @DisplayName("Негативный тест на создание действия с именем содержащее латинскую букву в верхнем регистре")
+    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
     @Test
-    public void createActionWithEngWordInUppercase() {
-        JSONObject nameWithUppercase = actionsSteps.createJsonObject("NameWithUppercase");
-        actionsSteps.createAction(nameWithUppercase).assertStatus(400);
-    }
-
-    @Order(14)
-    @DisplayName("Негативный тест на создание действия с именем содержащее латинскую букву в верхнем регистре в середине имени")
-    @Test
-    public void createActionWithEngWordInUppercaseInMiddle() {
-        String objectName = "nameWithUppercaseInMiddle";
-        JSONObject nameWithUppercaseInMiddle = actionsSteps.createJsonObject(objectName);
-        actionsSteps.createAction(nameWithUppercaseInMiddle).assertStatus(400);
-    }
-
-    @Order(15)
-    @DisplayName("Негативный тест на создание действия с именем на русском языке в нижнем регистре")
-    @Test
-    public void createActionWithRusWordInLowCase() {
-        String objectName = "имя";
-        JSONObject nameWithRusWordInLowCase = actionsSteps.createJsonObject(objectName);
-        actionsSteps.createAction(nameWithRusWordInLowCase).assertStatus(400);
-    }
-
-    @Order(16)
-    @DisplayName("Негативный тест на создание действия с именем нарусском языке с буквой в верхнем регистре")
-    @Test
-    public void createActionWithRusWordInUppercase() {
-        JSONObject nameWithRusWordInUppercase = actionsSteps.createJsonObject("Имя");
-        actionsSteps.createAction(nameWithRusWordInUppercase).assertStatus(400);
+    public void createActionWithInvalidCharacters() {
+        assertAll("Действие создался с недопустимым именем",
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("имя")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("Имя")).assertStatus(400),
+                () -> actionsSteps.createAction(actionsSteps.createJsonObject("a&b&c")).assertStatus(400)
+        );
     }
 
     @Order(17)
@@ -172,7 +150,7 @@ public class ActionsTest extends Tests {
 
     @Order(100)
     @Test
-    @DisplayName("Удаление экшена")
+    @DisplayName("Удаление действия")
     @MarkDelete
     public void deleteAction() {
         try (Action action = Action.builder().actionName("test_object_at2021").build().createObjectExclusiveAccess()) {

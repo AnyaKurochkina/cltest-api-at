@@ -86,6 +86,9 @@ public class GetProductResponse{
 	@JsonProperty("category")
 	private String category;
 
+	@JsonProperty("last_version")
+	private String lastVersion;
+
 	public List<Object> getAllowedPaths(){
 		return allowedPaths;
 	}

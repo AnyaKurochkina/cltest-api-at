@@ -22,6 +22,9 @@ public class ObjectPoolEntity {
     private String entity;
     @Getter
     @Setter
+    private boolean isPublic = true;
+    @Getter
+    @Setter
     private ObjectStatus status = ObjectStatus.NOT_CREATED;
     @Getter
     @Setter
@@ -38,6 +41,10 @@ public class ObjectPoolEntity {
     @SneakyThrows
     @ResourceLock(value = "entity", mode = READ)
     public boolean equalsEntity(Object o) {
+        if(status.equals(ObjectStatus.DELETED))
+            return false;
+        if(!isPublic)
+            return false;
         if (this == o)
             return true;
         if (o == null || clazz != o.getClass())

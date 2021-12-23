@@ -16,9 +16,6 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.util.List;
 
-import static core.helper.JsonHelper.convertResponseOnClass;
-import static io.restassured.RestAssured.given;
-
 public class ActionsSteps {
 
     @SneakyThrows
@@ -77,7 +74,7 @@ public class ActionsSteps {
     @Step("Обновление экшена")
     public PatchActionResponse patchAction(String actionName, String graphId, String actionId) {
         return new Http(Configure.ProductCatalogURL)
-                .body(toJson("actions/createAction.json", actionName, graphId))
+                .body(toJson("productCatalog/actions/createAction.json", actionName, graphId))
                 .patch("actions/" + actionId + "/")
                 .assertStatus(200)
                 .extractAs(PatchActionResponse.class);
@@ -96,24 +93,18 @@ public class ActionsSteps {
     @SneakyThrows
     @Step("Проверка существования действия по имени")
     public boolean isActionExists(String name) {
-        String object = new Http(Configure.ProductCatalogURL)
+        return new Http(Configure.ProductCatalogURL)
                 .get("actions/exists/?name=" + name)
                 .assertStatus(200)
-                .toString();
-        ExistsActionResponse response = convertResponseOnClass(object, ExistsActionResponse.class);
-        return response.getExists();
+                .extractAs(ExistsActionResponse.class).getExists();
     }
 
     @SneakyThrows
     @Step("Импорт действия")
     public void importAction(String pathName) {
-        given()
-                .contentType("multipart/form-data")
-                .multiPart("file", new File(pathName))
-                .when()
-                .post("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/product-catalog/actions/obj_import/")
-                .then()
-                .statusCode(200);
+        new Http(Configure.ProductCatalogURL)
+                .multiPart("actions/obj_import/", "file", new File(pathName))
+                .assertStatus(200);
     }
 
     @SneakyThrows
@@ -129,7 +120,6 @@ public class ActionsSteps {
     @Step("Копирование действия по Id")
     public void copyActionById(String id) {
         new Http(Configure.ProductCatalogURL)
-
                 .post("actions/" + id + "/copy/")
                 .assertStatus(200);
     }
@@ -138,16 +128,14 @@ public class ActionsSteps {
     @Step("Экспорт действия по Id")
     public void exportActionById(String id) {
         new Http(Configure.ProductCatalogURL)
-
                 .get("actions/" + id + "/obj_export/")
                 .assertStatus(200);
     }
 
     @SneakyThrows
     @Step("Удаление экшена")
-    public void deleteAction(String id) {
+    public void deleteActionById(String id) {
         new Http(Configure.ProductCatalogURL)
-
                 .delete("actions/" + id + "/")
                 .assertStatus(204);
     }
@@ -162,7 +150,7 @@ public class ActionsSteps {
 
     @Step("Удаление действия по имени")
     public void deleteActionByName(String name) {
-        deleteAction(getActionIdByNameWithMultiSearch(name));
+        deleteActionById(getActionIdByNameWithMultiSearch(name));
     }
 
     private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {

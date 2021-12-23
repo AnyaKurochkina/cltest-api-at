@@ -73,4 +73,11 @@ public class ListItem{
 
 	@JsonProperty("direction")
 	private String direction;
+
+	@JsonProperty("graph_version_calculated")
+	private String graphVersionCalculated;
+
+	@JsonProperty("title")
+	private String title;
+
 }
