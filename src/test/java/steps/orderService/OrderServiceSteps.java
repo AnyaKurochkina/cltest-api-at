@@ -157,7 +157,7 @@ public class OrderServiceSteps extends Steps {
         AtomicReference<Float> costPreBilling = new AtomicReference<>();
         AtomicReference<String> actionId = new AtomicReference<>();
 
-        Assertions.assertAll("проверка выполнения action - " + item.getName() + " у продукта " + product.getOrderId(),
+        Assertions.assertAll("Проверка выполнения action - " + item.getName() + " у продукта " + product.getOrderId(),
                 () -> {
                     costPreBilling.set(costSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
