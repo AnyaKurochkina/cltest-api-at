@@ -36,8 +36,8 @@ public class ServiceAccount extends Entity {
     @Override
     public Entity init() {
         jsonTemplate = "/authorizer/service_accounts.json";
-        if (id == null)
-            id = new RandomStringGenerator().generateByRegex("[a-z]{5,18}");
+        if (title == null)
+            title = new RandomStringGenerator().generateByRegex("[a-z]{5,18}");
         if (projectId == null)
             projectId = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
         return this;
@@ -114,7 +114,7 @@ public class ServiceAccount extends Entity {
                 .assertStatus(201)
                 .jsonPath();
 
-        Assertions.assertEquals(jsonPath.get("data.title"), title);
+        Assertions.assertEquals(title, jsonPath.get("data.title"));
         id = jsonPath.get("data.name");
         secret = jsonPath.get("data.client_secret");
     }

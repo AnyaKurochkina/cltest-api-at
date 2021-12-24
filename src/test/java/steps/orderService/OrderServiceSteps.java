@@ -2,7 +2,6 @@ package steps.orderService;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import core.exception.DeferredException;
 import core.helper.Http;
 import core.helper.JsonHelper;
 import core.utils.Waiting;
@@ -14,9 +13,11 @@ import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
+import models.orderService.interfaces.ProductStatus;
 import models.subModels.Item;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.function.Executable;
 import steps.Steps;
 import steps.calculator.CalcCostSteps;
 import steps.stateService.StateServiceSteps;
@@ -26,6 +27,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static core.helper.Configure.OrderServiceURL;
 import static core.helper.Configure.ProductCatalogURL;
@@ -112,11 +114,11 @@ public class OrderServiceSteps extends Steps {
     public Http.Response sendAction(String action, IProduct product, JSONObject jsonData) {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         return JsonHelper.getJsonTemplate("/actions/template.json")
-                .set("$.item_id", item.id)
+                .set("$.item_id", item.getId())
                 .set("$.order.data", jsonData)
                 .send(OrderServiceURL)
                 .setProjectId(product.getProjectId())
-                .patch("projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.name);
+                .patch("projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
 
     public Http.Response changeProjectForOrderRequest(IProduct product, Project target) {
@@ -132,6 +134,9 @@ public class OrderServiceSteps extends Steps {
         product.setProjectId(target.getId());
     }
 
+    public void executeAction(String action, IProduct product, JSONObject jsonData) {
+        executeAction(action, product, jsonData, null);
+    }
 
     /**
      * Метод выполняет экшен по его имени
@@ -141,55 +146,48 @@ public class OrderServiceSteps extends Steps {
      * @param jsonData параметр дата в запросе, к примеру: "order":{"data":{}}}
      */
     @Step("Выполнение action \"{action}\"")
-    public void executeAction(String action, IProduct product, JSONObject jsonData) {
+    public void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status) {
         CostSteps costSteps = new CostSteps();
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         //Получение item'ов для экшена
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
-        log.info("Отправка запроса на выполнение действия '{}' для продукта {}", action, product);
-        DeferredException exception = new DeferredException();
+        log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
         //TODO: Возможно стоит сделать более детальную проверку на значение
-        Float costPreBilling = null;
-        try {
-            costPreBilling = costSteps.getCostAction(item.name, item.id, product, jsonData);
-            Assertions.assertTrue(costPreBilling >= 0, "Стоимость после action отрицательная");
-        } catch (Throwable e) {
-            exception.addException(e, product.getOrderId());
-        }
 
-        String actionId = null;
-        try {
-            actionId = sendAction(action, product, jsonData)
-                    .assertStatus(200)
-                    .jsonPath()
-                    .get("action_id");
-        } catch (Throwable e) {
-            exception.addException(e, product.getOrderId());
-        }
-        try {
-            checkActionStatusMethod("success", product, actionId);
-        } catch (Throwable e) {
-            exception.addException(e, product.getOrderId());
-        }
-        try {
-            if (costPreBilling != null) {
-                Float cost = null;
-                for (int i = 0; i < 15; i++) {
-                    Waiting.sleep(20000);
-                    cost = calcCostSteps.getCostByUid(product);
-                    if (cost == null)
-                        continue;
-                    if (Math.abs(cost - costPreBilling) > 0.00001)
-                        continue;
-                    break;
-                }
-                Assertions.assertNotNull(cost, "Стоимость списания равна null");
-                Assertions.assertEquals(costPreBilling, cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
-            }
-        } catch (Throwable e) {
-            exception.addException(e, product.getOrderId());
-        }
-        exception.trowExceptionIfNotEmpty();
+        AtomicReference<Float> costPreBilling = new AtomicReference<>();
+        AtomicReference<String> actionId = new AtomicReference<>();
+
+        Assertions.assertAll("проверка выполнения action - " + item.getName() + " у продукта " + product.getOrderId(),
+                () -> {
+                    costPreBilling.set(costSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
+                    Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
+                },
+                () -> actionId.set(sendAction(action, product, jsonData)
+                        .assertStatus(200)
+                        .jsonPath()
+                        .get("action_id")),
+                () -> {
+                    checkActionStatusMethod("success", product, actionId.get());
+                    if (Objects.nonNull(status))
+                        product.setStatus(status);
+                },
+                () -> {
+                    if (costPreBilling.get() != null) {
+                        Float cost = null;
+                        for (int i = 0; i < 15; i++) {
+                            Waiting.sleep(20000);
+                            cost = calcCostSteps.getCostByUid(product);
+                            if (cost == null)
+                                continue;
+                            if (Math.abs(cost - costPreBilling.get()) > 0.00001)
+                                continue;
+                            break;
+                        }
+                        Assertions.assertNotNull(cost, "Стоимость списания равна null");
+                        Assertions.assertEquals(costPreBilling.get(), cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
+                    }
+                });
+
     }
 
     @Step("Ожидание успешного выполнения action")
@@ -288,16 +286,16 @@ public class OrderServiceSteps extends Steps {
 
         Item item = new Item();
         //Получаем все item ID по name, например: "expand_mount_point"
-        item.id = jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.item_id", action));
+        item.setId(jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.item_id", action)));
         //Получаем все item name
-        item.name = jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.name", action, action));
+        item.setName(jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.name", action, action)));
         //Достаем item ID и item name и сохраняем в объект Item
-        if (item.id == null) {
-            item.id = jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action));
-            item.name = jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.actions.find{it.name.contains('%s')}.name", action, action));
+        if (item.getId() == null) {
+            item.setId(jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action)));
+            item.setName(jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.actions.find{it.name.contains('%s')}.name", action, action)));
         }
 
-        Assertions.assertNotNull(item.id, "Action '" + action + "' не найден у продукта " + product.getProductName());
+        Assertions.assertNotNull(item.getId(), "Action '" + action + "' не найден у продукта " + product.getProductName());
         return item;
     }
 

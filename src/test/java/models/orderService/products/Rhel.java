@@ -1,10 +1,8 @@
 package models.orderService.products;
 
-import core.helper.Http;
 import core.helper.JsonHelper;
 import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,14 +15,10 @@ import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.authorizer.User;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
-
-import static core.helper.Configure.OrderServiceURL;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -65,16 +59,7 @@ public class Rhel extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        JsonPath array = new Http(OrderServiceURL)
-                .setProjectId(projectId)
-                .body(toJson())
-                .post("projects/" + projectId + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = array.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        setStatus(ProductStatus.CREATED);
-        compareCostOrderAndPrice();
+        createProduct();
     }
 
     public JSONObject toJson() {

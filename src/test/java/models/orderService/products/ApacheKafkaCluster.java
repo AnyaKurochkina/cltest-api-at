@@ -1,9 +1,7 @@
 package models.orderService.products;
 
-import core.helper.Http;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
@@ -11,7 +9,6 @@ import models.Entity;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import models.subModels.KafkaTopic;
 import org.json.JSONObject;
@@ -21,8 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static core.helper.Configure.OrderServiceURL;
 
 @Log4j2
 @Data
@@ -49,17 +44,7 @@ public class ApacheKafkaCluster extends IProduct {
     @Step("Заказ продукта")
     protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
-        log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath jsonPath = new Http(OrderServiceURL)
-                .setProjectId(projectId)
-                .body(toJson())
-                .post("projects/" + projectId + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = jsonPath.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        setStatus(ProductStatus.CREATED);
-        compareCostOrderAndPrice();
+        createProduct();
     }
 
     @Override
