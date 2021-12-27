@@ -49,13 +49,7 @@ public class RabbitMQCluster extends IProduct {
         jsonTemplate = "/orders/rabbitmq_cluster.json";
         productName = "RabbitMQ Cluster";
         role = "administrator";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if (projectId == null) {
-            projectId = project.getId();
-        }
-        if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
         return this;
     }
 

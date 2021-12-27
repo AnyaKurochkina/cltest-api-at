@@ -17,6 +17,7 @@ import models.subModels.Flavor;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.UUID;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -47,13 +48,7 @@ public class ApacheKafka extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/apache_kafka.json";
         productName = "Apache Kafka";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
-            projectId = project.getId();
-        }
-        if(productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
         return this;
     }
 

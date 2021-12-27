@@ -1,5 +1,6 @@
 package tests.orderService;
 
+import com.mifmif.common.regex.Generex;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -14,6 +15,9 @@ import tests.Tests;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster")
@@ -43,7 +47,8 @@ public class ApacheKafkaClusterTest extends Tests {
     void createTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.createTopics(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"));
+            kafka.createTopics(Stream.generate(new Generex("[a-zA-Z0-9][a-zA-Z0-9.\\-_]*")::random)
+                    .limit(new Random().nextInt(20) + 1).distinct().collect(Collectors.toList()));
         }
     }
 

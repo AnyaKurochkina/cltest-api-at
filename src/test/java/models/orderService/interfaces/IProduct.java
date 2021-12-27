@@ -10,6 +10,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.authorizer.Project;
+import models.authorizer.ProjectEnvironment;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -57,8 +59,7 @@ public abstract class IProduct extends Entity {
     @Getter
     protected String orderId;
     @Getter
-    @Builder.Default
-    protected String label = UUID.randomUUID().toString();
+    protected String label;
     @Getter
     @Setter
     protected String projectId;
@@ -154,7 +155,18 @@ public abstract class IProduct extends Entity {
         float sizeAfter = (Float) orderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
         Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }
-
+    protected void initProduct(){
+        if(projectId == null) {
+            Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+            projectId = project.getId();
+        }
+        if(label == null) {
+            label = UUID.randomUUID().toString();
+        }
+        if(productId == null) {
+            productId = orderServiceSteps.getProductId(this);
+        }
+    }
     protected void createProduct(){
         log.info("Отправка запроса на создание заказа " + productName);
         JsonPath jsonPath = new Http(OrderServiceURL)

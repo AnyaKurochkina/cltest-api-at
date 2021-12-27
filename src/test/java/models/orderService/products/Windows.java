@@ -69,13 +69,7 @@ public class Windows extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/windows_server.json";
         productName = "Windows server";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if (projectId == null) {
-            projectId = project.getId();
-        }
-        if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
         if(role == null){
             role = (String) roles.keySet().toArray()[(int) (Math.random() * roles.size())];
         }

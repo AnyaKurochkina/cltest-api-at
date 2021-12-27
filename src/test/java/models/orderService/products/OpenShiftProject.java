@@ -41,13 +41,7 @@ public class OpenShiftProject extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/openshift_project.json";
         productName = "OpenShift project";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
-            projectId = project.getId();
-        }
-        if(productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
         if(roles == null) {
             AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
             roles = Collections.singletonList(new Role("edit", accessGroup.getName()));

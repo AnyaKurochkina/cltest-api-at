@@ -42,13 +42,7 @@ public class Rhel extends IProduct {
         jsonTemplate = "/orders/rhel.json";
         if(productName == null)
             productName = "Rhel";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if (projectId == null) {
-            projectId = project.getId();
-        }
-        if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
         if (domain == null)
             domain = orderServiceSteps.getDomainBySegment(this, segment);
         List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);

@@ -39,13 +39,7 @@ public class Podman extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/podman.json";
         productName = "Podman";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if (projectId == null) {
-            projectId = project.getId();
-        }
-        if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
         return this;
     }
 

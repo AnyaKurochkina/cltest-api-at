@@ -1,9 +1,9 @@
 package models.authorizer;
 
+import com.mifmif.common.regex.Generex;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import core.random.string.RandomStringGenerator;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -35,7 +35,7 @@ public class ServiceAccount extends Entity {
     public Entity init() {
         jsonTemplate = "/authorizer/service_accounts.json";
         if (title == null)
-            title = new RandomStringGenerator().generateByRegex("[a-z]{5,18}");
+            title = new Generex("[a-z]{5,18}").random();
         if (projectId == null)
             projectId = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
         return this;

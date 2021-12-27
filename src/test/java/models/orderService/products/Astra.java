@@ -39,13 +39,7 @@ public class Astra extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/astra_general_application.json";
         productName = "Astra Linux (DEV only)";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if (projectId == null) {
-            projectId = project.getId();
-        }
-        if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
         return this;
     }
 
