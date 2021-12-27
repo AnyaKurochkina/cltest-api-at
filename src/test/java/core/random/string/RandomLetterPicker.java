@@ -26,7 +26,7 @@ class RandomLetterPicker {
 
     public <E extends Enum<E> & Letter> Builder addAllByEnum(Class<E> enumClass) {
       letters.addAll(Arrays.stream(enumClass.getEnumConstants())
-          .map(Letter::getLetter)
+          .map(e -> e.getLetter())
           .collect(Collectors.toList()));
       return this;
     }
