@@ -33,8 +33,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Execution(ExecutionMode.SAME_THREAD)
 @Tags({@Tag("regress"), @Tag("tariff")})
 public class OrganizationTariffPlanTest extends Tests {
-    TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
-    OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+    final TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
+    final OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @Test
     @Order(1)

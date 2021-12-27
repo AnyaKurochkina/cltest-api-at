@@ -4,8 +4,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.products.PostgresSQLCluster;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 @Epic("Старые продукты")
@@ -15,7 +13,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgresSQLClusterTest extends Tests {
 
-    PostgresSQLCluster postgres = PostgresSQLCluster.builder()
+    final PostgresSQLCluster postgres = PostgresSQLCluster.builder()
             .projectId("proj-67nljbzjtt")
             .productId("9c97f55c-ab21-4724-be4d-cb90b8a815c6")
             .orderId("985858eb-7d78-4ce5-9134-20cdb610be5e")

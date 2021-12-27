@@ -1,9 +1,6 @@
 package org.junit;
 
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Story;
-import io.qameta.allure.model.Status;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
 

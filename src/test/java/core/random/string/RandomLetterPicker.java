@@ -26,7 +26,7 @@ class RandomLetterPicker {
 
     public <E extends Enum<E> & Letter> Builder addAllByEnum(Class<E> enumClass) {
       letters.addAll(Arrays.stream(enumClass.getEnumConstants())
-          .map(e -> e.getLetter())
+          .map(Letter::getLetter)
           .collect(Collectors.toList()));
       return this;
     }
@@ -82,8 +82,8 @@ class RandomLetterPicker {
     int bufferSize = bounds.size();
 
     for (int i = 0; i < bufferSize; i += 2) {
-      int beginCode = (int) bounds.get(i).charAt(0);
-      int endCode = (int) bounds.get(i + 1).charAt(0);
+      int beginCode = bounds.get(i).charAt(0);
+      int endCode = bounds.get(i + 1).charAt(0);
 
       if (beginCode > endCode) {
         throw new RuntimeException("Detected invalid character range: ["

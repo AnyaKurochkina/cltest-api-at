@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Execution(ExecutionMode.SAME_THREAD)
 @Tags({@Tag("regress"), @Tag("tariff")})
 public class BaseTariffPlanTest extends Tests {
-    TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
+    final TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
 
     @Test
     @Order(1)

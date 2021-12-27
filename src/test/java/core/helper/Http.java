@@ -93,7 +93,7 @@ public class Http {
 
     private static String format(String str, Object ... args){
         for (Object arg : args)
-            str = str.replaceFirst("\\{\\}", Objects.requireNonNull(arg).toString());
+            str = str.replaceFirst("\\{}", Objects.requireNonNull(arg).toString());
         return str;
     }
 
@@ -181,12 +181,9 @@ public class Http {
             http.setRequestProperty("Content-Type", contentType);
             http.setRequestProperty("Accept", "application/json, text/plain, */*");
             if (isUsedToken) {
-                if (token.length() > 0)
-                    http.setRequestProperty("Authorization", token);
-                else {
+                if (token.length() == 0)
                     token = "bearer " + KeyCloakSteps.getUserToken();
-                    http.setRequestProperty("Authorization", token);
-                }
+                http.setRequestProperty("Authorization", token);
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
@@ -275,9 +272,9 @@ public class Http {
     }
 
     public class Response {
-        int status;
-        String responseMessage;
-        List<String> headers;
+        final int status;
+        final String responseMessage;
+        final List<String> headers;
 
         public Response(int status, String responseMessage, List<String> headers) {
             this.status = status;
@@ -303,6 +300,7 @@ public class Http {
             }
         }
 
+        @SuppressWarnings("unused")
         public JSONArray toJsonArray() {
             try {
                 return new JSONArray(toString());

@@ -4,8 +4,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.products.RabbitMQCluster;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 @Epic("Старые продукты")
@@ -15,7 +13,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldRabbitMQClusterTest extends Tests {
 
-    RabbitMQCluster rabbit = RabbitMQCluster.builder()
+    final RabbitMQCluster rabbit = RabbitMQCluster.builder()
             .projectId("proj-67nljbzjtt")
             .productId("cee004ec-136d-4605-98e1-da4dac466151")
             .orderId("43c2f7f3-74e2-4f78-beef-aae28107b6a1")//43c2f7f3-74e2-4f78-beef-aae28107b6a1 создал новый(старый бажный)

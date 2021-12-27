@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Feature("ApacheKafkaCluster")
 @Tags({@Tag("regress"), @Tag("negative"), @Tag("prod")})
 public class ApacheKafkaClusterNegativeTest extends Tests {
-    OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+    final OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @Tag("actions")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)

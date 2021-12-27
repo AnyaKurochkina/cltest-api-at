@@ -54,9 +54,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
     public ForkJoinPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration) {
         this.forkJoinPool = this.createForkJoinPool(configuration);
         this.parallelism = this.forkJoinPool.getParallelism();
-        LoggerFactory.getLogger(this.getClass()).config(() -> {
-            return "Using ForkJoinPool with parallelism of " + this.parallelism;
-        });
+        LoggerFactory.getLogger(this.getClass()).config(() -> "Using ForkJoinPool with parallelism of " + this.parallelism);
     }
 
     private static ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
@@ -66,14 +64,10 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
     private ForkJoinPool createForkJoinPool(ParallelExecutionConfiguration configuration) {
         ForkJoinWorkerThreadFactory threadFactory = new ForkJoinPoolHierarchicalTestExecutorService.WorkerThreadFactory();
-        return (ForkJoinPool) Try.call(() -> {
+        return Try.call(() -> {
             Constructor<ForkJoinPool> constructor = ForkJoinPool.class.getDeclaredConstructor(Integer.TYPE, ForkJoinWorkerThreadFactory.class, UncaughtExceptionHandler.class, Boolean.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE, Predicate.class, Long.TYPE, TimeUnit.class);
             return (ForkJoinPool) constructor.newInstance(configuration.getParallelism(), threadFactory, null, false, configuration.getCorePoolSize(), configuration.getMaxPoolSize(), configuration.getMinimumRunnable(), null, configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
-        }).orElseTry(() -> {
-            return new ForkJoinPool(configuration.getParallelism(), threadFactory, (UncaughtExceptionHandler) null, false);
-        }).getOrThrow((cause) -> {
-            return new JUnitException("Failed to create ForkJoinPool", cause);
-        });
+        }).orElseTry(() -> new ForkJoinPool(configuration.getParallelism(), threadFactory, (UncaughtExceptionHandler) null, false)).getOrThrow((cause) -> new JUnitException("Failed to create ForkJoinPool", cause));
     }
 
     public Future<Void> submit(TestTask testTask) {
@@ -195,7 +189,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         invokeAll(tasks2);
     }
 
-    AtomicBoolean first = new AtomicBoolean(true);
+    final AtomicBoolean first = new AtomicBoolean(true);
 
     public void invokeAll(List<? extends TestTask> tasks2) {
         ArrayList<TestTask> tasks = new ArrayList<>(tasks2);
@@ -353,8 +347,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         if (tasks.size() == 1) {
             (new ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask((TestTask) tasks.get(0))).compute();
         } else {
-            Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> nonConcurrentTasks = new LinkedList();
-            Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> concurrentTasksInReverseOrder = new LinkedList();
+            Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> nonConcurrentTasks = new LinkedList<>();
+            Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> concurrentTasksInReverseOrder = new LinkedList<>();
             this.forkConcurrentTasks(tasks, nonConcurrentTasks, concurrentTasksInReverseOrder);
             this.executeNonConcurrentTasks(nonConcurrentTasks);
             this.joinConcurrentTasksInReverseOrderToEnableWorkStealing(concurrentTasksInReverseOrder);

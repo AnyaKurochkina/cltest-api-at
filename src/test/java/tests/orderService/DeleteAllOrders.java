@@ -15,7 +15,7 @@ import tests.Tests;
 @Tag("deleteorders")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DeleteAllOrders extends Tests {
-    OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+    final OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @ParameterizedTest(name = "{0}")
     @Tag("deleteAll")

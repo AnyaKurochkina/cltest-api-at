@@ -18,7 +18,7 @@ import tests.Tests;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class AccountTest extends Tests {
-    AccountSteps accountSteps = new AccountSteps();
+     final AccountSteps accountSteps = new AccountSteps();
 
     @Order(1)
     @Test

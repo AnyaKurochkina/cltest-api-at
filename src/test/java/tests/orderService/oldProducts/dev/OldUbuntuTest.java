@@ -13,7 +13,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldUbuntuTest extends Tests {
 
-    Ubuntu ubuntu = Ubuntu.builder()
+    final Ubuntu ubuntu = Ubuntu.builder()
             .projectId("proj-67nljbzjtt")
             .productId("9d87b2b4-4145-401a-b1b1-edac6bb0c5e4")
             .orderId("f474dac0-1e37-4826-b4ba-1c9effbfa045")

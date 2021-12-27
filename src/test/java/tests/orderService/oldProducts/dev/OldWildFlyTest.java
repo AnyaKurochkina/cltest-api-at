@@ -14,7 +14,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldWildFlyTest extends Tests {
 
-    WildFly wildFly = WildFly.builder()
+    final WildFly wildFly = WildFly.builder()
             .projectId("proj-67nljbzjtt")
             .productId("972a66f1-cd45-437f-b920-676bad68e594")
             .orderId("da58d2c6-bc47-4a52-8aaa-85de22916a89")

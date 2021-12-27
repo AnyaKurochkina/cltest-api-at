@@ -6,8 +6,6 @@ import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import steps.Steps;
 
-import java.util.List;
-
 import static core.helper.Configure.StateServiceURL;
 
 @Log4j2

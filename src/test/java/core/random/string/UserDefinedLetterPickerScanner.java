@@ -21,7 +21,7 @@ class UserDefinedLetterPickerScanner {
   }
 
   public static ScannedUserDefinedPicker scan(final String[] regexCharacters, final int index) {
-    String key = "";
+    StringBuilder key = new StringBuilder();
     String character;
     List<String> bounds = new ArrayList<>();
 
@@ -31,7 +31,7 @@ class UserDefinedLetterPickerScanner {
         String beginCharacter = bounds.get(bounds.size() - 1); // take from tail
         String endCharacter = regexCharacters[++i]; // take from after "-"
 
-        key += beginCharacter + "-" + endCharacter;
+        key.append(beginCharacter).append("-").append(endCharacter);
 
         bounds.add(endCharacter);
       } else {
@@ -42,6 +42,6 @@ class UserDefinedLetterPickerScanner {
       }
     }
 
-    return new ScannedUserDefinedPicker(i, key, bounds);
+    return new ScannedUserDefinedPicker(i, key.toString(), bounds);
   }
 }

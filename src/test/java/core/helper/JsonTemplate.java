@@ -6,7 +6,7 @@ import org.intellij.lang.annotations.Language;
 import org.json.JSONObject;
 
 public class JsonTemplate {
-    JSONObject template;
+    final JSONObject template;
 
     public JsonTemplate(JSONObject template) {
         this.template = template;

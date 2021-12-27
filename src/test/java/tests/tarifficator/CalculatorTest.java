@@ -8,13 +8,10 @@ import lombok.extern.log4j.Log4j2;
 import models.accountManager.Account;
 import models.authorizer.Folder;
 import models.authorizer.Project;
-import models.orderService.interfaces.IProduct;
-import models.orderService.products.OpenShiftProject;
 import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,10 +28,10 @@ import java.util.Objects;
 @Feature("Калькулятор")
 @Tags({@Tag("regress"), @Tag("prod")})
 public class CalculatorTest extends Tests {
-    OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
-    AccountSteps accountSteps = new AccountSteps();
-    AuthorizerSteps authorizerSteps = new AuthorizerSteps();
-    CostSteps costSteps = new CostSteps();
+    final OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+    final AccountSteps accountSteps = new AccountSteps();
+    final AuthorizerSteps authorizerSteps = new AuthorizerSteps();
+    final CostSteps costSteps = new CostSteps();
 
     @SneakyThrows
     @Source(ProductArgumentsProvider.ONE_PRODUCT)

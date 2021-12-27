@@ -4,8 +4,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.products.Elasticsearch;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 @Epic("Старые продукты")
@@ -15,7 +13,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldElasticsearchTest extends Tests {
 
-    Elasticsearch elastic = Elasticsearch.builder()
+    final Elasticsearch elastic = Elasticsearch.builder()
             .projectId("proj-67nljbzjtt")
             .productId("f7aec597-14d5-48c8-a4fe-25af4f19e5d5")
             .orderId("c3a941a5-1e9f-4409-b661-ad655fcc4a71")
