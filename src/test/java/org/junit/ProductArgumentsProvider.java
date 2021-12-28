@@ -55,9 +55,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                         list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
                 });
             } else {
-                orders.forEach(entity -> {
-                    list.add(Arguments.of(new IProductMock(entity.toString())));
-                });
+                orders.forEach(entity -> list.add(Arguments.of(new IProductMock(entity.toString()))));
             }
         }
         else if (variableName == ONE_PRODUCT) {

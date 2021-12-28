@@ -2,12 +2,16 @@ package models.orderService.interfaces;
 
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
+import core.helper.Http;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.authorizer.Project;
+import models.authorizer.ProjectEnvironment;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -17,6 +21,9 @@ import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
 
 import java.util.List;
+import java.util.UUID;
+
+import static core.helper.Configure.OrderServiceURL;
 
 
 @SuperBuilder
@@ -51,6 +58,8 @@ public abstract class IProduct extends Entity {
 
     @Getter
     protected String orderId;
+    @Getter
+    protected String label;
     @Getter
     @Setter
     protected String projectId;
@@ -99,20 +108,17 @@ public abstract class IProduct extends Entity {
 
     //Выключить принудительно
     protected void stopHard(String action) {
-        orderServiceSteps.executeAction(action, this, null);
-        setStatus(ProductStatus.STOPPED);
+        orderServiceSteps.executeAction(action, this, null, ProductStatus.STOPPED);
     }
 
     //Выключить
     protected void stopSoft(String action) {
-        orderServiceSteps.executeAction(action, this, null);
-        setStatus(ProductStatus.STOPPED);
+        orderServiceSteps.executeAction(action, this, null, ProductStatus.STOPPED);
     }
 
     //Включить
     protected void start(String action) {
-        orderServiceSteps.executeAction(action, this, null);
-        setStatus(ProductStatus.CREATED);
+        orderServiceSteps.executeAction(action, this, null, ProductStatus.CREATED);
     }
 
     @SneakyThrows
@@ -126,8 +132,7 @@ public abstract class IProduct extends Entity {
     @Step("Удаление продукта")
     protected void delete(String action) {
         CalcCostSteps calcCostSteps = new CalcCostSteps();
-        orderServiceSteps.executeAction(action, this, null);
-        setStatus(ProductStatus.DELETED);
+        orderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED);
         Assertions.assertEquals(0.0F, calcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
     }
 
@@ -149,6 +154,31 @@ public abstract class IProduct extends Entity {
         orderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}"));
         float sizeAfter = (Float) orderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
         Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
+    }
+    protected void initProduct(){
+        if(projectId == null) {
+            Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+            projectId = project.getId();
+        }
+        if(label == null) {
+            label = UUID.randomUUID().toString();
+        }
+        if(productId == null) {
+            productId = orderServiceSteps.getProductId(this);
+        }
+    }
+    protected void createProduct(){
+        log.info("Отправка запроса на создание заказа " + productName);
+        JsonPath jsonPath = new Http(OrderServiceURL)
+                .setProjectId(projectId)
+                .body(toJson())
+                .post("projects/" + projectId + "/orders")
+                .assertStatus(201)
+                .jsonPath();
+        orderId = jsonPath.get("[0].id");
+        orderServiceSteps.checkOrderStatus("success", this);
+        setStatus(ProductStatus.CREATED);
+        compareCostOrderAndPrice();
     }
 
 

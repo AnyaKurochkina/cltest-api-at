@@ -41,7 +41,6 @@ public class CostSteps extends Steps {
             }
             log.info("Стоимость продукта : " + consumptionOfOneProduct);
         }
-        consumption = consumption;
         log.debug("Сумма расходов по всем продуктам: " + consumption);
         return consumption;
     }

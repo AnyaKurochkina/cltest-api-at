@@ -17,7 +17,7 @@ import java.util.HashMap;
 @Feature("Тарификатор")
 @Tags({@Tag("regress"), @Tag("tariff")})
 public class ComparePrebillingTest extends Tests {
-    CostSteps costSteps = new CostSteps();
+    final CostSteps costSteps = new CostSteps();
 
     @DisplayName("Сравнение стоимости продуктов в предбиллинге с ценами активного тарифного плана")
     @Source(ProductArgumentsProvider.PRODUCTS)

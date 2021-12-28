@@ -1,9 +1,9 @@
 package models.authorizer;
 
+import com.mifmif.common.regex.Generex;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.Http;
-import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,7 +50,7 @@ public class Folder extends Entity {
             }
         }
         if (title == null) {
-            title = new RandomStringGenerator().generateByRegex("FOLDER .{1,20}");
+            title = new Generex("FOLDER .{1,20}").random();
         }
         if (informationSystemIds == null) {
             InformationSystem informationSystem = InformationSystem.builder().build().createObject();

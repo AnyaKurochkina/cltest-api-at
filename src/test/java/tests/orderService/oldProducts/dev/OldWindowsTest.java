@@ -13,7 +13,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldWindowsTest extends Tests {
 
-    Windows windows = Windows.builder()
+    final Windows windows = Windows.builder()
             .projectId("proj-67nljbzjtt")
             .productId("28bed880-2714-4317-a967-d000d492bd9d")
             .orderId("9125747a-7197-42f0-9b32-aa5ccb4cefd4")

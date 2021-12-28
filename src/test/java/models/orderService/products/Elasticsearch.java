@@ -1,9 +1,7 @@
 package models.orderService.products;
 
-import core.helper.Http;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,11 +13,8 @@ import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-
-import static core.helper.Configure.OrderServiceURL;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -46,13 +41,7 @@ public class Elasticsearch extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/elasticsearch.json";
         productName = "Elasticsearch X-pack cluster";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if (projectId == null) {
-            projectId = project.getId();
-        }
-        if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
         return this;
     }
 
@@ -60,17 +49,7 @@ public class Elasticsearch extends IProduct {
     @Step("Заказ продукта")
     protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
-        log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = new Http(OrderServiceURL)
-                .setProjectId(projectId)
-                .body(toJson())
-                .post("projects/" + projectId + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = array.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        setStatus(ProductStatus.CREATED);
-        compareCostOrderAndPrice();
+        createProduct();
     }
 
     @Override
@@ -93,6 +72,7 @@ public class Elasticsearch extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.label", getLabel())
                 .build();
     }
 

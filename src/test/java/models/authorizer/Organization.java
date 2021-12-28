@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import models.Entity;
 import org.json.JSONObject;
-import steps.authorizer.AuthorizerSteps;
 
 import static core.helper.Configure.AuthorizerURL;
 

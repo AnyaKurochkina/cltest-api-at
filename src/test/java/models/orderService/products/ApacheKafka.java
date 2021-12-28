@@ -1,9 +1,7 @@
 package models.orderService.products;
 
-import core.helper.Http;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,14 +13,11 @@ import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
-
-import static core.helper.Configure.OrderServiceURL;
+import java.util.UUID;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -46,30 +41,14 @@ public class ApacheKafka extends IProduct {
     @Step("Заказ продукта")
     protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
-        log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath jsonPath = new Http(OrderServiceURL)
-                .setProjectId(projectId)
-                .body(toJson())
-                .post("projects/" + projectId + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = jsonPath.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        setStatus(ProductStatus.CREATED);
-        compareCostOrderAndPrice();
+        createProduct();
     }
 
     @Override
     public Entity init() {
         jsonTemplate = "/orders/apache_kafka.json";
         productName = "Apache Kafka";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
-            projectId = project.getId();
-        }
-        if(productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
         return this;
     }
 
@@ -90,6 +69,7 @@ public class ApacheKafka extends IProduct {
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.project_name", project.id)
+                .set("$.order.label", getLabel())
                 .build();
     }
 

@@ -1,10 +1,7 @@
 package models.orderService.products;
 
-import core.helper.Configure;
-import core.helper.Http;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -16,13 +13,8 @@ import models.authorizer.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
-import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.orderService.OrderServiceSteps;
-
-import java.util.List;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -44,13 +36,7 @@ public class HcpBucket extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/hcp_bucket.json";
         productName = "HCP bucket";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if (projectId == null) {
-            projectId = project.getId();
-        }
-        if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
         return this;
     }
 
@@ -64,22 +50,13 @@ public class HcpBucket extends IProduct {
                 .set("$.order.attrs.net_segment", segment)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.service_plan", servicePlan)
+                .set("$.order.label", getLabel())
                 .build();
     }
 
     @Override
     protected void create() {
-        log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = new Http(Configure.OrderServiceURL)
-                .setProjectId(projectId)
-                .body(toJson())
-                .post("projects/" + projectId + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = array.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        setStatus(ProductStatus.CREATED);
-        compareCostOrderAndPrice();
+        createProduct();
     }
 
     @Step("Измененить параметры версионирования")
