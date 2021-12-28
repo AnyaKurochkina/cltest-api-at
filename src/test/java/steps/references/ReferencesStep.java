@@ -2,7 +2,6 @@ package steps.references;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
 import models.orderService.interfaces.IProduct;

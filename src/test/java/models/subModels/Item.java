@@ -1,6 +1,9 @@
 package models.subModels;
 
+import lombok.Data;
+
+@Data
 public class Item {
-    public String name;
-    public String id;
+    String name;
+    String id;
 }

@@ -4,8 +4,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.products.Astra;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
 @Epic("Старые продукты")
@@ -15,7 +13,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldAstraTest extends Tests {
 
-    Astra astra = Astra.builder()
+    final Astra astra = Astra.builder()
             .projectId("proj-67nljbzjtt")
             .productId("c0aa15f7-5854-4c93-8c0f-1fcc9566f783")
             .orderId("b5998259-ccab-4a98-949d-801b115ec180")//43c2f7f3-74e2-4f78-beef-aae28107b6a1 создал новый(старый бажный)

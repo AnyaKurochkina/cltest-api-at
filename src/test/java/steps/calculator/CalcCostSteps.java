@@ -6,8 +6,6 @@ import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import steps.Steps;
 
-import java.util.Objects;
-
 import static core.helper.Configure.CalculatorURL;
 
 @Log4j2

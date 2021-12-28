@@ -13,7 +13,7 @@ import tests.Tests;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgreSQLTest extends Tests {
 
-    PostgreSQL postgreSQL = PostgreSQL.builder()
+    final PostgreSQL postgreSQL = PostgreSQL.builder()
             .projectId("proj-juh8ynkvtn")
             .productId("3b3807a6-9ad0-4ca6-930a-a37efffcc605")
             .orderId("ff75d654-c851-4cf0-8acc-95473afe9c36")

@@ -16,7 +16,7 @@ import java.util.Collections;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldApacheKafkaClusterTest extends Tests {
 
-    ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
+    final ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
             .projectId("proj-67nljbzjtt")
             .productId("d46dd919-defc-4ec6-a55b-2017b3981258")
             .orderId("62758afa-911e-4ee8-abd2-a59892e3426f")

@@ -37,9 +37,6 @@ public class ObjectPoolService {
         objectPoolEntity.lock();
         if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
             objectPoolEntity.release();
-//            Assertions.assertNotEquals(objectPoolEntity.getStatus(), ObjectStatus.FAILED,
-//                    String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой",
-//                            objectPoolEntity.getClazz().getSimpleName()));
                 throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой:\n%s",
                         objectPoolEntity.getClazz().getSimpleName(), objectPoolEntity.getError()));
         }
@@ -54,14 +51,12 @@ public class ObjectPoolService {
             } catch (Throwable throwable) {
                 if (throwable instanceof CalculateException) {
                     objectPoolEntity.setStatus(ObjectStatus.CREATED);
-                    objectPoolEntity.release();
-                    throw throwable;
                 } else {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED);
                     objectPoolEntity.setError(throwable);
-                    objectPoolEntity.release();
-                    throw throwable;
                 }
+                objectPoolEntity.release();
+                throw throwable;
             }
             objectPoolEntity.setStatus(ObjectStatus.CREATED);
         }
@@ -70,11 +65,9 @@ public class ObjectPoolService {
         }
         T entity = objectPoolEntity.get();
         toStringProductStep(entity);
-
         if (Objects.nonNull(objectPoolEntity.getError())) {
             throw objectPoolEntity.getError();
         }
-
         return entity;
     }
 
@@ -91,11 +84,6 @@ public class ObjectPoolService {
         }
         return writeEntityToMap(e);
     }
-
-
-//    public static <T extends Entity> T create(Entity e) {
-//        return create(e, false);
-//    }
 
     public static void saveEntity(Entity entity) {
         ObjectPoolEntity objectPoolEntity = getObjectPoolEntity(entity);
@@ -234,6 +222,4 @@ public class ObjectPoolService {
         allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
         allureLifecycle.updateStep(id, s -> s.setParameters(list));
     }
-
-
 }

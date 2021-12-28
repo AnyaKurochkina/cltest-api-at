@@ -17,7 +17,7 @@ import java.util.Collections;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldOpenShiftTest extends Tests {
 
-    OpenShiftProject openShift = OpenShiftProject.builder()
+    final OpenShiftProject openShift = OpenShiftProject.builder()
             .projectId("proj-67nljbzjtt")
             .productId("10000003-1111-2222-b9dc-4a9e5dafd44e")
             .orderId("a4335c3c-fa1a-49ba-b528-170885e06605")

@@ -1,9 +1,9 @@
 package models.authorizer;
 
+import com.mifmif.common.regex.Generex;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +34,7 @@ public class AccessGroup extends Entity {
     @Override
     public Entity init() {
         if (name == null)
-            name = new RandomStringGenerator().generateByRegex("[a-z]{5,15}");
+            name = new Generex("[a-z]{5,15}").random();
         if (projectName == null)
             projectName = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
         if (description == null)
