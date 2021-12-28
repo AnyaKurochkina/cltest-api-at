@@ -7,6 +7,7 @@ import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import models.Entity;
 import org.json.JSONObject;
 import steps.authorizer.ProjectSteps;
@@ -14,7 +15,9 @@ import steps.portalBack.PortalBackSteps;
 
 @Builder
 @Getter
+@ToString(onlyExplicitlyIncluded = true)
 public class Project extends Entity {
+    @ToString.Include
     public String id;
     public String informationSystem;
     public ProjectEnvironment projectEnvironment;

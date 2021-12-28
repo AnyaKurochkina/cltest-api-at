@@ -23,7 +23,7 @@
       },
       "extra_mounts": [
         {
-          "path": "/app",
+          "path": "/app/clickhouse",
           "size": 20,
           "file_system": "xfs"
         }

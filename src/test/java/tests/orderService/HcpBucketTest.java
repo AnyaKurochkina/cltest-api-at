@@ -8,6 +8,7 @@ import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.HcpBucket;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -47,6 +48,7 @@ public class HcpBucketTest extends Tests {
     }
 
     @Tag("actions")
+    @Disabled("Статический ключ не работает")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Настроить ACL бакета {0}")
     void editAcl(HcpBucket product) {
