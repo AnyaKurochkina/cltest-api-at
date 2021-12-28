@@ -12,6 +12,7 @@ import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,6 +37,7 @@ public class CalculatorTest extends Tests {
     @SneakyThrows
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Списание средств за продукт {0}")
+    @Disabled("Необходимо доработать тест. По всей видимости получать стоимость именно текущей конфигурации")
     public void expenseAccount(Rhel resource) {
         try (Rhel product = resource.createObjectExclusiveAccess()) {
             Project projectSource = Project.builder().id(product.getProjectId()).build().createObject();
