@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
 )
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
     private final ForkJoinPool forkJoinPool;
-    private final int parallelism;
+    public static AtomicInteger parallelism = new AtomicInteger();
 
     public ForkJoinPoolHierarchicalTestExecutorService(ConfigurationParameters configurationParameters) {
         this(createConfiguration(configurationParameters));
@@ -53,8 +53,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
     )
     public ForkJoinPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration) {
         this.forkJoinPool = this.createForkJoinPool(configuration);
-        this.parallelism = this.forkJoinPool.getParallelism();
-        LoggerFactory.getLogger(this.getClass()).config(() -> "Using ForkJoinPool with parallelism of " + this.parallelism);
+        parallelism.set(this.forkJoinPool.getParallelism());
+        LoggerFactory.getLogger(this.getClass()).config(() -> "Using ForkJoinPool with parallelism of " + parallelism.get());
     }
 
     private static ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
@@ -74,7 +74,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask exclusiveTask = new ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask(testTask);
         if (!this.isAlreadyRunningInForkJoinPool()) {
             return this.forkJoinPool.submit(exclusiveTask);
-        } else if (testTask.getExecutionMode() == ExecutionMode.CONCURRENT && ForkJoinTask.getSurplusQueuedTaskCount() < this.parallelism) {
+        } else if (testTask.getExecutionMode() == ExecutionMode.CONCURRENT && ForkJoinTask.getSurplusQueuedTaskCount() < parallelism.get()) {
             return exclusiveTask.fork();
         } else {
             exclusiveTask.compute();

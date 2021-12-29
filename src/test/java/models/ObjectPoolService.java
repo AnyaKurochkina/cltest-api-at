@@ -8,6 +8,7 @@ import core.enums.ObjectStatus;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
 import core.helper.DataFileHelper;
+import core.utils.Waiting;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
@@ -16,11 +17,16 @@ import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static io.qameta.allure.Allure.getLifecycle;
 
@@ -37,8 +43,8 @@ public class ObjectPoolService {
         objectPoolEntity.lock();
         if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
             objectPoolEntity.release();
-                throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой:\n%s",
-                        objectPoolEntity.getClazz().getSimpleName(), objectPoolEntity.getError()));
+            throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой:\n%s",
+                    objectPoolEntity.getClazz().getSimpleName(), objectPoolEntity.getError()));
         }
         if (objectPoolEntity.getStatus() == ObjectStatus.NOT_CREATED) {
             try {
@@ -105,9 +111,10 @@ public class ObjectPoolService {
         return objectPoolEntity;
     }
 
+    @SneakyThrows
     public static void deleteAllResources() {
         log.debug("##### deleteAllResources start #####");
-        List<Thread> threadList = new ArrayList<>();
+        ExecutorService threadPool = Executors.newFixedThreadPool(ForkJoinPoolHierarchicalTestExecutorService.parallelism.get());
         Collections.reverse(createdEntities);
         for (String key : createdEntities) {
             ObjectPoolEntity objectPoolEntity = entities.get(key);
@@ -119,17 +126,15 @@ public class ObjectPoolService {
 //                continue;
             Entity entity = objectPoolEntity.get();
             if (entity instanceof IProduct) {
-                Thread thread = new Thread(() -> {
-                    try {
-                        entity.deleteObject();
-                    } catch (Throwable e) {
-                        objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
-                        objectPoolEntity.setError(e);
-                        e.printStackTrace();
-                    }
-                });
-                threadList.add(thread);
-                thread.start();
+                threadPool.submit(() -> {
+                        try {
+                            entity.deleteObject();
+                        } catch (Throwable e) {
+                            objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
+                            objectPoolEntity.setError(e);
+                            e.printStackTrace();
+                        }
+                    });
             } else {
                 try {
                     entity.deleteObject();
@@ -140,14 +145,21 @@ public class ObjectPoolService {
                 }
             }
         }
-        threadList.forEach(thread -> {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+        awaitTerminationAfterShutdown(threadPool);
         log.debug("##### deleteAllResources end #####");
+    }
+
+
+    private static void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+        threadPool.shutdown();
+        try {
+            if (!threadPool.awaitTermination(1, TimeUnit.HOURS)) {
+                threadPool.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            threadPool.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     public static void saveEntities(String file) {
@@ -172,14 +184,14 @@ public class ObjectPoolService {
 
     public static void loadEntities(String content) {
         try {
-                List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(content, new TypeReference<List<LinkedHashMap<String, Object>>>() {
-                });
-                listEntities.forEach(v -> {
-                            ObjectPoolEntity objectPoolEntity = writeEntityToMap(fromJson(new JSONObject(v).toString(), getClassByName(v.get("objectClassName").toString())));
-                            objectPoolEntity.setStatus(ObjectStatus.CREATED);
+            List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(content, new TypeReference<List<LinkedHashMap<String, Object>>>() {
+            });
+            listEntities.forEach(v -> {
+                        ObjectPoolEntity objectPoolEntity = writeEntityToMap(fromJson(new JSONObject(v).toString(), getClassByName(v.get("objectClassName").toString())));
+                        objectPoolEntity.setStatus(ObjectStatus.CREATED);
 //                            objectPoolEntity.setMock(true);
-                        }
-                );
+                    }
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -212,7 +224,7 @@ public class ObjectPoolService {
             if (field.get(entity) != null) {
                 Parameter parameter = new Parameter();
                 parameter.setName(field.getName());
-                if(field.getName().equals("password"))
+                if (field.getName().equals("password"))
                     parameter.setValue("<password>");
                 else
                     parameter.setValue(field.get(entity).toString());
