@@ -16,6 +16,9 @@ import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static core.utils.Waiting.sleep;
@@ -63,7 +66,7 @@ public class ServiceAccount extends Entity {
                 .assertStatus(200)
                 .jsonPath();
 
-        Assertions.assertEquals("active", jsonPathStatus.get("data.status"),
+        Assertions.assertEquals(Collections.singletonList("active"), jsonPathStatus.get("data.status"),
                 "Статический ключ не создался, текущий статус: " + jsonPathStatus.get("data.status"));
     }
 
