@@ -26,7 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 public class RabbitMQCluster extends IProduct {
-    static String RABBITMQ_USER = "data.find{it.type=='cluster'}.config.users[0]";
+    static String RABBITMQ_USER = "data.find{it.type=='cluster'}.config.users.any{it.name=='%s'}";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -88,8 +88,8 @@ public class RabbitMQCluster extends IProduct {
     public void rabbitmqCreateUser() {
         String user = "testapiuser";
         orderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
-        String username = (String) orderServiceSteps.getProductsField(this, RABBITMQ_USER);
-        Assertions.assertEquals(user, username);
+        String username = (String) orderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user));
+        Assertions.assertEquals(user, username, "У продукта отсутствует пользователь "+ user);
     }
 
     @Step("Удаление продукта")

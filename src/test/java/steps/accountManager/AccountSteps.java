@@ -13,7 +13,7 @@ import static core.helper.Configure.AccountManagerURL;
 @Log4j2
 public class AccountSteps extends Steps {
 
-    @Step("Перевод со счета {from} на счет {to} суммы {amount} c комментарием {comment}")
+    @Step("Перевод со счета {from} на счет {to} суммы {amount} c комментарием {reason}")
     public void transferMoney(String from, String to, String amount, String reason) {
         JsonHelper.getJsonTemplate("/accountManager/transaction.json")
                 .set("$.from_account_id", Objects.requireNonNull(from))
