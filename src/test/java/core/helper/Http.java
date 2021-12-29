@@ -279,6 +279,8 @@ public class Http {
         public Response(int status, String responseMessage, List<String> headers) {
             this.status = status;
             this.responseMessage = responseMessage;
+            if(Objects.isNull(responseMessage))
+                responseMessage = "";
             this.headers = headers;
         }
 
