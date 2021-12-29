@@ -68,7 +68,7 @@ public class ProductTest {
             Waiting.sleep(60000);
             try {
                 orderServiceSteps.changeProjectForOrder(product, projectTarget2);
-                Waiting.sleep(60000);
+                Waiting.sleep(120000);
 
 //          Заказ отсутствует в списке продуктов исходного проекта
                 Assertions.assertFalse(orderServiceSteps.getProductsWithStatus(projectTarget.getId(), "success").stream().anyMatch(id -> id.equals(product.getOrderId())),

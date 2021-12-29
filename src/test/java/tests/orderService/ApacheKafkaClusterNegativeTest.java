@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster")
-@Tags({@Tag("regress"), @Tag("negative"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("negative"), @Tag("prod"), @Tag("apachekafkacluster")})
 public class ApacheKafkaClusterNegativeTest extends Tests {
     final OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 

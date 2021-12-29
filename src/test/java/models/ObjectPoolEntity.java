@@ -38,8 +38,8 @@ public class ObjectPoolEntity {
     @SneakyThrows
     @ResourceLock(value = "entity", mode = READ)
     public boolean equalsEntity(Object o) {
-        if(status.equals(ObjectStatus.DELETED))
-            return false;
+//        if(status.equals(ObjectStatus.DELETED))
+//            return false;
         if(!isPublic)
             return false;
         if (this == o)
