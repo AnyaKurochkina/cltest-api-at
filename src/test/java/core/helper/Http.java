@@ -273,14 +273,14 @@ public class Http {
 
     public class Response {
         final int status;
-        final String responseMessage;
+        String responseMessage;
         final List<String> headers;
 
         public Response(int status, String responseMessage, List<String> headers) {
             this.status = status;
             this.responseMessage = responseMessage;
             if(Objects.isNull(responseMessage))
-                responseMessage = "";
+                this.responseMessage = "";
             this.headers = headers;
         }
 
