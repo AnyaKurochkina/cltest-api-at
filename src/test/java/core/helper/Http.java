@@ -286,7 +286,7 @@ public class Http {
 
         public Response assertStatus(int s) {
             if (s != status())
-                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\nResponse: %s\n%s\n", s, status(), method, token, String.join("\n", headers), host + path, responseMessage, body));
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\n%s\nResponse: %s\n", s, status(), method, token, String.join("\n", headers), host + path, body, responseMessage));
             return this;
         }
 
