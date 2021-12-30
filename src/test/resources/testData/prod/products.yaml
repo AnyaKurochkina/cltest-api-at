@@ -1,6 +1,6 @@
 HcpBucket:
   - options:
-      - { platform: "hcp",env: "DEV", servicePlan: "Cold", segment: "dev-srv-app", dataCentre: "5" }
+      - { platform: "hcp",env: "DEV", servicePlan: "Sata_Tier", segment: "dev-srv-app", dataCentre: "5" }
 
 OpenShiftProject:
   - options:

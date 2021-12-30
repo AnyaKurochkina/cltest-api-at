@@ -136,8 +136,9 @@ public class CostSteps extends Steps {
 
     @Step("Получение предварительной стоимости action {action} продукта {product}")
     public Float getCostAction(String action, String itemId, IProduct product, JSONObject data) {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
-                .isForOrders(true).build().createObject();
+//        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
+//                .isForOrders(true).build().createObject();
+        Project project = Project.builder().id(product.getProjectId()).build().createObject();
         log.info("Отправка запроса на получение стоимости экшена: "+ action +", у продукта " + product.getProductName());
         return JsonHelper.getJsonTemplate("/tarifficator/costAction.json")
                 .set("$.params.project_name", project.id)

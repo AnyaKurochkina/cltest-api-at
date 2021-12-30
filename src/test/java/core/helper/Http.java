@@ -273,18 +273,20 @@ public class Http {
 
     public class Response {
         final int status;
-        final String responseMessage;
+        String responseMessage;
         final List<String> headers;
 
         public Response(int status, String responseMessage, List<String> headers) {
             this.status = status;
             this.responseMessage = responseMessage;
+            if(Objects.isNull(responseMessage))
+                this.responseMessage = "";
             this.headers = headers;
         }
 
         public Response assertStatus(int s) {
             if (s != status())
-                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\nResponse: %s\n%s\n", s, status(), method, token, String.join("\n", headers), host + path, responseMessage, body));
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\n%s\nResponse: %s\n", s, status(), method, token, String.join("\n", headers), host + path, body, responseMessage));
             return this;
         }
 

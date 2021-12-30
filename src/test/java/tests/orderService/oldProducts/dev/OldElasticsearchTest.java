@@ -6,7 +6,7 @@ import models.orderService.products.Elasticsearch;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("ElasticSearch OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_elasticsearch"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
