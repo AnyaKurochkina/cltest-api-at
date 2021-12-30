@@ -9,7 +9,7 @@ import tests.Tests;
 import java.util.Arrays;
 import java.util.Collections;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("ApacheKafkaCluster OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_apachekafkacluster"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
