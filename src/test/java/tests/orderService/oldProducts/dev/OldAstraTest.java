@@ -6,7 +6,7 @@ import models.orderService.products.Astra;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("Astra OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_astra"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

@@ -10,7 +10,7 @@ import tests.Tests;
 import java.util.Collections;
 
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("OpenShift OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_openshift"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
