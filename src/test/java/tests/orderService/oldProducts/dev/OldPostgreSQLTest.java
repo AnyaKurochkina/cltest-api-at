@@ -6,7 +6,7 @@ import models.orderService.products.PostgreSQL;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("PostgreSQL OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_postgresql"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

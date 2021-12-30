@@ -6,7 +6,7 @@ import models.orderService.products.Nginx;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("Nginx OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_nginx"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
