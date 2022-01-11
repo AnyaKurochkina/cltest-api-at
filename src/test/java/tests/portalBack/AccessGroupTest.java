@@ -8,6 +8,7 @@ import models.authorizer.InformationSystem;
 import models.authorizer.ProjectEnvironment;
 import models.portalBack.AccessGroup;
 import models.authorizer.Project;
+import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
@@ -19,7 +20,7 @@ import tests.Tests;
 
 @Epic("Управление")
 @Feature("Группы доступа")
-@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke")})
+@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke"), @Tag("prod")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -43,7 +44,7 @@ public class AccessGroupTest extends Tests {
     }
 
 
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("dev")
     @Test
     @Order(3)
     @DisplayName("Добавление пользователя в группу доступа для среды TEST")
