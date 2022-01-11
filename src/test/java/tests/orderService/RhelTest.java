@@ -3,7 +3,7 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.authorizer.AccessGroup;
+import models.portalBack.AccessGroup;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
@@ -45,7 +45,7 @@ public class RhelTest extends Tests {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             AccessGroup accessGroup = AccessGroup.builder().projectName(rhel.getProjectId()).build().createObject();
-            Assertions.assertTrue(accessGroup.getUsers().size() > 0, String.format("Нет пользователей в группе %s", accessGroup.getName()));
+            Assertions.assertTrue(accessGroup.getUsers().size() > 0, String.format("Нет пользователей в группе %s", accessGroup.getPrefixName()));
             rhel.checkCreateUseSsh(accessGroup.getUsers().get(0));
         }
     }

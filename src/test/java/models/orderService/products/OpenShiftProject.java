@@ -7,9 +7,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.authorizer.AccessGroup;
-import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
+import models.portalBack.AccessGroup;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Role;
@@ -44,7 +42,7 @@ public class OpenShiftProject extends IProduct {
         initProduct();
         if(roles == null) {
             AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
-            roles = Collections.singletonList(new Role("edit", accessGroup.getName()));
+            roles = Collections.singletonList(new Role("edit", accessGroup.getPrefixName()));
         }
         return this;
     }
@@ -64,7 +62,7 @@ public class OpenShiftProject extends IProduct {
                 filter(r -> r.getLabel().equals(resourcePoolLabel)).findFirst().orElseThrow(NoSuchFieldException::new);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
-                .set("$.order.attrs.roles[0].groups[0]", accessGroup.getName())
+                .set("$.order.attrs.roles[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", projectId)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.net_segment", segment)

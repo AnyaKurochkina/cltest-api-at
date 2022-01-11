@@ -1,11 +1,17 @@
 package tests.portalBack;
 
+import com.mifmif.common.regex.Generex;
+import core.helper.Configure;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.authorizer.AccessGroup;
+import models.authorizer.ProjectEnvironment;
+import models.portalBack.AccessGroup;
 import models.authorizer.Project;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
@@ -18,28 +24,58 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AccessGroupTest extends Tests {
+
+    String name = new Generex("[a-z]{5,15}").random();
 
     @Test
     @Order(1)
     @DisplayName("Создание Группы доступа")
     void createAccessGroup() {
-        AccessGroup.builder().name("accessgroup").build().createObject();
+        AccessGroup.builder().name(name).build().createObject();
     }
 
     @Test
     @Order(2)
-    @DisplayName("Добавление пользователя в группу доступа")
-    void addUserAccessGroup() {
+    @DisplayName("Редактирование группы доступа")
+    void editServiceAccount() {
+        AccessGroup group = AccessGroup.builder().name(name).build().createObject();
+        group.editGroup("new description");
+    }
+
+    public static boolean checkEnv(String env) {
+        System.setProperty("env", Configure.ENV);
+        return System.getProperty("env").equals(Configure.ENV);
+    }
+
+    @DisabledIf("java.lang.System.getProperty('env').toLowerCase().contains('IFT')")
+    @Test
+    @Order(3)
+    @DisplayName("Добавление пользователя в группу доступа для среды TEST")
+    void addUserAccessGroupTest() {
         AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
         PortalBackSteps portalBackSteps = new PortalBackSteps();
         AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").build().createObject();
-        Project project = Project.builder().id(accessGroup.getProjectName()).build().createObject();
+        Project project = Project.builder().id(accessGroup.getProjectName())
+                .projectEnvironment(new ProjectEnvironment("TEST")).build().createObject();
         accessGroupSteps.addUsersToGroup(accessGroup, portalBackSteps.getUsers(project, "VTB4043473"));
     }
 
     @Test
-    @Order(3)
+    @Order(4)
+    @DisplayName("Добавление пользователя в группу доступа для среды DEV")
+    void addUserAccessGroupDev() {
+        AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
+        PortalBackSteps portalBackSteps = new PortalBackSteps();
+        AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").build().createObject();
+        Project project = Project.builder().id(accessGroup.getProjectName())
+                .projectEnvironment(new ProjectEnvironment("DEV")).build().createObject();
+        accessGroupSteps.addUsersToGroup(accessGroup, portalBackSteps.getUsers(project, "VTB4043473"));
+    }
+
+    @Test
+    @Order(5)
     @DisplayName("Удаление пользователя из группы доступа")
     void deleteUserAccessGroup() {
         AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
@@ -52,7 +88,7 @@ public class AccessGroupTest extends Tests {
     }
 
     @Test
-    @Order(4)
+    @Order(6)
     @MarkDelete
     @DisplayName("Удаление Группы доступа")
     void deleteAccessGroup() {
