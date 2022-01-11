@@ -1,17 +1,15 @@
 package tests.portalBack;
 
 import com.mifmif.common.regex.Generex;
-import core.helper.Configure;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import models.authorizer.InformationSystem;
 import models.authorizer.ProjectEnvironment;
 import models.portalBack.AccessGroup;
 import models.authorizer.Project;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.condition.DisabledIf;
-import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
@@ -44,21 +42,20 @@ public class AccessGroupTest extends Tests {
         group.editGroup("new description");
     }
 
-    public static boolean checkEnv(String env) {
-        System.setProperty("env", Configure.ENV);
-        return System.getProperty("env").equals(Configure.ENV);
-    }
 
-    @DisabledIf("java.lang.System.getProperty('env').toLowerCase().contains('IFT')")
+    @EnabledIfEnv("ift")
     @Test
     @Order(3)
     @DisplayName("Добавление пользователя в группу доступа для среды TEST")
     void addUserAccessGroupTest() {
         AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
         PortalBackSteps portalBackSteps = new PortalBackSteps();
-        AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").build().createObject();
-        Project project = Project.builder().id(accessGroup.getProjectName())
-                .projectEnvironment(new ProjectEnvironment("TEST")).build().createObject();
+        String informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
+        ProjectEnvironment projectEnvironment = new PortalBackSteps().getProjectEnvironment("TEST", informationSystem);
+        Project project = Project.builder()
+                .projectEnvironment(projectEnvironment)
+                .build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").projectName(project.getId()).build().createObject();
         accessGroupSteps.addUsersToGroup(accessGroup, portalBackSteps.getUsers(project, "VTB4043473"));
     }
 
@@ -68,9 +65,9 @@ public class AccessGroupTest extends Tests {
     void addUserAccessGroupDev() {
         AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
         PortalBackSteps portalBackSteps = new PortalBackSteps();
-        AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").build().createObject();
-        Project project = Project.builder().id(accessGroup.getProjectName())
+        Project project = Project.builder()
                 .projectEnvironment(new ProjectEnvironment("DEV")).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").projectName(project.getId()).build().createObject();
         accessGroupSteps.addUsersToGroup(accessGroup, portalBackSteps.getUsers(project, "VTB4043473"));
     }
 
