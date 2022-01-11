@@ -37,7 +37,6 @@ public class CalculatorTest extends Tests {
     @SneakyThrows
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Списание средств за продукт {0}")
-    @Disabled("Необходимо доработать тест. По всей видимости получать стоимость именно текущей конфигурации")
     public void expenseAccount(Rhel resource) {
         try (Rhel product = resource.createObjectExclusiveAccess()) {
             Project projectSource = Project.builder().id(product.getProjectId()).build().createObject();
