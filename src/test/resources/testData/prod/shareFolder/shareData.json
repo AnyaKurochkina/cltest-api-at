@@ -172,42 +172,42 @@
     "isForOrders": true
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-edzorg-edugroup",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-b7iigm67tk"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-hfzorg-hotfix-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-rr4ncna00e"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-mtzorg-migr-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-sdt56df8rr"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-rrzorg-preprod-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-aiqk5zzot4"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-stzorg-st-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-ovkcqq41d3"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-ifzorg-ift-group",
     "users": [
       "check_admin"
@@ -216,7 +216,7 @@
     "projectName": "proj-7ll0yy5zsc"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-d5zorg-dev-group",
     "users": [
       "check_admin"
@@ -225,7 +225,7 @@
     "projectName": "proj-frybyv41jh"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-ltzorg-lt-group",
     "users": [],
     "isDeleted": false,

@@ -24,7 +24,7 @@
     "isForOrders": true
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-ifplux-test-acces-group",
     "user": "",
     "isDeleted": false,
@@ -48,7 +48,7 @@
     "isForOrders": true
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-d2plux-xazppulba",
     "user": "",
     "isDeleted": false,

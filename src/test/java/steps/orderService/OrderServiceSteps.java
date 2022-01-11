@@ -314,7 +314,11 @@ public class OrderServiceSteps extends Steps {
     }
 
     public <T extends Comparable<T>> Comparable<T> getProductsField(IProduct product, String path) {
-        Comparable<T> s;
+        return (Comparable<T>) getProductsField(product, path, Comparable.class);
+    }
+
+    public Object getProductsField(IProduct product, String path, Class<?> clazz) {
+        Object s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())

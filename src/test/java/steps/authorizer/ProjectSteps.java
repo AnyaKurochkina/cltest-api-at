@@ -25,7 +25,9 @@ public class ProjectSteps extends Steps {
         //Получение префикосв среды
         JsonPath jsonPath = new Http(PortalBackURL)
                 .get(String.format("folders/%s/information_systems/%s/environment_prefixes?project_environment_id=%s&reserved=false",
-                        Objects.requireNonNull(projectId), Objects.requireNonNull(infoSystems), Objects.requireNonNull(projectEnvId)))
+                        Objects.requireNonNull(projectId),
+                        Objects.requireNonNull(infoSystems),
+                        Objects.requireNonNull(projectEnvId)))
                 .assertStatus(200)
                 .jsonPath();
         //Сохранение списка префиксов с параметрами в список

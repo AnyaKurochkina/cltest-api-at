@@ -50,7 +50,7 @@ public class Folder extends Entity {
             }
         }
         if (title == null) {
-            title = new Generex("FOLDER .{1,20}").random();
+            title = new Generex("FOLDER \\w{1,20}").random();
         }
         if (informationSystemIds == null) {
             InformationSystem informationSystem = InformationSystem.builder().build().createObject();
