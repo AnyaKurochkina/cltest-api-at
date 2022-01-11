@@ -9,15 +9,13 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.authorizer.AccessGroup;
+import models.portalBack.AccessGroup;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.UUID;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -65,7 +63,7 @@ public class ApacheKafka extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.platform", platform)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.project_name", project.id)
