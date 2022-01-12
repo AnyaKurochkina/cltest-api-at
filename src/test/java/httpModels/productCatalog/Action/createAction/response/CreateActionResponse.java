@@ -100,4 +100,10 @@ public class CreateActionResponse{
 
 	@JsonProperty("required_order_statuses")
 	private List<Object> requiredOrderStatuses;
+
+	@JsonProperty("version_create_dt")
+	private String version_create_dt;
+
+	@JsonProperty("version_changed_by_user")
+	private String version_changed_by_user;
 }

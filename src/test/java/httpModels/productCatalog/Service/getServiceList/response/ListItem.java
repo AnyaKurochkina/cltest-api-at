@@ -1,6 +1,7 @@
 package httpModels.productCatalog.Service.getServiceList.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.ItemImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,72 +13,88 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListItem{
 
-	@JsonProperty("allowed_paths")
-	private List<Object> allowedPaths;
+public class ListItem implements ItemImpl {
 
-	@JsonProperty("version_list")
-	private List<String> versionList;
+    @JsonProperty("allowed_paths")
+    private List<Object> allowedPaths;
 
-	@JsonProperty("is_published")
-	private Boolean isPublished;
+    @JsonProperty("version_list")
+    private List<String> versionList;
 
-	@JsonProperty("icon")
-	private String icon;
+    @JsonProperty("is_published")
+    private Boolean isPublished;
 
-	@JsonProperty("graph_version")
-	private String graphVersion;
+    @JsonProperty("icon")
+    private String icon;
 
-	@JsonProperty("description")
-	private String description;
+    @JsonProperty("graph_version")
+    private String graphVersion;
 
-	@JsonProperty("restricted_groups")
-	private List<Object> restrictedGroups;
+    @JsonProperty("description")
+    private String description;
 
-	@JsonProperty("graph_id")
-	private String graphId;
+    @JsonProperty("restricted_groups")
+    private List<Object> restrictedGroups;
 
-	@JsonProperty("version")
-	private String version;
+    @JsonProperty("graph_id")
+    private String graphId;
 
-	@JsonProperty("data_source")
-	private DataSource dataSource;
+    @JsonProperty("version")
+    private String version;
 
-	@JsonProperty("last_version")
-	private String lastVersion;
+    @JsonProperty("data_source")
+    private DataSource dataSource;
 
-	@JsonProperty("number")
-	private Integer number;
+    @JsonProperty("last_version")
+    private String lastVersion;
 
-	@JsonProperty("direction_id")
-	private String directionId;
+    @JsonProperty("number")
+    private Integer number;
 
-	@JsonProperty("extra_data")
-	private ExtraData extraData;
+    @JsonProperty("direction_id")
+    private String directionId;
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("extra_data")
+    private ExtraData extraData;
 
-	@JsonProperty("restricted_paths")
-	private List<Object> restrictedPaths;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("graph_version_pattern")
-	private String graphVersionPattern;
+    @JsonProperty("restricted_paths")
+    private List<Object> restrictedPaths;
 
-	@JsonProperty("allowed_groups")
-	private List<Object> allowedGroups;
+    @JsonProperty("graph_version_pattern")
+    private String graphVersionPattern;
 
-	@JsonProperty("id")
-	private String id;
+    @JsonProperty("allowed_groups")
+    private List<Object> allowedGroups;
 
-	@JsonProperty("direction")
-	private String direction;
+    @JsonProperty("id")
+    private String id;
 
-	@JsonProperty("graph_version_calculated")
-	private String graphVersionCalculated;
+    @JsonProperty("direction")
+    private String direction;
 
-	@JsonProperty("title")
-	private String title;
+    @JsonProperty("graph_version_calculated")
+    private String graphVersionCalculated;
 
+    @JsonProperty("title")
+    private String title;
+
+    @JsonProperty("version_create_dt")
+    private String version_create_dt;
+
+    @JsonProperty("version_changed_by_user")
+    private String version_changed_by_user;
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
 }

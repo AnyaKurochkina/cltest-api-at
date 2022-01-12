@@ -1,6 +1,7 @@
 package httpModels.productCatalog.Product.existProduct.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.ExistImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +11,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExistProductResponse{
+public class ExistProductResponse implements ExistImpl {
 
 	@JsonProperty("exists")
 	private Boolean exists;
+
+	@Override
+	public boolean isExist() {
+		return exists;
+	}
 }

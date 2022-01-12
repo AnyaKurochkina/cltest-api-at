@@ -3,12 +3,15 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
-import httpModels.productCatalog.Template.patchTemplate.response.PatchTemplateResponse;
+import httpModels.productCatalog.Template.existsTemplate.response.ExistsTemplateResponse;
+import httpModels.productCatalog.Template.getListTemplate.response.GetTemplateListResponse;
+import httpModels.productCatalog.Template.getTemplate.response.GetTemplateResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Template;
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import steps.productCatalog.TemplateSteps;
+import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -19,14 +22,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class TemplatesTest extends Tests {
 
     Template template;
-    TemplateSteps templateSteps = new TemplateSteps();
+    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+    String productName = "templates/";
+    String templatePath = "productCatalog/products/createProduct.json";
 
     @Order(1)
     @DisplayName("Создание шаблона в продуктовом каталоге")
     @Test
     public void createTemplate() {
         template = Template.builder()
-                .templateName("template_for_at1")
+                .templateName("template_for_at_api")
                 .build()
                 .createObject();
     }
@@ -35,54 +40,53 @@ public class TemplatesTest extends Tests {
     @DisplayName("Получение списка шаблонов")
     @Test
     public void getTemplateList() {
-        Assertions.assertTrue(templateSteps.getTemplateList().size() > 0);
+        Assertions.assertTrue(productCatalogSteps.getProductObjectList(productName, GetTemplateListResponse.class)
+                .size() > 0);
     }
 
     @Order(3)
     @DisplayName("Проверка на существование шаблона по имени")
     @Test
     public void existTemplateByName() {
-        Assertions.assertTrue(templateSteps.isExist(template.getTemplateName()));
-        Assertions.assertFalse(templateSteps.isExist("NoExistsAction"));
+        Assertions.assertTrue(productCatalogSteps.isExists(productName, template.getTemplateName(), ExistsTemplateResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(productName, "NoExistsAction", ExistsTemplateResponse.class));
     }
 
     @Order(4)
     @DisplayName("Получение шаблона по Id")
     @Test
     public void getTemplateById() {
-        templateSteps.getTemplateById(template.getTemplateId());
+        productCatalogSteps.getById(productName, String.valueOf(template.getTemplateId()), GetTemplateResponse.class);
     }
 
     @Order(5)
     @DisplayName("Копирование шаблона по Id и удаление этого клона")
     @Test
     public void copyTemplateById() {
-        templateSteps.copyTemplateById(template.getTemplateId());
-        templateSteps.deleteTemplateByName(template.getTemplateName() + "-clone");
+        String cloneName = template.getTemplateName() + "-clone";
+        productCatalogSteps.copyById(productName, String.valueOf(template.getTemplateId()));
+        Assertions.assertTrue(productCatalogSteps.isExists(productName, cloneName, ExistsTemplateResponse.class));
+        productCatalogSteps.deleteByName(productName, template.getTemplateName() + "-clone", GetTemplateListResponse.class);
+        Assertions.assertFalse(productCatalogSteps.isExists(productName, cloneName, ExistsTemplateResponse.class));
     }
 
     @Order(6)
     @DisplayName("Обновление шаблона по Id")
     @Test
     public void updateTemplateById() {
-        templateSteps.updateTemplateById("Black", template.getTemplateName(), template.getTemplateId());
-    }
-
-    @Order(11)
-    @DisplayName("Частичное обновление шаблона")
-    @Test
-    public void partialUpdateProduct() {
-        String runUpdate = "run_update";
-        PatchTemplateResponse patchTemplateResponse = templateSteps.partialUpdateTemplate(template.getTemplateId(), "run", runUpdate);
-        Assertions.assertEquals("1.0.2", patchTemplateResponse.getVersion());
-        Assertions.assertEquals(runUpdate, patchTemplateResponse.getRun());
+        String expectedValue = "UpdateDescription";
+        productCatalogSteps.partialUpdateObject(productName, String.valueOf(template.getTemplateId()),
+                new JSONObject().put("description", expectedValue));
+        String actual = productCatalogSteps.getById(productName, String.valueOf(template.getTemplateId()), GetTemplateResponse.class).getDescription();
+        Assertions.assertEquals(expectedValue, actual);
     }
 
     @Order(12)
     @DisplayName("Негативный тест на создание действия с существующим именем")
     @Test
     public void createActionWithSameName() {
-        templateSteps.createProduct(templateSteps.createJsonObject(template.getTemplateName())).assertStatus(400);
+        productCatalogSteps.createProductObject(productName, productCatalogSteps
+                .createJsonObject(template.getTemplateName(), templatePath)).assertStatus(400);
     }
 
     @Order(13)
@@ -90,11 +94,16 @@ public class TemplatesTest extends Tests {
     @Test
     public void createTemplateWithInvalidCharacters() {
         assertAll("Шаблон создался с недопустимым именем",
-                () -> templateSteps.createProduct(templateSteps.createJsonObject("NameWithUppercase")).assertStatus(400),
-                () -> templateSteps.createProduct(templateSteps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
-                () -> templateSteps.createProduct(templateSteps.createJsonObject("имя")).assertStatus(400),
-                () -> templateSteps.createProduct(templateSteps.createJsonObject("Имя")).assertStatus(400),
-                () -> templateSteps.createProduct(templateSteps.createJsonObject("a&b&c")).assertStatus(400)
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                        .createJsonObject("NameWithUppercase", templatePath)).assertStatus(400),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                        .createJsonObject("nameWithUppercaseInMiddle", templatePath)).assertStatus(400),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                        .createJsonObject("имя", templatePath)).assertStatus(400),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                        .createJsonObject("Имя", templatePath)).assertStatus(400),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                        .createJsonObject("a&b&c", templatePath)).assertStatus(400)
         );
     }
 
@@ -106,10 +115,10 @@ public class TemplatesTest extends Tests {
         String templateName = new JsonPath(data).get("Template.json.name");
         String versionArr = new JsonPath(data).get("Template.version_arr").toString();
         Assertions.assertEquals("[1, 0, 0]", versionArr);
-        templateSteps.importTemplate(Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplate.json");
-        Assertions.assertTrue(templateSteps.isExist(templateName));
-        templateSteps.deleteTemplateByName(templateName);
-        Assertions.assertFalse(templateSteps.isExist(templateName));
+        productCatalogSteps.importObject(productName, Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplate.json");
+        Assertions.assertTrue(productCatalogSteps.isExists(productName, templateName, ExistsTemplateResponse.class));
+        productCatalogSteps.deleteByName(productName, templateName, GetTemplateListResponse.class);
+        Assertions.assertFalse(productCatalogSteps.isExists(productName, templateName, ExistsTemplateResponse.class));
     }
 
     @Order(100)
@@ -118,7 +127,7 @@ public class TemplatesTest extends Tests {
     @MarkDelete
     public void deleteTemplate() {
         try (Template template = Template.builder()
-                .templateName("template_for_at1")
+                .templateName("template_for_at_api")
                 .build()
                 .createObjectExclusiveAccess()) {
             template.deleteObject();

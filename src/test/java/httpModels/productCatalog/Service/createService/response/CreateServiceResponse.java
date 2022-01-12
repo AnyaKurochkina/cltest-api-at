@@ -12,65 +12,77 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateServiceResponse{
+public class CreateServiceResponse {
 
-	@JsonProperty("allowed_paths")
-	private List<Object> allowedPaths;
+    @JsonProperty("allowed_paths")
+    private List<Object> allowedPaths;
 
-	@JsonProperty("version_list")
-	private List<String> versionList;
+    @JsonProperty("version_list")
+    private List<String> versionList;
 
-	@JsonProperty("is_published")
-	private Boolean isPublished;
+    @JsonProperty("is_published")
+    private Boolean isPublished;
 
-	@JsonProperty("icon")
-	private Object icon;
+    @JsonProperty("icon")
+    private Object icon;
 
-	@JsonProperty("graph_version")
-	private String graphVersion;
+    @JsonProperty("version_create_dt")
+    private String versionCreateDt;
 
-	@JsonProperty("description")
-	private String description;
+    @JsonProperty("description")
+    private String description;
 
-	@JsonProperty("restricted_groups")
-	private List<Object> restrictedGroups;
+    @JsonProperty("graph_version")
+    private String graphVersion;
 
-	@JsonProperty("graph_id")
-	private String graphId;
+    @JsonProperty("restricted_groups")
+    private List<Object> restrictedGroups;
 
-	@JsonProperty("version")
-	private String version;
+    @JsonProperty("title")
+    private String title;
 
-	@JsonProperty("data_source")
-	private DataSource dataSource;
+    @JsonProperty("graph_id")
+    private String graphId;
 
-	@JsonProperty("last_version")
-	private String lastVersion;
+    @JsonProperty("version")
+    private String version;
 
-	@JsonProperty("number")
-	private Integer number;
+    @JsonProperty("data_source")
+    private DataSource dataSource;
 
-	@JsonProperty("direction_id")
-	private String directionId;
+    @JsonProperty("number")
+    private Integer number;
 
-	@JsonProperty("extra_data")
-	private ExtraData extraData;
+    @JsonProperty("last_version")
+    private String lastVersion;
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("direction_id")
+    private String directionId;
 
-	@JsonProperty("restricted_paths")
-	private List<Object> restrictedPaths;
+    @JsonProperty("extra_data")
+    private ExtraData extraData;
 
-	@JsonProperty("graph_version_pattern")
-	private String graphVersionPattern;
+    @JsonProperty("version_changed_by_user")
+    private String versionChangedByUser;
 
-	@JsonProperty("allowed_groups")
-	private List<Object> allowedGroups;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("id")
-	private String id;
+    @JsonProperty("restricted_paths")
+    private List<Object> restrictedPaths;
 
-	@JsonProperty("title")
-	private String title;
+    @JsonProperty("graph_version_pattern")
+    private String graphVersionPattern;
+
+    @JsonProperty("allowed_groups")
+    private List<Object> allowedGroups;
+
+    @JsonProperty("id")
+    private String id;
+
+    @JsonProperty("graph_version_calculated")
+    private String graphVersionCalculated;
+
+    @JsonProperty("direction")
+    private String direction;
 }
