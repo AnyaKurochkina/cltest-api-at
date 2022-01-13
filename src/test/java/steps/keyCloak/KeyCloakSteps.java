@@ -1,5 +1,6 @@
 package steps.keyCloak;
 
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.Http;
 import io.qameta.allure.Step;
@@ -21,11 +22,11 @@ public class KeyCloakSteps {
      * @return - возвращаем токен
      */
     @Step("Получение нового UserToken")
-    public static synchronized String getNewUserToken() {
+    public static synchronized String getNewUserToken(Role role) {
         //Получение сервис из памяти
 //        Service service = Service.builder().build().createObject();
         //Получение пользователя из памяти
-        User user = User.builder().role("admin").build().createObject();
+        User user = User.builder().role(role).build().createObject();
         //Отправка запроса на получение токена
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
@@ -45,12 +46,12 @@ public class KeyCloakSteps {
     /**
      * @return возвращаем токен
      */
-    public static synchronized String getUserToken() {
+    public static synchronized String getUserToken(Role role) {
         UserToken userToken = UserToken.builder().build().createObject();
         long currentTime = System.currentTimeMillis() / 1000L;
 
         if (currentTime - userToken.time > TOKEN_LIFETIME_SEC) {
-            userToken.token = getNewUserToken();
+            userToken.token = getNewUserToken(role);
             userToken.time = currentTime;
             //Если он не Null и время его существования не превышено, то просто возвращаем токен из памяти
         }
