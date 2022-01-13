@@ -1,6 +1,7 @@
 package httpModels.productCatalog.Graphs.getGraphsList.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.GetListImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +13,16 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetGraphsListResponse {
+public class GetGraphsListResponse implements GetListImpl {
 
 	@JsonProperty("meta")
 	private Meta meta;
 
 	@JsonProperty("list")
 	private List<ListItem> list;
+
+	@Override
+	public List getItemsList() {
+		return list;
+	}
 }

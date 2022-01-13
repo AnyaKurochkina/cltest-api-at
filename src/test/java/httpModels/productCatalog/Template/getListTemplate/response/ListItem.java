@@ -1,6 +1,7 @@
 package httpModels.productCatalog.Template.getListTemplate.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.ItemImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListItem {
+
+public class ListItem implements ItemImpl {
 
     @JsonProperty("additional_input")
     private Boolean additionalInput;
@@ -97,4 +99,20 @@ public class ListItem {
 
     @JsonProperty("additional_output")
     private Boolean additionalOutput;
+
+    @JsonProperty("version_create_dt")
+    private String version_create_dt;
+
+    @JsonProperty("version_changed_by_user")
+    private String version_changed_by_user;
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getId() {
+        return String.valueOf(id);
+    }
 }

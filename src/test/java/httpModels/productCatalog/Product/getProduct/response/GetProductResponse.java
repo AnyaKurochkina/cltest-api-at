@@ -1,6 +1,7 @@
 package httpModels.productCatalog.Product.getProduct.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.GetImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetProductResponse{
+public class GetProductResponse implements GetImpl {
 
 	@JsonProperty("allowed_paths")
 	private List<Object> allowedPaths;

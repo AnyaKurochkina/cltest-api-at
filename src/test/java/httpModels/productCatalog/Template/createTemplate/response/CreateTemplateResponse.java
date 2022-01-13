@@ -97,6 +97,12 @@ public class CreateTemplateResponse{
 	@JsonProperty("additional_output")
 	private boolean additionalOutput;
 
+	@JsonProperty("version_create_dt")
+	private String version_create_dt;
+
+	@JsonProperty("version_changed_by_user")
+	private String version_changed_by_user;
+
 	public boolean isAdditionalInput(){
 		return additionalInput;
 	}

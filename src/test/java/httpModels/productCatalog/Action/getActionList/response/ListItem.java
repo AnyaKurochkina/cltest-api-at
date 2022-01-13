@@ -1,6 +1,7 @@
 package httpModels.productCatalog.Action.getActionList.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.ItemImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,92 +13,109 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListItem{
 
-	@JsonProperty("available_without_money")
-	private Boolean availableWithoutMoney;
+public class ListItem implements ItemImpl {
 
-	@JsonProperty("version_list")
-	private List<String> versionList;
+    @JsonProperty("available_without_money")
+    private Boolean availableWithoutMoney;
 
-	@JsonProperty("icon")
-	private String icon;
+    @JsonProperty("version_list")
+    private List<String> versionList;
 
-	@JsonProperty("graph_version")
-	private String graphVersion;
+    @JsonProperty("icon")
+    private String icon;
 
-	@JsonProperty("description")
-	private String description;
+    @JsonProperty("graph_version")
+    private String graphVersion;
 
-	@JsonProperty("skip_on_prebilling")
-	private Boolean skipOnPrebilling;
+    @JsonProperty("description")
+    private String description;
 
-	@JsonProperty("item_restriction")
-	private Object itemRestriction;
+    @JsonProperty("skip_on_prebilling")
+    private Boolean skipOnPrebilling;
 
-	@JsonProperty("auto_removing_if_failed")
-	private Boolean autoRemovingIfFailed;
+    @JsonProperty("item_restriction")
+    private Object itemRestriction;
 
-	@JsonProperty("title")
-	private String title;
+    @JsonProperty("auto_removing_if_failed")
+    private Boolean autoRemovingIfFailed;
 
-	@JsonProperty("type")
-	private Object type;
+    @JsonProperty("title")
+    private String title;
 
-	@JsonProperty("event_type")
-	private List<String> eventType;
+    @JsonProperty("type")
+    private Object type;
 
-	@JsonProperty("required_item_statuses")
-	private List<String> requiredItemStatuses;
+    @JsonProperty("event_type")
+    private List<String> eventType;
 
-	@JsonProperty("data_config_path")
-	private Object dataConfigPath;
+    @JsonProperty("required_item_statuses")
+    private List<String> requiredItemStatuses;
 
-	@JsonProperty("restricted_paths")
-	private List<Object> restrictedPaths;
+    @JsonProperty("data_config_path")
+    private Object dataConfigPath;
 
-	@JsonProperty("graph_version_pattern")
-	private String graphVersionPattern;
+    @JsonProperty("restricted_paths")
+    private List<Object> restrictedPaths;
 
-	@JsonProperty("id")
-	private String id;
+    @JsonProperty("graph_version_pattern")
+    private String graphVersionPattern;
 
-	@JsonProperty("allowed_paths")
-	private List<Object> allowedPaths;
+    @JsonProperty("id")
+    private String id;
 
-	@JsonProperty("event_provider")
-	private List<String> eventProvider;
+    @JsonProperty("allowed_paths")
+    private List<Object> allowedPaths;
 
-	@JsonProperty("restricted_groups")
-	private List<Object> restrictedGroups;
+    @JsonProperty("event_provider")
+    private List<String> eventProvider;
 
-	@JsonProperty("graph_id")
-	private String graphId;
+    @JsonProperty("restricted_groups")
+    private List<Object> restrictedGroups;
 
-	@JsonProperty("version")
-	private String version;
+    @JsonProperty("graph_id")
+    private String graphId;
 
-	@JsonProperty("last_version")
-	private String lastVersion;
+    @JsonProperty("version")
+    private String version;
 
-	@JsonProperty("config_restriction")
-	private Object configRestriction;
+    @JsonProperty("last_version")
+    private String lastVersion;
 
-	@JsonProperty("data_config_key")
-	private Object dataConfigKey;
+    @JsonProperty("config_restriction")
+    private Object configRestriction;
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("data_config_key")
+    private Object dataConfigKey;
 
-	@JsonProperty("allowed_groups")
-	private List<Object> allowedGroups;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("graph_version_calculated")
-	private String graphVersionCalculated;
+    @JsonProperty("allowed_groups")
+    private List<Object> allowedGroups;
 
-	@JsonProperty("data_config_fields")
-	private List<Object> dataConfigFields;
+    @JsonProperty("graph_version_calculated")
+    private String graphVersionCalculated;
 
-	@JsonProperty("required_order_statuses")
-	private List<String> requiredOrderStatuses;
+    @JsonProperty("data_config_fields")
+    private List<Object> dataConfigFields;
+
+    @JsonProperty("required_order_statuses")
+    private List<String> requiredOrderStatuses;
+
+    @JsonProperty("version_create_dt")
+    private String version_create_dt;
+
+    @JsonProperty("version_changed_by_user")
+    private String version_changed_by_user;
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
 }
