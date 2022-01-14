@@ -317,6 +317,7 @@ public class OrderServiceSteps extends Steps {
         return (Comparable<T>) getProductsField(product, path, Comparable.class);
     }
 
+    @Step("Получение значения по пути {path}")
     public Object getProductsField(IProduct product, String path, Class<?> clazz) {
         Object s;
         log.info("getFiledProduct path: " + path);
