@@ -173,7 +173,7 @@ public class OrderServiceSteps extends Steps {
                 () -> {
                     if (costPreBilling.get() != null) {
                         Float cost = null;
-                        for (int i = 0; i < 15; i++) {
+                        for (int i = 0; i < 20; i++) {
                             Waiting.sleep(20000);
                             cost = calcCostSteps.getCostByUid(product);
                             if (cost == null)
