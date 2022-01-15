@@ -70,9 +70,15 @@ public class CalculatorTest extends Tests {
                     break;
                 }
                 Assertions.assertEquals(cost, (1000.0f - Objects.requireNonNull(spent)), 0.01, "Сумма списания отличается от ожидаемой суммы");
-            } finally {
-                orderServiceSteps.changeProjectForOrder(product, projectSource);
+            } catch (Throwable t) {
+                try {
+                    orderServiceSteps.changeProjectForOrder(product, projectSource);
+                } catch (Throwable t2) {
+                    log.error(t2.toString());
+                }
+                throw t;
             }
+            orderServiceSteps.changeProjectForOrder(product, projectSource);
         }
     }
 }
