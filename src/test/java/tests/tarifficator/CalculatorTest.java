@@ -59,6 +59,7 @@ public class CalculatorTest extends Tests {
             accountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
             try {
                 Float cost = costSteps.getPreBillingCost(product);
+                Waiting.sleep(60000);
                 orderServiceSteps.changeProjectForOrder(product, projectTarget);
                 Float spent = null;
                 for (int i = 0; i < 15; i++) {
