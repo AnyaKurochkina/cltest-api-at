@@ -6,7 +6,7 @@ import models.orderService.products.Rhel;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("Rhel OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_rhel"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

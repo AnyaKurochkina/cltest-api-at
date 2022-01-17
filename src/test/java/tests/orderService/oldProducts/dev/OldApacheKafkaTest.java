@@ -6,7 +6,7 @@ import models.orderService.products.ApacheKafka;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("ApacheKafka OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_apachekafka"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

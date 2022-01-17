@@ -1,6 +1,7 @@
 package httpModels.productCatalog.OrgDirection.getOrgDirectionList.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.ItemImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,20 +11,31 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListItem{
 
-	@JsonProperty("extra_data")
-	private ExtraData extraData;
+public class ListItem implements ItemImpl {
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("extra_data")
+    private ExtraData extraData;
 
-	@JsonProperty("icon")
-	private String icon;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("description")
-	private String description;
+    @JsonProperty("icon")
+    private String icon;
 
-	@JsonProperty("id")
-	private String id;
+    @JsonProperty("description")
+    private String description;
+
+    @JsonProperty("id")
+    private String id;
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
 }

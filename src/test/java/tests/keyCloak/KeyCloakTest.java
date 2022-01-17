@@ -1,5 +1,6 @@
 package tests.keyCloak;
 
+import core.enums.Role;
 import io.qameta.allure.Epic;
 import org.junit.jupiter.api.*;
 import steps.keyCloak.KeyCloakSteps;
@@ -15,6 +16,6 @@ public class KeyCloakTest extends Tests {
 //    @Tag("tariffPlans")
     @DisplayName("Получение токена")
     void getToken() {
-        KeyCloakSteps.getUserToken();
+        KeyCloakSteps.getUserToken(Role.ADMIN);
     }
 }

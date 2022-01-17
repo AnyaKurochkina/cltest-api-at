@@ -6,7 +6,7 @@ import models.orderService.products.ClickHouse;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("ClickHouse OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_clickhouse"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

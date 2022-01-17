@@ -17,7 +17,7 @@ public class PortalBackSteps extends Steps {
 
     @SneakyThrows
     @Step("Получение ID project env")
-    public ProjectEnvironment getProjectEnvironment(String envName, String informationSystemId) {
+    public ProjectEnvironment getProjectEnvironment(String envType, String informationSystemId) {
         String folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
 
         JsonPath jsonPath = new Http(PortalBackURL)
@@ -32,13 +32,13 @@ public class PortalBackSteps extends Steps {
                     .assertStatus(200)
                     .jsonPath();
 
-            String id = jsonPathInCycle.get(String.format("list.find{it.name.equals('%s')}.id", Objects.requireNonNull(envName)));
-            String environmentType = jsonPathInCycle.get(String.format("list.find{it.name.equals('%s')}.environment_type", envName));
+            String id = jsonPathInCycle.get(String.format("list.find{it.environment_type.equals('%s')}.id", Objects.requireNonNull(envType)));
+            String environmentType = jsonPathInCycle.get(String.format("list.find{it.environment_type.equals('%s')}.environment_type", envType));
             if(id != null){
-                return new ProjectEnvironment(id, environmentType, envName);
+                return new ProjectEnvironment(id, environmentType, envType);
             }
         }
-        throw new Exception("Не найден ProjectEnvironment с именем " + envName);
+        throw new Exception("Не найден ProjectEnvironment с именем " + envType);
     }
 
     @Step("Получение пользователя из LDAP")

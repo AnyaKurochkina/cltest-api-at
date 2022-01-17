@@ -6,6 +6,7 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.model.Attachment;
 import lombok.SneakyThrows;
 import org.junit.CustomDisplayNameGenerator;
+import org.junit.EnvironmentCondition;
 import org.junit.TmsLinkExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import java.util.*;
 import static io.qameta.allure.Allure.getLifecycle;
 
 @ExtendWith(TmsLinkExtension.class)
+@ExtendWith(EnvironmentCondition.class)
 @DisplayNameGeneration(CustomDisplayNameGenerator.class)
 public class Tests {
 //    private static final ThreadLocal<StringBuilder> testLog = new ThreadLocal<>();

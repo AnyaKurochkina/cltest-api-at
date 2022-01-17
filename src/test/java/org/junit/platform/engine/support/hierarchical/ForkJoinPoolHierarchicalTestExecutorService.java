@@ -9,6 +9,7 @@ package org.junit.platform.engine.support.hierarchical;
 import core.helper.MarkDelete;
 import models.ObjectPoolService;
 import core.helper.StringUtils;
+import models.orderService.interfaces.IProduct;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 import org.junit.ProductArgumentsProvider;
@@ -540,12 +541,26 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                     e.printStackTrace();
                 }
 
-
                 if (mapTests.isEmpty() && !del.get()) {
                     del.set(true);
                     ObjectPoolService.deleteAllResources();
                     invokeAllRef(invokeDeleteTest());
                 }
+
+                if (!mapTests.isEmpty()){
+                    Set<Class<?>> currentClassListArgument = new HashSet<>();
+                    for(JupiterTestDescriptor descriptor : mapTests.values()){
+                        if(!(descriptor instanceof MethodBasedTestDescriptor))
+                            continue;
+                        MethodBasedTestDescriptor methodBasedTestDescriptor = ((MethodBasedTestDescriptor) descriptor);
+                        MarkDelete deleted = methodBasedTestDescriptor.getTestMethod().getAnnotation(MarkDelete.class);
+                        if (deleted != null)
+                            continue;
+                        currentClassListArgument.addAll(Arrays.asList(((MethodBasedTestDescriptor) descriptor).getTestMethod().getParameterTypes()));
+                    }
+                    ObjectPoolService.removeProducts(currentClassListArgument);
+                }
+
 
 
 //                Integer order = null;

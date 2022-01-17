@@ -1,6 +1,7 @@
 package core.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import core.enums.Role;
 import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -35,6 +36,7 @@ public class Http {
     private String method;
     private String token = "";
     private String field = "";
+    private Role role = Role.ADMIN;
     private String contentType = "application/json";
     private boolean isUsedToken = true;
     private boolean isLogged = true;
@@ -143,6 +145,11 @@ public class Http {
         return this;
     }
 
+    public Http setRole(Role role) {
+        this.role = role;
+        return this;
+    }
+
     public Http setWithoutToken() {
         isUsedToken = false;
         return this;
@@ -182,7 +189,7 @@ public class Http {
             http.setRequestProperty("Accept", "application/json, text/plain, */*");
             if (isUsedToken) {
                 if (token.length() == 0)
-                    token = "bearer " + KeyCloakSteps.getUserToken();
+                    token = "bearer " + KeyCloakSteps.getUserToken(role);
                 http.setRequestProperty("Authorization", token);
             }
             http.setDoOutput(true);
@@ -286,7 +293,7 @@ public class Http {
 
         public Response assertStatus(int s) {
             if (s != status())
-                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\nResponse: %s\n%s\n", s, status(), method, token, String.join("\n", headers), host + path, responseMessage, body));
+                throw new StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\n%s\nResponse: %s\n", s, status(), method, token, String.join("\n", headers), host + path, body, responseMessage));
             return this;
         }
 

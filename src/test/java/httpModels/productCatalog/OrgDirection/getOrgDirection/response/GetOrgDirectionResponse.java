@@ -1,6 +1,7 @@
 package httpModels.productCatalog.OrgDirection.getOrgDirection.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.GetImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,20 +11,31 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetOrgDirectionResponse {
 
-	@JsonProperty("extra_data")
-	private ExtraData extraData;
+public class GetOrgDirectionResponse implements GetImpl {
 
-	@JsonProperty("icon")
-	private String icon;
+    @JsonProperty("extra_data")
+    private ExtraData extraData;
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("icon")
+    private String icon;
 
-	@JsonProperty("description")
-	private String description;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("id")
-	private String id;
+    @JsonProperty("description")
+    private String description;
+
+    @JsonProperty("id")
+    private String id;
+
+    @Override
+    public String getVersion() {
+        return null;
+    }
+
+    @Override
+    public String getGraphVersionCalculated() {
+        return null;
+    }
 }

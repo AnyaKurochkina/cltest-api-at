@@ -82,4 +82,10 @@ public class CreateProductResponse{
 
 	@JsonProperty("graph_version_calculated")
 	private String graphVersionCalculated;
+
+	@JsonProperty("version_create_dt")
+	private String version_create_dt;
+
+	@JsonProperty("version_changed_by_user")
+	private String version_changed_by_user;
 }

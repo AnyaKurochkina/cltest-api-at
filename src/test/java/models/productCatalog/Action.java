@@ -4,6 +4,8 @@ import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.Action.createAction.response.CreateActionResponse;
+import httpModels.productCatalog.Action.existsAction.response.ExistsActionResponse;
+import httpModels.productCatalog.Graphs.getGraphsList.response.GetGraphsListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,10 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.ActionsSteps;
-import steps.productCatalog.GraphSteps;
-
-import static core.helper.JsonHelper.convertResponseOnClass;
+import steps.productCatalog.ProductCatalogSteps;
 
 @Log4j2
 @Builder
@@ -25,14 +24,14 @@ public class Action extends Entity {
     private String actionName;
     private String graphId;
     private String actionId;
-    @Builder.Default
-    protected transient ActionsSteps actionsSteps = new ActionsSteps();
+    private final String productName = "actions/";
 
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/actions/createAction.json";
-        GraphSteps graphSteps = new GraphSteps();
-        graphId = graphSteps.getGraphId("AtTestGraph");
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+        graphId = productCatalogSteps
+                .getProductObjectIdByNameWithMultiSearch("graphs/", "AtTestGraph", GetGraphsListResponse.class);
         return this;
     }
 
@@ -50,12 +49,11 @@ public class Action extends Entity {
     @Override
     @Step("Создание экшена")
     protected void create() {
-        String response = new Http(Configure.ProductCatalogURL)
+        CreateActionResponse createActionResponse = new Http(Configure.ProductCatalogURL)
                 .body(toJson())
-                .post("actions/")
+                .post(productName)
                 .assertStatus(201)
-                .toString();
-        CreateActionResponse createActionResponse = convertResponseOnClass(response, CreateActionResponse.class);
+                .extractAs(CreateActionResponse.class);
         actionId = createActionResponse.getId();
         Assertions.assertNotNull(actionId, "Экшен с именем: " + actionName + ", не создался");
     }
@@ -64,10 +62,9 @@ public class Action extends Entity {
     @Step("Удаление экшена")
     protected void delete() {
         new Http(Configure.ProductCatalogURL)
-                .delete("actions/" + actionId + "/")
+                .delete(productName + actionId + "/")
                 .assertStatus(204);
-        ActionsSteps actionsSteps = new ActionsSteps();
-        actionId = actionsSteps.getActionId(actionName);
-        Assertions.assertNull(actionId, String.format("Экшен с именем: %s не удалился", actionName));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+        Assertions.assertFalse(productCatalogSteps.isExists(productName, actionName, ExistsActionResponse.class));
     }
 }
