@@ -8,7 +8,6 @@ import core.enums.ObjectStatus;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
 import core.helper.DataFileHelper;
-import core.utils.Waiting;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
@@ -23,7 +22,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -127,14 +125,14 @@ public class ObjectPoolService {
             Entity entity = objectPoolEntity.get();
             if (entity instanceof IProduct) {
                 threadPool.submit(() -> {
-                        try {
-                            entity.deleteObject();
-                        } catch (Throwable e) {
-                            objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
-                            objectPoolEntity.setError(e);
-                            e.printStackTrace();
-                        }
-                    });
+                    try {
+                        entity.deleteObject();
+                    } catch (Throwable e) {
+                        objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
+                        objectPoolEntity.setError(e);
+                        e.printStackTrace();
+                    }
+                });
             } else {
                 try {
                     entity.deleteObject();
@@ -147,6 +145,35 @@ public class ObjectPoolService {
         }
         awaitTerminationAfterShutdown(threadPool);
         log.debug("##### deleteAllResources end #####");
+    }
+
+    public static void removeProducts(Set<Class<?>> currentClassListArgument) {
+        for (String key : createdEntities) {
+            ObjectPoolEntity objectPoolEntity = entities.get(key);
+            if(objectPoolEntity == null){
+                log.error("Key " + key + " is null");
+            }
+            if(objectPoolEntity.getStatus() == null){
+                log.error("Key getStatus() " + key + " is null");
+            }
+            if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
+                continue;
+            if(currentClassListArgument.contains(objectPoolEntity.getClazz()))
+                continue;
+            Entity entity = objectPoolEntity.get();
+            if (entity instanceof IProduct) {
+                objectPoolEntity.setStatus(ObjectStatus.NOT_CREATED);
+                try {
+                    log.debug("##### removeProduct {} #####", entity);
+                    entity.deleteObject();
+                } catch (Throwable e) {
+                    objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
+                    objectPoolEntity.setError(e);
+                    e.printStackTrace();
+                }
+                return;
+            }
+        }
     }
 
 

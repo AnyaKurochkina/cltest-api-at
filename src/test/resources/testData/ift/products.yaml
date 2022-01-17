@@ -5,12 +5,12 @@ OpenShiftProject:
 Rhel:
   - options:
       - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
 PostgreSQL:
   - options:
       - { platform: "Nutanix", postgresqlVersion: "11", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", postgresqlVersion: "12", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", postgresqlVersion: "12", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 RabbitMQCluster:
   - options:
@@ -19,17 +19,17 @@ RabbitMQCluster:
 Windows:
   - options:
       - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2019" }
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2016" }
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2016" }
 
 Nginx:
   - options:
       - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 WildFly:
   - options:
       - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
 Redis:
   - options:
@@ -62,7 +62,7 @@ Podman:
 
 PostgresSQLCluster:
   - options:
-#      - { platform: "OpenStack", env: "DSO", segment: "dev-srv-app", postgresqlVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+      - { platform: "OpenStack", env: "DSO", segment: "dev-srv-app", postgresqlVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
       - { platform: "OpenStack", env: "DSO", segment: "dev-srv-app", postgresqlVersion: "11", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
 #Elasticsearch:

@@ -64,6 +64,7 @@ public class ProductTest {
             accountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
             String accountTo2 = ((Account) Account.builder().folder(folderTarget2).build().createObject()).getAccountId();
             accountSteps.transferMoney(accountFrom, accountTo2, "1000.00", "Перевод в рамках тестирования");
+            Waiting.sleep(60000);
             orderServiceSteps.changeProjectForOrder(product, projectTarget);
             Waiting.sleep(60000);
             try {

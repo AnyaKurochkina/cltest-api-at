@@ -173,7 +173,7 @@ public class OrderServiceSteps extends Steps {
                 () -> {
                     if (costPreBilling.get() != null) {
                         Float cost = null;
-                        for (int i = 0; i < 15; i++) {
+                        for (int i = 0; i < 20; i++) {
                             Waiting.sleep(20000);
                             cost = calcCostSteps.getCostByUid(product);
                             if (cost == null)
@@ -317,6 +317,7 @@ public class OrderServiceSteps extends Steps {
         return (Comparable<T>) getProductsField(product, path, Comparable.class);
     }
 
+    @Step("Получение значения по пути {path}")
     public Object getProductsField(IProduct product, String path, Class<?> clazz) {
         Object s;
         log.info("getFiledProduct path: " + path);

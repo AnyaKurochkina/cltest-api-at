@@ -59,6 +59,9 @@ public class CalculatorTest extends Tests {
             accountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
             try {
                 Float cost = costSteps.getPreBillingCost(product);
+                while(cost < 0.01f)
+                    cost += cost;
+                Waiting.sleep(60000);
                 orderServiceSteps.changeProjectForOrder(product, projectTarget);
                 Float spent = null;
                 for (int i = 0; i < 15; i++) {
@@ -69,9 +72,15 @@ public class CalculatorTest extends Tests {
                     break;
                 }
                 Assertions.assertEquals(cost, (1000.0f - Objects.requireNonNull(spent)), 0.01, "Сумма списания отличается от ожидаемой суммы");
-            } finally {
-                orderServiceSteps.changeProjectForOrder(product, projectSource);
+            } catch (Throwable t) {
+                try {
+                    orderServiceSteps.changeProjectForOrder(product, projectSource);
+                } catch (Throwable t2) {
+                    log.error(t2.toString());
+                }
+                throw t;
             }
+            orderServiceSteps.changeProjectForOrder(product, projectSource);
         }
     }
 }
