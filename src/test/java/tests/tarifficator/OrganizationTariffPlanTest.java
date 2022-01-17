@@ -140,7 +140,7 @@ public class OrganizationTariffPlanTest extends Tests {
         tariffPlan.setStatus(TariffPlanStatus.planned);
         tariffPlan.setBeginDate(date);
         tariffPlan = tariffPlanSteps.editTariffPlan(tariffPlan);
-        Waiting.sleep(15 * 60 * 1000);
+        Waiting.sleep(16 * 60 * 1000);
         TariffPlan updatedTariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
         TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
 

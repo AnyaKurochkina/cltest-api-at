@@ -150,6 +150,12 @@ public class ObjectPoolService {
     public static void removeProducts(Set<Class<?>> currentClassListArgument) {
         for (String key : createdEntities) {
             ObjectPoolEntity objectPoolEntity = entities.get(key);
+            if(objectPoolEntity == null){
+                log.error("Key " + key + " is null");
+            }
+            if(objectPoolEntity.getStatus() == null){
+                log.error("Key getStatus() " + key + " is null");
+            }
             if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
                 continue;
             if(currentClassListArgument.contains(objectPoolEntity.getClazz()))
