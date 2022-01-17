@@ -1,33 +1,21 @@
 {
-  "coords_x": 0,
-  "coords_y": 0,
-  "extra_data": {},
-  "color": "string",
-  "name": "string",
-  "run": "string",
-  "rollback": "string",
-  "timeout": 0,
+  "id": "",
+  "name": "test_api",
+  "run": "run",
+  "rollback": "Rollback",
+  "timeout": 1,
   "input": {},
   "output": {},
   "printed_output": {},
-  "printed_output_can_be_overridden": true,
-  "description": "string",
-  "additional_input": true,
-  "additional_output": true,
-  "priority": 0,
-  "priority_can_be_overridden": true,
-  "allowed_groups": [
-    "string"
-  ],
-  "restricted_groups": [
-    "string"
-  ],
-  "allowed_paths": [
-    "string"
-  ],
-  "restricted_paths": [
-    "string"
-  ],
+  "printed_output_can_be_overridden": false,
+  "description": "",
+  "additional_input": false,
+  "additional_output": false,
   "log_level": "",
-  "log_can_be_overridden": false
+  "log_can_be_overridden": false,
+  "priority": 0,
+  "priority_can_be_overridden": false,
+  "allowed_groups": [],
+  "restricted_groups": [],
+  "version_list": []
 }

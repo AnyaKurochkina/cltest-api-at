@@ -85,6 +85,13 @@ public class ServicesTest extends Tests {
     }
 
     @Order(7)
+    @DisplayName("Негатичный тест на получение сервиса по Id без токена")
+    @Test
+    public void getServiceByIdWithOutToken() {
+        productCatalogSteps.getByIdWithOutToken(productName, service.getServiceId(), GetServiceResponse.class);
+    }
+
+    @Order(40)
     @DisplayName("Копирование сервиса")
     @Test
     public void copyService() {
@@ -95,7 +102,14 @@ public class ServicesTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists(productName, expectedName, ExistsServiceResponse.class));
     }
 
-    @Order(8)
+    @Order(41)
+    @DisplayName("Негатичный тест на копирование сервиса по Id без токена")
+    @Test
+    public void copyServiceWithOutToken() {
+        productCatalogSteps.copyByIdWithOutToken(productName, service.getServiceId());
+    }
+
+    @Order(50)
     @DisplayName("Обновление сервиса")
     @Test
     public void updateServiceDescription() {
@@ -107,7 +121,15 @@ public class ServicesTest extends Tests {
         Assertions.assertEquals(expected, actual);
     }
 
-    @Order(9)
+    @Order(51)
+    @DisplayName("Негативный тест на обновление сервиса по Id без токена")
+    @Test
+    public void updateServiceByIdWithOutToken() {
+        productCatalogSteps.partialUpdateObjectWithOutToken(productName, String.valueOf(service.getServiceId()),
+                new JSONObject().put("description", "UpdateDescription"));
+    }
+
+    @Order(60)
     @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {
@@ -115,30 +137,30 @@ public class ServicesTest extends Tests {
         Assertions.assertNotNull(getServiceResponse.getGraphVersionCalculated());
     }
 
-    @Order(10)
+    @Order(70)
     @DisplayName("Негативный тест на создание сервиса с недопустимыми символами в имени")
     @Test
     public void createServiceWithInvalidCharacters() {
         assertAll("Сервис создался с недопустимым именем",
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
                                 .createJsonObject("NameWithUppercase", "/productCatalog/services/createServices.json"))
-                        .assertStatus(400),
+                        .assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
                                 .createJsonObject("nameWithUppercaseInMiddle", "/productCatalog/services/createServices.json"))
-                        .assertStatus(400),
+                        .assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
                                 .createJsonObject("имя", "/productCatalog/services/createServices.json"))
-                        .assertStatus(400),
+                        .assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
                                 .createJsonObject("Имя", "/productCatalog/services/createServices.json"))
-                        .assertStatus(400),
+                        .assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
                                 .createJsonObject("a&b&c", "/productCatalog/services/createServices.json"))
-                        .assertStatus(400)
+                        .assertStatus(500)
         );
     }
 
-    @Order(11)
+    @Order(80)
     @DisplayName("Создание сервиса со значением ключа graph_id равным null")
     @Test
     public void createServiceWithGraphIdNull() {
@@ -150,7 +172,7 @@ public class ServicesTest extends Tests {
         productCatalogSteps.deleteById(productName, createServiceResponse.getId());
     }
 
-    @Order(12)
+    @Order(90)
     @DisplayName("Негативный тест на создание сервиса с недопустимыми graph_id")
     @Test
     public void createServiceWithInvalidGraphId() {
@@ -164,6 +186,13 @@ public class ServicesTest extends Tests {
                         .set("graph_id", 56564)
                         .build()).assertStatus(500)
         );
+    }
+
+    @Order(99)
+    @DisplayName("Негативный тест на удаление сервиса без токена")
+    @Test
+    public void deleteServiceWithOutToken() {
+        productCatalogSteps.deleteObjectByIdWithOutToken(productName, String.valueOf(service.getServiceId()));
     }
 
     @Order(100)

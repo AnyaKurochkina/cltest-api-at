@@ -2,7 +2,6 @@ package httpModels.productCatalog.Template.getListTemplate.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import httpModels.productCatalog.GetListImpl;
-import httpModels.productCatalog.ItemImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +22,7 @@ public class GetTemplateListResponse implements GetListImpl {
     private List<ListItem> list;
 
     @Override
-    public List<ItemImpl> getItemsList() {
-        return null;
+    public List getItemsList() {
+        return list;
     }
 }

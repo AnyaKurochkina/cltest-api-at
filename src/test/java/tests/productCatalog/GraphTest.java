@@ -16,10 +16,9 @@ import io.restassured.path.json.JsonPath;
 import models.productCatalog.Graph;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import steps.productCatalog.*;
+import steps.productCatalog.ProductCatalogSteps;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -76,17 +75,33 @@ public class GraphTest {
     }
 
     @Order(6)
+    @DisplayName("Негатичный тест на получение графа по Id без токена")
+    @Test
+    public void getGraphByIdWithOutToken() {
+        productCatalogSteps.getByIdWithOutToken(productName, graph.getGraphId(), GetGraphResponse.class);
+    }
+
+    @Order(50)
     @DisplayName("Копирование графа по Id")
     @Test
-    public void copyActionById() {
+    public void copyGraphById() {
         String cloneName = graph.getName() + "-clone";
         productCatalogSteps.copyById(productName, graph.getGraphId());
         Assertions.assertTrue(productCatalogSteps.isExists(productName, cloneName, ExistsGraphsResponse.class));
-        productCatalogSteps.deleteByName(productName, cloneName, GetGraphsListResponse.class);
+        productCatalogSteps.getDeleteObjectResponse(productName,
+                        productCatalogSteps.getProductObjectIdByNameWithMultiSearch(productName, cloneName, GetGraphsListResponse.class))
+                .assertStatus(200);
         Assertions.assertFalse(productCatalogSteps.isExists(productName, cloneName, ExistsGraphsResponse.class));
     }
 
-    @Order(7)
+    @Order(50)
+    @DisplayName("Негативный тест на копирование графа по Id без токена")
+    @Test
+    public void copyGraphByIdWithOutToken() {
+        productCatalogSteps.copyByIdWithOutToken(productName, graph.getGraphId());
+    }
+
+    @Order(60)
     @DisplayName("Частичное обновление графа по Id")
     @Test
     public void partialUpdateGraph() {
@@ -101,7 +116,15 @@ public class GraphTest {
         Assertions.assertNotEquals(oldGraphVersion, newGraphVersion);
     }
 
-    @Order(8)
+    @Order(61)
+    @DisplayName("Негативный тест на обновление графа по Id без токена")
+    @Test
+    public void updateGraphByIdWithOutToken() {
+        productCatalogSteps.partialUpdateObjectWithOutToken(productName, graph.getGraphId(),
+                new JSONObject().put("description", "UpdateDescription"));
+    }
+
+    @Order(70)
     @DisplayName("Негативный тест на попытку обновления графа до текущей версии")
     @Test
     public void partialUpdateForCurrentVersion() {
@@ -110,7 +133,7 @@ public class GraphTest {
                 .put("version", currentVersion)).assertStatus(500);
     }
 
-    @Order(9)
+    @Order(80)
     @DisplayName("Негативный тест на создание графа с существующим именем")
     @Test
     public void createGraphWithSameName() {
@@ -118,7 +141,7 @@ public class GraphTest {
                 .createJsonObject(graph.getName(), "productCatalog/graphs/createGraph.json")).assertStatus(400);
     }
 
-    @Order(10)
+    @Order(90)
     @DisplayName("Получение списка объектов использующих граф")
     @Test
     public void getUsedGraphList() {
@@ -154,20 +177,35 @@ public class GraphTest {
         productCatalogSteps.deleteById("products/", createProductResponse.getId());
         productCatalogSteps.deleteById("services/", createServiceResponse.getId());
         productCatalogSteps.deleteById("actions/", createActionResponse.getId());
-        productCatalogSteps.deleteById(productName, usedGraphId);
+        productCatalogSteps.getDeleteObjectResponse(productName, usedGraphId).assertStatus(200);
     }
 
-    @Order(99)
+    @Order(97)
+    @Test
+    @DisplayName("Проверка отсутсвия ' в значениях ключя template_id")
+    public void checkKeys() {
+        productCatalogSteps.createProductObject(productName, productCatalogSteps.createJsonObject("api_test", "productCatalog/graphs/createGraph.json"));
+        productCatalogSteps.partialUpdateObject(productName, productCatalogSteps
+                .getProductObjectIdByNameWithMultiSearch(productName, "api_test", GetGraphsListResponse.class), JsonHelper.getJsonTemplate("productCatalog/graphs/patch.json")
+                .build());
+        String id = productCatalogSteps.getProductObjectIdByNameWithMultiSearch(productName, "api_test", GetGraphsListResponse.class);
+        JsonPath jsonPath = productCatalogSteps.getJsonPath(productName, id);
+        assertFalse(jsonPath.getString("graph[0].template_id").contains("'"));
+        productCatalogSteps.getDeleteObjectResponse(productName, productCatalogSteps
+                .getProductObjectIdByNameWithMultiSearch(productName, "api_test", GetGraphsListResponse.class )).assertStatus(200);
+    }
+
+    @Order(98)
     @Test
     @DisplayName("Попытка удаления графа используемого в продукте, действии и сервисе")
     public void deleteUsedGraph() {
         CreateGraphResponse mainGraph = productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("mainGraph", "productCatalog/graphs/createGraph.json"))
+                        .createJsonObject("main_graph", "productCatalog/graphs/createGraph.json"))
                 .extractAs(CreateGraphResponse.class);
         String mainGraphId = mainGraph.getId();
 
         CreateGraphResponse secondGraph = productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("secondGraph", "productCatalog/graphs/createGraph.json"))
+                        .createJsonObject("second_graph", "productCatalog/graphs/createGraph.json"))
                 .extractAs(CreateGraphResponse.class);
         String secondGraphId = secondGraph.getId();
 
@@ -202,15 +240,22 @@ public class GraphTest {
         productCatalogSteps.deleteById("products/", createProductResponse.getId());
         productCatalogSteps.deleteById("services/", createServiceResponse.getId());
         productCatalogSteps.deleteById("actions/", createActionResponse.getId());
-        productCatalogSteps.deleteById(productName, mainGraphId);
-        productCatalogSteps.deleteById(productName, secondGraphId);
+        productCatalogSteps.getDeleteObjectResponse(productName, mainGraphId).assertStatus(200);
+        productCatalogSteps.getDeleteObjectResponse(productName, secondGraphId).assertStatus(200);
+    }
+
+    @Order(99)
+    @DisplayName("Негативный тест на удаление графа без токена")
+    @Test
+    public void deleteGraphWithOutToken() {
+        productCatalogSteps.deleteObjectByIdWithOutToken(productName, graph.getGraphId());
     }
 
     @Order(100)
     @Test
     @DisplayName("Удаление графа")
     @MarkDelete
-    public void deleteAction() {
+    public void deleteGraph() {
         try (Graph graph = Graph.builder().name("at_test_graph_api").build().createObjectExclusiveAccess()) {
             graph.deleteObject();
         }
