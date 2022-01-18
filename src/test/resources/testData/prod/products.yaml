@@ -11,7 +11,7 @@ OpenShiftProject:
       - { env: "LT", resourcePoolLabel: "ls5-genr02.test.vtb.ru - TEST-SRV-PERF", segment: "test-srv-perf", dataCentre: "5"  }
       - { env: "LT", resourcePoolLabel: "ls5-lpal01.test.vtb.ru - TEST-SRV-PERF", segment: "test-srv-perf", dataCentre: "5"  }
       - { env: "HOTFIX", resourcePoolLabel: "rs5-genr02.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app", dataCentre: "5"  }
-      - { env: "PREPROD", resourcePoolLabel: "rs1-lpar01.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app", dataCentre: "5"  }
+#      - { env: "PREPROD", resourcePoolLabel: "rs1-lpar01.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app", dataCentre: "5"  }
 
 ClickHouse:
   - options:
@@ -26,7 +26,7 @@ Podman:
       - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 WildFly:
@@ -37,7 +37,7 @@ WildFly:
       - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 Rhel:
@@ -48,7 +48,7 @@ Rhel:
       - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
       - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
       - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4", productName: "RHEL General Application" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 PostgreSQL:
@@ -59,7 +59,7 @@ PostgreSQL:
       - { platform: "Nutanix", env: "HOTFIX", postgresqlVersion: "11", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "vsphere", env: "LT", postgresqlVersion: "12", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "MIGR", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "PREPROD", postgresqlVersion: "12", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", postgresqlVersion: "12", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "ST", postgresqlVersion: "12", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 RabbitMQCluster:
@@ -70,7 +70,7 @@ RabbitMQCluster:
       - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 Windows:
@@ -81,7 +81,7 @@ Windows:
       - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
       - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
       - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2016" }
 
 Nginx:
@@ -92,7 +92,7 @@ Nginx:
       - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
 Redis:
@@ -103,7 +103,7 @@ Redis:
       - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
       - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
       - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
 ApacheKafkaCluster:
@@ -114,7 +114,7 @@ ApacheKafkaCluster:
       - { platform: "Nutanix", env: "HOTFIX", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
       - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
       - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
 Ubuntu:
@@ -140,7 +140,7 @@ PostgresSQLCluster:
       - { platform: "Nutanix", env: "HOTFIX", postgresqlVersion: "11", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "vsphere", env: "LT", postgresqlVersion: "12", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "MIGR", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-      - { platform: "Nutanix", env: "PREPROD", postgresqlVersion: "12", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", postgresqlVersion: "12", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
       - { platform: "Nutanix", env: "ST", postgresqlVersion: "12", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 Elasticsearch:
@@ -150,5 +150,11 @@ Elasticsearch:
 
 ScyllaDb:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", version: "4.4.8", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
-#      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", version: "4.4.8", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "OpenStack", env: "DEV", version: "4.4.8", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "OpenStack", env: "IFT", version: "4.4.8", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "OpenStack", env: "EDU", version: "4.4.8", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "HOTFIX", version: "4.4.8", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "vsphere", env: "LT", version: "4.4.8", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "MIGR", version: "4.4.8", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+#      - { platform: "Nutanix", env: "PREPROD", version: "4.4.8", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "ST", version: "4.4.8", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }

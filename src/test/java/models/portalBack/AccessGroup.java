@@ -38,8 +38,8 @@ public class AccessGroup extends Entity {
 
     @Override
     public Entity init() {
-        if (prefixName == null)
-            prefixName = new Generex("[a-z]{5,15}").random();
+        if (name == null)
+            name = new Generex("[a-z]{5,15}").random();
         if (projectName == null)
             projectName = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
         if (description == null)
@@ -51,7 +51,7 @@ public class AccessGroup extends Entity {
 
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("/accessGroup/accessGroup.json")
-                .set("$.access_group.name", prefixName)
+                .set("$.access_group.name", name)
                 .set("$.access_group.description", description)
                 .set("$.access_group.project_name", projectName)
                 .build();

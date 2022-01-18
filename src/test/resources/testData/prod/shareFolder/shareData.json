@@ -181,42 +181,42 @@
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-edzorg-edugroup",
+    "prefixName": "cloud-edzorg-edugroup",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-b7iigm67tk"
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-hfzorg-hotfix-group",
+    "prefixName": "cloud-hfzorg-hotfix-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-rr4ncna00e"
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-mtzorg-migr-group",
+    "prefixName": "cloud-mtzorg-migr-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-sdt56df8rr"
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-rrzorg-preprod-group",
+    "prefixName": "cloud-rrzorg-preprod-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-aiqk5zzot4"
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-stzorg-st-group",
+    "prefixName": "cloud-stzorg-st-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-ovkcqq41d3"
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-ifzorg-ift-group",
+    "prefixName": "cloud-ifzorg-ift-group",
     "users": [
       "check_admin"
     ],
@@ -225,7 +225,7 @@
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-d5zorg-dev-group",
+    "prefixName": "cloud-d5zorg-dev-group",
     "users": [
       "check_admin"
     ],
@@ -234,7 +234,7 @@
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-ltzorg-lt-group",
+    "prefixName": "cloud-ltzorg-lt-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-j5uzlpvbjz"
