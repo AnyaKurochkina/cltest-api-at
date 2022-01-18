@@ -60,6 +60,13 @@ public class TemplatesTest extends Tests {
     }
 
     @Order(5)
+    @DisplayName("Негатичный тест на получение шаблона по Id без токена")
+    @Test
+    public void getTemplateByIdWithOutToken() {
+        productCatalogSteps.getByIdWithOutToken(productName, String.valueOf(template.getTemplateId()), GetTemplateResponse.class);
+    }
+
+    @Order(6)
     @DisplayName("Копирование шаблона по Id и удаление этого клона")
     @Test
     public void copyTemplateById() {
@@ -70,7 +77,14 @@ public class TemplatesTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists(productName, cloneName, ExistsTemplateResponse.class));
     }
 
-    @Order(6)
+    @Order(7)
+    @DisplayName("Негатичный тест на копирование сервиса по Id без токена")
+    @Test
+    public void copyTemplateByIdWithOutToken() {
+        productCatalogSteps.copyByIdWithOutToken(productName, String.valueOf(template.getTemplateId()));
+    }
+
+    @Order(10)
     @DisplayName("Обновление шаблона по Id")
     @Test
     public void updateTemplateById() {
@@ -79,6 +93,14 @@ public class TemplatesTest extends Tests {
                 new JSONObject().put("description", expectedValue));
         String actual = productCatalogSteps.getById(productName, String.valueOf(template.getTemplateId()), GetTemplateResponse.class).getDescription();
         Assertions.assertEquals(expectedValue, actual);
+    }
+
+    @Order(11)
+    @DisplayName("Негативный тест на обновление шаблона по Id без токена")
+    @Test
+    public void updateTemplateByIdWithOutToken() {
+        productCatalogSteps.partialUpdateObjectWithOutToken(productName, String.valueOf(template.getTemplateId()),
+                new JSONObject().put("description", "UpdateDescription"));
     }
 
     @Order(12)
@@ -95,15 +117,15 @@ public class TemplatesTest extends Tests {
     public void createTemplateWithInvalidCharacters() {
         assertAll("Шаблон создался с недопустимым именем",
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("NameWithUppercase", templatePath)).assertStatus(400),
+                        .createJsonObject("NameWithUppercase", templatePath)).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("nameWithUppercaseInMiddle", templatePath)).assertStatus(400),
+                        .createJsonObject("nameWithUppercaseInMiddle", templatePath)).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("имя", templatePath)).assertStatus(400),
+                        .createJsonObject("имя", templatePath)).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("Имя", templatePath)).assertStatus(400),
+                        .createJsonObject("Имя", templatePath)).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("a&b&c", templatePath)).assertStatus(400)
+                        .createJsonObject("a&b&c", templatePath)).assertStatus(500)
         );
     }
 
@@ -119,6 +141,13 @@ public class TemplatesTest extends Tests {
         Assertions.assertTrue(productCatalogSteps.isExists(productName, templateName, ExistsTemplateResponse.class));
         productCatalogSteps.deleteByName(productName, templateName, GetTemplateListResponse.class);
         Assertions.assertFalse(productCatalogSteps.isExists(productName, templateName, ExistsTemplateResponse.class));
+    }
+
+    @Order(90)
+    @DisplayName("Негативный тест на удаление шаблона без токена")
+    @Test
+    public void deleteTemplateWithOutToken() {
+        productCatalogSteps.deleteObjectByIdWithOutToken(productName, String.valueOf(template.getTemplateId()));
     }
 
     @Order(100)

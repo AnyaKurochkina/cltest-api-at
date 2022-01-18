@@ -102,14 +102,17 @@ public class GetTemplateResponse implements GetImpl {
 	@JsonProperty("additional_output")
 	private Boolean additionalOutput;
 
+	@JsonProperty("last_version")
+	private String last_version;
+
 	@Override
 	public String getName() {
-		return null;
+		return name;
 	}
 
 	@Override
 	public String getVersion() {
-		return null;
+		return version;
 	}
 
 	@Override
@@ -119,7 +122,7 @@ public class GetTemplateResponse implements GetImpl {
 
 	@Override
 	public String getDescription() {
-		return null;
+		return description;
 	}
 
 	@Override

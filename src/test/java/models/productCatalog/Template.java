@@ -80,7 +80,6 @@ public class Template extends Entity {
     @Override
     protected void delete() {
          new Http(Configure.ProductCatalogURL)
-                .setWithoutToken()
                 .delete(productName + templateId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();

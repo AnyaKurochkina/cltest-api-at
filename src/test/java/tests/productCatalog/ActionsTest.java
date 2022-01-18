@@ -10,6 +10,7 @@ import httpModels.productCatalog.GetImpl;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
@@ -69,6 +70,13 @@ public class ActionsTest extends Tests {
     }
 
     @Order(6)
+    @DisplayName("Негатичный тест на получение действия по Id без токена")
+    @Test
+    public void getActionByIdWithOutToken() {
+        productCatalogSteps.getByIdWithOutToken(productName, action.getActionId(), GetActionResponse.class);
+    }
+
+    @Order(7)
     @DisplayName("Копирование действия по Id")
     @Test
     public void copyActionById() {
@@ -79,14 +87,21 @@ public class ActionsTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists(productName, cloneName, ExistsActionResponse.class));
     }
 
-    @Order(7)
+    @Order(8)
+    @DisplayName("Негативный тест на копирование действия по Id без токена")
+    @Test
+    public void copyActionByIdWithOutToken() {
+        productCatalogSteps.copyByIdWithOutToken(productName, action.getActionId());
+    }
+
+    @Order(70)
     @DisplayName("Экспорт действия по Id")
     @Test
     public void exportActionById() {
         productCatalogSteps.exportById(productName, action.getActionId());
     }
 
-    @Order(8)
+    @Order(80)
     @DisplayName("Поиск действия по имени, с использованием multiSearch")
     @Test
     public void searchActionByName() {
@@ -96,7 +111,15 @@ public class ActionsTest extends Tests {
                 () -> assertEquals(action.getActionId(), actionIdWithMultiSearch));
     }
 
-    @Order(9)
+    @Order(91)
+    @DisplayName("Негативный тест на обновление действия по Id без токена")
+    @Test
+    public void updateActionByIdWithOutToken() {
+        productCatalogSteps.partialUpdateObjectWithOutToken(productName, action.getActionId(),
+                new JSONObject().put("description", "UpdateDescription"));
+    }
+
+    @Order(92)
     @DisplayName("Негативный тест на создание действия с двумя параметрами одновременно graph_version_pattern и graph_version")
     @Test
     public void doubleVersionTest() {
@@ -108,7 +131,7 @@ public class ActionsTest extends Tests {
                 .assertStatus(500);
     }
 
-    @Order(10)
+    @Order(93)
     @DisplayName("Обновление действия без указания версии, версия должна инкрементироваться")
     @Test
     public void patchTest() {
@@ -118,7 +141,7 @@ public class ActionsTest extends Tests {
         Assertions.assertEquals("1.1.2", version);
     }
 
-    @Order(11)
+    @Order(94)
     @DisplayName("Негативный тест на обновление действия до той же версии/текущей")
     @Test
     public void sameVersionTest() {
@@ -127,7 +150,7 @@ public class ActionsTest extends Tests {
                 .build(), action.getActionId()).assertStatus(500);
     }
 
-    @Order(12)
+    @Order(95)
     @DisplayName("Негативный тест на создание действия с существующим именем")
     @Test
     public void createActionWithSameName() {
@@ -135,25 +158,25 @@ public class ActionsTest extends Tests {
                 .createJsonObject(action.getActionName(), templatePath)).assertStatus(400);
     }
 
-    @Order(13)
+    @Order(96)
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
     @Test
     public void createActionWithInvalidCharacters() {
         assertAll("Действие создался с недопустимым именем",
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("NameWithUppercase", templatePath)).assertStatus(400),
+                        .createJsonObject("NameWithUppercase", templatePath)).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("nameWithUppercaseInMiddle", templatePath)).assertStatus(400),
+                        .createJsonObject("nameWithUppercaseInMiddle", templatePath)).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("имя", templatePath)).assertStatus(400),
+                        .createJsonObject("имя", templatePath)).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("Имя", templatePath)).assertStatus(400),
+                        .createJsonObject("Имя", templatePath)).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("a&b&c", templatePath)).assertStatus(400)
+                        .createJsonObject("a&b&c", templatePath)).assertStatus(500)
         );
     }
 
-    @Order(17)
+    @Order(97)
     @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {
@@ -162,7 +185,7 @@ public class ActionsTest extends Tests {
         Assertions.assertNotNull(graphVersionCalculated);
     }
 
-    @Order(18)
+    @Order(98)
     @DisplayName("Получение списка действий по фильтрам")
     @Test
     public void getActionListByFilters() {
@@ -176,6 +199,13 @@ public class ActionsTest extends Tests {
                         .getProductObjectList(productName, ActionResponse.class, "?graph_id=" + action.getGraphId())
                         .size() > 0)
         );
+    }
+
+    @Order(99)
+    @DisplayName("Негативный тест на удаление действия без токена")
+    @Test
+    public void deleteActionWithOutToken() {
+        productCatalogSteps.deleteObjectByIdWithOutToken(productName, action.getActionId());
     }
 
     @Order(100)

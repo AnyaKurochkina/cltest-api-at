@@ -85,4 +85,8 @@ public class CreateServiceResponse {
 
     @JsonProperty("direction")
     private String direction;
+
+    @JsonProperty("service_info")
+    private String service_info;
+
 }

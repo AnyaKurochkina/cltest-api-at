@@ -57,6 +57,12 @@ public class ProductCatalogSteps {
                 .extractAs(clazz);
     }
 
+    @Step("Получение объекта продуктового каталога по Id")
+    public void getByIdWithOutToken(String productName, String objectId, Class<?> clazz) {
+        new Http(Configure.ProductCatalogURL).setWithoutToken()
+                .get(productName + objectId + "/").assertStatus(403);
+    }
+
     @Step("Обновление объекта продуктового каталога")
     public GetImpl patchObject(String productName, Class<?> clazz, String name, String graphId, String objectId) {
         return (GetImpl) new Http(Configure.ProductCatalogURL)
@@ -71,6 +77,14 @@ public class ProductCatalogSteps {
         new Http(Configure.ProductCatalogURL)
                 .post(productName + objectId + "/copy/")
                 .assertStatus(200);
+    }
+
+    @Step("Копирование объекта продуктового каталога по Id без ключа")
+    public void copyByIdWithOutToken(String productName, String objectId) {
+        new Http(Configure.ProductCatalogURL)
+                .setWithoutToken()
+                .post(productName + objectId + "/copy/")
+                .assertStatus(403);
     }
 
     @Step("Экспорт объекта продуктового каталога по Id")
@@ -88,6 +102,13 @@ public class ProductCatalogSteps {
     @Step("Удаление объекта продуктового каталога по Id")
     public void deleteById(String productName, String objectId) {
         getDeleteObjectResponse(productName, objectId).assertStatus(204);
+    }
+
+    @Step("Удаление объекта продуктового каталога по Id без токена")
+    public void deleteObjectByIdWithOutToken(String productName, String id) {
+        new Http(Configure.ProductCatalogURL)
+                .setWithoutToken()
+                .delete(productName + id + "/").assertStatus(403);
     }
 
     @Step("Поиск ID экшена по имени с использованием multiSearch")
@@ -129,6 +150,15 @@ public class ProductCatalogSteps {
                 .patch(productName + id + "/");
     }
 
+    @Step("Частичное обновление продукта без токена")
+    public void partialUpdateObjectWithOutToken(String productName, String id, JSONObject object) {
+        new Http(Configure.ProductCatalogURL)
+                .setWithoutToken()
+                .body(object)
+                .patch(productName + id + "/")
+                .assertStatus(403);
+    }
+
     @Step("Получение времени отклика на запрос")
     public long getTime(String url) {
         Response response = given()
@@ -148,9 +178,6 @@ public class ProductCatalogSteps {
                 .delete(productName + id + "/");
     }
 
-    public Http.Response getObjectListByFilter(String productName, String filter) {
-        return new  Http(Configure.ProductCatalogURL).get(productName + filter).assertStatus(200);
-    }
     public List<ItemImpl> getProductObjectList(String productName, Class<?> clazz, String filter) {
         return ((GetListImpl) new Http(Configure.ProductCatalogURL)
                 .get(productName + filter)
@@ -158,7 +185,11 @@ public class ProductCatalogSteps {
                 .extractAs(clazz)).getItemsList();
     }
 
-
+    public JsonPath getJsonPath(String productName, String id) {
+        return new Http(Configure.ProductCatalogURL)
+                .get(productName + id + "/")
+                .assertStatus(200).jsonPath();
+    }
 
     private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {
         return JsonHelper.getJsonTemplate(pathToJsonBody)

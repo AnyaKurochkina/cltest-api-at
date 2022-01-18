@@ -86,4 +86,7 @@ public class GetServiceResponse implements GetImpl {
 
 	@JsonProperty("title")
 	private String title;
+
+	@JsonProperty("service_info")
+	private String service_info;
 }
