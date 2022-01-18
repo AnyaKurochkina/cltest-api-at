@@ -4,10 +4,10 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
 import httpModels.productCatalog.Action.existsAction.response.ExistsActionResponse;
+import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.OrgDirection.existsOrgDirection.response.ExistsOrgDirectionResponse;
 import httpModels.productCatalog.OrgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import httpModels.productCatalog.OrgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
-import httpModels.productCatalog.GetImpl;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
@@ -78,6 +78,13 @@ public class OrgDirectionTest extends Tests {
     }
 
     @Order(6)
+    @DisplayName("Негатичный тест на получение направления по Id без токена")
+    @Test
+    public void getOrgDirectionByIdWithOutToken() {
+        productCatalogSteps.getByIdWithOutToken(productName, orgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class);
+    }
+
+    @Order(6)
     @DisplayName("Обновление направления по Id")
     @Test
     public void updateOrgDirection() {
@@ -90,6 +97,14 @@ public class OrgDirectionTest extends Tests {
     }
 
     @Order(7)
+    @DisplayName("Негативный тест на обновление направления по Id без токена")
+    @Test
+    public void updateOrgDirectionByIdWithOutToken() {
+        productCatalogSteps.partialUpdateObjectWithOutToken(productName, orgDirection.getOrgDirectionId(),
+                new JSONObject().put("description", "UpdateDescription"));
+    }
+
+    @Order(8)
     @DisplayName("Копирование направления по Id")
     @Test
     public void copyOrgDirectionById() {
@@ -100,14 +115,21 @@ public class OrgDirectionTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists(productName, cloneName, ExistsOrgDirectionResponse.class));
     }
 
-    @Order(8)
+    @Order(9)
+    @DisplayName("Негатичный тест на копирование направления по Id без токена")
+    @Test
+    public void copyOrgDirectionByIdWithOutToken() {
+        productCatalogSteps.copyByIdWithOutToken(productName, orgDirection.getOrgDirectionId());
+    }
+
+    @Order(80)
     @DisplayName("Экспорт направления по Id")
     @Test
     public void exportOrgDirectionById() {
         productCatalogSteps.exportById(productName, orgDirection.getOrgDirectionId());
     }
 
-    @Order(9)
+    @Order(98)
     @Disabled
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
     @Test
@@ -129,6 +151,13 @@ public class OrgDirectionTest extends Tests {
                                 .createJsonObject("a&b&c", "productCatalog/orgDirection/orgDirection.json"))
                         .assertStatus(400)
         );
+    }
+
+    @Order(99)
+    @DisplayName("Негативный тест на удаление направления без токена")
+    @Test
+    public void deleteOrgDirectionWithOutToken() {
+        productCatalogSteps.deleteObjectByIdWithOutToken(productName, orgDirection.getOrgDirectionId());
     }
 
     @Order(100)

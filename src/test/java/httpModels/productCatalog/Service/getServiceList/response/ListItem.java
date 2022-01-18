@@ -88,6 +88,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("version_changed_by_user")
     private String version_changed_by_user;
 
+    @JsonProperty("service_info")
+    private String service_info;
+
     @Override
     public String getName() {
         return name;

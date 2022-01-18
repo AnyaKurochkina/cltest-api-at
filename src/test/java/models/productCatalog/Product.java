@@ -3,9 +3,9 @@ package models.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
+import httpModels.productCatalog.Action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.Graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.Product.createProduct.response.CreateProductResponse;
-import httpModels.productCatalog.Product.existProduct.response.ExistProductResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,7 +52,7 @@ public class Product extends Entity {
     public Entity init() {
         jsonTemplate = "productCatalog/products/createProduct.json";
         graphId = productCatalogSteps
-                .getProductObjectIdByNameWithMultiSearch(productName, "GraphProduct", GetGraphsListResponse.class);
+                .getProductObjectIdByNameWithMultiSearch("graphs/", "GraphProduct", GetGraphsListResponse.class);
         return this;
     }
 
@@ -90,6 +90,7 @@ public class Product extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete(productName + productId + "/")
                 .assertStatus(204);
-        Assertions.assertFalse(productCatalogSteps.isExists(productName, name, ExistProductResponse.class));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+        Assertions.assertFalse(productCatalogSteps.isExists(productName, productName, ExistsActionResponse.class));
     }
 }
