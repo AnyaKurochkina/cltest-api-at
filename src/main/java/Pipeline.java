@@ -46,7 +46,7 @@ public class Pipeline {
             }
             String command = "-Dsecret=123456 -Denv=IFT -Dtest=" + String.join(",", externalIds);
             try (PrintWriter writerCommand = new PrintWriter(new BufferedWriter(new FileWriter("run.sh", false)))) {
-                writerCommand.println("mvn clean test" + command);
+                writerCommand.println("mvn clean test " + command);
                 System.out.println("COMMAND_LINE: " + command);
             }
         }
