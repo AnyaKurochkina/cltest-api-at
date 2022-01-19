@@ -255,6 +255,9 @@
                 <executions>
                     <execution>
                         <phase>install</phase>
+                        <configuration>
+                            <classpathScope>main</classpathScope>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
