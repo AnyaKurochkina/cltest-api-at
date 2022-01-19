@@ -7,7 +7,9 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.json.JSONObject;
 import ru.testit.properties.AppProperties;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,25 +46,8 @@ public class Pipeline {
             }
             String command = "-Dsecret=123456 -Denv=IFT -Dtest=" + String.join(",", externalIds);
             try (PrintWriter writerCommand = new PrintWriter(new BufferedWriter(new FileWriter("run.sh", false)))) {
-                writerCommand.println("mvn test " + command);
+                writerCommand.println("mvn " + command + " test");
                 System.out.println("COMMAND_LINE: " + command);
-
-                String s;
-                Process p;
-                try {
-                    p = Runtime.getRuntime().exec("ls -aF");
-                    BufferedReader br = new BufferedReader(
-                            new InputStreamReader(p.getInputStream()));
-                    while ((s = br.readLine()) != null)
-                        System.out.println("line: " + s);
-                    p.waitFor();
-                    System.out.println("exit: " + p.exitValue());
-                    p.destroy();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
             }
         }
 
