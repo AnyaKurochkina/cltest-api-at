@@ -7,9 +7,7 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.json.JSONObject;
 import ru.testit.properties.AppProperties;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,7 +34,7 @@ public class Pipeline {
                 .response()
                 .jsonPath();
 
-        try(PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(pathTestResourcesDir + "/configurations.txt", false)))) {
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(pathTestResourcesDir + "/configurations.txt", false)))) {
             List<Map<String, Object>> testResults = jsonPath.getList("testResults");
             for (Map<String, Object> resultMap : testResults) {
                 JSONObject result = new JSONObject(resultMap);
@@ -45,7 +43,27 @@ public class Pipeline {
                 writer.println(externalId + "=" + result.query("/configuration/id"));
             }
             String command = "-Denv=IFT -Dgroups=" + String.join(",", externalIds);
-            System.out.println(command);
+            try (PrintWriter writerCommand = new PrintWriter(new BufferedWriter(new FileWriter("run.sh", false)))) {
+                writerCommand.println("mvn test " + command);
+                System.out.println("COMMAND_LINE: " + command);
+
+                String s;
+                Process p;
+                try {
+                    p = Runtime.getRuntime().exec("ls -aF");
+                    BufferedReader br = new BufferedReader(
+                            new InputStreamReader(p.getInputStream()));
+                    while ((s = br.readLine()) != null)
+                        System.out.println("line: " + s);
+                    p.waitFor();
+                    System.out.println("exit: " + p.exitValue());
+                    p.destroy();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
         }
 
     }
