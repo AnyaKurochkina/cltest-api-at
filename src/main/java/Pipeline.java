@@ -42,7 +42,7 @@ public class Pipeline {
                 externalIds.add(externalId);
                 writer.println(externalId + "=" + result.query("/configuration/id"));
             }
-            String command = "-Dsecret=123456 -Denv=IFT -Dgroups=" + String.join(",", externalIds);
+            String command = "-Dsecret=123456 -Denv=IFT -Dtest=" + String.join(",", externalIds);
             try (PrintWriter writerCommand = new PrintWriter(new BufferedWriter(new FileWriter("run.sh", false)))) {
                 writerCommand.println("mvn test " + command);
                 System.out.println("COMMAND_LINE: " + command);
