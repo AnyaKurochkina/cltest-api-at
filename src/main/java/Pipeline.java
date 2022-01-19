@@ -45,11 +45,12 @@ public class Pipeline {
                 writer.println(externalId + "=" + result.query("/configuration/id"));
             }
             String command = "-Dsecret=123456 -Denv=IFT -Dtest=" + String.join(",", externalIds);
-            try (PrintWriter writerCommand = new PrintWriter(new BufferedWriter(new FileWriter("run.sh", false)))) {
-                writerCommand.println("mvn clean install -DskipTests=false " + command);
-                System.out.println("COMMAND_LINE: " + command);
-                System.out.println("##teamcity[setParameter name='env.ENV_AAA' value='aaaaaaaaaa']");
-            }
+            System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");
+
+//            try (PrintWriter writerCommand = new PrintWriter(new BufferedWriter(new FileWriter("run.sh", false)))) {
+//                writerCommand.println("mvn clean install -DskipTests=false " + command);
+//                System.out.println("COMMAND_LINE: " + command);
+//            }
         }
 
     }
