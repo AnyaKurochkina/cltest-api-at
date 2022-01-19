@@ -258,6 +258,9 @@
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>maven</executable>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
