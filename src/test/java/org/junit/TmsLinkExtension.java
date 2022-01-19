@@ -25,7 +25,7 @@ public class TmsLinkExtension implements InvocationInterceptor {
             String subId = StringUtils.findByRegex("#(\\d+)\\]$", extensionContext.getUniqueId());
             AllureLifecycle allureLifecycle = getLifecycle();
             Link link = new Link();
-            link.setName(id + "." + subId);
+            link.setName(id + "#" + subId);
             link.setType("tms");
             link.setUrl("");
             allureLifecycle.getCurrentTestCase().ifPresent(i ->

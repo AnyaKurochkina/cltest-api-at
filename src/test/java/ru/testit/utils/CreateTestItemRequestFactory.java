@@ -105,7 +105,7 @@ public class CreateTestItemRequestFactory {
         String postfix = "";
         if (Objects.nonNull(subId))
             postfix = "#" + subId;
-        return className + "." + methodName + postfix;
+        return className + "#" + methodName + postfix;
     }
 
     private String extractDisplayName(final Method atomicTest) {

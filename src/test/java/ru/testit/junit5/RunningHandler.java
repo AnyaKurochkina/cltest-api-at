@@ -112,6 +112,6 @@ public class RunningHandler
         String postfix = "";
         if(Objects.nonNull(subId))
             postfix = "#" + subId;
-        return className + "." + methodName + postfix;
+        return className + "#" + methodName + postfix;
     }
 }
