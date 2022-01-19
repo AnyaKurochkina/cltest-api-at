@@ -258,9 +258,6 @@
                         <goals>
                             <goal>exec</goal>
                         </goals>
-                        <configuration>
-                            <executable>cmd</executable>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
