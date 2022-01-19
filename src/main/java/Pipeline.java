@@ -46,7 +46,7 @@ public class Pipeline {
             }
             String command = "-Dsecret=123456 -Denv=IFT -Dtest=" + String.join(",", externalIds);
             System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");
-
+            System.out.println("##teamcity[setParameter name='env.MAVEN_OPTS' value='-Dmaven.test.skip=false']");
 //            try (PrintWriter writerCommand = new PrintWriter(new BufferedWriter(new FileWriter("run.sh", false)))) {
 //                writerCommand.println("mvn clean install -DskipTests=false " + command);
 //                System.out.println("COMMAND_LINE: " + command);
