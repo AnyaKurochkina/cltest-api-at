@@ -21,6 +21,13 @@ public class Pipeline {
 
     @SuppressWarnings("deprecation")
     public static void main(String[] args) throws Exception {
+        String[] cmd = {
+                "/bin/sh",
+                "-c",
+                "echo \"##teamcity[setParameter name='env.testArguments' value='5678']\"",
+                "##teamcity[setParameter name='env.testArguments' value='1234']"
+        };
+        Process p = Runtime.getRuntime().exec(cmd);
         SSLSocketFactory clientAuthFactory = new SSLSocketFactory(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build());
         SSLConfig config = new SSLConfig().with().sslSocketFactory(clientAuthFactory).and().allowAllHostnames();
         Set<String> externalIds = new HashSet<>();
