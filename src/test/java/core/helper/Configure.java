@@ -33,10 +33,10 @@ public class Configure {
                 } else ENV = getAppProp("env").toLowerCase();
             } else
                 ENV = System.getProperty("env").toLowerCase();
-            log.info("ENV = " + ENV);
+            log.info("SET ENVIRONMENT = " + ENV);
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
 
-            String kongURL = getAppProp("host_kong");
+            String kongURL = getAppProp("url.kong");
             AuthorizerURL = kongURL + "authorizer/api/v1/";
             AccountManagerURL = kongURL + "accountmanager/api/v1/";
             PortalBackURL = kongURL + "portal/api/v1/";
@@ -44,7 +44,7 @@ public class Configure {
             CalculatorURL = kongURL + "calculator/";
             ProductCatalogURL = kongURL + "product-catalog/";
             OrderServiceURL = kongURL + "order-service/api/v1/";
-            StateServiceURL = kongURL + "state-service/api/v1/";
+            StateServiceURL = kongURL + "state-service/";
             ReferencesURL = kongURL + "references/api/v1/";
         } catch (Exception e) {
             e.printStackTrace();

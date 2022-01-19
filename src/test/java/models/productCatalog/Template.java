@@ -3,6 +3,7 @@ package models.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
+import httpModels.productCatalog.Action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.Template.createTemplate.response.CreateTemplateResponse;
 import httpModels.productCatalog.Template.createTemplate.response.Input;
 import httpModels.productCatalog.Template.createTemplate.response.Output;
@@ -13,11 +14,9 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.TemplateSteps;
+import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
-
-import static core.helper.JsonHelper.convertResponseOnClass;
 
 @Log4j2
 @Builder
@@ -52,6 +51,8 @@ public class Template extends Entity {
     private Boolean additionalOutput;
     private String jsonTemplate;
 
+    private final String productName = "templates/";
+
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/templates/createTemplate.json";
@@ -67,26 +68,21 @@ public class Template extends Entity {
 
     @Override
     protected void create() {
-        String response = new Http(Configure.ProductCatalogURL)
+        CreateTemplateResponse createTemplateResponse = new Http(Configure.ProductCatalogURL)
                 .body(toJson())
-                .post("templates/")
+                .post(productName)
                 .assertStatus(201)
-                .toString();
-        CreateTemplateResponse createTemplateResponse = convertResponseOnClass(response, CreateTemplateResponse.class);
+                .extractAs(CreateTemplateResponse.class);
         templateId = createTemplateResponse.getId();
         Assertions.assertNotNull(templateId, "Шаблон с именем: " + templateName + ", не создался");
-        System.out.println(templateId);
     }
 
     @Override
     protected void delete() {
          new Http(Configure.ProductCatalogURL)
-                .setWithoutToken()
-                .delete("templates/" + templateId + "/")
+                .delete(productName + templateId + "/")
                 .assertStatus(204);
-
-        TemplateSteps templateSteps = new TemplateSteps();
-        templateId = templateSteps.getTemplateIdByNameMultiSearch(templateName);
-        Assertions.assertNull(templateId, String.format("Шаблон с именем: %s не удалился", templateName));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+        Assertions.assertFalse(productCatalogSteps.isExists(productName, templateName, ExistsActionResponse.class));
     }
 }

@@ -5,7 +5,7 @@ import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.authorizer.AccessGroup;
+import models.portalBack.AccessGroup;
 import steps.Steps;
 
 import java.net.URLEncoder;
@@ -27,7 +27,7 @@ public class AccessGroupSteps extends Steps {
         JsonHelper.getJsonTemplate("/accessGroup/users.json")
                 .set("$.users", arr)
                 .send(PortalBackURL)
-                .post("projects/{}/access_groups/{}/group_users", group.getProjectName(), group.getName())
+                .post("projects/{}/access_groups/{}/group_users", group.getProjectName(), group.getPrefixName())
                 .assertStatus(201);
         group.addUser(username);
     }
@@ -36,7 +36,7 @@ public class AccessGroupSteps extends Steps {
     @Step("Добавление пользователя в группу доступа для проекта среды {env}")
     public void removeUserFromGroup(AccessGroup group, String user) {
         new Http(PortalBackURL)
-                .delete("projects/{}/access_groups/{}/group_users?unique_name={}", group.getProjectName(), group.getName(), URLEncoder.encode(user, String.valueOf(StandardCharsets.UTF_8)))
+                .delete("projects/{}/access_groups/{}/group_users?unique_name={}", group.getProjectName(), group.getPrefixName(), URLEncoder.encode(user, String.valueOf(StandardCharsets.UTF_8)))
                 .assertStatus(204);
         group.removeUser(user);
     }

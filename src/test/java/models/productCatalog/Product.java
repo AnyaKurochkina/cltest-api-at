@@ -3,6 +3,8 @@ package models.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
+import httpModels.productCatalog.Action.existsAction.response.ExistsActionResponse;
+import httpModels.productCatalog.Graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.Product.createProduct.response.CreateProductResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
@@ -12,12 +14,9 @@ import models.Entity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.GraphSteps;
-import steps.productCatalog.ProductsSteps;
+import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
-
-import static core.helper.JsonHelper.convertResponseOnClass;
 
 @Log4j2
 @Builder
@@ -37,26 +36,30 @@ public class Product extends Entity {
     private String graphId;
     private String version;
     private Integer maxCount;
-    private String productName;
+    private String name;
     private List<Object> restrictedPaths;
     private String graphVersionPattern;
     private List<Object> allowedGroups;
     private String productId;
     private String category;
     private String jsonTemplate;
+    @Builder.Default
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+
+    private final String productName = "products/";
 
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/products/createProduct.json";
-        GraphSteps graphSteps = new GraphSteps();
-        graphId = graphSteps.getGraphId("GraphProduct");
+        graphId = productCatalogSteps
+                .getProductObjectIdByNameWithMultiSearch("graphs/", "GraphProduct", GetGraphsListResponse.class);
         return this;
     }
 
     @Override
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.name", productName)
+                .set("$.name", name)
                 .set("$.title", title)
                 .set("$.graph_id", graphId)
                 .set("$.envs", new JSONArray(envs))
@@ -65,15 +68,13 @@ public class Product extends Entity {
 
     @Override
     protected void create() {
-        String response = new Http(Configure.ProductCatalogURL)
+        CreateProductResponse createProductResponse = new Http(Configure.ProductCatalogURL)
                 .body(toJson())
                 .post("products/")
                 .assertStatus(201)
-                .toString();
-
-        CreateProductResponse createProductResponse = convertResponseOnClass(response, CreateProductResponse.class);
+                .extractAs(CreateProductResponse.class);
         productId = createProductResponse.getId();
-        Assertions.assertNotNull(productId, "Продукт с именем: " + productName + ", не создался");
+        Assertions.assertNotNull(productId, "Продукт с именем: " + name + ", не создался");
     }
 
     @Step("Обновление продукта")
@@ -87,10 +88,9 @@ public class Product extends Entity {
     @Override
     protected void delete() {
         new Http(Configure.ProductCatalogURL)
-                .delete("products/" + productId + "/")
+                .delete(productName + productId + "/")
                 .assertStatus(204);
-        ProductsSteps productsSteps = new ProductsSteps();
-        productId = productsSteps.getProductId(productName);
-        Assertions.assertNull(productId, String.format("Продукт с именем: %s не удалился", productName));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+        Assertions.assertFalse(productCatalogSteps.isExists(productName, productName, ExistsActionResponse.class));
     }
 }

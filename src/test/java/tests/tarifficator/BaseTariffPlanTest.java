@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Execution(ExecutionMode.SAME_THREAD)
 @Tags({@Tag("regress"), @Tag("tariff")})
 public class BaseTariffPlanTest extends Tests {
-    TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
+    final TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
 
     @Test
     @Order(1)
@@ -124,7 +124,7 @@ public class BaseTariffPlanTest extends Tests {
         tariffPlan.setStatus(TariffPlanStatus.planned);
         tariffPlan.setBeginDate(date);
         tariffPlan = tariffPlanSteps.editTariffPlan(tariffPlan);
-        Waiting.sleep(15 * 60 * 1000);
+        Waiting.sleep(17 * 60 * 1000);
         TariffPlan updatedTariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
         TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
 

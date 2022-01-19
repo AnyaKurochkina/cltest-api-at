@@ -6,14 +6,14 @@ import models.orderService.products.Redis;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты TEST")
 @Feature("Redis OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_redis"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldRedisTest extends Tests {
 
-    Redis redis = Redis.builder()
+    final Redis redis = Redis.builder()
             .projectId("proj-juh8ynkvtn")
             .productId("6662a03d-20ce-4a83-a684-ddec48393516")
             .orderId("af3dd005-a86f-41c2-be43-12b2a21cdac4")

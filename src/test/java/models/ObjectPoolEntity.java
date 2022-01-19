@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
 public class ObjectPoolEntity {
     private String entity;
-    @Getter
-    @Setter
+    @Getter @Setter
+    private boolean isPublic = true;
+    @Getter @Setter
     private ObjectStatus status = ObjectStatus.NOT_CREATED;
-    @Getter
-    @Setter
+    @Getter @Setter
     private Throwable error;
     @Getter
     public final Class<? extends Entity> clazz;
@@ -38,6 +38,10 @@ public class ObjectPoolEntity {
     @SneakyThrows
     @ResourceLock(value = "entity", mode = READ)
     public boolean equalsEntity(Object o) {
+//        if(status.equals(ObjectStatus.DELETED))
+//            return false;
+        if(!isPublic)
+            return false;
         if (this == o)
             return true;
         if (o == null || clazz != o.getClass())
@@ -46,18 +50,11 @@ public class ObjectPoolEntity {
         String that = new Gson().toJson(o, o.getClass());
         JsonNode jsonNodeThis = mapper.readTree(entity);
         JsonNode jsonNodeThat = mapper.readTree(that);
-//        Iterator<Map.Entry<String, JsonNode>> node = jsonNodeThis.fields();
-//        while (node.hasNext()) {
-//            Map.Entry<String, JsonNode> entry = node.next();
-//            if (!jsonNodeThat.hasNonNull(entry.getKey()))
-//                node.remove();
-//        }
         removeEmptyNode(jsonNodeThis);
         removeEmptyNode(jsonNodeThat);
         removeNode(jsonNodeThis, jsonNodeThat);
         return Objects.equals(jsonNodeThis, jsonNodeThat);
     }
-
 
     private void removeNode(JsonNode jsonNodeThis, JsonNode jsonNodeThat) {
         Iterator<Map.Entry<String, JsonNode>> node = jsonNodeThis.fields();
@@ -70,7 +67,6 @@ public class ObjectPoolEntity {
                 node.remove();
         }
     }
-
 
     private void removeEmptyNode(JsonNode jsonNode) {
         Iterator<Map.Entry<String, JsonNode>> node = jsonNode.fields();

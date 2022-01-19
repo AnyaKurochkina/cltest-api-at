@@ -87,9 +87,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
 //                    }
 //                });
             } else {
-                orders.forEach(entity -> {
-                    list.add(Arguments.of(new IProductMock(entity.toString())));
-                });
+                orders.forEach(entity -> list.add(Arguments.of(new IProductMock(entity.toString()))));
             }
         }
         else if (variableName == ONE_PRODUCT) {

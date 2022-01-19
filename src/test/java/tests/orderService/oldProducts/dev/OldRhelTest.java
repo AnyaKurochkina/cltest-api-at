@@ -4,18 +4,16 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.products.Rhel;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("Rhel OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_rhel"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldRhelTest extends Tests {
 
-    Rhel rhel = Rhel.builder()
+    final Rhel rhel = Rhel.builder()
             .projectId("proj-67nljbzjtt")
             .productId("0da09981-c1ac-45b6-ba3b-7bfe52fd45bc")
             .orderId("fa58784b-69c8-4b2e-b42b-4f704e5bbf2c")

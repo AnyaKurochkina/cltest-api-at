@@ -1,12 +1,13 @@
 package models.authorizer;
 
+import com.mifmif.common.regex.Generex;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import core.random.string.RandomStringGenerator;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import models.Entity;
 import org.json.JSONObject;
 import steps.authorizer.ProjectSteps;
@@ -14,7 +15,9 @@ import steps.portalBack.PortalBackSteps;
 
 @Builder
 @Getter
+@ToString(onlyExplicitlyIncluded = true)
 public class Project extends Entity {
+    @ToString.Include
     public String id;
     public String informationSystem;
     public ProjectEnvironment projectEnvironment;
@@ -40,7 +43,7 @@ public class Project extends Entity {
             prefix = projectSteps.getPrefixEnv(folderName, informationSystem, projectEnvironment.getId());
         }
         if(projectName == null){
-            projectName = new RandomStringGenerator().generateByRegex("project [0-9a-zA-Z]{5,15}");
+            projectName = new Generex("project [0-9a-zA-Z]{5,15}").random();
         }
         return this;
     }

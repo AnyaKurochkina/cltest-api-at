@@ -1,6 +1,5 @@
 package models;
 
-import core.helper.JsonHelper;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
 import lombok.*;
@@ -61,15 +60,18 @@ public abstract class Entity implements AutoCloseable {
 
 
     public <T extends Entity> T createObject() {
-        return createObject(false);
+        return createObject(false, true);
+    }
+    public <T extends Entity> T createObjectPrivateAccess() {
+        return createObject(false, false);
     }
 
-    private <T extends Entity> T createObject(boolean exclusiveAccess) {
-        return ObjectPoolService.create(this, exclusiveAccess);
+    private <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
+        return ObjectPoolService.create(this, exclusiveAccess, true);
     }
 
     public <T extends Entity> T createObjectExclusiveAccess() {
-        return createObject(true);
+        return createObject(true, true);
     }
 
 }

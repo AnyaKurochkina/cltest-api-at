@@ -3,26 +3,24 @@ package tests;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import io.qameta.allure.Allure;
-import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.model.Attachment;
-import io.qameta.allure.model.Status;
 import lombok.SneakyThrows;
-import models.orderService.products.WildFly;
 import org.junit.CustomDisplayNameGenerator;
+import org.junit.EnvironmentCondition;
 import org.junit.TmsLinkExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.annotations.Title;
 import ru.testit.junit5.JUnit5EventListener;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static io.qameta.allure.Allure.getLifecycle;
 
 @ExtendWith(TmsLinkExtension.class)
+@ExtendWith(EnvironmentCondition.class)
 @ExtendWith(JUnit5EventListener.class)
 @DisplayNameGeneration(CustomDisplayNameGenerator.class)
 public class Tests {

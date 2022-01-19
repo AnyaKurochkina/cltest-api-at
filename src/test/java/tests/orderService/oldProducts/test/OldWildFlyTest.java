@@ -7,14 +7,14 @@ import models.orderService.products.WildFly;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты TEST")
 @Feature("WildFly OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_wildfly"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldWildFlyTest extends Tests {
 
-    WildFly wildFly = WildFly.builder()
+    final WildFly wildFly = WildFly.builder()
             .projectId("proj-juh8ynkvtn")
             .productId("972a66f1-cd45-437f-b920-676bad68e594")
             .orderId("05e157b1-b9ae-4b23-9e16-74d5e6071db4")

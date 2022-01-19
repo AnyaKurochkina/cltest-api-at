@@ -5,6 +5,7 @@ import core.helper.Http;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.OrgDirection.createOrgDirection.response.CreateOrgDirectionResponse;
 import httpModels.productCatalog.OrgDirection.createOrgDirection.response.ExtraData;
+import httpModels.productCatalog.OrgDirection.existsOrgDirection.response.ExistsOrgDirectionResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.OrgDirectionSteps;
+import steps.productCatalog.ProductCatalogSteps;
 
 import static core.helper.JsonHelper.convertResponseOnClass;
 
@@ -26,6 +27,10 @@ public class OrgDirection extends Entity {
     private String description;
     private String orgDirectionId;
     private String jsonTemplate;
+    @Builder.Default
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+
+    private final String productName = "org_direction/";
 
     @Override
     public Entity init() {
@@ -51,13 +56,16 @@ public class OrgDirection extends Entity {
                 .toString();
         CreateOrgDirectionResponse createOrgDirectionResponse = convertResponseOnClass(response, CreateOrgDirectionResponse.class);
         orgDirectionId = createOrgDirectionResponse.getId();
-        Assertions.assertNotNull(orgDirectionId, "Экшен с именем: " + orgDirectionName + ", не создался");
+        Assertions.assertNotNull(orgDirectionId, "Направление с именем: " + orgDirectionName + ", не создался");
     }
 
     @Override
     @Step("Удаление направления")
     protected void delete() {
-        OrgDirectionSteps steps = new OrgDirectionSteps();
-        steps.deleteOrgDirectoryById(orgDirectionId);
+        new Http(Configure.ProductCatalogURL)
+                .delete(productName + orgDirectionId + "/")
+                .assertStatus(204);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+        Assertions.assertFalse(productCatalogSteps.isExists(productName, orgDirectionName, ExistsOrgDirectionResponse.class));
     }
 }

@@ -1,18 +1,19 @@
 package httpModels.productCatalog.Template.getTemplate.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.GetImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetTemplateResponse{
+
+public class GetTemplateResponse implements GetImpl {
 
 	@JsonProperty("additional_input")
 	private Boolean additionalInput;
@@ -100,4 +101,32 @@ public class GetTemplateResponse{
 
 	@JsonProperty("additional_output")
 	private Boolean additionalOutput;
+
+	@JsonProperty("last_version")
+	private String last_version;
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getVersion() {
+		return version;
+	}
+
+	@Override
+	public String getGraphVersionCalculated() {
+		return null;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public String getId() {
+		return String.valueOf(id);
+	}
 }

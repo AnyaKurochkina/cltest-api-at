@@ -1,17 +1,20 @@
 package httpModels.productCatalog.Graphs.getGraphsList.response;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.ItemImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListItem{
+
+public class ListItem implements ItemImpl {
 
 	@JsonProperty("last_version")
 	private String lastVersion;
@@ -36,4 +39,17 @@ public class ListItem{
 
 	@JsonProperty("title")
 	private String title;
+
+	@JsonProperty("version")
+	private String version;
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getId() {
+		return id;
+	}
 }

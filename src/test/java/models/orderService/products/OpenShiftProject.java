@@ -3,22 +3,17 @@ package models.orderService.products;
 import core.helper.Http;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.authorizer.AccessGroup;
-import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
+import models.portalBack.AccessGroup;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
 import models.subModels.Role;
 import org.json.JSONObject;
 import ru.testit.services.StepAspect;
 import org.junit.jupiter.api.Assertions;
-import steps.orderService.OrderServiceSteps;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,16 +40,10 @@ public class OpenShiftProject extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/openshift_project.json";
         productName = "OpenShift project";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
-            projectId = project.getId();
-        }
-        if(productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
         if(roles == null) {
             AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
-            roles = Collections.singletonList(new Role("edit", accessGroup.getName()));
+            roles = Collections.singletonList(new Role("edit", accessGroup.getPrefixName()));
         }
         return this;
     }
@@ -63,17 +52,8 @@ public class OpenShiftProject extends IProduct {
     @Step("Заказ продукта")
     protected void create() {
         StepAspect.step("Заказ продукта", "desc", () -> {
-            JsonPath array = new Http(OrderServiceURL)
-                    .setProjectId(projectId)
-                    .body(toJson())
-                    .post("projects/" + projectId + "/orders")
-                    .assertStatus(201)
-                    .jsonPath();
-            orderId = array.get("[0].id");
-            orderServiceSteps.checkOrderStatus("success", this);
-            setStatus(ProductStatus.CREATED);
-            compareCostOrderAndPrice();
-        });
+        createProduct();
+    });
     }
 
     @SneakyThrows
@@ -85,11 +65,12 @@ public class OpenShiftProject extends IProduct {
                 filter(r -> r.getLabel().equals(resourcePoolLabel)).findFirst().orElseThrow(NoSuchFieldException::new);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
-                .set("$.order.attrs.roles[0].groups[0]", accessGroup.getName())
+                .set("$.order.attrs.roles[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", projectId)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.net_segment", segment)
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
+                .set("$.order.label", getLabel())
                 .build();
     }
 

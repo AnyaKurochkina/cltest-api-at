@@ -9,14 +9,14 @@ import tests.Tests;
 import java.util.Arrays;
 import java.util.Collections;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты TEST")
 @Feature("ApacheKafkaCluster OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_apachekafkacluster"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldApacheKafkaClusterTest extends Tests {
 
-    ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
+    final ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
             .projectId("proj-juh8ynkvtn")
             .productId("d46dd919-defc-4ec6-a55b-2017b3981258")
             .orderId("df835386-d7ea-4ad7-8d06-05d64d0b2acb")

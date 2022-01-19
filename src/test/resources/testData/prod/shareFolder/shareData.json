@@ -1,5 +1,13 @@
 [
   {
+    "objectClassName": "models.authorizer.Folder",
+    "kind": "department",
+    "informationSystemIds": ["8e33baf8-e181-457b-9d60-e5dc470fe8fa"],
+    "name": "fold-21yhccp939",
+    "title": "Команда QA. Роль Администратор",
+    "parentId": "fold-dkj0exqf9q"
+  },
+  {
     "objectClassName": "models.authorizer.ServiceAccount",
     "secret": "1496e1a70381040818ac021175292766",
     "id": "sa_proj-juh8ynkvtn-7w",
@@ -172,42 +180,42 @@
     "isForOrders": true
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-edzorg-edugroup",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-b7iigm67tk"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-hfzorg-hotfix-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-rr4ncna00e"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-mtzorg-migr-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-sdt56df8rr"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-rrzorg-preprod-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-aiqk5zzot4"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-stzorg-st-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-ovkcqq41d3"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-ifzorg-ift-group",
     "users": [
       "check_admin"
@@ -216,7 +224,7 @@
     "projectName": "proj-7ll0yy5zsc"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-d5zorg-dev-group",
     "users": [
       "check_admin"
@@ -225,7 +233,7 @@
     "projectName": "proj-frybyv41jh"
   },
   {
-    "objectClassName": "models.authorizer.AccessGroup",
+    "objectClassName": "models.portalBack.AccessGroup",
     "name": "cloud-ltzorg-lt-group",
     "users": [],
     "isDeleted": false,

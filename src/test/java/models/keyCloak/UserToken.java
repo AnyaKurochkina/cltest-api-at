@@ -1,5 +1,6 @@
 package models.keyCloak;
 
+import core.enums.Role;
 import lombok.Builder;
 import models.Entity;
 import org.json.JSONObject;
@@ -22,7 +23,7 @@ public class UserToken extends Entity {
 
     @Override
     protected void create() {
-        token = KeyCloakSteps.getNewUserToken();
+        token = KeyCloakSteps.getNewUserToken(Role.ADMIN);
         time = System.currentTimeMillis() / 1000L;
     }
 

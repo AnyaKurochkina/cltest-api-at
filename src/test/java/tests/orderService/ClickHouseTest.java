@@ -34,46 +34,55 @@ public class ClickHouseTest extends Tests {
         }
     }
 
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить БД {0}")
-    void createDb(ClickHouse product) {
-        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("cached_bd");
-        }
-    }
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Добавить БД {0}")
+//    void createDb(ClickHouse product) {
+//        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+//            clickHouse.createDb("cached_bd");
+//        }
+//    }
 
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить пользователя {0}")
-    void createDbmsUser(ClickHouse product) {
-        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("cached_bd");
-            clickHouse.createDbmsUser("chelik1", "user", "cached_bd");
-        }
-    }
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Добавить пользователя {0}")
+//    void createDbmsUser(ClickHouse product) {
+//        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+//            clickHouse.createDb("cached_bd");
+//            clickHouse.createDbmsUser("chelik1", "user", "cached_bd");
+//        }
+//    }
+
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Сбросить пароль {0}")
+//    void resetPassword(ClickHouse product) {
+//        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+//            clickHouse.createDb("cached_bd");
+//            clickHouse.createDbmsUser("chelikforreset1", "user", "cached_bd");
+//            clickHouse.resetPassword("chelikforreset1");
+//        }
+//    }
 
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
-    void resetPassword(ClickHouse product) {
+    void resetPasswordOwner(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("cached_bd");
-            clickHouse.createDbmsUser("chelikforreset1", "user", "cached_bd");
-            clickHouse.resetPassword("chelikforreset1");
+            clickHouse.resetPassword("username_created");
         }
     }
 
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить пользователя {0}")
-    void removeDbmsUser(ClickHouse product) {
-        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("cached_bd");
-            clickHouse.createDbmsUser("chelikforreset2", "user", "cached_bd");
-            clickHouse.removeDbmsUser("chelikforreset2", "cached_bd");
-        }
-    }
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Удалить пользователя {0}")
+//    void removeDbmsUser(ClickHouse product) {
+//        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+//            clickHouse.createDb("cached_bd");
+//            clickHouse.createDbmsUser("chelikforreset2", "user", "cached_bd");
+//            clickHouse.removeDbmsUser("chelikforreset2", "cached_bd");
+//        }
+//    }
 
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -85,15 +94,15 @@ public class ClickHouseTest extends Tests {
         }
     }
 
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить БД {0}")
-    void removeDb(ClickHouse product) {
-        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.createDb("cached_bd");
-            clickHouse.removeDb("cached_bd");
-        }
-    }
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Удалить БД {0}")
+//    void removeDb(ClickHouse product) {
+//        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+//            clickHouse.createDb("cached_bd");
+//            clickHouse.removeDb("cached_bd");
+//        }
+//    }
 
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

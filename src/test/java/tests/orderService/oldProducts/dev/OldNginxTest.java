@@ -2,21 +2,18 @@ package tests.orderService.oldProducts.dev;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Nginx;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("Nginx OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_nginx"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldNginxTest extends Tests {
 
-    Nginx nginx = Nginx.builder()
+    final Nginx nginx = Nginx.builder()
             .projectId("proj-67nljbzjtt")
             .productId("ebe832bd-ed1c-4998-8a58-6c4d16db1d60")
             .orderId("ef57bd15-2f61-4c34-8460-bf77d7312808")

@@ -6,11 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateGraphResponse{
+
+	@JsonProperty("last_version")
+	private String lastVersion;
+
+	@JsonProperty("version_list")
+	private List<String> versionList;
 
 	@JsonProperty("author")
 	private String author;

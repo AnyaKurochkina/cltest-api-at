@@ -2,21 +2,18 @@ package tests.orderService.oldProducts.dev;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.ClickHouse;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("ClickHouse OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_clickhouse"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldClickHouseTest extends Tests {
 
-    ClickHouse clickHouse = ClickHouse.builder()
+    final ClickHouse clickHouse = ClickHouse.builder()
             .projectId("proj-67nljbzjtt")
             .productId("93fbf58f-bf5b-4f2b-a491-3c382c9837fd")
             .orderId("e75ff7b3-5bc9-4c61-a445-b4caba970606")

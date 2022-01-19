@@ -6,14 +6,14 @@ import models.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты TEST")
 @Feature("Windows OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_windows"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldWindowsTest extends Tests {
 
-    Windows windows = Windows.builder()
+    final Windows windows = Windows.builder()
             .projectId("proj-juh8ynkvtn")
             .productId("28bed880-2714-4317-a967-d000d492bd9d")
             .orderId("ced7ea99-79af-4ff4-aaf7-7ef32b722d18")

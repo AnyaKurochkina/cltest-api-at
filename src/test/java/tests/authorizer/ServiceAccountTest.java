@@ -35,6 +35,7 @@ public class ServiceAccountTest extends Tests {
     }
 
     @Test
+    @Disabled("Статический ключ не работает")
     @Order(3)
     @DisplayName("Создание статического ключа досутпа hcp bucket")
     void createStaticKey() {
@@ -45,6 +46,7 @@ public class ServiceAccountTest extends Tests {
 
     @Test
     @Order(4)
+    @Disabled("Статический ключ не работает")
     @DisplayName("Удаление статического ключа досутпа hcp bucket")
     void deleteStaticKey() {
         try (ServiceAccount account = ServiceAccount.builder().title("deleteServiceAccount").build().createObjectExclusiveAccess()) {

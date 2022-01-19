@@ -19,6 +19,7 @@ import steps.orderService.OrderServiceSteps;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static core.helper.Configure.CalculatorURL;
 import static core.helper.Configure.TarifficatorURL;
@@ -41,7 +42,6 @@ public class CostSteps extends Steps {
             }
             log.info("Стоимость продукта : " + consumptionOfOneProduct);
         }
-        consumption = consumption;
         log.debug("Сумма расходов по всем продуктам: " + consumption);
         return consumption;
     }
@@ -94,6 +94,12 @@ public class CostSteps extends Steps {
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
+
+
+        if(Objects.nonNull(product.getOrderId())) {
+            attrs = new JSONObject((Map) orderServiceSteps.getProductsField(product, "attrs", JSONObject.class));
+        }
+
         template.put("params", attrs);
         template.put("project_name", project.id);
         template.put("product_id", productId);
@@ -137,8 +143,9 @@ public class CostSteps extends Steps {
 
     @Step("Получение предварительной стоимости action {action} продукта {product}")
     public Float getCostAction(String action, String itemId, IProduct product, JSONObject data) {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
-                .isForOrders(true).build().createObject();
+//        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
+//                .isForOrders(true).build().createObject();
+        Project project = Project.builder().id(product.getProjectId()).build().createObject();
         log.info("Отправка запроса на получение стоимости экшена: "+ action +", у продукта " + product.getProductName());
         return JsonHelper.getJsonTemplate("/tarifficator/costAction.json")
                 .set("$.params.project_name", project.id)

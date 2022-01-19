@@ -6,14 +6,14 @@ import models.orderService.products.Podman;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-@Epic("Старые продукты")
+@Epic("Старые продукты DEV")
 @Feature("Podman OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_podman"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPodmanTest extends Tests {
 
-    Podman podman = Podman.builder()
+    final Podman podman = Podman.builder()
             .projectId("proj-67nljbzjtt")
             .productId("91025447-e6d3-4b91-be18-a84d62402825")
             .orderId("faaa9d8d-d3e8-4778-b14d-24be995ec878")

@@ -1,6 +1,7 @@
 package httpModels.productCatalog.Graphs.getGraph.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.GetImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetGraphResponse{
+public class GetGraphResponse implements GetImpl {
 
 	@JsonProperty("version_list")
 	private List<String> versionList;
@@ -67,4 +68,9 @@ public class GetGraphResponse{
 
 	@JsonProperty("modifications")
 	private List<Object> modifications;
+
+	@Override
+	public String getGraphVersionCalculated() {
+		return null;
+	}
 }

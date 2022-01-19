@@ -4,6 +4,8 @@ import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.authorizer.Folder;
+import org.junit.DisabledIfEnv;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -11,13 +13,14 @@ import tests.Tests;
 
 @Epic("Организационная структура")
 @Feature("Папки")
-@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke")})
+@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke"), @Tag("prod")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class FoldersTest extends Tests {
 
     @Test
     @Order(1)
+    @DisabledIfEnv("prod")
     @DisplayName("Создание Бизнес-блока")
     void createBusinessBlock() {
         Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject();
@@ -25,6 +28,7 @@ public class FoldersTest extends Tests {
 
     @Test
     @Order(2)
+    @DisabledIfEnv("prod")
     @DisplayName("Создание Департамента")
     void createDepartmentBlock() {
         Folder.builder().kind(Folder.DEPARTMENT).build().createObject();
@@ -47,6 +51,7 @@ public class FoldersTest extends Tests {
 
     @Test
     @Order(5)
+    @DisabledIfEnv("prod")
     @DisplayName("Удаление Департамента")
     @MarkDelete
     public void deleteDepartmentBlock() {
@@ -55,6 +60,7 @@ public class FoldersTest extends Tests {
 
     @Test
     @Order(6)
+    @DisabledIfEnv("prod")
     @DisplayName("Удаление Бизнес-блока")
     @MarkDelete
     public void deleteBusinessBlock() {
