@@ -225,7 +225,8 @@
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-d5zorg-dev-group",
+    "name": "group",
+    "prefixName": "cloud-d5zorg-dev-group",
     "users": [
       "check_admin"
     ],
