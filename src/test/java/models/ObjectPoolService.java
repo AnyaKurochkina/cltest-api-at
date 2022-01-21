@@ -271,7 +271,8 @@ public class ObjectPoolService {
         allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
         allureLifecycle.updateStep(id, s -> s.setParameters(list));
         StepAspect.step("Получена сущность {} с параметрами", entity.getClass().getSimpleName(), () -> {
-            InnerResult.parametersMap.set(parametersMap);
+//            InnerResult.parametersMap.set(parametersMap);
+            StepAspect.getCurrentStep().get().setParameters(parametersMap);
         });
         InnerResult.parametersMap.set(null);
     }

@@ -1,5 +1,7 @@
 package ru.testit.utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.testit.services.*;
 import java.util.*;
 
@@ -14,6 +16,8 @@ public class StepNode
     private Throwable failureReason;
     private List<LinkItem> linkItems;
     private List<StepNode> childrens;
+    @Setter @Getter
+    private Map<String, String> parameters;
     
     public StepNode() {
         this.linkItems = new LinkedList<LinkItem>();

@@ -28,8 +28,6 @@ public class InnerResult
     @Setter
     @JsonProperty("parameters")
     private Map<String, String> parameters;
-
-    public static ThreadLocal<Map<String, String>> parametersMap = new ThreadLocal<>();
     
     public InnerResult() {
         this.stepResults = new LinkedList<InnerResult>();

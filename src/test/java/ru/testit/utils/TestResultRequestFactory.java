@@ -82,8 +82,8 @@ public class TestResultRequestFactory {
         innerResult.setDescription(stepNode.getDescription());
         final Date startedOn = stepNode.getStartedOn();
         final Date completedOn = stepNode.getCompletedOn();
-        if(Objects.nonNull(InnerResult.parametersMap.get()))
-            innerResult.setParameters(InnerResult.parametersMap.get());
+        if(Objects.nonNull(stepNode.getParameters()))
+            innerResult.setParameters(stepNode.getParameters());
         innerResult.setStartedOn(startedOn);
         innerResult.setCompletedOn(completedOn);
         innerResult.setDuration((int) (completedOn.getTime() - startedOn.getTime()));

@@ -1,6 +1,7 @@
 package ru.testit.services;
 
 import core.helper.StringUtils;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.function.Executable;
 import ru.testit.annotations.*;
@@ -13,6 +14,7 @@ import ru.testit.utils.*;
 //@Aspect
 public class StepAspect
 {
+    @Getter
     private static final InheritableThreadLocal<StepNode> currentStep;
     private static final InheritableThreadLocal<StepNode> previousStep;
 
