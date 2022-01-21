@@ -94,8 +94,8 @@ public class Rhel extends IProduct {
         start("start_vm");
     }
 
-    public void resize() {
-        resize("resize_vm");
+    public void resize(Flavor flavor) {
+        resize("resize_vm", flavor);
     }
     public void expandMountPoint(){
         expandMountPoint("expand_mount_point", "/app", 10);

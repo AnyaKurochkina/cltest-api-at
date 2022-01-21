@@ -25,20 +25,19 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Расширить WildFly OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (!wildFly.productIsOn()) {
             wildFly.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            wildFly.expandMountPoint();
         }
+        wildFly.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Перезагрузить WildFly OLD")
     @Test
     void restart() {
-        wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
+        if (!wildFly.productIsOn()) {
+            wildFly.start();
+        }
         wildFly.restart();
     }
 
@@ -46,27 +45,30 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Выключить WildFly OLD")
     @Test
     void stopSoft() {
+        if (!wildFly.productIsOn()) {
+            wildFly.start();
+        }
         wildFly.stopSoft();
-        wildFly.start();
     }
 
     @Order(4)
     @DisplayName("Изменить конфигурацию WildFly OLD")
     @Test
     void resize() {
-        wildFly.stopHard();
-        try {
-            wildFly.resize();
-        } finally {
-            wildFly.start();
+        if (wildFly.productIsOn()) {
+            wildFly.stopHard();
         }
+        wildFly.resize(wildFly.getMaxFlavor());
+        wildFly.resize(wildFly.getMinFlavor());
     }
 
     @Order(5)
     @DisplayName("Включить WildFly OLD")
     @Test
     void start() {
-        wildFly.stopHard();
+        if (wildFly.productIsOn()) {
+            wildFly.stopHard();
+        }
         wildFly.start();
     }
 
@@ -74,6 +76,9 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Обновить сертификаты WildFly OLD")
     @Test
     void updateCerts() {
+        if (!wildFly.productIsOn()) {
+            wildFly.start();
+        }
         wildFly.updateCerts();
     }
 
@@ -81,6 +86,9 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Выключить принудительно WildFly OLD")
     @Test
     void stopHard() {
+        if (!wildFly.productIsOn()) {
+            wildFly.start();
+        }
         wildFly.stopHard();
     }
 }

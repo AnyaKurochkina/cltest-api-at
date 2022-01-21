@@ -24,11 +24,10 @@ public class OldUbuntuTest extends Tests {
     @DisplayName("Расширить Ubuntu OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (ubuntu.productIsOn()) {
+            ubuntu.expandMountPoint();
+        } else {
             ubuntu.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
             ubuntu.expandMountPoint();
         }
     }
@@ -37,26 +36,37 @@ public class OldUbuntuTest extends Tests {
     @DisplayName("Перезагрузить Ubuntu OLD")
     @Test
     void restart() {
-        ubuntu.restart();
+        if (ubuntu.productIsOn()) {
+            ubuntu.restart();
+        } else {
+            ubuntu.start();
+            ubuntu.restart();
+        }
     }
 
     @Order(3)
     @DisplayName("Выключить ")
     @Test
     void stopSoft() {
-        ubuntu.stopSoft();
-        ubuntu.start();
+        if (ubuntu.productIsOn()) {
+            ubuntu.stopSoft();
+            ubuntu.start();
+        } else {
+            ubuntu.start();
+        }
     }
 
     @Order(4)
     @DisplayName("Изменить конфигурацию Ubuntu OLD")
     @Test
     void resize() {
-        ubuntu.stopHard();
-        try {
-            ubuntu.resize();
-        } finally {
-            ubuntu.start();
+        if (ubuntu.productIsOn()) {
+            ubuntu.stopHard();
+            ubuntu.resize(ubuntu.getMaxFlavor());
+            ubuntu.resize(ubuntu.getMinFlavor());
+        } else {
+            ubuntu.resize(ubuntu.getMaxFlavor());
+            ubuntu.resize(ubuntu.getMinFlavor());
         }
     }
 
@@ -64,14 +74,23 @@ public class OldUbuntuTest extends Tests {
     @DisplayName("Включить Ubuntu OLD")
     @Test
     void start() {
-        ubuntu.stopHard();
-        ubuntu.start();
+        if (ubuntu.productIsOn()) {
+            ubuntu.stopHard();
+            ubuntu.start();
+        } else {
+            ubuntu.start();
+        }
     }
 
     @Order(6)
     @DisplayName("Выключить принудительно Ubuntu OLD")
     @Test
     void stopHard() {
-        ubuntu.stopHard();
+        if (ubuntu.productIsOn()) {
+            ubuntu.stopHard();
+        } else {
+            ubuntu.start();
+            ubuntu.stopHard();
+        }
     }
 }

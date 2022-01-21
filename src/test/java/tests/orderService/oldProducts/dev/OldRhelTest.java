@@ -24,11 +24,10 @@ public class OldRhelTest extends Tests {
     @DisplayName("Перезагрузить Rhel OLD")
     @Test
     void restart() {
-        try {
+        if (rhel.productIsOn()) {
+            rhel.restart();
+        } else {
             rhel.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
             rhel.restart();
         }
     }
@@ -37,19 +36,25 @@ public class OldRhelTest extends Tests {
     @DisplayName("Выключить Rhel OLD")
     @Test
     void stopSoft() {
-        rhel.stopSoft();
-        rhel.start();
+        if (rhel.productIsOn()) {
+            rhel.stopSoft();
+        } else {
+            rhel.start();
+            rhel.stopSoft();
+        }
     }
 
     @Order(4)
     @DisplayName("Изменить конфигурацию Rhel OLD")
     @Test
     void resize() {
-        rhel.stopHard();
-        try {
-            rhel.resize();
-        } finally {
-            rhel.start();
+        if (rhel.productIsOn()) {
+            rhel.stopHard();
+            rhel.resize(rhel.getMaxFlavor());
+            rhel.resize(rhel.getMinFlavor());
+        } else {
+            rhel.resize(rhel.getMaxFlavor());
+            rhel.resize(rhel.getMinFlavor());
         }
     }
 
@@ -57,14 +62,23 @@ public class OldRhelTest extends Tests {
     @DisplayName("Включить Rhel OLD")
     @Test
     void start() {
-        rhel.stopHard();
-        rhel.start();
+        if (rhel.productIsOn()) {
+            rhel.stopHard();
+            rhel.start();
+        } else {
+            rhel.start();
+        }
     }
 
     @Order(6)
     @DisplayName("Выключить принудительно Rhel OLD")
     @Test
     void stopHard() {
-        rhel.stopHard();
+        if (rhel.productIsOn()) {
+            rhel.stopHard();
+        } else {
+            rhel.start();
+            rhel.stopHard();
+        }
     }
 }
