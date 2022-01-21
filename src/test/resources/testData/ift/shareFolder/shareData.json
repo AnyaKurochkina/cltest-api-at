@@ -49,7 +49,7 @@
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-d2plux-xazppulba",
+    "prefixName": "cloud-d2plux-xazppulba",
     "user": "",
     "isDeleted": false,
     "projectName": "proj-xazpppulba",
