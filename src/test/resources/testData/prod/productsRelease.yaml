@@ -43,3 +43,7 @@ Redis:
 ApacheKafkaCluster:
   - options:
       - { platform: "Nutanix", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+
+ScyllaDb:
+  - options:
+      - { platform: "Nutanix", env: "EDU", version: "4.4.8", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }

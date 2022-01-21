@@ -15,7 +15,7 @@
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-crux-proj-3d1jt57gm3",
+    "prefixName": "cloud-crux-proj-3d1jt57gm3",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-3d1jt57gm3"

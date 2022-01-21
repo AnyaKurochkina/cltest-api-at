@@ -150,29 +150,35 @@ public class ObjectPoolService {
     public static void removeProducts(Set<Class<?>> currentClassListArgument) {
         for (String key : createdEntities) {
             ObjectPoolEntity objectPoolEntity = entities.get(key);
-            if(objectPoolEntity == null){
-                log.error("Key " + key + " is null");
-            }
-            if(objectPoolEntity.getStatus() == null){
-                log.error("Key getStatus() " + key + " is null");
-            }
-            if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
-                continue;
-            if(currentClassListArgument.contains(objectPoolEntity.getClazz()))
-                continue;
-            Entity entity = objectPoolEntity.get();
-            if (entity instanceof IProduct) {
-                objectPoolEntity.setStatus(ObjectStatus.NOT_CREATED);
-                try {
-                    log.debug("##### removeProduct {} #####", entity);
-                    entity.deleteObject();
-                } catch (Throwable e) {
-                    objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
-                    objectPoolEntity.setError(e);
-                    e.printStackTrace();
+            synchronized (ObjectPoolService.class) {
+                if (objectPoolEntity == null) {
+                    log.error("Key " + key + " is null");
                 }
-                return;
+                if (objectPoolEntity.getStatus() == null) {
+                    log.error("Key getStatus() " + key + " is null");
+                }
+                if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
+                    continue;
+                if (currentClassListArgument.contains(objectPoolEntity.getClazz()))
+                    continue;
+                Entity entity = objectPoolEntity.get();
+                if (!(entity instanceof IProduct))
+                    continue;
+                objectPoolEntity.setStatus(ObjectStatus.NOT_CREATED);
             }
+            removeProduct(objectPoolEntity);
+        }
+    }
+
+    public static void removeProduct(ObjectPoolEntity objectPoolEntity) {
+        Entity entity = objectPoolEntity.get();
+        try {
+            log.debug("##### removeProduct {} #####", entity);
+            entity.deleteObject();
+        } catch (Throwable e) {
+            objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
+            objectPoolEntity.setError(e);
+            e.printStackTrace();
         }
     }
 

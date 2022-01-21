@@ -82,7 +82,7 @@ public class PostgresSQLCluster extends IProduct {
 
     //Расширить
     public void expandMountPoint() {
-        expandMountPoint("expand_mount_point", "/pg_data", 10);
+        expandMountPoint("expand_mount_point", "/app/etcd", 10);
     }
 
     public void createDb(String dbName) {
@@ -110,7 +110,7 @@ public class PostgresSQLCluster extends IProduct {
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 "Имя пользователя отличается от создаваемого");
-        users.add(new DbUser(dbName, username, false));
+        users.add(new DbUser(dbName, username));
         log.info("users = " + users);
         save();
     }
