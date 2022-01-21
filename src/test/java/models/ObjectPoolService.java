@@ -32,6 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static io.qameta.allure.Allure.getLifecycle;
+import static tests.Tests.putAttachLog;
 
 @Log4j2
 public class ObjectPoolService {
@@ -275,7 +276,10 @@ public class ObjectPoolService {
         }
         allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
         allureLifecycle.updateStep(id, s -> s.setParameters(list));
-        StepAspect.step("Получена сущность {} с параметрами", entity.getClass().getSimpleName(), () -> StepAspect.getCurrentStep().get().setParameters(parametersMap));
+        StepAspect.step("Получена сущность {} с параметрами", entity.getClass().getSimpleName(), () -> {
+            StepAspect.getCurrentStep().get().setParameters(parametersMap);
+            putAttachLog("sbLog.toString()");
+        });
         StepAspect.getCurrentStep().get().setParameters(null);
     }
 }

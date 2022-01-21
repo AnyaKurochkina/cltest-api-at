@@ -45,7 +45,11 @@ public class CreateTestItemRequestFactory {
     public void processFinishLaunchUniqueTest(final HashMap<MethodType, StepNode> utilsMethodSteps, final HashMap<UniqueTest, StepNode> includedTests, UniqueTest test) {
         final CreateTestItemRequest createTestItemRequest = this.createTestItemRequests.get(test);
         final StepNode testParentStepNode = includedTests.get(test);
-        createTestItemRequest.setOutcome(Outcome.getByValue(testParentStepNode.getOutcome()));
+        try {
+            createTestItemRequest.setOutcome(Outcome.getByValue(testParentStepNode.getOutcome()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.processTestSteps(createTestItemRequest, testParentStepNode);
         this.processUtilsSteps(createTestItemRequest, utilsMethodSteps);
     }

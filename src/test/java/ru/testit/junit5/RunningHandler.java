@@ -4,6 +4,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import core.helper.StringUtils;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -12,6 +13,7 @@ import ru.testit.services.*;
 import ru.testit.utils.*;
 import ru.testit.annotations.*;
 
+@Log4j2
 public class RunningHandler
 {
     private TestITClient testITClient;
@@ -55,7 +57,7 @@ public class RunningHandler
         parentStep.setTitle(displayName);
         parentStep.setDescription(this.extractDescription(currentTest));
         parentStep.setStartedOn(new Date());
-
+        log.info("startTest " + new UniqueTest(extractExternalID(currentTest, null), configurationId));
         //TODO: UUID
         this.includedTests.put(new UniqueTest(extractExternalID(currentTest, null), configurationId), parentStep);
         StepAspect.setStepNodes(parentStep);

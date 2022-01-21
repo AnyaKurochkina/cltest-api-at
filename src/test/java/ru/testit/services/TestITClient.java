@@ -477,12 +477,11 @@ public class TestITClient
     }
 
     public static String sendAttachment(Attachment attachment, String testResultId) {
-        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/testResults");
+        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testResults/" + testResultId + "/attachments");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         try {
             HttpEntity entity = MultipartEntityBuilder.create()
-                    .addTextBody("testResultId", testResultId)
-                    .addBinaryBody("file", attachment.getBytes(), ContentType.create("application/octet-stream"), attachment.getFileName())
+                    .addBinaryBody("file", attachment.getBytes(), ContentType.create("multipart/form-data"), attachment.getFileName())
                     .build();
             post.setEntity(entity);
             final CloseableHttpClient httpClient = getHttpClient();
@@ -492,7 +491,7 @@ public class TestITClient
                 /////////////////
                 String res = response.toString();
                 if(response.getEntity() != null)
-                    res += EntityUtils.toString(response.getEntity());
+                    res += httpResponse;
                 TestITClient.log.info(res);
                 ////////////////
 

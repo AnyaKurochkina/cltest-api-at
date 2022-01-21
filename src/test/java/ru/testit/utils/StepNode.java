@@ -20,7 +20,7 @@ public class StepNode
     @Setter @Getter
     private Map<String, String> parameters;
     @Getter
-    private List<Attachment> attachments;
+    private final List<Attachment> attachments = new ArrayList<>();
     private final StringJoiner stepLog = new StringJoiner("\n");
     
     public StepNode() {
