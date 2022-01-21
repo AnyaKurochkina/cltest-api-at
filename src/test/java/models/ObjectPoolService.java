@@ -274,6 +274,6 @@ public class ObjectPoolService {
 //            InnerResult.parametersMap.set(parametersMap);
             StepAspect.getCurrentStep().get().setParameters(parametersMap);
         });
-        InnerResult.parametersMap.set(null);
+        StepAspect.getCurrentStep().get().setParameters(null);
     }
 }
