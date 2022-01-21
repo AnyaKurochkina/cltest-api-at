@@ -31,10 +31,11 @@ public class RunningHandler
     }
     
     public void startLaunch() {
-        String testRunId = System.getProperty("testrun");
+        String testRunId = System.getProperty("testRunId");
         if(Objects.nonNull(testRunId)){
             TestITClient.startLaunchResponse = new StartLaunchResponse();
             TestITClient.startLaunchResponse.setId(testRunId);
+            TestITClient.sendStartTestRun();
             return;
         }
         this.testITClient.startLaunch();

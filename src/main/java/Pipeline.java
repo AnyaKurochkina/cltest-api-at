@@ -44,7 +44,7 @@ public class Pipeline {
                 externalIds.add(externalId);
                 writer.println(externalId + "=" + result.query("/configuration/id"));
             }
-            String command = "-Dmaven.test.skip=false -Dsecret=123456 -Denv=PROD -Dtestrun=" + argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
+            String command = "-Dmaven.test.skip=false -Dsecret=123456 -Denv=PROD -DtestRunId=" + argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
             System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");
 //            System.out.println("##teamcity[setParameter name='env.MAVEN_OPTS' value='" + command + "']");
 //            try (PrintWriter writerCommand = new PrintWriter(new BufferedWriter(new FileWriter("run.sh", false)))) {

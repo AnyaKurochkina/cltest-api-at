@@ -528,7 +528,62 @@ public class TestITClient
             TestITClient.log.error("Exception while sending test result", (Throwable)e);
         }
     }
-    
+
+
+    public static void sendStartTestRun() {
+        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/start");
+        post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
+        try {
+            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)""), ContentType.APPLICATION_JSON);
+            post.setEntity((HttpEntity)requestEntity);
+            final CloseableHttpClient httpClient = getHttpClient();
+            try {
+                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
+
+                /////////////////
+                String res = response.toString();
+                if(response.getEntity() != null)
+                    res += EntityUtils.toString(response.getEntity());
+                TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
+                        " :: " + requestEntity + " :: " + res);
+                ////////////////
+
+                final Throwable t2 = null;
+                if (response != null) {
+                    if (t2 != null) {
+                        try {
+                            response.close();
+                        }
+                        catch (Throwable t3) {
+                            t2.addSuppressed(t3);
+                        }
+                    }
+                    else {
+                        response.close();
+                    }
+                }
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+            }
+            catch (Throwable t4) {
+                if (httpClient != null) {
+                    try {
+                        httpClient.close();
+                    }
+                    catch (Throwable t5) {
+                        t4.addSuppressed(t5);
+                    }
+                }
+                throw t4;
+            }
+        }
+        catch (IOException e) {
+            TestITClient.log.error("Exception while sending complete test run", (Throwable)e);
+        }
+    }
+
+
     public void sendCompleteTestRun() {
         final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/complete");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
