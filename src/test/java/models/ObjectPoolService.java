@@ -273,5 +273,6 @@ public class ObjectPoolService {
         StepAspect.step("Получена сущность {} с параметрами", entity.getClass().getSimpleName(), () -> {
             InnerResult.parametersMap.set(parametersMap);
         });
+        InnerResult.parametersMap.set(null);
     }
 }
