@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.annotations.Title;
 import ru.testit.junit5.JUnit5EventListener;
+import ru.testit.services.StepAspect;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -46,6 +47,8 @@ public class Tests {
                 formatter.format(new Date(System.currentTimeMillis())) + text);
         Attachment attachment = new Attachment().setSource(source).setName("log-step.log");
         getLifecycle().updateStep(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
+
+        StepAspect.getCurrentStep().get().writeStepLog(text);
     }
 
     //    @AfterEach

@@ -14,6 +14,7 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -474,8 +475,66 @@ public class TestITClient
 //        this.sendTestResult(request);
         this.sendCompleteTestRun();
     }
-    
-    public static void sendTestResult(final TestResultsRequest request) {
+
+    public static String sendAttachment(Attachment attachment, String testResultId) {
+        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/testResults");
+        post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
+        try {
+
+            HttpEntity entity = MultipartEntityBuilder.create()
+                    .addTextBody("testResultId", testResultId)
+                    .addBinaryBody("file", attachment.getBytes(), ContentType.create("application/octet-stream"), attachment.getFileName())
+                    .build();
+            post.setEntity(entity);
+            final CloseableHttpClient httpClient = getHttpClient();
+            try {
+                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
+
+                /////////////////
+                String res = response.toString();
+                if(response.getEntity() != null)
+                    res += EntityUtils.toString(response.getEntity());
+                TestITClient.log.info(res);
+                ////////////////
+
+                final Throwable t2 = null;
+                if (response != null) {
+                    if (t2 != null) {
+                        try {
+                            response.close();
+                        }
+                        catch (Throwable t3) {
+                            t2.addSuppressed(t3);
+                        }
+                    }
+                    else {
+                        response.close();
+                    }
+                }
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+                return EntityUtils.toString(response.getEntity());
+            }
+            catch (Throwable t4) {
+                if (httpClient != null) {
+                    try {
+                        httpClient.close();
+                    }
+                    catch (Throwable t5) {
+                        t4.addSuppressed(t5);
+                    }
+                }
+                throw t4;
+            }
+        }
+        catch (IOException e) {
+            TestITClient.log.error("Exception while sending test result", (Throwable)e);
+        }
+        return null;
+    }
+
+    public static String sendTestResult(final TestResultsRequest request) {
         final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/testResults");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         try {
@@ -511,6 +570,7 @@ public class TestITClient
                 if (httpClient != null) {
                     httpClient.close();
                 }
+                return core.helper.StringUtils.findByRegex("([\\w-]+)", EntityUtils.toString(response.getEntity()));
             }
             catch (Throwable t4) {
                 if (httpClient != null) {
@@ -527,6 +587,7 @@ public class TestITClient
         catch (IOException e) {
             TestITClient.log.error("Exception while sending test result", (Throwable)e);
         }
+        return null;
     }
 
 

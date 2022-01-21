@@ -5,6 +5,7 @@ import org.apache.commons.lang3.exception.*;
 import ru.testit.model.request.*;
 import ru.testit.services.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class TestResultRequestFactory {
@@ -32,6 +33,23 @@ public class TestResultRequestFactory {
         this.processTestSteps(currentTest, includedTests.get(test));
         this.processUtilsMethodsSteps(currentTest, utilsMethodSteps);
         req.getTestResults().add(currentTest);
+        String testResultId = TestITClient.sendTestResult(req);
+        for(StepNode step : includedTests.values()) {
+            Attachment log = new Attachment();
+            log.setFileName("log-step.log");
+            log.setBytes(step.getStepLog().getBytes(StandardCharsets.UTF_8));
+            step.getAttachments().add(log);
+            for(Attachment attachment : step.getAttachments()) {
+                attachment.setId(TestITClient.sendAttachment(attachment, testResultId));
+            }
+        }
+        req = new TestResultsRequest();
+        final TestResultRequest currentTest2 = new TestResultRequest();
+        currentTest2.setAutoTestExternalId(externalId);
+        currentTest2.setConfigurationId(test.getConfigurationId());
+        this.processTestSteps(currentTest2, includedTests.get(test));
+        this.processUtilsMethodsSteps(currentTest2, utilsMethodSteps);
+        req.getTestResults().add(currentTest2);
         TestITClient.sendTestResult(req);
     }
 
@@ -75,7 +93,18 @@ public class TestResultRequestFactory {
         this.processStep(testResult, parentStep.getChildrens(), innerResult.getStepResults());
         testResult.getTeardownResults().add(innerResult);
     }
-
+    private InnerResult makeInnerResult(final StepNode stepNode, String testResultId) {
+        final InnerResult innerResult = makeInnerResult(stepNode);
+        List<Map<String, String>> attachmentList = new ArrayList<>();
+        for(Attachment attachment : stepNode.getAttachments()) {
+            attachment.setId(TestITClient.sendAttachment(attachment, testResultId));
+            Map<String, String> attachmentsMap = new HashMap<>();
+            attachmentsMap.put("id", attachment.getId());
+            attachmentList.add(attachmentsMap);
+        }
+        innerResult.setAttachments(attachmentList);
+        return innerResult;
+    }
     private InnerResult makeInnerResult(final StepNode stepNode) {
         final InnerResult innerResult = new InnerResult();
         innerResult.setTitle(stepNode.getTitle());

@@ -2,6 +2,7 @@ package ru.testit.utils;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.testit.model.request.Attachment;
 import ru.testit.services.*;
 import java.util.*;
 
@@ -18,10 +19,21 @@ public class StepNode
     private List<StepNode> childrens;
     @Setter @Getter
     private Map<String, String> parameters;
+    @Getter
+    private List<Attachment> attachments;
+    private final StringJoiner stepLog = new StringJoiner("\n");
     
     public StepNode() {
         this.linkItems = new LinkedList<LinkItem>();
         this.childrens = new LinkedList<StepNode>();
+    }
+
+    public void writeStepLog(String text){
+        stepLog.add(text);
+    }
+
+    public String getStepLog(){
+        return stepLog.toString();
     }
     
     public StepNode getParent() {
