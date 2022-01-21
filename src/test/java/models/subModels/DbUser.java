@@ -8,5 +8,4 @@ import lombok.Data;
 public class DbUser {
     String nameDB;
     String username;
-    public boolean isDeleted = false;
 }

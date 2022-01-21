@@ -181,42 +181,42 @@
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-edzorg-edugroup",
+    "prefixName": "cloud-edzorg-edugroup",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-b7iigm67tk"
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-hfzorg-hotfix-group",
+    "prefixName": "cloud-hfzorg-hotfix-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-rr4ncna00e"
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-mtzorg-migr-group",
+    "prefixName": "cloud-mtzorg-migr-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-sdt56df8rr"
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-rrzorg-preprod-group",
+    "prefixName": "cloud-rrzorg-preprod-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-aiqk5zzot4"
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-stzorg-st-group",
+    "prefixName": "cloud-stzorg-st-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-ovkcqq41d3"
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-ifzorg-ift-group",
+    "prefixName": "cloud-ifzorg-ift-group",
     "users": [
       "check_admin"
     ],
@@ -225,7 +225,6 @@
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "group",
     "prefixName": "cloud-d5zorg-dev-group",
     "users": [
       "check_admin"
@@ -235,7 +234,7 @@
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "name": "cloud-ltzorg-lt-group",
+    "prefixName": "cloud-ltzorg-lt-group",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-j5uzlpvbjz"
@@ -244,31 +243,5 @@
     "objectClassName": "models.authorizer.InformationSystem",
     "id": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
     "isForOrders": true
-  },
-  {
-    "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
-    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-    "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
-    "id": "proj-67nljbzjtt",
-    "projectName": "OLD_PROJECT",
-    "projectEnvironment": {
-      "env": "DEV",
-      "id": "ce11798a-e5f6-4e54-9582-78770f15b52a",
-      "envType": "DEV"
-    }
-  },
-  {
-    "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
-    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-    "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d4",
-    "id": "proj-juh8ynkvtn",
-    "projectName": "OLD_PROJECT_TEST",
-    "projectEnvironment": {
-      "env": "PREPROD",
-      "id": "df4d904e-f0b1-4c74-877e-fec4576666f3",
-      "envType": "TEST"
-    }
   }
 ]
