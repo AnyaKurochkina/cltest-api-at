@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import ru.testit.model.request.InnerResult;
+import ru.testit.services.StepAspect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -269,6 +270,8 @@ public class ObjectPoolService {
         }
         allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
         allureLifecycle.updateStep(id, s -> s.setParameters(list));
-        InnerResult.parametersMap.set(parametersMap);
+        StepAspect.step("Получена сущность {} с параметрами", entity.getClass().getSimpleName(), () -> {
+            InnerResult.parametersMap.set(parametersMap);
+        });
     }
 }

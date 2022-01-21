@@ -51,7 +51,7 @@ public class OpenShiftProject extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        StepAspect.step("Заказ продукта", "desc", () -> {
+        StepAspect.step("Заказ продукта {}", this.toString(), () -> {
         createProduct();
     });
     }
