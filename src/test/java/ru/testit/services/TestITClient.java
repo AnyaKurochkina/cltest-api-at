@@ -480,7 +480,6 @@ public class TestITClient
         final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/testResults");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         try {
-
             HttpEntity entity = MultipartEntityBuilder.create()
                     .addTextBody("testResultId", testResultId)
                     .addBinaryBody("file", attachment.getBytes(), ContentType.create("application/octet-stream"), attachment.getFileName())
@@ -489,7 +488,7 @@ public class TestITClient
             final CloseableHttpClient httpClient = getHttpClient();
             try {
                 final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
-
+                String httpResponse = EntityUtils.toString(response.getEntity());
                 /////////////////
                 String res = response.toString();
                 if(response.getEntity() != null)
@@ -514,7 +513,7 @@ public class TestITClient
                 if (httpClient != null) {
                     httpClient.close();
                 }
-                return EntityUtils.toString(response.getEntity());
+                return httpResponse;
             }
             catch (Throwable t4) {
                 if (httpClient != null) {
@@ -544,7 +543,7 @@ public class TestITClient
             final CloseableHttpClient httpClient = getHttpClient();
             try {
                 final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
-
+                String httpResponse = EntityUtils.toString(response.getEntity());
                 /////////////////
                 String res = response.toString();
                 if(response.getEntity() != null)
@@ -570,7 +569,7 @@ public class TestITClient
                 if (httpClient != null) {
                     httpClient.close();
                 }
-                return core.helper.StringUtils.findByRegex("([\\w-]+)", EntityUtils.toString(response.getEntity()));
+                return core.helper.StringUtils.findByRegex("([\\w-]+)", httpResponse);
             }
             catch (Throwable t4) {
                 if (httpClient != null) {
