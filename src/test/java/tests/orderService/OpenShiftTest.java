@@ -33,12 +33,8 @@ public class OpenShiftTest extends Tests {
     }
 
     @Tag("actions")
-//    @Link(type="manual", value = "377741")
     @WorkItemId("376495")
-//    @ExternalId("OpenShiftTest.change")
-//    @Test
     @Title("test")
-//    @DisplayName("Изменение проекта {0}")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменение проекта {0}")
     void change(OpenShiftProject product) {

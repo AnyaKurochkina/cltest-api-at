@@ -94,27 +94,21 @@ public class Http {
         return this;
     }
 
-    private static String format(String str, Object ... args){
-        for (Object arg : args)
-            str = str.replaceFirst("\\{}", Objects.requireNonNull(arg).toString());
-        return str;
-    }
-
     public Response get(String path, Object ... args) {
         this.method = "GET";
-        this.path = format(path, args);
+        this.path = StringUtils.format(path, args);
         return request();
     }
 
     public Response delete(String path, Object ... args) {
         this.method = "DELETE";
-        this.path = format(path, args);
+        this.path = StringUtils.format(path, args);
         return request();
     }
 
     public Response patch(String path, Object ... args) {
         this.method = "PATCH";
-        this.path = format(path, args);
+        this.path = StringUtils.format(path, args);
         return request();
     }
 
@@ -137,7 +131,7 @@ public class Http {
 
     public Response post(String path, Object ... args) {
         this.method = "POST";
-        this.path = format(path, args);
+        this.path = StringUtils.format(path, args);
         return request();
     }
 

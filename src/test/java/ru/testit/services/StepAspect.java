@@ -1,5 +1,6 @@
 package ru.testit.services;
 
+import core.helper.StringUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.function.Executable;
 import ru.testit.annotations.*;
@@ -23,11 +24,29 @@ public class StepAspect
     public void anyMethod() {
     }
 
+
+
+    public static void step(String title, String arg1, Executable executable){
+        step(StringUtils.format(title, arg1), executable);
+    }
+
+    public static void step(String title, String arg1, String arg2, Executable executable){
+        step(StringUtils.format(title, arg1, arg2), executable);
+    }
+
+    public static void step(String title, String arg1, String arg2, String arg3, Executable executable){
+        step(StringUtils.format(title, arg1, arg2, arg3), executable);
+    }
+
+    public static void step(String title, String arg1, String arg2, String arg3, String arg4, Executable executable){
+        step(StringUtils.format(title, arg1, arg2, arg3, arg4), executable);
+    }
+
     @SneakyThrows
-    public static void step(String title, String description, Executable executable){
+    public static void step(String title, Executable executable){
         if(currentStep.get() == null)
             currentStep.set(new StepNode());
-        startNestedStep(title, description);
+        startNestedStep(title, "");
         try {
             executable.execute();
         } catch (Throwable e) {

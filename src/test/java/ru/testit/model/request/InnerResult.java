@@ -1,6 +1,10 @@
 package ru.testit.model.request;
 
 import com.fasterxml.jackson.annotation.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Singular;
+
 import java.util.*;
 
 public class InnerResult
@@ -21,6 +25,11 @@ public class InnerResult
     private String outcome;
     @JsonProperty("stepResults")
     private List<InnerResult> stepResults;
+    @Setter
+    @JsonProperty("parameters")
+    private Map<String, String> parameters;
+
+    public static ThreadLocal<Map<String, String>> parametersMap = new ThreadLocal<>();
     
     public InnerResult() {
         this.stepResults = new LinkedList<InnerResult>();

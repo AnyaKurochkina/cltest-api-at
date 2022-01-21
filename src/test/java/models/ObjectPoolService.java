@@ -17,6 +17,7 @@ import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
+import ru.testit.model.request.InnerResult;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -248,6 +249,7 @@ public class ObjectPoolService {
         if (id == null)
             return;
         List<Parameter> list = new ArrayList<>();
+        Map<String, String> parametersMap = new HashMap<>();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(entity.getClass().getSuperclass().getDeclaredFields()));
         fieldList.addAll(Arrays.asList(entity.getClass().getDeclaredFields()));
         for (Field field : fieldList) {
@@ -257,14 +259,16 @@ public class ObjectPoolService {
             if (field.get(entity) != null) {
                 Parameter parameter = new Parameter();
                 parameter.setName(field.getName());
+                String value = field.get(entity).toString();
                 if (field.getName().equals("password"))
-                    parameter.setValue("<password>");
-                else
-                    parameter.setValue(field.get(entity).toString());
+                    value = "<password>";
+                parametersMap.put(field.getName(), value);
+                parameter.setValue(value);
                 list.add(parameter);
             }
         }
         allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
         allureLifecycle.updateStep(id, s -> s.setParameters(list));
+        InnerResult.parametersMap.set(parametersMap);
     }
 }
