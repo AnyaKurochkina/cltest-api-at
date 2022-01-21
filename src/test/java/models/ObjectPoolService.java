@@ -13,6 +13,9 @@ import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import models.authorizer.ServiceAccount;
+import models.keyCloak.Service;
+import models.keyCloak.ServiceAccountToken;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -253,6 +256,8 @@ public class ObjectPoolService {
         Map<String, String> parametersMap = new HashMap<>();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(entity.getClass().getSuperclass().getDeclaredFields()));
         fieldList.addAll(Arrays.asList(entity.getClass().getDeclaredFields()));
+        if(entity instanceof ServiceAccount || entity instanceof ServiceAccountToken)
+            return;
         for (Field field : fieldList) {
             if (Modifier.isStatic(field.getModifiers()))
                 continue;
@@ -270,10 +275,7 @@ public class ObjectPoolService {
         }
         allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
         allureLifecycle.updateStep(id, s -> s.setParameters(list));
-        StepAspect.step("Получена сущность {} с параметрами", entity.getClass().getSimpleName(), () -> {
-//            InnerResult.parametersMap.set(parametersMap);
-            StepAspect.getCurrentStep().get().setParameters(parametersMap);
-        });
+        StepAspect.step("Получена сущность {} с параметрами", entity.getClass().getSimpleName(), () -> StepAspect.getCurrentStep().get().setParameters(parametersMap));
         StepAspect.getCurrentStep().get().setParameters(null);
     }
 }

@@ -169,14 +169,14 @@ public abstract class IProduct extends Entity {
     }
     protected void createProduct(){
         log.info("Отправка запроса на создание заказа " + productName);
-        JsonPath jsonPath = new Http(OrderServiceURL)
-                .setProjectId(projectId)
-                .body(toJson())
-                .post("projects/" + projectId + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = jsonPath.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
+//        JsonPath jsonPath = new Http(OrderServiceURL)
+//                .setProjectId(projectId)
+//                .body(toJson())
+//                .post("projects/" + projectId + "/orders")
+//                .assertStatus(201)
+//                .jsonPath();
+//        orderId = jsonPath.get("[0].id");
+//        orderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
         compareCostOrderAndPrice();
     }

@@ -61,6 +61,7 @@ public class TestResultRequestFactory {
         testResult.getLinks().addAll(this.makeInnerLinks(parentStep.getLinkItems()));
         final InnerResult innerResult = this.makeInnerResult(parentStep);
         this.processStep(testResult, parentStep.getChildrens(), innerResult.getStepResults());
+        innerResult.getStepResults().remove(0);
         testResult.getStepResults().add(innerResult);
     }
 
