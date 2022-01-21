@@ -547,7 +547,7 @@ public class TestITClient
                 /////////////////
                 String res = response.toString();
                 if(response.getEntity() != null)
-                    res += EntityUtils.toString(response.getEntity());
+                    res += httpResponse;
                 TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
                         " :: " + requestEntity + " :: " + res);
                 ////////////////
