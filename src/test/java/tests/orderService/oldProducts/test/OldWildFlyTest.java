@@ -54,7 +54,7 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Изменить конфигурацию WildFly OLD")
     @Test
     void resize() {
-        if (wildFly.productIsOn()) {
+        if (wildFly.productStatusIs(ProductStatus.ON)) {
             wildFly.stopHard();
             wildFly.resize(wildFly.getMaxFlavor());
             wildFly.resize(wildFly.getMinFlavor());

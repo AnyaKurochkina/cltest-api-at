@@ -6,6 +6,9 @@ import models.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
+import static models.orderService.interfaces.ProductStatus.OFF;
+import static models.orderService.interfaces.ProductStatus.ON;
+
 @Epic("Старые продукты DEV")
 @Feature("Windows OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_windows"), @Tag("prod"), @Tag("old")})
@@ -24,40 +27,40 @@ public class OldWindowsTest extends Tests {
     @DisplayName("Перезагрузить Windows OLD")
     @Test
     void restart() {
-        try {
+        if (windows.productStatusIs(OFF)) {
             windows.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            windows.restart();
         }
+        windows.restart();
     }
 
     @Order(2)
     @DisplayName("Выключить Windows OLD")
     @Test
     void stopSoft() {
+        if (windows.productStatusIs(OFF)) {
+            windows.start();
+        }
         windows.stopSoft();
-        windows.start();
     }
 
     @Order(3)
     @DisplayName("Изменить конфигурацию Windows OLD")
     @Test
     void resize() {
-        windows.stopHard();
-        try {
-            windows.resize();
-        } finally {
-            windows.start();
+        if (windows.productStatusIs(ON)) {
+            windows.stopHard();
         }
+        windows.resize(windows.getMaxFlavor());
+        windows.resize(windows.getMinFlavor());
     }
 
     @Order(4)
     @DisplayName("Включить Windows OLD")
     @Test
     void start() {
-        windows.stopHard();
+        if (windows.productStatusIs(ON)) {
+            windows.stopHard();
+        }
         windows.start();
     }
 
@@ -65,7 +68,9 @@ public class OldWindowsTest extends Tests {
     @DisplayName("Выключить принудительно Windows OLD")
     @Test
     void stopHard() {
+        if (windows.productStatusIs(OFF)) {
+            windows.start();
+        }
         windows.stopHard();
-        windows.start();
     }
 }

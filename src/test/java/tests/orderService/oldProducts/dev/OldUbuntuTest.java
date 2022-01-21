@@ -6,6 +6,9 @@ import models.orderService.products.Ubuntu;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
+import static models.orderService.interfaces.ProductStatus.OFF;
+import static models.orderService.interfaces.ProductStatus.ON;
+
 @Epic("Старые продукты DEV")
 @Feature("Ubuntu OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_ubuntu"), @Tag("prod"), @Tag("old")})
@@ -24,73 +27,60 @@ public class OldUbuntuTest extends Tests {
     @DisplayName("Расширить Ubuntu OLD")
     @Test
     void expandMountPoint() {
-        if (ubuntu.productIsOn()) {
-            ubuntu.expandMountPoint();
-        } else {
+        if (ubuntu.productStatusIs(OFF)) {
             ubuntu.start();
-            ubuntu.expandMountPoint();
         }
+        ubuntu.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Перезагрузить Ubuntu OLD")
     @Test
     void restart() {
-        if (ubuntu.productIsOn()) {
-            ubuntu.restart();
-        } else {
+        if (ubuntu.productStatusIs(OFF)) {
             ubuntu.start();
-            ubuntu.restart();
         }
+        ubuntu.restart();
     }
 
     @Order(3)
     @DisplayName("Выключить ")
     @Test
     void stopSoft() {
-        if (ubuntu.productIsOn()) {
-            ubuntu.stopSoft();
-            ubuntu.start();
-        } else {
+        if (ubuntu.productStatusIs(OFF)) {
             ubuntu.start();
         }
+        ubuntu.stopSoft();
     }
 
     @Order(4)
     @DisplayName("Изменить конфигурацию Ubuntu OLD")
     @Test
     void resize() {
-        if (ubuntu.productIsOn()) {
+        if (!ubuntu.productStatusIs(ON)) {
             ubuntu.stopHard();
-            ubuntu.resize(ubuntu.getMaxFlavor());
-            ubuntu.resize(ubuntu.getMinFlavor());
-        } else {
-            ubuntu.resize(ubuntu.getMaxFlavor());
-            ubuntu.resize(ubuntu.getMinFlavor());
         }
+        ubuntu.resize(ubuntu.getMaxFlavor());
+        ubuntu.resize(ubuntu.getMinFlavor());
     }
 
     @Order(5)
     @DisplayName("Включить Ubuntu OLD")
     @Test
     void start() {
-        if (ubuntu.productIsOn()) {
+        if (!ubuntu.productStatusIs(ON)) {
             ubuntu.stopHard();
-            ubuntu.start();
-        } else {
-            ubuntu.start();
         }
+        ubuntu.start();
     }
 
     @Order(6)
     @DisplayName("Выключить принудительно Ubuntu OLD")
     @Test
     void stopHard() {
-        if (ubuntu.productIsOn()) {
-            ubuntu.stopHard();
-        } else {
+        if (!ubuntu.productStatusIs(OFF)) {
             ubuntu.start();
-            ubuntu.stopHard();
         }
+        ubuntu.stopHard();
     }
 }

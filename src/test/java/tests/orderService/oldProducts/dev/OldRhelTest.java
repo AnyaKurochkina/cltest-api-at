@@ -2,9 +2,13 @@ package tests.orderService.oldProducts.dev;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Rhel;
 import org.junit.jupiter.api.*;
 import tests.Tests;
+
+import static models.orderService.interfaces.ProductStatus.OFF;
+import static models.orderService.interfaces.ProductStatus.ON;
 
 @Epic("Старые продукты DEV")
 @Feature("Rhel OLD")
@@ -24,61 +28,50 @@ public class OldRhelTest extends Tests {
     @DisplayName("Перезагрузить Rhel OLD")
     @Test
     void restart() {
-        if (rhel.productIsOn()) {
-            rhel.restart();
-        } else {
+        if (rhel.productStatusIs(OFF)) {
             rhel.start();
-            rhel.restart();
         }
+        rhel.restart();
     }
 
     @Order(3)
     @DisplayName("Выключить Rhel OLD")
     @Test
     void stopSoft() {
-        if (rhel.productIsOn()) {
-            rhel.stopSoft();
-        } else {
+        if (rhel.productStatusIs(OFF)) {
             rhel.start();
-            rhel.stopSoft();
         }
+        rhel.stopSoft();
     }
 
     @Order(4)
     @DisplayName("Изменить конфигурацию Rhel OLD")
     @Test
     void resize() {
-        if (rhel.productIsOn()) {
+        if (rhel.productStatusIs(ON)) {
             rhel.stopHard();
-            rhel.resize(rhel.getMaxFlavor());
-            rhel.resize(rhel.getMinFlavor());
-        } else {
-            rhel.resize(rhel.getMaxFlavor());
-            rhel.resize(rhel.getMinFlavor());
         }
+        rhel.resize(rhel.getMaxFlavor());
+        rhel.resize(rhel.getMinFlavor());
     }
 
     @Order(5)
     @DisplayName("Включить Rhel OLD")
     @Test
     void start() {
-        if (rhel.productIsOn()) {
+        if (rhel.productStatusIs(ON)) {
             rhel.stopHard();
-            rhel.start();
-        } else {
-            rhel.start();
         }
+        rhel.start();
     }
 
     @Order(6)
     @DisplayName("Выключить принудительно Rhel OLD")
     @Test
     void stopHard() {
-        if (rhel.productIsOn()) {
-            rhel.stopHard();
-        } else {
+        if (rhel.productStatusIs(OFF)) {
             rhel.start();
-            rhel.stopHard();
         }
+        rhel.stopHard();
     }
 }

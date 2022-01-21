@@ -136,8 +136,8 @@ public abstract class IProduct extends Entity {
         Assertions.assertEquals(0.0F, calcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
     }
 
-    public boolean productIsOn() {
-        return orderServiceSteps.productIsOn(this);
+    public boolean productStatusIs(ProductStatus status) {
+        return orderServiceSteps.productStatusIs(this, status);
     }
 
     //Изменить конфигурацию

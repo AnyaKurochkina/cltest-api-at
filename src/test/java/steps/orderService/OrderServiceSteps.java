@@ -300,10 +300,11 @@ public class OrderServiceSteps extends Steps {
 
     /**
      * Метод проверяет состояние продукта: включен или выключен
+     *
      * @param product продукт
      * @return true если включен, false выключен
      */
-    public boolean productIsOn(IProduct product) {
+    public boolean productStatusIs(IProduct product, ProductStatus status) {
         log.info("Получение статуса для для продукта " + Objects.requireNonNull(product));
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
@@ -311,8 +312,11 @@ public class OrderServiceSteps extends Steps {
                 .get("projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
-
-        return jsonPath.getString("data.find{it.type=='vm'}.state").equals("on");
+        if (status.equals(ProductStatus.ON)) {
+            return jsonPath.getString("data.find{it.type=='vm'}.state").equals("on");
+        } else {
+            return jsonPath.getString("data.find{it.type=='vm'}.state").equals("off");
+        }
     }
 
     @Step("Получение списка ресурсных пулов для категории {category} и среды {env}")
