@@ -59,7 +59,7 @@ public class OldRedisTest extends Tests {
     @DisplayName("Изменить конфигурацию Redis OLD")
     @Test
     void resize() {
-        redis.resize();
+        redis.resize(redis.getMaxFlavor());
     }
 
     @Order(6)
