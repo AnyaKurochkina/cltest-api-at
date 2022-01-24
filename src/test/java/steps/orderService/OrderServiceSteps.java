@@ -299,7 +299,7 @@ public class OrderServiceSteps extends Steps {
     }
 
 
-    @Step("Получение списка ресурсных пулов для категории {category} и среды {env}")
+    @Step("Получение списка ресурсных пулов для категории {category} и проекта {projectId}")
     public List<ResourcePool> getResourcesPoolList(String category, String projectId) {
         String jsonArray = new Http(OrderServiceURL)
                 .setProjectId(projectId)

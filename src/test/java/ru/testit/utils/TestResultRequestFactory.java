@@ -52,7 +52,7 @@ public class TestResultRequestFactory {
             attachmentsMap.put("id", attachment.getId());
             attachmentList.add(attachmentsMap);
         }
-        currentTest.setAttachments(attachmentList);
+//        currentTest.setAttachments(attachmentList);
 
 //        req = new TestResultsRequest();
 //        final TestResultRequest currentTest2 = new TestResultRequest();
@@ -61,7 +61,7 @@ public class TestResultRequestFactory {
 //        this.processTestSteps(currentTest2, includedTests.get(test), testResultId);
 //        this.processUtilsMethodsSteps(currentTest2, utilsMethodSteps);
 //        req.getTestResults().add(currentTest2);
-        TestITClient.sendTestResult(req);
+//        TestITClient.sendTestResult(req);
     }
 
     private void processUtilsMethodsSteps(final TestResultRequest currentTest, final HashMap<MethodType, StepNode> utilsMethodSteps) {
