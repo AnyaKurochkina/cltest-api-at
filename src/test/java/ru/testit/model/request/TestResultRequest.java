@@ -1,6 +1,8 @@
 package ru.testit.model.request;
 
 import com.fasterxml.jackson.annotation.*;
+import lombok.Setter;
+
 import java.util.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -34,6 +36,9 @@ public class TestResultRequest
     private List<InnerResult> teardownResults;
     @JsonProperty("links")
     private List<InnerLink> links;
+    @Setter
+    @JsonProperty("attachments")
+    private List<Map<String, String>> attachments;
     
     public TestResultRequest() {
         this.stepResults = new LinkedList<InnerResult>();

@@ -37,17 +37,25 @@ public class Tests {
     }
 
     public static void putAttachLog(String text) {
-        String stepId = getLifecycle().getCurrentTestCaseOrStep().orElse(null);
+        String stepId = getLifecycle().getCurrentTestCase().orElse(null);
         if (stepId == null)
             return;
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss ");
         String source = stepId + "-attachment.txt";
         DataFileHelper.appendToFile(Configure.getAppProp("allure.results") + source,
                 formatter.format(new Date(System.currentTimeMillis())) + text);
-        Attachment attachment = new Attachment().setSource(source).setName("log-step.log");
+        Attachment attachment = new Attachment().setSource(source).setName("log-test.log");
         getLifecycle().updateStep(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
 
         StepsAspects.getCurrentStep().get().writeStepLog(text);
+    }
+
+    public static String getAttachLog() {
+        String stepId = getLifecycle().getCurrentTestCase().orElse(null);
+        if (stepId == null)
+            return "";
+        String source = stepId + "-attachment.txt";
+        return DataFileHelper.read(Configure.getAppProp("allure.results") + source);
     }
 
     //    @AfterEach

@@ -28,9 +28,6 @@ public class InnerResult
     @Setter
     @JsonProperty("parameters")
     private Map<String, String> parameters;
-    @Setter
-    @JsonProperty("attachments")
-    private List<Map<String, String>> attachments;
     
     public InnerResult() {
         this.stepResults = new LinkedList<InnerResult>();

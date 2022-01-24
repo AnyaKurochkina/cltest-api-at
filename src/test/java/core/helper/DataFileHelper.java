@@ -1,6 +1,8 @@
 package core.helper;
 
 
+import lombok.SneakyThrows;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -45,9 +47,9 @@ public class DataFileHelper {
      * Чтение файла в одну строку
      * @param fileName имя файла в корне проекта или полный путь к файлу + именем
      * @return переданный файл в виде строки
-     * @throws IOException - в случае ошибок ввода вывода
      */
-    public static String read(String fileName) throws IOException {
+    @SneakyThrows
+    public static String read(String fileName) {
         StringBuilder sb = new StringBuilder();
         List<String> fileStr = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
         fileStr.stream().map(str -> str + "\n").forEach(sb::append);
