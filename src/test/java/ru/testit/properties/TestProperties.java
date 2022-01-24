@@ -51,6 +51,8 @@ public class TestProperties
                     }
                     else log.error("{} уже существует", uniqueTest);
                 }
+                ConfigurationResponse response = client.getConfiguration(TestITClient.properties.getConfigurationId());
+                configurations.put(new UniqueTest("default", TestITClient.properties.getConfigurationId()), response);
             }
         } catch (IOException e) {
             log.error(e.toString());
@@ -65,7 +67,12 @@ public class TestProperties
             UniqueTest uniqueTest = new UniqueTest(externalId, id);
             Configuration configuration = new Configuration();
             configuration.setId(id);
-            configuration.setConfMap(configurations.get(uniqueTest).getCapabilities());
+            if(configurations.containsKey(uniqueTest)) {
+                configuration.setConfMap(configurations.get(uniqueTest).getCapabilities());
+            }
+            else {
+                configuration.setConfMap(configurations.get(new UniqueTest("default", TestITClient.properties.getConfigurationId())).getCapabilities());
+            }
             configurationList.add(configuration);
         }
         return configurationList;

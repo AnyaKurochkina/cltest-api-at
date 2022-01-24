@@ -21,20 +21,6 @@ public class StepNode
     private Map<String, String> parameters;
     @Getter
     private final List<Attachment> attachments = new ArrayList<>();
-    private final StringJoiner stepLog = new StringJoiner("\n");
-    
-    public StepNode() {
-        this.linkItems = new LinkedList<LinkItem>();
-        this.childrens = new LinkedList<StepNode>();
-    }
-
-    public void writeStepLog(String text){
-        stepLog.add(text);
-    }
-
-    public String getStepLog(){
-        return stepLog.toString();
-    }
     
     public StepNode getParent() {
         return this.parent;

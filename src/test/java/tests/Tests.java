@@ -13,6 +13,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.annotations.Title;
+import ru.testit.utils.UniqueTest;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,6 +35,7 @@ public class Tests {
         String className = testInfo.getTestClass().orElseThrow(Exception::new).getSimpleName();
         String methodName = testInfo.getTestMethod().orElseThrow(Exception::new).getName();
         Allure.tms(className + "#" + methodName, "");
+        UniqueTest.clearStepLog();
     }
 
     public static void putAttachLog(String text) {
@@ -47,15 +49,11 @@ public class Tests {
         Attachment attachment = new Attachment().setSource(source).setName("log-test.log");
         getLifecycle().updateStep(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
 
-        StepsAspects.getCurrentStep().get().writeStepLog(text);
+        UniqueTest.writeStepLog(text);
     }
 
     public static String getAttachLog() {
-        String stepId = getLifecycle().getCurrentTestCase().orElse(null);
-        if (stepId == null)
-            return "";
-        String source = stepId + "-attachment.txt";
-        return DataFileHelper.read(Configure.getAppProp("allure.results") + source);
+        return UniqueTest.getStepLog();
     }
 
     //    @AfterEach
