@@ -312,9 +312,11 @@ public class OrderServiceSteps extends Steps {
                 .get("projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
-        if (status.equals(ProductStatus.ON)) {
+        if (status.equals(ProductStatus.STARTED)) {
+            log.info("Статус продукта ВКЛЮЧЕН");
             return jsonPath.getString("data.find{it.type=='vm'}.state").equals("on");
         } else {
+            log.info("Статус продукта ВЫКЛЮЧЕН");
             return jsonPath.getString("data.find{it.type=='vm'}.state").equals("off");
         }
     }

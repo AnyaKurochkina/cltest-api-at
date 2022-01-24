@@ -6,8 +6,8 @@ import models.orderService.products.Redis;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-import static models.orderService.interfaces.ProductStatus.OFF;
-import static models.orderService.interfaces.ProductStatus.ON;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+import static models.orderService.interfaces.ProductStatus.STARTED;
 
 @Epic("Старые продукты DEV")
 @Feature("Redis OLD")
@@ -19,7 +19,7 @@ public class OldRedisTest extends Tests {
     final Redis redis = Redis.builder()
             .projectId("proj-67nljbzjtt")
             .productId("6662a03d-20ce-4a83-a684-ddec48393516")
-            .orderId("b29c6a04-c92f-4b52-90c1-4172ae93fe19")//b29c6a04-c92f-4b52-90c1-4172ae93fe19 создал новый(старый бажный)
+            .orderId("ad4f9bf5-ca89-4d20-bc98-b29644a9fd40")//b29c6a04-c92f-4b52-90c1-4172ae93fe19 создал новый(старый бажный)
             .productName("Redis")
             .build();
 
@@ -27,7 +27,7 @@ public class OldRedisTest extends Tests {
     @DisplayName("Расширить Redis OLD")
     @Test
     void expandMountPoint() {
-        if (redis.productStatusIs(OFF)) {
+        if (redis.productStatusIs(STOPPED)) {
             redis.start();
         }
         redis.expandMountPoint();
@@ -37,7 +37,7 @@ public class OldRedisTest extends Tests {
     @DisplayName("Сбросить пароль Redis OLD")
     @Test
     void resetPassword() {
-        if (redis.productStatusIs(OFF)) {
+        if (redis.productStatusIs(STOPPED)) {
             redis.start();
         }
         redis.resetPassword();
@@ -47,7 +47,7 @@ public class OldRedisTest extends Tests {
     @DisplayName("Перезагрузить Redis OLD")
     @Test
     void restart() {
-        if (redis.productStatusIs(OFF)) {
+        if (redis.productStatusIs(STOPPED)) {
             redis.start();
         }
         redis.restart();
@@ -57,7 +57,7 @@ public class OldRedisTest extends Tests {
     @DisplayName("Выключить Redis OLD")
     @Test
     void stopSoft() {
-        if (redis.productStatusIs(OFF)) {
+        if (redis.productStatusIs(STOPPED)) {
             redis.start();
         }
         redis.stopSoft();
@@ -67,8 +67,8 @@ public class OldRedisTest extends Tests {
     @DisplayName("Изменить конфигурацию Redis OLD")
     @Test
     void resize() {
-        if (redis.productStatusIs(ON)) {
-            redis.stopHard();
+        if (redis.productStatusIs(STOPPED)) {
+            redis.start();
         }
         redis.resize(redis.getMaxFlavor());
         redis.resize(redis.getMinFlavor());
@@ -78,7 +78,7 @@ public class OldRedisTest extends Tests {
     @DisplayName("Включить Redis OLD")
     @Test
     void start() {
-        if (redis.productStatusIs(ON)) {
+        if (redis.productStatusIs(STARTED)) {
             redis.stopHard();
         }
         redis.start();
@@ -88,7 +88,7 @@ public class OldRedisTest extends Tests {
     @DisplayName("Выключить принудительно Redis OLD")
     @Test
     void stopHard() {
-        if (redis.productStatusIs(OFF)) {
+        if (redis.productStatusIs(STOPPED)) {
             redis.start();
         }
         redis.stopHard();

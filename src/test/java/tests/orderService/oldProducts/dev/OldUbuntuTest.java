@@ -6,8 +6,8 @@ import models.orderService.products.Ubuntu;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-import static models.orderService.interfaces.ProductStatus.OFF;
-import static models.orderService.interfaces.ProductStatus.ON;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+import static models.orderService.interfaces.ProductStatus.STARTED;
 
 @Epic("Старые продукты DEV")
 @Feature("Ubuntu OLD")
@@ -27,7 +27,7 @@ public class OldUbuntuTest extends Tests {
     @DisplayName("Расширить Ubuntu OLD")
     @Test
     void expandMountPoint() {
-        if (ubuntu.productStatusIs(OFF)) {
+        if (ubuntu.productStatusIs(STOPPED)) {
             ubuntu.start();
         }
         ubuntu.expandMountPoint();
@@ -37,7 +37,7 @@ public class OldUbuntuTest extends Tests {
     @DisplayName("Перезагрузить Ubuntu OLD")
     @Test
     void restart() {
-        if (ubuntu.productStatusIs(OFF)) {
+        if (ubuntu.productStatusIs(STOPPED)) {
             ubuntu.start();
         }
         ubuntu.restart();
@@ -47,7 +47,7 @@ public class OldUbuntuTest extends Tests {
     @DisplayName("Выключить ")
     @Test
     void stopSoft() {
-        if (ubuntu.productStatusIs(OFF)) {
+        if (ubuntu.productStatusIs(STOPPED)) {
             ubuntu.start();
         }
         ubuntu.stopSoft();
@@ -57,8 +57,8 @@ public class OldUbuntuTest extends Tests {
     @DisplayName("Изменить конфигурацию Ubuntu OLD")
     @Test
     void resize() {
-        if (!ubuntu.productStatusIs(ON)) {
-            ubuntu.stopHard();
+        if (!ubuntu.productStatusIs(STOPPED)) {
+            ubuntu.start();
         }
         ubuntu.resize(ubuntu.getMaxFlavor());
         ubuntu.resize(ubuntu.getMinFlavor());
@@ -68,7 +68,7 @@ public class OldUbuntuTest extends Tests {
     @DisplayName("Включить Ubuntu OLD")
     @Test
     void start() {
-        if (!ubuntu.productStatusIs(ON)) {
+        if (!ubuntu.productStatusIs(STARTED)) {
             ubuntu.stopHard();
         }
         ubuntu.start();
@@ -78,7 +78,7 @@ public class OldUbuntuTest extends Tests {
     @DisplayName("Выключить принудительно Ubuntu OLD")
     @Test
     void stopHard() {
-        if (!ubuntu.productStatusIs(OFF)) {
+        if (!ubuntu.productStatusIs(STOPPED)) {
             ubuntu.start();
         }
         ubuntu.stopHard();

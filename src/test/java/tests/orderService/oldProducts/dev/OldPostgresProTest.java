@@ -6,6 +6,9 @@ import models.orderService.products.PostgresPro;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+
 @Epic("Старые продукты DEV")
 @Feature("PostgresPRO OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_postgrespro"), @Tag("prod"), @Tag("old")})
@@ -24,19 +27,19 @@ public class OldPostgresProTest extends Tests {
     @DisplayName("Расширить PostgresPRO OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (postgresPro.productStatusIs(STOPPED)) {
             postgresPro.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            postgresPro.expandMountPoint();
         }
+        postgresPro.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Добавить БД PostgresPRO OLD")
     @Test
     void createDb() {
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
         postgresPro.createDb("createdb1");
 
         postgresPro.removeDb("createdb1");
@@ -46,6 +49,9 @@ public class OldPostgresProTest extends Tests {
     @DisplayName("Добавить пользователя PostgresPRO OLD")
     @Test
     void createDbmsUser() {
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
         postgresPro.createDb("createdbforuser2");
         postgresPro.createDbmsUser("chelik1", "user", "createdbforuser2");
 
@@ -57,6 +63,9 @@ public class OldPostgresProTest extends Tests {
     @DisplayName("Сбросить пароль PostgresPRO OLD")
     @Test
     void resetPassword() {
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
         postgresPro.createDb("createdbforreset3");
         postgresPro.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
         postgresPro.resetPassword("chelikforreset1");
@@ -69,6 +78,9 @@ public class OldPostgresProTest extends Tests {
     @DisplayName("Сбросить пароль владельца PostgresPRO OLD")
     @Test
     void resetDbOwnerPassword() {
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
         postgresPro.createDb("createdbforreset8");
         postgresPro.resetDbOwnerPassword("createdbforreset8");
 
@@ -79,6 +91,9 @@ public class OldPostgresProTest extends Tests {
     @DisplayName("Удалить пользователя PostgresPRO OLD")
     @Test
     void removeDbmsUser() {
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
         postgresPro.createDb("createdbforreset4");
         postgresPro.createDbmsUser("chelikforreset2", "user", "createdbforreset4");
         postgresPro.removeDbmsUser("chelikforreset2", "createdbforreset4");
@@ -90,6 +105,9 @@ public class OldPostgresProTest extends Tests {
     @DisplayName("Перезагрузить PostgresPRO OLD")
     @Test
     void restart() {
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
         postgresPro.restart();
     }
 
@@ -97,6 +115,9 @@ public class OldPostgresProTest extends Tests {
     @DisplayName("Удалить БД PostgresPRO Old")
     @Test
     void removeDb() {
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
         postgresPro.createDb("createdbforremove5");
         postgresPro.removeDb("createdbforremove5");
     }
@@ -105,22 +126,30 @@ public class OldPostgresProTest extends Tests {
     @DisplayName("Выключить PostgresPRO OLD")
     @Test
     void stopSoft() {
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
         postgresPro.stopSoft();
-        postgresPro.start();
     }
 
     @Order(10)
     @DisplayName("Изменить конфигурацию PostgresPRO Old")
     @Test
     void resize() {
-        postgresPro.resize();
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
+        postgresPro.resize(postgresPro.getMaxFlavor());
+        postgresPro.resize(postgresPro.getMinFlavor());
     }
 
     @Order(11)
     @DisplayName("Включить PostgresPRO OLD")
     @Test
     void start() {
-        postgresPro.stopHard();
+        if (postgresPro.productStatusIs(STARTED)) {
+            postgresPro.stopHard();
+        }
         postgresPro.start();
     }
 
@@ -128,6 +157,9 @@ public class OldPostgresProTest extends Tests {
     @DisplayName("Выключить принудительно PostgresPRO OLD")
     @Test
     void stopHard() {
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
         postgresPro.stopHard();
     }
 }

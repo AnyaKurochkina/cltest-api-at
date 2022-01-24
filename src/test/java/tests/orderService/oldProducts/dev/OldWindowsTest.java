@@ -6,8 +6,8 @@ import models.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-import static models.orderService.interfaces.ProductStatus.OFF;
-import static models.orderService.interfaces.ProductStatus.ON;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+import static models.orderService.interfaces.ProductStatus.STARTED;
 
 @Epic("Старые продукты DEV")
 @Feature("Windows OLD")
@@ -27,7 +27,7 @@ public class OldWindowsTest extends Tests {
     @DisplayName("Перезагрузить Windows OLD")
     @Test
     void restart() {
-        if (windows.productStatusIs(OFF)) {
+        if (windows.productStatusIs(STOPPED)) {
             windows.start();
         }
         windows.restart();
@@ -37,7 +37,7 @@ public class OldWindowsTest extends Tests {
     @DisplayName("Выключить Windows OLD")
     @Test
     void stopSoft() {
-        if (windows.productStatusIs(OFF)) {
+        if (windows.productStatusIs(STOPPED)) {
             windows.start();
         }
         windows.stopSoft();
@@ -47,8 +47,8 @@ public class OldWindowsTest extends Tests {
     @DisplayName("Изменить конфигурацию Windows OLD")
     @Test
     void resize() {
-        if (windows.productStatusIs(ON)) {
-            windows.stopHard();
+        if (windows.productStatusIs(STOPPED)) {
+            windows.start();
         }
         windows.resize(windows.getMaxFlavor());
         windows.resize(windows.getMinFlavor());
@@ -58,7 +58,7 @@ public class OldWindowsTest extends Tests {
     @DisplayName("Включить Windows OLD")
     @Test
     void start() {
-        if (windows.productStatusIs(ON)) {
+        if (windows.productStatusIs(STARTED)) {
             windows.stopHard();
         }
         windows.start();
@@ -68,7 +68,7 @@ public class OldWindowsTest extends Tests {
     @DisplayName("Выключить принудительно Windows OLD")
     @Test
     void stopHard() {
-        if (windows.productStatusIs(OFF)) {
+        if (windows.productStatusIs(STOPPED)) {
             windows.start();
         }
         windows.stopHard();

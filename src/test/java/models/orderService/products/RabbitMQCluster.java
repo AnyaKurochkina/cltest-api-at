@@ -25,7 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 public class RabbitMQCluster extends IProduct {
-    static String RABBITMQ_USER = "data.find{it.type=='cluster'}.config.users.any{it=='%s'}";
+    static String RABBITMQ_USER = "data.find{it.type=='cluster'}.config.users.name.any{it=='%s'}";
     @ToString.Include
     String segment;
     String dataCentre;

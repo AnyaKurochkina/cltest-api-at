@@ -6,6 +6,9 @@ import models.orderService.products.RabbitMQCluster;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+
 @Epic("Старые продукты DEV")
 @Feature("RabbitMQCluster OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_rabbitmqcluster"), @Tag("prod"), @Tag("old")})
@@ -16,7 +19,7 @@ public class OldRabbitMQClusterTest extends Tests {
     final RabbitMQCluster rabbit = RabbitMQCluster.builder()
             .projectId("proj-67nljbzjtt")
             .productId("cee004ec-136d-4605-98e1-da4dac466151")
-            .orderId("43c2f7f3-74e2-4f78-beef-aae28107b6a1")//43c2f7f3-74e2-4f78-beef-aae28107b6a1 создал новый(старый бажный)
+            .orderId("108f0794-83fd-476f-a729-46a3befe027c")//108f0794-83fd-476f-a729-46a3befe027c
             .productName("RabbitMQCluster")
             .build();
 
@@ -24,19 +27,19 @@ public class OldRabbitMQClusterTest extends Tests {
     @DisplayName("Расширить RabbitMQCluster OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (rabbit.productStatusIs(STOPPED)) {
             rabbit.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            rabbit.expandMountPoint();
         }
+        rabbit.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Перезагрузить RabbitMQCluster OLD")
     @Test
     void restart() {
+        if (rabbit.productStatusIs(STOPPED)) {
+            rabbit.start();
+        }
         rabbit.restart();
     }
 
@@ -44,14 +47,19 @@ public class OldRabbitMQClusterTest extends Tests {
     @DisplayName("Выключить RabbitMQCluster OLD")
     @Test
     void stopSoft() {
+        if (rabbit.productStatusIs(STOPPED)) {
+            rabbit.start();
+        }
         rabbit.stopSoft();
-        rabbit.start();
     }
 
     @Order(4)
     @DisplayName("Создать пользователя RabbitMQCluster OLD")
     @Test
     void createUser() {
+        if (rabbit.productStatusIs(STOPPED)) {
+            rabbit.start();
+        }
         rabbit.rabbitmqCreateUser();
     }
 
@@ -59,7 +67,9 @@ public class OldRabbitMQClusterTest extends Tests {
     @DisplayName("Включить RabbitMQCluster OLD")
     @Test
     void start() {
-        rabbit.stopHard();
+        if (rabbit.productStatusIs(STARTED)) {
+            rabbit.stopHard();
+        }
         rabbit.start();
     }
 
@@ -67,6 +77,9 @@ public class OldRabbitMQClusterTest extends Tests {
     @DisplayName("Обновить сертификаты RabbitMQCluster OLD")
     @Test
     void updateCerts() {
+        if (rabbit.productStatusIs(STOPPED)) {
+            rabbit.start();
+        }
         rabbit.updateCerts();
     }
 
@@ -74,6 +87,9 @@ public class OldRabbitMQClusterTest extends Tests {
     @DisplayName("Выключить принудительно RabbitMQCluster OLD")
     @Test
     void stopHard() {
+        if (rabbit.productStatusIs(STOPPED)) {
+            rabbit.start();
+        }
         rabbit.stopHard();
     }
 }

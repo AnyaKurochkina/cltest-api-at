@@ -2,13 +2,12 @@ package tests.orderService.oldProducts.dev;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Rhel;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-import static models.orderService.interfaces.ProductStatus.OFF;
-import static models.orderService.interfaces.ProductStatus.ON;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+import static models.orderService.interfaces.ProductStatus.STARTED;
 
 @Epic("Старые продукты DEV")
 @Feature("Rhel OLD")
@@ -28,7 +27,7 @@ public class OldRhelTest extends Tests {
     @DisplayName("Перезагрузить Rhel OLD")
     @Test
     void restart() {
-        if (rhel.productStatusIs(OFF)) {
+        if (rhel.productStatusIs(STOPPED)) {
             rhel.start();
         }
         rhel.restart();
@@ -38,7 +37,7 @@ public class OldRhelTest extends Tests {
     @DisplayName("Выключить Rhel OLD")
     @Test
     void stopSoft() {
-        if (rhel.productStatusIs(OFF)) {
+        if (rhel.productStatusIs(STOPPED)) {
             rhel.start();
         }
         rhel.stopSoft();
@@ -48,7 +47,7 @@ public class OldRhelTest extends Tests {
     @DisplayName("Изменить конфигурацию Rhel OLD")
     @Test
     void resize() {
-        if (rhel.productStatusIs(ON)) {
+        if (rhel.productStatusIs(STARTED)) {
             rhel.stopHard();
         }
         rhel.resize(rhel.getMaxFlavor());
@@ -59,7 +58,7 @@ public class OldRhelTest extends Tests {
     @DisplayName("Включить Rhel OLD")
     @Test
     void start() {
-        if (rhel.productStatusIs(ON)) {
+        if (rhel.productStatusIs(STARTED)) {
             rhel.stopHard();
         }
         rhel.start();
@@ -69,7 +68,7 @@ public class OldRhelTest extends Tests {
     @DisplayName("Выключить принудительно Rhel OLD")
     @Test
     void stopHard() {
-        if (rhel.productStatusIs(OFF)) {
+        if (rhel.productStatusIs(STOPPED)) {
             rhel.start();
         }
         rhel.stopHard();

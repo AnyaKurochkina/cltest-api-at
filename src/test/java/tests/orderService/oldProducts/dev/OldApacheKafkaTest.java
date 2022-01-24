@@ -6,6 +6,9 @@ import models.orderService.products.ApacheKafka;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+
 @Epic("Старые продукты DEV")
 @Feature("ApacheKafka OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_apachekafka"), @Tag("prod"), @Tag("old")})
@@ -24,19 +27,19 @@ public class OldApacheKafkaTest extends Tests {
     @DisplayName("Расширить ApacheKafka OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (kafka.productStatusIs(STOPPED)) {
             kafka.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            kafka.expandMountPoint();
         }
+        kafka.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Перезагрузить ApacheKafka OLD")
     @Test
     void restart() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.restart();
     }
 
@@ -44,27 +47,29 @@ public class OldApacheKafkaTest extends Tests {
     @DisplayName("Выключить ApacheKafka OLD")
     @Test
     void stopSoft() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.stopSoft();
-        kafka.start();
     }
 
     @Order(4)
     @DisplayName("Изменить конфигурацию ApacheKafka OLD")
     @Test
     void resize() {
-        kafka.stopHard();
-        try {
-            kafka.resize();
-        } finally {
+        if (kafka.productStatusIs(STOPPED)) {
             kafka.start();
         }
+        kafka.resize(kafka.getMaxFlavor());
     }
 
     @Order(5)
     @DisplayName("Включить ApacheKafka OLD")
     @Test
     void start() {
-        kafka.stopHard();
+        if (kafka.productStatusIs(STARTED)) {
+            kafka.stopHard();
+        }
         kafka.start();
     }
 
@@ -72,6 +77,9 @@ public class OldApacheKafkaTest extends Tests {
     @DisplayName("Выключить принудительно ApacheKafka OLD")
     @Test
     void stopHard() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.stopHard();
     }
 }

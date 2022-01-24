@@ -71,8 +71,8 @@ public class ApacheKafka extends IProduct {
                 .build();
     }
 
-    public void resize() {
-        resize("resize_vm");
+    public void resize(Flavor flavor) {
+        resize("resize_vm", flavor);
     }
 
     public void restart() {

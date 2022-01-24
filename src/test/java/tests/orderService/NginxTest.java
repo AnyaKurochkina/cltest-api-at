@@ -63,7 +63,7 @@ public class NginxTest extends Tests {
             nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
             nginx.stopHard();
             try {
-                nginx.resize();
+                nginx.resize(nginx.getMaxFlavor());
             } finally {
                 nginx.start();
             }

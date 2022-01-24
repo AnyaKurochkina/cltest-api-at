@@ -64,7 +64,7 @@ public class AstraTest extends Tests {
             astra.checkPreconditionStatusProduct(ProductStatus.CREATED);
             astra.stopHard();
             try {
-                astra.resize();
+                astra.resize(astra.getMaxFlavor());
             } finally {
                 astra.start();
             }

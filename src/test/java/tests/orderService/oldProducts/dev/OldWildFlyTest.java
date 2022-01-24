@@ -6,8 +6,8 @@ import models.orderService.products.WildFly;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
-import static models.orderService.interfaces.ProductStatus.OFF;
-import static models.orderService.interfaces.ProductStatus.ON;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+import static models.orderService.interfaces.ProductStatus.STARTED;
 
 @Epic("Старые продукты DEV")
 @Feature("WildFly OLD")
@@ -27,7 +27,7 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Расширить WildFly OLD")
     @Test
     void expandMountPoint() {
-        if (wildFly.productStatusIs(OFF)) {
+        if (wildFly.productStatusIs(STOPPED)) {
             wildFly.start();
         }
         wildFly.expandMountPoint();
@@ -37,7 +37,7 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Перезагрузить WildFly OLD")
     @Test
     void restart() {
-        if (wildFly.productStatusIs(OFF)) {
+        if (wildFly.productStatusIs(STOPPED)) {
             wildFly.start();
         }
         wildFly.restart();
@@ -47,7 +47,7 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Выключить WildFly OLD")
     @Test
     void stopSoft() {
-        if (wildFly.productStatusIs(OFF)) {
+        if (wildFly.productStatusIs(STOPPED)) {
             wildFly.start();
         }
         wildFly.stopSoft();
@@ -57,7 +57,7 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Изменить конфигурацию WildFly OLD")
     @Test
     void resize() {
-        if (wildFly.productStatusIs(ON)) {
+        if (wildFly.productStatusIs(STARTED)) {
             wildFly.stopHard();
         }
         wildFly.resize(wildFly.getMaxFlavor());
@@ -68,7 +68,7 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Включить WildFly OLD")
     @Test
     void start() {
-        if (wildFly.productStatusIs(ON)) {
+        if (wildFly.productStatusIs(STARTED)) {
             wildFly.stopHard();
         }
         wildFly.start();
@@ -78,7 +78,7 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Обновить сертификаты WildFly OLD")
     @Test
     void updateCerts() {
-        if (wildFly.productStatusIs(OFF)) {
+        if (wildFly.productStatusIs(STOPPED)) {
             wildFly.start();
         }
         wildFly.updateCerts();
@@ -88,7 +88,7 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Выключить принудительно WildFly OLD")
     @Test
     void stopHard() {
-        if (wildFly.productStatusIs(OFF)) {
+        if (wildFly.productStatusIs(STOPPED)) {
             wildFly.start();
         }
         wildFly.stopHard();

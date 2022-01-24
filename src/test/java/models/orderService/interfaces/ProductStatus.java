@@ -4,6 +4,5 @@ public enum ProductStatus {
     CREATED,
     STOPPED,
     DELETED,
-    ON,
-    OFF
+    STARTED
 }
