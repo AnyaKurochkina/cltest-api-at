@@ -314,22 +314,24 @@ public class OrderServiceSteps extends Steps {
     }
 
     public <T extends Comparable<T>> Comparable<T> getProductsField(IProduct product, String path) {
+
         return (Comparable<T>) getProductsField(product, path, Comparable.class);
     }
 
+
     @Step("Получение значения по пути {path}")
     public Object getProductsField(IProduct product, String path, Class<?> clazz) {
-        Object s;
-        log.info("getFiledProduct path: " + path);
-        JsonPath jsonPath = new Http(OrderServiceURL)
-                .setProjectId(product.getProjectId())
-                .get("projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
-                .assertStatus(200)
-                .jsonPath();
-        s = jsonPath.get(path);
-        log.info(String.format("getFiledProduct return: %s", s));
-        Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
-        return s;
+            Object s;
+            log.info("getFiledProduct path: " + path);
+            JsonPath jsonPath = new Http(OrderServiceURL)
+                    .setProjectId(product.getProjectId())
+                    .get("projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
+                    .assertStatus(200)
+                    .jsonPath();
+            s = jsonPath.get(path);
+            log.info(String.format("getFiledProduct return: %s", s));
+            Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
+            return s;
     }
 
     @Step("Удаление всех заказов")

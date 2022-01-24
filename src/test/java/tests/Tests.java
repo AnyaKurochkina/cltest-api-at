@@ -3,6 +3,7 @@ package tests;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import io.qameta.allure.Allure;
+import io.qameta.allure.aspects.StepsAspects;
 import io.qameta.allure.model.Attachment;
 import lombok.SneakyThrows;
 import org.junit.CustomDisplayNameGenerator;
@@ -12,8 +13,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.annotations.Title;
-import ru.testit.junit5.JUnit5EventListener;
-import ru.testit.services.StepAspect;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -48,7 +47,7 @@ public class Tests {
         Attachment attachment = new Attachment().setSource(source).setName("log-step.log");
         getLifecycle().updateStep(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
 
-        StepAspect.getCurrentStep().get().writeStepLog(text);
+        StepsAspects.getCurrentStep().get().writeStepLog(text);
     }
 
     //    @AfterEach

@@ -1,17 +1,16 @@
 package ru.testit.junit5;
 
-import java.lang.reflect.*;
-import java.util.*;
-
-import core.helper.StringUtils;
+import io.qameta.allure.aspects.StepsAspects;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.Nullable;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import ru.testit.annotations.Description;
+import ru.testit.annotations.Title;
 import ru.testit.model.response.StartLaunchResponse;
-import ru.testit.services.*;
+import ru.testit.services.TestITClient;
 import ru.testit.utils.*;
-import ru.testit.annotations.*;
+
+import java.lang.reflect.Method;
+import java.util.*;
 
 @Log4j2
 public class RunningHandler
@@ -60,7 +59,7 @@ public class RunningHandler
         log.info("startTest " + new UniqueTest(extractExternalID(currentTest, null), configurationId));
         //TODO: UUID
         this.includedTests.put(new UniqueTest(extractExternalID(currentTest, null), configurationId), parentStep);
-        StepAspect.setStepNodes(parentStep);
+        StepsAspects.setStepNodes(parentStep);
     }
     
     public void finishTest(final Method atomicTest, final Throwable thrown, String configurationId) {
@@ -87,7 +86,7 @@ public class RunningHandler
         parentStep.setDescription(this.extractDescription(method));
         parentStep.setStartedOn(new Date());
         this.utilsMethodSteps.putIfAbsent(currentMethod, parentStep);
-        StepAspect.setStepNodes(parentStep);
+        StepsAspects.setStepNodes(parentStep);
     }
     
     public void finishUtilMethod(final MethodType currentMethod, final Throwable thrown) {
@@ -95,7 +94,7 @@ public class RunningHandler
         parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
         parentStep.setCompletedOn(new Date());
         if (currentMethod == MethodType.BEFORE_METHOD) {
-            StepAspect.returnStepNode();
+            StepsAspects.returnStepNode();
         }
     }
     

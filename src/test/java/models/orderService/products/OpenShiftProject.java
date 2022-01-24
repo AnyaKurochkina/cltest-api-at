@@ -12,7 +12,6 @@ import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Role;
 import org.json.JSONObject;
-import ru.testit.services.StepAspect;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.Collections;
@@ -51,9 +50,7 @@ public class OpenShiftProject extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        StepAspect.step("Заказ продукта {}", this.toString(), () -> {
         createProduct();
-    });
     }
 
     @SneakyThrows

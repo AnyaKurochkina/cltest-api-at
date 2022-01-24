@@ -36,7 +36,7 @@ public class TestResultRequestFactory {
         String testResultId = TestITClient.sendTestResult(req);
         for(StepNode step : includedTests.get(test).getChildrens()) {
             Attachment log = new Attachment();
-            log.setFileName("log-step.log");
+            log.setFileName(step.getTitle() + ".log");
             log.setBytes(step.getStepLog().getBytes(StandardCharsets.UTF_8));
             step.getAttachments().add(log);
 

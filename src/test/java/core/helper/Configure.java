@@ -1,12 +1,14 @@
 package core.helper;
 
 import lombok.extern.log4j.Log4j2;
+import org.aspectj.lang.annotation.Aspect;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
 @Log4j2
+@Aspect
 public class Configure {
     private static Properties properties;
     public static String RESOURCE_PATH;

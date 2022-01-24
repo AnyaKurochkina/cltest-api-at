@@ -8,20 +8,19 @@ import core.enums.ObjectStatus;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
 import core.helper.DataFileHelper;
+import core.helper.StringUtils;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
+import io.qameta.allure.aspects.StepsAspects;
 import io.qameta.allure.model.Parameter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
-import models.keyCloak.Service;
 import models.keyCloak.ServiceAccountToken;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
-import ru.testit.model.request.InnerResult;
-import ru.testit.services.StepAspect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -32,7 +31,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static io.qameta.allure.Allure.getLifecycle;
-import static tests.Tests.putAttachLog;
 
 @Log4j2
 public class ObjectPoolService {
@@ -246,7 +244,7 @@ public class ObjectPoolService {
         return act;
     }
 
-    @Step
+    @Step()
     @SneakyThrows
     private static void toStringProductStep(Entity entity) {
         AllureLifecycle allureLifecycle = getLifecycle();
@@ -260,7 +258,7 @@ public class ObjectPoolService {
         if(entity instanceof ServiceAccount || entity instanceof ServiceAccountToken)
             return;
         for (Field field : fieldList) {
-            if (Modifier.isStatic(field.getModifiers()))
+            if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()))
                 continue;
             field.setAccessible(true);
             if (field.get(entity) != null) {
@@ -276,10 +274,7 @@ public class ObjectPoolService {
         }
         allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
         allureLifecycle.updateStep(id, s -> s.setParameters(list));
-        StepAspect.step("Получена сущность {} с параметрами", entity.getClass().getSimpleName(), () -> {
-            StepAspect.getCurrentStep().get().setParameters(parametersMap);
-            putAttachLog("sbLog.toString()");
-        });
-        StepAspect.getCurrentStep().get().setParameters(null);
+        StepsAspects.getCurrentStep().get().setTitle(StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName()));
+        StepsAspects.getCurrentStep().get().setParameters(parametersMap);
     }
 }

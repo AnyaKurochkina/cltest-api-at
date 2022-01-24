@@ -73,12 +73,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.junit.platform</groupId>-->
-<!--            <artifactId>junit-platform-runner</artifactId>-->
-<!--            <version>1.8.0-M1</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.junit.platform</groupId>-->
+        <!--            <artifactId>junit-platform-runner</artifactId>-->
+        <!--            <version>1.8.0-M1</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>com.github.mifmif</groupId>
             <artifactId>generex</artifactId>
@@ -143,11 +143,11 @@
             <artifactId>rest-assured</artifactId>
             <version>${rest-assured-version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-csv</artifactId>-->
-<!--            <version>1.5</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.commons</groupId>-->
+        <!--            <artifactId>commons-csv</artifactId>-->
+        <!--            <version>1.5</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -171,6 +171,12 @@
             <version>2.8.6</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.2</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -193,16 +199,91 @@
                     </infrastructureFailReasonExceptions>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin-version}</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
+                                <configuration>
+                                    <source>${maven.compiler.source}</source>
+                                    <target>${maven.compiler.target}</target>
+                                    <encoding>UTF-8</encoding>
+<!--                                    <annotationProcessors>-->
+<!--                                        <annotationProcessor>-->
+<!--                                            lombok.launch.AnnotationProcessorHider$AnnotationProcessor-->
+<!--                                        </annotationProcessor>-->
+<!--                                        <annotationProcessor>-->
+<!--                                            annotationprocessing.AnnotationProcessor-->
+<!--                                        </annotationProcessor>-->
+<!--                                    </annotationProcessors>-->
+<!--                                    <forceJavacCompilerUse>true</forceJavacCompilerUse>-->
+                                </configuration>
+<!--                <configuration>-->
+<!--                    <annotationProcessorPaths>-->
+<!--                        <path>-->
+<!--                            <groupId>org.aspectj</groupId>-->
+<!--                            <artifactId>aspectjweaver</artifactId>-->
+<!--                            <version>1.9.2</version>-->
+<!--&lt;!&ndash;                            <scope>compile</scope>&ndash;&gt;-->
+<!--                        </path>-->
+<!--                        <path>-->
+<!--                            <groupId>org.projectlombok</groupId>-->
+<!--                            <artifactId>lombok</artifactId>-->
+<!--                            <version>1.18.16</version>-->
+<!--                        </path>-->
+<!--                    </annotationProcessorPaths>-->
+<!--                </configuration>-->
             </plugin>
+
+
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+            <!--                <version>${maven-compiler-plugin-version}</version>-->
+            <!--                <goals>-->
+            <!--                    <goal>compile</goal>-->
+            <!--                </goals>-->
+            <!--                <configuration>-->
+            <!--                    <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>-->
+            <!--                    <annotationProcessorPaths>-->
+            <!--                        <annotationProcessorPath>-->
+            <!--                            <groupId>org.projectlombok</groupId>-->
+            <!--                            <artifactId>lombok</artifactId>-->
+            <!--                            <version>1.18.16</version>-->
+            <!--                        </annotationProcessorPath>-->
+            <!--                        <annotationProcessorPath>-->
+            <!--                            <groupId>annotationprocessing</groupId>-->
+            <!--                            <artifactId>AnnotationProcessor</artifactId>-->
+            <!--                            <version>1.0-SNAPSHOT</version>-->
+            <!--                        </annotationProcessorPath>-->
+            <!--                    </annotationProcessorPaths>-->
+            <!--                    <annotationProcessors>-->
+            <!--                        <annotationProcessor>annotationprocessing.AnnotationProcessor</annotationProcessor>-->
+            <!--                    </annotationProcessors>-->
+            <!--                    <compilerArgs>-->
+            <!--                        <arg>-AaddGeneratedAnnotation=false</arg>-->
+            <!--                    </compilerArgs>-->
+            <!--                    <compilerArguments>-->
+            <!--                        <AaddGeneratedAnnotation>false</AaddGeneratedAnnotation>-->
+            <!--                        <Adebug>true</Adebug>-->
+            <!--                    </compilerArguments>-->
+            <!--                    <failOnError>true</failOnError>-->
+            <!--                </configuration>-->
+            <!--                <dependencies>-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>org.projectlombok</groupId>-->
+            <!--                        <artifactId>lombok</artifactId>-->
+            <!--                        <optional>true</optional>-->
+            <!--                    </dependency>-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>annotationprocessing</groupId>-->
+            <!--                        <artifactId>AnnotationProcessor</artifactId>-->
+            <!--                        <version>1.0-SNAPSHOT</version>-->
+            <!--                        <type>jar</type>-->
+            <!--                    </dependency>-->
+            <!--                </dependencies>-->
+            <!--            </plugin>-->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -217,10 +298,10 @@
                     <!--                    <threadCount>2</threadCount>-->
                     <!--                    <perCoreThreadCount>true</perCoreThreadCount>-->
                     <!--                    <useUnlimitedThreads>true</useUnlimitedThreads>-->
-<!--                    <forkCount>0</forkCount>-->
-<!--                    <reuseForks>true</reuseForks>-->
-<!--                    <useSystemClassLoader>false</useSystemClassLoader>-->
-<!--                    <reportsDirectory>target/surefire-reports-${surefire.forkNumber}</reportsDirectory>-->
+                    <!--                    <forkCount>0</forkCount>-->
+                    <!--                    <reuseForks>true</reuseForks>-->
+                    <!--                    <useSystemClassLoader>false</useSystemClassLoader>-->
+                    <!--                    <reportsDirectory>target/surefire-reports-${surefire.forkNumber}</reportsDirectory>-->
 
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
@@ -248,19 +329,45 @@
                     <reportVersion>2.13.8</reportVersion>
                 </configuration>
             </plugin>
+
+
 <!--            <plugin>-->
 <!--                <groupId>org.codehaus.mojo</groupId>-->
-<!--                <artifactId>exec-maven-plugin</artifactId>-->
-<!--                <version>3.0.0</version>-->
+<!--                <artifactId>aspectj-maven-plugin</artifactId>-->
+<!--                <version>1.11</version>-->
+<!--                <configuration>-->
+<!--                    <complianceLevel>${maven.compiler.source}</complianceLevel>-->
+<!--                    <source>${maven.compiler.source}</source>-->
+<!--                    <target>${maven.compiler.source}</target>-->
+<!--                    <weaveDependencies>-->
+<!--                        <weaveDependency>-->
+<!--                            <groupId>ru.testit</groupId>-->
+<!--                            <artifactId>junit5</artifactId>-->
+<!--                        </weaveDependency>-->
+<!--                    </weaveDependencies>-->
+<!--                </configuration>-->
 <!--                <executions>-->
 <!--                    <execution>-->
-<!--                        <phase>install</phase>-->
-<!--                        <configuration>-->
-<!--                            <classpathScope>main</classpathScope>-->
-<!--                        </configuration>-->
+<!--                        <goals>-->
+<!--                            <goal>test-compile</goal>-->
+<!--                        </goals>-->
 <!--                    </execution>-->
 <!--                </executions>-->
 <!--            </plugin>-->
+
+            <!--            <plugin>-->
+            <!--                <groupId>org.codehaus.mojo</groupId>-->
+            <!--                <artifactId>exec-maven-plugin</artifactId>-->
+            <!--                <version>3.0.0</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <phase>install</phase>-->
+            <!--                        <configuration>-->
+            <!--                            <classpathScope>main</classpathScope>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 </project>
