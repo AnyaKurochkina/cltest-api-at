@@ -29,7 +29,7 @@ public class Tests {
 
     @BeforeEach
     @SneakyThrows
-    @Title("beforeScenarios")
+//    @Title("beforeScenarios")
     public void beforeScenarios(TestInfo testInfo){
         String className = testInfo.getTestClass().orElseThrow(Exception::new).getSimpleName();
         String methodName = testInfo.getTestMethod().orElseThrow(Exception::new).getName();
