@@ -244,19 +244,22 @@ public class ObjectPoolService {
         return act;
     }
 
-    @Step()
-    @SneakyThrows
     private static void toStringProductStep(Entity entity) {
+        if (entity instanceof ServiceAccount || entity instanceof ServiceAccountToken)
+            return;
+        toStringProductStepFunc(entity);
+    }
+
+
+    @Step
+    @SneakyThrows
+    private static void toStringProductStepFunc(Entity entity) {
         AllureLifecycle allureLifecycle = getLifecycle();
         String id = allureLifecycle.getCurrentTestCaseOrStep().orElse(null);
-        if (id == null)
-            return;
         List<Parameter> list = new ArrayList<>();
         Map<String, String> parametersMap = new HashMap<>();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(entity.getClass().getSuperclass().getDeclaredFields()));
         fieldList.addAll(Arrays.asList(entity.getClass().getDeclaredFields()));
-        if(entity instanceof ServiceAccount || entity instanceof ServiceAccountToken)
-            return;
         for (Field field : fieldList) {
             if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()))
                 continue;
@@ -272,8 +275,10 @@ public class ObjectPoolService {
                 list.add(parameter);
             }
         }
-        allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
-        allureLifecycle.updateStep(id, s -> s.setParameters(list));
+        if (Objects.nonNull(id)) {
+            allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
+            allureLifecycle.updateStep(id, s -> s.setParameters(list));
+        }
         StepsAspects.getCurrentStep().get().setTitle(StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName()));
         StepsAspects.getCurrentStep().get().setParameters(parametersMap);
     }
