@@ -29,11 +29,11 @@ public class Tests {
 
     @BeforeEach
     @SneakyThrows
-//    @Title("beforeScenarios")
+    @Title("Generate TMS link")
     public void beforeScenarios(TestInfo testInfo){
         String className = testInfo.getTestClass().orElseThrow(Exception::new).getSimpleName();
         String methodName = testInfo.getTestMethod().orElseThrow(Exception::new).getName();
-        Allure.tms(className + "." + methodName, "");
+        Allure.tms(className + "#" + methodName, "");
     }
 
     public static void putAttachLog(String text) {

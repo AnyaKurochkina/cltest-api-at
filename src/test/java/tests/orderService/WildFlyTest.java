@@ -10,6 +10,7 @@ import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
+import ru.testit.annotations.WorkItemId;
 import tests.Tests;
 
 @Epic("Продукты")
@@ -17,13 +18,15 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("wildfly"), @Tag("prod")})
 public class WildFlyTest extends Tests {
 
+    @WorkItemId("377474")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "Заказ {0}")
     void create(WildFly product) {
         //noinspection EmptyTryBlock
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {}
     }
 
+    @WorkItemId("377467")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -34,6 +37,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @WorkItemId("377470")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -44,6 +48,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @WorkItemId("377473")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -55,6 +60,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @WorkItemId("377469")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
@@ -70,6 +76,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @WorkItemId("377472")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -81,6 +88,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @WorkItemId("377471")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -92,6 +100,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @WorkItemId("377477")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
@@ -102,6 +111,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @WorkItemId("377468")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
