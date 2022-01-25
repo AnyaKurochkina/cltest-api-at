@@ -47,8 +47,8 @@ public class OldWindowsTest extends Tests {
     @DisplayName("Изменить конфигурацию Windows OLD")
     @Test
     void resize() {
-        if (windows.productStatusIs(STOPPED)) {
-            windows.start();
+        if (windows.productStatusIs(STARTED)) {
+            windows.stopHard();
         }
         windows.resize(windows.getMaxFlavor());
         windows.resize(windows.getMinFlavor());

@@ -132,6 +132,7 @@ public class OldPostgresProTest extends Tests {
         postgresPro.stopSoft();
     }
 
+    @Tag("resize")
     @Order(10)
     @DisplayName("Изменить конфигурацию PostgresPRO Old")
     @Test

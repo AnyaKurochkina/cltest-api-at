@@ -57,8 +57,8 @@ public class OldApacheKafkaTest extends Tests {
     @DisplayName("Изменить конфигурацию ApacheKafka OLD")
     @Test
     void resize() {
-        if (kafka.productStatusIs(STOPPED)) {
-            kafka.start();
+        if (kafka.productStatusIs(STARTED)) {
+            kafka.stopHard();
         }
         kafka.resize(kafka.getMaxFlavor());
     }
