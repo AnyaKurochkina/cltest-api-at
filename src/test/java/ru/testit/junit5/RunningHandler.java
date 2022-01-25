@@ -17,8 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RunningHandler
 {
     private static final TestITClient testITClient = new TestITClient();
-    private final CreateTestItemRequestFactory createTestItemRequestFactory = new CreateTestItemRequestFactory();
-    private final TestResultRequestFactory testResultRequestFactory = new TestResultRequestFactory();
+    private static final CreateTestItemRequestFactory createTestItemRequestFactory = new CreateTestItemRequestFactory();
+    private static final TestResultRequestFactory testResultRequestFactory = new TestResultRequestFactory();
     private static final Map<MethodType, StepNode> utilsMethodSteps = Collections.synchronizedMap(new LinkedHashMap<>());
     private static final ConcurrentHashMap<UniqueTest, StepNode> includedTests = new ConcurrentHashMap<>();
     private static final List<UniqueTest> alreadyFinished = Collections.synchronizedList(new LinkedList<>());
@@ -35,19 +35,19 @@ public class RunningHandler
         TestITClient.startLaunch();
     }
     
-    public synchronized void finishLaunch() {
+    public static void finishLaunch() {
 //        this.createTestItemRequestFactory.processFinishLaunch(this.utilsMethodSteps, this.includedTests);
 //        this.testITClient.sendTestItems(this.createTestItemRequestFactory.getCreateTestRequests());
-        this.testResultRequestFactory.processFinishLaunch(utilsMethodSteps, includedTests);
+        testResultRequestFactory.processFinishLaunch(utilsMethodSteps, includedTests);
 //        this.testITClient.finishLaunch(this.testResultRequestFactory.getTestResultRequest());
         testITClient.sendCompleteTestRun();
     }
     
-    public synchronized void startTest(Method currentTest, String displayName, String configurationId) {
-        this.createTestItemRequestFactory.processTest(currentTest, displayName, configurationId);
+    public static void startTest(Method currentTest, String displayName, String configurationId) {
+        createTestItemRequestFactory.processTest(currentTest, displayName, configurationId);
         final StepNode parentStep = new StepNode();
         parentStep.setTitle(displayName);
-        parentStep.setDescription(this.extractDescription(currentTest));
+        parentStep.setDescription(extractDescription(currentTest));
         parentStep.setStartedOn(new Date());
         log.info("startTest " + new UniqueTest(extractExternalID(currentTest, null), configurationId));
         //TODO: UUID
@@ -55,7 +55,7 @@ public class RunningHandler
         StepsAspects.setStepNodes(parentStep);
     }
     
-    public synchronized void finishTest(final Method atomicTest, final Throwable thrown, String configurationId) {
+    public void finishTest(final Method atomicTest, final Throwable thrown, String configurationId) {
 //        final String externalId = extractExternalID(atomicTest, subId);
         UniqueTest test = new UniqueTest(extractExternalID(atomicTest, null), configurationId);
         if (alreadyFinished.contains(test)) {
@@ -68,21 +68,21 @@ public class RunningHandler
             parentStep.setCompletedOn(new Date());
         }
         alreadyFinished.add(test);
-        this.createTestItemRequestFactory.processFinishLaunchUniqueTest(utilsMethodSteps, includedTests, test);
+        createTestItemRequestFactory.processFinishLaunchUniqueTest(utilsMethodSteps, includedTests, test);
         testITClient.sendTestItemsUniqueTest(this.createTestItemRequestFactory.getCreateTestRequests(test));
-        this.testResultRequestFactory.processFinishLaunchUniqueTest(test, utilsMethodSteps, includedTests);
+        testResultRequestFactory.processFinishLaunchUniqueTest(test, utilsMethodSteps, includedTests);
     }
     
-    public synchronized void startUtilMethod(final MethodType currentMethod, final Method method) {
+    public static void startUtilMethod(final MethodType currentMethod, final Method method) {
         final StepNode parentStep = new StepNode();
-        parentStep.setTitle(this.extractTitle(method));
-        parentStep.setDescription(this.extractDescription(method));
+        parentStep.setTitle(extractTitle(method));
+        parentStep.setDescription(extractDescription(method));
         parentStep.setStartedOn(new Date());
         utilsMethodSteps.putIfAbsent(currentMethod, parentStep);
         StepsAspects.setStepNodes(parentStep);
     }
     
-    public synchronized void finishUtilMethod(final MethodType currentMethod, final Throwable thrown) {
+    public static void finishUtilMethod(final MethodType currentMethod, final Throwable thrown) {
         final StepNode parentStep = utilsMethodSteps.get(currentMethod);
         parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
         parentStep.setCompletedOn(new Date());
@@ -91,12 +91,12 @@ public class RunningHandler
         }
     }
     
-    private synchronized String extractDescription(final Method currentTest) {
+    private static String extractDescription(final Method currentTest) {
         final Description annotation = currentTest.getAnnotation(Description.class);
         return (annotation != null) ? annotation.value() : null;
     }
     
-    private synchronized String extractTitle(final Method currentTest) {
+    private static String extractTitle(final Method currentTest) {
         final Title annotation = currentTest.getAnnotation(Title.class);
         return (annotation != null) ? annotation.value() : null;
     }
