@@ -40,7 +40,8 @@ public class TestResultRequestFactory {
         Attachment log = new Attachment();
         log.setFileName("http-request.log");
         log.setBytes(Tests.getAttachLog().getBytes());
-        step.getAttachments().add(log);
+        if(log.getBytes().length > 0)
+            step.getAttachments().add(log);
 
         List<Map<String, String>> attachmentList = new ArrayList<>();
         Iterator<Attachment> iterator = step.getAttachments().iterator();
