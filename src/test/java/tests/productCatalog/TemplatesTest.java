@@ -3,9 +3,9 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
-import httpModels.productCatalog.Template.existsTemplate.response.ExistsTemplateResponse;
-import httpModels.productCatalog.Template.getListTemplate.response.GetTemplateListResponse;
-import httpModels.productCatalog.Template.getTemplate.response.GetTemplateResponse;
+import httpModels.productCatalog.template.existsTemplate.response.ExistsTemplateResponse;
+import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
+import httpModels.productCatalog.template.getTemplate.response.GetTemplateResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Template;
@@ -15,6 +15,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -125,7 +126,13 @@ public class TemplatesTest extends Tests {
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
                         .createJsonObject("Имя", templatePath)).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("a&b&c", templatePath)).assertStatus(500)
+                        .createJsonObject("a&b&c", templatePath)).assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                                .createJsonObject("", templatePath))
+                        .assertStatus(400),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                                .createJsonObject(" ", templatePath))
+                        .assertStatus(400)
         );
     }
 
@@ -141,6 +148,25 @@ public class TemplatesTest extends Tests {
         Assertions.assertTrue(productCatalogSteps.isExists(productName, templateName, ExistsTemplateResponse.class));
         productCatalogSteps.deleteByName(productName, templateName, GetTemplateListResponse.class);
         Assertions.assertFalse(productCatalogSteps.isExists(productName, templateName, ExistsTemplateResponse.class));
+    }
+
+    @Order(89)
+    @DisplayName("Обновление сервиса с указанием версии в граничных значениях")
+    @Test
+    public void updateTemplateAndGetVersion() {
+        Template templateTest = Template.builder().templateName("template_version_test_api").version("1.0.999").build().createObject();
+        productCatalogSteps.partialUpdateObject(productName, String.valueOf(templateTest.getTemplateId()), new JSONObject().put("name", "template_version_test_api2"));
+        String currentVersion = productCatalogSteps.getById(productName, String.valueOf(templateTest.getTemplateId()), GetTemplateResponse.class).getVersion();
+        assertEquals("1.1.0", currentVersion);
+        productCatalogSteps.partialUpdateObject(productName, String.valueOf(templateTest.getTemplateId()), new JSONObject().put("name", "template_version_test_api3")
+                .put("version", "1.999.999"));
+        productCatalogSteps.partialUpdateObject(productName, String.valueOf(templateTest.getTemplateId()), new JSONObject().put("name", "template_version_test_api4"));
+        currentVersion = productCatalogSteps.getById(productName, String.valueOf(templateTest.getTemplateId()), GetTemplateResponse.class).getVersion();
+        assertEquals("2.0.0", currentVersion);
+        productCatalogSteps.partialUpdateObject(productName, String.valueOf(templateTest.getTemplateId()), new JSONObject().put("name", "template_version_test_api5")
+                .put("version", "999.999.999"));
+        productCatalogSteps.partialUpdateObject(productName, String.valueOf(templateTest.getTemplateId()), new JSONObject().put("name", "template_version_test_api6"))
+                .assertStatus(500);
     }
 
     @Order(90)

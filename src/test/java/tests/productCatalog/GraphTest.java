@@ -3,15 +3,15 @@ package tests.productCatalog;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
 import core.helper.StringUtils;
-import httpModels.productCatalog.Action.createAction.response.CreateActionResponse;
+import httpModels.productCatalog.action.createAction.response.CreateActionResponse;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.Graphs.createGraph.response.CreateGraphResponse;
-import httpModels.productCatalog.Graphs.deleteGraph.response.DeleteGraphResponse;
-import httpModels.productCatalog.Graphs.existsGraphs.response.ExistsGraphsResponse;
-import httpModels.productCatalog.Graphs.getGraph.response.GetGraphResponse;
-import httpModels.productCatalog.Graphs.getGraphsList.response.GetGraphsListResponse;
-import httpModels.productCatalog.Product.createProduct.response.CreateProductResponse;
-import httpModels.productCatalog.Service.createService.response.CreateServiceResponse;
+import httpModels.productCatalog.graphs.createGraph.response.CreateGraphResponse;
+import httpModels.productCatalog.graphs.deleteGraph.response.DeleteGraphResponse;
+import httpModels.productCatalog.graphs.existsGraphs.response.ExistsGraphsResponse;
+import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
+import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
+import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
+import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Graph;
 import org.json.JSONObject;
@@ -139,6 +139,25 @@ public class GraphTest {
     public void createGraphWithSameName() {
         productCatalogSteps.createProductObject(productName, productCatalogSteps
                 .createJsonObject(graph.getName(), "productCatalog/graphs/createGraph.json")).assertStatus(400);
+    }
+
+    @Order(89)
+    @DisplayName("Обновление графа с указанием версии в граничных значениях")
+    @Test
+    public void updateGraphAndGetVersion() {
+        Graph graphTest = Graph.builder().name("graph_version_test_api").version("1.0.999").build().createObject();
+        productCatalogSteps.partialUpdateObject(productName, graphTest.getGraphId(), new JSONObject().put("name", "graph_version_test_api2"));
+        String currentVersion = productCatalogSteps.getById(productName, graphTest.getGraphId(), GetGraphResponse.class).getVersion();
+        assertEquals("1.1.0", currentVersion);
+        productCatalogSteps.partialUpdateObject(productName, graphTest.getGraphId(), new JSONObject().put("name", "graph_version_test_api3")
+                .put("version", "1.999.999"));
+        productCatalogSteps.partialUpdateObject(productName, graphTest.getGraphId(), new JSONObject().put("name", "graph_version_test_api4"));
+        currentVersion = productCatalogSteps.getById(productName, graphTest.getGraphId(), GetGraphResponse.class).getVersion();
+        assertEquals("2.0.0", currentVersion);
+        productCatalogSteps.partialUpdateObject(productName, graphTest.getGraphId(), new JSONObject().put("name", "graph_version_test_api5")
+                .put("version", "999.999.999"));
+        productCatalogSteps.partialUpdateObject(productName, graphTest.getGraphId(), new JSONObject().put("name", "graph_version_test_api6"))
+                .assertStatus(500);
     }
 
     @Order(90)
