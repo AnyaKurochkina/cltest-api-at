@@ -21,7 +21,12 @@ public class StepNode
     private Map<String, String> parameters;
     @Getter
     private final List<Attachment> attachments = new ArrayList<>();
-    
+
+    public StepNode() {
+        this.linkItems = new LinkedList<LinkItem>();
+        this.childrens = new LinkedList<StepNode>();
+    }
+
     public StepNode getParent() {
         return this.parent;
     }

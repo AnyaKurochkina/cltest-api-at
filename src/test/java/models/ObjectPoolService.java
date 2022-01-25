@@ -247,6 +247,8 @@ public class ObjectPoolService {
     private static void toStringProductStep(Entity entity) {
         if (entity instanceof ServiceAccount || entity instanceof ServiceAccountToken)
             return;
+        if(Objects.isNull(getLifecycle().getCurrentTestCaseOrStep().orElse(null)))
+            return;
         toStringProductStepFunc(entity);
     }
 

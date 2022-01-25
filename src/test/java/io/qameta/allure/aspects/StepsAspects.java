@@ -15,6 +15,7 @@ import io.qameta.allure.model.StepResult;
 import io.qameta.allure.util.AspectUtils;
 import io.qameta.allure.util.ResultsUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -68,8 +69,8 @@ public class StepsAspects {
     }
 
     public static void startNestedStep(final String title, final String description) {
-        if(currentStep.get() == null)
-            currentStep.set(new StepNode());
+//        if(currentStep.get() == null)
+//            currentStep.set(new StepNode());
         final StepNode currStep = currentStep.get();
         final StepNode newStep = StepUtils.makeStepNode(title, description, currStep);
         newStep.setStartedOn(new Date());

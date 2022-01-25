@@ -31,7 +31,7 @@ public class RunningHandler
         this.testITClient = new TestITClient();
     }
     
-    public void startLaunch() {
+    public synchronized void startLaunch() {
         String testRunId = System.getProperty("testRunId");
         if(Objects.nonNull(testRunId)){
             TestITClient.startLaunchResponse = new StartLaunchResponse();
@@ -42,7 +42,7 @@ public class RunningHandler
         this.testITClient.startLaunch();
     }
     
-    public void finishLaunch() {
+    public synchronized void finishLaunch() {
 //        this.createTestItemRequestFactory.processFinishLaunch(this.utilsMethodSteps, this.includedTests);
 //        this.testITClient.sendTestItems(this.createTestItemRequestFactory.getCreateTestRequests());
         this.testResultRequestFactory.processFinishLaunch(this.utilsMethodSteps, this.includedTests);
@@ -50,7 +50,7 @@ public class RunningHandler
         this.testITClient.sendCompleteTestRun();
     }
     
-    public void startTest(Method currentTest, String displayName, String configurationId) {
+    public synchronized void startTest(Method currentTest, String displayName, String configurationId) {
         this.createTestItemRequestFactory.processTest(currentTest, displayName, configurationId);
         final StepNode parentStep = new StepNode();
         parentStep.setTitle(displayName);
@@ -62,7 +62,7 @@ public class RunningHandler
         StepsAspects.setStepNodes(parentStep);
     }
     
-    public void finishTest(final Method atomicTest, final Throwable thrown, String configurationId) {
+    public synchronized void finishTest(final Method atomicTest, final Throwable thrown, String configurationId) {
 //        final String externalId = extractExternalID(atomicTest, subId);
         UniqueTest test = new UniqueTest(extractExternalID(atomicTest, null), configurationId);
         if (this.alreadyFinished.contains(test)) {
@@ -80,7 +80,7 @@ public class RunningHandler
         this.testResultRequestFactory.processFinishLaunchUniqueTest(test, this.utilsMethodSteps, this.includedTests);
     }
     
-    public void startUtilMethod(final MethodType currentMethod, final Method method) {
+    public synchronized void startUtilMethod(final MethodType currentMethod, final Method method) {
         final StepNode parentStep = new StepNode();
         parentStep.setTitle(this.extractTitle(method));
         parentStep.setDescription(this.extractDescription(method));
@@ -89,7 +89,7 @@ public class RunningHandler
         StepsAspects.setStepNodes(parentStep);
     }
     
-    public void finishUtilMethod(final MethodType currentMethod, final Throwable thrown) {
+    public synchronized void finishUtilMethod(final MethodType currentMethod, final Throwable thrown) {
         final StepNode parentStep = this.utilsMethodSteps.get(currentMethod);
         parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
         parentStep.setCompletedOn(new Date());
@@ -98,12 +98,12 @@ public class RunningHandler
         }
     }
     
-    private String extractDescription(final Method currentTest) {
+    private synchronized String extractDescription(final Method currentTest) {
         final Description annotation = currentTest.getAnnotation(Description.class);
         return (annotation != null) ? annotation.value() : null;
     }
     
-    private String extractTitle(final Method currentTest) {
+    private synchronized String extractTitle(final Method currentTest) {
         final Title annotation = currentTest.getAnnotation(Title.class);
         return (annotation != null) ? annotation.value() : null;
     }
