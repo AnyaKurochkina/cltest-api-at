@@ -67,7 +67,7 @@ public class TestITClient
                 .build();
     }
     
-    public void startLaunch() {
+    public static void startLaunch() {
         final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns");
         post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
         try {
@@ -86,7 +86,7 @@ public class TestITClient
                             " :: " + requestEntity + " :: " + str);
                     //////////////////
 
-                    this.startLaunchResponse = (StartLaunchResponse)getObjectMapper().readValue(str, (Class)StartLaunchResponse.class);
+                    startLaunchResponse = (StartLaunchResponse)getObjectMapper().readValue(str, (Class)StartLaunchResponse.class);
                     if (response != null) {
                         response.close();
                     }

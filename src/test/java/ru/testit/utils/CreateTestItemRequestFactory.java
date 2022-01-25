@@ -42,7 +42,7 @@ public class CreateTestItemRequestFactory {
 //        }
 //    }
 
-    public void processFinishLaunchUniqueTest(final HashMap<MethodType, StepNode> utilsMethodSteps, final HashMap<UniqueTest, StepNode> includedTests, UniqueTest test) {
+    public void processFinishLaunchUniqueTest(final Map<MethodType, StepNode> utilsMethodSteps, final Map<UniqueTest, StepNode> includedTests, UniqueTest test) {
         final CreateTestItemRequest createTestItemRequest = this.createTestItemRequests.get(test);
         final StepNode testParentStepNode = includedTests.get(test);
         try {
@@ -60,7 +60,7 @@ public class CreateTestItemRequestFactory {
         this.processStep(parentStep.getChildrens(), createTestItemRequest.getSteps());
     }
 
-    private void processUtilsSteps(final CreateTestItemRequest createTestItemRequest, final HashMap<MethodType, StepNode> utilsMethodSteps) {
+    private void processUtilsSteps(final CreateTestItemRequest createTestItemRequest, final Map<MethodType, StepNode> utilsMethodSteps) {
         for (final MethodType methodType : utilsMethodSteps.keySet()) {
             if (methodType == MethodType.BEFORE_CLASS || methodType == MethodType.BEFORE_METHOD) {
                 this.processSetUpSteps(createTestItemRequest, utilsMethodSteps.get(methodType));

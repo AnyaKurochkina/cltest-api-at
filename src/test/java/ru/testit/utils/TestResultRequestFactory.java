@@ -12,7 +12,7 @@ import java.util.*;
 public class TestResultRequestFactory {
     private TestResultsRequest request;
 
-    public void processFinishLaunch(final HashMap<MethodType, StepNode> utilsMethodSteps, final HashMap<UniqueTest, StepNode> includedTests) {
+    public void processFinishLaunch(final Map<MethodType, StepNode> utilsMethodSteps, final Map<UniqueTest, StepNode> includedTests) {
         this.request = new TestResultsRequest();
         for (final UniqueTest test : includedTests.keySet()) {
             final String externalId = test.getExternalId();
@@ -25,7 +25,7 @@ public class TestResultRequestFactory {
         }
     }
 
-    public void processFinishLaunchUniqueTest(final UniqueTest test, final HashMap<MethodType, StepNode> utilsMethodSteps, final HashMap<UniqueTest, StepNode> includedTests) {
+    public void processFinishLaunchUniqueTest(final UniqueTest test, final Map<MethodType, StepNode> utilsMethodSteps, final Map<UniqueTest, StepNode> includedTests) {
         TestResultsRequest req = new TestResultsRequest();
         final String externalId = test.getExternalId();
         final TestResultRequest currentTest = new TestResultRequest();
@@ -64,7 +64,7 @@ public class TestResultRequestFactory {
 //        TestITClient.sendTestResult(req);
     }
 
-    private void processUtilsMethodsSteps(final TestResultRequest currentTest, final HashMap<MethodType, StepNode> utilsMethodSteps) {
+    private void processUtilsMethodsSteps(final TestResultRequest currentTest, final Map<MethodType, StepNode> utilsMethodSteps) {
         for (final MethodType methodType : utilsMethodSteps.keySet()) {
             if (methodType == MethodType.BEFORE_CLASS || methodType == MethodType.BEFORE_METHOD) {
                 this.processSetUpSteps(currentTest, utilsMethodSteps.get(methodType));

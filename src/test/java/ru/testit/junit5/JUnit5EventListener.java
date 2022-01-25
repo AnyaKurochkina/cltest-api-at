@@ -14,7 +14,7 @@ import java.util.Objects;
 @Log4j2
 public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterAllCallback, InvocationInterceptor, TestWatcher
 {
-    private static final RunningHandler HANDLER;
+    private static final RunningHandler HANDLER = new RunningHandler();
     private static final ExtensionContext.Namespace configurationSpace = ExtensionContext.Namespace.create(JUnit5EventListener.class);
     
     public void beforeAll(final ExtensionContext context) {
@@ -107,8 +107,5 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             throw new Exception(throwable.getMessage());
         }
     }
-    
-    static {
-        HANDLER = new RunningHandler();
-    }
+
 }
