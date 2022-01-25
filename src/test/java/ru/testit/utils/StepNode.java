@@ -15,8 +15,8 @@ public class StepNode
     private Date completedOn;
     private String outcome;
     private Throwable failureReason;
-    private List<LinkItem> linkItems;
-    private List<StepNode> childrens;
+    private List<LinkItem> linkItems = new ArrayList<>();
+    private List<StepNode> childrens = new ArrayList<>();
     @Setter @Getter
     private Map<String, String> parameters;
     @Getter

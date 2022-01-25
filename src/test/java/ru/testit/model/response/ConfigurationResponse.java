@@ -1,14 +1,17 @@
 package ru.testit.model.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConfigurationResponse{
 	private boolean isDefault;
 	private Map<String, String> capabilities;
 	private String name;
+	@EqualsAndHashCode.Include
 	private String id;
 
 	public void setIsDefault(boolean isDefault){
