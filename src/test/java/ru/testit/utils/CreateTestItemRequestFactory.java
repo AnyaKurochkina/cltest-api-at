@@ -10,12 +10,13 @@ import ru.testit.model.request.*;
 import ru.testit.annotations.*;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CreateTestItemRequestFactory {
-    private Map<UniqueTest, CreateTestItemRequest> createTestItemRequests;
+    private static Map<UniqueTest, CreateTestItemRequest> createTestItemRequests;
 
     public CreateTestItemRequestFactory() {
-        this.createTestItemRequests = new HashMap<UniqueTest, CreateTestItemRequest>();
+        createTestItemRequests = new ConcurrentHashMap<>();
     }
 
     public void processTest(final Method method, String displayName, String configurationId) {
@@ -29,7 +30,7 @@ public class CreateTestItemRequestFactory {
         createTestItemRequest.setTestPlanId(this.extractTestPlanId(method));
         createTestItemRequest.setLinks(this.extractLinks(method));
         createTestItemRequest.setLabels(this.extractLabels(method));
-        this.createTestItemRequests.put(new UniqueTest(externalId, configurationId), createTestItemRequest);
+        createTestItemRequests.put(new UniqueTest(externalId, configurationId), createTestItemRequest);
     }
 
 //    public void processFinishLaunch(final HashMap<MethodType, StepNode> utilsMethodSteps, final HashMap<UniqueTest, StepNode> includedTests) {
@@ -43,7 +44,7 @@ public class CreateTestItemRequestFactory {
 //    }
 
     public void processFinishLaunchUniqueTest(final Map<MethodType, StepNode> utilsMethodSteps, final Map<UniqueTest, StepNode> includedTests, UniqueTest test) {
-        final CreateTestItemRequest createTestItemRequest = this.createTestItemRequests.get(test);
+        final CreateTestItemRequest createTestItemRequest = createTestItemRequests.get(test);
         final StepNode testParentStepNode = includedTests.get(test);
         try {
             createTestItemRequest.setOutcome(Outcome.getByValue(testParentStepNode.getOutcome()));
