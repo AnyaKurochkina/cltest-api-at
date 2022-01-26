@@ -3,9 +3,9 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
-import httpModels.productCatalog.Action.existsAction.response.ExistsActionResponse;
-import httpModels.productCatalog.Action.getAction.response.GetActionResponse;
-import httpModels.productCatalog.Action.getActionList.response.ActionResponse;
+import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
+import httpModels.productCatalog.action.getAction.response.GetActionResponse;
+import httpModels.productCatalog.action.getActionList.response.ActionResponse;
 import httpModels.productCatalog.GetImpl;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
@@ -111,6 +111,25 @@ public class ActionsTest extends Tests {
                 () -> assertEquals(action.getActionId(), actionIdWithMultiSearch));
     }
 
+    @Order(90)
+    @DisplayName("Обновление действия с указанием версии в граничных значениях")
+    @Test
+    public void updateActionAndGetVersion() {
+        Action actionTest = Action.builder().actionName("action_version_test_api").version("1.0.999").build().createObject();
+        productCatalogSteps.partialUpdateObject(productName, actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api2"));
+        String currentVersion = productCatalogSteps.getById(productName, actionTest.getActionId(), GetActionResponse.class).getVersion();
+        Assertions.assertEquals("1.1.0", currentVersion);
+        productCatalogSteps.partialUpdateObject(productName, actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api3")
+                .put("version", "1.999.999"));
+        productCatalogSteps.partialUpdateObject(productName, actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api4"));
+        currentVersion = productCatalogSteps.getById(productName, actionTest.getActionId(), GetActionResponse.class).getVersion();
+        Assertions.assertEquals("2.0.0", currentVersion);
+        productCatalogSteps.partialUpdateObject(productName, actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api5")
+                .put("version", "999.999.999"));
+        productCatalogSteps.partialUpdateObject(productName, actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api6"))
+                .assertStatus(500);
+    }
+
     @Order(91)
     @DisplayName("Негативный тест на обновление действия по Id без токена")
     @Test
@@ -138,7 +157,7 @@ public class ActionsTest extends Tests {
         String version = productCatalogSteps
                 .patchObject(productName, GetActionResponse.class, "test_object_at2021", action.getGraphId(), action.getActionId())
                 .getVersion();
-        Assertions.assertEquals("1.1.2", version);
+        Assertions.assertEquals("1.0.1", version);
     }
 
     @Order(94)
@@ -146,7 +165,7 @@ public class ActionsTest extends Tests {
     @Test
     public void sameVersionTest() {
         productCatalogSteps.patchRow(productName, Action.builder().actionName("test_object_at2021").build().init().getTemplate()
-                .set("$.version", "1.1.2")
+                .set("$.version", "1.0.1")
                 .build(), action.getActionId()).assertStatus(500);
     }
 
@@ -172,7 +191,11 @@ public class ActionsTest extends Tests {
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
                         .createJsonObject("Имя", templatePath)).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("a&b&c", templatePath)).assertStatus(500)
+                        .createJsonObject("a&b&c", templatePath)).assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                        .createJsonObject("", templatePath)).assertStatus(400),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                        .createJsonObject(" ", templatePath)).assertStatus(400)
         );
     }
 

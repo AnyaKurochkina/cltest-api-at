@@ -117,7 +117,7 @@ public class PostgresPro extends IProduct {
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 "Имя пользователя отличается от создаваемого");
-        users.add(new DbUser(dbName, username, false));
+        users.add(new DbUser(dbName, username));
         log.info("users = " + users);
         save();
     }

@@ -3,11 +3,11 @@ package models.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.Action.existsAction.response.ExistsActionResponse;
-import httpModels.productCatalog.Template.createTemplate.response.CreateTemplateResponse;
-import httpModels.productCatalog.Template.createTemplate.response.Input;
-import httpModels.productCatalog.Template.createTemplate.response.Output;
-import httpModels.productCatalog.Template.createTemplate.response.PrintedOutput;
+import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
+import httpModels.productCatalog.template.createTemplate.response.CreateTemplateResponse;
+import httpModels.productCatalog.template.createTemplate.response.Input;
+import httpModels.productCatalog.template.createTemplate.response.Output;
+import httpModels.productCatalog.template.createTemplate.response.PrintedOutput;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -50,6 +50,7 @@ public class Template extends Entity {
     private List<Object> allowedGroups;
     private Boolean additionalOutput;
     private String jsonTemplate;
+    private String version;
 
     private final String productName = "templates/";
 
@@ -63,6 +64,7 @@ public class Template extends Entity {
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", templateName)
+                .set("$.version", version)
                 .build();
     }
 

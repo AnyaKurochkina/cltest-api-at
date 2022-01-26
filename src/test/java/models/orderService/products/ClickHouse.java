@@ -117,7 +117,7 @@ public class ClickHouse extends IProduct {
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, username)),
                 "Имя пользователя отличается от создаваемого");
-        users.add(new DbUser(dbName, username, false));
+        users.add(new DbUser(dbName, username));
         log.info("users = " + users);
         save();
     }

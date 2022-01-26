@@ -3,11 +3,11 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
-import httpModels.productCatalog.Action.existsAction.response.ExistsActionResponse;
+import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.OrgDirection.existsOrgDirection.response.ExistsOrgDirectionResponse;
-import httpModels.productCatalog.OrgDirection.getOrgDirection.response.GetOrgDirectionResponse;
-import httpModels.productCatalog.OrgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
+import httpModels.productCatalog.orgDirection.existsOrgDirection.response.ExistsOrgDirectionResponse;
+import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
+import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
@@ -130,7 +130,6 @@ public class OrgDirectionTest extends Tests {
     }
 
     @Order(98)
-    @Disabled
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени.")
     @Test
     public void createActionWithInvalidCharacters() {
@@ -149,6 +148,12 @@ public class OrgDirectionTest extends Tests {
                         .assertStatus(400),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
                                 .createJsonObject("a&b&c", "productCatalog/orgDirection/orgDirection.json"))
+                        .assertStatus(400),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                                .createJsonObject("", "productCatalog/orgDirection/orgDirection.json"))
+                        .assertStatus(400),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                                .createJsonObject(" ", "productCatalog/orgDirection/orgDirection.json"))
                         .assertStatus(400)
         );
     }

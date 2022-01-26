@@ -3,11 +3,11 @@ package models.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.Graphs.getGraphsList.response.GetGraphsListResponse;
-import httpModels.productCatalog.Service.createService.response.CreateServiceResponse;
-import httpModels.productCatalog.Service.createService.response.DataSource;
-import httpModels.productCatalog.Service.createService.response.ExtraData;
-import httpModels.productCatalog.Service.existsService.response.ExistsServiceResponse;
+import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
+import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
+import httpModels.productCatalog.service.createService.response.DataSource;
+import httpModels.productCatalog.service.createService.response.ExtraData;
+import httpModels.productCatalog.service.existsService.response.ExistsServiceResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +30,7 @@ public class Services extends Entity {
     private Object icon;
     private String graphVersion;
     private String description;
+    private String version;
     private List<Object> restrictedGroups;
     private String graphId;
     private DataSource dataSource;
@@ -60,6 +61,7 @@ public class Services extends Entity {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", serviceName)
                 .set("$.graph_id", graphId)
+                .set("$.version", version)
                 .build();
     }
 

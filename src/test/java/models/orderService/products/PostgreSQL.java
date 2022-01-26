@@ -116,7 +116,7 @@ public class PostgreSQL extends IProduct {
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 "Имя пользователя отличается от создаваемого");
-        users.add(new DbUser(dbName, username, false));
+        users.add(new DbUser(dbName, username));
         log.info("users = " + users);
         save();
     }
@@ -140,6 +140,7 @@ public class PostgreSQL extends IProduct {
         Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(
                 this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));
+        users.remove(new DbUser(dbName, username));
         log.info("users = " + users);
         save();
     }

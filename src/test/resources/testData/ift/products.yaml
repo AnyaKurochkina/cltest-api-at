@@ -62,8 +62,8 @@ Podman:
 
 PostgresSQLCluster:
   - options:
-      - { platform: "OpenStack", env: "DSO", segment: "dev-srv-app", postgresqlVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "OpenStack", env: "DSO", segment: "dev-srv-app", postgresqlVersion: "11", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", postgresqlVersion: "12", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "DSO", segment: "dev-srv-app", postgresqlVersion: "11", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 #Elasticsearch:
 #  - options:

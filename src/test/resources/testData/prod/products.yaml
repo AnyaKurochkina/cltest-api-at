@@ -147,3 +147,14 @@ Elasticsearch:
   - options:
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", elasticsearchVersion: "7.9.2 + Exporter 1.1.0" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", elasticsearchVersion: "7.9.2 + Exporter 1.1.0" }
+
+ScyllaDb:
+  - options:
+      - { platform: "OpenStack", env: "DEV", version: "4.4.8", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "OpenStack", env: "IFT", version: "4.4.8", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "OpenStack", env: "EDU", version: "4.4.8", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "HOTFIX", version: "4.4.8", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "vsphere", env: "LT", version: "4.4.8", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "MIGR", version: "4.4.8", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "PREPROD", version: "4.4.8", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "Nutanix", env: "ST", version: "4.4.8", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }

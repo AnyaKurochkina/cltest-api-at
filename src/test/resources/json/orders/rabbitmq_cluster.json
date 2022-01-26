@@ -43,7 +43,7 @@
 			],
 			"web_console_grants": [
 				{
-					"role": "administrator",
+					"role": "manager",
 					"groups": [
 						"cloud-s9crux-denisapi"
 					]
