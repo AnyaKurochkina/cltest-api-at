@@ -3,9 +3,9 @@ package models.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.Action.createAction.response.CreateActionResponse;
-import httpModels.productCatalog.Action.existsAction.response.ExistsActionResponse;
-import httpModels.productCatalog.Graphs.getGraphsList.response.GetGraphsListResponse;
+import httpModels.productCatalog.action.createAction.response.CreateActionResponse;
+import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
+import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +24,7 @@ public class Action extends Entity {
     private String actionName;
     private String graphId;
     private String actionId;
+    private String version;
     private final String productName = "actions/";
 
     @Override
@@ -31,7 +32,7 @@ public class Action extends Entity {
         jsonTemplate = "productCatalog/actions/createAction.json";
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
         graphId = productCatalogSteps
-                .getProductObjectIdByNameWithMultiSearch("graphs/", "AtTestGraph", GetGraphsListResponse.class);
+                .getProductObjectIdByNameWithMultiSearch("graphs/", "graph_for_api_test", GetGraphsListResponse.class);
         return this;
     }
 
@@ -42,19 +43,19 @@ public class Action extends Entity {
                 .set("$.title", actionName)
                 .set("$.description", actionName)
                 .set("$.graph_id", graphId)
-                .set("$.version", "1.1.1")
+                .set("$.version", version)
                 .build();
     }
 
     @Override
     @Step("Создание экшена")
     protected void create() {
-        CreateActionResponse createActionResponse = new Http(Configure.ProductCatalogURL)
+        actionId = new Http(Configure.ProductCatalogURL)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
-                .extractAs(CreateActionResponse.class);
-        actionId = createActionResponse.getId();
+                .extractAs(CreateActionResponse.class)
+                .getId();
         Assertions.assertNotNull(actionId, "Экшен с именем: " + actionName + ", не создался");
     }
 

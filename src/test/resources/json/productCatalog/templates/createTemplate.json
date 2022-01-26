@@ -1,6 +1,7 @@
 {
   "id": "",
   "name": "test_api",
+  "version": "",
   "run": "run",
   "rollback": "Rollback",
   "timeout": 1,

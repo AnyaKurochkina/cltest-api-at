@@ -3,11 +3,11 @@ package models.productCatalog;
 import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.Graphs.createGraph.response.CreateGraphResponse;
-import httpModels.productCatalog.Graphs.createGraph.response.JsonSchema;
-import httpModels.productCatalog.Graphs.createGraph.response.StaticData;
-import httpModels.productCatalog.Graphs.createGraph.response.UiSchema;
-import httpModels.productCatalog.Graphs.existsGraphs.response.ExistsGraphsResponse;
+import httpModels.productCatalog.graphs.createGraph.response.CreateGraphResponse;
+import httpModels.productCatalog.graphs.createGraph.response.JsonSchema;
+import httpModels.productCatalog.graphs.createGraph.response.StaticData;
+import httpModels.productCatalog.graphs.createGraph.response.UiSchema;
+import httpModels.productCatalog.graphs.existsGraphs.response.ExistsGraphsResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -59,12 +59,12 @@ public class Graph extends Entity {
     @Override
     @Step("Создание графа")
     protected void create() {
-        CreateGraphResponse createGraphResponse = new Http(Configure.ProductCatalogURL)
+        graphId = new Http(Configure.ProductCatalogURL)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
-                .extractAs(CreateGraphResponse.class);
-        graphId = createGraphResponse.getId();
+                .extractAs(CreateGraphResponse.class)
+                .getId();
         Assertions.assertNotNull(graphId, "Граф с именем: " + name + ", не создался");
     }
 
