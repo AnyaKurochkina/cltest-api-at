@@ -1,5 +1,6 @@
 package ru.testit.junit5;
 
+import core.exception.CreateEntityException;
 import io.qameta.allure.aspects.StepsAspects;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +28,7 @@ public class RunningHandler
     public synchronized void startLaunch() {
         String testRunId = System.getProperty("testRunId");
         if(Objects.nonNull(testRunId)){
-            TestITClient.startLaunchResponse = new StartLaunchResponse();
+//            TestITClient.startLaunchResponse = new StartLaunchResponse();
             TestITClient.startLaunchResponse.setId(testRunId);
             TestITClient.sendStartTestRun();
             return;
@@ -64,6 +65,8 @@ public class RunningHandler
         final StepNode parentStep = includedTests.get(new UniqueTest(extractExternalID(atomicTest, null), configurationId));
         if (parentStep != null) {
             parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
+            if(thrown instanceof CreateEntityException)
+                parentStep.setOutcome(Outcome.BLOCKED.getValue());
             parentStep.setFailureReason(thrown);
             parentStep.setCompletedOn(new Date());
         }

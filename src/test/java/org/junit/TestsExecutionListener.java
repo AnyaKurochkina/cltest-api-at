@@ -7,6 +7,8 @@ import core.utils.Encrypt;
 import models.ObjectPoolService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 
@@ -18,9 +20,9 @@ import java.util.Base64;
 
 import static core.helper.Configure.ENV;
 
-@Log4j2
+//@Log4j2
 public class TestsExecutionListener implements TestExecutionListener {
-
+//    private static final Logger log = LogManager.getLogger("LogTest");
     @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
 //        List<Class<?>> classes = ClassFinder.find("tests");

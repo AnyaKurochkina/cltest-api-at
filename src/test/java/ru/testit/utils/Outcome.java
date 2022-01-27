@@ -3,8 +3,9 @@ package ru.testit.utils;
 public enum Outcome
 {
     PASSED("Passed"), 
-    FAILED("Failed");
-    
+    FAILED("Failed"),
+    BLOCKED("Blocked");
+
     private String value;
     
     private Outcome(final String value) {

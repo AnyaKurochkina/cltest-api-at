@@ -14,24 +14,17 @@ import io.qameta.allure.model.StatusDetails;
 import io.qameta.allure.model.StepResult;
 import io.qameta.allure.util.AspectUtils;
 import io.qameta.allure.util.ResultsUtils;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
 import lombok.Getter;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
-//import ru.testit.services.AddLink;
 import ru.testit.utils.Outcome;
 import ru.testit.utils.StepNode;
 import ru.testit.utils.StepUtils;
+
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Aspect
 public class StepsAspects {

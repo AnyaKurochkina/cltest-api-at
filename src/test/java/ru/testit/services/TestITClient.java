@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import core.helper.Http;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
@@ -19,6 +20,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.testit.model.request.*;
 import ru.testit.model.response.ConfigurationResponse;
 import ru.testit.model.response.CreateTestItemResponse;
@@ -33,27 +36,19 @@ import java.util.List;
 import java.util.TimeZone;
 
 
-
 @Log4j2
-public class TestITClient
-{
-//    private static final Logger log;
-    public static AppProperties properties;
-    public static StartLaunchResponse startLaunchResponse;
-    
-    public TestITClient() {
+public class TestITClient {
+    public final static AppProperties properties = new AppProperties();
+    public static StartLaunchResponse startLaunchResponse = new StartLaunchResponse();
+
+    private static ObjectMapper getObjectMapper() {
+        return new ObjectMapper().setTimeZone(TimeZone.getTimeZone("GMT+3"));
     }
-    
-    private static ObjectMapper getObjectMapper(){
-        return  new ObjectMapper().setTimeZone(TimeZone.getTimeZone("GMT+3"));
-    }
-    
-    
-    
+
     public static String getProjectID() {
         return TestITClient.properties.getProjectID();
     }
-    
+
     public static String getConfigurationId() {
         return TestITClient.properties.getConfigurationId();
     }
@@ -66,642 +61,250 @@ public class TestITClient
                 .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
                 .build();
     }
-    
+
+    //старт тест-рана
     public static void startLaunch() {
-        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns");
-        post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
+        String body;
+        Http.Response response;
         try {
             final StartTestRunRequest request = new StartTestRunRequest();
             request.setProjectId(getProjectID());
-            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)request), ContentType.APPLICATION_JSON);
-            post.setEntity((HttpEntity)requestEntity);
-            final CloseableHttpClient httpClient = getHttpClient();
-            try {
-                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
-                try {
-
-                    //////////////////
-                    String str = EntityUtils.toString(response.getEntity());
-                    TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
-                            " :: " + requestEntity + " :: " + str);
-                    //////////////////
-
-                    startLaunchResponse = (StartLaunchResponse)getObjectMapper().readValue(str, (Class)StartLaunchResponse.class);
-                    if (response != null) {
-                        response.close();
-                    }
-                }
-                catch (Throwable t) {
-                    if (response != null) {
-                        try {
-                            response.close();
-                        }
-                        catch (Throwable t2) {
-                            t.addSuppressed(t2);
-                        }
-                    }
-                    throw t;
-                }
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-            }
-            catch (Throwable t3) {
-                if (httpClient != null) {
-                    try {
-                        httpClient.close();
-                    }
-                    catch (Throwable t4) {
-                        t3.addSuppressed(t4);
-                    }
-                }
-                throw t3;
-            }
+            body = getObjectMapper().writeValueAsString(request);
+            response = new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .body(body)
+                    .post("/api/v2/testRuns")
+                    .assertStatus(201);
+            startLaunchResponse = response.extractAs(StartLaunchResponse.class);
+        } catch (Throwable e) {
+            log.error(e.toString());
+            return;
         }
-        catch (IOException e) {
-            TestITClient.log.error("Exception while starting test run", (Throwable)e);
-        }
+        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
     }
-    
-//    public void sendTestItems(final Collection<CreateTestItemRequest> createTestRequests) {
-//        for (final CreateTestItemRequest createTestRequest : createTestRequests) {
-//            final GetTestItemResponse getTestItemResponse = this.getTestItem(createTestRequest);
-//            if (getTestItemResponse == null || StringUtils.isBlank((CharSequence)getTestItemResponse.getId())) {
-////                createTestRequest.setExternalId(createTestRequest.getExternalId().replaceAll("#(\\d+)$", ""));
-//                this.createTestItem(createTestRequest);
-//            }
-//            else {
-//                if (createTestRequest.getOutcome().equals(Outcome.FAILED)) {
-//                    createTestRequest.setId(getTestItemResponse.getId());
-//                    createTestRequest.setName(getTestItemResponse.getName());
-//                    createTestRequest.setExternalId(getTestItemResponse.getExternalId());
-//                    createTestRequest.setDescription(getTestItemResponse.getDescription());
-//                    createTestRequest.setNameSpace(getTestItemResponse.getNameSpace());
-//                    createTestRequest.setClassName(getTestItemResponse.getClassName());
-//                    createTestRequest.setLabels(getTestItemResponse.getLabels());
-//                    createTestRequest.setSetUp(getTestItemResponse.getSetUp());
-//                    createTestRequest.setSteps(getTestItemResponse.getSteps());
-//                    createTestRequest.setTearDown(getTestItemResponse.getTearDown());
-//                    createTestRequest.setProjectId(getTestItemResponse.getProjectId());
-//                    createTestRequest.setTitle(getTestItemResponse.getTitle());
-//                }
-//                this.updatePostItem(createTestRequest, getTestItemResponse.getId());
-//            }
-//        }
-//    }
+
 
     public void sendTestItemsUniqueTest(final CreateTestItemRequest createTestRequest) {
-            final GetTestItemResponse getTestItemResponse = this.getTestItem(createTestRequest);
-            if (getTestItemResponse == null || StringUtils.isBlank((CharSequence)getTestItemResponse.getId())) {
+        final GetTestItemResponse getTestItemResponse = this.getTestItem(createTestRequest);
+        if (getTestItemResponse == null || StringUtils.isBlank(getTestItemResponse.getId())) {
 //                createTestRequest.setExternalId(createTestRequest.getExternalId().replaceAll("#(\\d+)$", ""));
-                this.createTestItem(createTestRequest);
+            this.createTestItem(createTestRequest);
+        } else {
+            if (createTestRequest.getOutcome().equals(Outcome.FAILED)) {
+                createTestRequest.setId(getTestItemResponse.getId());
+                createTestRequest.setName(getTestItemResponse.getName());
+                createTestRequest.setExternalId(getTestItemResponse.getExternalId());
+                createTestRequest.setDescription(getTestItemResponse.getDescription());
+                createTestRequest.setNameSpace(getTestItemResponse.getNameSpace());
+                createTestRequest.setClassName(getTestItemResponse.getClassName());
+                createTestRequest.setLabels(getTestItemResponse.getLabels());
+                createTestRequest.setSetUp(getTestItemResponse.getSetUp());
+                createTestRequest.setSteps(getTestItemResponse.getSteps());
+                createTestRequest.setTearDown(getTestItemResponse.getTearDown());
+                createTestRequest.setProjectId(getTestItemResponse.getProjectId());
+                createTestRequest.setTitle(getTestItemResponse.getTitle());
             }
-            else {
-                if (createTestRequest.getOutcome().equals(Outcome.FAILED)) {
-                    createTestRequest.setId(getTestItemResponse.getId());
-                    createTestRequest.setName(getTestItemResponse.getName());
-                    createTestRequest.setExternalId(getTestItemResponse.getExternalId());
-                    createTestRequest.setDescription(getTestItemResponse.getDescription());
-                    createTestRequest.setNameSpace(getTestItemResponse.getNameSpace());
-                    createTestRequest.setClassName(getTestItemResponse.getClassName());
-                    createTestRequest.setLabels(getTestItemResponse.getLabels());
-                    createTestRequest.setSetUp(getTestItemResponse.getSetUp());
-                    createTestRequest.setSteps(getTestItemResponse.getSteps());
-                    createTestRequest.setTearDown(getTestItemResponse.getTearDown());
-                    createTestRequest.setProjectId(getTestItemResponse.getProjectId());
-                    createTestRequest.setTitle(getTestItemResponse.getTitle());
-                }
-                this.updatePostItem(createTestRequest, getTestItemResponse.getId());
-            }
+            this.updatePostItem(createTestRequest, getTestItemResponse.getId());
+        }
     }
 
+    //получение конфигурации по ид
     public ConfigurationResponse getConfiguration(String configurationId) {
-        final HttpGet get = new HttpGet(TestITClient.properties.getUrl() + "/api/v2/configurations/" + configurationId);
-        get.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
-        ConfigurationResponse configurationResponse = null;
+        Http.Response response;
         try {
-            final CloseableHttpClient httpClient = getHttpClient();
-            try {
-                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)get);
-                try {
-
-                    //////////////////
-                    String str = EntityUtils.toString(response.getEntity());
-                    TestITClient.log.info(get + " :: " + str);
-                    //////////////////
-
-                    configurationResponse = (ConfigurationResponse)getObjectMapper().readValue(str, (Class)ConfigurationResponse.class);
-                    if (response != null) {
-                        response.close();
-                    }
-                }
-                catch (Throwable t) {
-                    if (response != null) {
-                        try {
-                            response.close();
-                        }
-                        catch (Throwable t2) {
-                            t.addSuppressed(t2);
-                        }
-                    }
-                    throw t;
-                }
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-            }
-            catch (Throwable t3) {
-                if (httpClient != null) {
-                    try {
-                        httpClient.close();
-                    }
-                    catch (Throwable t4) {
-                        t3.addSuppressed(t4);
-                    }
-                }
-                throw t3;
-            }
+            response = new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .get("/api/v2/configurations/{}", configurationId)
+                    .assertStatus(200);
+        } catch (Throwable e) {
+            log.error(e.toString());
+            throw e;
         }
-        catch (IOException e) {
-            TestITClient.log.error("Exception while sending test item", (Throwable)e);
-        }
+        log.info("[{}] Response :{}", response.status(), response.toString());
 //        if (configurationResponse != null && StringUtils.isNotBlank((CharSequence)createTestItemResponse.getId())) {
 //            this.linkAutoTestWithTestCase(createTestItemResponse.getId(), new LinkAutoTestRequest(createTestItemRequest.getTestPlanId()));
 //        }
-        return configurationResponse;
+        return response.extractAs(ConfigurationResponse.class);
     }
 
 
-
-
-
-
-
+    @SneakyThrows
+    //получение автотеста по ид
     public GetTestItemResponse getTestItem(final CreateTestItemRequest createTestItemRequest) {
-
-//        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
-
-
-        final HttpGet get = new HttpGet(TestITClient.properties.getUrl() + "/api/v2/autoTests?projectId=" + TestITClient.properties.getProjectID() + "&externalId=" + createTestItemRequest.getExternalId());
-        get.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
-        GetTestItemResponse getTestItemResponse = null;
+        Http.Response response;
         try {
-            final CloseableHttpClient httpClient = getHttpClient();
-            try {
-                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)get);
-                try {
-
-                    //////////////////
-                    String str = EntityUtils.toString(response.getEntity());
-                    TestITClient.log.info(get + " :: " + str);
-                    //////////////////
-
-                    final TypeFactory typeFactory = getObjectMapper().getTypeFactory();
-                    final CollectionType collectionType = typeFactory.constructCollectionType((Class)List.class, (Class)GetTestItemResponse.class);
-                    final List<GetTestItemResponse> listTestItems = (List<GetTestItemResponse>)getObjectMapper().readValue(str, (JavaType)collectionType);
-                    if (!listTestItems.isEmpty()) {
-                        getTestItemResponse = listTestItems.get(0);
-                    }
-                    if (response != null) {
-                        response.close();
-                    }
-                }
-                catch (Throwable t) {
-                    if (response != null) {
-                        try {
-                            response.close();
-                        }
-                        catch (Throwable t2) {
-                            t.addSuppressed(t2);
-                        }
-                    }
-                    throw t;
-                }
-                if (httpClient != null) {
-                    httpClient.close();
-                }
+            response = new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .get("/api/v2/autoTests?projectId={}&externalId={}", properties.getProjectID(), createTestItemRequest.getExternalId())
+                    .assertStatus(200);
+            final CollectionType collectionType = getObjectMapper().getTypeFactory().constructCollectionType(List.class, GetTestItemResponse.class);
+            final List<GetTestItemResponse> listTestItems = getObjectMapper().readValue(response.toString(), collectionType);
+            if (!listTestItems.isEmpty()) {
+                log.info("[{}] Response :{}", response.status(), response.toString());
+                return listTestItems.get(0);
             }
-            catch (Throwable t3) {
-                if (httpClient != null) {
-                    try {
-                        httpClient.close();
-                    }
-                    catch (Throwable t4) {
-                        t3.addSuppressed(t4);
-                    }
-                }
-                throw t3;
-            }
+        } catch (Throwable e) {
+            log.error(e.toString());
+            throw e;
         }
-        catch (IOException e) {
-            TestITClient.log.error("Exception while sending test item", (Throwable)e);
-        }
-        return getTestItemResponse;
+        log.info("[{}] Response :{}", response.status(), response.toString());
+        return null;
     }
-    
+
+    private String filterTestName(String name){
+        return name.replaceAll("(\\(super=\\w+\\(\\w+\\)[,\\s\\w]+\\))", "");
+    }
+
+    //создание автотеста
     public void createTestItem(final CreateTestItemRequest createTestItemRequest) {
-//        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
-        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/autoTests");
-        post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
+        String body;
+        Http.Response response;
         CreateTestItemResponse createTestItemResponse = null;
         try {
-            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)createTestItemRequest), ContentType.APPLICATION_JSON);
-            post.setEntity((HttpEntity)requestEntity);
-            final CloseableHttpClient httpClient = getHttpClient();
-            try {
-                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
-                try {
-
-                    //////////////////
-                    String str = EntityUtils.toString(response.getEntity());
-                    TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
-                            " :: " + requestEntity + " :: " + str);
-                    //////////////////
-
-                    createTestItemResponse = (CreateTestItemResponse)getObjectMapper().readValue(str, (Class)CreateTestItemResponse.class);
-                    if (response != null) {
-                        response.close();
-                    }
-                }
-                catch (Throwable t) {
-                    if (response != null) {
-                        try {
-                            response.close();
-                        }
-                        catch (Throwable t2) {
-                            t.addSuppressed(t2);
-                        }
-                    }
-                    throw t;
-                }
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-            }
-            catch (Throwable t3) {
-                if (httpClient != null) {
-                    try {
-                        httpClient.close();
-                    }
-                    catch (Throwable t4) {
-                        t3.addSuppressed(t4);
-                    }
-                }
-                throw t3;
-            }
+            createTestItemRequest.setTitle(filterTestName(createTestItemRequest.getTitle()));
+            createTestItemRequest.setName(filterTestName(createTestItemRequest.getName()));
+            body = getObjectMapper().writeValueAsString(createTestItemRequest);
+            response = new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .body(body)
+                    .post("/api/v2/autoTests")
+                    .assertStatus(201);
+            createTestItemResponse = response.extractAs(CreateTestItemResponse.class);
+        } catch (Throwable e) {
+            log.error(e.toString());
+            return;
         }
-        catch (IOException e) {
-            TestITClient.log.error("Exception while sending test item", (Throwable)e);
-        }
-        if (createTestItemResponse != null && StringUtils.isNotBlank((CharSequence)createTestItemResponse.getId())) {
+        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
+
+        if (createTestItemResponse != null && StringUtils.isNotBlank(createTestItemResponse.getId())) {
             this.linkAutoTestWithTestCase(createTestItemResponse.getId(), new LinkAutoTestRequest(createTestItemRequest.getTestPlanId()));
         }
     }
-    
+
+    //обновление автотеста
     public void updatePostItem(final CreateTestItemRequest createTestItemRequest, final String testId) {
-//        createTestItemRequest.setExternalId(createTestItemRequest.getExternalId().replaceAll("#(\\d+)$", ""));
         createTestItemRequest.setId(testId);
-        final HttpPut put = new HttpPut(TestITClient.properties.getUrl() + "/api/v2/autoTests");
-        put.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
-        final CreateTestItemResponse createTestItemResponse = null;
+        String body;
+        Http.Response response;
         try {
-            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)createTestItemRequest), ContentType.APPLICATION_JSON);
-            put.setEntity((HttpEntity)requestEntity);
-            final CloseableHttpClient httpClient = getHttpClient();
-            try {
-                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)put);
-
-                //////////
-                String res = response.toString();
-                if(response.getEntity() != null)
-                    res += EntityUtils.toString(response.getEntity());
-                TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
-                        " :: " + requestEntity + " :: " + res);
-                ///////////
-
-                final Throwable t2 = null;
-                if (response != null) {
-                    if (t2 != null) {
-                        try {
-                            response.close();
-                        }
-                        catch (Throwable t3) {
-                            t2.addSuppressed(t3);
-                        }
-                    }
-                    else {
-                        response.close();
-                    }
-                }
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-            }
-            catch (Throwable t4) {
-                if (httpClient != null) {
-                    try {
-                        httpClient.close();
-                    }
-                    catch (Throwable t5) {
-                        t4.addSuppressed(t5);
-                    }
-                }
-                throw t4;
-            }
+            createTestItemRequest.setTitle(filterTestName(createTestItemRequest.getTitle()));
+            createTestItemRequest.setName(filterTestName(createTestItemRequest.getName()));
+            body = getObjectMapper().writeValueAsString(createTestItemRequest);
+            response = new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .body(body)
+                    .put("/api/v2/autoTests")
+                    .assertStatus(204);
+        } catch (Throwable e) {
+            log.error(e.toString());
+            return;
         }
-        catch (IOException e) {
-            TestITClient.log.error("Exception while sending test item", (Throwable)e);
-        }
-        if (StringUtils.isNotBlank((CharSequence)createTestItemRequest.getTestPlanId())) {
+        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
+        if (StringUtils.isNotBlank(createTestItemRequest.getTestPlanId())) {
             this.linkAutoTestWithTestCase(testId, new LinkAutoTestRequest(createTestItemRequest.getTestPlanId()));
         }
     }
-    
+
     private void linkAutoTestWithTestCase(final String autoTestId, final LinkAutoTestRequest linkAutoTestRequest) {
-        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/autoTests/" + autoTestId + "/workItems");
-        post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
+        String body;
+        Http.Response response;
         try {
-            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)linkAutoTestRequest), ContentType.APPLICATION_JSON);
-            post.setEntity((HttpEntity)requestEntity);
-            final CloseableHttpClient httpClient = getHttpClient();
-            try {
-                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
-
-                //////////////
-                String res = response.toString();
-                if(response.getEntity() != null)
-                    res += EntityUtils.toString(response.getEntity());
-                TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
-                        " :: " + requestEntity + " :: " + res);
-                /////////////
-
-
-                final Throwable t2 = null;
-                if (response != null) {
-                    if (t2 != null) {
-                        try {
-                            response.close();
-                        }
-                        catch (Throwable t3) {
-                            t2.addSuppressed(t3);
-                        }
-                    }
-                    else {
-                        response.close();
-                    }
-                }
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-            }
-            catch (Throwable t4) {
-                if (httpClient != null) {
-                    try {
-                        httpClient.close();
-                    }
-                    catch (Throwable t5) {
-                        t4.addSuppressed(t5);
-                    }
-                }
-                throw t4;
-            }
+            body = getObjectMapper().writeValueAsString(linkAutoTestRequest);
+            response = new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .body(body)
+                    .post("/api/v2/autoTests/{}/workItems", autoTestId)
+                    .assertStatus(204);
+        } catch (Throwable e) {
+            log.error(e.toString());
+            return;
         }
-        catch (IOException e) {
-            TestITClient.log.error("Exception while linking auto test", (Throwable)e);
-        }
+        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
     }
-    
+
     public void finishLaunch(final TestResultsRequest request) {
 //        this.sendTestResult(request);
         this.sendCompleteTestRun();
     }
 
     public static String sendAttachment(Attachment attachment, String testResultId) {
-        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testResults/" + testResultId + "/attachments");
-        post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
+        Http.Response response;
         try {
-            HttpEntity entity = MultipartEntityBuilder.create()
-                    .addBinaryBody("file", attachment.getBytes(), ContentType.create("multipart/form-data"), attachment.getFileName())
-                    .build();
-            post.setEntity(entity);
-            final CloseableHttpClient httpClient = getHttpClient();
-            try {
-                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
-                String httpResponse = EntityUtils.toString(response.getEntity());
-                /////////////////
-                String res = response.toString();
-                if(response.getEntity() != null)
-                    res += httpResponse;
-                TestITClient.log.info(res);
-                ////////////////
-
-                final Throwable t2 = null;
-                if (response != null) {
-                    if (t2 != null) {
-                        try {
-                            response.close();
-                        }
-                        catch (Throwable t3) {
-                            t2.addSuppressed(t3);
-                        }
-                    }
-                    else {
-                        response.close();
-                    }
-                }
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-                return httpResponse;
-            }
-            catch (Throwable t4) {
-                if (httpClient != null) {
-                    try {
-                        httpClient.close();
-                    }
-                    catch (Throwable t5) {
-                        t4.addSuppressed(t5);
-                    }
-                }
-                throw t4;
-            }
+            response = new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .multiPart("/api/v2/testResults/" + testResultId + "/attachments", "file", attachment.getFileName(), attachment.getBytes())
+                    .assertStatus(200);
+            log.info("[{}] Response :{}", response.status(), response.toString());
+            return response.toString();
+        } catch (Throwable e) {
+            log.error(e.toString());
+            throw e;
         }
-        catch (IOException e) {
-            TestITClient.log.error("Exception while sending test result", (Throwable)e);
-        }
-        return null;
     }
 
+    @SneakyThrows
     public static String sendTestResult(final TestResultsRequest request) {
-        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/testResults");
-        post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
+        String body;
+        Http.Response response;
         try {
             List<TestResultRequest> list = request.getTestResults();
-            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)list), ContentType.APPLICATION_JSON);
-            post.setEntity((HttpEntity)requestEntity);
-            final CloseableHttpClient httpClient = getHttpClient();
-            try {
-                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
-                String httpResponse = EntityUtils.toString(response.getEntity());
-                /////////////////
-                String res = response.toString();
-                if(response.getEntity() != null)
-                    res += httpResponse;
-                TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
-                        " :: " + requestEntity + " :: " + res);
-                ////////////////
-
-                final Throwable t2 = null;
-                if (response != null) {
-                    if (t2 != null) {
-                        try {
-                            response.close();
-                        }
-                        catch (Throwable t3) {
-                            t2.addSuppressed(t3);
-                        }
-                    }
-                    else {
-                        response.close();
-                    }
-                }
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-                return core.helper.StringUtils.findByRegex("([\\w-]+)", httpResponse);
-            }
-            catch (Throwable t4) {
-                if (httpClient != null) {
-                    try {
-                        httpClient.close();
-                    }
-                    catch (Throwable t5) {
-                        t4.addSuppressed(t5);
-                    }
-                }
-                throw t4;
-            }
+            body = getObjectMapper().writeValueAsString(list);
+            response = new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .body(body)
+                    .post("/api/v2/testRuns/{}/testResults", startLaunchResponse.getId())
+                    .assertStatus(200);
+        } catch (Throwable e) {
+            log.error(e.toString());
+            throw e;
         }
-        catch (IOException e) {
-            TestITClient.log.error("Exception while sending test result", (Throwable)e);
-        }
-        return null;
+        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
+        return core.helper.StringUtils.findByRegex("([\\w-]+)", response.toString());
     }
 
 
     public static void sendStartTestRun() {
-        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/start");
-        post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
+        Http.Response response;
         try {
-            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)""), ContentType.APPLICATION_JSON);
-            post.setEntity((HttpEntity)requestEntity);
-            final CloseableHttpClient httpClient = getHttpClient();
-            try {
-                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
-
-                /////////////////
-                String res = response.toString();
-                if(response.getEntity() != null)
-                    res += EntityUtils.toString(response.getEntity());
-                TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
-                        " :: " + requestEntity + " :: " + res);
-                ////////////////
-
-                final Throwable t2 = null;
-                if (response != null) {
-                    if (t2 != null) {
-                        try {
-                            response.close();
-                        }
-                        catch (Throwable t3) {
-                            t2.addSuppressed(t3);
-                        }
-                    }
-                    else {
-                        response.close();
-                    }
-                }
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-            }
-            catch (Throwable t4) {
-                if (httpClient != null) {
-                    try {
-                        httpClient.close();
-                    }
-                    catch (Throwable t5) {
-                        t4.addSuppressed(t5);
-                    }
-                }
-                throw t4;
-            }
+            response = new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .body("")
+                    .post("/api/v2/testRuns/{}/start", startLaunchResponse.getId())
+                    .assertStatus(201);
+        } catch (Throwable e) {
+            log.error(e.toString());
+            return;
         }
-        catch (IOException e) {
-            TestITClient.log.error("Exception while sending complete test run", (Throwable)e);
-        }
+        log.info("[{}] Response :{}", response.status(), response.toString());
     }
-
 
     public void sendCompleteTestRun() {
-        final HttpPost post = new HttpPost(TestITClient.properties.getUrl() + "/api/v2/testRuns/" + startLaunchResponse.getId() + "/complete");
-        post.addHeader("Authorization", "PrivateToken " + TestITClient.properties.getPrivateToken());
+        Http.Response response;
         try {
-            final StringEntity requestEntity = new StringEntity(getObjectMapper().writeValueAsString((Object)""), ContentType.APPLICATION_JSON);
-            post.setEntity((HttpEntity)requestEntity);
-            final CloseableHttpClient httpClient = getHttpClient();
-            try {
-                final CloseableHttpResponse response = httpClient.execute((HttpUriRequest)post);
-
-                /////////////////
-                String res = response.toString();
-                if(response.getEntity() != null)
-                    res += EntityUtils.toString(response.getEntity());
-                TestITClient.log.info(IOUtils.toString(requestEntity.getContent(), StandardCharsets.UTF_8) +
-                        " :: " + requestEntity + " :: " + res);
-                ////////////////
-
-                final Throwable t2 = null;
-                if (response != null) {
-                    if (t2 != null) {
-                        try {
-                            response.close();
-                        }
-                        catch (Throwable t3) {
-                            t2.addSuppressed(t3);
-                        }
-                    }
-                    else {
-                        response.close();
-                    }
-                }
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-            }
-            catch (Throwable t4) {
-                if (httpClient != null) {
-                    try {
-                        httpClient.close();
-                    }
-                    catch (Throwable t5) {
-                        t4.addSuppressed(t5);
-                    }
-                }
-                throw t4;
-            }
+            response = new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .body("")
+                    .post("/api/v2/testRuns/{}/complete", startLaunchResponse.getId())
+                    .assertStatus(201);
+        } catch (Throwable e) {
+            log.error(e.toString());
+            return;
         }
-        catch (IOException e) {
-            TestITClient.log.error("Exception while sending complete test run", (Throwable)e);
-        }
+        log.info("[{}] Response :{}", response.status(), response.toString());
     }
-    
+
     @AddLink
     public static void addLink(final LinkItem linkItem) {
     }
-    
-    static {
-//        log = LoggerFactory.getLogger((Class)TestITClient.class);
-        TestITClient.properties = new AppProperties();
-    }
+
 }

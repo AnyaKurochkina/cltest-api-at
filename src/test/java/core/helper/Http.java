@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.enums.Role;
 import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
-//import org.apache.logging.log4j.core.util.Assert;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -19,7 +19,9 @@ import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -29,8 +31,9 @@ import java.util.concurrent.Semaphore;
 import static core.helper.JsonHelper.stringPrettyFormat;
 import static tests.Tests.putAttachLog;
 
-@Log4j2
+
 public class Http {
+    private Logger log = LogManager.getLogger("LogTest");
     private final String host;
     private String path;
     private String body = "";
@@ -42,8 +45,10 @@ public class Http {
     private boolean isUsedToken = true;
     private boolean isLogged = true;
     private static final Semaphore SEMAPHORE = new Semaphore(1, true);
+
     private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
-    private File file;
+    private String fileName;
+    private byte[] bytes;
 
     static {
         try {
@@ -94,8 +99,11 @@ public class Http {
         return this;
     }
 
+    @SneakyThrows
     public Response get(String path, Object ... args) {
         this.method = "GET";
+        for (Object arg : args)
+            path = path.replaceFirst("\\{}", URLEncoder.encode(Objects.requireNonNull(arg).toString(), StandardCharsets.UTF_8.toString()));
         this.path = StringUtils.format(path, args);
         return request();
     }
@@ -112,6 +120,12 @@ public class Http {
         return request();
     }
 
+    public Response put(String path, Object ... args) {
+        this.method = "PUT";
+        this.path = StringUtils.format(path, args);
+        return request();
+    }
+
     public Http setContentType(String contentType) {
         this.contentType = contentType;
         return this;
@@ -122,10 +136,20 @@ public class Http {
         return this;
     }
 
+    @SneakyThrows
     public Response multiPart(String path, String field, File file) {
         contentType = "multipart/form-data; boundary=" + boundary;
         this.field = field;
-        this.file = file;
+        this.bytes = Files.readAllBytes(file.toPath());
+        this.fileName = file.getName();
+        return post(path);
+    }
+
+    public Response multiPart(String path, String field, String fileName, byte[] bytes) {
+        contentType = "multipart/form-data; boundary=" + boundary;
+        this.field = field;
+        this.fileName = fileName;
+        this.bytes = bytes;
         return post(path);
     }
 
@@ -137,6 +161,11 @@ public class Http {
 
     public Http setProjectId(String projectId) {
         this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId);
+        return this;
+    }
+
+    public Http setSourceToken(String token) {
+        this.token = token;
         return this;
     }
 
@@ -191,7 +220,7 @@ public class Http {
             http.setRequestMethod(method);
             log(String.format("%s URL: %s\n", method, (host + path)));
             if (field.length() > 0) {
-                addFilePart(http.getOutputStream(), file);
+                addFilePart(http.getOutputStream(), fileName, bytes);
             } else {
                 if (body.length() > 0) {
                     log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
@@ -224,7 +253,8 @@ public class Http {
                 log(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
             else
                 log(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
-            log.debug(sbLog.toString());
+            if(isLogged)
+                log.debug(sbLog.toString());
             putAttachLog(sbLog.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -243,9 +273,8 @@ public class Http {
     }
 
     @SneakyThrows
-    public void addFilePart(OutputStream outputStream, File uploadFile) {
+    public void addFilePart(OutputStream outputStream, String fileName, byte[] bytes) {
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8), true);
-        String fileName = uploadFile.getName();
         writer.append("--" + boundary)
                 .append("\r\n")
                 .append("Content-Disposition: form-data; name=\"")
@@ -259,7 +288,7 @@ public class Http {
                 .append("Content-Transfer-Encoding: binary\r\n\r\n")
                 .flush();
 
-        FileInputStream inputStream = new FileInputStream(uploadFile);
+        InputStream inputStream = new ByteArrayInputStream(bytes);
         byte[] buffer = new byte[4096];
         int bytesRead;
         while ((bytesRead = inputStream.read(buffer)) != -1) {

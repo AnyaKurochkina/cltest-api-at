@@ -20,7 +20,6 @@ import java.util.List;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
-@Log4j2
 @Data
 @NoArgsConstructor
 @SuperBuilder
