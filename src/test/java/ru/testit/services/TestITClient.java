@@ -266,7 +266,7 @@ public class TestITClient {
                     .setSourceToken("PrivateToken " + properties.getPrivateToken())
                     .body("")
                     .post("/api/v2/testRuns/{}/start", startLaunchResponse.getId())
-                    .assertStatus(201);
+                    .assertStatus(204);
         } catch (Throwable e) {
             log.error(e.toString());
             return;
@@ -282,7 +282,7 @@ public class TestITClient {
                     .setSourceToken("PrivateToken " + properties.getPrivateToken())
                     .body("")
                     .post("/api/v2/testRuns/{}/complete", startLaunchResponse.getId())
-                    .assertStatus(201);
+                    .assertStatus(204);
         } catch (Throwable e) {
             log.error(e.toString());
             return;
