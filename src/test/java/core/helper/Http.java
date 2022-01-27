@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.enums.Role;
 import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,9 +32,8 @@ import java.util.concurrent.Semaphore;
 import static core.helper.JsonHelper.stringPrettyFormat;
 import static tests.Tests.putAttachLog;
 
-
+@Log4j2
 public class Http {
-    private Logger log = LogManager.getLogger("LogTest");
     private final String host;
     private String path;
     private String body = "";
@@ -253,9 +253,10 @@ public class Http {
                 log(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
             else
                 log(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
-            if(isLogged)
+            if(isLogged) {
                 log.debug(sbLog.toString());
-            putAttachLog(sbLog.toString());
+                putAttachLog(sbLog.toString());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
