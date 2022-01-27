@@ -63,6 +63,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         FileWriter fooWriter = new FileWriter(Configure.getAppProp("allure.results") + "environment.properties", false);
         fooWriter.write("ENV=" + ENV);
         fooWriter.close();
+        System.out.println("##teamcity[publishArtifacts 'logs => logs']");
     }
 
 
