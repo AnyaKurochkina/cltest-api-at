@@ -20,7 +20,8 @@ public class UniqueTest {
     private static final ThreadLocal<StringJoiner> stepLog = new ThreadLocal<>();
 
     public static void writeStepLog(String text){
-        stepLog.get().add(text);
+        if(stepLog.get() != null)
+            stepLog.get().add(text);
     }
 
     public static void clearStepLog(){

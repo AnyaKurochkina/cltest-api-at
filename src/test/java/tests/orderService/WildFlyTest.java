@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.WildFly;
 import org.junit.ProductArgumentsProvider;
@@ -10,7 +11,6 @@ import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import ru.testit.annotations.WorkItemId;
 import tests.Tests;
 
 @Epic("Продукты")
@@ -18,7 +18,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("wildfly"), @Tag("prod")})
 public class WildFlyTest extends Tests {
 
-    @WorkItemId("377474")
+    @TmsLink("377474")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Заказ {0}")
     void create(WildFly product) {
@@ -26,7 +26,7 @@ public class WildFlyTest extends Tests {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {}
     }
 
-    @WorkItemId("377467")
+    @TmsLink("377467")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -37,7 +37,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
-    @WorkItemId("377470")
+    @TmsLink("377470")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -48,7 +48,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
-    @WorkItemId("377473")
+    @TmsLink("377473")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -60,7 +60,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
-    @WorkItemId("377469")
+    @TmsLink("377469")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
@@ -76,7 +76,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
-    @WorkItemId("377472")
+    @TmsLink("377472")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -88,7 +88,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
-    @WorkItemId("377471")
+    @TmsLink("377471")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -100,7 +100,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
-    @WorkItemId("377477")
+    @TmsLink("377477")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
@@ -111,7 +111,7 @@ public class WildFlyTest extends Tests {
         }
     }
 
-    @WorkItemId("377468")
+    @TmsLink("377468")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete

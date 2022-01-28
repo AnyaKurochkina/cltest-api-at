@@ -2,6 +2,9 @@ package ru.testit.utils;
 
 import java.lang.reflect.*;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import ru.testit.services.*;
@@ -25,8 +28,12 @@ public class CreateTestItemRequestFactory {
         createTestItemRequest.setExternalId(externalId);
         createTestItemRequest.setProjectId(TestITClient.getProjectID());
         createTestItemRequest.setName(displayName);
-        createTestItemRequest.setClassName(method.getDeclaringClass().getSimpleName());
-        createTestItemRequest.setNameSpace((method.getDeclaringClass().getPackage() == null) ? null : method.getDeclaringClass().getPackage().getName());
+//        createTestItemRequest.setClassName(method.getDeclaringClass().getSimpleName());
+//        createTestItemRequest.setNameSpace((method.getDeclaringClass().getPackage() == null) ? null : method.getDeclaringClass().getPackage().getName());
+
+        createTestItemRequest.setClassName(extractFeatureValue(method));
+        createTestItemRequest.setNameSpace(extractEpicValue(method));
+
         createTestItemRequest.setTestPlanId(this.extractTestPlanId(method));
         createTestItemRequest.setLinks(this.extractLinks(method));
         createTestItemRequest.setLabels(this.extractLabels(method));
@@ -113,13 +120,13 @@ public class CreateTestItemRequestFactory {
         return className + "#" + methodName + postfix;
     }
 
-    private String extractDisplayName(final Method atomicTest) {
-        final DisplayName annotation = atomicTest.getAnnotation(DisplayName.class);
-        return (annotation != null) ? annotation.value() : null;
-    }
+//    private String extractDisplayName(final Method atomicTest) {
+//        final DisplayName annotation = atomicTest.getAnnotation(DisplayName.class);
+//        return (annotation != null) ? annotation.value() : null;
+//    }
 
     private String extractTestPlanId(final Method method) {
-        final WorkItemId annotation = method.getAnnotation(WorkItemId.class);
+        final TmsLink annotation = method.getAnnotation(TmsLink.class);
         return (annotation != null) ? annotation.value() : null;
     }
 
@@ -159,6 +166,22 @@ public class CreateTestItemRequestFactory {
             }
         }
         return labels;
+    }
+
+    public String extractEpicValue(final Method method){
+        final Epic annotation = method.getDeclaringClass().getAnnotation(Epic.class);
+        if (annotation != null) {
+            return annotation.value();
+        }
+        return method.getDeclaringClass().getName();
+    }
+
+    public String extractFeatureValue(final Method method){
+        final Feature annotation = method.getDeclaringClass().getAnnotation(Feature.class);
+        if (annotation != null) {
+            return annotation.value();
+        }
+        return method.getName();
     }
 
     public Collection<CreateTestItemRequest> getCreateTestRequests() {
