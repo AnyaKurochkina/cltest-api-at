@@ -4,10 +4,10 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.Service.createService.response.CreateServiceResponse;
-import httpModels.productCatalog.Service.existsService.response.ExistsServiceResponse;
-import httpModels.productCatalog.Service.getService.response.GetServiceResponse;
-import httpModels.productCatalog.Service.getServiceList.response.GetServiceListResponse;
+import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
+import httpModels.productCatalog.service.existsService.response.ExistsServiceResponse;
+import httpModels.productCatalog.service.getService.response.GetServiceResponse;
+import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Services;
@@ -17,6 +17,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -156,7 +157,13 @@ public class ServicesTest extends Tests {
                         .assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
                                 .createJsonObject("a&b&c", "/productCatalog/services/createServices.json"))
-                        .assertStatus(500)
+                        .assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                                .createJsonObject("", "/productCatalog/services/createServices.json"))
+                        .assertStatus(400),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                                .createJsonObject(" ", "/productCatalog/services/createServices.json"))
+                        .assertStatus(400)
         );
     }
 
@@ -170,6 +177,25 @@ public class ServicesTest extends Tests {
                         .build()).extractAs(CreateServiceResponse.class);
         Assertions.assertNull(createServiceResponse.getGraphId(), "GraphId не равен null");
         productCatalogSteps.deleteById(productName, createServiceResponse.getId());
+    }
+
+    @Order(89)
+    @DisplayName("Обновление сервиса с указанием версии в граничных значениях")
+    @Test
+    public void updateServiceAndGetVersion() {
+        Services services = Services.builder().serviceName("service_version_test_api").version("1.0.999").build().createObject();
+        productCatalogSteps.partialUpdateObject(productName, services.getServiceId(), new JSONObject().put("name", "service_version_test_api2"));
+        String currentVersion = productCatalogSteps.getById(productName, services.getServiceId(), GetServiceResponse.class).getVersion();
+        assertEquals("1.1.0", currentVersion);
+        productCatalogSteps.partialUpdateObject(productName, services.getServiceId(), new JSONObject().put("name", "service_version_test_api3")
+                .put("version", "1.999.999"));
+        productCatalogSteps.partialUpdateObject(productName, services.getServiceId(), new JSONObject().put("name", "service_version_test_api4"));
+        currentVersion = productCatalogSteps.getById(productName, services.getServiceId(), GetServiceResponse.class).getVersion();
+        assertEquals("2.0.0", currentVersion);
+        productCatalogSteps.partialUpdateObject(productName, services.getServiceId(), new JSONObject().put("name", "service_version_test_api5")
+                .put("version", "999.999.999"));
+        productCatalogSteps.partialUpdateObject(productName, services.getServiceId(), new JSONObject().put("name", "service_version_test_api6"))
+                .assertStatus(500);
     }
 
     @Order(90)

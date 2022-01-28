@@ -4,9 +4,9 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.Product.existProduct.response.ExistProductResponse;
-import httpModels.productCatalog.Product.getProduct.response.GetProductResponse;
-import httpModels.productCatalog.Product.getProducts.response.GetProductsResponse;
+import httpModels.productCatalog.product.existProduct.response.ExistProductResponse;
+import httpModels.productCatalog.product.getProduct.response.GetServiceResponce;
+import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import io.qameta.allure.Feature;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Product;
@@ -18,6 +18,7 @@ import tests.Tests;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -73,7 +74,7 @@ public class ProductsTest extends Tests {
     @DisplayName("Получение продукта по Id")
     @Test
     public void getProductById() {
-        GetImpl productCatalogGet = productCatalogSteps.getById(productName, product.getProductId(), GetProductResponse.class);
+        GetImpl productCatalogGet = productCatalogSteps.getById(productName, product.getProductId(), GetServiceResponce.class);
         Assertions.assertEquals(productCatalogGet.getName(), product.getName());
     }
 
@@ -81,7 +82,7 @@ public class ProductsTest extends Tests {
     @DisplayName("Негатичный тест на получение продукта по Id без токена")
     @Test
     public void getProductByIdWithOutToken() {
-        productCatalogSteps.getByIdWithOutToken(productName, product.getProductId(), GetProductResponse.class);
+        productCatalogSteps.getByIdWithOutToken(productName, product.getProductId(), GetServiceResponce.class);
     }
 
     @Order(20)
@@ -91,7 +92,7 @@ public class ProductsTest extends Tests {
         String expectedValue = "UpdateDescription";
         productCatalogSteps.partialUpdateObject(productName, product.getProductId(), new JSONObject().put("description", expectedValue))
                 .assertStatus(200);
-        String actual = productCatalogSteps.getById(productName, product.getProductId(), GetProductResponse.class).getDescription();
+        String actual = productCatalogSteps.getById(productName, product.getProductId(), GetServiceResponce.class).getDescription();
         Assertions.assertEquals(expectedValue, actual);
     }
 
@@ -116,7 +117,7 @@ public class ProductsTest extends Tests {
     @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {
-        GetImpl productCatalogGet = productCatalogSteps.getById(productName, product.getProductId(), GetProductResponse.class);
+        GetImpl productCatalogGet = productCatalogSteps.getById(productName, product.getProductId(), GetServiceResponce.class);
         Assertions.assertNotNull(productCatalogGet.getGraphVersionCalculated());
     }
 
@@ -168,8 +169,33 @@ public class ProductsTest extends Tests {
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
                         .createJsonObject("Имя", "productCatalog/products/createProduct.json")).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("a&b&c", "productCatalog/products/createProduct.json")).assertStatus(500)
+                        .createJsonObject("a&b&c", "productCatalog/products/createProduct.json")).assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                                .createJsonObject("", "productCatalog/products/createProduct.json"))
+                        .assertStatus(400),
+                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
+                                .createJsonObject(" ", "productCatalog/products/createProduct.json"))
+                        .assertStatus(400)
         );
+    }
+
+    @Order(89)
+    @DisplayName("Обновление продукта с указанием версии в граничных значениях")
+    @Test
+    public void updateProductAndGetVersion() {
+        Product productTest = Product.builder().name("product_version_test_api").version("1.0.999").build().createObject();
+        productCatalogSteps.partialUpdateObject(productName, productTest.getProductId(), new JSONObject().put("name", "product_version_test_api2"));
+        String currentVersion = productCatalogSteps.getById(productName, productTest.getProductId(), GetServiceResponce.class).getVersion();
+        assertEquals("1.1.0", currentVersion);
+        productCatalogSteps.partialUpdateObject(productName, productTest.getProductId(), new JSONObject().put("name", "product_version_test_api3")
+                .put("version", "1.999.999"));
+        productCatalogSteps.partialUpdateObject(productName, productTest.getProductId(), new JSONObject().put("name", "product_version_test_api4"));
+        currentVersion = productCatalogSteps.getById(productName, productTest.getProductId(), GetServiceResponce.class).getVersion();
+        assertEquals("2.0.0", currentVersion);
+        productCatalogSteps.partialUpdateObject(productName, productTest.getProductId(), new JSONObject().put("name", "product_version_test_api5")
+                .put("version", "999.999.999"));
+        productCatalogSteps.partialUpdateObject(productName, productTest.getProductId(), new JSONObject().put("name", "product_version_test_api6"))
+                .assertStatus(500);
     }
 
     @Order(90)

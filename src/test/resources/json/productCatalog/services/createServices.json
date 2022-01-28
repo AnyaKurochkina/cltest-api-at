@@ -2,6 +2,7 @@
   "id": "",
   "name": "service_test",
   "title": "title",
+  "version": "1.0.0",
   "direction": "Windows",
   "direction_id": "2f804be7-0fd6-4f70-9ff2-9e8d51fbe032",
   "description": "ServiceForAT",
