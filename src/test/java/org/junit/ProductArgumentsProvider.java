@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import core.helper.Configure;
 import models.ObjectPoolService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -52,40 +53,34 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         if (variableName == PRODUCTS) {
             if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
 
-                List<Configuration> confMap = TestProperties.getInstance().getConfigMapsByTest(context.getRequiredTestMethod());
-                Class<?> argument = Arrays.stream(context.getRequiredTestMethod().getParameterTypes())
-                        .filter(m -> Entity.class.isAssignableFrom((Class<?>) m)).findFirst().orElseThrow(Exception::new);
 
-                for(Configuration configuration : confMap) {
-                    Entity entity = ObjectPoolService.fromJson(new JSONObject(configuration.getConfMap()).toString(), argument);
-                    entity.setConfigurationId(configuration.getId());
-                    list.add(Arguments.of(entity));
+                if(Configure.isIntegrationTestIt()) {
+                    List<Configuration> confMap = TestProperties.getInstance().getConfigMapsByTest(context.getRequiredTestMethod());
+                    Class<?> argument = Arrays.stream(context.getRequiredTestMethod().getParameterTypes())
+                            .filter(m -> Entity.class.isAssignableFrom((Class<?>) m)).findFirst().orElseThrow(Exception::new);
+
+                    for (Configuration configuration : confMap) {
+                        Entity entity = ObjectPoolService.fromJson(new JSONObject(configuration.getConfMap()).toString(), argument);
+                        entity.setConfigurationId(configuration.getId());
+                        list.add(Arguments.of(entity));
+                    }
                 }
-//                System.out.println(1);
-
-//                Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
-//                Class<?> clazz = null;
-//                for (Class<?> m : params) {
-//                    if (Entity.class.isAssignableFrom(m)) {
-//                        clazz = m;
-//                        break;
-//                    }
-//                }
-//                Class<?> finalClazz = clazz;
-//                orders.forEach(entity -> {
-//                    Class<?> c = entity.getClass();
-//                    if (finalClazz.isInstance(entity)){
-//                        String object = ObjectPoolService.toJson(entity);
-//                        DocumentContext jsonPath = JsonPath.parse(object);
-//                        boolean approved = true;
-//                        for (Map.Entry<String, String> entry : confMap.entrySet()) {
-//                            if(((JSONArray)jsonPath.read("$[?(@." + entry.getKey() + " =~ /.*" + entry.getValue() + "*/i)]")).isEmpty())
-//                                approved = false;
-//                        }
-//                        if(approved)
-//                            list.add(Arguments.of(ObjectPoolService.fromJson(object, c)));
-//                    }
-//                });
+                else {
+                    Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
+                    Class<?> clazz = null;
+                    for (Class<?> m : params) {
+                        if (Entity.class.isAssignableFrom(m)) {
+                            clazz = m;
+                            break;
+                        }
+                    }
+                    Class<?> finalClazz = clazz;
+                    orders.forEach(entity -> {
+                        Class<?> c = entity.getClass();
+                        if (finalClazz.isInstance(entity))
+                            list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
+                    });
+                }
             } else {
                 orders.forEach(entity -> list.add(Arguments.of(new IProductMock(entity.toString()))));
             }

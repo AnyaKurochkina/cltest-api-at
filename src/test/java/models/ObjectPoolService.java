@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import core.enums.ObjectStatus;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
+import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.helper.StringUtils;
 import io.qameta.allure.AllureLifecycle;
@@ -281,7 +282,9 @@ public class ObjectPoolService {
             allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
             allureLifecycle.updateStep(id, s -> s.setParameters(list));
         }
-        StepsAspects.getCurrentStep().get().setTitle(StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName()));
-        StepsAspects.getCurrentStep().get().setParameters(parametersMap);
+        if(Configure.isIntegrationTestIt()) {
+            StepsAspects.getCurrentStep().get().setTitle(StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName()));
+            StepsAspects.getCurrentStep().get().setParameters(parametersMap);
+        }
     }
 }

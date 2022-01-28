@@ -5,6 +5,7 @@
 
 package io.qameta.allure.aspects;
 
+import core.helper.Configure;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
@@ -25,6 +26,8 @@ import ru.testit.utils.StepUtils;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import static core.helper.Configure.isIntegrationTestIt;
 
 @Aspect
 public class StepsAspects {
@@ -62,8 +65,8 @@ public class StepsAspects {
     }
 
     public static void startNestedStep(final String title, final String description) {
-//        if(currentStep.get() == null)
-//            currentStep.set(new StepNode());
+        if(!isIntegrationTestIt())
+            return;
         final StepNode currStep = currentStep.get();
         final StepNode newStep = StepUtils.makeStepNode(title, description, currStep);
         newStep.setStartedOn(new Date());
@@ -72,6 +75,8 @@ public class StepsAspects {
     }
 
     public static void finishNestedStep() {
+        if(!isIntegrationTestIt())
+            return;
         final StepNode currStep = currentStep.get();
         currStep.setCompletedOn(new Date());
         currStep.setOutcome(Outcome.PASSED.getValue());
@@ -79,6 +84,8 @@ public class StepsAspects {
     }
 
     public static void failedNestedStep(final Throwable throwable) {
+        if(!isIntegrationTestIt())
+            return;
         final StepNode currStep = currentStep.get();
         currStep.setCompletedOn(new Date());
         currStep.setOutcome(Outcome.FAILED.getValue());

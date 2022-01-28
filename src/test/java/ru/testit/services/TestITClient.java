@@ -17,7 +17,6 @@ import ru.testit.model.response.CreateTestItemResponse;
 import ru.testit.model.response.GetTestItemResponse;
 import ru.testit.model.response.StartLaunchResponse;
 import ru.testit.properties.AppProperties;
-import ru.testit.utils.CreateTestItemRequestFactory;
 import ru.testit.utils.Outcome;
 
 import java.util.List;

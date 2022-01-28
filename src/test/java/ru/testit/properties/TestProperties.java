@@ -37,31 +37,32 @@ public class TestProperties
 
 
     private TestProperties() {
-        try {
-            final String testConfigPath = Configure.RESOURCE_PATH + "/configurations.txt";
-            if (Files.exists(Paths.get(testConfigPath))) {
-                testProps = Files.readAllLines(Paths.get(testConfigPath));
-                TestITClient client = new TestITClient();
-                Map<String, ConfigurationResponse> configurationsMap = new HashMap<>();
-                for(String line : testProps){
-                    String[] parseLine = line.split("=");
-                    UniqueTest uniqueTest = new UniqueTest(parseLine[0].trim(), parseLine[1].trim());
-                    if(!configurations.containsKey(uniqueTest)) {
-                        if(configurationsMap.containsKey(uniqueTest.getConfigurationId()))
-                            configurations.put(uniqueTest, configurationsMap.get(uniqueTest.getConfigurationId()));
-                        else {
-                            ConfigurationResponse response = client.getConfiguration(uniqueTest.getConfigurationId());
-                            configurations.put(uniqueTest, response);
-                            configurationsMap.put(response.getId(), response);
-                        }
+        if(Configure.isIntegrationTestIt()) {
+            try {
+                final String testConfigPath = Configure.RESOURCE_PATH + "/configurations.txt";
+                if (Files.exists(Paths.get(testConfigPath))) {
+                    testProps = Files.readAllLines(Paths.get(testConfigPath));
+                    TestITClient client = new TestITClient();
+                    Map<String, ConfigurationResponse> configurationsMap = new HashMap<>();
+                    for (String line : testProps) {
+                        String[] parseLine = line.split("=");
+                        UniqueTest uniqueTest = new UniqueTest(parseLine[0].trim(), parseLine[1].trim());
+                        if (!configurations.containsKey(uniqueTest)) {
+                            if (configurationsMap.containsKey(uniqueTest.getConfigurationId()))
+                                configurations.put(uniqueTest, configurationsMap.get(uniqueTest.getConfigurationId()));
+                            else {
+                                ConfigurationResponse response = client.getConfiguration(uniqueTest.getConfigurationId());
+                                configurations.put(uniqueTest, response);
+                                configurationsMap.put(response.getId(), response);
+                            }
+                        } else log.error("{} уже существует", uniqueTest);
                     }
-                    else log.error("{} уже существует", uniqueTest);
+                    ConfigurationResponse response = client.getConfiguration(TestITClient.properties.getConfigurationId());
+                    configurations.put(new UniqueTest("default", TestITClient.properties.getConfigurationId()), response);
                 }
-                ConfigurationResponse response = client.getConfiguration(TestITClient.properties.getConfigurationId());
-                configurations.put(new UniqueTest("default", TestITClient.properties.getConfigurationId()), response);
+            } catch (IOException e) {
+                log.error(e.toString());
             }
-        } catch (IOException e) {
-            log.error(e.toString());
         }
     }
 

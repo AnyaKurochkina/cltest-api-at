@@ -22,24 +22,8 @@ import static core.helper.Configure.ENV;
 
 //@Log4j2
 public class TestsExecutionListener implements TestExecutionListener {
-//    private static final Logger log = LogManager.getLogger("LogTest");
     @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
-//        List<Class<?>> classes = ClassFinder.find("tests");
-//        Set<Float> values = new HashSet<>();
-//        for (Class<?> c : classes) {
-//            for (Method method : c.getDeclaredMethods()) {
-//                if (method.isAnnotationPresent(TmsLink.class)) {
-//                    Float value = Float.valueOf(method.getAnnotation(TmsLink.class).value());
-//                    if (values.contains(value)) {
-//                        log.error(String.format("Значение '%s' у аннотации TmsLink не уникально", value));
-//                        System.exit(1);
-//                    }
-//                    values.add(value);
-//                }
-//            }
-//        }
-//        log.info("tmsLink max {}", Math.round(Collections.max(values)));
         String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
         if (Files.exists(Paths.get(fileSecret)))
             ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));

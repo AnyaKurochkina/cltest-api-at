@@ -13,6 +13,8 @@
 *.log.1
 *.log.gz
 
+*.configurations.txt
+
 **/application.properties
 /test/resources/logs/
 /cltest-api-at-junit5.iml

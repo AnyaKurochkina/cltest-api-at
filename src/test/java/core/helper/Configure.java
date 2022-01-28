@@ -28,6 +28,9 @@ public class Configure {
         try {
             RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
+
+            properties.setProperty("testIt", "false");
+
             loadProperties(RESOURCE_PATH + "/config/application.properties");
             if (System.getProperty("env") == null) {
                 if (getAppProp("env") == null) {
@@ -59,6 +62,11 @@ public class Configure {
         } catch (Exception e) {
             log.warn("Can't load environment properties file : " + e.getMessage());
         }
+    }
+
+    public static boolean isIntegrationTestIt(){
+        return (Configure.getAppProp("testIt").equals("true") || System.getProperty("testRunId") != null);
+//        return true;
     }
 
     public static String getAppProp(String propertyKey) {
