@@ -3,6 +3,7 @@ package tests.tarifficator;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.accountManager.Account;
@@ -34,6 +35,7 @@ public class CalculatorTest extends Tests {
     final AuthorizerSteps authorizerSteps = new AuthorizerSteps();
     final CostSteps costSteps = new CostSteps();
 
+    @TmsLink("456417")
     @SneakyThrows
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Списание средств за продукт {0}")
