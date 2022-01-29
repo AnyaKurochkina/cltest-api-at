@@ -12,7 +12,6 @@ import core.helper.DataFileHelper;
 import core.helper.StringUtils;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
-import io.qameta.allure.aspects.StepsAspects;
 import io.qameta.allure.model.Parameter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -22,6 +21,7 @@ import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
+import ru.testit.junit5.StepsAspects;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -248,7 +248,7 @@ public class ObjectPoolService {
     private static void toStringProductStep(Entity entity) {
         if (entity instanceof ServiceAccount || entity instanceof ServiceAccountToken)
             return;
-        if(Objects.isNull(getLifecycle().getCurrentTestCaseOrStep().orElse(null)))
+        if (Objects.isNull(getLifecycle().getCurrentTestCaseOrStep().orElse(null)))
             return;
         toStringProductStepFunc(entity);
     }
@@ -282,7 +282,7 @@ public class ObjectPoolService {
             allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
             allureLifecycle.updateStep(id, s -> s.setParameters(list));
         }
-        if(Configure.isIntegrationTestIt()) {
+        if (Configure.isIntegrationTestIt()) {
             StepsAspects.getCurrentStep().get().setTitle(StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName()));
             StepsAspects.getCurrentStep().get().setParameters(parametersMap);
         }
