@@ -3,7 +3,6 @@ package ru.testit.properties;
 import lombok.SneakyThrows;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
 
