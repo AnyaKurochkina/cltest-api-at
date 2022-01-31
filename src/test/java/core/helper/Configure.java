@@ -66,7 +66,6 @@ public class Configure {
 
     public static boolean isIntegrationTestIt(){
         return (Configure.getAppProp("testIt").equals("true") || System.getProperty("testRunId") != null);
-//        return true;
     }
 
     public static String getAppProp(String propertyKey) {

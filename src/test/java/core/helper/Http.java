@@ -218,12 +218,18 @@ public class Http {
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
+
+            if(method.equals("POST"))
+                http.setRequestProperty("Content-Length", "0");
+
+
             log(String.format("%s URL: %s\n", method, (host + path)));
             if (field.length() > 0) {
                 addFilePart(http.getOutputStream(), fileName, bytes);
             } else {
                 if (body.length() > 0) {
                     log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
+                    http.setRequestProperty("Accept", "application/json, text/plain, */*");
                     http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
                 }
             }
