@@ -219,23 +219,23 @@ public class Http {
             http.setDoOutput(true);
             http.setRequestMethod(method);
 
-            if(method.equals("POST"))
-                http.setRequestProperty("Content-Length", "0");
-
-            OutputStream os = http.getOutputStream();
-
             log(String.format("%s URL: %s\n", method, (host + path)));
             if (field.length() > 0) {
+                OutputStream os = http.getOutputStream();
                 addFilePart(os, fileName, bytes);
+                os.flush();
+                os.close();
             } else {
                 if (body.length() > 0) {
                     log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
                     http.setRequestProperty("Accept", "application/json, text/plain, */*");
+                    OutputStream os = http.getOutputStream();
                     os.write((body.trim()).getBytes(StandardCharsets.UTF_8));
+                    os.flush();
+                    os.close();
                 }
             }
-            os.flush();
-            os.close();
+
             InputStream is;
             if (http.getResponseCode() >= 400)
                 is = http.getErrorStream();
