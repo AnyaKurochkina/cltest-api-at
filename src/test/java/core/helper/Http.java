@@ -216,23 +216,18 @@ public class Http {
                     token = "bearer " + KeyCloakSteps.getUserToken(role);
                 http.setRequestProperty("Authorization", token);
             }
-            http.setDoOutput(true);
             http.setRequestMethod(method);
 
             log(String.format("%s URL: %s\n", method, (host + path)));
             if (field.length() > 0) {
-                OutputStream os = http.getOutputStream();
-                addFilePart(os, fileName, bytes);
-                os.flush();
-                os.close();
+                http.setDoOutput(true);
+                addFilePart(http.getOutputStream(), fileName, bytes);
             } else {
                 if (body.length() > 0) {
                     log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
                     http.setRequestProperty("Accept", "application/json, text/plain, */*");
-                    OutputStream os = http.getOutputStream();
-                    os.write((body.trim()).getBytes(StandardCharsets.UTF_8));
-                    os.flush();
-                    os.close();
+                    http.setDoOutput(true);
+                    http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
                 }
             }
 
