@@ -26,6 +26,7 @@ import steps.Steps;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,86 +49,65 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
     @SneakyThrows
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
-
-        List<Arguments> list = new ArrayList<>();
-        if (variableName == PRODUCTS) {
-            if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
-
-
-                if(Configure.isIntegrationTestIt()) {
-                    List<Configuration> confMap = TestProperties.getInstance().getConfigMapsByTest(context.getRequiredTestMethod());
-                    Class<?> argument = Arrays.stream(context.getRequiredTestMethod().getParameterTypes())
-                            .filter(m -> Entity.class.isAssignableFrom((Class<?>) m)).findFirst().orElseThrow(Exception::new);
-
-                    for (Configuration configuration : confMap) {
-                        if(configuration.getConfMap().isEmpty())
-                        {
-                            orders.forEach(entity -> {
-                                Class<?> c = entity.getClass();
-                                if (argument.isInstance(entity)) {
-                                    Entity e = ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c);
-                                    e.setConfigurationId(configuration.getId());
-                                    list.add(Arguments.of(e));
-                                }
-                            });
-                        }
-                        else {
-                            Entity entity = ObjectPoolService.fromJson(new JSONObject(configuration.getConfMap()).toString(), argument);
-                            entity.setConfigurationId(configuration.getId());
-                            list.add(Arguments.of(entity));
-                        }
-                    }
-                }
-                else {
-                    Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
-                    Class<?> clazz = null;
-                    for (Class<?> m : params) {
-                        if (Entity.class.isAssignableFrom(m)) {
-                            clazz = m;
-                            break;
-                        }
-                    }
-                    Class<?> finalClazz = clazz;
-                    orders.forEach(entity -> {
-                        Class<?> c = entity.getClass();
-                        if (finalClazz.isInstance(entity))
-                            list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
-                    });
-                }
-            } else {
-                orders.forEach(entity -> list.add(Arguments.of(new IProductMock(entity.toString()))));
-            }
-        }
-        else if (variableName == ONE_PRODUCT) {
-            if (!context.getRequiredTestMethod().isAnnotationPresent(Mock.class)) {
-                Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
-                Class<?> clazz = null;
-                for (Class<?> m : params) {
-                    if (Entity.class.isAssignableFrom(m)) {
-                        clazz = m;
-                        break;
-                    }
-                }
-                Class<?> finalClazz = clazz;
-                for (IProduct entity : orders) {
-                    Class<?> c = entity.getClass();
-                    if (finalClazz.isInstance(entity)) {
-                        list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
-                        break;
-                    }
-                }
-            }
-        }
-        else if (variableName == ENV) {
+        if (variableName != ENV) {
+            return getProducts(context.getRequiredTestMethod()).stream();
+        } else {
+            List<Arguments> list = new ArrayList<>();
             AtomicInteger i = new AtomicInteger(1);
             orders.stream()
                     .filter(distinctByKey(IProduct::getEnv))
                     .collect(Collectors.toList())
                     .forEach(entity -> list.add(Arguments.arguments(entity.getEnv(), String.valueOf(i.getAndIncrement()))));
+            return list.stream();
         }
-        return list.stream();
     }
 
+
+    @SneakyThrows
+    private List<Arguments> getProducts(Method method) {
+        List<Arguments> list = new ArrayList<>();
+        if (Configure.isIntegrationTestIt()) {
+            List<Configuration> confMap = TestProperties.getInstance().getConfigMapsByTest(method);
+            Class<?> argument = Arrays.stream(method.getParameterTypes())
+                    .filter(m -> Entity.class.isAssignableFrom((Class<?>) m)).findFirst().orElseThrow(Exception::new);
+
+            for (Configuration configuration : confMap) {
+                if (configuration.getConfMap().isEmpty()) {
+                    orders.forEach(entity -> {
+                        Class<?> c = entity.getClass();
+                        if (argument.isInstance(entity)) {
+                            Entity e = ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c);
+                            e.setConfigurationId(configuration.getId());
+                            list.add(Arguments.of(e));
+                        }
+                    });
+                } else {
+                    Entity entity = ObjectPoolService.fromJson(new JSONObject(configuration.getConfMap()).toString(), argument);
+                    entity.setConfigurationId(configuration.getId());
+                    list.add(Arguments.of(entity));
+                }
+            }
+        } else {
+            Class<?>[] params = method.getParameterTypes();
+            Class<?> clazz = null;
+            for (Class<?> m : params) {
+                if (Entity.class.isAssignableFrom(m)) {
+                    clazz = m;
+                    break;
+                }
+            }
+            Class<?> finalClazz = clazz;
+            for (Entity entity : orders) {
+                Class<?> c = entity.getClass();
+                if (finalClazz.isInstance(entity)) {
+                    list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
+                    if (variableName == ONE_PRODUCT)
+                        break;
+                }
+            }
+        }
+        return list;
+    }
 
     @Override
     public void accept(Source variableSource) {
