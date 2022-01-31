@@ -64,8 +64,12 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                         {
                             orders.forEach(entity -> {
                                 Class<?> c = entity.getClass();
-                                if (argument.isInstance(entity))
-                                    list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
+                                if (argument.isInstance(entity)) {
+                                    Entity e = ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c);
+                                    e.setConfigurationId(configuration.getId());
+                                    list.add(Arguments.of(e));
+
+                                }
                             });
                         }
                         else {
