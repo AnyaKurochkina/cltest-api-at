@@ -12,6 +12,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static ru.testit.junit5.StepsAspects.removeCurrentStep;
+
 @Log4j2
 public class RunningHandler
 {
@@ -72,6 +74,7 @@ public class RunningHandler
         createTestItemRequestFactory.processFinishLaunchUniqueTest(utilsMethodSteps, includedTests, test);
         testITClient.sendTestItemsUniqueTest(this.createTestItemRequestFactory.getCreateTestRequests(test));
         testResultRequestFactory.processFinishLaunchUniqueTest(test, utilsMethodSteps, includedTests);
+        removeCurrentStep();
     }
     
     public static void startUtilMethod(final MethodType currentMethod, final Method method) {

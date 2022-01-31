@@ -12,6 +12,7 @@ import ru.testit.utils.StepNode;
 import ru.testit.utils.StepUtils;
 
 import java.util.Date;
+import java.util.Objects;
 
 import static core.helper.Configure.isIntegrationTestIt;
 
@@ -23,6 +24,8 @@ public class StepsAspects {
 
 
     public static void startNestedStep(final String title, final String description) {
+        if (Objects.isNull(currentStep.get()))
+            return;
         if (!isIntegrationTestIt())
             return;
         final StepNode currStep = currentStep.get();
@@ -33,6 +36,8 @@ public class StepsAspects {
     }
 
     public static void finishNestedStep() {
+        if (Objects.isNull(currentStep.get()))
+            return;
         if (!isIntegrationTestIt())
             return;
         final StepNode currStep = currentStep.get();
@@ -42,6 +47,8 @@ public class StepsAspects {
     }
 
     public static void failedNestedStep() {
+        if (Objects.isNull(currentStep.get()))
+            return;
         if (!isIntegrationTestIt())
             return;
         final StepNode currStep = currentStep.get();
@@ -72,6 +79,10 @@ public class StepsAspects {
     public static void returnStepNode() {
         currentStep.set(previousStep.get());
         previousStep.set(currentStep.get());
+    }
+
+    public static void removeCurrentStep() {
+        currentStep.remove();
     }
 
     static {
