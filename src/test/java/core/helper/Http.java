@@ -220,13 +220,14 @@ public class Http {
 
             log(String.format("%s URL: %s\n", method, (host + path)));
             if (field.length() > 0) {
+                http.setDoOutput(true);
                 addFilePart(http.getOutputStream(), fileName, bytes);
             } else {
                 if (body.length() > 0) {
+                    http.setDoOutput(true);
                     log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
                     http.setRequestProperty("Accept", "application/json, text/plain, */*");
-                    if(body.length() > 0)
-                        http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
+                    http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
                 }
             }
 
