@@ -73,14 +73,16 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
 
             for (Configuration configuration : confMap) {
                 if (configuration.getConfMap().isEmpty()) {
-                    orders.forEach(entity -> {
+                    for (Entity entity : orders) {
                         Class<?> c = entity.getClass();
                         if (argument.isInstance(entity)) {
                             Entity e = ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c);
                             e.setConfigurationId(configuration.getId());
                             list.add(Arguments.of(e));
+                            if (variableName == ONE_PRODUCT)
+                                break;
                         }
-                    });
+                    }
                 } else {
                     Entity entity = ObjectPoolService.fromJson(new JSONObject(configuration.getConfMap()).toString(), argument);
                     entity.setConfigurationId(configuration.getId());
