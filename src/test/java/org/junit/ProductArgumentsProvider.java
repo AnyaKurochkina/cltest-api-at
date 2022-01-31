@@ -68,7 +68,6 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                                     Entity e = ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c);
                                     e.setConfigurationId(configuration.getId());
                                     list.add(Arguments.of(e));
-
                                 }
                             });
                         }
