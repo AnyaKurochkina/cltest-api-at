@@ -61,7 +61,7 @@ public class Pipeline {
             }
             String command = "-Dmaven.test.skip=false -Dsecret=123456 -Denv=" + ENV + " -DtestRunId=" + argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
             System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");
-            System.out.println("##teamcity[publishArtifacts 'configurations.txt => configurations.txt']");
+            System.out.println("##teamcity[publishArtifacts 'configurations.txt => configurations']");
         }
 
     }
