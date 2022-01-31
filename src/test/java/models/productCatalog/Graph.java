@@ -34,7 +34,7 @@ public class Graph extends Entity {
     private String version;
     private String jsonTemplate;
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
 
     private final String productName = "graphs/";
 
@@ -74,7 +74,7 @@ public class Graph extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete(productName + graphId + "/")
                 .assertStatus(200);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
-        Assertions.assertFalse(productCatalogSteps.isExists(productName, name, ExistsGraphsResponse.class));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        Assertions.assertFalse(productCatalogSteps.isExists(name, ExistsGraphsResponse.class));
     }
 }

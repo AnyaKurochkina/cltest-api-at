@@ -30,9 +30,9 @@ public class Action extends Entity {
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/actions/createAction.json";
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
         graphId = productCatalogSteps
-                .getProductObjectIdByNameWithMultiSearch("graphs/", "graph_for_api_test", GetGraphsListResponse.class);
+                .getProductObjectIdByNameWithMultiSearch("graph_for_api_test", GetGraphsListResponse.class);
         return this;
     }
 
@@ -65,7 +65,7 @@ public class Action extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete(productName + actionId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
-        Assertions.assertFalse(productCatalogSteps.isExists(productName, actionName, ExistsActionResponse.class));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        Assertions.assertFalse(productCatalogSteps.isExists(actionName, ExistsActionResponse.class));
     }
 }

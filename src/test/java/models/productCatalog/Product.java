@@ -43,16 +43,17 @@ public class Product extends Entity {
     private String productId;
     private String category;
     private String jsonTemplate;
-    @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+//    @Builder.Default
+//    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("products/", "productCatalog/products/createProduct.json");
 
     private final String productName = "products/";
 
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/products/createProduct.json";
-        graphId = productCatalogSteps
-                .getProductObjectIdByNameWithMultiSearch("graphs/", "graph_for_api_test", GetGraphsListResponse.class);
+        ProductCatalogSteps graphSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
+        graphId = graphSteps
+                .getProductObjectIdByNameWithMultiSearch("graph_for_api_test", GetGraphsListResponse.class);
         return this;
     }
 
@@ -91,7 +92,7 @@ public class Product extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete(productName + productId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
-        Assertions.assertFalse(productCatalogSteps.isExists(productName, productName, ExistsActionResponse.class));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        Assertions.assertFalse(productCatalogSteps.isExists(productName, ExistsActionResponse.class));
     }
 }

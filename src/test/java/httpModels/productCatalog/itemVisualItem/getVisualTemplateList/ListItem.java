@@ -1,45 +1,47 @@
 package httpModels.productCatalog.itemVisualItem.getVisualTemplateList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.ItemImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListItem{
+public class ListItem implements ItemImpl {
 
-	@JsonProperty("event_type")
-	private List<String> eventType;
+    @JsonProperty("event_type")
+    private List<String> eventType;
 
-	@JsonProperty("compact_template")
-	private Object compactTemplate;
+    @JsonProperty("compact_template")
+    private Object compactTemplate;
 
-	@JsonProperty("is_active")
-	private Boolean isActive;
+    @JsonProperty("is_active")
+    private Boolean isActive;
 
-	@JsonProperty("full_template")
-	private Object fullTemplate;
+    @JsonProperty("full_template")
+    private Object fullTemplate;
 
-	@JsonProperty("event_provider")
-	private List<String> eventProvider;
+    @JsonProperty("event_provider")
+    private List<String> eventProvider;
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("default_item")
-	private Object defaultItem;
+    @JsonProperty("default_item")
+    private Object defaultItem;
 
-	@JsonProperty("description")
-	private String description;
+    @JsonProperty("description")
+    private String description;
 
-	@JsonProperty("id")
-	private String id;
+    @JsonProperty("id")
+    private String id;
 
-	@JsonProperty("title")
-	private String title;
+    @JsonProperty("title")
+    private String title;
 }
