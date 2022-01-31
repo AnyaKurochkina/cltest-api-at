@@ -167,6 +167,7 @@ public abstract class IProduct extends Entity {
             productId = orderServiceSteps.getProductId(this);
         }
     }
+
     protected void createProduct(){
         log.info("Отправка запроса на создание заказа " + productName);
         JsonPath jsonPath = new Http(OrderServiceURL)
