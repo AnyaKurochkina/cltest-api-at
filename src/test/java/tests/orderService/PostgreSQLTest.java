@@ -123,7 +123,7 @@ public class PostgreSQLTest extends Tests {
     void resize(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgreSQL.resize();
+            postgreSQL.resize(postgreSQL.getMaxFlavor());
         }
     }
 

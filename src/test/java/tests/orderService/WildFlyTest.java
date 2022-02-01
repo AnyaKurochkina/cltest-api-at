@@ -69,7 +69,7 @@ public class WildFlyTest extends Tests {
             wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.stopHard();
             try {
-                wildFly.resize();
+                wildFly.resize(wildFly.getMaxFlavor());
             } finally {
                 wildFly.start();
             }

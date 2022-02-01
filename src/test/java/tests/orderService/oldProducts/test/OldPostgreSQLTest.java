@@ -117,7 +117,7 @@ public class OldPostgreSQLTest extends Tests {
     @DisplayName("Изменить конфигурацию PorstgreSQL OLD")
     @Test
     void resize() {
-        postgreSQL.resize();
+        postgreSQL.resize(postgreSQL.getMaxFlavor());
     }
 
     @Order(11)

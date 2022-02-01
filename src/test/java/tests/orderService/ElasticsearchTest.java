@@ -73,7 +73,7 @@ public class ElasticsearchTest extends Tests {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             elastic.stopHard();
             try {
-                elastic.resize();
+                elastic.resize(elastic.getMaxFlavor());
             } finally {
                 elastic.start();
             }

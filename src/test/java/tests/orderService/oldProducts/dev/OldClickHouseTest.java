@@ -6,6 +6,9 @@ import models.orderService.products.ClickHouse;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+
 @Epic("Старые продукты DEV")
 @Feature("ClickHouse OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_clickhouse"), @Tag("prod"), @Tag("old")})
@@ -24,19 +27,19 @@ public class OldClickHouseTest extends Tests {
     @DisplayName("Расширить CLickHouse OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (clickHouse.productStatusIs(STOPPED)) {
             clickHouse.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            clickHouse.expandMountPoint();
         }
+        clickHouse.expandMountPoint();
     }
 
     @Order(2)
     @Test
     @DisplayName("Добавить БД CLickHouse OLD")
     void createDb() {
+        if (clickHouse.productStatusIs(STOPPED)) {
+            clickHouse.start();
+        }
         clickHouse.createDb("db_1");
 
         clickHouse.removeDb("db_1");
@@ -47,6 +50,9 @@ public class OldClickHouseTest extends Tests {
     @Test
     @DisplayName("Добавить пользователя CLickHouse OLD")
     void createDbmsUser() {
+        if (clickHouse.productStatusIs(STOPPED)) {
+            clickHouse.start();
+        }
         clickHouse.createDb("createdbforuser");
         clickHouse.createDbmsUser("chelik1", "user", "createdbforuser");
 
@@ -57,6 +63,9 @@ public class OldClickHouseTest extends Tests {
     @Test
     @DisplayName("Сбросить пароль CLickHouse OLD")
     void resetPassword() {
+        if (clickHouse.productStatusIs(STOPPED)) {
+            clickHouse.start();
+        }
         clickHouse.createDb("createdbforreset1");
         clickHouse.createDbmsUser("chelikforreset1", "user", "createdbforreset1");
         clickHouse.resetPassword("chelikforreset1");
@@ -69,6 +78,9 @@ public class OldClickHouseTest extends Tests {
     @Test
     @DisplayName("Удалить пользователя CLickHouse OLD")
     void removeDbmsUser() {
+        if (clickHouse.productStatusIs(STOPPED)) {
+            clickHouse.start();
+        }
         clickHouse.createDb("createdbforreset2");
         clickHouse.createDbmsUser("chelikforreset2", "user", "createdbforreset2");
         clickHouse.removeDbmsUser("chelikforreset2", "createdbforreset2");
@@ -80,6 +92,9 @@ public class OldClickHouseTest extends Tests {
     @Test
     @DisplayName("Перезагрузить CLickHouse OLD")
     void restart() {
+        if (clickHouse.productStatusIs(STOPPED)) {
+            clickHouse.start();
+        }
         clickHouse.restart();
     }
 
@@ -87,6 +102,9 @@ public class OldClickHouseTest extends Tests {
     @Test
     @DisplayName("Удалить БД CLickHouse OLD")
     void removeDb() {
+        if (clickHouse.productStatusIs(STOPPED)) {
+            clickHouse.start();
+        }
         clickHouse.createDb("createdbforremove3");
         clickHouse.removeDb("createdbforremove3");
     }
@@ -95,15 +113,19 @@ public class OldClickHouseTest extends Tests {
     @Test
     @DisplayName("Выключить CLickHouse OLD")
     void stopSoft() {
+        if (clickHouse.productStatusIs(STOPPED)) {
+            clickHouse.start();
+        }
         clickHouse.stopSoft();
-        clickHouse.start();
     }
 
     @Order(9)
     @Test
     @DisplayName("Включить CLickHouse OLD")
     void start() {
-        clickHouse.stopHard();
+        if (clickHouse.productStatusIs(STARTED)) {
+            clickHouse.stopHard();
+        }
         clickHouse.start();
     }
 
@@ -111,6 +133,9 @@ public class OldClickHouseTest extends Tests {
     @Test
     @DisplayName("Выключить принудительно CLickHouse OLD")
     void stopHard() {
+        if (clickHouse.productStatusIs(STOPPED)) {
+            clickHouse.start();
+        }
         clickHouse.stopHard();
     }
 }

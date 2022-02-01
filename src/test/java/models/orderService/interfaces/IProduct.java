@@ -31,7 +31,7 @@ import static core.helper.Configure.OrderServiceURL;
 @ToString(onlyExplicitlyIncluded = true, includeFieldNames = false)
 @Log4j2
 public abstract class IProduct extends Entity {
-//    public static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
+    //    public static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
     private static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm' && it.config.extra_mounts.find{it.mount=='%s'}}.config.extra_mounts.find{it.mount=='%s'}.size";
     private static final String CHECK_EXPAND_MOUNT_SIZE = "data.find{it.type=='vm' && it.config.extra_mounts.find{it.mount=='%s'}}.config.extra_mounts.find{it.mount=='%s' && it.size>%d}.size";
     public static final String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
@@ -124,7 +124,7 @@ public abstract class IProduct extends Entity {
     @SneakyThrows
     public void checkPreconditionStatusProduct(ProductStatus status) {
 //        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
-        if(!status.equals(getStatus()))
+        if (!status.equals(getStatus()))
             throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status));
     }
 
@@ -134,6 +134,20 @@ public abstract class IProduct extends Entity {
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         orderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED);
         Assertions.assertEquals(0.0F, calcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
+    }
+
+    public boolean productStatusIs(ProductStatus status) {
+        return orderServiceSteps.productStatusIs(this, status);
+    }
+
+    //Изменить конфигурацию
+    protected void resize(String action, Flavor flavor) {
+        orderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
+        int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
+        int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
+        Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
+        Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
+
     }
 
     //Изменить конфигурацию
@@ -146,6 +160,19 @@ public abstract class IProduct extends Entity {
         int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
         Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
+
+    }
+
+    public Flavor getMaxFlavor() {
+        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
+        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
+        return list.get(list.size() - 1);
+    }
+
+    public Flavor getMinFlavor(){
+        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
+        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
+        return list.get(0);
     }
 
     //Расширить
@@ -155,20 +182,21 @@ public abstract class IProduct extends Entity {
         float sizeAfter = (Float) orderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
         Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }
-    protected void initProduct(){
-        if(projectId == null) {
+
+    protected void initProduct() {
+        if (projectId == null) {
             Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
             projectId = project.getId();
         }
-        if(label == null) {
+        if (label == null) {
             label = UUID.randomUUID().toString();
         }
-        if(productId == null) {
+        if (productId == null) {
             productId = orderServiceSteps.getProductId(this);
         }
     }
 
-    protected void createProduct(){
+    protected void createProduct() {
         log.info("Отправка запроса на создание заказа " + productName);
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId)

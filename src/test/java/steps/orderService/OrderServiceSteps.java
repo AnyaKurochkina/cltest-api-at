@@ -298,6 +298,28 @@ public class OrderServiceSteps extends Steps {
         return item;
     }
 
+    /**
+     * Метод проверяет состояние продукта: включен или выключен
+     *
+     * @param product продукт
+     * @return true если включен, false выключен
+     */
+    public boolean productStatusIs(IProduct product, ProductStatus status) {
+        log.info("Получение статуса для для продукта " + Objects.requireNonNull(product));
+        //Отправка запроса на получение айтема
+        JsonPath jsonPath = new Http(OrderServiceURL)
+                .setProjectId(Objects.requireNonNull(product).getProjectId())
+                .get("projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
+                .assertStatus(200)
+                .jsonPath();
+        if (status.equals(ProductStatus.STARTED)) {
+            log.info("Статус продукта ВКЛЮЧЕН");
+            return jsonPath.getString("data.find{it.type=='vm'}.state").equals("on");
+        } else {
+            log.info("Статус продукта ВЫКЛЮЧЕН");
+            return jsonPath.getString("data.find{it.type=='vm'}.state").equals("off");
+        }
+    }
 
     @Step("Получение списка ресурсных пулов для категории {category} и проекта {projectId}")
     public List<ResourcePool> getResourcesPoolList(String category, String projectId) {

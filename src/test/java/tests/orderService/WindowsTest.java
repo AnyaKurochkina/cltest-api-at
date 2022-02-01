@@ -74,7 +74,7 @@ public class WindowsTest extends Tests {
             windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
             windows.stopHard();
             try {
-                windows.resize();
+                windows.resize(windows.getMaxFlavor());
             } finally {
                 windows.start();
             }
