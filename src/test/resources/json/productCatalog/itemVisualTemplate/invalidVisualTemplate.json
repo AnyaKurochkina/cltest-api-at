@@ -1,6 +1,6 @@
 {
-  "title": "item_visual_template_test_api",
-  "name": "item_visual_template_test_api",
+  "title": "invalid_item_visual_template_test_api",
+  "name": "invalid_item_visual_template_test_api",
   "description": "description",
   "event_type": [
     "string"
@@ -12,6 +12,5 @@
   "compact_template": {},
   "is_active": true,
   "default_item": {
-    "key": "value"
   }
 }

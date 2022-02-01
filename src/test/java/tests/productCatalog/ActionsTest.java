@@ -3,11 +3,12 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
+import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.action.getActionList.response.ActionResponse;
-import httpModels.productCatalog.GetImpl;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
 import org.json.JSONObject;
@@ -22,13 +23,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @Feature("Продуктовый каталог: действия")
 public class ActionsTest extends Tests {
 
-    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("actions/", "productCatalog/actions/createAction.json");
     Action action;
-    private final String productName = "actions/";
-    private final String templatePath = "productCatalog/actions/createAction.json";
 
     @Order(1)
     @DisplayName("Создание действия в продуктовом каталоге")
+    @TmsLink("640545")
     @Test
     public void createAction() {
         action = Action.builder().actionName("test_object_at2021").build().createObject();
@@ -36,76 +36,104 @@ public class ActionsTest extends Tests {
 
     @Order(2)
     @DisplayName("Получение списка действий")
+    @TmsLink("642429")
     @Test
     public void getActionList() {
-        Assertions.assertTrue(productCatalogSteps.getProductObjectList(productName, ActionResponse.class).size() > 0);
+        Assertions.assertTrue(productCatalogSteps.getProductObjectList(ActionResponse.class).size() > 0);
     }
 
     @Order(3)
     @DisplayName("Проверка существования действия по имени")
+    @TmsLink("642432")
     @Test
     public void checkActionExists() {
-        Assertions.assertTrue(productCatalogSteps.isExists(productName, action.getActionName(), ExistsActionResponse.class));
-        Assertions.assertFalse(productCatalogSteps.isExists(productName, "NoExistsAction", ExistsActionResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(action.getActionName(), ExistsActionResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists("NoExistsAction", ExistsActionResponse.class));
     }
 
     @Order(4)
     @DisplayName("Импорт действия")
+    @TmsLink("642433")
     @Test
     public void importAction() {
         String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
         String actionName = new JsonPath(data).get("Action.json.name");
-        productCatalogSteps.importObject(productName, Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
-        Assertions.assertTrue(productCatalogSteps.isExists(productName, actionName, ExistsActionResponse.class));
-        productCatalogSteps.deleteByName(productName, actionName, ActionResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(productName, actionName, ExistsActionResponse.class));
+        productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
+        Assertions.assertTrue(productCatalogSteps.isExists(actionName, ExistsActionResponse.class));
+        productCatalogSteps.deleteByName(actionName, ActionResponse.class);
+        Assertions.assertFalse(productCatalogSteps.isExists(actionName, ExistsActionResponse.class));
     }
 
     @Order(5)
     @DisplayName("Получение действия по Id")
+    @TmsLink("642436")
     @Test
     public void getActionById() {
-        GetImpl productCatalogGet = productCatalogSteps.getById(productName, action.getActionId(), GetActionResponse.class);
+        GetImpl productCatalogGet = productCatalogSteps.getById(action.getActionId(), GetActionResponse.class);
         Assertions.assertEquals(action.getActionName(), productCatalogGet.getName());
     }
 
     @Order(6)
-    @DisplayName("Негатичный тест на получение действия по Id без токена")
+    @DisplayName("Негативный тест на получение действия по Id без токена")
+    @TmsLink("642485")
     @Test
     public void getActionByIdWithOutToken() {
-        productCatalogSteps.getByIdWithOutToken(productName, action.getActionId(), GetActionResponse.class);
+        productCatalogSteps.getByIdWithOutToken(action.getActionId());
     }
 
     @Order(7)
     @DisplayName("Копирование действия по Id")
+    @TmsLink("642489")
     @Test
     public void copyActionById() {
         String cloneName = action.getActionName() + "-clone";
-        productCatalogSteps.copyById(productName, action.getActionId());
-        Assertions.assertTrue(productCatalogSteps.isExists(productName, cloneName, ExistsActionResponse.class));
-        productCatalogSteps.deleteByName(productName, cloneName, ActionResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(productName, cloneName, ExistsActionResponse.class));
+        productCatalogSteps.copyById(action.getActionId());
+        Assertions.assertTrue(productCatalogSteps.isExists(cloneName, ExistsActionResponse.class));
+        productCatalogSteps.deleteByName(cloneName, ActionResponse.class);
+        Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistsActionResponse.class));
     }
 
     @Order(8)
+    @DisplayName("Копирование действия по Id и проверка на соответствие полей")
+    @TmsLink("642493")
+    @Test
+    public void copyActionByIdAndFieldCheck() {
+        String cloneName = action.getActionName() + "-clone";
+        productCatalogSteps.copyById(action.getActionId());
+        String cloneId = productCatalogSteps.getProductObjectIdByNameWithMultiSearch(cloneName, ActionResponse.class);
+        productCatalogSteps.partialUpdateObject(cloneId, new JSONObject().put("description", "descr_api"));
+        GetImpl importedAction = productCatalogSteps.getByIdAndVersion(cloneId, "1.0.1", GetActionResponse.class);
+        Assertions.assertAll(
+                () -> assertEquals("1.0.1", importedAction.getVersion()),
+                () -> assertEquals("descr_api", importedAction.getDescription())
+        );
+        Assertions.assertTrue(productCatalogSteps.isExists(cloneName, ExistsActionResponse.class));
+        productCatalogSteps.deleteByName(cloneName, ActionResponse.class);
+        Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistsActionResponse.class));
+    }
+
+    @Order(60)
     @DisplayName("Негативный тест на копирование действия по Id без токена")
+    @TmsLink("642497")
     @Test
     public void copyActionByIdWithOutToken() {
-        productCatalogSteps.copyByIdWithOutToken(productName, action.getActionId());
+        productCatalogSteps.copyByIdWithOutToken(action.getActionId());
     }
 
     @Order(70)
     @DisplayName("Экспорт действия по Id")
+    @TmsLink("642499")
     @Test
     public void exportActionById() {
-        productCatalogSteps.exportById(productName, action.getActionId());
+        productCatalogSteps.exportById(action.getActionId());
     }
 
     @Order(80)
     @DisplayName("Поиск действия по имени, с использованием multiSearch")
+    @TmsLink("642503")
     @Test
     public void searchActionByName() {
-        String actionIdWithMultiSearch = productCatalogSteps.getProductObjectIdByNameWithMultiSearch(productName, action.getActionName(), ActionResponse.class);
+        String actionIdWithMultiSearch = productCatalogSteps.getProductObjectIdByNameWithMultiSearch(action.getActionName(), ActionResponse.class);
         assertAll(
                 () -> assertNotNull(actionIdWithMultiSearch, String.format("Действие с именем: %s не найден", "test_object_at2021")),
                 () -> assertEquals(action.getActionId(), actionIdWithMultiSearch));
@@ -113,36 +141,39 @@ public class ActionsTest extends Tests {
 
     @Order(90)
     @DisplayName("Обновление действия с указанием версии в граничных значениях")
+    @TmsLink("642507")
     @Test
     public void updateActionAndGetVersion() {
         Action actionTest = Action.builder().actionName("action_version_test_api").version("1.0.999").build().createObject();
-        productCatalogSteps.partialUpdateObject(productName, actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api2"));
-        String currentVersion = productCatalogSteps.getById(productName, actionTest.getActionId(), GetActionResponse.class).getVersion();
+        productCatalogSteps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api2"));
+        String currentVersion = productCatalogSteps.getById(actionTest.getActionId(), GetActionResponse.class).getVersion();
         Assertions.assertEquals("1.1.0", currentVersion);
-        productCatalogSteps.partialUpdateObject(productName, actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api3")
+        productCatalogSteps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api3")
                 .put("version", "1.999.999"));
-        productCatalogSteps.partialUpdateObject(productName, actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api4"));
-        currentVersion = productCatalogSteps.getById(productName, actionTest.getActionId(), GetActionResponse.class).getVersion();
+        productCatalogSteps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api4"));
+        currentVersion = productCatalogSteps.getById(actionTest.getActionId(), GetActionResponse.class).getVersion();
         Assertions.assertEquals("2.0.0", currentVersion);
-        productCatalogSteps.partialUpdateObject(productName, actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api5")
+        productCatalogSteps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api5")
                 .put("version", "999.999.999"));
-        productCatalogSteps.partialUpdateObject(productName, actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api6"))
+        productCatalogSteps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api6"))
                 .assertStatus(500);
     }
 
     @Order(91)
     @DisplayName("Негативный тест на обновление действия по Id без токена")
+    @TmsLink("642510")
     @Test
     public void updateActionByIdWithOutToken() {
-        productCatalogSteps.partialUpdateObjectWithOutToken(productName, action.getActionId(),
+        productCatalogSteps.partialUpdateObjectWithOutToken(action.getActionId(),
                 new JSONObject().put("description", "UpdateDescription"));
     }
 
     @Order(92)
     @DisplayName("Негативный тест на создание действия с двумя параметрами одновременно graph_version_pattern и graph_version")
+    @TmsLink("642514")
     @Test
     public void doubleVersionTest() {
-        productCatalogSteps.createProductObject(productName, Action.builder().actionName("negative_object").build().init().getTemplate()
+        productCatalogSteps.createProductObject(Action.builder().actionName("negative_object").build().init().getTemplate()
                         .set("$.version", "1.1.1")
                         .set("$.graph_version", "1.0.0")
                         .set("$.graph_version_pattern", "1.")
@@ -152,88 +183,94 @@ public class ActionsTest extends Tests {
 
     @Order(93)
     @DisplayName("Обновление действия без указания версии, версия должна инкрементироваться")
+    @TmsLink("642515")
     @Test
     public void patchTest() {
         String version = productCatalogSteps
-                .patchObject(productName, GetActionResponse.class, "test_object_at2021", action.getGraphId(), action.getActionId())
+                .patchObject(GetActionResponse.class, "test_object_at2021", action.getGraphId(), action.getActionId())
                 .getVersion();
         Assertions.assertEquals("1.0.1", version);
     }
 
     @Order(94)
     @DisplayName("Негативный тест на обновление действия до той же версии/текущей")
+    @TmsLink("642518")
     @Test
     public void sameVersionTest() {
-        productCatalogSteps.patchRow(productName, Action.builder().actionName("test_object_at2021").build().init().getTemplate()
+        productCatalogSteps.patchRow(Action.builder().actionName("test_object_at2021").build().init().getTemplate()
                 .set("$.version", "1.0.1")
                 .build(), action.getActionId()).assertStatus(500);
     }
 
     @Order(95)
     @DisplayName("Негативный тест на создание действия с существующим именем")
+    @TmsLink("642520")
     @Test
     public void createActionWithSameName() {
-        productCatalogSteps.createProductObject(productName, productCatalogSteps
-                .createJsonObject(action.getActionName(), templatePath)).assertStatus(400);
+        productCatalogSteps.createProductObject(productCatalogSteps
+                .createJsonObject(action.getActionName())).assertStatus(400);
     }
 
     @Order(96)
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
+    @TmsLink("642523")
     @Test
     public void createActionWithInvalidCharacters() {
         assertAll("Действие создался с недопустимым именем",
-                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("NameWithUppercase", templatePath)).assertStatus(500),
-                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("nameWithUppercaseInMiddle", templatePath)).assertStatus(500),
-                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("имя", templatePath)).assertStatus(500),
-                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("Имя", templatePath)).assertStatus(500),
-                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("a&b&c", templatePath)).assertStatus(500),
-                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject("", templatePath)).assertStatus(400),
-                () -> productCatalogSteps.createProductObject(productName, productCatalogSteps
-                        .createJsonObject(" ", templatePath)).assertStatus(400)
+                () -> productCatalogSteps.createProductObject(productCatalogSteps
+                        .createJsonObject("NameWithUppercase")).assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productCatalogSteps
+                        .createJsonObject("nameWithUppercaseInMiddle")).assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productCatalogSteps
+                        .createJsonObject("имя")).assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productCatalogSteps
+                        .createJsonObject("Имя")).assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productCatalogSteps
+                        .createJsonObject("a&b&c")).assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productCatalogSteps
+                        .createJsonObject("")).assertStatus(400),
+                () -> productCatalogSteps.createProductObject(productCatalogSteps
+                        .createJsonObject(" ")).assertStatus(400)
         );
     }
 
     @Order(97)
     @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
+    @TmsLink("642524")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {
-        String graphVersionCalculated = productCatalogSteps.getById(productName, action.getActionId(), GetActionResponse.class)
+        String graphVersionCalculated = productCatalogSteps.getById(action.getActionId(), GetActionResponse.class)
                 .getGraphVersionCalculated();
         Assertions.assertNotNull(graphVersionCalculated);
     }
 
     @Order(98)
     @DisplayName("Получение списка действий по фильтрам")
+    @TmsLink("642526")
     @Test
     public void getActionListByFilters() {
         assertAll(
                 () -> assertTrue(productCatalogSteps
-                        .getProductObjectList(productName, ActionResponse.class, "?name=" + action.getActionName())
-                        .size() > 0),
+                        .getProductObjectList(ActionResponse.class, "?name=" + action.getActionName()).size() > 0),
                 () -> assertTrue(productCatalogSteps
-                        .getProductObjectList(productName, ActionResponse.class, "?type=" + "delete").size() > 0),
+                        .getProductObjectList(ActionResponse.class, "?type=" + "delete").size() > 0),
                 () -> assertTrue(productCatalogSteps
-                        .getProductObjectList(productName, ActionResponse.class, "?graph_id=" + action.getGraphId())
-                        .size() > 0)
+                        .getProductObjectList(ActionResponse.class, "?graph_id=" + action.getGraphId()).size() > 0)
         );
     }
 
     @Order(99)
     @DisplayName("Негативный тест на удаление действия без токена")
+    @TmsLink("642528")
     @Test
     public void deleteActionWithOutToken() {
-        productCatalogSteps.deleteObjectByIdWithOutToken(productName, action.getActionId());
+        productCatalogSteps.deleteObjectByIdWithOutToken(action.getActionId());
     }
 
     @Order(100)
     @Test
     @DisplayName("Удаление действия")
+    @TmsLink("642530")
     @MarkDelete
     public void deleteAction() {
         try (Action action = Action.builder().actionName("test_object_at2021").build().createObjectExclusiveAccess()) {

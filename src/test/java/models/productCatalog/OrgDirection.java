@@ -15,8 +15,6 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
-import static core.helper.JsonHelper.convertResponseOnClass;
-
 @Log4j2
 @Builder
 @Getter
@@ -28,7 +26,7 @@ public class OrgDirection extends Entity {
     private String orgDirectionId;
     private String jsonTemplate;
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/", "productCatalog/orgDirection/orgDirection.json");
 
     private final String productName = "org_direction/";
 
@@ -49,12 +47,11 @@ public class OrgDirection extends Entity {
     @Override
     @Step("Создание направления")
     protected void create() {
-        String response = new Http(Configure.ProductCatalogURL)
+        CreateOrgDirectionResponse createOrgDirectionResponse = new Http(Configure.ProductCatalogURL)
                 .body(toJson())
                 .post("org_direction/")
                 .assertStatus(201)
-                .toString();
-        CreateOrgDirectionResponse createOrgDirectionResponse = convertResponseOnClass(response, CreateOrgDirectionResponse.class);
+                .extractAs(CreateOrgDirectionResponse.class);
         orgDirectionId = createOrgDirectionResponse.getId();
         Assertions.assertNotNull(orgDirectionId, "Направление с именем: " + orgDirectionName + ", не создался");
     }
@@ -65,7 +62,7 @@ public class OrgDirection extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete(productName + orgDirectionId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
-        Assertions.assertFalse(productCatalogSteps.isExists(productName, orgDirectionName, ExistsOrgDirectionResponse.class));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        Assertions.assertFalse(productCatalogSteps.isExists(orgDirectionName, ExistsOrgDirectionResponse.class));
     }
 }

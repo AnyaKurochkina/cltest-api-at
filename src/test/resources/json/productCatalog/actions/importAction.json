@@ -73,7 +73,7 @@
         },
         "json": {
           "id": "7adbcad7-6184-4efc-9c63-d0ea7e0a551b",
-          "name": "AtTestGraph",
+          "name": "test_graph_api",
           "type": "action",
           "title": "AtTestGraph",
           "author": "Morozov Ilya",

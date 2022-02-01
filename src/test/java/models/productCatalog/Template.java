@@ -84,7 +84,7 @@ public class Template extends Entity {
          new Http(Configure.ProductCatalogURL)
                 .delete(productName + templateId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
-        Assertions.assertFalse(productCatalogSteps.isExists(productName, templateName, ExistsActionResponse.class));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        Assertions.assertFalse(productCatalogSteps.isExists(templateName, ExistsActionResponse.class));
     }
 }

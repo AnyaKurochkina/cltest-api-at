@@ -1,8 +1,8 @@
 {
   "model_name": "ItemVisualisationTemplate",
   "ItemVisualisationTemplate": {
-    "title": "import_api",
-    "name": "import_api",
+    "title": "invalid_import_api",
+    "name": "invalid_import_api",
     "description": "",
     "event_type": [
       "bm"
@@ -14,7 +14,6 @@
     "compact_template": {},
     "is_active": false,
     "default_item": {
-      "key": "value"
     }
   },
   "rel_foreign_models": {},
