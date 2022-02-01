@@ -17,6 +17,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
 import models.keyCloak.ServiceAccountToken;
+import models.keyCloak.UserToken;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -246,7 +247,7 @@ public class ObjectPoolService {
     }
 
     private static void toStringProductStep(Entity entity) {
-        if (entity instanceof ServiceAccount || entity instanceof ServiceAccountToken)
+        if (entity instanceof ServiceAccount || entity instanceof ServiceAccountToken || entity instanceof UserToken)
             return;
         if (Objects.isNull(getLifecycle().getCurrentTestCaseOrStep().orElse(null)))
             return;

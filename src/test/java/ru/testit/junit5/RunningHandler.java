@@ -44,8 +44,8 @@ public class RunningHandler
         testITClient.sendCompleteTestRun();
     }
     
-    public static void startTest(Method currentTest, String displayName, String configurationId) {
-        createTestItemRequestFactory.processTest(currentTest, displayName, configurationId);
+    public static void startTest(Method currentTest, String displayName, String configurationId, Set<String> tags) {
+        createTestItemRequestFactory.processTest(currentTest, displayName, configurationId, tags);
         final StepNode parentStep = new StepNode();
         parentStep.setTitle(displayName);
         parentStep.setDescription(extractDescription(currentTest));

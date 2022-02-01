@@ -22,7 +22,7 @@ public class CreateTestItemRequestFactory {
         createTestItemRequests = new ConcurrentHashMap<>();
     }
 
-    public void processTest(final Method method, String displayName, String configurationId) {
+    public void processTest(final Method method, String displayName, String configurationId, Set<String> tags) {
         final CreateTestItemRequest createTestItemRequest = new CreateTestItemRequest();
         final String externalId = this.extractExternalID(method, null);
         createTestItemRequest.setExternalId(externalId);
@@ -36,7 +36,7 @@ public class CreateTestItemRequestFactory {
 
         createTestItemRequest.setTestPlanId(this.extractTestPlanId(method));
         createTestItemRequest.setLinks(this.extractLinks(method));
-        createTestItemRequest.setLabels(this.extractLabels(method));
+        createTestItemRequest.setLabels(this.extractLabels(tags));
         createTestItemRequests.put(new UniqueTest(externalId, configurationId), createTestItemRequest);
     }
 
@@ -155,16 +155,13 @@ public class CreateTestItemRequestFactory {
         return innerLink;
     }
 
-    private List<Label> extractLabels(final Method method) {
-        final List<Label> labels = new LinkedList<Label>();
-        final Labels annotation = method.getAnnotation(Labels.class);
-        if (annotation != null) {
-            for (final String s : annotation.value()) {
+    private List<Label> extractLabels(Set<String> tags) {
+        final List<Label> labels = new LinkedList<>();
+        for (String s : tags) {
                 final Label label = new Label();
                 label.setName(s);
                 labels.add(label);
             }
-        }
         return labels;
     }
 
