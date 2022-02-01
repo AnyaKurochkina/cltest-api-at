@@ -2,6 +2,7 @@ package ru.testit.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import core.helper.Configure;
 import core.helper.Http;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -22,12 +23,21 @@ import ru.testit.utils.Outcome;
 import java.util.List;
 import java.util.TimeZone;
 
+import static ru.testit.properties.AppProperties.TEST_IT_TOKEN;
+
 
 @Log4j2
 public class TestITClient {
-    public final static AppProperties properties = new AppProperties();
+    public final static AppProperties properties;
     public static StartLaunchResponse startLaunchResponse = new StartLaunchResponse();
 
+    static {
+        properties = new AppProperties();
+        if(Configure.getAppProp(TEST_IT_TOKEN) != null)
+            properties.setPrivateToken(Configure.getAppProp(TEST_IT_TOKEN));
+        if(System.getProperty(TEST_IT_TOKEN) != null)
+            properties.setPrivateToken(System.getProperty(TEST_IT_TOKEN));
+    }
     private static ObjectMapper getObjectMapper() {
         return new ObjectMapper().setTimeZone(TimeZone.getTimeZone("GMT+3"));
     }

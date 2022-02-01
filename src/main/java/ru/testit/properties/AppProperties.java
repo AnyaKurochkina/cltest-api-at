@@ -8,7 +8,8 @@ import java.util.Properties;
 
 public class AppProperties
 {
-    private Properties appProps;
+    private final Properties appProps;
+    public final static String TEST_IT_TOKEN = "testItToken";
     
     @SneakyThrows
     public AppProperties() {
@@ -27,6 +28,9 @@ public class AppProperties
     
     public String getPrivateToken() {
         return String.valueOf(this.appProps.get("PrivateToken"));
+    }
+    public void setPrivateToken(String token) {
+        this.appProps.setProperty("PrivateToken", token);
     }
     
     public String getConfigurationId() {

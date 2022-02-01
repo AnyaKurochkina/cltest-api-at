@@ -14,10 +14,13 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ru.testit.properties.AppProperties.TEST_IT_TOKEN;
+
 public class Pipeline {
     final static AppProperties properties = new AppProperties();
     final static String TEST_RUN_ID = "testRunId";
     final static String TEST_PLAN_ID = "testPlanId";
+
     final static String pathTestResourcesDir = Paths.get("src/test/resources").toAbsolutePath().toString();
     static String ENV = "prod";
 
@@ -27,6 +30,11 @@ public class Pipeline {
         SSLConfig config = new SSLConfig().with().sslSocketFactory(clientAuthFactory).and().allowAllHostnames();
         Set<String> externalIds = new HashSet<>();
         Map<String, String> argsMap = Arrays.stream(args).map(e -> e.split("=")).collect(Collectors.toMap(s -> s[0], s -> s[1]));
+
+        if(System.getProperty(TEST_IT_TOKEN) != null)
+            properties.setPrivateToken(System.getProperty(TEST_IT_TOKEN));
+        if(argsMap.containsKey(TEST_IT_TOKEN))
+            properties.setPrivateToken(argsMap.get(TEST_IT_TOKEN));
 
         String testPlanName = RestAssured.given()
                 .config(RestAssured.config().sslConfig(config))
@@ -59,7 +67,7 @@ public class Pipeline {
                 externalIds.add(externalId);
                 writer.println(externalId + "=" + result.query("/configuration/id"));
             }
-            String command = "-Dmaven.test.skip=false -Dsecret=123456 -Denv=" + ENV + " -DtestRunId=" + argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
+            String command = "-Dmaven.test.skip=false -Dsecret=123456 -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestRunId=" + argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
             System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");
             System.out.println("##teamcity[publishArtifacts '" + pathTestResourcesDir + "/configurations.txt => configurations']");
         }
