@@ -117,7 +117,6 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     /**
-     *
      * @param transactionRegex имя Acl транзакции, Если в aclTransactionName передать "*" то удалятся все Acl транзакции
      */
     public void deleteAclTransaction(String transactionRegex) {
@@ -148,6 +147,10 @@ public class ApacheKafkaCluster extends IProduct {
 
     public void restart() {
         restart("restart_kafka");
+    }
+
+    public void syncInfo() {
+        orderServiceSteps.executeAction("kafka_sync_info", this, null);
     }
 
     public void stopSoft() {

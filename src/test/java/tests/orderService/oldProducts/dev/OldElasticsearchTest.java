@@ -6,6 +6,9 @@ import models.orderService.products.Elasticsearch;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+
 @Epic("Старые продукты DEV")
 @Feature("ElasticSearch OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_elasticsearch"), @Tag("prod"), @Tag("old")})
@@ -24,20 +27,19 @@ public class OldElasticsearchTest extends Tests {
     @DisplayName("Расширить Elasticsearch OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (elastic.productStatusIs(STOPPED)) {
             elastic.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            elastic.expandMountPoint();
         }
+        elastic.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Включить Elasticsearch OLD")
     @Test
     void start() {
-        elastic.stopHard();
+        if (elastic.productStatusIs(STARTED)) {
+            elastic.stopHard();
+        }
         elastic.start();
     }
 
@@ -45,26 +47,30 @@ public class OldElasticsearchTest extends Tests {
     @DisplayName("Выключить Elasticsearch OLD")
     @Test
     void stopSoft() {
+        if (elastic.productStatusIs(STOPPED)) {
+            elastic.start();
+        }
         elastic.stopSoft();
-        elastic.start();
     }
 
     @Order(4)
     @DisplayName("Изменить конфигурацию Elasticsearch OLD")
     @Test
     void resize() {
-        elastic.stopHard();
-        try {
-            elastic.resize();
-        } finally {
-            elastic.start();
+        if (elastic.productStatusIs(STARTED)) {
+            elastic.stopHard();
         }
+        elastic.resize(elastic.getMaxFlavor());
+        elastic.resize(elastic.getMinFlavor());
     }
 
     @Order(5)
     @DisplayName("Перезагрузить Elasticsearch OLD")
     @Test
     void restart() {
+        if (elastic.productStatusIs(STOPPED)) {
+            elastic.start();
+        }
         elastic.restart();
     }
 
@@ -72,6 +78,9 @@ public class OldElasticsearchTest extends Tests {
     @DisplayName("Выключить принудительно Elasticsearch OLD")
     @Test
     void stopHard() {
+        if (elastic.productStatusIs(STOPPED)) {
+            elastic.start();
+        }
         elastic.stopHard();
     }
 }

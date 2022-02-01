@@ -47,7 +47,7 @@ public class OldWindowsTest extends Tests {
     void resize() {
         windows.stopHard();
         try {
-            windows.resize();
+            windows.resize(windows.getMaxFlavor());
         } finally {
             windows.start();
         }

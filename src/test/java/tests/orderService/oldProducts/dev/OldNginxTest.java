@@ -6,6 +6,9 @@ import models.orderService.products.Nginx;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+
 @Epic("Старые продукты DEV")
 @Feature("Nginx OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_nginx"), @Tag("prod"), @Tag("old")})
@@ -24,19 +27,19 @@ public class OldNginxTest extends Tests {
     @DisplayName("Расширить Nginx OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (nginx.productStatusIs(STOPPED)) {
             nginx.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            nginx.expandMountPoint();
         }
+        nginx.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Перезагрузить Nginx OLD")
     @Test
     void restart() {
+        if (nginx.productStatusIs(STOPPED)) {
+            nginx.start();
+        }
         nginx.restart();
     }
 
@@ -44,27 +47,30 @@ public class OldNginxTest extends Tests {
     @DisplayName("Выключить Nginx OLD")
     @Test
     void stopSoft() {
+        if (nginx.productStatusIs(STOPPED)) {
+            nginx.start();
+        }
         nginx.stopSoft();
-        nginx.start();
     }
 
     @Order(4)
     @DisplayName("Изменить конфигурацию Nginx OLD")
     @Test
     void resize() {
-        nginx.stopHard();
-        try {
-            nginx.resize();
-        } finally {
-            nginx.start();
+        if (nginx.productStatusIs(STARTED)) {
+            nginx.stopHard();
         }
+        nginx.resize(nginx.getMaxFlavor());
+        nginx.resize(nginx.getMinFlavor());
     }
 
     @Order(5)
-    @DisplayName("Включть Nginx OLD")
+    @DisplayName("Включить Nginx OLD")
     @Test
     void start() {
-        nginx.stopHard();
+        if (nginx.productStatusIs(STARTED)) {
+            nginx.stopHard();
+        }
         nginx.start();
     }
 
@@ -72,6 +78,9 @@ public class OldNginxTest extends Tests {
     @DisplayName("Выключить принудительно Nginx OLD")
     @Test
     void stopHard() {
+        if (nginx.productStatusIs(STOPPED)) {
+            nginx.start();
+        }
         nginx.stopHard();
     }
 }

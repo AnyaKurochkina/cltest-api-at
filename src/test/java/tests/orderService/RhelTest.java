@@ -79,7 +79,7 @@ public class RhelTest extends Tests {
             rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.stopHard();
             try {
-                rhel.resize();
+                rhel.resize(rhel.getMaxFlavor());
             } finally {
                 rhel.start();
             }

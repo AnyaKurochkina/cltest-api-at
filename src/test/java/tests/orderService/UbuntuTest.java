@@ -63,7 +63,7 @@ public class UbuntuTest extends Tests {
             ubuntu.checkPreconditionStatusProduct(ProductStatus.CREATED);
             ubuntu.stopHard();
             try {
-                ubuntu.resize();
+                ubuntu.resize(ubuntu.getMaxFlavor());
             } finally {
                 ubuntu.start();
             }

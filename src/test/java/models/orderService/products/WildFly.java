@@ -104,8 +104,8 @@ public class WildFly extends IProduct {
         stopHard("stop_hard_two_layer");
     }
 
-    public void resize() {
-        resize("resize_vm");
+    public void resize(Flavor flavor) {
+        resize("resize_vm", flavor);
     }
 
     @Step("Удаление продукта")

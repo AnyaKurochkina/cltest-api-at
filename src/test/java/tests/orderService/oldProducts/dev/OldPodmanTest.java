@@ -6,6 +6,9 @@ import models.orderService.products.Podman;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+
 @Epic("Старые продукты DEV")
 @Feature("Podman OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_podman"), @Tag("prod"), @Tag("old")})
@@ -24,38 +27,39 @@ public class OldPodmanTest extends Tests {
     @Test
     @DisplayName("Расширить Podman OLD")
     void expandMountPoint() {
-        try {
+        if (podman.productStatusIs(STOPPED)) {
             podman.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            podman.expandMountPoint();
         }
+        podman.expandMountPoint();
     }
 
     @Order(2)
     @Test
     @DisplayName("Выключить Podman OLD")
     void stopSoft() {
+        if (podman.productStatusIs(STOPPED)) {
+            podman.start();
+        }
         podman.stopSoft();
-        podman.start();
     }
 
     @Order(3)
     @Test
     @DisplayName("Включить Podman OLD")
     void start() {
-        try {
+        if (podman.productStatusIs(STARTED)) {
             podman.stopHard();
-        } finally {
-            podman.start();
         }
+        podman.start();
     }
 
     @Order(4)
     @Test
     @DisplayName("Выключить принудительно Podman OLD")
     void stopHard() {
+        if (podman.productStatusIs(STOPPED)) {
+            podman.start();
+        }
         podman.stopHard();
     }
 }

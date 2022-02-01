@@ -132,8 +132,8 @@ public class Windows extends IProduct {
         start("start_vm");
     }
 
-    public void resize() {
-        resize("resize_vm");
+    public void resize(Flavor flavor) {
+        resize("resize_vm", flavor);
     }
 
     @Step("Удаление продукта")
