@@ -79,7 +79,7 @@ public class ProductCatalogSteps {
     @Step("Получение объекта продуктового каталога по Id")
     public void getByIdWithOutToken(String objectId) {
         new Http(Configure.ProductCatalogURL).setWithoutToken()
-                .get(productName + objectId + "/").assertStatus(403);
+                .get(productName + objectId + "/").assertStatus(401);
     }
 
     @Step("Обновление объекта продуктового каталога")
