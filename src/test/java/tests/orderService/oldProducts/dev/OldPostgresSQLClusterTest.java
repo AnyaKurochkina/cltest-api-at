@@ -16,7 +16,7 @@ public class OldPostgresSQLClusterTest extends Tests {
     final PostgresSQLCluster postgres = PostgresSQLCluster.builder()
             .projectId("proj-67nljbzjtt")
             .productId("9c97f55c-ab21-4724-be4d-cb90b8a815c6")
-            .orderId("985858eb-7d78-4ce5-9134-20cdb610be5e")
+            .orderId("b8877469-5751-4ca5-acf2-86a99695f240")
             .productName("PostgreSQL Cluster")
             .build();
 

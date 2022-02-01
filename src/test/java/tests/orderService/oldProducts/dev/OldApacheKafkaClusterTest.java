@@ -9,6 +9,9 @@ import tests.Tests;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+
 @Epic("Старые продукты DEV")
 @Feature("ApacheKafkaCluster OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_apachekafkacluster"), @Tag("prod"), @Tag("old")})
@@ -27,19 +30,19 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Расширить Apache Kafka Cluster OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (kafka.productStatusIs(STOPPED)) {
             kafka.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            kafka.expandMountPoint();
         }
+        kafka.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Обновить сертификаты Apache Kafka Cluster OLD")
     @Test
     void updateCerts() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.updateCerts();
     }
 
@@ -47,6 +50,9 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Создать топик Apache Kafka Cluster OLD")
     @Test
     void createTopic() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.createTopics(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"));
         kafka.deleteTopics(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"));
     }
@@ -55,6 +61,9 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Удалить топик Apache Kafka Cluster OLD")
     @Test
     void deleteTopic() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.createTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
         kafka.deleteTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
     }
@@ -63,6 +72,9 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Создать ACL Apache Kafka Cluster OLD")
     @Test
     void createAcl() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
         kafka.createAcl("*");
 
@@ -74,6 +86,9 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Удалить ACL Apache Kafka Cluster OLD")
     @Test
     void deleteAcl() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl1"));
         kafka.createAcl("*");
 
@@ -85,6 +100,9 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Удалить ACL транзакцию Apache Kafka Cluster OLD")
     @Test
     void deleteAclTransaction() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.createAclTransaction("*");
 
         kafka.deleteAclTransaction("*");
@@ -94,6 +112,9 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Создать ACL транзакцию Apache Kafka Cluster OLD")
     @Test
     void createAclTransaction() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.createAclTransaction("*");
 
         kafka.deleteAclTransaction("*");
@@ -103,21 +124,29 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Включить Apache Kafka Cluster OLD")
     @Test
     void start() {
-        kafka.stopSoft();
+        if (kafka.productStatusIs(STARTED)) {
+            kafka.stopSoft();
+        }
         kafka.start();
     }
 
     @Order(10)
-    @DisplayName("Изменить конфигурацию Apache Kafka Cluster OLD")
+    @DisplayName("Синхронизировать конфигурацию Apache Kafka Cluster OLD")
     @Test
     void resize() {
-        kafka.restart();
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
+        kafka.syncInfo();
     }
 
     @Order(11)
     @DisplayName("Выключить Apache Kafka Cluster OLD")
     @Test
     void stopSoft() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.stopSoft();
     }
 }

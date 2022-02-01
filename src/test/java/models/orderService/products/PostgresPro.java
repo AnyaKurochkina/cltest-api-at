@@ -146,10 +146,7 @@ public class PostgresPro extends IProduct {
     }
 
     //Изменить конфигурацию
-    public void resize() {
-        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
-        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
-        Flavor flavor = list.get(list.size() - 1);
+    public void resize(Flavor flavor) {
         orderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}"));
         int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);

@@ -122,7 +122,7 @@ public class PostgresProTest extends Tests {
     void resize(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
             postgresPro.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            postgresPro.resize();
+            postgresPro.resize(postgresPro.getMaxFlavor());
         }
     }
 

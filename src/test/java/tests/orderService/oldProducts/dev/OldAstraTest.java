@@ -6,6 +6,9 @@ import models.orderService.products.Astra;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+
 @Epic("Старые продукты DEV")
 @Feature("Astra OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_astra"), @Tag("prod"), @Tag("old")})
@@ -25,19 +28,19 @@ public class OldAstraTest extends Tests {
     @DisplayName("Расширить Astra OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (astra.productStatusIs(STOPPED)) {
             astra.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            astra.expandMountPoint();
         }
+        astra.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Перезагрузить Astra OLD")
     @Test
     void restart() {
+        if (astra.productStatusIs(STOPPED)) {
+            astra.start();
+        }
         astra.restart();
     }
 
@@ -45,27 +48,30 @@ public class OldAstraTest extends Tests {
     @DisplayName("Выключить Astra OLD")
     @Test
     void stopSoft() {
+        if (astra.productStatusIs(STOPPED)) {
+            astra.start();
+        }
         astra.stopSoft();
-        astra.start();
     }
 
     @Order(4)
     @DisplayName("Изменить конфигурацию Astra OLD")
     @Test
     void resize() {
-        astra.stopHard();
-        try {
-            astra.resize();
-        } finally {
-            astra.start();
+        if (astra.productStatusIs(STARTED)) {
+            astra.stopHard();
         }
+        astra.resize(astra.getMaxFlavor());
+        astra.resize(astra.getMinFlavor());
     }
 
     @Order(5)
     @DisplayName("Включить Astra OLD")
     @Test
     void start() {
-        astra.stopHard();
+        if (astra.productStatusIs(STARTED)) {
+            astra.stopHard();
+        }
         astra.start();
     }
 
@@ -73,6 +79,9 @@ public class OldAstraTest extends Tests {
     @DisplayName("Выключить принудительно Astra OLD")
     @Test
     void stopHard() {
+        if (astra.productStatusIs(STOPPED)) {
+            astra.start();
+        }
         astra.stopHard();
     }
 }

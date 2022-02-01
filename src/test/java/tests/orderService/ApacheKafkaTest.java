@@ -63,7 +63,7 @@ public class ApacheKafkaTest extends Tests {
             kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.stopHard();
             try {
-                kafka.resize();
+                kafka.resize(kafka.getMaxFlavor());
             } finally {
                 kafka.start();
             }

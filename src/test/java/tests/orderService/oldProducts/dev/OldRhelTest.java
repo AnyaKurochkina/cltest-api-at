@@ -6,6 +6,9 @@ import models.orderService.products.Rhel;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+import static models.orderService.interfaces.ProductStatus.STARTED;
+
 @Epic("Старые продукты DEV")
 @Feature("Rhel OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_rhel"), @Tag("prod"), @Tag("old")})
@@ -24,40 +27,40 @@ public class OldRhelTest extends Tests {
     @DisplayName("Перезагрузить Rhel OLD")
     @Test
     void restart() {
-        try {
+        if (rhel.productStatusIs(STOPPED)) {
             rhel.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            rhel.restart();
         }
+        rhel.restart();
     }
 
     @Order(3)
     @DisplayName("Выключить Rhel OLD")
     @Test
     void stopSoft() {
+        if (rhel.productStatusIs(STOPPED)) {
+            rhel.start();
+        }
         rhel.stopSoft();
-        rhel.start();
     }
 
     @Order(4)
     @DisplayName("Изменить конфигурацию Rhel OLD")
     @Test
     void resize() {
-        rhel.stopHard();
-        try {
-            rhel.resize();
-        } finally {
-            rhel.start();
+        if (rhel.productStatusIs(STARTED)) {
+            rhel.stopHard();
         }
+        rhel.resize(rhel.getMaxFlavor());
+        rhel.resize(rhel.getMinFlavor());
     }
 
     @Order(5)
     @DisplayName("Включить Rhel OLD")
     @Test
     void start() {
-        rhel.stopHard();
+        if (rhel.productStatusIs(STARTED)) {
+            rhel.stopHard();
+        }
         rhel.start();
     }
 
@@ -65,6 +68,9 @@ public class OldRhelTest extends Tests {
     @DisplayName("Выключить принудительно Rhel OLD")
     @Test
     void stopHard() {
+        if (rhel.productStatusIs(STOPPED)) {
+            rhel.start();
+        }
         rhel.stopHard();
     }
 }
