@@ -1,2 +1,0 @@
-OpenShiftTest#change=55716772-bfd2-47fb-a9b4-5de60dba6f2f
-OpenShiftTest#change=60672379-d54f-465b-a4dd-bee8635fee74

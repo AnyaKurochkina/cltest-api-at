@@ -248,8 +248,9 @@ public class TestITClient {
         }
     }
 
+    //Todo: synchronized пока есть баг
     @SneakyThrows
-    public static String sendTestResult(final TestResultsRequest request) {
+    public static synchronized String sendTestResult(final TestResultsRequest request) {
         String body;
         Http.Response response;
         try {
