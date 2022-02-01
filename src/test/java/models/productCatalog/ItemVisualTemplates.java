@@ -7,6 +7,7 @@ import httpModels.productCatalog.itemVisualItem.CompactTemplate;
 import httpModels.productCatalog.itemVisualItem.CreateItemVisualResponse;
 import httpModels.productCatalog.itemVisualItem.DefaultItem;
 import httpModels.productCatalog.itemVisualItem.FullTemplate;
+import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
 
@@ -47,7 +49,9 @@ public class ItemVisualTemplates extends Entity {
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.description", description)
-                .set("$.isActive", isActive)
+                .set("$.is_active", isActive)
+                .set("$.event_provider", eventProvider)
+                .set("$.event_type", eventType)
                 .build();
     }
 
@@ -61,5 +65,16 @@ public class ItemVisualTemplates extends Entity {
                 .extractAs(CreateItemVisualResponse.class)
                 .getId();
         Assertions.assertNotNull(itemId, "Шаблон визуализации с именем: " + name + ", не создался");
+    }
+
+    @Override
+    @Step("Удаление шаблона визуализации")
+    protected void delete() {
+        new Http(Configure.ProductCatalogURL)
+                .delete(productName + itemId + "/")
+                .assertStatus(204);
+        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
+        Assertions.assertEquals(0, steps.getObjectByName(name, GetVisualTemplateListResponse.class)
+                .getItemsList().size(), "Шаблон визуализации с именем: " + name + ", не удалился");
     }
 }

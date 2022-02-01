@@ -1,0 +1,52 @@
+{
+  "model_name": "Graph",
+  "Graph": {
+    "id": 6926,
+    "create_dt": "2022-01-19T12:47:43.845951",
+    "user": {
+      "id": null,
+      "is_staff": false,
+      "username": "",
+      "is_active": false,
+      "is_superuser": false
+    },
+    "json": {
+      "id": "a26577de-7c91-41b7-b756-6ccb19c065ef",
+      "name": "import_graph_api_test",
+      "type": "creating",
+      "title": "import_graph_api_test",
+      "author": "Airat Muzafarov",
+      "output": {},
+      "ui_schema": {},
+      "description": "\u043d\u0435 \u0442\u0440\u043e\u0433\u0430\u0442\u044c....",
+      "json_schema": {},
+      "static_data": {},
+      "printed_output": {},
+      "damage_order_on_error": false
+    },
+    "hash": "dfc3be415785cfa4d10b1f99acaff021",
+    "version_arr": [
+      1,
+      2,
+      0
+    ],
+    "used_graph": {
+      "graph": [],
+      "object_info": {
+        "id": "a26577de-7c91-41b7-b756-6ccb19c065ef",
+        "name": "graph_for_api_test",
+        "type": "Graph",
+        "version": "1.2.0"
+      }
+    },
+    "graph": "a26577de-7c91-41b7-b756-6ccb19c065ef"
+  },
+  "rel_foreign_models": {},
+  "rel_revers_models": {
+    "nodes": [],
+    "modifications": []
+  },
+  "dump_version": 4.0,
+  "dump_date": "2022-01-28 14:03:42",
+  "is_pinned_versions": false
+}

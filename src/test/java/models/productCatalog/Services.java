@@ -44,15 +44,16 @@ public class Services extends Entity {
     private String serviceId;
     private String jsonTemplate;
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("services/", "productCatalog/services/createServices.json" );
 
     private final String productName = "services/";
 
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/services/createServices.json";
-        graphId = productCatalogSteps
-                .getProductObjectIdByNameWithMultiSearch("graphs/", "AtTestServiceGraph", GetGraphsListResponse.class);
+        ProductCatalogSteps graphSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
+        graphId = graphSteps
+                .getProductObjectIdByNameWithMultiSearch("graph_for_api_test", GetGraphsListResponse.class);
         return this;
     }
 
@@ -83,7 +84,7 @@ public class Services extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete("services/" + serviceId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps();
-        Assertions.assertFalse(productCatalogSteps.isExists(productName, serviceName, ExistsServiceResponse.class));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        Assertions.assertFalse(productCatalogSteps.isExists(serviceName, ExistsServiceResponse.class));
     }
 }

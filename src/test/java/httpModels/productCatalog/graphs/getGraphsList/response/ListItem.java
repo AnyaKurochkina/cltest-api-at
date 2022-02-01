@@ -34,6 +34,9 @@ public class ListItem implements ItemImpl {
 	@JsonProperty("action_ids")
 	private List<Object> actionIds;
 
+	@JsonProperty("type")
+	private String type;
+
 	@JsonProperty("id")
 	private String id;
 
