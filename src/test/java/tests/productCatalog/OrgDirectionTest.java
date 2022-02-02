@@ -140,21 +140,21 @@ public class OrgDirectionTest extends Tests {
     }
 
     @Order(98)
-    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
+    @DisplayName("Негативный тест на создание направления с недопустимыми символами в имени")
     @TmsLink("643340")
     @Test
     public void createActionWithInvalidCharacters() {
         assertAll("Направление создалось с недопустимым именем",
                 () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("NameWithUppercase"))
-                        .assertStatus(400),
+                        .assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("nameWithUppercaseInMiddle"))
-                        .assertStatus(400),
-                () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("имя"))
-                        .assertStatus(400),
-                () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("Имя"))
-                        .assertStatus(400),
+                        .assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("название"))
+                        .assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("Название"))
+                        .assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("a&b&c"))
-                        .assertStatus(400),
+                        .assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject(""))
                         .assertStatus(400),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject(" "))
