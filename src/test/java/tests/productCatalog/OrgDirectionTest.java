@@ -3,8 +3,8 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
-import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.orgDirection.existsOrgDirection.response.ExistsOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Feature("Продуктовый каталог: направления")
 public class OrgDirectionTest extends Tests {
 
+    private static final String ORG_DIRECTION_NAME = "org_direction_at_test-:2022.";
     OrgDirection orgDirection;
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/", "productCatalog/orgDirection/orgDirection.json");
 
@@ -33,7 +34,7 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void createOrgDirection() {
         orgDirection = OrgDirection.builder()
-                .orgDirectionName("org_direction_at_test2021")
+                .orgDirectionName(ORG_DIRECTION_NAME)
                 .build()
                 .createObject();
     }
@@ -89,7 +90,7 @@ public class OrgDirectionTest extends Tests {
         productCatalogSteps.getByIdWithOutToken(orgDirection.getOrgDirectionId());
     }
 
-    @Order(6)
+    @Order(7)
     @DisplayName("Обновление направления по Id")
     @TmsLink("643319")
     @Test
@@ -102,7 +103,7 @@ public class OrgDirectionTest extends Tests {
         Assertions.assertEquals(expected, actual);
     }
 
-    @Order(7)
+    @Order(8)
     @DisplayName("Негативный тест на обновление направления по Id без токена")
     @TmsLink("643322")
     @Test
@@ -111,7 +112,7 @@ public class OrgDirectionTest extends Tests {
                 new JSONObject().put("description", "UpdateDescription"));
     }
 
-    @Order(8)
+    @Order(9)
     @DisplayName("Копирование направления по Id")
     @TmsLink("643327")
     @Test
@@ -123,12 +124,22 @@ public class OrgDirectionTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistsOrgDirectionResponse.class));
     }
 
-    @Order(9)
+    @Order(10)
     @DisplayName("Негативный тест на копирование направления по Id без токена")
     @TmsLink("643332")
     @Test
     public void copyOrgDirectionByIdWithOutToken() {
         productCatalogSteps.copyByIdWithOutToken(orgDirection.getOrgDirectionId());
+    }
+
+    @Order(11)
+    @DisplayName("Негативный тест на создание направления с неуникальным именем")
+    @Test
+    public void createOrgDirectionWithNonUniqueName() {
+        {
+            productCatalogSteps.createProductObject(productCatalogSteps
+                    .createJsonObject(ORG_DIRECTION_NAME)).assertStatus(400);
+        }
     }
 
     @Order(80)
@@ -177,7 +188,7 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void deleteOrgDirection() {
         try (OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("org_direction_at_test2021")
+                .orgDirectionName(ORG_DIRECTION_NAME)
                 .build()
                 .createObjectExclusiveAccess()) {
             orgDirection.deleteObject();
