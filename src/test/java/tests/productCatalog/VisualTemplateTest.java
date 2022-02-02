@@ -7,6 +7,7 @@ import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
@@ -23,7 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Feature("Продуктовый каталог: шаблоны отображения")
+@Epic("Продуктовый каталог")
+@Feature("Шаблоны отображения")
 public class VisualTemplateTest extends Tests {
 
     private static final String VISUAL_TEMPLATE_NAME = "item_visual_template_test_api-:2022.";

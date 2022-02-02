@@ -13,6 +13,8 @@ import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
 import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Graph;
@@ -25,6 +27,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("product_catalog")
+@Epic("Продуктовый каталог")
+@Feature("Графы")
 public class GraphTest {
 
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
