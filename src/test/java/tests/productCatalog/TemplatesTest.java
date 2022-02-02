@@ -107,16 +107,16 @@ public class TemplatesTest extends Tests {
     }
 
     @Order(10)
-    @DisplayName("Негативный тест на создание действия с существующим именем")
+    @DisplayName("Негативный тест на создание шаблона с существующим именем")
     @TmsLink("643606")
     @Test
-    public void createActionWithSameName() {
+    public void createTemplateWithSameName() {
         productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject(template.getTemplateName()))
                 .assertStatus(400);
     }
 
     @Order(11)
-    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
+    @DisplayName("Негативный тест на создание шаблона с недопустимыми символами в имени")
     @TmsLink("643607")
     @Test
     public void createTemplateWithInvalidCharacters() {
