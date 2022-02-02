@@ -17,6 +17,7 @@ public class ProjectTest extends Tests {
 
     @Order(1)
     @Test
+    @TmsLink("377747")
     @DisplayName("Создание проекта")
     void createProject() {
         Project.builder().isForOrders(false).build().createObject();
@@ -24,6 +25,7 @@ public class ProjectTest extends Tests {
 
     @Order(2)
     @Test
+    @TmsLink("377748")
     @DisplayName("Удаление проекта")
     @MarkDelete
     void deleteProject() {

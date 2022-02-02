@@ -4,6 +4,7 @@ import com.mifmif.common.regex.Generex;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.authorizer.InformationSystem;
 import models.authorizer.ProjectEnvironment;
 import models.portalBack.AccessGroup;
@@ -30,6 +31,7 @@ public class AccessGroupTest extends Tests {
 
     @Test
     @Order(1)
+    @TmsLink("377438")
     @DisplayName("Создание Группы доступа")
     void createAccessGroup() {
         AccessGroup.builder().name(name).build().createObject();
@@ -37,6 +39,7 @@ public class AccessGroupTest extends Tests {
 
     @Test
     @Order(2)
+    @TmsLink("648626")
     @DisplayName("Редактирование группы доступа")
     void editServiceAccount() {
         AccessGroup group = AccessGroup.builder().name(name).build().createObject();
@@ -47,6 +50,7 @@ public class AccessGroupTest extends Tests {
     @DisabledIfEnv("dev")
     @Test
     @Order(3)
+    @TmsLink("377442")
     @DisplayName("Добавление пользователя в группу доступа для среды TEST")
     void addUserAccessGroupTest() {
         AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
@@ -62,6 +66,7 @@ public class AccessGroupTest extends Tests {
 
     @Test
     @Order(4)
+    @TmsLink("377440")
     @DisplayName("Добавление пользователя в группу доступа для среды DEV")
     void addUserAccessGroupDev() {
         AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
@@ -74,6 +79,7 @@ public class AccessGroupTest extends Tests {
 
     @Test
     @Order(5)
+    @TmsLink("377441")
     @DisplayName("Удаление пользователя из группы доступа")
     void deleteUserAccessGroup() {
         AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
@@ -87,6 +93,7 @@ public class AccessGroupTest extends Tests {
 
     @Test
     @Order(6)
+    @TmsLink("377439")
     @MarkDelete
     @DisplayName("Удаление Группы доступа")
     void deleteAccessGroup() {
