@@ -97,7 +97,7 @@ public class CalculatorTest extends Tests {
         }
     }
 
-    @TmsLink("648902")
+    @TmsLink("649012")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Сравнение стоимости продукта в статусе OFF с ценой предбиллинга")
     public void costProductStatusOff(Rhel resource) {

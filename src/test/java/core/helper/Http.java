@@ -103,7 +103,7 @@ public class Http {
     public Response get(String path, Object ... args) {
         this.method = "GET";
         for (Object arg : args)
-            path = path.replaceFirst("\\{}", URLEncoder.encode(Objects.requireNonNull(arg).toString(), StandardCharsets.UTF_8.toString()));
+            path = path.replaceFirst("\\{}", Objects.requireNonNull(arg).toString().replaceFirst("#", "%23"));
         this.path = StringUtils.format(path, args);
         return request();
     }

@@ -7,6 +7,7 @@ import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ public class BaseTariffPlanTest extends Tests {
 
     @Test
     @Order(1)
+    @TmsLink("531448")
     @DisplayName("Создание тарифного плана")
     void createBaseTariffPlanFromActive() {
         TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=true&f[status][]=active").get(0);
@@ -52,6 +54,7 @@ public class BaseTariffPlanTest extends Tests {
 
     @Test
     @Order(2)
+    @TmsLink("650114")
     @DisplayName("Создание базового тарифного плана с существующим именем")
     void duplicateNameBaseTariffPlan() {
         TariffPlan tariffPlan = TariffPlan.builder()
@@ -73,6 +76,7 @@ public class BaseTariffPlanTest extends Tests {
 
     @Test
     @Order(3)
+    @TmsLink("531461")
     @DisplayName("Черновик. Изменение имени тарифного плана")
     public void renameBaseTariffPlan() {
         TariffPlan tariffPlan = TariffPlan.builder()
@@ -92,6 +96,7 @@ public class BaseTariffPlanTest extends Tests {
 
     @Test
     @Order(4)
+    @TmsLink("531500")
     @DisplayName("Черновик -> Планируемый")
     public void tariffPlanToPlanned() {
         Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
@@ -111,6 +116,7 @@ public class BaseTariffPlanTest extends Tests {
 
     @Order(5)
     @Test
+    @TmsLink("531464")
     @DisplayName("Активация и Архивация")
     public void activateBaseTariffPlan() {
         Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
