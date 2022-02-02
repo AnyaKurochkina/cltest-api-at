@@ -8,6 +8,7 @@ import httpModels.productCatalog.action.existsAction.response.ExistsActionRespon
 import httpModels.productCatalog.orgDirection.existsOrgDirection.response.ExistsOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
@@ -21,7 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Feature("Продуктовый каталог: направления")
+@Tag("product_catalog")
+@Epic("Продуктовый каталог")
+@Feature("Направления")
 public class OrgDirectionTest extends Tests {
 
     private static final String ORG_DIRECTION_NAME = "org_direction_at_test-:2022.";

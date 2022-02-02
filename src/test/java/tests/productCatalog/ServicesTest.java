@@ -8,6 +8,7 @@ import httpModels.productCatalog.service.createService.response.CreateServiceRes
 import httpModels.productCatalog.service.existsService.response.ExistsServiceResponse;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
@@ -22,7 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Feature("Продуктовый каталог: сервисы")
+@Tag("product_catalog")
+@Epic("Продуктовый каталог")
+@Feature("Сервисы")
 public class ServicesTest extends Tests {
 
     Services service;

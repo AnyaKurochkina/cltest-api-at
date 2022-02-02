@@ -6,6 +6,7 @@ import core.helper.MarkDelete;
 import httpModels.productCatalog.template.existsTemplate.response.ExistsTemplateResponse;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
 import httpModels.productCatalog.template.getTemplate.response.GetTemplateResponse;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
@@ -20,7 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Feature("Продуктовый каталог: шаблоны")
+@Epic("Продуктовый каталог")
+@Feature("Шаблоны")
 public class TemplatesTest extends Tests {
 
     Template template;
