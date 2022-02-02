@@ -82,7 +82,7 @@ public abstract class IProduct extends Entity {
     protected void compareCostOrderAndPrice() {
         try {
             CostSteps costSteps = new CostSteps();
-            Float preBillingCost = costSteps.getPreBillingCost(this);
+            Float preBillingCost = costSteps.getPreBillingTotalCost(this);
             Float currentCost = costSteps.getCurrentCost(this);
             for (int i = 0; i < 15; i++) {
                 Waiting.sleep(20000);

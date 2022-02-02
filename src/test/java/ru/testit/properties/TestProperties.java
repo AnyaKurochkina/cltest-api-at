@@ -16,8 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
-public class TestProperties
-{
+public class TestProperties {
     private List<String> testProps = new ArrayList<>();
     final private Map<UniqueTest, ConfigurationResponse> configurations = new HashMap<>();
     private static volatile TestProperties instance;
@@ -37,7 +36,7 @@ public class TestProperties
 
 
     private TestProperties() {
-        if(Configure.isIntegrationTestIt()) {
+        if (Configure.isIntegrationTestIt()) {
             try {
                 final String testConfigPath = Configure.RESOURCE_PATH + "/configurations.txt";
                 if (Files.exists(Paths.get(testConfigPath))) {
@@ -66,28 +65,29 @@ public class TestProperties
         }
     }
 
-    public List<Configuration> getConfigMapsByTest(Method method){
+    public List<Configuration> getConfigMapsByTest(Method method) {
         String externalId = RunningHandler.extractExternalID(method, null);
         List<String> configurationIds = getConfigurationIds(externalId);
         List<Configuration> configurationList = new ArrayList<>();
-        for(String id : configurationIds){
+        for (String id : configurationIds) {
             UniqueTest uniqueTest = new UniqueTest(externalId, id);
             Configuration configuration = new Configuration();
             configuration.setId(id);
-            if(configurations.containsKey(uniqueTest)) {
+            if (configurations.containsKey(uniqueTest)) {
                 configuration.setConfMap(configurations.get(uniqueTest).getCapabilities());
-            }
-            else {
-                configuration.setConfMap(configurations.get(new UniqueTest("default", TestITClient.properties.getConfigurationId())).getCapabilities());
+            } else {
+                ConfigurationResponse configurationResponse = configurations.get(new UniqueTest("default", TestITClient.properties.getConfigurationId()));
+                if(configurationResponse != null)
+                    configuration.setConfMap(configurationResponse.getCapabilities());
             }
             configurationList.add(configuration);
         }
         return configurationList;
     }
-    
+
     private List<String> getConfigurationIds(String externalId) {
         List<String> list = testProps.stream().filter(t -> t.startsWith(externalId + "=")).map(t -> t.split("=")[1]).collect(Collectors.toList());
-        if(list.isEmpty())
+        if (list.isEmpty())
             list = Collections.singletonList(TestITClient.properties.getConfigurationId());
         return list;
     }

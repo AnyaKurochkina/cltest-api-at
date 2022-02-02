@@ -13,7 +13,6 @@ import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -60,7 +59,7 @@ public class CalculatorTest extends Tests {
             String accountTo = ((Account) Account.builder().folder(folderTarget).build().createObject()).getAccountId();
             accountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
             try {
-                Float cost = costSteps.getPreBillingCost(product);
+                Float cost = costSteps.getPreBillingTotalCost(product);
                 while(cost < 0.01f)
                     cost += cost;
                 Waiting.sleep(60000);
@@ -85,4 +84,30 @@ public class CalculatorTest extends Tests {
             orderServiceSteps.changeProjectForOrder(product, projectSource);
         }
     }
+
+
+    @TmsLink("648902")
+    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @ParameterizedTest(name = "Сравнение стоимости продукта в статусе ON с ценой предбиллинга")
+    public void costProductStatusOn(Rhel resource) {
+        try (Rhel product = resource.createObjectExclusiveAccess()) {
+            Float preBillingCostOn = costSteps.getPreBillingCostPath(product, "items.find{it.type=='vm'}.resources_statuses.on.collect{it.total_price.toFloat()}.sum().toFloat()");
+            Float currentCost = costSteps.getCurrentCost(product);
+            Assertions.assertEquals(preBillingCostOn, currentCost, 0.01f, "Стоимость предбиллинга не равна текущей стоимости");
+        }
+    }
+
+    @TmsLink("648902")
+    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @ParameterizedTest(name = "Сравнение стоимости продукта в статусе OFF с ценой предбиллинга")
+    public void costProductStatusOff(Rhel resource) {
+        try (Rhel product = resource.createObjectExclusiveAccess()) {
+            Float preBillingCostOff = costSteps.getPreBillingCostPath(product, "items.find{it.type=='vm'}.resources_statuses.off.collect{it.total_price.toFloat()}.sum().toFloat()");
+            product.stopHard();
+            Float currentCost = costSteps.getCurrentCost(product);
+            product.start();
+            Assertions.assertEquals(preBillingCostOff, currentCost, 0.01f, "Стоимость предбиллинга не равна текущей стоимости");
+        }
+    }
+
 }

@@ -59,7 +59,7 @@ public class CostSteps extends Steps {
 
     @Step("Получение текущего расхода для заказа")
     public Float getCurrentCost(IProduct product) {
-        Assertions.assertSame(ProductStatus.CREATED, product.getStatus(), "Продукт " + product + " не был заказан");
+        Assertions.assertNotSame(null, product.getStatus(), "Продукт " + product + " не был заказан");
         Float consumption = null;
         for (int i = 0; i < 15; i++) {
             Waiting.sleep(20000);
@@ -83,7 +83,11 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
-    public Float getPreBillingCost(IProduct product) {
+    public Float getPreBillingTotalCost(IProduct product) {
+        return getPreBillingCostPath(product, "total_price");
+    }
+
+    public Float getPreBillingCostPath(IProduct product, String path) {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = Project.builder()
                 .projectEnvironment(new ProjectEnvironment(product.getEnv()))
@@ -113,7 +117,7 @@ public class CostSteps extends Steps {
 
         //TODO: Добавить проверки
 
-        return response.get("total_price");
+        return response.get(path);
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
