@@ -7,6 +7,7 @@ import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
@@ -23,9 +24,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Feature("Продуктовый каталог: шаблоны визуализации")
+@Epic("Продуктовый каталог")
+@Feature("Шаблоны отображения")
 public class VisualTemplateTest extends Tests {
 
+    private static final String VISUAL_TEMPLATE_NAME = "item_visual_template_test_api-:2022.";
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("item_visual_templates/", "productCatalog/itemVisualTemplate/createItemVisual.json");
     ItemVisualTemplates visualTemplates;
 
@@ -34,7 +37,7 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("643631")
     @Test
     public void createVisualTemplate() {
-        visualTemplates = ItemVisualTemplates.builder().name("item_visual_template_test_api")
+        visualTemplates = ItemVisualTemplates.builder().name(VISUAL_TEMPLATE_NAME)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
                 .build()
@@ -156,6 +159,16 @@ public class VisualTemplateTest extends Tests {
         assertEquals(visualTemplate.getEventType(), visualTemplate.getEventType());
     }
 
+    @Order(12)
+    @DisplayName("Негативный тест на создание шаблона отображения с неуникальным именем")
+    @Test
+    public void createVisualTemplateWithNonUniqueName() {
+        {
+            productCatalogSteps.createProductObject(productCatalogSteps
+                    .createJsonObject(VISUAL_TEMPLATE_NAME)).assertStatus(400);
+        }
+    }
+
     @Order(96)
     @DisplayName("Негативный тест на создание шаблона визуализации с недопустимыми символами в имени")
     @TmsLink("643672")
@@ -185,7 +198,7 @@ public class VisualTemplateTest extends Tests {
     @MarkDelete
     @Test
     public void deleteAction() {
-        try (ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder().name("item_visual_template_test_api").build().createObjectExclusiveAccess()) {
+        try (ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder().name(VISUAL_TEMPLATE_NAME).build().createObjectExclusiveAccess()) {
             visualTemplates.deleteObject();
         }
     }

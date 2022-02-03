@@ -7,6 +7,7 @@ import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.action.getActionList.response.ActionResponse;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
@@ -20,7 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Feature("Продуктовый каталог: действия")
+@Tag("product_catalog")
+@Epic("Продуктовый каталог")
+@Feature("Действия")
 public class ActionsTest extends Tests {
 
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("actions/", "productCatalog/actions/createAction.json");

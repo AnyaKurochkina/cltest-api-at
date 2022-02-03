@@ -3,11 +3,12 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
-import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.orgDirection.existsOrgDirection.response.ExistsOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
@@ -21,9 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Feature("Продуктовый каталог: направления")
+@Tag("product_catalog")
+@Epic("Продуктовый каталог")
+@Feature("Направления")
 public class OrgDirectionTest extends Tests {
 
+    private static final String ORG_DIRECTION_NAME = "org_direction_at_test-:2022.";
     OrgDirection orgDirection;
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/", "productCatalog/orgDirection/orgDirection.json");
 
@@ -33,7 +37,7 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void createOrgDirection() {
         orgDirection = OrgDirection.builder()
-                .orgDirectionName("org_direction_at_test2021")
+                .orgDirectionName(ORG_DIRECTION_NAME)
                 .build()
                 .createObject();
     }
@@ -89,7 +93,7 @@ public class OrgDirectionTest extends Tests {
         productCatalogSteps.getByIdWithOutToken(orgDirection.getOrgDirectionId());
     }
 
-    @Order(6)
+    @Order(7)
     @DisplayName("Обновление направления по Id")
     @TmsLink("643319")
     @Test
@@ -102,7 +106,7 @@ public class OrgDirectionTest extends Tests {
         Assertions.assertEquals(expected, actual);
     }
 
-    @Order(7)
+    @Order(8)
     @DisplayName("Негативный тест на обновление направления по Id без токена")
     @TmsLink("643322")
     @Test
@@ -111,7 +115,7 @@ public class OrgDirectionTest extends Tests {
                 new JSONObject().put("description", "UpdateDescription"));
     }
 
-    @Order(8)
+    @Order(9)
     @DisplayName("Копирование направления по Id")
     @TmsLink("643327")
     @Test
@@ -123,12 +127,22 @@ public class OrgDirectionTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistsOrgDirectionResponse.class));
     }
 
-    @Order(9)
+    @Order(10)
     @DisplayName("Негативный тест на копирование направления по Id без токена")
     @TmsLink("643332")
     @Test
     public void copyOrgDirectionByIdWithOutToken() {
         productCatalogSteps.copyByIdWithOutToken(orgDirection.getOrgDirectionId());
+    }
+
+    @Order(11)
+    @DisplayName("Негативный тест на создание направления с неуникальным именем")
+    @Test
+    public void createOrgDirectionWithNonUniqueName() {
+        {
+            productCatalogSteps.createProductObject(productCatalogSteps
+                    .createJsonObject(ORG_DIRECTION_NAME)).assertStatus(400);
+        }
     }
 
     @Order(80)
@@ -140,21 +154,21 @@ public class OrgDirectionTest extends Tests {
     }
 
     @Order(98)
-    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
+    @DisplayName("Негативный тест на создание направления с недопустимыми символами в имени")
     @TmsLink("643340")
     @Test
     public void createActionWithInvalidCharacters() {
         assertAll("Направление создалось с недопустимым именем",
                 () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("NameWithUppercase"))
-                        .assertStatus(400),
+                        .assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("nameWithUppercaseInMiddle"))
-                        .assertStatus(400),
-                () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("имя"))
-                        .assertStatus(400),
-                () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("Имя"))
-                        .assertStatus(400),
+                        .assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("название"))
+                        .assertStatus(500),
+                () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("Название"))
+                        .assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject("a&b&c"))
-                        .assertStatus(400),
+                        .assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject(""))
                         .assertStatus(400),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject(" "))
@@ -177,7 +191,7 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void deleteOrgDirection() {
         try (OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("org_direction_at_test2021")
+                .orgDirectionName(ORG_DIRECTION_NAME)
                 .build()
                 .createObjectExclusiveAccess()) {
             orgDirection.deleteObject();

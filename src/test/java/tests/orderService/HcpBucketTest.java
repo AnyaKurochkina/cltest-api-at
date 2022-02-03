@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.authorizer.ServiceAccount;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.HcpBucket;
@@ -19,6 +20,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("hcpbucket"), @Tag("prod")})
 public class HcpBucketTest extends Tests {
 
+    @TmsLink("581192")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(HcpBucket product) {
@@ -27,6 +29,7 @@ public class HcpBucketTest extends Tests {
         }
     }
 
+    @TmsLink("581457")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Измененить параметры версионирования {0}")
@@ -37,6 +40,7 @@ public class HcpBucketTest extends Tests {
         }
     }
 
+    @TmsLink("581198")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Измененить конфигурацию бакета {0}")
@@ -47,6 +51,7 @@ public class HcpBucketTest extends Tests {
         }
     }
 
+    @TmsLink("581200")
     @Tag("actions")
     @Disabled("Статический ключ не работает")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -66,6 +71,7 @@ public class HcpBucketTest extends Tests {
         }
     }
 
+    @TmsLink("581195")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить HCP Bucket {0}")
     @MarkDelete

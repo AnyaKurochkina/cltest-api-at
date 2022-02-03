@@ -6,6 +6,7 @@ import core.helper.MarkDelete;
 import httpModels.productCatalog.template.existsTemplate.response.ExistsTemplateResponse;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
 import httpModels.productCatalog.template.getTemplate.response.GetTemplateResponse;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
@@ -20,7 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Feature("Продуктовый каталог: шаблоны")
+@Epic("Продуктовый каталог")
+@Feature("Шаблоны")
 public class TemplatesTest extends Tests {
 
     Template template;
@@ -107,16 +109,16 @@ public class TemplatesTest extends Tests {
     }
 
     @Order(10)
-    @DisplayName("Негативный тест на создание действия с существующим именем")
+    @DisplayName("Негативный тест на создание шаблона с существующим именем")
     @TmsLink("643606")
     @Test
-    public void createActionWithSameName() {
+    public void createTemplateWithSameName() {
         productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject(template.getTemplateName()))
                 .assertStatus(400);
     }
 
     @Order(11)
-    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
+    @DisplayName("Негативный тест на создание шаблона с недопустимыми символами в имени")
     @TmsLink("643607")
     @Test
     public void createTemplateWithInvalidCharacters() {
