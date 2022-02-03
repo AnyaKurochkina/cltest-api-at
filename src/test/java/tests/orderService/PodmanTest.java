@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Podman;
 import org.junit.ProductArgumentsProvider;
@@ -17,6 +18,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("podman"), @Tag("prod")})
 public class PodmanTest extends Tests {
 
+    @TmsLink("377809")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Podman product) {
@@ -24,6 +26,7 @@ public class PodmanTest extends Tests {
         try (Podman podman = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("653489")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -34,6 +37,7 @@ public class PodmanTest extends Tests {
         }
     }
 
+    @TmsLink("377805")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -44,6 +48,7 @@ public class PodmanTest extends Tests {
         }
     }
 
+    @TmsLink("377808")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -69,6 +74,7 @@ public class PodmanTest extends Tests {
 //        }
 //    }
 
+    @TmsLink("377807")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -80,6 +86,7 @@ public class PodmanTest extends Tests {
         }
     }
 
+    @TmsLink("377806")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -91,6 +98,7 @@ public class PodmanTest extends Tests {
         }
     }
 
+    @TmsLink("377804")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
