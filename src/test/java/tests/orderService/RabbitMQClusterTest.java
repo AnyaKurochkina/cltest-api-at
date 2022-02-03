@@ -3,7 +3,9 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
+import models.orderService.products.ElasticsearchOpensearchCluster;
 import models.orderService.products.RabbitMQCluster;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -17,6 +19,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("rabbitmqcluster"), @Tag("prod")})
 public class RabbitMQClusterTest extends Tests {
 
+    @TmsLink("377645")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(RabbitMQCluster product) {
@@ -24,6 +27,7 @@ public class RabbitMQClusterTest extends Tests {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("377638")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -34,6 +38,18 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @TmsLink("653492")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверить конфигурацию {0}")
+    void refreshVmConfig(RabbitMQCluster product) {
+        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
+            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            rabbit.refreshVmConfig();
+        }
+    }
+
+    @TmsLink("377641")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -44,6 +60,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377644")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -55,6 +72,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377656")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать пользователя RabbitMQ {0}")
@@ -65,6 +83,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377643")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -76,6 +95,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377646")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
@@ -86,6 +106,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377642")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -97,6 +118,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377639")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
