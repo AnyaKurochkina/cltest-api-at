@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.ClickHouse;
 import org.junit.ProductArgumentsProvider;
@@ -17,6 +18,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("clickhouse"), @Tag("prod")})
 public class ClickHouseTest extends Tests {
 
+    @TmsLink("377799")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(ClickHouse product) {
@@ -24,6 +26,7 @@ public class ClickHouseTest extends Tests {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("377793")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -34,6 +37,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    //    @TmsLink("377800")
 //    @Tag("actions")
 //    @Source(ProductArgumentsProvider.PRODUCTS)
 //    @ParameterizedTest(name = "Добавить БД {0}")
@@ -43,6 +47,7 @@ public class ClickHouseTest extends Tests {
 //        }
 //    }
 
+    //    @TmsLink("377802")
 //    @Tag("actions")
 //    @Source(ProductArgumentsProvider.PRODUCTS)
 //    @ParameterizedTest(name = "Добавить пользователя {0}")
@@ -64,6 +69,7 @@ public class ClickHouseTest extends Tests {
 //        }
 //    }
 
+    @TmsLink("377689")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
@@ -73,6 +79,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+//    @TmsLink("")
 //    @Tag("actions")
 //    @Source(ProductArgumentsProvider.PRODUCTS)
 //    @ParameterizedTest(name = "Удалить пользователя {0}")
@@ -84,6 +91,7 @@ public class ClickHouseTest extends Tests {
 //        }
 //    }
 
+    @TmsLink("377795")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -94,6 +102,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+//    @TmsLink("377688")
 //    @Tag("actions")
 //    @Source(ProductArgumentsProvider.PRODUCTS)
 //    @ParameterizedTest(name = "Удалить БД {0}")
@@ -104,6 +113,7 @@ public class ClickHouseTest extends Tests {
 //        }
 //    }
 
+    @TmsLink("377798")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -115,6 +125,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @TmsLink("377797")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -126,6 +137,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @TmsLink("377796")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -137,6 +149,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @TmsLink("377794")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
