@@ -56,6 +56,10 @@ public class Tests {
         return UniqueTest.getStepLog();
     }
 
+    public static boolean isAttachLog() {
+        return UniqueTest.getStepLog() != null;
+    }
+
     //    @AfterEach
 //    public void afterScenarios(){
 //    }

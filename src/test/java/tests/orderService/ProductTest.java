@@ -17,12 +17,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import steps.accountManager.AccountSteps;
 import steps.authorizer.AuthorizerSteps;
 import steps.orderService.OrderServiceSteps;
+import tests.Tests;
 
 @Log4j2
 @Epic("Продукты")
 @Feature("Действия над продуктами")
 @Tags({@Tag("regress"), @Tag("prod")})
-public class ProductTest {
+public class ProductTest extends Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
     AccountSteps accountSteps = new AccountSteps();
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();

@@ -30,6 +30,8 @@ public class UniqueTest {
     }
 
     public static String getStepLog(){
+        if(stepLog.get() == null)
+            return null;
         return stepLog.get().toString();
     }
 }

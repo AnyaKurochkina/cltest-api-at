@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
+import ru.testit.junit5.JUnit5EventListener;
 
 
 import java.io.*;
@@ -42,6 +43,7 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     @SneakyThrows
     public void testPlanExecutionFinished(TestPlan testPlan) {
+        JUnit5EventListener.HANDLER.finishLaunch();
         ObjectPoolService.saveEntities(Configure.getAppProp("data.folder") + "/shareFolder/logData.json");
         new File(Configure.getAppProp("allure.results")).mkdir();
         FileWriter fooWriter = new FileWriter(Configure.getAppProp("allure.results") + "environment.properties", false);

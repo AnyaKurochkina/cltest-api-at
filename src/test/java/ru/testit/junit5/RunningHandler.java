@@ -39,7 +39,7 @@ public class RunningHandler
     public static void finishLaunch() {
 //        this.createTestItemRequestFactory.processFinishLaunch(this.utilsMethodSteps, this.includedTests);
 //        this.testITClient.sendTestItems(this.createTestItemRequestFactory.getCreateTestRequests());
-        testResultRequestFactory.processFinishLaunch(utilsMethodSteps, includedTests);
+//        testResultRequestFactory.processFinishLaunch(utilsMethodSteps, includedTests);
 //        this.testITClient.finishLaunch(this.testResultRequestFactory.getTestResultRequest());
         testITClient.sendCompleteTestRun();
     }
@@ -56,7 +56,7 @@ public class RunningHandler
         StepsAspects.setStepNodes(parentStep);
     }
     
-    public void finishTest(final Method atomicTest, final Throwable thrown, String configurationId) {
+    public static void finishTest(final Method atomicTest, final Throwable thrown, String configurationId) {
 //        final String externalId = extractExternalID(atomicTest, subId);
         UniqueTest test = new UniqueTest(extractExternalID(atomicTest, null), configurationId);
         if (alreadyFinished.contains(test)) {
@@ -71,9 +71,9 @@ public class RunningHandler
             parentStep.setCompletedOn(new Date());
         }
         alreadyFinished.add(test);
-        createTestItemRequestFactory.processFinishLaunchUniqueTest(utilsMethodSteps, includedTests, test);
-        testITClient.sendTestItemsUniqueTest(this.createTestItemRequestFactory.getCreateTestRequests(test));
-        testResultRequestFactory.processFinishLaunchUniqueTest(test, utilsMethodSteps, includedTests);
+        createTestItemRequestFactory.processFinishLaunchUniqueTest(utilsMethodSteps, parentStep, test);
+        testITClient.sendTestItemsUniqueTest(createTestItemRequestFactory.getCreateTestRequests(test));
+        testResultRequestFactory.processFinishLaunchUniqueTest(test, utilsMethodSteps, parentStep);
         removeCurrentStep();
     }
     

@@ -25,23 +25,24 @@ public class TestResultRequestFactory {
         }
     }
 
-    public void processFinishLaunchUniqueTest(final UniqueTest test, final Map<MethodType, StepNode> utilsMethodSteps, final Map<UniqueTest, StepNode> includedTests) {
+    public void processFinishLaunchUniqueTest(final UniqueTest test, final Map<MethodType, StepNode> utilsMethodSteps, StepNode step) {
         TestResultsRequest req = new TestResultsRequest();
         final String externalId = test.getExternalId();
         final TestResultRequest currentTest = new TestResultRequest();
         currentTest.setAutoTestExternalId(externalId);
         currentTest.setConfigurationId(test.getConfigurationId());
-        this.processTestSteps(currentTest, includedTests.get(test), null);
+        this.processTestSteps(currentTest, step, null);
         this.processUtilsMethodsSteps(currentTest, utilsMethodSteps);
         req.getTestResults().add(currentTest);
         String testResultId = TestITClient.sendTestResult(req);
 
-        StepNode step = includedTests.get(test);
-        Attachment log = new Attachment();
-        log.setFileName("http-request.log");
-        log.setBytes(Tests.getAttachLog().getBytes());
-        if(log.getBytes().length > 0)
-            step.getAttachments().add(log);
+        if(Tests.isAttachLog()) {
+            Attachment log = new Attachment();
+            log.setFileName("http-request.log");
+            log.setBytes(Tests.getAttachLog().getBytes());
+            if (log.getBytes().length > 0)
+                step.getAttachments().add(log);
+        }
 
         List<Map<String, String>> attachmentList = new ArrayList<>();
         Iterator<Attachment> iterator = step.getAttachments().iterator();

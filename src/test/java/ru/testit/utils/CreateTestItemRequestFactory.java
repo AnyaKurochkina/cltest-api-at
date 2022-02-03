@@ -50,9 +50,8 @@ public class CreateTestItemRequestFactory {
 //        }
 //    }
 
-    public void processFinishLaunchUniqueTest(final Map<MethodType, StepNode> utilsMethodSteps, final Map<UniqueTest, StepNode> includedTests, UniqueTest test) {
+    public void processFinishLaunchUniqueTest(final Map<MethodType, StepNode> utilsMethodSteps, final StepNode testParentStepNode, UniqueTest test) {
         final CreateTestItemRequest createTestItemRequest = createTestItemRequests.get(test);
-        final StepNode testParentStepNode = includedTests.get(test);
         try {
             createTestItemRequest.setOutcome(Outcome.getByValue(testParentStepNode.getOutcome()));
         } catch (Exception e) {

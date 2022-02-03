@@ -227,10 +227,10 @@ public class TestITClient {
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
     }
 
-    public void finishLaunch(final TestResultsRequest request) {
-//        this.sendTestResult(request);
-        this.sendCompleteTestRun();
-    }
+//    public void finishLaunch(final TestResultsRequest request) {
+////        this.sendTestResult(request);
+//        this.sendCompleteTestRun();
+//    }
 
     public static String sendAttachment(Attachment attachment, String testResultId) {
         Http.Response response;
