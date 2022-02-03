@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Elasticsearch;
 import org.junit.ProductArgumentsProvider;
@@ -17,6 +18,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearch"), @Tag("prod")})
 public class ElasticsearchTest extends Tests {
 
+    @TmsLink("396147")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Elasticsearch product) {
@@ -24,6 +26,7 @@ public class ElasticsearchTest extends Tests {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("425724")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -34,6 +37,7 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
+    @TmsLink("425735")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -46,6 +50,7 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
+    @TmsLink("425725")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -56,6 +61,7 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
+    @TmsLink("425726")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -66,6 +72,7 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
+    @TmsLink("425727")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
@@ -80,15 +87,17 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
+    @TmsLink("425728")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить по питанию {0}")
+    @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Elasticsearch product) {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             elastic.restart();
         }
     }
 
+    @TmsLink("396155")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
