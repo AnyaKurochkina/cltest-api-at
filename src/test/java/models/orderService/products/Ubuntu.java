@@ -69,6 +69,11 @@ public class Ubuntu extends IProduct {
                 .build();
     }
 
+    //Проверить конфигурацию
+    public void refreshVmConfig() {
+        orderServiceSteps.executeAction("check_vm", this, null);
+    }
+
     //Перезагрузить по питанию
     public void restart() {
         restart("reset_vm");
