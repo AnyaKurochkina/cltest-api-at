@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 import steps.calculator.CalcCostSteps;
+import steps.productCatalog.ProductCatalogSteps;
 import steps.stateService.StateServiceSteps;
 import steps.tarifficator.CostSteps;
 
@@ -226,47 +227,6 @@ public class OrderServiceSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .get("list[0].code");
-    }
-
-    /**
-     * @param product объект продукт наследуемый от абстрактного класса IProduct
-     * @return - возвращаем ID проудкта
-     */
-    public String getProductId(IProduct product) {
-        log.info("Получение id для продукта " + Objects.requireNonNull(product).getProductName());
-        //Получение информационной сисетмы
-        InformationSystem informationSystem = InformationSystem.builder().isForOrders(true).build().createObject();
-        String product_id = "";
-
-        //Получение среды проекта
-        ProjectEnvironment projectEnvironment = ((Project) Project.builder().id(product.getProjectId())
-                .build().createObject()).getProjectEnvironment();
-
-        //Выполнение запроса
-        //TODO: оптимизировать
-        int total_count = new Http(ProductCatalogURL)
-                .setProjectId(product.getProjectId())
-                .get("products/?is_open=true&env={}&information_systems={}&page=1&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id)
-                .assertStatus(200)
-                .jsonPath()
-                .get("meta.total_count");
-
-        int countOfIteration = total_count / 100 + 1;
-        for (int i = 1; i <= countOfIteration; i++) {
-            //Выполнение запроса на получение id подукта
-            product_id = new Http(ProductCatalogURL)
-                    .setProjectId(product.getProjectId())
-                    .get("products/?is_open=true&env={}&information_systems={}&page={}&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id, i)
-                    .assertStatus(200)
-                    .jsonPath()
-                    .get(String.format("list.find{it.title == '%s' || it.title == '%s' || it.title == '%s'}.id", product.getProductName().toLowerCase(), product.getProductName().toUpperCase(), product.getProductName()));
-            if (product_id != null) {
-                log.info("Id продукта = " + product_id);
-                break;
-            }
-        }
-        Assertions.assertNotNull(product_id, String.format("ID продукта: %s, не найден", product.getProductName()));
-        return product_id;
     }
 
     /**

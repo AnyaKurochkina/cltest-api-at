@@ -46,7 +46,7 @@ public class Product extends Entity {
 //    @Builder.Default
 //    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("products/", "productCatalog/products/createProduct.json");
 
-    private final String productName = "products/";
+    public static final String productName = "products/";
 
     @Override
     public Entity init() {

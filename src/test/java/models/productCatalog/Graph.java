@@ -36,7 +36,7 @@ public class Graph extends Entity {
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
 
-    private final String productName = "graphs/";
+    public static final String productName = "graphs/";
 
     @Override
     public Entity init() {

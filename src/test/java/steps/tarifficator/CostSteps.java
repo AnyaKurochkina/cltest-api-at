@@ -9,12 +9,13 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
+import models.productCatalog.Product;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 import steps.orderService.OrderServiceSteps;
+import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.HashMap;
 import java.util.List;
@@ -94,13 +95,13 @@ public class CostSteps extends Steps {
                 .isForOrders(true)
                 .build()
                 .createObject();
-        String productId = orderServiceSteps.getProductId(product);
+        String productId = new ProductCatalogSteps(Product.productName).getProductIdByTitleWithMultiSearchIgnoreCase(product.getProductName());
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
 
 
-        if(Objects.nonNull(product.getOrderId())) {
+        if (Objects.nonNull(product.getOrderId())) {
             attrs = new JSONObject((Map) orderServiceSteps.getProductsField(product, "attrs", JSONObject.class));
         }
 
@@ -128,7 +129,7 @@ public class CostSteps extends Steps {
                 .isForOrders(true)
                 .build()
                 .createObject();
-        String productId = orderServiceSteps.getProductId(product);
+        String productId = new ProductCatalogSteps(Product.productName).getProductIdByTitleWithMultiSearchIgnoreCase(product.getProductName());
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
@@ -150,7 +151,7 @@ public class CostSteps extends Steps {
 //        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
 //                .isForOrders(true).build().createObject();
         Project project = Project.builder().id(product.getProjectId()).build().createObject();
-        log.info("Отправка запроса на получение стоимости экшена: "+ action +", у продукта " + product.getProductName());
+        log.info("Отправка запроса на получение стоимости экшена: " + action + ", у продукта " + product.getProductName());
         return JsonHelper.getJsonTemplate("/tarifficator/costAction.json")
                 .set("$.params.project_name", project.id)
                 .set("$.params.item_id", itemId)

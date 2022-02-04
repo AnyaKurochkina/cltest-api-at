@@ -1,9 +1,12 @@
 package models.orderService.interfaces;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
 import core.helper.Http;
 import core.utils.Waiting;
+import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
+import httpModels.productCatalog.product.getProduct.response.GetServiceResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
@@ -12,15 +15,19 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
+import models.productCatalog.Graph;
+import models.productCatalog.Product;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
+import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static core.helper.Configure.OrderServiceURL;
@@ -163,6 +170,17 @@ public abstract class IProduct extends Entity {
 
     }
 
+    @SneakyThrows
+    //TODO: впилить во все продукты
+    protected String getRandomOsVersion(){
+        GetServiceResponse productResponse = (GetServiceResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetServiceResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
+        String urlAttrs = JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("os_version")))
+                        .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')");
+        return Objects.requireNonNull(ReferencesStep.getJsonPathList(urlAttrs)
+                        .getString("collect{it.data.os.version}.shuffled()[0]"), "Версия ОС не найдена");
+    }
+
     public Flavor getMaxFlavor() {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
@@ -192,7 +210,7 @@ public abstract class IProduct extends Entity {
             label = UUID.randomUUID().toString();
         }
         if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
+            productId = new ProductCatalogSteps(Product.productName).getProductIdByTitleWithMultiSearchIgnoreCase(getProductName());
         }
     }
 

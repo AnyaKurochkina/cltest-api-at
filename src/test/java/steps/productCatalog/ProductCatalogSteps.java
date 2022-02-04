@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 import static io.restassured.RestAssured.given;
 
@@ -24,6 +25,10 @@ import static io.restassured.RestAssured.given;
 public class ProductCatalogSteps {
     String productName;
     String templatePath;
+
+    public ProductCatalogSteps(String productName) {
+        this.productName = productName;
+    }
 
     @Step("Получение списка объекта продуктового каталога")
     public List<ItemImpl> getProductObjectList(Class<?> clazz) {
@@ -152,7 +157,16 @@ public class ProductCatalogSteps {
         return objectId;
     }
 
-    @Step("ООбновление объекта продуктового каталога")
+    @Step("Поиск ID объекта продуктового каталога по Title")
+    public String getProductIdByTitleWithMultiSearchIgnoreCase(String title) {
+        return Objects.requireNonNull(new Http(Configure.ProductCatalogURL)
+                .get("{}?multisearch={}", productName, title)
+                .assertStatus(200)
+                .jsonPath()
+                .getString("list.find{it.title.toLowerCase()=='" + title.toLowerCase() + "'}.id"), "ID продукта: " + title + " не найден");
+    }
+
+    @Step("Обновление объекта продуктового каталога")
     public Http.Response patchRow(JSONObject body, String actionId) {
         return new Http(Configure.ProductCatalogURL)
                 .body(body)
