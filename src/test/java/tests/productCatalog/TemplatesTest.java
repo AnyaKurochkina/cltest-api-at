@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны")
+@Tag("product_catalog")
 public class TemplatesTest extends Tests {
 
     Template template;

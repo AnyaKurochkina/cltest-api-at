@@ -3,6 +3,7 @@ package tests.orderService;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.accountManager.Account;
 import models.authorizer.Folder;
@@ -29,6 +30,7 @@ public class ProductTest extends Tests {
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();
 
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @TmsLink("584453")
     @ParameterizedTest(name = "Перенос заказа. ВМ {0} при одинаковых префиксах")
     public void moveProductWithEqualsPrefix(Rhel resource) {
         try (Rhel product = resource.createObjectExclusiveAccess()) {

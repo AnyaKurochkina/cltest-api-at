@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны отображения")
+@Tag("product_catalog")
 public class VisualTemplateTest extends Tests {
 
     private static final String VISUAL_TEMPLATE_NAME = "item_visual_template_test_api-:2022.";

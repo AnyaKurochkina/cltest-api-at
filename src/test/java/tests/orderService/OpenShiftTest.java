@@ -21,6 +21,7 @@ import tests.Tests;
 public class OpenShiftTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
+    @TmsLink("376186")
     @ParameterizedTest(name = "Создание проекта {0}")
     void create(OpenShiftProject product) {
         //noinspection EmptyTryBlock
@@ -29,7 +30,6 @@ public class OpenShiftTest extends Tests {
 
     @Tag("actions")
     @TmsLink("376495")
-    @Title("test")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменение проекта {0}")
     void change(OpenShiftProject product) {
@@ -39,6 +39,7 @@ public class OpenShiftTest extends Tests {
         }
     }
 
+    @TmsLink("376187")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удаление проекта {0}")
     @MarkDelete

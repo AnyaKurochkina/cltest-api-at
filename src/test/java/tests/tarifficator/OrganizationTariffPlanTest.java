@@ -7,6 +7,7 @@ import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.authorizer.Organization;
 import models.orderService.products.Rhel;
 import models.tarifficator.TariffPlan;
@@ -38,6 +39,7 @@ public class OrganizationTariffPlanTest extends Tests {
 
     @Test
     @Order(1)
+    @TmsLink("531445")
     @DisplayName("Создание тарифного плана")
     void createOrganizationTariffPlanFromActive() {
         Organization organization = Organization.builder().build().createObject();
@@ -61,7 +63,8 @@ public class OrganizationTariffPlanTest extends Tests {
 
     @Test
     @Order(2)
-    @DisplayName("Создание базового тарифного плана с существующим именем")
+    @TmsLink("531453")
+    @DisplayName("Уникальность названия ТП")
     void duplicateNameBaseTariffPlan() {
         Organization organization = Organization.builder().build().createObject();
         TariffPlan tariffPlan = TariffPlan.builder()
@@ -85,6 +88,7 @@ public class OrganizationTariffPlanTest extends Tests {
 
     @Test
     @Order(3)
+    @TmsLink("531459")
     @DisplayName("Черновик. Изменение имени тарифного плана")
     void renameTariffPlan() {
         TariffPlan tariffPlan = TariffPlan.builder()
@@ -104,6 +108,7 @@ public class OrganizationTariffPlanTest extends Tests {
 
     @Test
     @Order(4)
+    @TmsLink("531476")
     @DisplayName("Черновик -> Планируемый")
     void tariffPlanToPlanned() {
         Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
@@ -122,6 +127,7 @@ public class OrganizationTariffPlanTest extends Tests {
     }
 
     @Order(5)
+    @TmsLink("531467")
     @ParameterizedTest(name = "Активация и Архивация (без update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     void activateTariffPlanWithoutUpdateOrders(Rhel product) {
@@ -152,6 +158,7 @@ public class OrganizationTariffPlanTest extends Tests {
     }
 
     @Order(6)
+    @TmsLink("531468")
     @ParameterizedTest(name = "Активация и Архивация (с update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     void activateTariffPlanWithUpdateOrders(Rhel product) {

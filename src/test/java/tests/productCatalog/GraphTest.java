@@ -21,6 +21,7 @@ import models.productCatalog.Graph;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
+import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Графы")
-public class GraphTest {
+public class GraphTest extends Tests {
 
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
     Graph graph;
