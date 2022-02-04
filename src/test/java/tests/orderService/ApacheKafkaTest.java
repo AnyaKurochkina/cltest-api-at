@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.ApacheKafka;
 import org.junit.ProductArgumentsProvider;
@@ -17,6 +18,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafka"), @Tag("prod")})
 public class ApacheKafkaTest extends Tests {
 
+    @TmsLink("377693")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(ApacheKafka product) {
@@ -24,6 +26,7 @@ public class ApacheKafkaTest extends Tests {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("377686")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -34,6 +37,7 @@ public class ApacheKafkaTest extends Tests {
         }
     }
 
+    @TmsLink("377689")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -44,6 +48,7 @@ public class ApacheKafkaTest extends Tests {
         }
     }
 
+    @TmsLink("377692")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -55,6 +60,7 @@ public class ApacheKafkaTest extends Tests {
         }
     }
 
+    @TmsLink("377688")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
@@ -70,6 +76,7 @@ public class ApacheKafkaTest extends Tests {
         }
     }
 
+    @TmsLink("377691")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -81,6 +88,7 @@ public class ApacheKafkaTest extends Tests {
         }
     }
 
+    @TmsLink("377690")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -92,6 +100,7 @@ public class ApacheKafkaTest extends Tests {
         }
     }
 
+    @TmsLink("377687")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete

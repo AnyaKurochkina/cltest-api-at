@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Redis;
 import org.junit.ProductArgumentsProvider;
@@ -17,6 +18,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("redis"), @Tag("prod")})
 public class RedisTest extends Tests {
 
+    @TmsLink("377701")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Redis product) {
@@ -24,6 +26,7 @@ public class RedisTest extends Tests {
         try (Redis redis = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("377694")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -34,6 +37,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @TmsLink("377702")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
@@ -44,6 +48,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @TmsLink("377697")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -54,6 +59,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @TmsLink("377700")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -65,6 +71,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @TmsLink("653499")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
@@ -75,6 +82,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @TmsLink("377699")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -86,6 +94,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @TmsLink("377698")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -97,6 +106,7 @@ public class RedisTest extends Tests {
         }
     }
 
+    @TmsLink("377695")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete

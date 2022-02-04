@@ -3,7 +3,9 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
+import models.orderService.products.ScyllaDb;
 import models.orderService.products.Ubuntu;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -17,6 +19,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("ubuntu"), @Tag("prod")})
 public class UbuntuTest extends Tests {
 
+    @TmsLink("391696")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Ubuntu product) {
@@ -24,6 +27,7 @@ public class UbuntuTest extends Tests {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("391706")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -34,6 +38,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @TmsLink("391692")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -44,6 +49,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @TmsLink("391695")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -55,6 +61,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @TmsLink("391697")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
@@ -70,6 +77,18 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @TmsLink("654208")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверить конфигурацию {0}")
+    void refreshVmConfig(Ubuntu product) {
+        try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
+            ubuntu.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            ubuntu.refreshVmConfig();
+        }
+    }
+
+    @TmsLink("391694")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -81,6 +100,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @TmsLink("391693")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -92,6 +112,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @TmsLink("391691")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")

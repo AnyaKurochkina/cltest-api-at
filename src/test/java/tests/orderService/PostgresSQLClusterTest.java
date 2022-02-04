@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.PostgresSQLCluster;
 import org.junit.ProductArgumentsProvider;
@@ -17,6 +18,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgressqlcluster"), @Tag("prod")})
 public class PostgresSQLClusterTest extends Tests {
 
+    @TmsLink("461798")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(PostgresSQLCluster product) {
@@ -24,6 +26,7 @@ public class PostgresSQLClusterTest extends Tests {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("461791")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -34,6 +37,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("461800")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить БД {0}")
@@ -44,6 +48,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("461801")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить пользователя {0}")
@@ -55,6 +60,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("461793")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль пользователя {0}")
@@ -66,6 +72,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("461802")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить пользователя {0}")
@@ -78,6 +85,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("461804")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
@@ -88,6 +96,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("461803")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить БД {0}")
@@ -98,6 +107,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("461794")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -108,6 +118,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("461797")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -119,6 +130,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("461796")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -130,6 +142,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("461795")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -141,6 +154,7 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("461792")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete

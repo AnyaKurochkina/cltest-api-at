@@ -4,6 +4,7 @@ import com.mifmif.common.regex.Generex;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.ApacheKafkaCluster;
 import org.junit.ProductArgumentsProvider;
@@ -24,6 +25,7 @@ import java.util.stream.Stream;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafkacluster"), @Tag("prod")})
 public class ApacheKafkaClusterTest extends Tests {
 
+    @TmsLink("377732")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(ApacheKafkaCluster product) {
@@ -31,6 +33,7 @@ public class ApacheKafkaClusterTest extends Tests {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("377734")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
@@ -41,6 +44,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377729")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Пакетное создание Topic-ов Kafka {0}")
@@ -52,6 +56,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377736")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Пакетное удаление Topic-ов Kafka {0}")
@@ -63,6 +68,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377727")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать ACL Kafka {0}")
@@ -74,6 +80,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377735")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание ACL на транзакцию Kafka {0}")
@@ -84,6 +91,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377731")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить кластер Kafka {0}")
@@ -95,6 +103,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377728")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить кластер Kafka {0}")
@@ -105,6 +114,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377730")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить кластер Kafka {0}")
@@ -116,6 +126,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377725")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -126,6 +137,7 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @TmsLink("377726")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete

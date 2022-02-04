@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.portalBack.AccessGroup;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Rhel;
@@ -20,6 +21,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("rhel"), @Tag("prod")})
 public class RhelTest extends Tests {
 
+    @TmsLink("377711")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Rhel product) {
@@ -27,6 +29,7 @@ public class RhelTest extends Tests {
         try (Rhel rhel = product.createObjectExclusiveAccess()){}
     }
 
+    @TmsLink("37705")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -37,6 +40,7 @@ public class RhelTest extends Tests {
         }
     }
 
+//    @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания {0}")
@@ -50,6 +54,7 @@ public class RhelTest extends Tests {
         }
     }
 
+    @TmsLink("377707")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -60,6 +65,7 @@ public class RhelTest extends Tests {
         }
     }
 
+    @TmsLink("377710")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -71,6 +77,7 @@ public class RhelTest extends Tests {
         }
     }
 
+    @TmsLink("377712")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
@@ -86,6 +93,7 @@ public class RhelTest extends Tests {
         }
     }
 
+    @TmsLink("377709")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -97,6 +105,7 @@ public class RhelTest extends Tests {
         }
     }
 
+    @TmsLink("377708")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -108,6 +117,7 @@ public class RhelTest extends Tests {
         }
     }
 
+    @TmsLink("377706")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
