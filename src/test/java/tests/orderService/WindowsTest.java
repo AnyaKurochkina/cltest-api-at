@@ -3,7 +3,9 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
+import models.orderService.products.Ubuntu;
 import models.orderService.products.Windows;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -17,6 +19,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("windows"), @Tag("prod")})
 public class WindowsTest extends Tests {
 
+    @TmsLink("377721")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Windows product) {
@@ -24,6 +27,7 @@ public class WindowsTest extends Tests {
         try (Windows windows = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("377724")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить диск {0}")
@@ -34,6 +38,7 @@ public class WindowsTest extends Tests {
         }
     }
 
+    @TmsLink("377715")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить диск {0}")
@@ -45,6 +50,7 @@ public class WindowsTest extends Tests {
         }
     }
 
+    @TmsLink("377717")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -55,6 +61,7 @@ public class WindowsTest extends Tests {
         }
     }
 
+    @TmsLink("377720")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -66,6 +73,7 @@ public class WindowsTest extends Tests {
         }
     }
 
+    @TmsLink("377722")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
@@ -81,6 +89,18 @@ public class WindowsTest extends Tests {
         }
     }
 
+    @TmsLink("654229")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверить конфигурацию {0}")
+    void refreshVmConfig(Windows product) {
+        try (Windows windows = product.createObjectExclusiveAccess()) {
+            windows.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            windows.refreshVmConfig();
+        }
+    }
+
+    @TmsLink("377719")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -92,6 +112,7 @@ public class WindowsTest extends Tests {
         }
     }
 
+    @TmsLink("377718")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -103,6 +124,7 @@ public class WindowsTest extends Tests {
         }
     }
 
+    @TmsLink("377716")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
