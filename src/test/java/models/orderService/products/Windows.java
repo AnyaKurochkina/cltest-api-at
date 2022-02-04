@@ -111,6 +111,11 @@ public class Windows extends IProduct {
         Assertions.assertEquals(sizeBefore, sizeAfter - 1, "sizeBefore >= sizeAfter");
     }
 
+    //Проверить конфигурацию
+    public void refreshVmConfig() {
+        orderServiceSteps.executeAction("check_vm", this, null);
+    }
+
 
     //Перезагрузить по питанию
     public void restart() {

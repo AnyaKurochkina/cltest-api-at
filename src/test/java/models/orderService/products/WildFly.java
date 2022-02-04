@@ -83,6 +83,11 @@ public class WildFly extends IProduct {
         Assertions.assertNotEquals(0, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
 
+    //Проверить конфигурацию
+    public void refreshVmConfig() {
+        orderServiceSteps.executeAction("check_vm", this, null);
+    }
+
     public void expandMountPoint() {
         expandMountPoint("expand_mount_point", "/app/app", 10);
     }

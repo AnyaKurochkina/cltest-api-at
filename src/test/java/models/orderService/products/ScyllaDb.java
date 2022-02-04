@@ -142,6 +142,11 @@ public class ScyllaDb extends IProduct {
         save();
     }
 
+    //Проверить конфигурацию
+    public void refreshVmConfig() {
+        orderServiceSteps.executeAction("check_vm", this, null);
+    }
+
     public void expandMountPoint() {
         expandMountPoint("expand_mount_point", "/app/scylla/data", 10);
     }

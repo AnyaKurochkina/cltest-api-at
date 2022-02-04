@@ -5,6 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
+import models.orderService.products.Ubuntu;
 import models.orderService.products.WildFly;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -20,7 +21,7 @@ public class WildFlyTest extends Tests {
 
     @TmsLink("377474")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Заказ {0}")
+    @ParameterizedTest(name = "Создать {0}")
     void create(WildFly product) {
         //noinspection EmptyTryBlock
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {}
@@ -73,6 +74,17 @@ public class WildFlyTest extends Tests {
             } finally {
                 wildFly.start();
             }
+        }
+    }
+
+    @TmsLink("654210")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверить конфигурацию {0}")
+    void refreshVmConfig(WildFly product) {
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            wildFly.refreshVmConfig();
         }
     }
 

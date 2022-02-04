@@ -3,7 +3,9 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
+import models.orderService.products.ElasticsearchOpensearchCluster;
 import models.orderService.products.PostgreSQL;
 import models.orderService.products.ScyllaDb;
 import org.junit.ProductArgumentsProvider;
@@ -19,6 +21,7 @@ import tests.Tests;
 public class ScyllaDbTest extends Tests {
     private final String password = "pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ";
 
+    @TmsLink("622616")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(ScyllaDb product) {
@@ -26,6 +29,7 @@ public class ScyllaDbTest extends Tests {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("622619")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -36,6 +40,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("622622")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить БД {0}")
@@ -46,6 +51,19 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("654176")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверить конфигурацию {0}")
+    void refreshVmConfig(ScyllaDb product) {
+        try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
+            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
+            scyllaDb.refreshVmConfig();
+        }
+    }
+
+
+    @TmsLink("654178")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Присвоить права доступа пользователю {0}")
@@ -58,6 +76,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("654179")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить права доступа пользователю {0}")
@@ -71,6 +90,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("622629")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить пользователя {0}")
@@ -82,6 +102,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("622614")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
@@ -95,6 +116,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("622631")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить пользователя {0}")
@@ -107,6 +129,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("622618")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -117,6 +140,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("622634")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить БД {0}")
@@ -127,6 +151,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("622621")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -138,6 +163,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("622624")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -149,6 +175,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("622625")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -160,6 +187,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @TmsLink("622626")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete

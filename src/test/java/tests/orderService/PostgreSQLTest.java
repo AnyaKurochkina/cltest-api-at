@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.PostgreSQL;
 import org.junit.ProductArgumentsProvider;
@@ -17,6 +18,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql"), @Tag("prod")})
 public class PostgreSQLTest extends Tests {
 
+    @TmsLink("377668")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(PostgreSQL product) {
@@ -24,6 +26,7 @@ public class PostgreSQLTest extends Tests {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("377661")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -34,6 +37,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("377677")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить БД {0}")
@@ -43,6 +47,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("377678")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить пользователя {0}")
@@ -53,6 +58,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("377663")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
@@ -64,6 +70,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("461766")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
@@ -74,6 +81,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("377683")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить пользователя {0}")
@@ -86,6 +94,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("377664")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -96,6 +105,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("392130")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить БД {0}")
@@ -106,6 +116,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("377667")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -117,6 +128,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("377669")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
@@ -127,6 +139,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("377666")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
@@ -138,6 +151,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("377665")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
@@ -149,6 +163,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("377662")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
