@@ -63,7 +63,7 @@ public class PostgreSQL extends IProduct {
         if(osVersion == null)
             osVersion = Objects.requireNonNull(getRandomOsVersion(), "Нет доступных версий ОС");
         if(postgresqlVersion == null)
-            getRandomProductVersionByPathEnum("properties.postgresql_version.enum");
+            getRandomProductVersionByPathEnum("postgresql_version.enum");
         return this;
     }
 
