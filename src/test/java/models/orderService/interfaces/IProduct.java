@@ -3,7 +3,7 @@ package models.orderService.interfaces;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
-import core.helper.Http;
+import core.helper.http.Http;
 import core.utils.Waiting;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
 import httpModels.productCatalog.product.getProduct.response.GetServiceResponse;

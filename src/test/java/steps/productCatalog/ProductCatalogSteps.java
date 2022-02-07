@@ -1,8 +1,9 @@
 package steps.productCatalog;
 
 import core.helper.Configure;
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import httpModels.productCatalog.ExistImpl;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.GetListImpl;
@@ -10,7 +11,6 @@ import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -39,14 +39,14 @@ public class ProductCatalogSteps {
     }
 
     @Step("Создание объекта продуктового каталога")
-    public Http.Response createProductObject(JSONObject body) {
+    public Response createProductObject(JSONObject body) {
         return new Http(Configure.ProductCatalogURL)
                 .body(body)
                 .post(productName);
     }
 
     @Step("Создание объекта продуктового каталога")
-    public Http.Response createProductObject(String url, JSONObject body) {
+    public Response createProductObject(String url, JSONObject body) {
         return new Http(Configure.ProductCatalogURL)
                 .body(body)
                 .post(url);
@@ -167,7 +167,7 @@ public class ProductCatalogSteps {
     }
 
     @Step("Обновление объекта продуктового каталога")
-    public Http.Response patchRow(JSONObject body, String actionId) {
+    public Response patchRow(JSONObject body, String actionId) {
         return new Http(Configure.ProductCatalogURL)
                 .body(body)
                 .patch(productName + actionId + "/");
@@ -182,7 +182,7 @@ public class ProductCatalogSteps {
     }
 
     @Step("Частичное обновление продукта")
-    public Http.Response partialUpdateObject(String id, JSONObject object) {
+    public Response partialUpdateObject(String id, JSONObject object) {
         return new Http(Configure.ProductCatalogURL)
                 .body(object)
                 .patch(productName + id + "/");
@@ -199,7 +199,7 @@ public class ProductCatalogSteps {
 
     @Step("Получение времени отклика на запрос")
     public long getTime(String url) {
-        Response response = given()
+        io.restassured.response.Response response = given()
                 .get(url);
         return response.getTime();
     }
@@ -211,12 +211,12 @@ public class ProductCatalogSteps {
                 .assertStatus(200).jsonPath();
     }
 
-    public Http.Response getDeleteObjectResponse(String id) {
+    public Response getDeleteObjectResponse(String id) {
         return new Http(Configure.ProductCatalogURL)
                 .delete(productName + id + "/");
     }
 
-    public Http.Response getDeleteObjectResponse(String url, String id) {
+    public Response getDeleteObjectResponse(String url, String id) {
         return new Http(Configure.ProductCatalogURL)
                 .delete(url + id + "/");
     }

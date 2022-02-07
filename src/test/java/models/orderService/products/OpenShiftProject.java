@@ -1,6 +1,6 @@
 package models.orderService.products;
 
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.*;

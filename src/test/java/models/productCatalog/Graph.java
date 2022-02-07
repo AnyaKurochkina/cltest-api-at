@@ -1,7 +1,7 @@
 package models.productCatalog;
 
 import core.helper.Configure;
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.graphs.createGraph.response.CreateGraphResponse;
 import httpModels.productCatalog.graphs.createGraph.response.JsonSchema;

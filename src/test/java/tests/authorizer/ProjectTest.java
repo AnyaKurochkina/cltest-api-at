@@ -1,6 +1,6 @@
 package tests.authorizer;
 
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import io.qameta.allure.*;
 import models.authorizer.Project;
 import org.junit.jupiter.api.*;

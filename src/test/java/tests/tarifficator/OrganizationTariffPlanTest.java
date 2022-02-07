@@ -2,7 +2,7 @@ package tests.tarifficator;
 
 import core.helper.Configure;
 import core.helper.CustomDate;
-import core.helper.Http;
+import core.helper.http.Http;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;

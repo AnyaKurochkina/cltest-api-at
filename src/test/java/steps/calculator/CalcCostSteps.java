@@ -1,6 +1,6 @@
 package steps.calculator;
 
-import core.helper.Http;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;

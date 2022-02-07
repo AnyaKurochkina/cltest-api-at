@@ -3,7 +3,8 @@ package ru.testit.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import core.helper.Configure;
-import core.helper.Http;
+import core.helper.http.Http;
+import core.helper.http.Response;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -62,7 +63,7 @@ public class TestITClient {
     //старт тест-рана
     public static void startLaunch() {
         String body;
-        Http.Response response;
+        Response response;
         try {
             final StartTestRunRequest request = new StartTestRunRequest();
             request.setProjectId(getProjectID());
@@ -108,7 +109,7 @@ public class TestITClient {
 
     //получение конфигурации по ид
     public ConfigurationResponse getConfiguration(String configurationId) {
-        Http.Response response;
+        Response response;
         try {
             response = new Http(properties.getUrl())
                     .disableAttachmentLog()
@@ -130,7 +131,7 @@ public class TestITClient {
     @SneakyThrows
     //получение автотеста по ид
     public GetTestItemResponse getTestItem(final CreateTestItemRequest createTestItemRequest) {
-        Http.Response response;
+        Response response;
         try {
             response = new Http(properties.getUrl())
                     .disableAttachmentLog()
@@ -158,7 +159,7 @@ public class TestITClient {
     //создание автотеста
     public void createTestItem(final CreateTestItemRequest createTestItemRequest) {
         String body;
-        Http.Response response;
+        Response response;
         CreateTestItemResponse createTestItemResponse = null;
         try {
             createTestItemRequest.setTitle(filterTestName(createTestItemRequest.getTitle()));
@@ -186,7 +187,7 @@ public class TestITClient {
     public void updatePostItem(final CreateTestItemRequest createTestItemRequest, final String testId) {
         createTestItemRequest.setId(testId);
         String body;
-        Http.Response response;
+        Response response;
         try {
             createTestItemRequest.setTitle(filterTestName(createTestItemRequest.getTitle()));
             createTestItemRequest.setName(filterTestName(createTestItemRequest.getName()));
@@ -211,7 +212,7 @@ public class TestITClient {
         if(linkAutoTestRequest.getId() == null)
             return;
         String body;
-        Http.Response response;
+        Response response;
         try {
             body = getObjectMapper().writeValueAsString(linkAutoTestRequest);
             response = new Http(properties.getUrl())
@@ -233,7 +234,7 @@ public class TestITClient {
 //    }
 
     public static String sendAttachment(Attachment attachment, String testResultId) {
-        Http.Response response;
+        Response response;
         try {
             response = new Http(properties.getUrl())
                     .disableAttachmentLog()
@@ -252,7 +253,7 @@ public class TestITClient {
     @SneakyThrows
     public static synchronized String sendTestResult(final TestResultsRequest request) {
         String body;
-        Http.Response response;
+        Response response;
         try {
             List<TestResultRequest> list = request.getTestResults();
             body = getObjectMapper().writeValueAsString(list);
@@ -272,7 +273,7 @@ public class TestITClient {
 
 
     public static void sendStartTestRun() {
-        Http.Response response;
+        Response response;
         try {
             response = new Http(properties.getUrl())
                     .disableAttachmentLog()
@@ -288,7 +289,7 @@ public class TestITClient {
     }
 
     public void sendCompleteTestRun() {
-        Http.Response response;
+        Response response;
         try {
             response = new Http(properties.getUrl())
                     .disableAttachmentLog()

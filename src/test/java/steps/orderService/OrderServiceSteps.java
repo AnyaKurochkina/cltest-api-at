@@ -2,13 +2,13 @@ package steps.orderService;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
-import models.authorizer.InformationSystem;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.ResourcePool;
@@ -19,7 +19,6 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 import steps.calculator.CalcCostSteps;
-import steps.productCatalog.ProductCatalogSteps;
 import steps.stateService.StateServiceSteps;
 import steps.tarifficator.CostSteps;
 
@@ -30,7 +29,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static core.helper.Configure.OrderServiceURL;
-import static core.helper.Configure.ProductCatalogURL;
 
 @Log4j2
 public class OrderServiceSteps extends Steps {
@@ -43,7 +41,7 @@ public class OrderServiceSteps extends Steps {
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
             Waiting.sleep(30000);
-            Http.Response res = new Http(OrderServiceURL)
+            Response res = new Http(OrderServiceURL)
                     .setProjectId(product.getProjectId())
                     .get("projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
                     .assertStatus(200);
@@ -111,7 +109,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Отправка action {action}")
-    public Http.Response sendAction(String action, IProduct product, JSONObject jsonData) {
+    public Response sendAction(String action, IProduct product, JSONObject jsonData) {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.getId())
@@ -121,7 +119,7 @@ public class OrderServiceSteps extends Steps {
                 .patch("projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
 
-    public Http.Response changeProjectForOrderRequest(IProduct product, Project target) {
+    public Response changeProjectForOrderRequest(IProduct product, Project target) {
         return new Http(OrderServiceURL)
                 .body(new JSONObject(String.format("{target_project_name: \"%s\"}", target.getId())))
                 .patch("projects/{}/orders/{}/change_project", product.getProjectId(), product.getOrderId());

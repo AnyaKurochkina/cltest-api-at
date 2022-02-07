@@ -1,6 +1,6 @@
 package models.authorizer;
 
-import core.helper.Http;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;

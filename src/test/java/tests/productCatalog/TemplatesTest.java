@@ -2,7 +2,7 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import httpModels.productCatalog.template.existsTemplate.response.ExistsTemplateResponse;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
 import httpModels.productCatalog.template.getTemplate.response.GetTemplateResponse;

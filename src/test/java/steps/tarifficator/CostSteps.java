@@ -1,6 +1,6 @@
 package steps.tarifficator;
 
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
 import core.utils.Waiting;
 import io.qameta.allure.Step;

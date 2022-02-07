@@ -1,6 +1,6 @@
 package steps.accountManager;
 
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;

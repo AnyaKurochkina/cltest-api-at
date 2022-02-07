@@ -2,7 +2,7 @@ package steps.keyCloak;
 
 import core.enums.Role;
 import core.helper.Configure;
-import core.helper.Http;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
