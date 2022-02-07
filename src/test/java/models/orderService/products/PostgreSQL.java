@@ -50,6 +50,7 @@ public class PostgreSQL extends IProduct {
     @Step("Заказ продукта")
     protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
+        dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         createProduct();
     }
 
@@ -58,12 +59,14 @@ public class PostgreSQL extends IProduct {
         jsonTemplate = "/orders/postgresql.json";
         productName = "PostgreSQL";
         initProduct();
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
+        if(flavor == null)
+            flavor = getMinFlavor();
         if(osVersion == null)
-            osVersion = Objects.requireNonNull(getRandomOsVersion(), "Нет доступных версий ОС");
+            osVersion = getRandomOsVersion();
         if(postgresqlVersion == null)
-            getRandomProductVersionByPathEnum("postgresql_version.enum");
+            postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
         return this;
     }
 

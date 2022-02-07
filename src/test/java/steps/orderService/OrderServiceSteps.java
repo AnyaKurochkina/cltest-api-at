@@ -223,10 +223,20 @@ public class OrderServiceSteps extends Steps {
         log.info("Получение домена для сегмента сети " + netSegment);
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
-                .get("domains?net_segment_code={}&include=total_count&page=1&per_page=25", netSegment)
+                .get("domains?net_segment_code={}&page=1&per_page=25", netSegment)
                 .assertStatus(200)
                 .jsonPath()
-                .get("list[0].code");
+                .get("list.collect{e -> e}.shuffled()[0].code");
+    }
+
+    public String getDataCentreBySegment(IProduct product, String netSegment) {
+        log.info("Получение ДЦ для сегмента сети " + netSegment);
+        return new Http(OrderServiceURL)
+                .setProjectId(product.getProjectId())
+                .get("data_centers?net_segment_code={}&page=1&per_page=25", netSegment)
+                .assertStatus(200)
+                .jsonPath()
+                .get("list.collect{e -> e}.shuffled()[0].code");
     }
 
     /**
