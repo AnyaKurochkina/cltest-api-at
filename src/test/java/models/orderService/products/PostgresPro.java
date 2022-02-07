@@ -63,7 +63,7 @@ public class PostgresPro extends IProduct {
         if(postgresproVersion == null)
             postgresproVersion = getRandomProductVersionByPathEnum("postgrespro_version.enum");
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
+            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 

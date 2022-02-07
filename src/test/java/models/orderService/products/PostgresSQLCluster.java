@@ -62,7 +62,7 @@ public class PostgresSQLCluster extends IProduct {
         if(postgresqlVersion == null)
             postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
+            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 

@@ -45,7 +45,7 @@ public class OpenShiftProject extends IProduct {
             roles = Collections.singletonList(new Role("edit", accessGroup.getPrefixName()));
         }
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
+            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 

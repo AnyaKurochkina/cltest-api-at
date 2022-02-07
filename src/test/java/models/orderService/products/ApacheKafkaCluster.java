@@ -59,7 +59,7 @@ public class ApacheKafkaCluster extends IProduct {
         if(kafkaVersion == null)
             kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
+            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 

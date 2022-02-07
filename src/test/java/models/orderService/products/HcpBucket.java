@@ -37,7 +37,7 @@ public class HcpBucket extends IProduct {
         productName = "HCP bucket";
         initProduct();
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
+            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
