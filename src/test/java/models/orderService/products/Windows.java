@@ -54,7 +54,6 @@ public class Windows extends IProduct {
             { "generic_gateway", "gw" },
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
-
     @Override
     @Step("Заказ продукта")
     protected void create() {
@@ -72,6 +71,12 @@ public class Windows extends IProduct {
         if(role == null){
             role = (String) roles.keySet().toArray()[(int) (Math.random() * roles.size())];
         }
+        if(flavor == null)
+            flavor = getMinFlavor();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
         return this;
     }
 
@@ -79,8 +84,6 @@ public class Windows extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)

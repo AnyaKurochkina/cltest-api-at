@@ -41,6 +41,12 @@ public class Elasticsearch extends IProduct {
         jsonTemplate = "/orders/elasticsearch.json";
         productName = "Elasticsearch X-pack cluster";
         initProduct();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(elasticsearchVersion == null)
+            elasticsearchVersion = getRandomProductVersionByPathEnum("elasticsearch_version.enum");
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
         return this;
     }
 

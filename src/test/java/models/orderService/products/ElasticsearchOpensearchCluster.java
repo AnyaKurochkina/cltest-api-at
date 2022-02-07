@@ -39,6 +39,12 @@ public class ElasticsearchOpensearchCluster extends IProduct {
         jsonTemplate = "/orders/elasticsearch_opensearch_cluster.json";
         productName = "Elasticsearch Opensearch cluster";
         initProduct();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(elasticsearchVersion == null)
+            elasticsearchVersion = getRandomProductVersionByPathEnum("elasticsearch_version.enum");
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
         return this;
     }
 

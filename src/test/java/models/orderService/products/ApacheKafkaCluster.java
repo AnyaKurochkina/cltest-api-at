@@ -52,14 +52,20 @@ public class ApacheKafkaCluster extends IProduct {
         jsonTemplate = "/orders/apache_kafka_cluster.json";
         productName = "Apache Kafka Cluster";
         initProduct();
+        if(flavor == null)
+            flavor = getMinFlavor();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(kafkaVersion == null)
+            kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
         return this;
     }
 
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)

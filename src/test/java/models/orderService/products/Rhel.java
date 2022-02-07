@@ -10,14 +10,12 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.portalBack.AccessGroup;
 import models.authorizer.Project;
 import models.authorizer.User;
 import models.orderService.interfaces.IProduct;
+import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-
-import java.util.List;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -44,8 +42,12 @@ public class Rhel extends IProduct {
         initProduct();
         if (domain == null)
             domain = orderServiceSteps.getDomainBySegment(this, segment);
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
+        if(flavor == null)
+            flavor = getMinFlavor();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
         return this;
     }
 

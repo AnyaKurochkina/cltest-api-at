@@ -50,7 +50,6 @@ public class PostgreSQL extends IProduct {
     @Step("Заказ продукта")
     protected void create() {
         domain = orderServiceSteps.getDomainBySegment(this, segment);
-        dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         createProduct();
     }
 

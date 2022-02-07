@@ -47,6 +47,10 @@ public class Redis extends IProduct {
         jsonTemplate = "/orders/redis.json";
         productName = "Redis";
         initProduct();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
         return this;
     }
 

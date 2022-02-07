@@ -49,6 +49,12 @@ public class RabbitMQCluster extends IProduct {
         productName = "RabbitMQ Cluster";
         role = "administrator";
         initProduct();
+        if(flavor == null)
+            flavor = getMinFlavor();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDomainBySegment(this, segment);
         return this;
     }
 
@@ -64,8 +70,6 @@ public class RabbitMQCluster extends IProduct {
                 role = "administrator";
                 break;
         }
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
