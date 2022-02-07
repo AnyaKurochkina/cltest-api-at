@@ -181,6 +181,15 @@ public abstract class IProduct extends Entity {
                         .getString("collect{it.data.os.version}.shuffled()[0]"), "Версия ОС не найдена");
     }
 
+    @SneakyThrows
+    //TODO: впилить во все продукты
+    protected String getRandomProductVersionByPathEnum(String path){
+        GetServiceResponse productResponse = (GetServiceResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetServiceResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
+        return Objects.requireNonNull(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getJsonSchema().get("properties")))
+                .getString(path + ".collect{e -> e}.shuffled()[0]"), "Версия продукта не найдена");
+    }
+
     public Flavor getMaxFlavor() {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");

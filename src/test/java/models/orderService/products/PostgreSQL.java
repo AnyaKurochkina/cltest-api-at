@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -57,6 +58,12 @@ public class PostgreSQL extends IProduct {
         jsonTemplate = "/orders/postgresql.json";
         productName = "PostgreSQL";
         initProduct();
+        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
+        flavor = flavorList.get(0);
+        if(osVersion == null)
+            osVersion = Objects.requireNonNull(getRandomOsVersion(), "Нет доступных версий ОС");
+        if(postgresqlVersion == null)
+            getRandomProductVersionByPathEnum("json_schema.properties.postgresql_version.enum");
         return this;
     }
 
@@ -64,8 +71,6 @@ public class PostgreSQL extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
