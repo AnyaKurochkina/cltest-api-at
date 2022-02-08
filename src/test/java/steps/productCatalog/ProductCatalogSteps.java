@@ -157,10 +157,11 @@ public class ProductCatalogSteps {
         return objectId;
     }
 
+
     @Step("Поиск ID объекта продуктового каталога по Title")
-    public String getProductIdByTitleWithMultiSearchIgnoreCase(String title) {
+    public String getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(String title, String parameters) {
         return Objects.requireNonNull(new Http(Configure.ProductCatalogURL)
-                .get("{}?multisearch={}", productName, title)
+                .get("{}?multisearch={}&{}", productName, title, parameters)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("list.find{it.title.toLowerCase()=='" + title.toLowerCase() + "'}.id"), "ID продукта: " + title + " не найден");

@@ -209,15 +209,16 @@ public abstract class IProduct extends Entity {
     }
 
     protected void initProduct() {
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
         if (projectId == null) {
-            Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
             setProjectId(project.getId());
         }
         if (label == null) {
             label = UUID.randomUUID().toString();
         }
         if (productId == null) {
-            productId = new ProductCatalogSteps(Product.productName).getProductIdByTitleWithMultiSearchIgnoreCase(getProductName());
+            productId = new ProductCatalogSteps(Product.productName).
+                    getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(getProductName(), "&is_open=true&env=" + project.getProjectEnvironment().getEnvType());
         }
     }
 
