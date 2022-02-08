@@ -53,11 +53,10 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
             return getProducts(context.getRequiredTestMethod()).stream();
         } else {
             List<Arguments> list = new ArrayList<>();
-            AtomicInteger i = new AtomicInteger(1);
             orders.stream()
                     .filter(distinctByKey(IProduct::getEnv))
                     .collect(Collectors.toList())
-                    .forEach(entity -> list.add(Arguments.arguments(entity.getEnv(), String.valueOf(i.getAndIncrement()))));
+                    .forEach(entity -> list.add(Arguments.arguments(entity.getEnv())));
             return list.stream();
         }
     }
