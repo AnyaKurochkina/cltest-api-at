@@ -65,8 +65,8 @@ public class Http {
         this.method = "GET";
         for (Object arg : args)
             path = path.replaceFirst("\\{}", Objects.requireNonNull(arg).toString()
-                    .replaceFirst("#", "%23")
-                    .replaceFirst(" ", "%20"));
+                    .replaceAll("#", "%23")
+                    .replaceAll(" ", "%20"));
         this.path = StringUtils.format(path, args);
         return request();
     }

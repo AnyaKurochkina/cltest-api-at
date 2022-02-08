@@ -3,7 +3,6 @@ package core.helper.http;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
