@@ -96,7 +96,7 @@ public class CostSteps extends Steps {
                 .build()
                 .createObject();
         String productId = new ProductCatalogSteps(Product.productName)
-                .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(), project.getProjectEnvironment().getEnvType());
+                .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(), Objects.requireNonNull(project.getProjectEnvironment().getEnvType()));
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
@@ -131,7 +131,7 @@ public class CostSteps extends Steps {
                 .build()
                 .createObject();
         String productId = new ProductCatalogSteps(Product.productName)
-                .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(), project.getProjectEnvironment().getEnvType());
+                .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(), Objects.requireNonNull(project.getProjectEnvironment().getEnvType()));
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
