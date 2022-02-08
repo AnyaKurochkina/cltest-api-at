@@ -70,8 +70,8 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     }
 
     public void interceptTestTemplateMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Throwable {
-        Entity entity = (Entity) invocationContext.getArguments().stream().filter(o -> Entity.class.isAssignableFrom(o.getClass())).findFirst().orElseThrow(Exception::new);
-        if (isIntegrationTestIt()) {
+        Entity entity = (Entity) invocationContext.getArguments().stream().filter(o -> Entity.class.isAssignableFrom(o.getClass())).findFirst().orElse(null);
+        if (isIntegrationTestIt() && entity != null) {
             JUnit5EventListener.HANDLER.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), entity.getConfigurationId(), extensionContext.getTags());
             extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), entity.getConfigurationId());
         }
@@ -81,7 +81,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             else
                 invocation.proceed();
         } catch (Throwable throwable) {
-            if (isIntegrationTestIt())
+            if (isIntegrationTestIt() && entity != null)
                 JUnit5EventListener.HANDLER.finishTest(extensionContext.getRequiredTestMethod(), throwable, entity.getConfigurationId());
             throw throwable;
         }

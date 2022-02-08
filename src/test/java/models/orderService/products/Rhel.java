@@ -37,8 +37,13 @@ public class Rhel extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/rhel.json";
-        if(productName == null)
-            productName = "Rhel";
+        if(productName == null) {
+            Project project = Project.builder().id(projectId).build().createObject();
+            if(project.getProjectEnvironment().getEnvType().contains("TEST"))
+                productName = "RHEL General Application";
+            else
+                productName = "Rhel";
+        }
         initProduct();
         if (domain == null)
             domain = orderServiceSteps.getDomainBySegment(this, segment);
