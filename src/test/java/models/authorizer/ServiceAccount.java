@@ -76,7 +76,7 @@ public class ServiceAccount extends Entity {
         int counter = 60;
         JsonPath jsonPath = null;
         log.info("Проверка статуса статического ключа");
-        while ((keyStatus.equals("deleting") || keyStatus.equals("")) || keyStatus.equals("[active]") && counter > 0) {
+        while ((keyStatus.equals("[deleting]") || keyStatus.equals("")) || keyStatus.equals("[active]") && counter > 0) {
             sleep(30000);
             jsonPath = new Http(Configure.AuthorizerURL)
                     .get("projects/{}/service_accounts/{}/access_keys", projectId, id)
