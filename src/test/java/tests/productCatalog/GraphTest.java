@@ -8,7 +8,6 @@ import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.action.createAction.response.CreateActionResponse;
 import httpModels.productCatalog.graphs.createGraph.response.CreateGraphResponse;
 import httpModels.productCatalog.graphs.deleteGraph.response.DeleteGraphResponse;
-import httpModels.productCatalog.graphs.existsGraphs.response.ExistsGraphsResponse;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
@@ -56,8 +55,8 @@ public class GraphTest {
     @TmsLink("642540")
     @Test
     public void checkGraphExists() {
-        Assertions.assertTrue(productCatalogSteps.isExists(graph.getName(), ExistsGraphsResponse.class));
-        Assertions.assertFalse(productCatalogSteps.isExists("NoExistsAction", ExistsGraphsResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(graph.getName()));
+        Assertions.assertFalse(productCatalogSteps.isExists("NoExistsAction"));
     }
 
     @Order(4)
@@ -68,10 +67,10 @@ public class GraphTest {
         String data = JsonHelper.getStringFromFile("/productCatalog/graphs/importGraph.json");
         String graphName = new JsonPath(data).get("Graph.json.name");
         productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json");
-        Assertions.assertTrue(productCatalogSteps.isExists(graphName, ExistsGraphsResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(graphName));
         productCatalogSteps.getDeleteObjectResponse(productCatalogSteps
                 .getProductObjectIdByNameWithMultiSearch(graphName, GetGraphsListResponse.class)).assertStatus(200);
-        Assertions.assertFalse(productCatalogSteps.isExists(graphName, ExistsGraphsResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(graphName));
     }
 
     @Order(5)
@@ -98,11 +97,11 @@ public class GraphTest {
     public void copyGraphById() {
         String cloneName = graph.getName() + "-clone";
         productCatalogSteps.copyById(graph.getGraphId());
-        Assertions.assertTrue(productCatalogSteps.isExists(cloneName, ExistsGraphsResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.getDeleteObjectResponse(
                         productCatalogSteps.getProductObjectIdByNameWithMultiSearch(cloneName, GetGraphsListResponse.class))
                 .assertStatus(200);
-        Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistsGraphsResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
     @Order(50)

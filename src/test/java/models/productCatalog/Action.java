@@ -4,7 +4,6 @@ import core.helper.Configure;
 import core.helper.Http;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.action.createAction.response.CreateActionResponse;
-import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
@@ -66,6 +65,6 @@ public class Action extends Entity {
                 .delete(productName + actionId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(actionName, ExistsActionResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(actionName));
     }
 }

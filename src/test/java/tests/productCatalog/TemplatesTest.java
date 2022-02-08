@@ -3,7 +3,6 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
-import httpModels.productCatalog.template.existsTemplate.response.ExistsTemplateResponse;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
 import httpModels.productCatalog.template.getTemplate.response.GetTemplateResponse;
 import io.qameta.allure.Epic;
@@ -51,8 +50,8 @@ public class TemplatesTest extends Tests {
     @TmsLink("643552")
     @Test
     public void existTemplateByName() {
-        Assertions.assertTrue(productCatalogSteps.isExists(template.getTemplateName(), ExistsTemplateResponse.class));
-        Assertions.assertFalse(productCatalogSteps.isExists("NoExistsAction", ExistsTemplateResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(template.getTemplateName()));
+        Assertions.assertFalse(productCatalogSteps.isExists("NoExistsAction"));
     }
     @Order(4)
     @DisplayName("Получение шаблона по Id")
@@ -75,9 +74,9 @@ public class TemplatesTest extends Tests {
     public void copyTemplateById() {
         String cloneName = template.getTemplateName() + "-clone";
         productCatalogSteps.copyById(String.valueOf(template.getTemplateId()));
-        Assertions.assertTrue(productCatalogSteps.isExists(cloneName, ExistsTemplateResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(template.getTemplateName() + "-clone", GetTemplateListResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistsTemplateResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
     @Order(7)
     @DisplayName("Негатичный тест на копирование сервиса по Id без токена")
@@ -150,9 +149,9 @@ public class TemplatesTest extends Tests {
         String versionArr = new JsonPath(data).get("Template.version_arr").toString();
         Assertions.assertEquals("[1, 0, 0]", versionArr);
         productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplate.json");
-        Assertions.assertTrue(productCatalogSteps.isExists(templateName, ExistsTemplateResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(templateName));
         productCatalogSteps.deleteByName(templateName, GetTemplateListResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(templateName, ExistsTemplateResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(templateName));
     }
 
     @Order(13)

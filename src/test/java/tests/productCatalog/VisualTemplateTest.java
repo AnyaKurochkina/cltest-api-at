@@ -143,8 +143,8 @@ public class VisualTemplateTest extends Tests {
         String expectedDescription = "UpdateDescription";
         productCatalogSteps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject()
                 .put("description", expectedDescription)).assertStatus(200);
-        GetImpl getGraphResponse = productCatalogSteps.getById(visualTemplates.getItemId(), GetVisualTemplateResponse.class);
-        String actualDescription = getGraphResponse.getDescription();
+        GetImpl getResponse = productCatalogSteps.getById(visualTemplates.getItemId(), GetVisualTemplateResponse.class);
+        String actualDescription = getResponse.getDescription();
         assertEquals(expectedDescription, actualDescription);
     }
 

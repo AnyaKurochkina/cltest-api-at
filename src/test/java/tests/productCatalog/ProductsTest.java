@@ -4,7 +4,6 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.product.existProduct.response.ExistProductResponse;
 import httpModels.productCatalog.product.getProduct.response.GetServiceResponce;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import io.qameta.allure.Epic;
@@ -60,8 +59,8 @@ public class ProductsTest extends Tests {
     @TmsLink("643392")
     @Test
     public void checkProductExists() {
-        Assertions.assertTrue(productCatalogSteps.isExists(product.getName(), ExistProductResponse.class));
-        Assertions.assertFalse(productCatalogSteps.isExists("not_exists_name", ExistProductResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(product.getName()));
+        Assertions.assertFalse(productCatalogSteps.isExists("not_exists_name"));
     }
 
     @Order(4)
@@ -72,9 +71,9 @@ public class ProductsTest extends Tests {
         String data = JsonHelper.getStringFromFile("/productCatalog/products/importProduct.json");
         String name = new JsonPath(data).get("Product.json.name");
         productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProduct.json");
-        Assertions.assertTrue(productCatalogSteps.isExists(name, ExistProductResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(name));
         productCatalogSteps.deleteByName(name, GetProductsResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(name, ExistProductResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 
     @Order(5)
@@ -141,9 +140,9 @@ public class ProductsTest extends Tests {
     public void copyProductById() {
         String cloneName = product.getName() + "-clone";
         productCatalogSteps.copyById(product.getProductId());
-        Assertions.assertTrue(productCatalogSteps.isExists(cloneName, ExistProductResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(cloneName, GetProductsResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistProductResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
     @Order(51)

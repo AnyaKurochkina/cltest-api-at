@@ -5,7 +5,6 @@ import core.helper.Http;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.orgDirection.createOrgDirection.response.CreateOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.createOrgDirection.response.ExtraData;
-import httpModels.productCatalog.orgDirection.existsOrgDirection.response.ExistsOrgDirectionResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -63,6 +62,6 @@ public class OrgDirection extends Entity {
                 .delete(productName + orgDirectionId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(orgDirectionName, ExistsOrgDirectionResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(orgDirectionName));
     }
 }
