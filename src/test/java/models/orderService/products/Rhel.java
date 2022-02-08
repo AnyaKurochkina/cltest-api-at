@@ -39,7 +39,7 @@ public class Rhel extends IProduct {
         jsonTemplate = "/orders/rhel.json";
         if(productName == null) {
             Project project = Project.builder().id(projectId).build().createObject();
-            if(project.getProjectEnvironment().getEnvType().contains("TEST"))
+            if(project.getProjectEnvironment().getEnvType().toUpperCase().contains("TEST"))
                 productName = "RHEL General Application";
             else
                 productName = "Rhel";

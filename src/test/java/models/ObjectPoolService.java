@@ -284,8 +284,10 @@ public class ObjectPoolService {
             allureLifecycle.updateStep(id, s -> s.setParameters(list));
         }
         if (Configure.isIntegrationTestIt()) {
-            StepsAspects.getCurrentStep().get().setTitle(StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName()));
-            StepsAspects.getCurrentStep().get().setParameters(parametersMap);
+            if(StepsAspects.getCurrentStep().get() != null) {
+                StepsAspects.getCurrentStep().get().setTitle(StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName()));
+                StepsAspects.getCurrentStep().get().setParameters(parametersMap);
+            }
         }
     }
 }
