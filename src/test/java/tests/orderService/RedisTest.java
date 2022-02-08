@@ -78,7 +78,7 @@ public class RedisTest extends Tests {
     void resize(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            redis.resize(product.getMaxFlavor());
+            redis.resize(redis.getMaxFlavor());
         }
     }
 

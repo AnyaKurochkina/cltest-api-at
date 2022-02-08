@@ -213,7 +213,7 @@ public abstract class IProduct extends Entity {
     protected void initProduct() {
         if (projectId == null) {
             Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-            projectId = project.getId();
+            setProjectId(project.getId());
         }
         if (label == null) {
             label = UUID.randomUUID().toString();

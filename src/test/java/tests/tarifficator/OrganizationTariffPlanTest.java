@@ -132,29 +132,30 @@ public class OrganizationTariffPlanTest extends Tests {
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     void activateTariffPlanWithoutUpdateOrders(Rhel product) {
         String tariffPlanIdPath = "attrs.tariff_plan_id";
-        Rhel rhel = product.createObject();
-        String tariffPlanId = ((String) orderServiceSteps.getProductsField(rhel, tariffPlanIdPath));
-        Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
-        TariffPlan tariffPlan = TariffPlan.builder()
-                .base(false)
-                .status(TariffPlanStatus.draft)
-                .build()
-                .createObject();
-        Organization organization = Organization.builder().build().createObject();
-        TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[organization_name]=" + organization.getName() + "&f[status][]=active").get(0);
+        try (Rhel rhel = product.createObjectExclusiveAccess()) {
+            String tariffPlanId = ((String) orderServiceSteps.getProductsField(rhel, tariffPlanIdPath));
+            Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
+            TariffPlan tariffPlan = TariffPlan.builder()
+                    .base(false)
+                    .status(TariffPlanStatus.draft)
+                    .build()
+                    .createObject();
+            Organization organization = Organization.builder().build().createObject();
+            TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[organization_name]=" + organization.getName() + "&f[status][]=active").get(0);
 
-        tariffPlan.setStatus(TariffPlanStatus.planned);
-        tariffPlan.setBeginDate(date);
-        tariffPlan = tariffPlanSteps.editTariffPlan(tariffPlan);
-        Waiting.sleep(16 * 60 * 1000);
-        TariffPlan updatedTariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
-        TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
+            tariffPlan.setStatus(TariffPlanStatus.planned);
+            tariffPlan.setBeginDate(date);
+            tariffPlan = tariffPlanSteps.editTariffPlan(tariffPlan);
+            Waiting.sleep(16 * 60 * 1000);
+            TariffPlan updatedTariffPlan = tariffPlanSteps.getTariffPlan(tariffPlan.getId());
+            TariffPlan archiveTariff = tariffPlanSteps.getTariffPlan(activeTariff.getId());
 
-        Assertions.assertAll("Проверка полей активного и архивного ТП",
-                () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15, "Время архивации ТП не соответствует действительному"),
-                () -> assertEquals(TariffPlanStatus.active, updatedTariffPlan.getStatus(), "Тарифный план не перешел в статус активный"),
-                () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"),
-                () -> assertEquals(tariffPlanId, orderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта изменился"));
+            Assertions.assertAll("Проверка полей активного и архивного ТП",
+                    () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15, "Время архивации ТП не соответствует действительному"),
+                    () -> assertEquals(TariffPlanStatus.active, updatedTariffPlan.getStatus(), "Тарифный план не перешел в статус активный"),
+                    () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"),
+                    () -> assertEquals(tariffPlanId, orderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта изменился"));
+        }
     }
 
     @Order(6)
