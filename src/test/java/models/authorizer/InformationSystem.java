@@ -24,4 +24,7 @@ public class InformationSystem extends Entity {
     @Override
     protected void create() {
     }
+
+    @Override
+    protected void delete() {}
 }

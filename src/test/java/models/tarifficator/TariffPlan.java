@@ -44,6 +44,8 @@ public class TariffPlan extends Entity {
         return new JSONObject("{\"tariff_plan\":" + JsonHelper.toJson(this) + "}");
     }
 
+    @Override
+    protected void delete() {}
 
     @Override
     public Entity init() {

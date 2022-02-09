@@ -37,4 +37,7 @@ public class Organization extends Entity {
                 .getString(String.format("data.find{it.title=='%s'}.name", title));
     }
 
+    @Override
+    protected void delete() {}
+
 }
