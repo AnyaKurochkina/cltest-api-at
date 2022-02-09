@@ -22,8 +22,7 @@ public abstract class Entity implements AutoCloseable {
 
     protected abstract void create();
 
-    protected void delete() {
-    }
+    protected abstract void delete();
 
     public String uuid;
     @Setter

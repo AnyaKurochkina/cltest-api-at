@@ -29,4 +29,7 @@ public class ServiceAccountToken extends Entity {
         time = System.currentTimeMillis() / 1000L;
     }
 
+    @Override
+    protected void delete() {}
+
 }

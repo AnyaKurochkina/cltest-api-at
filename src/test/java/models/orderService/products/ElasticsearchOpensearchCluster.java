@@ -105,4 +105,9 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     public void start() {
         start("start_vm");
     }
+
+    @Override
+    protected void delete() {
+        delete("delete_elasticsearch_opensearch");
+    }
 }
