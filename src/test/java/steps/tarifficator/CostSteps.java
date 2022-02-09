@@ -153,16 +153,16 @@ public class CostSteps extends Steps {
     public Float getCostAction(String action, String itemId, IProduct product, JSONObject data) {
 //        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
 //                .isForOrders(true).build().createObject();
-        Project project = Project.builder().id(product.getProjectId()).build().createObject();
+//        Project project = Project.builder().id(product.getProjectId()).build().createObject();
         log.info("Отправка запроса на получение стоимости экшена: " + action + ", у продукта " + product.getProductName());
         return JsonHelper.getJsonTemplate("/tarifficator/costAction.json")
-                .set("$.params.project_name", project.id)
+                .set("$.params.project_name", product.getProjectId())
                 .set("$.params.item_id", itemId)
                 .set("$.params.action_name", action)
                 .set("$.params.id", product.getOrderId())
                 .set("$.params.order.data", data)
                 .send(TarifficatorURL)
-                .setProjectId(project.id)
+                .setProjectId(product.getProjectId())
                 .post("cost")
                 .assertStatus(200)
                 .jsonPath()
