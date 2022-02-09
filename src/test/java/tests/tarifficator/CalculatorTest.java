@@ -91,6 +91,7 @@ public class CalculatorTest extends Tests {
     @ParameterizedTest(name = "Сравнение стоимости продукта в статусе ON с ценой предбиллинга")
     public void costProductStatusOn(Rhel resource) {
         try (Rhel product = resource.createObjectExclusiveAccess()) {
+            Waiting.sleep(60000);
             Float preBillingCostOn = costSteps.getPreBillingCostPath(product, "items.find{it.type=='vm'}.resources_statuses.on.collect{it.total_price.toFloat()}.sum().toFloat()");
             Float currentCost = costSteps.getCurrentCost(product);
             Assertions.assertEquals(preBillingCostOn, currentCost, 0.01f, "Стоимость предбиллинга не равна текущей стоимости");
@@ -102,6 +103,7 @@ public class CalculatorTest extends Tests {
     @ParameterizedTest(name = "Сравнение стоимости продукта в статусе OFF с ценой предбиллинга")
     public void costProductStatusOff(Rhel resource) {
         try (Rhel product = resource.createObjectExclusiveAccess()) {
+            Waiting.sleep(60000);
             Float preBillingCostOff = costSteps.getPreBillingCostPath(product, "items.find{it.type=='vm'}.resources_statuses.off.collect{it.total_price.toFloat()}.sum().toFloat()");
             product.stopHard();
             Float currentCost = costSteps.getCurrentCost(product);
