@@ -21,7 +21,6 @@ import java.util.concurrent.Semaphore;
 import static core.helper.JsonHelper.stringPrettyFormat;
 import static core.helper.http.ModifyHttpURLConnection.addHttpMethods;
 import static core.helper.http.ModifyHttpURLConnection.disableHostnameVerifier;
-import static tests.Tests.putAttachLog;
 
 @Log4j2
 public class Http {
@@ -216,7 +215,6 @@ public class Http {
             log(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
             if (isLogged) {
                 log.debug(sbLog.toString());
-                putAttachLog(sbLog.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
