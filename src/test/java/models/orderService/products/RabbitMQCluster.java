@@ -86,7 +86,7 @@ public class RabbitMQCluster extends IProduct {
     //Создать пользователя RabbitMQ
     public void rabbitmqCreateUser() {
         String user = "testapiuser";
-        orderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
+        orderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)), this.getProjectId());
         Assertions.assertTrue(((Boolean) orderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта отсутствует пользователь "+ user);
     }
 
@@ -111,7 +111,7 @@ public class RabbitMQCluster extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        orderServiceSteps.executeAction("check_vm", this, null);
+        orderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
     }
 
     public void resize() {

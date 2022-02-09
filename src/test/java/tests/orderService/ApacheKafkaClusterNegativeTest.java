@@ -51,7 +51,7 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
     }
 
     public void checkIncorrectTopic(ApacheKafkaCluster kafkaCluster, KafkaTopic topic){
-        orderServiceSteps.sendAction(KAFKA_CREATE_TOPICS, kafkaCluster, new JSONObject("{\"topics\": " + JsonHelper.toJson(topic) + "}"))
+        orderServiceSteps.sendAction(KAFKA_CREATE_TOPICS, kafkaCluster, new JSONObject("{\"topics\": " + JsonHelper.toJson(topic) + "}"), kafkaCluster.getProjectId())
                 .assertStatus(422);
     }
 
