@@ -1,3 +1,7 @@
+HcpBucket:
+  - options:
+      - { platform: "hcp", env: "DSO", servicePlan: "Sata_Tier", segment: "dev-srv-app", dataCentre: "5" }
+
 OpenShiftProject:
   - options:
       - { env: "DSO", resourcePoolLabel: "ds5-plux01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app", dataCentre: "5" }

@@ -7,16 +7,22 @@ import com.google.gson.Gson;
 import core.enums.ObjectStatus;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
+import core.helper.Configure;
 import core.helper.DataFileHelper;
+import core.helper.StringUtils;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import models.authorizer.ServiceAccount;
+import models.keyCloak.ServiceAccountToken;
+import models.keyCloak.UserToken;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
+import ru.testit.junit5.StepsAspects;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -148,7 +154,9 @@ public class ObjectPoolService {
     }
 
     public static void removeProducts(Set<Class<?>> currentClassListArgument) {
-        for (String key : createdEntities) {
+        Iterator<String> iterator = createdEntities.listIterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
             ObjectPoolEntity objectPoolEntity = entities.get(key);
             synchronized (ObjectPoolService.class) {
                 if (objectPoolEntity == null) {
@@ -240,31 +248,48 @@ public class ObjectPoolService {
         return act;
     }
 
+    private static void toStringProductStep(Entity entity) {
+        if (entity instanceof ServiceAccount || entity instanceof ServiceAccountToken || entity instanceof UserToken)
+            return;
+        if (Objects.isNull(getLifecycle().getCurrentTestCaseOrStep().orElse(null)))
+            return;
+        toStringProductStepFunc(entity);
+    }
+
+
     @Step
     @SneakyThrows
-    private static void toStringProductStep(Entity entity) {
+    private static void toStringProductStepFunc(Entity entity) {
         AllureLifecycle allureLifecycle = getLifecycle();
         String id = allureLifecycle.getCurrentTestCaseOrStep().orElse(null);
-        if (id == null)
-            return;
         List<Parameter> list = new ArrayList<>();
+        Map<String, String> parametersMap = new HashMap<>();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(entity.getClass().getSuperclass().getDeclaredFields()));
         fieldList.addAll(Arrays.asList(entity.getClass().getDeclaredFields()));
         for (Field field : fieldList) {
-            if (Modifier.isStatic(field.getModifiers()))
+            if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()))
                 continue;
             field.setAccessible(true);
             if (field.get(entity) != null) {
                 Parameter parameter = new Parameter();
                 parameter.setName(field.getName());
+                String value = field.get(entity).toString();
                 if (field.getName().equals("password"))
-                    parameter.setValue("<password>");
-                else
-                    parameter.setValue(field.get(entity).toString());
+                    value = "<password>";
+                parametersMap.put(field.getName(), value);
+                parameter.setValue(value);
                 list.add(parameter);
             }
         }
-        allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
-        allureLifecycle.updateStep(id, s -> s.setParameters(list));
+        if (Objects.nonNull(id)) {
+            allureLifecycle.updateStep(id, s -> s.setName("Получена сущность " + entity.getClass().getSimpleName() + " с параметрами"));
+            allureLifecycle.updateStep(id, s -> s.setParameters(list));
+        }
+        if (Configure.isIntegrationTestIt()) {
+            if(StepsAspects.getCurrentStep().get() != null) {
+                StepsAspects.getCurrentStep().get().setTitle(StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName()));
+                StepsAspects.getCurrentStep().get().setParameters(parametersMap);
+            }
+        }
     }
 }

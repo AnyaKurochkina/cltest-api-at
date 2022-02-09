@@ -1,4 +1,4 @@
-package core.helper;
+package org.junit;
 
 import java.lang.annotation.*;
 

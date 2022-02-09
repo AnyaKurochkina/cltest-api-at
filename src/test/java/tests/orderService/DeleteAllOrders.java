@@ -21,7 +21,7 @@ public class DeleteAllOrders extends Tests {
     @Tag("deleteAll")
     @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Удаление всех успешных заказов из проекта")
-    public void DeleteOrders(String env, String tmsId)  {
+    public void DeleteOrders(String env)  {
         orderServiceSteps.deleteOrders(env);
     }
 }

@@ -2,8 +2,9 @@ package steps.references;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import core.helper.Http;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
+import io.restassured.path.json.JsonPath;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Flavor;
 
@@ -45,5 +46,13 @@ public class ReferencesStep {
         List<Flavor> list = new Gson().fromJson(jsonArray, type);
 
         return list.stream().sorted(Comparator.comparing(Flavor::getCpus).thenComparing(Flavor::getMemory)).collect(Collectors.toList());
+    }
+
+    @Step("Получение списка в справочнике по параметрам {attrs}")
+    public static JsonPath getJsonPathList(String attrs) {
+        return new Http(ReferencesURL)
+                .get("pages/?{}", attrs)
+                .assertStatus(200)
+                .jsonPath();
     }
 }

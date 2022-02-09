@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetServiceResponce implements GetImpl {
+public class GetServiceResponse implements GetImpl {
 
 	@JsonProperty("allowed_paths")
 	private List<Object> allowedPaths;

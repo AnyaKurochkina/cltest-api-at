@@ -1,9 +1,9 @@
 package tests.orderService;
 
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import io.qameta.allure.Link;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.OpenShiftProject;
 import org.junit.ProductArgumentsProvider;
@@ -19,8 +19,8 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("openshift"), @Tag("prod")})
 public class OpenShiftTest extends Tests {
 
-    @Link(type="manual", value = "377745")
     @Source(ProductArgumentsProvider.PRODUCTS)
+    @TmsLink("376186")
     @ParameterizedTest(name = "Создание проекта {0}")
     void create(OpenShiftProject product) {
         //noinspection EmptyTryBlock
@@ -28,7 +28,7 @@ public class OpenShiftTest extends Tests {
     }
 
     @Tag("actions")
-    @Link(type="manual", value = "377741")
+    @TmsLink("376495")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменение проекта {0}")
     void change(OpenShiftProject product) {
@@ -38,7 +38,7 @@ public class OpenShiftTest extends Tests {
         }
     }
 
-    @Link(type="manual", value = "377740")
+    @TmsLink("376187")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удаление проекта {0}")
     @MarkDelete

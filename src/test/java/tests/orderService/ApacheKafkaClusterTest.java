@@ -1,7 +1,7 @@
 package tests.orderService;
 
 import com.mifmif.common.regex.Generex;
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;

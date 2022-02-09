@@ -44,7 +44,7 @@ public class OldUbuntuTest extends Tests {
     }
 
     @Order(3)
-    @DisplayName("Выключить ")
+    @DisplayName("Выключить")
     @Test
     void stopSoft() {
         if (ubuntu.productStatusIs(STOPPED)) {

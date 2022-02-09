@@ -1,6 +1,6 @@
 package steps.tarifficator;
 
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -9,12 +9,13 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
+import models.productCatalog.Product;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 import steps.orderService.OrderServiceSteps;
+import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +60,7 @@ public class CostSteps extends Steps {
 
     @Step("Получение текущего расхода для заказа")
     public Float getCurrentCost(IProduct product) {
-        Assertions.assertSame(ProductStatus.CREATED, product.getStatus(), "Продукт " + product + " не был заказан");
+        Assertions.assertNotSame(null, product.getStatus(), "Продукт " + product + " не был заказан");
         Float consumption = null;
         for (int i = 0; i < 15; i++) {
             Waiting.sleep(20000);
@@ -83,20 +84,26 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
-    public Float getPreBillingCost(IProduct product) {
+    public Float getPreBillingTotalCost(IProduct product) {
+        return getPreBillingCostPath(product, "total_price");
+    }
+
+    public Float getPreBillingCostPath(IProduct product, String path) {
         OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = Project.builder()
                 .projectEnvironment(new ProjectEnvironment(product.getEnv()))
                 .isForOrders(true)
                 .build()
                 .createObject();
-        String productId = orderServiceSteps.getProductId(product);
+        String productId = new ProductCatalogSteps(Product.productName)
+                .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
+                        "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironment().getEnvType().toLowerCase()));
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
 
 
-        if(Objects.nonNull(product.getOrderId())) {
+        if (Objects.nonNull(product.getOrderId())) {
             attrs = new JSONObject((Map) orderServiceSteps.getProductsField(product, "attrs", JSONObject.class));
         }
 
@@ -113,18 +120,19 @@ public class CostSteps extends Steps {
 
         //TODO: Добавить проверки
 
-        return response.get("total_price");
+        return response.get(path);
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
     public JSONArray getCost(IProduct product) {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = Project.builder()
                 .projectEnvironment(new ProjectEnvironment(product.getEnv()))
                 .isForOrders(true)
                 .build()
                 .createObject();
-        String productId = orderServiceSteps.getProductId(product);
+        String productId = new ProductCatalogSteps(Product.productName)
+                .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
+                        "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironment().getEnvType()).toLowerCase());
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
@@ -145,16 +153,16 @@ public class CostSteps extends Steps {
     public Float getCostAction(String action, String itemId, IProduct product, JSONObject data) {
 //        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
 //                .isForOrders(true).build().createObject();
-        Project project = Project.builder().id(product.getProjectId()).build().createObject();
-        log.info("Отправка запроса на получение стоимости экшена: "+ action +", у продукта " + product.getProductName());
+//        Project project = Project.builder().id(product.getProjectId()).build().createObject();
+        log.info("Отправка запроса на получение стоимости экшена: " + action + ", у продукта " + product.getProductName());
         return JsonHelper.getJsonTemplate("/tarifficator/costAction.json")
-                .set("$.params.project_name", project.id)
+                .set("$.params.project_name", product.getProjectId())
                 .set("$.params.item_id", itemId)
                 .set("$.params.action_name", action)
                 .set("$.params.id", product.getOrderId())
                 .set("$.params.order.data", data)
                 .send(TarifficatorURL)
-                .setProjectId(project.id)
+                .setProjectId(product.getProjectId())
                 .post("cost")
                 .assertStatus(200)
                 .jsonPath()

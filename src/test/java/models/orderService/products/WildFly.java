@@ -20,7 +20,6 @@ import java.util.List;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
-@Log4j2
 @Data
 @NoArgsConstructor
 @SuperBuilder
@@ -32,6 +31,8 @@ public class WildFly extends IProduct {
     String platform;
     @ToString.Include
     String osVersion;
+    @ToString.Include
+    String wildFlyVersion;
     String domain;
     Flavor flavor;
 
@@ -46,6 +47,14 @@ public class WildFly extends IProduct {
         jsonTemplate = "/orders/wildfly.json";
         productName = "WildFly";
         initProduct();
+        if(flavor == null)
+            flavor = getMinFlavor();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(wildFlyVersion == null)
+            wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -53,8 +62,6 @@ public class WildFly extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
@@ -63,6 +70,7 @@ public class WildFly extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
+                .set("$.order.attrs.wildfly_version", getWildFlyVersion())
                 .set("$.order.attrs.access_group[0]", accessGroup.getPrefixName())
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)

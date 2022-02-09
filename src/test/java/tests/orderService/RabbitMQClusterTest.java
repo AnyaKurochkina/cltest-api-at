@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.ProductStatus;
-import models.orderService.products.ElasticsearchOpensearchCluster;
 import models.orderService.products.RabbitMQCluster;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;

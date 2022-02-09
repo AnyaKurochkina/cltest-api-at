@@ -1,8 +1,9 @@
 package tests.authorizer;
 
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.authorizer.ServiceAccount;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
@@ -18,6 +19,7 @@ public class ServiceAccountTest extends Tests {
 
     @Test
     @Order(1)
+    @TmsLink("376600")
     @DisplayName("Создание сервисного аккаунта")
     void createServiceAccount() {
         //noinspection EmptyTryBlock
@@ -26,6 +28,7 @@ public class ServiceAccountTest extends Tests {
 
     @Test
     @Order(2)
+    @TmsLink("534443")
     @DisplayName("Редактирование сервисного аккаунта")
     void editServiceAccount() {
         String title = "deleteServiceAccount";
@@ -35,8 +38,8 @@ public class ServiceAccountTest extends Tests {
     }
 
     @Test
-    @Disabled("Статический ключ не работает")
     @Order(3)
+    @TmsLink("534448")
     @DisplayName("Создание статического ключа досутпа hcp bucket")
     void createStaticKey() {
         try (ServiceAccount account = ServiceAccount.builder().title("deleteServiceAccount").build().createObjectExclusiveAccess()) {
@@ -46,7 +49,7 @@ public class ServiceAccountTest extends Tests {
 
     @Test
     @Order(4)
-    @Disabled("Статический ключ не работает")
+    @TmsLink("534451")
     @DisplayName("Удаление статического ключа досутпа hcp bucket")
     void deleteStaticKey() {
         try (ServiceAccount account = ServiceAccount.builder().title("deleteServiceAccount").build().createObjectExclusiveAccess()) {
@@ -57,6 +60,7 @@ public class ServiceAccountTest extends Tests {
     @Test
     @Order(5)
     @MarkDelete
+    @TmsLink("376604")
     @DisplayName("Удаление сервисного аккаунта")
     void deleteServiceAccount() {
         try(ServiceAccount account = ServiceAccount.builder().title("deleteServiceAccount").build().createObjectExclusiveAccess()) {

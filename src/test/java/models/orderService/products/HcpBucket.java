@@ -36,13 +36,14 @@ public class HcpBucket extends IProduct {
         jsonTemplate = "/orders/hcp_bucket.json";
         productName = "HCP bucket";
         initProduct();
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.data_center", dataCentre)

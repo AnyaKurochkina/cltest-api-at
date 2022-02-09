@@ -2,22 +2,18 @@ package models.authorizer;
 
 import com.mifmif.common.regex.Generex;
 import core.helper.Configure;
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,7 +76,7 @@ public class ServiceAccount extends Entity {
         int counter = 60;
         JsonPath jsonPath = null;
         log.info("Проверка статуса статического ключа");
-        while ((keyStatus.equals("deleting") || keyStatus.equals("")) || keyStatus.equals("[active]") && counter > 0) {
+        while ((keyStatus.equals("[deleting]") || keyStatus.equals("")) || keyStatus.equals("[active]") && counter > 0) {
             sleep(30000);
             jsonPath = new Http(Configure.AuthorizerURL)
                     .get("projects/{}/service_accounts/{}/access_keys", projectId, id)

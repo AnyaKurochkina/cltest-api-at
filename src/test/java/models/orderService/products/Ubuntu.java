@@ -39,6 +39,12 @@ public class Ubuntu extends IProduct {
         jsonTemplate = "/orders/ubuntu_general_application.json";
         productName = "Ubuntu Linux (DEV only)";
         initProduct();
+        if(flavor == null)
+            flavor = getMinFlavor();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -53,8 +59,6 @@ public class Ubuntu extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)

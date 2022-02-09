@@ -1,6 +1,6 @@
 package tests.orderService;
 
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -78,7 +78,7 @@ public class RedisTest extends Tests {
     void resize(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            redis.resize(product.getMaxFlavor());
+            redis.resize(redis.getMaxFlavor());
         }
     }
 

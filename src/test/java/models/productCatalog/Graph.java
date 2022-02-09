@@ -1,7 +1,7 @@
 package models.productCatalog;
 
 import core.helper.Configure;
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.graphs.createGraph.response.CreateGraphResponse;
 import httpModels.productCatalog.graphs.createGraph.response.JsonSchema;
@@ -36,7 +36,7 @@ public class Graph extends Entity {
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
 
-    private final String productName = "graphs/";
+    public static final String productName = "graphs/";
 
     @Override
     public Entity init() {

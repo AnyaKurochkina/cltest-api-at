@@ -1,6 +1,6 @@
 package tests.orderService;
 
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -29,7 +29,7 @@ public class RhelTest extends Tests {
         try (Rhel rhel = product.createObjectExclusiveAccess()){}
     }
 
-    @TmsLink("37705")
+    @TmsLink("377705")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -40,7 +40,6 @@ public class RhelTest extends Tests {
         }
     }
 
-//    @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания {0}")

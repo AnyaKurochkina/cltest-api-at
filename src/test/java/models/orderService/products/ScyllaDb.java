@@ -54,8 +54,12 @@ public class ScyllaDb extends IProduct {
         initProduct();
         if (domain == null)
             domain = orderServiceSteps.getDomainBySegment(this, segment);
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
+        if(flavor == null)
+            flavor = getMinFlavor();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
