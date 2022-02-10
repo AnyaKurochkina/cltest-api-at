@@ -2,11 +2,13 @@ package core.helper.http;
 
 import core.enums.Role;
 import core.helper.StringUtils;
+import core.utils.Waiting;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.opentest4j.AssertionFailedError;
 import steps.keyCloak.KeyCloakSteps;
 
 import java.io.*;
@@ -33,9 +35,9 @@ public class Http {
     private Role role = Role.ADMIN;
     private String contentType = "application/json";
     private boolean isUsedToken = true;
-    private boolean isLogged = true;
+//    private boolean isLogged = true;
     private static final Semaphore SEMAPHORE = new Semaphore(1, true);
-    private final StringBuilder sbLog = new StringBuilder();
+//    private final StringBuilder sbLog = new StringBuilder();
     private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
     private String fileName;
     private byte[] bytes;
@@ -55,7 +57,7 @@ public class Http {
     }
 
     public Http disableAttachmentLog() {
-        this.isLogged = false;
+//        this.isLogged = false;
         return this;
     }
 
@@ -141,22 +143,26 @@ public class Http {
         return this;
     }
 
-    @SneakyThrows
     private Response request() {
         Response response = null;
         for (int i = 0; i < 3; i++) {
-            response = filterRequest();
+            try {
+                response = filterRequest();
+            } catch (AssertionFailedError e) {
+                Waiting.sleep(5000);
+                response = filterRequest();
+            }
             if (!(response.status() == 504 && method.equals("GET")))
                 break;
-            Thread.sleep(1000);
+            Waiting.sleep(1000);
         }
         return response;
     }
 
-    private void log(String str) {
-        if (isLogged)
-            sbLog.append(str);
-    }
+//    private void log(String str) {
+//        if (isLogged)
+//            sbLog.append(str);
+//    }
 
     private Response filterRequest() {
         HttpURLConnection http;
@@ -178,12 +184,12 @@ public class Http {
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
-            log(String.format("%s URL: %s\n", method, (host + path)));
+            log.debug(String.format("%s URL: %s\n", method, (host + path)));
             if (field.length() > 0) {
                 addFilePart(http.getOutputStream(), fileName, bytes);
             } else {
                 if (body.length() > 0 || method.equals("POST")) {
-                    log(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
+                    log.debug(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
                     http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
                 }
             }
@@ -212,12 +218,11 @@ public class Http {
 //            if (responseMessage.length() > 10000)
 //                log(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
 //            else
-            log(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
-            if (isLogged) {
-                log.debug(sbLog.toString());
-            }
+            log.debug(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
+//            if (isLogged) {
+//                log.debug(sbLog.toString());
+//            }
         } catch (Exception e) {
-            e.printStackTrace();
             Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
         } finally {
             if (path.endsWith("/cost") || path.contains("order-service"))
