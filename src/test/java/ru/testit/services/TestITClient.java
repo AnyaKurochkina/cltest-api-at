@@ -157,7 +157,7 @@ public class TestITClient {
     }
 
     //создание автотеста
-    public void createTestItem(final CreateTestItemRequest createTestItemRequest) {
+    public synchronized void createTestItem(final CreateTestItemRequest createTestItemRequest) {
         String body;
         Response response;
         CreateTestItemResponse createTestItemResponse = null;

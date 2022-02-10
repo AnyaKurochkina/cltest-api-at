@@ -80,16 +80,16 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
-    @TmsLink("377735")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание ACL на транзакцию Kafka {0}")
-    void createAclTransaction(ApacheKafkaCluster product) {
-        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.createAclTransaction("*");
-        }
-    }
+//    @TmsLink("377735")
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Создание ACL на транзакцию Kafka {0}")
+//    void createAclTransaction(ApacheKafkaCluster product) {
+//        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+//            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
+//            kafka.createAclTransaction("*");
+//        }
+//    }
 
     @TmsLink("377731")
     @Tag("actions")

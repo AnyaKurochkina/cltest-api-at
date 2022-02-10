@@ -154,9 +154,8 @@ public class ObjectPoolService {
     }
 
     public static void removeProducts(Set<Class<?>> currentClassListArgument) {
-        Iterator<String> iterator = createdEntities.listIterator();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
+        List<String> createdEntitiesCopy = new ArrayList<>(createdEntities);
+        for (String key : createdEntitiesCopy) {
             ObjectPoolEntity objectPoolEntity = entities.get(key);
             synchronized (ObjectPoolService.class) {
                 if (objectPoolEntity == null) {
