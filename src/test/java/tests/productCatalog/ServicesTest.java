@@ -17,8 +17,7 @@ import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -49,6 +48,16 @@ public class ServicesTest extends Tests {
     public void getServiceList() {
         Assertions.assertTrue(productCatalogSteps.getProductObjectList(GetServiceListResponse.class)
                 .size() > 0);
+    }
+
+    @Order(2)
+    @DisplayName("Проверка значения next в запросе на получение списка сервисов")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(GetServiceListResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
     }
 
     @Order(3)

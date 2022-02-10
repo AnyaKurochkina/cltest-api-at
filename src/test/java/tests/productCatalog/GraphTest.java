@@ -50,6 +50,16 @@ public class GraphTest {
                 .getProductObjectList(GetGraphsListResponse.class).size() > 0);
     }
 
+    @Order(2)
+    @DisplayName("Проверка значения next в запросе на получение списка графа")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(GetGraphsListResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
+    }
+
     @Order(3)
     @DisplayName("Проверка существования графа по имени")
     @TmsLink("642540")

@@ -44,6 +44,16 @@ public class ActionsTest extends Tests {
         Assertions.assertTrue(productCatalogSteps.getProductObjectList(ActionResponse.class).size() > 0);
     }
 
+    @Order(11)
+    @DisplayName("Проверка значения next в запросе на получение списка действий")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(ActionResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
+    }
+
     @Order(3)
     @DisplayName("Проверка существования действия по имени")
     @TmsLink("642432")

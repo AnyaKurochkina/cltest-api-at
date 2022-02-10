@@ -2,6 +2,7 @@ package httpModels.productCatalog.product.getProducts.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import httpModels.productCatalog.GetListImpl;
+import httpModels.productCatalog.MetaImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,5 +25,10 @@ public class GetProductsResponse implements GetListImpl {
 	@Override
 	public List getItemsList() {
 		return list;
+	}
+
+	@Override
+	public MetaImpl getMeta() {
+		return meta;
 	}
 }

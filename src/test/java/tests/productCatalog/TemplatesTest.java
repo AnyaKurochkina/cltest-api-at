@@ -15,8 +15,7 @@ import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -45,6 +44,17 @@ public class TemplatesTest extends Tests {
         Assertions.assertTrue(productCatalogSteps.getProductObjectList(GetTemplateListResponse.class)
                 .size() > 0);
     }
+
+    @Order(2)
+    @DisplayName("Проверка значения next в запросе на получение списка шаблонов")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(GetTemplateListResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
+    }
+
     @Order(3)
     @DisplayName("Проверка на существование шаблона по имени")
     @TmsLink("643552")

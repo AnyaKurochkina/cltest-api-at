@@ -6,11 +6,13 @@ import core.helper.JsonHelper;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
+import httpModels.productCatalog.MetaImpl;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
@@ -19,6 +21,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
+@Data
 @AllArgsConstructor
 public class ProductCatalogSteps {
     String productName;
@@ -30,6 +33,14 @@ public class ProductCatalogSteps {
                 .get(productName)
                 .assertStatus(200)
                 .extractAs(clazz)).getItemsList();
+    }
+
+    @Step("Получение Meta данных объекта продуктового каталога")
+    public MetaImpl getMeta(Class<?> clazz) {
+        return ((GetListImpl) new Http(Configure.ProductCatalogURL)
+                .get(productName)
+                .assertStatus(200)
+                .extractAs(clazz)).getMeta();
     }
 
     @Step("Создание объекта продуктового каталога")

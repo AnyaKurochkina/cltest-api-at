@@ -17,6 +17,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -47,6 +48,16 @@ public class OrgDirectionTest extends Tests {
     public void getOrgDirectionList() {
         Assertions.assertTrue(productCatalogSteps
                 .getProductObjectList(GetOrgDirectionListResponse.class).size() > 0);
+    }
+
+    @Order(6)
+    @DisplayName("Проверка значения next в запросе на получение списка направлений")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(GetOrgDirectionListResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
     }
 
     @Order(3)

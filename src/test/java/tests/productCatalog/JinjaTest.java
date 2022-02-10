@@ -44,6 +44,16 @@ public class JinjaTest extends Tests {
         assertTrue(productCatalogSteps.getProductObjectList(GetJinjaListResponse.class).size() > 0);
     }
 
+    @Order(6)
+    @DisplayName("Проверка значения next в запросе на получение списка jinja")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(GetJinjaListResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
+    }
+
     @Order(10)
     @DisplayName("Проверка существования jinja по имени")
     @TmsLink("660073")
