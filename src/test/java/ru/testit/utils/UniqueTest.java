@@ -17,7 +17,7 @@ public class UniqueTest {
     String externalId;
     String configurationId;
 
-    private static final ThreadLocal<StringJoiner> stepLog = new ThreadLocal<>();
+    private static final InheritableThreadLocal<StringJoiner> stepLog = new InheritableThreadLocal<>();
 
     public static void writeStepLog(String text){
         if(stepLog.get() != null)

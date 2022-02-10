@@ -153,7 +153,7 @@ public class TestITClient {
     }
 
     private String filterTestName(String name){
-        return name.replaceAll("(\\(super=\\w+\\(\\w+\\)[,.\\-\\s\\w]+\\))", "");
+        return name.replaceAll("(\\(super=\\w+\\(\\w+\\)[,.+\\-\\s\\w]+\\))", "");
     }
 
     //создание автотеста
