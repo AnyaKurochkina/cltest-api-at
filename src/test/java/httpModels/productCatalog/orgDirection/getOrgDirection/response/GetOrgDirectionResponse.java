@@ -30,6 +30,11 @@ public class GetOrgDirectionResponse implements GetImpl {
     private String id;
 
     @Override
+    public String getTitle() {
+        return null;
+    }
+
+    @Override
     public String getVersion() {
         return null;
     }

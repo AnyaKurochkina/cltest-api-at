@@ -117,6 +117,12 @@ public class Http {
         return request();
     }
 
+    public Response put(String path, Object ... args) {
+        this.method = "PUT";
+        this.path = format(path, args);
+        return request();
+    }
+
     public Http setContentType(String contentType) {
         this.contentType = contentType;
         return this;

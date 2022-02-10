@@ -1,4 +1,4 @@
-package httpModels.productCatalog.orgDirection.getOrgDirectionList.response;
+package httpModels.productCatalog.jinja2.getJinjaListResponse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import httpModels.productCatalog.MetaImpl;
@@ -12,13 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Meta implements MetaImpl {
-
 	@JsonProperty("next")
 	private String next;
-
 	@JsonProperty("previous")
 	private String previous;
-
 	@JsonProperty("total_count")
 	private Integer totalCount;
 

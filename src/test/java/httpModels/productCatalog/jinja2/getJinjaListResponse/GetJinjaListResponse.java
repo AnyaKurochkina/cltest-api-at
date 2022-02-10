@@ -1,4 +1,4 @@
-package httpModels.productCatalog.product.getProducts.response;
+package httpModels.productCatalog.jinja2.getJinjaListResponse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import httpModels.productCatalog.GetListImpl;
@@ -14,18 +14,18 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetProductsResponse implements GetListImpl {
+public class GetJinjaListResponse implements GetListImpl {
 
-	@JsonProperty("meta")
-	private Meta meta;
+    @JsonProperty("meta")
+    private Meta meta;
 
-	@JsonProperty("list")
-	private List<ListItem> list;
+    @JsonProperty("list")
+    private List<ListItem> list;
 
-	@Override
-	public List getItemsList() {
-		return list;
-	}
+    @Override
+    public List getItemsList() {
+        return list;
+    }
 
 	@Override
 	public MetaImpl getMeta() {

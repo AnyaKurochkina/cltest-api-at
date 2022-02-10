@@ -7,7 +7,6 @@ import httpModels.productCatalog.graphs.createGraph.response.CreateGraphResponse
 import httpModels.productCatalog.graphs.createGraph.response.JsonSchema;
 import httpModels.productCatalog.graphs.createGraph.response.StaticData;
 import httpModels.productCatalog.graphs.createGraph.response.UiSchema;
-import httpModels.productCatalog.graphs.existsGraphs.response.ExistsGraphsResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -75,6 +74,6 @@ public class Graph extends Entity {
                 .delete(productName + graphId + "/")
                 .assertStatus(200);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(name, ExistsGraphsResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 }
