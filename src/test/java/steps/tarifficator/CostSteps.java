@@ -120,6 +120,13 @@ public class CostSteps extends Steps {
                 costItem.put("data", item);
                 template.append("items", costItem);
             }
+            return new Http(TarifficatorURL)
+                    .setProjectId(project.id)
+                    .body(template)
+                    .post("cost_items")
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get(path);
         }
 
         JsonPath response = new Http(TarifficatorURL)
