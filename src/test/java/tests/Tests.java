@@ -43,7 +43,7 @@ public class Tests {
         if (stepId == null)
             return;
         String source = stepId + "-attachment.txt";
-        DataFileHelper.appendToFile(Configure.getAppProp("allure.results") + source, text);
+        DataFileHelper.appendToFile(Configure.getAppProp("allure.results") + source, text + "\n");
         Attachment attachment = new Attachment().setSource(source).setName("log-test.log");
         getLifecycle().updateTestCase(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
         UniqueTest.writeStepLog(text);

@@ -1,5 +1,6 @@
 package tests.tarifficator;
 
+import core.helper.JsonHelper;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -10,11 +11,14 @@ import models.accountManager.Account;
 import models.authorizer.Folder;
 import models.authorizer.Project;
 import models.orderService.products.Rhel;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.accountManager.AccountSteps;
 import steps.authorizer.AuthorizerSteps;
@@ -22,6 +26,7 @@ import steps.orderService.OrderServiceSteps;
 import steps.tarifficator.CostSteps;
 import tests.Tests;
 
+import java.util.Map;
 import java.util.Objects;
 
 @Log4j2
@@ -60,7 +65,7 @@ public class CalculatorTest extends Tests {
             accountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
             try {
                 Float cost = costSteps.getPreBillingTotalCost(product);
-                while(cost < 0.01f)
+                while (cost < 0.01f)
                     cost += cost;
                 Waiting.sleep(60000);
                 orderServiceSteps.changeProjectForOrder(product, projectTarget);
