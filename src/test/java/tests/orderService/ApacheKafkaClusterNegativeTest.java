@@ -3,7 +3,6 @@ package tests.orderService;
 import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.ApacheKafkaCluster;
 import models.subModels.KafkaTopic;
 import org.json.JSONObject;
@@ -29,7 +28,6 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
     @ParameterizedTest(name = "Негативные тесты создания топика над {0}")
     public void negativeCreateKafkaTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             assertAll("Проверка ошибки при передачи неверных параметров топика",
                     () -> checkIncorrectTopic(kafka,
                             new KafkaTopic("delete", 1, 1, 1, 1209600001, "TopicName")),

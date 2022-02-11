@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Elasticsearch;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -32,7 +31,6 @@ public class ElasticsearchTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Elasticsearch product) {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
-            elastic.checkPreconditionStatusProduct(ProductStatus.CREATED);
             elastic.expandMountPoint();
         }
     }
@@ -43,7 +41,6 @@ public class ElasticsearchTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(Elasticsearch product) {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
-            elastic.checkPreconditionStatusProduct(ProductStatus.CREATED);
             elastic.stopHard();
             elastic.start();
 

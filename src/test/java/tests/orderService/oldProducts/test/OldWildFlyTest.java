@@ -38,7 +38,6 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Перезагрузить WildFly OLD")
     @Test
     void restart() {
-        wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
         wildFly.restart();
     }
 

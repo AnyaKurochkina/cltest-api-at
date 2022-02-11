@@ -1,12 +1,11 @@
 package tests.orderService;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.authorizer.ServiceAccount;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.HcpBucket;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Disabled;
@@ -35,7 +34,6 @@ public class HcpBucketTest extends Tests {
     @ParameterizedTest(name = "Измененить параметры версионирования {0}")
     void changeBucketVersioning(HcpBucket product) {
         try (HcpBucket hcpBucket = product.createObjectExclusiveAccess()) {
-            hcpBucket.checkPreconditionStatusProduct(ProductStatus.CREATED);
             hcpBucket.changeBucketVersioning();
         }
     }
@@ -46,7 +44,6 @@ public class HcpBucketTest extends Tests {
     @ParameterizedTest(name = "Измененить конфигурацию бакета {0}")
     void changeBucketConfig(HcpBucket product) {
         try (HcpBucket hcpBucket = product.createObjectExclusiveAccess()) {
-            hcpBucket.checkPreconditionStatusProduct(ProductStatus.CREATED);
             hcpBucket.changeBucketConfig();
         }
     }
@@ -58,7 +55,6 @@ public class HcpBucketTest extends Tests {
     @ParameterizedTest(name = "Настроить ACL бакета {0}")
     void editAcl(HcpBucket product) {
         try (HcpBucket hcpBucket = product.createObjectExclusiveAccess()) {
-            hcpBucket.checkPreconditionStatusProduct(ProductStatus.CREATED);
             ServiceAccount account = ServiceAccount.builder()
                     .title("serviceAccForStaticKey")
                     .projectId(hcpBucket.getProjectId())

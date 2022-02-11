@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Nginx;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -32,7 +31,6 @@ public class NginxTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
-            nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
             nginx.expandMountPoint();
         }
     }
@@ -43,7 +41,6 @@ public class NginxTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
-            nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
             nginx.restart();
         }
     }
@@ -54,7 +51,6 @@ public class NginxTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
-            nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
             nginx.stopSoft();
             nginx.start();
         }
@@ -66,7 +62,6 @@ public class NginxTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
-            nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
             nginx.stopHard();
             try {
                 nginx.resize(nginx.getMaxFlavor());
@@ -83,7 +78,6 @@ public class NginxTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
-            nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
             nginx.stopHard();
             nginx.start();
         }
@@ -95,7 +89,6 @@ public class NginxTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
-            nginx.checkPreconditionStatusProduct(ProductStatus.CREATED);
             nginx.stopHard();
             nginx.start();
         }

@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.ScyllaDb;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -33,7 +32,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.expandMountPoint();
         }
     }
@@ -44,7 +42,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.createDb("cachedbd");
         }
     }
@@ -55,7 +52,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Проверить конфигурацию {0}")
     void refreshVmConfig(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.refreshVmConfig();
         }
     }
@@ -67,7 +63,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Присвоить права доступа пользователю {0}")
     void addPermissionsUser(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.createDb("cachedbd");
             scyllaDb.createDbmsUser("chelik3", password, "admin");
             scyllaDb.addPermissionsUser("cachedbd", "chelik3");
@@ -80,7 +75,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Удалить права доступа пользователю {0}")
     void removePermissionsUser(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.createDb("cachedbd");
             scyllaDb.createDbmsUser("chelik4", password, "admin");
             scyllaDb.addPermissionsUser("cachedbd", "chelik4");
@@ -94,7 +88,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.createDb("cachedbd");
             scyllaDb.createDbmsUser("chelik1", password, "admin");
         }
@@ -106,7 +99,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.createDb("cachedbd");
             scyllaDb.createDbmsUser("chelikforreset1", password, "admin");
             String newPassword = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
@@ -120,7 +112,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.createDb("cachedbd");
             scyllaDb.createDbmsUser("chelikdelete2", password, "admin");
             scyllaDb.removeDbmsUser("chelikdelete2");
@@ -133,7 +124,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.restart();
         }
     }
@@ -155,7 +145,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.stopSoft();
             scyllaDb.start();
         }
@@ -167,7 +156,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.stopHard();
             scyllaDb.start();
         }
@@ -179,7 +167,6 @@ public class ScyllaDbTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.stopHard();
             scyllaDb.start();
         }
