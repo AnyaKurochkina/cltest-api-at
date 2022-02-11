@@ -15,7 +15,7 @@ import java.util.Objects;
 @Log4j2
 public class KeyCloakSteps {
     private static final String URL = Configure.getAppProp("url.keycloak");
-    private static final int TOKEN_LIFETIME_SEC = 250;
+    private static final int TOKEN_LIFETIME_SEC = 200;
 
 
     /**

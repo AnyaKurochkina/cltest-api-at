@@ -70,7 +70,7 @@ public class ScyllaDbTest extends Tests {
             scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.createDb("cachedbd");
             scyllaDb.createDbmsUser("chelik3", password, "admin");
-            scyllaDb.addPermissionsUser("cachedbd", "chelik3", "admin");
+            scyllaDb.addPermissionsUser("cachedbd", "chelik3");
         }
     }
 
@@ -83,7 +83,7 @@ public class ScyllaDbTest extends Tests {
             scyllaDb.checkPreconditionStatusProduct(ProductStatus.CREATED);
             scyllaDb.createDb("cachedbd");
             scyllaDb.createDbmsUser("chelik4", password, "admin");
-            scyllaDb.addPermissionsUser("cachedbd", "chelik4", "admin");
+            scyllaDb.addPermissionsUser("cachedbd", "chelik4");
             scyllaDb.removePermissionsUser("cachedbd", "chelik4");
         }
     }
