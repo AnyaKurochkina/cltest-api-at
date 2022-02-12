@@ -86,7 +86,7 @@ public abstract class IProduct extends Entity {
     }
 
     @Override
-    protected  <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
+    protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
         T entity = ObjectPoolService.create(this, exclusiveAccess, isPublic);
         ((IProduct) entity).checkPreconditionStatusProduct();
         return entity;
@@ -139,8 +139,10 @@ public abstract class IProduct extends Entity {
     @SneakyThrows
     private void checkPreconditionStatusProduct() {
 //        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
-        if (!ProductStatus.CREATED.equals(getStatus()))
+        if (!ProductStatus.CREATED.equals(getStatus())) {
+            close();
             throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), ProductStatus.CREATED));
+        }
     }
 
     //Удалить рекурсивно

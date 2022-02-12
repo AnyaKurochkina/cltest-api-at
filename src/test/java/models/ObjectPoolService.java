@@ -42,9 +42,12 @@ public class ObjectPoolService {
 
     @SneakyThrows
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess, boolean isPublic) {
-        ObjectPoolEntity objectPoolEntity = createObjectPoolEntity(e);
-        objectPoolEntity.setPublic(isPublic);
-        objectPoolEntity.lock();
+        ObjectPoolEntity objectPoolEntity;
+        synchronized(ObjectPoolService.class) {
+            objectPoolEntity = createObjectPoolEntity(e);
+            objectPoolEntity.setPublic(isPublic);
+            objectPoolEntity.lock();
+        }
         if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
             objectPoolEntity.release();
             throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой:\n%s",
@@ -83,7 +86,7 @@ public class ObjectPoolService {
 
     private static final List<ObjectPoolEntity> listObject = new ArrayList<>();
 
-    public static synchronized ObjectPoolEntity createObjectPoolEntity(Entity e) {
+    public static ObjectPoolEntity createObjectPoolEntity(Entity e) {
         listObject.clear();
         listObject.addAll(entities.values());
         Collections.shuffle(listObject);
