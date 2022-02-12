@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
 public class ObjectPoolEntity {
     private String entity;
-    @Getter @Setter
+    @Setter @Getter
     private boolean isPublic = true;
-    @Getter @Setter
+    @Setter @Getter
     private ObjectStatus status = ObjectStatus.NOT_CREATED;
-    @Getter @Setter
+    @Setter @Getter
     private Throwable error;
     @Getter
     public final Class<? extends Entity> clazz;
@@ -40,7 +40,7 @@ public class ObjectPoolEntity {
     public boolean equalsEntity(Object o) {
 //        if(status.equals(ObjectStatus.DELETED))
 //            return false;
-        if(!isPublic)
+        if (!isPublic)
             return false;
         if (this == o)
             return true;

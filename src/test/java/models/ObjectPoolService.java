@@ -46,8 +46,9 @@ public class ObjectPoolService {
         synchronized(ObjectPoolService.class) {
             objectPoolEntity = createObjectPoolEntity(e);
             objectPoolEntity.setPublic(isPublic);
-            objectPoolEntity.lock();
         }
+        objectPoolEntity.lock();
+
         if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
             objectPoolEntity.release();
             throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой:\n%s",
