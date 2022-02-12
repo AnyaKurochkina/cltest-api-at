@@ -87,8 +87,8 @@ public abstract class IProduct extends Entity {
 
     @Override
     protected  <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
-        T entity = ObjectPoolService.create(this, exclusiveAccess, true);
-        checkPreconditionStatusProduct();
+        T entity = ObjectPoolService.create(this, exclusiveAccess, isPublic);
+        ((IProduct) entity).checkPreconditionStatusProduct();
         return entity;
     }
 
