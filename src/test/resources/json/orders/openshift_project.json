@@ -16,7 +16,7 @@
       },
       "roles": [
         {
-          "role": "edit",
+          "role": "view",
           "groups": [
             "cloud-d2plux-access-groupc3uvw11s"
           ]

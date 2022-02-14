@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.PostgreSQL;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -32,7 +31,6 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgreSQL.expandMountPoint();
         }
     }
@@ -87,7 +85,6 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgreSQL.createDb("cached_bd");
             postgreSQL.createDbmsUser("chelikforreset2", "user", "cached_bd");
             postgreSQL.removeDbmsUser("chelikforreset2", "cached_bd");
@@ -100,7 +97,6 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgreSQL.restart();
         }
     }
@@ -122,7 +118,6 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgreSQL.stopSoft();
             postgreSQL.start();
         }
@@ -134,7 +129,6 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgreSQL.resize(postgreSQL.getMaxFlavor());
         }
     }
@@ -145,7 +139,6 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgreSQL.stopHard();
             postgreSQL.start();
         }
@@ -157,7 +150,6 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgreSQL.stopHard();
             postgreSQL.start();
         }

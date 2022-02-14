@@ -1,7 +1,7 @@
 package models.tarifficator;
 
 import core.helper.Configure;
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
@@ -44,6 +44,8 @@ public class TariffPlan extends Entity {
         return new JSONObject("{\"tariff_plan\":" + JsonHelper.toJson(this) + "}");
     }
 
+    @Override
+    protected void delete() {}
 
     @Override
     public Entity init() {

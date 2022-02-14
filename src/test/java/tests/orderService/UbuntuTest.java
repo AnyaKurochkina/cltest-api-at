@@ -1,12 +1,10 @@
 package tests.orderService;
 
-import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
-import models.orderService.products.ScyllaDb;
 import models.orderService.products.Ubuntu;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -33,7 +31,6 @@ public class UbuntuTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
-            ubuntu.checkPreconditionStatusProduct(ProductStatus.CREATED);
             ubuntu.expandMountPoint();
         }
     }
@@ -44,7 +41,6 @@ public class UbuntuTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
-            ubuntu.checkPreconditionStatusProduct(ProductStatus.CREATED);
             ubuntu.restart();
         }
     }
@@ -55,7 +51,6 @@ public class UbuntuTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
-            ubuntu.checkPreconditionStatusProduct(ProductStatus.CREATED);
             ubuntu.stopSoft();
             ubuntu.start();
         }
@@ -67,7 +62,6 @@ public class UbuntuTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
-            ubuntu.checkPreconditionStatusProduct(ProductStatus.CREATED);
             ubuntu.stopHard();
             try {
                 ubuntu.resize(ubuntu.getMaxFlavor());
@@ -83,7 +77,6 @@ public class UbuntuTest extends Tests {
     @ParameterizedTest(name = "Проверить конфигурацию {0}")
     void refreshVmConfig(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
-            ubuntu.checkPreconditionStatusProduct(ProductStatus.CREATED);
             ubuntu.refreshVmConfig();
         }
     }
@@ -94,7 +87,6 @@ public class UbuntuTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
-            ubuntu.checkPreconditionStatusProduct(ProductStatus.CREATED);
             ubuntu.stopHard();
             ubuntu.start();
         }
@@ -106,7 +98,6 @@ public class UbuntuTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
-            ubuntu.checkPreconditionStatusProduct(ProductStatus.CREATED);
             ubuntu.stopHard();
             ubuntu.start();
         }

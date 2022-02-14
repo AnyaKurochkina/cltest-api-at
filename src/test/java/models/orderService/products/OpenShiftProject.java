@@ -1,6 +1,6 @@
 package models.orderService.products;
 
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.*;
@@ -44,6 +44,8 @@ public class OpenShiftProject extends IProduct {
             AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
             roles = Collections.singletonList(new Role("edit", accessGroup.getPrefixName()));
         }
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 

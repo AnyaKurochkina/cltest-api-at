@@ -1,12 +1,10 @@
 package tests.orderService;
 
-import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
-import models.orderService.products.ElasticsearchOpensearchCluster;
 import models.orderService.products.RabbitMQCluster;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -33,7 +31,6 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rabbit.expandMountPoint();
         }
     }
@@ -44,7 +41,6 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "Проверить конфигурацию {0}")
     void refreshVmConfig(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rabbit.refreshVmConfig();
         }
     }
@@ -55,7 +51,6 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rabbit.restart();
         }
     }
@@ -66,7 +61,6 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rabbit.stopSoft();
             rabbit.start();
         }
@@ -78,7 +72,6 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "Создать пользователя RabbitMQ {0}")
     void createUser(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rabbit.rabbitmqCreateUser();
         }
     }
@@ -89,7 +82,6 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rabbit.stopHard();
             rabbit.start();
         }
@@ -101,7 +93,6 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(RabbitMQCluster product) {
         try (RabbitMQCluster rabbitMQCluster = product.createObjectExclusiveAccess()) {
-            rabbitMQCluster.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rabbitMQCluster.updateCerts();
         }
     }
@@ -112,7 +103,6 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rabbit.stopHard();
             rabbit.start();
         }

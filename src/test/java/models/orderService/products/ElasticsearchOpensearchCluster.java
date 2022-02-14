@@ -39,6 +39,12 @@ public class ElasticsearchOpensearchCluster extends IProduct {
         jsonTemplate = "/orders/elasticsearch_opensearch_cluster.json";
         productName = "Elasticsearch Opensearch cluster";
         initProduct();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(elasticsearchVersion == null)
+            elasticsearchVersion = getRandomProductVersionByPathEnum("elasticsearch_version.enum");
+        if(dataCentre == null)
+            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -98,5 +104,10 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     //Включить
     public void start() {
         start("start_vm");
+    }
+
+    @Override
+    protected void delete() {
+        delete("delete_elasticsearch_opensearch");
     }
 }

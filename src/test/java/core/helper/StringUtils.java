@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +17,12 @@ public final class StringUtils {
         if (matcher.find())
             return matcher.group(1);
         return null;
+    }
+
+    public static String format(String str, Object ... args){
+        for (Object arg : args)
+            str = str.replaceFirst("\\{}", Objects.requireNonNull(arg).toString());
+        return str;
     }
 
     @SneakyThrows

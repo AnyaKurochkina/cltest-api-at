@@ -1,8 +1,8 @@
 package models.productCatalog;
 
 import core.helper.Configure;
-import core.helper.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import httpModels.productCatalog.jinja2.createJinja2.response.CreateJinjaResponse;
 import httpModels.productCatalog.jinja2.createJinja2.response.Jinja2Data;
 import io.qameta.allure.Step;

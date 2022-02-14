@@ -1,6 +1,7 @@
 package core.helper;
 
 import lombok.extern.log4j.Log4j2;
+import org.aspectj.lang.annotation.Aspect;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,6 +27,9 @@ public class Configure {
         try {
             RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
+
+            properties.setProperty("testIt", "false");
+
             loadProperties(RESOURCE_PATH + "/config/application.properties");
             if (System.getProperty("env") == null) {
                 if (getAppProp("env") == null) {
@@ -57,6 +61,10 @@ public class Configure {
         } catch (Exception e) {
             log.warn("Can't load environment properties file : " + e.getMessage());
         }
+    }
+
+    public static boolean isIntegrationTestIt(){
+        return (Configure.getAppProp("testIt").equals("true") || System.getProperty("testRunId") != null);
     }
 
     public static String getAppProp(String propertyKey) {

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Data
@@ -39,7 +40,7 @@ public class GraphItem{
 	private Integer timeout;
 
 	@JsonProperty("output")
-	private Output output;
+	private Map<String, String> output;
 
 	@JsonProperty("coords_x")
 	private Integer coordsX;
@@ -78,7 +79,7 @@ public class GraphItem{
 	private Boolean onPrebilling;
 
 	@JsonProperty("input")
-	private Input input;
+	private Map<String, String> input;
 
 	@JsonProperty("not_damage_on_error")
 	private Boolean notDamageOnError;

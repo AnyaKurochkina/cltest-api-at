@@ -1,7 +1,7 @@
 package models.productCatalog;
 
 import core.helper.Configure;
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.template.createTemplate.response.CreateTemplateResponse;
 import httpModels.productCatalog.template.createTemplate.response.Input;

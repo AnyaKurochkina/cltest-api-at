@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Data
@@ -46,13 +47,13 @@ public class GetGraphResponse implements GetImpl {
 	private List<GraphItem> graph;
 
 	@JsonProperty("output")
-	private Output output;
+	private Map<String, String> output;
 
 	@JsonProperty("printed_output")
 	private PrintedOutput printedOutput;
 
 	@JsonProperty("json_schema")
-	private JsonSchema jsonSchema;
+	private Map<String, Object> jsonSchema;
 
 	@JsonProperty("version_changed_by_user")
 	private String versionChangedByUser;
@@ -61,13 +62,13 @@ public class GetGraphResponse implements GetImpl {
 	private String name;
 
 	@JsonProperty("static_data")
-	private StaticData staticData;
+	private Map<String, Object> staticData;
 
 	@JsonProperty("id")
 	private String id;
 
 	@JsonProperty("ui_schema")
-	private UiSchema uiSchema;
+	private Map<String, Object> uiSchema;
 
 	@JsonProperty("modifications")
 	private List<Object> modifications;

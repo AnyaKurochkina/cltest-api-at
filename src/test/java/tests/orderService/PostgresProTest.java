@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.PostgresPro;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -32,7 +31,6 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgresPro.expandMountPoint();
         }
     }
@@ -99,7 +97,6 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgresPro.restart();
         }
     }
@@ -121,7 +118,6 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgresPro.stopSoft();
             postgresPro.start();
         }
@@ -133,7 +129,6 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgresPro.resize(postgresPro.getMaxFlavor());
         }
     }
@@ -144,7 +139,6 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgresPro.stopHard();
             postgresPro.start();
         }
@@ -156,7 +150,6 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgresPro.stopHard();
             postgresPro.start();
         }

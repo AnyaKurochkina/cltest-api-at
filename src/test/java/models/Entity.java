@@ -2,8 +2,7 @@ package models;
 
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
-import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.json.JSONObject;
 
@@ -23,10 +22,12 @@ public abstract class Entity implements AutoCloseable {
 
     protected abstract void create();
 
-    protected void delete() {
-    }
+    protected abstract void delete();
 
     public String uuid;
+    @Setter
+    @Getter
+    String configurationId;
 
     public void save() {
         ObjectPoolService.saveEntity(this);
@@ -64,8 +65,8 @@ public abstract class Entity implements AutoCloseable {
         return createObject(false, false);
     }
 
-    private <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
-        return ObjectPoolService.create(this, exclusiveAccess, true);
+    protected  <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
+        return ObjectPoolService.create(this, exclusiveAccess, isPublic);
     }
 
     public <T extends Entity> T createObjectExclusiveAccess() {

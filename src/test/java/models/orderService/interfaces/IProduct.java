@@ -1,26 +1,34 @@
 package models.orderService.interfaces;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
-import core.helper.Http;
+import core.helper.http.Http;
 import core.utils.Waiting;
+import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
+import httpModels.productCatalog.product.getProduct.response.GetServiceResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.ObjectPoolService;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
+import models.productCatalog.Graph;
+import models.productCatalog.Product;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
+import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static core.helper.Configure.OrderServiceURL;
@@ -77,12 +85,19 @@ public abstract class IProduct extends Entity {
         save();
     }
 
+    @Override
+    protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
+        T entity = ObjectPoolService.create(this, exclusiveAccess, isPublic);
+        ((IProduct) entity).checkPreconditionStatusProduct();
+        return entity;
+    }
+
     @SneakyThrows
     @Step("Сравнение стоимости продукта с ценой предбиллинга при заказе")
     protected void compareCostOrderAndPrice() {
         try {
             CostSteps costSteps = new CostSteps();
-            Float preBillingCost = costSteps.getPreBillingCost(this);
+            Float preBillingCost = costSteps.getPreBillingTotalCost(this);
             Float currentCost = costSteps.getCurrentCost(this);
             for (int i = 0; i < 15; i++) {
                 Waiting.sleep(20000);
@@ -122,10 +137,12 @@ public abstract class IProduct extends Entity {
     }
 
     @SneakyThrows
-    public void checkPreconditionStatusProduct(ProductStatus status) {
+    private void checkPreconditionStatusProduct() {
 //        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
-        if (!status.equals(getStatus()))
-            throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status));
+        if (!ProductStatus.CREATED.equals(getStatus()) && !ProductStatus.DELETED.equals(getStatus())) {
+            close();
+            throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), ProductStatus.CREATED));
+        }
     }
 
     //Удалить рекурсивно
@@ -163,15 +180,33 @@ public abstract class IProduct extends Entity {
 
     }
 
+    @SneakyThrows
+    //TODO: впилить во все продукты
+    protected String getRandomOsVersion(){
+        GetServiceResponse productResponse = (GetServiceResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetServiceResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
+        String urlAttrs = JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("os_version")))
+                        .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')");
+        return Objects.requireNonNull(ReferencesStep.getJsonPathList(urlAttrs)
+                        .getString("collect{it.data.os.version}.shuffled()[0]"), "Версия ОС не найдена");
+    }
+
+    @SneakyThrows
+    //TODO: впилить во все продукты
+    protected String getRandomProductVersionByPathEnum(String path){
+        GetServiceResponse productResponse = (GetServiceResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetServiceResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
+        return Objects.requireNonNull(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getJsonSchema().get("properties")))
+                .getString(path + ".collect{e -> e}.shuffled()[0]"), "Версия продукта не найдена");
+    }
+
     public Flavor getMaxFlavor() {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
-        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         return list.get(list.size() - 1);
     }
 
     public Flavor getMinFlavor(){
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
-        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         return list.get(0);
     }
 
@@ -184,15 +219,17 @@ public abstract class IProduct extends Entity {
     }
 
     protected void initProduct() {
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
         if (projectId == null) {
-            Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-            projectId = project.getId();
+            setProjectId(project.getId());
         }
         if (label == null) {
             label = UUID.randomUUID().toString();
         }
         if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
+            productId = new ProductCatalogSteps(Product.productName).
+                    getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(Objects.requireNonNull(getProductName()),
+                            "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironment().getEnvType().toLowerCase()));
         }
     }
 

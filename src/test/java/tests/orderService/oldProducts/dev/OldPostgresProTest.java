@@ -19,7 +19,7 @@ public class OldPostgresProTest extends Tests {
     final PostgresPro postgresPro = PostgresPro.builder()
             .projectId("proj-67nljbzjtt")
             .productId("0da09981-c1ac-45b6-ba3b-7bfe52fd45bc")
-            .orderId("fff78d59-f584-4fec-a93e-a258b4b68240")
+            .orderId("b778270e-a5a6-49df-8de7-4831b19fd4b8")
             .productName("PostgresPro")
             .build();
 

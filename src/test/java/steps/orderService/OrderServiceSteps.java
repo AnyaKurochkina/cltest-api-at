@@ -2,13 +2,13 @@ package steps.orderService;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import core.helper.Http;
+import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
-import models.authorizer.InformationSystem;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.orderService.ResourcePool;
@@ -29,7 +29,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static core.helper.Configure.OrderServiceURL;
-import static core.helper.Configure.ProductCatalogURL;
 
 @Log4j2
 public class OrderServiceSteps extends Steps {
@@ -42,7 +41,7 @@ public class OrderServiceSteps extends Steps {
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
             Waiting.sleep(30000);
-            Http.Response res = new Http(OrderServiceURL)
+            Response res = new Http(OrderServiceURL)
                     .setProjectId(product.getProjectId())
                     .get("projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
                     .assertStatus(200);
@@ -110,7 +109,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Отправка action {action}")
-    public Http.Response sendAction(String action, IProduct product, JSONObject jsonData) {
+    public Response sendAction(String action, IProduct product, JSONObject jsonData) {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.getId())
@@ -120,7 +119,7 @@ public class OrderServiceSteps extends Steps {
                 .patch("projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
 
-    public Http.Response changeProjectForOrderRequest(IProduct product, Project target) {
+    public Response changeProjectForOrderRequest(IProduct product, Project target) {
         return new Http(OrderServiceURL)
                 .body(new JSONObject(String.format("{target_project_name: \"%s\"}", target.getId())))
                 .patch("projects/{}/orders/{}/change_project", product.getProjectId(), product.getOrderId());
@@ -169,24 +168,22 @@ public class OrderServiceSteps extends Steps {
                     checkActionStatusMethod("success", product, actionId.get());
                     if (Objects.nonNull(status))
                         product.setStatus(status);
-                },
-                () -> {
-                    if (costPreBilling.get() != null) {
-                        Float cost = null;
-                        for (int i = 0; i < 20; i++) {
-                            Waiting.sleep(20000);
-                            cost = calcCostSteps.getCostByUid(product);
-                            if (cost == null)
-                                continue;
-                            if (Math.abs(cost - costPreBilling.get()) > 0.00001)
-                                continue;
-                            break;
-                        }
-                        Assertions.assertNotNull(cost, "Стоимость списания равна null");
-                        Assertions.assertEquals(costPreBilling.get(), cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
-                    }
                 });
 
+        if (costPreBilling.get() != null) {
+            Float cost = null;
+            for (int i = 0; i < 20; i++) {
+                Waiting.sleep(20000);
+                cost = calcCostSteps.getCostByUid(product);
+                if (cost == null)
+                    continue;
+                if (Math.abs(cost - costPreBilling.get()) > 0.00001)
+                    continue;
+                break;
+            }
+            Assertions.assertNotNull(cost, "Стоимость списания равна null");
+            Assertions.assertEquals(costPreBilling.get(), cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
+        }
     }
 
     @Step("Ожидание успешного выполнения action")
@@ -222,51 +219,20 @@ public class OrderServiceSteps extends Steps {
         log.info("Получение домена для сегмента сети " + netSegment);
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
-                .get("domains?net_segment_code={}&include=total_count&page=1&per_page=25", netSegment)
+                .get("domains?net_segment_code={}&page=1&per_page=25", netSegment)
                 .assertStatus(200)
                 .jsonPath()
-                .get("list[0].code");
+                .get("list.collect{e -> e}.shuffled()[0].code");
     }
 
-    /**
-     * @param product объект продукт наследуемый от абстрактного класса IProduct
-     * @return - возвращаем ID проудкта
-     */
-    public String getProductId(IProduct product) {
-        log.info("Получение id для продукта " + Objects.requireNonNull(product).getProductName());
-        //Получение информационной сисетмы
-        InformationSystem informationSystem = InformationSystem.builder().isForOrders(true).build().createObject();
-        String product_id = "";
-
-        //Получение среды проекта
-        ProjectEnvironment projectEnvironment = ((Project) Project.builder().id(product.getProjectId())
-                .build().createObject()).getProjectEnvironment();
-
-        //Выполнение запроса
-        //TODO: оптимизировать
-        int total_count = new Http(ProductCatalogURL)
+    public String getDataCentreBySegment(IProduct product, String netSegment) {
+        log.info("Получение ДЦ для сегмента сети " + netSegment);
+        return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
-                .get("products/?is_open=true&env={}&information_systems={}&page=1&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id)
+                .get("data_centers?net_segment_code={}&page=1&per_page=25", netSegment)
                 .assertStatus(200)
                 .jsonPath()
-                .get("meta.total_count");
-
-        int countOfIteration = total_count / 100 + 1;
-        for (int i = 1; i <= countOfIteration; i++) {
-            //Выполнение запроса на получение id подукта
-            product_id = new Http(ProductCatalogURL)
-                    .setProjectId(product.getProjectId())
-                    .get("products/?is_open=true&env={}&information_systems={}&page={}&per_page=100", projectEnvironment.envType.toLowerCase(), informationSystem.id, i)
-                    .assertStatus(200)
-                    .jsonPath()
-                    .get(String.format("list.find{it.title == '%s' || it.title == '%s' || it.title == '%s'}.id", product.getProductName().toLowerCase(), product.getProductName().toUpperCase(), product.getProductName()));
-            if (product_id != null) {
-                log.info("Id продукта = " + product_id);
-                break;
-            }
-        }
-        Assertions.assertNotNull(product_id, String.format("ID продукта: %s, не найден", product.getProductName()));
-        return product_id;
+                .get("list.collect{e -> e}.shuffled()[0].code");
     }
 
     /**
@@ -321,7 +287,7 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    @Step("Получение списка ресурсных пулов для категории {category} и среды {env}")
+    @Step("Получение списка ресурсных пулов для категории {category} и проекта {projectId}")
     public List<ResourcePool> getResourcesPoolList(String category, String projectId) {
         String jsonArray = new Http(OrderServiceURL)
                 .setProjectId(projectId)
@@ -338,6 +304,7 @@ public class OrderServiceSteps extends Steps {
     public <T extends Comparable<T>> Comparable<T> getProductsField(IProduct product, String path) {
         return (Comparable<T>) getProductsField(product, path, Comparable.class);
     }
+
 
     @Step("Получение значения по пути {path}")
     public Object getProductsField(IProduct product, String path, Class<?> clazz) {

@@ -6,10 +6,9 @@
 package org.junit.platform.engine.support.hierarchical;
 
 
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import models.ObjectPoolService;
 import core.helper.StringUtils;
-import models.orderService.interfaces.IProduct;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 import org.junit.ProductArgumentsProvider;
@@ -137,8 +136,27 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 Map<String, List<Map>> products = ProductArgumentsProvider.getProductListMap();
                 for (Map.Entry<String, List<Map>> e : products.entrySet()) {
                     if(e.getKey().endsWith(match)){
-                    List listProduct = ProductArgumentsProvider.findListInMapByKey("options", e.getValue());
-                    if(listProduct == null)
+                    List<Map<String, Object>> listProduct = ProductArgumentsProvider.findListInMapByKey("options", e.getValue());
+
+//                    Map <String, String> confMap = TestProperties.getInstance().getConfigMap(((MethodBasedTestDescriptor) testDescriptor).getTestMethod());
+//                    Iterator itr = listProduct.iterator();
+//                    while(itr.hasNext()) {
+//                        Map<String, Object> map = (Map<String, Object>) itr.next();
+//                        DocumentContext jsonPath = JsonPath.parse(new JSONObject(map));
+//                        boolean approved = true;
+//                        for (Map.Entry<String, String> entry : confMap.entrySet()) {
+//                            if (((JSONArray) jsonPath.read("$[?(@." + entry.getKey() + " =~ /.*" + entry.getValue() + "*/i)]")).isEmpty())
+//                                approved = false;
+//                        }
+//                        if(!approved)
+//                            itr.remove();
+//                    }
+
+                    if(listProduct == null) {
+                        skipTests.add(testDescriptor);
+                        return;
+                    }
+                    if(listProduct.isEmpty())
                         skipTests.add(testDescriptor);
                     return;
                     }

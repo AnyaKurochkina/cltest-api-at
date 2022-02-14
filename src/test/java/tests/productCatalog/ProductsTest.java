@@ -2,10 +2,10 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.product.getProduct.response.GetServiceResponce;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
+import httpModels.productCatalog.product.getProduct.response.GetServiceResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -90,7 +90,7 @@ public class ProductsTest extends Tests {
     @TmsLink("643395")
     @Test
     public void getProductById() {
-        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetServiceResponce.class);
+        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetServiceResponse.class);
         Assertions.assertEquals(productCatalogGet.getName(), product.getName());
     }
 
@@ -110,7 +110,7 @@ public class ProductsTest extends Tests {
         String expectedValue = "UpdateDescription";
         productCatalogSteps.partialUpdateObject(product.getProductId(), new JSONObject().put("description", expectedValue))
                 .assertStatus(200);
-        String actual = productCatalogSteps.getById(product.getProductId(), GetServiceResponce.class).getDescription();
+        String actual = productCatalogSteps.getById(product.getProductId(), GetServiceResponse.class).getDescription();
         Assertions.assertEquals(expectedValue, actual);
     }
 
@@ -138,7 +138,7 @@ public class ProductsTest extends Tests {
     @TmsLink("643412")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {
-        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetServiceResponce.class);
+        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetServiceResponse.class);
         Assertions.assertNotNull(productCatalogGet.getGraphVersionCalculated());
     }
 
@@ -210,12 +210,12 @@ public class ProductsTest extends Tests {
     public void updateProductAndGetVersion() {
         Product productTest = Product.builder().name("product_version_test_api").version("1.0.999").build().createObject();
         productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api2"));
-        String currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetServiceResponce.class).getVersion();
+        String currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetServiceResponse.class).getVersion();
         assertEquals("1.1.0", currentVersion);
         productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api3")
                 .put("version", "1.999.999"));
         productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api4"));
-        currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetServiceResponce.class).getVersion();
+        currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetServiceResponse.class).getVersion();
         assertEquals("2.0.0", currentVersion);
         productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api5")
                 .put("version", "999.999.999"));

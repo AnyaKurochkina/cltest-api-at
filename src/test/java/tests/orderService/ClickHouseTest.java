@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.ClickHouse;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -32,7 +31,6 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.checkPreconditionStatusProduct(ProductStatus.CREATED);
             clickHouse.expandMountPoint();
         }
     }
@@ -97,7 +95,6 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.checkPreconditionStatusProduct(ProductStatus.CREATED);
             clickHouse.restart();
         }
     }
@@ -119,7 +116,6 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.checkPreconditionStatusProduct(ProductStatus.CREATED);
             clickHouse.stopSoft();
             clickHouse.start();
         }
@@ -131,7 +127,6 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.checkPreconditionStatusProduct(ProductStatus.CREATED);
             clickHouse.stopHard();
             clickHouse.start();
         }
@@ -143,7 +138,6 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.checkPreconditionStatusProduct(ProductStatus.CREATED);
             clickHouse.stopHard();
             clickHouse.start();
         }

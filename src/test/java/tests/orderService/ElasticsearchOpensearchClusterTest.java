@@ -1,12 +1,10 @@
 package tests.orderService;
 
-import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
-import models.orderService.products.Elasticsearch;
 import models.orderService.products.ElasticsearchOpensearchCluster;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -33,7 +31,6 @@ public class ElasticsearchOpensearchClusterTest extends Tests {
     @ParameterizedTest(name = "Проверить конфигурацию {0}")
     void refreshVmConfig(ElasticsearchOpensearchCluster product) {
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
-            elastic.checkPreconditionStatusProduct(ProductStatus.CREATED);
             elastic.refreshVmConfig();
         }
     }
@@ -44,7 +41,6 @@ public class ElasticsearchOpensearchClusterTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(ElasticsearchOpensearchCluster product) {
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
-            elastic.checkPreconditionStatusProduct(ProductStatus.CREATED);
             elastic.stopHard();
             elastic.start();
 

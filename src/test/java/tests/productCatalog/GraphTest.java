@@ -2,7 +2,7 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import core.helper.StringUtils;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.action.createAction.response.CreateActionResponse;
@@ -20,6 +20,7 @@ import models.productCatalog.Graph;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
+import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Графы")
-public class GraphTest {
+public class GraphTest extends Tests {
 
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
     Graph graph;

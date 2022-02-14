@@ -2,6 +2,7 @@ package tests.tarifficator;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.junit.ProductArgumentsProvider;
@@ -19,9 +20,9 @@ import java.util.HashMap;
 public class ComparePrebillingTest extends Tests {
     final CostSteps costSteps = new CostSteps();
 
-    @DisplayName("Сравнение стоимости продуктов в предбиллинге с ценами активного тарифного плана")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сравнение стоимости продукта {0} в предбиллинге с ценами активного тарифного плана")
+    @TmsLink("654182")
+    @ParameterizedTest(name = "Сравнение стоимости продукта {0} в предбиллинге с ценами активного ТПО")
     public void compareTariffs(IProduct resource){
         try (IProduct product = resource.createObjectExclusiveAccess()) {
             String tariffPlanId = costSteps.getActiveTariffId();

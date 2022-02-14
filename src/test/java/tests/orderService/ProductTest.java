@@ -3,6 +3,7 @@ package tests.orderService;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.accountManager.Account;
 import models.authorizer.Folder;
@@ -17,17 +18,19 @@ import org.junit.jupiter.params.ParameterizedTest;
 import steps.accountManager.AccountSteps;
 import steps.authorizer.AuthorizerSteps;
 import steps.orderService.OrderServiceSteps;
+import tests.Tests;
 
 @Log4j2
 @Epic("Продукты")
 @Feature("Действия над продуктами")
 @Tags({@Tag("regress"), @Tag("prod")})
-public class ProductTest {
+public class ProductTest extends Tests {
     OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
     AccountSteps accountSteps = new AccountSteps();
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();
 
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @TmsLink("584453")
     @ParameterizedTest(name = "Перенос заказа. ВМ {0} при одинаковых префиксах")
     public void moveProductWithEqualsPrefix(Rhel resource) {
         try (Rhel product = resource.createObjectExclusiveAccess()) {

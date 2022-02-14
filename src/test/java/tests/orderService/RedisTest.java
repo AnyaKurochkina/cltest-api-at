@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Redis;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -32,7 +31,6 @@ public class RedisTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
-            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
             redis.expandMountPoint();
         }
     }
@@ -43,7 +41,6 @@ public class RedisTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
-            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
             redis.resetPassword();
         }
     }
@@ -54,7 +51,6 @@ public class RedisTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
-            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
             redis.restart();
         }
     }
@@ -65,7 +61,6 @@ public class RedisTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
-            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
             redis.stopSoft();
             redis.start();
         }
@@ -77,8 +72,7 @@ public class RedisTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
-            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            redis.resize(product.getMaxFlavor());
+            redis.resize(redis.getMaxFlavor());
         }
     }
 
@@ -88,7 +82,6 @@ public class RedisTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
-            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
             redis.stopHard();
             redis.start();
         }
@@ -100,7 +93,6 @@ public class RedisTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
-            redis.checkPreconditionStatusProduct(ProductStatus.CREATED);
             redis.stopHard();
             redis.start();
         }

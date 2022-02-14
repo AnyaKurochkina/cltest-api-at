@@ -2,7 +2,7 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;

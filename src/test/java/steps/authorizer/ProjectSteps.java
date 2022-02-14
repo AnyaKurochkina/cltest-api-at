@@ -1,6 +1,6 @@
 package steps.authorizer;
 
-import core.helper.Http;
+import core.helper.http.Http;
 import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
