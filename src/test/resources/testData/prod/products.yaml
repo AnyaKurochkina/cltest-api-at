@@ -157,7 +157,7 @@ Elasticsearch:
 ElasticsearchOpensearchCluster:
   - options:
       - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", elasticsearchVersion: "1.0.1 + Exporter 1.1.0" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", elasticsearchVersion: "1.0.1 + Exporter 1.1.0" }
+      - { platform: "OpenStack", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", elasticsearchVersion: "1.0.1 + Exporter 1.1.0" }
 
 ScyllaDb:
   - options:
