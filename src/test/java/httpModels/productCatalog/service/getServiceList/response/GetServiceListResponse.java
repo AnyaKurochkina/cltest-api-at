@@ -2,17 +2,11 @@ package httpModels.productCatalog.service.getServiceList.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import httpModels.productCatalog.GetListImpl;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import httpModels.productCatalog.MetaImpl;
 
 import java.util.List;
 
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class GetServiceListResponse implements GetListImpl {
 
 	@JsonProperty("meta")
@@ -24,5 +18,10 @@ public class GetServiceListResponse implements GetListImpl {
 	@Override
 	public List getItemsList() {
 		return list;
+	}
+
+	@Override
+	public MetaImpl getMeta() {
+		return meta;
 	}
 }

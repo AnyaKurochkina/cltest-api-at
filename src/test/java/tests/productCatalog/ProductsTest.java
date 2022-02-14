@@ -4,7 +4,6 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.MarkDelete;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.product.existProduct.response.ExistProductResponse;
 import httpModels.productCatalog.product.getProduct.response.GetServiceResponce;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import io.qameta.allure.Epic;
@@ -19,8 +18,7 @@ import tests.Tests;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -55,13 +53,23 @@ public class ProductsTest extends Tests {
                 .size() > 0);
     }
 
+    @Order(6)
+    @DisplayName("Проверка значения next в запросе на получение списка продуктов")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(GetProductsResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
+    }
+
     @Order(3)
     @DisplayName("Проверка существования продукта по имени")
     @TmsLink("643392")
     @Test
     public void checkProductExists() {
-        Assertions.assertTrue(productCatalogSteps.isExists(product.getName(), ExistProductResponse.class));
-        Assertions.assertFalse(productCatalogSteps.isExists("not_exists_name", ExistProductResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(product.getName()));
+        Assertions.assertFalse(productCatalogSteps.isExists("not_exists_name"));
     }
 
     @Order(4)
@@ -72,9 +80,9 @@ public class ProductsTest extends Tests {
         String data = JsonHelper.getStringFromFile("/productCatalog/products/importProduct.json");
         String name = new JsonPath(data).get("Product.json.name");
         productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProduct.json");
-        Assertions.assertTrue(productCatalogSteps.isExists(name, ExistProductResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(name));
         productCatalogSteps.deleteByName(name, GetProductsResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(name, ExistProductResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 
     @Order(5)
@@ -141,9 +149,9 @@ public class ProductsTest extends Tests {
     public void copyProductById() {
         String cloneName = product.getName() + "-clone";
         productCatalogSteps.copyById(product.getProductId());
-        Assertions.assertTrue(productCatalogSteps.isExists(cloneName, ExistProductResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(cloneName, GetProductsResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistProductResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
     @Order(51)

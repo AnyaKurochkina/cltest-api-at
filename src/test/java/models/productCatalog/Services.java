@@ -7,7 +7,6 @@ import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResp
 import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
 import httpModels.productCatalog.service.createService.response.DataSource;
 import httpModels.productCatalog.service.createService.response.ExtraData;
-import httpModels.productCatalog.service.existsService.response.ExistsServiceResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -85,6 +84,6 @@ public class Services extends Entity {
                 .delete("services/" + serviceId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(serviceName, ExistsServiceResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(serviceName));
     }
 }

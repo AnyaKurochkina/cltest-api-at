@@ -5,7 +5,6 @@ import core.helper.JsonHelper;
 import core.helper.MarkDelete;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
-import httpModels.productCatalog.service.existsService.response.ExistsServiceResponse;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Epic;
@@ -18,8 +17,7 @@ import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -52,13 +50,23 @@ public class ServicesTest extends Tests {
                 .size() > 0);
     }
 
+    @Order(2)
+    @DisplayName("Проверка значения next в запросе на получение списка сервисов")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(GetServiceListResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
+    }
+
     @Order(3)
     @DisplayName("Проверка существования продукта по имени")
     @TmsLink("643453")
     @Test
     public void checkServiceExists() {
-        Assertions.assertTrue(productCatalogSteps.isExists(service.getServiceName(), ExistsServiceResponse.class));
-        Assertions.assertFalse(productCatalogSteps.isExists("not_exist_name", ExistsServiceResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(service.getServiceName()));
+        Assertions.assertFalse(productCatalogSteps.isExists("not_exist_name"));
     }
 
     @Order(4)
@@ -69,9 +77,9 @@ public class ServicesTest extends Tests {
         String data = JsonHelper.getStringFromFile("/productCatalog/services/importService.json");
         String serviceName = new JsonPath(data).get("Service.json.name");
         productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
-        Assertions.assertTrue(productCatalogSteps.isExists(serviceName, ExistsServiceResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(serviceName));
         productCatalogSteps.deleteByName(serviceName, GetServiceListResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(serviceName, ExistsServiceResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(serviceName));
     }
 
     @Order(5)
@@ -107,9 +115,9 @@ public class ServicesTest extends Tests {
     public void copyService() {
         String expectedName = service.getServiceName() + "-clone";
         productCatalogSteps.copyById(service.getServiceId());
-        Assertions.assertTrue(productCatalogSteps.isExists(expectedName, ExistsServiceResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(expectedName));
         productCatalogSteps.deleteByName(expectedName, GetServiceListResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(expectedName, ExistsServiceResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(expectedName));
     }
 
     @Order(41)

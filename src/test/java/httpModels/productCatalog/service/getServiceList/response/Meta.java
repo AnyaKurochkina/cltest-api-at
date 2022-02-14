@@ -1,6 +1,7 @@
 package httpModels.productCatalog.service.getServiceList.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.MetaImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,14 +11,29 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Meta{
+public class Meta implements MetaImpl {
 
 	@JsonProperty("next")
-	private Object next;
+	private String next;
 
 	@JsonProperty("previous")
-	private Object previous;
+	private String previous;
 
 	@JsonProperty("total_count")
 	private Integer totalCount;
+
+	@Override
+	public String getNext() {
+		return next;
+	}
+
+	@Override
+	public String getPrevious() {
+		return previous;
+	}
+
+	@Override
+	public Integer getTotalCount() {
+		return totalCount;
+	}
 }
