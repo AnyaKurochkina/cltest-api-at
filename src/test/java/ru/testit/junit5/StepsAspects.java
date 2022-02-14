@@ -6,6 +6,7 @@
 package ru.testit.junit5;
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.annotation.Aspect;
 import ru.testit.utils.Outcome;
 import ru.testit.utils.StepNode;
@@ -17,6 +18,7 @@ import java.util.Objects;
 import static core.helper.Configure.isIntegrationTestIt;
 
 @Aspect
+@Log4j2
 public class StepsAspects {
     @Getter
     private static final InheritableThreadLocal<StepNode> currentStep;
@@ -46,7 +48,8 @@ public class StepsAspects {
         currentStep.set(currStep.getParent());
     }
 
-    public static void failedNestedStep() {
+    public static void failedNestedStep(Throwable e) {
+        log.error(e.toString());
         if (Objects.isNull(currentStep.get()))
             return;
         if (!isIntegrationTestIt())

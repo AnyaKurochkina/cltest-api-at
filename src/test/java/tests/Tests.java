@@ -25,8 +25,6 @@ import static io.qameta.allure.Allure.getLifecycle;
 @ExtendWith(JUnit5EventListener.class)
 @DisplayNameGeneration(CustomDisplayNameGenerator.class)
 public class Tests {
-//    private static final ThreadLocal<StringBuilder> testLog = new ThreadLocal<>();
-//    private static final ThreadLocal<Map<String, StringBuilder>> testLogMap = new ThreadLocal<>();
 
     @BeforeEach
     @SneakyThrows
