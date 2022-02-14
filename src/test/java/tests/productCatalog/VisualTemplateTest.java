@@ -1,8 +1,8 @@
 package tests.productCatalog;
 
 import core.helper.Configure;
-import core.helper.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
@@ -54,7 +54,7 @@ public class VisualTemplateTest extends Tests {
                 .set("name", "visual")
                 .set("event_provider", Collections.singletonList("docker"))
                 .set("event_type", Collections.singletonList("app")).build();
-        Http.Response response = productCatalogSteps.createProductObject(jsonObject).assertStatus(422);
+        Response response = productCatalogSteps.createProductObject(jsonObject).assertStatus(422);
         assertEquals(VISUAL_TEMPLATE_NAME, response.jsonPath().get("name[0]").toString());
         assertEquals(visualTemplates.getItemId(), response.jsonPath().get("id").toString());
     }

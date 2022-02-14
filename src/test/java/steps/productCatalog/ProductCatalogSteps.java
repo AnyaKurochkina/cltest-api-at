@@ -1,10 +1,9 @@
 package steps.productCatalog;
 
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import core.helper.http.Response;
-import httpModels.productCatalog.ExistImpl;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;

@@ -1,7 +1,6 @@
 package tests.productCatalog;
 
 import core.helper.JsonHelper;
-import core.helper.MarkDelete;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.jinja2.getJinjaListResponse.GetJinjaListResponse;
 import httpModels.productCatalog.jinja2.getJinjaResponse.GetJinjaResponse;
@@ -10,6 +9,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.productCatalog.Jinja2;
 import org.json.JSONObject;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;

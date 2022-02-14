@@ -3,8 +3,6 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import org.junit.MarkDelete;
-import httpModels.productCatalog.template.existsTemplate.response.ExistsTemplateResponse;
-import core.helper.MarkDelete;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
 import httpModels.productCatalog.template.getTemplate.response.GetTemplateResponse;
 import io.qameta.allure.Epic;
