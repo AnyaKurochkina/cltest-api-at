@@ -4,8 +4,6 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
-import httpModels.productCatalog.orgDirection.existsOrgDirection.response.ExistsOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Epic;
@@ -19,6 +17,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -51,15 +50,25 @@ public class OrgDirectionTest extends Tests {
                 .getProductObjectList(GetOrgDirectionListResponse.class).size() > 0);
     }
 
+    @Order(6)
+    @DisplayName("Проверка значения next в запросе на получение списка направлений")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(GetOrgDirectionListResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
+    }
+
     @Order(3)
     @DisplayName("Проверка существования направления по имени")
     @TmsLink("643309")
     @Test
     public void checkOrgDirectionExists() {
         Assertions.assertTrue(productCatalogSteps
-                .isExists(orgDirection.getOrgDirectionName(), ExistsOrgDirectionResponse.class));
+                .isExists(orgDirection.getOrgDirectionName()));
         Assertions.assertFalse(productCatalogSteps
-                .isExists("NoExistsAction", ExistsActionResponse.class));
+                .isExists("NoExistsAction"));
     }
 
     @Order(4)
@@ -70,9 +79,9 @@ public class OrgDirectionTest extends Tests {
         String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
         String orgDirectionName = new JsonPath(data).get("OrgDirection.name");
         productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirection.json");
-        Assertions.assertTrue(productCatalogSteps.isExists(orgDirectionName, ExistsOrgDirectionResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(orgDirectionName));
         productCatalogSteps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(orgDirectionName, ExistsOrgDirectionResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(orgDirectionName));
     }
 
     @Order(5)
@@ -122,9 +131,9 @@ public class OrgDirectionTest extends Tests {
     public void copyOrgDirectionById() {
         String cloneName = orgDirection.getOrgDirectionName() + "-clone";
         productCatalogSteps.copyById(orgDirection.getOrgDirectionId());
-        Assertions.assertTrue(productCatalogSteps.isExists(cloneName, ExistsOrgDirectionResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(cloneName, GetOrgDirectionListResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistsOrgDirectionResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
     @Order(10)

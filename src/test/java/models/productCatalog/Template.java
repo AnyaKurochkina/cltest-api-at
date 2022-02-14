@@ -3,7 +3,6 @@ package models.productCatalog;
 import core.helper.Configure;
 import core.helper.http.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.template.createTemplate.response.CreateTemplateResponse;
 import httpModels.productCatalog.template.createTemplate.response.Input;
 import httpModels.productCatalog.template.createTemplate.response.Output;
@@ -85,6 +84,6 @@ public class Template extends Entity {
                 .delete(productName + templateId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(templateName, ExistsActionResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(templateName));
     }
 }

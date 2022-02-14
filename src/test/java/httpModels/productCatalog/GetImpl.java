@@ -4,6 +4,8 @@ public interface GetImpl {
 
     String getName();
 
+    String getTitle();
+
     String getVersion();
 
     String getGraphVersionCalculated();

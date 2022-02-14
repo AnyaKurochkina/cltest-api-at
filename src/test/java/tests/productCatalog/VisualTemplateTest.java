@@ -1,6 +1,7 @@
 package tests.productCatalog;
 
 import core.helper.Configure;
+import core.helper.Http;
 import core.helper.JsonHelper;
 import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
@@ -45,7 +46,21 @@ public class VisualTemplateTest extends Tests {
                 .createObject();
     }
 
-    @Order(2)
+    @Order(5)
+    @DisplayName("Негативный тест на создание шаблона визуализации с неуникальной связкой EventType-EventProvider")
+    @Test
+    public void createVisualTemplateWithNotUniqueEventTypeEventProvider() {
+        JSONObject jsonObject = JsonHelper.getJsonTemplate("productCatalog/itemVisualTemplate/createItemVisual.json")
+                .set("name", "visual")
+                .set("event_provider", Collections.singletonList("docker"))
+                .set("event_type", Collections.singletonList("app")).build();
+        Http.Response response = productCatalogSteps.createProductObject(jsonObject).assertStatus(422);
+        assertEquals(VISUAL_TEMPLATE_NAME, response.jsonPath().get("name[0]").toString());
+        assertEquals(visualTemplates.getItemId(), response.jsonPath().get("id").toString());
+    }
+
+
+    @Order(10)
     @DisplayName("Получение списка шаблонов визуализаций")
     @TmsLink("643632")
     @Test
@@ -54,7 +69,17 @@ public class VisualTemplateTest extends Tests {
                 .size() > 0);
     }
 
-    @Order(3)
+    @Order(11)
+    @DisplayName("Проверка значения next в запросе на получение списка шаблонов визуализаций")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(GetVisualTemplateListResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
+    }
+
+    @Order(15)
     @DisplayName("Получение списка шаблонов визуализаций по фильтру event_provider")
     @TmsLink("643634")
     @Test
@@ -69,7 +94,7 @@ public class VisualTemplateTest extends Tests {
         }
     }
 
-    @Order(4)
+    @Order(20)
     @DisplayName("Получение списка шаблонов визуализаций по фильтру event_type")
     @TmsLink("643636")
     @Test
@@ -83,7 +108,7 @@ public class VisualTemplateTest extends Tests {
         }
     }
 
-    @Order(5)
+    @Order(25)
     @DisplayName("Получение списка шаблонов визуализаций по фильтрам event_provider и event_type")
     @TmsLink("643638")
     @Test
@@ -99,7 +124,7 @@ public class VisualTemplateTest extends Tests {
         }
     }
 
-    @Order(6)
+    @Order(30)
     @DisplayName("Импорт шаблона визуализации")
     @TmsLink("643640")
     @Test
@@ -111,7 +136,7 @@ public class VisualTemplateTest extends Tests {
         productCatalogSteps.deleteByName(importName, GetVisualTemplateListResponse.class);
     }
 
-    @Order(7)
+    @Order(35)
     @DisplayName("Получение шаблона визуализации по Id")
     @TmsLink("643644")
     @Test
@@ -120,7 +145,7 @@ public class VisualTemplateTest extends Tests {
         assertEquals(visualTemplates.getName(), productCatalogGet.getName());
     }
 
-    @Order(8)
+    @Order(40)
     @DisplayName("Негативный тест на получение шаблона визуализации по Id без токена")
     @TmsLink("643649")
     @Test
@@ -128,7 +153,7 @@ public class VisualTemplateTest extends Tests {
         productCatalogSteps.getByIdWithOutToken(visualTemplates.getItemId());
     }
 
-    @Order(9)
+    @Order(45)
     @DisplayName("Экспорт шаблона визуализации по Id")
     @TmsLink("643667")
     @Test
@@ -136,7 +161,7 @@ public class VisualTemplateTest extends Tests {
         productCatalogSteps.exportById(visualTemplates.getItemId());
     }
 
-    @Order(10)
+    @Order(50)
     @DisplayName("Частичное обновление шаблона визуализации по Id")
     @TmsLink("643668")
     @Test
@@ -144,12 +169,12 @@ public class VisualTemplateTest extends Tests {
         String expectedDescription = "UpdateDescription";
         productCatalogSteps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject()
                 .put("description", expectedDescription)).assertStatus(200);
-        GetImpl getGraphResponse = productCatalogSteps.getById(visualTemplates.getItemId(), GetVisualTemplateResponse.class);
-        String actualDescription = getGraphResponse.getDescription();
+        GetImpl getResponse = productCatalogSteps.getById(visualTemplates.getItemId(), GetVisualTemplateResponse.class);
+        String actualDescription = getResponse.getDescription();
         assertEquals(expectedDescription, actualDescription);
     }
 
-    @Order(11)
+    @Order(55)
     @DisplayName("Получение шаблона визуализации по event_provider, event_type")
     @TmsLink("643671")
     @Test
@@ -160,7 +185,7 @@ public class VisualTemplateTest extends Tests {
         assertEquals(visualTemplate.getEventType(), visualTemplate.getEventType());
     }
 
-    @Order(12)
+    @Order(60)
     @DisplayName("Негативный тест на создание шаблона отображения с неуникальным именем")
     @Test
     public void createVisualTemplateWithNonUniqueName() {
@@ -170,7 +195,7 @@ public class VisualTemplateTest extends Tests {
         }
     }
 
-    @Order(96)
+    @Order(65)
     @DisplayName("Негативный тест на создание шаблона визуализации с недопустимыми символами в имени")
     @TmsLink("643672")
     @Test

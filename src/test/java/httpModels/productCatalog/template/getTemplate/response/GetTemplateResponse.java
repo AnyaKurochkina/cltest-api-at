@@ -111,6 +111,11 @@ public class GetTemplateResponse implements GetImpl {
 	}
 
 	@Override
+	public String getTitle() {
+		return null;
+	}
+
+	@Override
 	public String getVersion() {
 		return version;
 	}

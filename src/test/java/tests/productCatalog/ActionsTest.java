@@ -4,7 +4,6 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.action.getActionList.response.ActionResponse;
 import io.qameta.allure.Epic;
@@ -45,13 +44,23 @@ public class ActionsTest extends Tests {
         Assertions.assertTrue(productCatalogSteps.getProductObjectList(ActionResponse.class).size() > 0);
     }
 
+    @Order(11)
+    @DisplayName("Проверка значения next в запросе на получение списка действий")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(ActionResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
+    }
+
     @Order(3)
     @DisplayName("Проверка существования действия по имени")
     @TmsLink("642432")
     @Test
     public void checkActionExists() {
-        Assertions.assertTrue(productCatalogSteps.isExists(action.getActionName(), ExistsActionResponse.class));
-        Assertions.assertFalse(productCatalogSteps.isExists("NoExistsAction", ExistsActionResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(action.getActionName()));
+        Assertions.assertFalse(productCatalogSteps.isExists("NoExistsAction"));
     }
 
     @Order(4)
@@ -62,9 +71,9 @@ public class ActionsTest extends Tests {
         String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
         String actionName = new JsonPath(data).get("Action.json.name");
         productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
-        Assertions.assertTrue(productCatalogSteps.isExists(actionName, ExistsActionResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(actionName));
         productCatalogSteps.deleteByName(actionName, ActionResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(actionName, ExistsActionResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(actionName));
     }
 
     @Order(5)
@@ -91,9 +100,9 @@ public class ActionsTest extends Tests {
     public void copyActionById() {
         String cloneName = action.getActionName() + "-clone";
         productCatalogSteps.copyById(action.getActionId());
-        Assertions.assertTrue(productCatalogSteps.isExists(cloneName, ExistsActionResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(cloneName, ActionResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistsActionResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
     @Order(8)
@@ -110,9 +119,9 @@ public class ActionsTest extends Tests {
                 () -> assertEquals("1.0.1", importedAction.getVersion()),
                 () -> assertEquals("descr_api", importedAction.getDescription())
         );
-        Assertions.assertTrue(productCatalogSteps.isExists(cloneName, ExistsActionResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(cloneName, ActionResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistsActionResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
     @Order(60)

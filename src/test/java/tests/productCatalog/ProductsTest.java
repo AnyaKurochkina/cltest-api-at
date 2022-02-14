@@ -4,8 +4,7 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.product.existProduct.response.ExistProductResponse;
-import httpModels.productCatalog.product.getProduct.response.GetServiceResponse;
+import httpModels.productCatalog.product.getProduct.response.GetServiceResponce;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -19,8 +18,7 @@ import tests.Tests;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -55,13 +53,23 @@ public class ProductsTest extends Tests {
                 .size() > 0);
     }
 
+    @Order(6)
+    @DisplayName("Проверка значения next в запросе на получение списка продуктов")
+    @Test
+    public void getMeta() {
+        String str = productCatalogSteps.getMeta(GetProductsResponse.class).getNext();
+        if (!(str == null)) {
+            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+        }
+    }
+
     @Order(3)
     @DisplayName("Проверка существования продукта по имени")
     @TmsLink("643392")
     @Test
     public void checkProductExists() {
-        Assertions.assertTrue(productCatalogSteps.isExists(product.getName(), ExistProductResponse.class));
-        Assertions.assertFalse(productCatalogSteps.isExists("not_exists_name", ExistProductResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(product.getName()));
+        Assertions.assertFalse(productCatalogSteps.isExists("not_exists_name"));
     }
 
     @Order(4)
@@ -72,9 +80,9 @@ public class ProductsTest extends Tests {
         String data = JsonHelper.getStringFromFile("/productCatalog/products/importProduct.json");
         String name = new JsonPath(data).get("Product.json.name");
         productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProduct.json");
-        Assertions.assertTrue(productCatalogSteps.isExists(name, ExistProductResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(name));
         productCatalogSteps.deleteByName(name, GetProductsResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(name, ExistProductResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 
     @Order(5)
@@ -82,7 +90,7 @@ public class ProductsTest extends Tests {
     @TmsLink("643395")
     @Test
     public void getProductById() {
-        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetServiceResponse.class);
+        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetServiceResponce.class);
         Assertions.assertEquals(productCatalogGet.getName(), product.getName());
     }
 
@@ -102,7 +110,7 @@ public class ProductsTest extends Tests {
         String expectedValue = "UpdateDescription";
         productCatalogSteps.partialUpdateObject(product.getProductId(), new JSONObject().put("description", expectedValue))
                 .assertStatus(200);
-        String actual = productCatalogSteps.getById(product.getProductId(), GetServiceResponse.class).getDescription();
+        String actual = productCatalogSteps.getById(product.getProductId(), GetServiceResponce.class).getDescription();
         Assertions.assertEquals(expectedValue, actual);
     }
 
@@ -130,7 +138,7 @@ public class ProductsTest extends Tests {
     @TmsLink("643412")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {
-        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetServiceResponse.class);
+        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetServiceResponce.class);
         Assertions.assertNotNull(productCatalogGet.getGraphVersionCalculated());
     }
 
@@ -141,9 +149,9 @@ public class ProductsTest extends Tests {
     public void copyProductById() {
         String cloneName = product.getName() + "-clone";
         productCatalogSteps.copyById(product.getProductId());
-        Assertions.assertTrue(productCatalogSteps.isExists(cloneName, ExistProductResponse.class));
+        Assertions.assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(cloneName, GetProductsResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(cloneName, ExistProductResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
     @Order(51)
@@ -202,12 +210,12 @@ public class ProductsTest extends Tests {
     public void updateProductAndGetVersion() {
         Product productTest = Product.builder().name("product_version_test_api").version("1.0.999").build().createObject();
         productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api2"));
-        String currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetServiceResponse.class).getVersion();
+        String currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetServiceResponce.class).getVersion();
         assertEquals("1.1.0", currentVersion);
         productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api3")
                 .put("version", "1.999.999"));
         productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api4"));
-        currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetServiceResponse.class).getVersion();
+        currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetServiceResponce.class).getVersion();
         assertEquals("2.0.0", currentVersion);
         productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api5")
                 .put("version", "999.999.999"));
