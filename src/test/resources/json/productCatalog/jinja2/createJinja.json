@@ -1,0 +1,7 @@
+{
+  "title": "jinja_api_test",
+  "name": "jinja_api_test",
+  "description": "description",
+  "jinja2_template": "template",
+  "jinja2_data": {}
+}

@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.PostgresSQLCluster;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -32,7 +31,6 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgres.expandMountPoint();
         }
     }
@@ -43,7 +41,6 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgres.createDb("cached_bd");
         }
     }
@@ -54,7 +51,6 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgres.createDb("cached_bd");
             postgres.createDbmsUser("testchelik1", "user", "cached_bd");
         }
@@ -113,7 +109,6 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgres.restart();
         }
     }
@@ -124,7 +119,6 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgres.stopSoft();
             postgres.start();
         }
@@ -136,7 +130,6 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgres.stopHard();
             postgres.start();
         }
@@ -148,7 +141,6 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.checkPreconditionStatusProduct(ProductStatus.CREATED);
             postgres.stopHard();
             postgres.start();
         }

@@ -1,13 +1,12 @@
 package tests.orderService;
 
 import com.mifmif.common.regex.Generex;
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.ApacheKafkaCluster;
 import org.json.JSONObject;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
@@ -42,7 +41,6 @@ public class ApacheKafkaClusterTest extends Tests {
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.updateCerts();
         }
     }
@@ -53,7 +51,6 @@ public class ApacheKafkaClusterTest extends Tests {
     @ParameterizedTest(name = "Пакетное создание Topic-ов Kafka {0}")
     void createTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.createTopics(Stream.generate(new Generex("[a-zA-Z0-9][a-zA-Z0-9.\\-_]*")::random)
                     .limit(new Random().nextInt(20) + 1).distinct().collect(Collectors.toList()));
         }
@@ -65,7 +62,6 @@ public class ApacheKafkaClusterTest extends Tests {
     @ParameterizedTest(name = "Пакетное удаление Topic-ов Kafka {0}")
     void deleteTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.createTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
             kafka.deleteTopics(Arrays.asList("PacketTopicName01", "PacketTopicName03"));
         }
@@ -77,22 +73,20 @@ public class ApacheKafkaClusterTest extends Tests {
     @ParameterizedTest(name = "Создать ACL Kafka {0}")
     void createAcl(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
             kafka.createAcl("*");
         }
     }
 
-    @TmsLink("377735")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание ACL на транзакцию Kafka {0}")
-    void createAclTransaction(ApacheKafkaCluster product) {
-        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
-            kafka.createAclTransaction("*");
-        }
-    }
+//    @TmsLink("377735")
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Создание ACL на транзакцию Kafka {0}")
+//    void createAclTransaction(ApacheKafkaCluster product) {
+//        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+//            kafka.createAclTransaction("*");
+//        }
+//    }
 
     @TmsLink("377731")
     @Tag("actions")
@@ -100,7 +94,6 @@ public class ApacheKafkaClusterTest extends Tests {
     @ParameterizedTest(name = "Выключить кластер Kafka {0}")
     void stopSoft(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.stopSoft();
             kafka.start();
         }
@@ -112,7 +105,6 @@ public class ApacheKafkaClusterTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить кластер Kafka {0}")
     void resize(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.restart();
         }
     }
@@ -123,7 +115,6 @@ public class ApacheKafkaClusterTest extends Tests {
     @ParameterizedTest(name = "Синхронизировать конфигурацию кластера Kafka {0}")
     void syncInfo(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.syncInfo();
         }
     }
@@ -134,7 +125,6 @@ public class ApacheKafkaClusterTest extends Tests {
     @ParameterizedTest(name = "Прислать конфигурацию кластера Kafka {0}")
     void sendConfig(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.sendConfig();
         }
     }
@@ -146,7 +136,6 @@ public class ApacheKafkaClusterTest extends Tests {
     @ParameterizedTest(name = "Включить кластер Kafka {0}")
     void start(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.stopSoft();
             kafka.start();
         }
@@ -158,7 +147,6 @@ public class ApacheKafkaClusterTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.expandMountPoint();
         }
     }

@@ -29,8 +29,7 @@ import java.util.List;
 public class ScyllaDb extends IProduct {
     private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.any{it.db_name=='%s'}";
     private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
-    private final static String DB_USERNAME_PERMISSIONS_PATH = "data.find{it.config.containsKey('permissions')}.config.permissions.any{it.db_name=='%s' && it.dbms_role=='%s' && it.user_name=='%s'}";
-    private final static String DB_USERNAME_NOT_PERMISSIONS_PATH = "data.find{it.config.containsKey('permissions')}.config.permissions.any{it.db_name=='%s' && it.user_name=='%s'}";
+    private final static String DB_USERNAME_PERMISSIONS_PATH = "data.find{it.config.containsKey('permissions')}.config.permissions.any{it.db_name=='%s' && it.user_name=='%s'}";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -109,17 +108,17 @@ public class ScyllaDb extends IProduct {
     }
 
     // admin, user
-    public void addPermissionsUser(String dbName, String username, String role){
-        orderServiceSteps.executeAction("scylladb_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\"}", dbName, role, username)), this.getProjectId());
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, role, username)), "Права пользователю не выданы");
+    public void addPermissionsUser(String dbName, String username){
+        orderServiceSteps.executeAction("scylladb_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\", \"id\":\"%s:%s\"}", dbName, username, username, dbName)));
+        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, username)), "Права пользователю не выданы");
         users.add(new DbUser(dbName, username));
         log.info("addPermissionsUser = " + username);
         save();
     }
 
     public void removePermissionsUser(String dbName, String username){
-        orderServiceSteps.executeAction("scylladb_remove_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\"}", dbName, username)), this.getProjectId());
-        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_NOT_PERMISSIONS_PATH, dbName, username)), "Права у пользователя остались");
+        orderServiceSteps.executeAction("scylladb_remove_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\"}", dbName, username)));
+        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, username)), "Права у пользователя остались");
         users.remove(new DbUser(dbName, username));
         log.info("removePermissionsUser = " + username);
         save();

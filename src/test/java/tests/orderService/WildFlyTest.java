@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.WildFly;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -32,7 +31,6 @@ public class WildFlyTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.expandMountPoint();
         }
     }
@@ -43,7 +41,6 @@ public class WildFlyTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.restart();
         }
     }
@@ -54,7 +51,6 @@ public class WildFlyTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.stopSoft();
             wildFly.start();
         }
@@ -66,7 +62,6 @@ public class WildFlyTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.stopHard();
             try {
                 wildFly.resize(wildFly.getMaxFlavor());
@@ -82,7 +77,6 @@ public class WildFlyTest extends Tests {
     @ParameterizedTest(name = "Проверить конфигурацию {0}")
     void refreshVmConfig(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.refreshVmConfig();
         }
     }
@@ -93,7 +87,6 @@ public class WildFlyTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.stopHard();
             wildFly.start();
         }
@@ -105,7 +98,6 @@ public class WildFlyTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.stopHard();
             wildFly.start();
         }
@@ -117,7 +109,6 @@ public class WildFlyTest extends Tests {
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.checkPreconditionStatusProduct(ProductStatus.CREATED);
             wildFly.updateCerts();
         }
     }

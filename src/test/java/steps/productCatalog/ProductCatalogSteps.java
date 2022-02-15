@@ -1,17 +1,18 @@
 package steps.productCatalog;
 
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import core.helper.http.Response;
-import httpModels.productCatalog.ExistImpl;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
+import httpModels.productCatalog.MetaImpl;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
@@ -21,6 +22,7 @@ import java.util.Objects;
 
 import static io.restassured.RestAssured.given;
 
+@Data
 @AllArgsConstructor
 public class ProductCatalogSteps {
     String productName;
@@ -38,6 +40,14 @@ public class ProductCatalogSteps {
                 .extractAs(clazz)).getItemsList();
     }
 
+    @Step("Получение Meta данных объекта продуктового каталога")
+    public MetaImpl getMeta(Class<?> clazz) {
+        return ((GetListImpl) new Http(Configure.ProductCatalogURL)
+                .get(productName)
+                .assertStatus(200)
+                .extractAs(clazz)).getMeta();
+    }
+
     @Step("Создание объекта продуктового каталога")
     public Response createProductObject(JSONObject body) {
         return new Http(Configure.ProductCatalogURL)
@@ -53,11 +63,10 @@ public class ProductCatalogSteps {
     }
 
     @Step("Проверка существования объекта продуктового каталога по имени")
-    public boolean isExists(String name, Class<?> clazz) {
-        return ((ExistImpl) new Http(Configure.ProductCatalogURL)
+    public boolean isExists(String name) {
+        return new Http(Configure.ProductCatalogURL)
                 .get(productName + "exists/?name=" + name)
-                .assertStatus(200)
-                .extractAs(clazz)).isExist();
+                .assertStatus(200).jsonPath().get("exists");
     }
 
     @Step("Импорт объекта продуктового каталога")
@@ -81,10 +90,10 @@ public class ProductCatalogSteps {
                 .extractAs(clazz);
     }
 
-    @Step("Получение объекта продуктового каталога по Id")
+    @Step("Получение объекта продуктового каталога по Id без токена")
     public void getByIdWithOutToken(String objectId) {
         new Http(Configure.ProductCatalogURL).setWithoutToken()
-                .get(productName + objectId + "/").assertStatus(403);
+                .get(productName + objectId + "/").assertStatus(401);
     }
 
     @Step("Обновление объекта продуктового каталога")
@@ -108,7 +117,7 @@ public class ProductCatalogSteps {
         new Http(Configure.ProductCatalogURL)
                 .setWithoutToken()
                 .post(productName + objectId + "/copy/")
-                .assertStatus(403);
+                .assertStatus(401);
     }
 
     @Step("Экспорт объекта продуктового каталога по Id")
@@ -121,6 +130,14 @@ public class ProductCatalogSteps {
     @Step("Удаление объекта продуктового каталога по имени")
     public void deleteByName(String name, Class<?> clazz) {
         deleteById(getProductObjectIdByNameWithMultiSearch(name, clazz));
+    }
+
+    @Step("Обновление всего объекта продуктового каталога по Id")
+    public void putObjectById(String objectId, JSONObject body) {
+        new Http(Configure.ProductCatalogURL)
+                .body(body)
+                .put(productName + objectId + "/")
+                .assertStatus(200);
     }
 
     @Step("Удаление объекта продуктового каталога по Id")
@@ -137,7 +154,7 @@ public class ProductCatalogSteps {
     public void deleteObjectByIdWithOutToken(String id) {
         new Http(Configure.ProductCatalogURL)
                 .setWithoutToken()
-                .delete(productName + id + "/").assertStatus(403);
+                .delete(productName + id + "/").assertStatus(401);
     }
 
     @Step("Поиск ID объекта продуктового каталога по имени с использованием multiSearch")
@@ -195,7 +212,7 @@ public class ProductCatalogSteps {
                 .setWithoutToken()
                 .body(object)
                 .patch(productName + id + "/")
-                .assertStatus(403);
+                .assertStatus(401);
     }
 
     @Step("Получение времени отклика на запрос")

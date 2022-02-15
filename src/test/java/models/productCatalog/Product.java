@@ -3,7 +3,6 @@ package models.productCatalog;
 import core.helper.Configure;
 import core.helper.http.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.action.existsAction.response.ExistsActionResponse;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
 import io.qameta.allure.Step;
@@ -93,6 +92,6 @@ public class Product extends Entity {
                 .delete(productName + productId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(productName, ExistsActionResponse.class));
+        Assertions.assertFalse(productCatalogSteps.isExists(productName));
     }
 }

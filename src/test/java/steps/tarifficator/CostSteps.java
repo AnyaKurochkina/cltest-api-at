@@ -102,14 +102,32 @@ public class CostSteps extends Steps {
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
 
-
-        if (Objects.nonNull(product.getOrderId())) {
-            attrs = new JSONObject((Map) orderServiceSteps.getProductsField(product, "attrs", JSONObject.class));
-        }
-
         template.put("params", attrs);
         template.put("project_name", project.id);
         template.put("product_id", productId);
+
+        if (Objects.nonNull(product.getOrderId())) {
+            template = JsonHelper.getJsonTemplate("/tarifficator/costItems.json").build();
+            JSONObject vm = new JSONObject((Map) orderServiceSteps.getProductsField(product, "", JSONObject.class));
+            template.put("tariff_plan_id", vm.query("/attrs/tariff_plan_id"));
+
+            JSONArray items = (JSONArray) vm.query("/data");
+            for(Object itemObj : items){
+                JSONObject item = (JSONObject) itemObj;
+                JSONObject costItem = new JSONObject();
+                costItem.put("item_id", item.get("item_id"));
+                costItem.put("type", item.get("type"));
+                costItem.put("data", item);
+                template.append("items", costItem);
+            }
+            return new Http(TarifficatorURL)
+                    .setProjectId(project.id)
+                    .body(template)
+                    .post("cost_items")
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get(path);
+        }
 
         JsonPath response = new Http(TarifficatorURL)
                 .setProjectId(project.id)

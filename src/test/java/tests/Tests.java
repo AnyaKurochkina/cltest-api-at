@@ -25,8 +25,6 @@ import static io.qameta.allure.Allure.getLifecycle;
 @ExtendWith(JUnit5EventListener.class)
 @DisplayNameGeneration(CustomDisplayNameGenerator.class)
 public class Tests {
-//    private static final ThreadLocal<StringBuilder> testLog = new ThreadLocal<>();
-//    private static final ThreadLocal<Map<String, StringBuilder>> testLogMap = new ThreadLocal<>();
 
     @BeforeEach
     @SneakyThrows
@@ -42,13 +40,10 @@ public class Tests {
         String stepId = getLifecycle().getCurrentTestCase().orElse(null);
         if (stepId == null)
             return;
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss ");
         String source = stepId + "-attachment.txt";
-        DataFileHelper.appendToFile(Configure.getAppProp("allure.results") + source,
-                formatter.format(new Date(System.currentTimeMillis())) + text);
+        DataFileHelper.appendToFile(Configure.getAppProp("allure.results") + source, text + "\n");
         Attachment attachment = new Attachment().setSource(source).setName("log-test.log");
-        getLifecycle().updateStep(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
-
+        getLifecycle().updateTestCase(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
         UniqueTest.writeStepLog(text);
     }
 

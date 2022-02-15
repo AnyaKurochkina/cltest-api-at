@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Podman;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -32,7 +31,6 @@ public class PodmanTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {
-            podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
             podman.expandMountPoint();
         }
     }
@@ -43,7 +41,6 @@ public class PodmanTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {
-            podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
             podman.restart();
         }
     }
@@ -54,7 +51,6 @@ public class PodmanTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {
-            podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
             podman.stopSoft();
             podman.start();
         }
@@ -80,7 +76,6 @@ public class PodmanTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {
-            podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
             podman.stopHard();
             podman.start();
         }
@@ -92,7 +87,6 @@ public class PodmanTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {
-            podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
             podman.stopHard();
             podman.start();
         }

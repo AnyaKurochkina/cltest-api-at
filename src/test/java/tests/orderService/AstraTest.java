@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Astra;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -33,7 +32,6 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
-            astra.checkPreconditionStatusProduct(ProductStatus.CREATED);
             astra.expandMountPoint();
         }
     }
@@ -44,7 +42,6 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
-            astra.checkPreconditionStatusProduct(ProductStatus.CREATED);
             astra.restart();
         }
     }
@@ -55,7 +52,6 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
-            astra.checkPreconditionStatusProduct(ProductStatus.CREATED);
             astra.stopSoft();
             astra.start();
         }
@@ -67,7 +63,6 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
-            astra.checkPreconditionStatusProduct(ProductStatus.CREATED);
             astra.stopHard();
             try {
                 astra.resize(astra.getMaxFlavor());
@@ -83,7 +78,6 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
-            astra.checkPreconditionStatusProduct(ProductStatus.CREATED);
             astra.stopHard();
             astra.start();
         }
@@ -95,7 +89,6 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
-            astra.checkPreconditionStatusProduct(ProductStatus.CREATED);
             astra.stopHard();
             astra.start();
         }

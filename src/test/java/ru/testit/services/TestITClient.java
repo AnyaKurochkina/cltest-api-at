@@ -153,11 +153,11 @@ public class TestITClient {
     }
 
     private String filterTestName(String name){
-        return name.replaceAll("(\\(super=\\w+\\(\\w+\\)[,.\\-\\s\\w]+\\))", "");
+        return name.replaceAll("(\\(super=\\w+\\(\\w+\\)[,.+\\-\\s\\w]+\\))", "");
     }
 
     //создание автотеста
-    public void createTestItem(final CreateTestItemRequest createTestItemRequest) {
+    public synchronized void createTestItem(final CreateTestItemRequest createTestItemRequest) {
         String body;
         Response response;
         CreateTestItemResponse createTestItemResponse = null;

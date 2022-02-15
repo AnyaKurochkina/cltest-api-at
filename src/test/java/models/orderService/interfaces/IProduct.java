@@ -13,6 +13,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.ObjectPoolService;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.productCatalog.Graph;
@@ -84,6 +85,13 @@ public abstract class IProduct extends Entity {
         save();
     }
 
+    @Override
+    protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
+        T entity = ObjectPoolService.create(this, exclusiveAccess, isPublic);
+        ((IProduct) entity).checkPreconditionStatusProduct();
+        return entity;
+    }
+
     @SneakyThrows
     @Step("Сравнение стоимости продукта с ценой предбиллинга при заказе")
     protected void compareCostOrderAndPrice() {
@@ -129,10 +137,12 @@ public abstract class IProduct extends Entity {
     }
 
     @SneakyThrows
-    public void checkPreconditionStatusProduct(ProductStatus status) {
+    private void checkPreconditionStatusProduct() {
 //        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
-        if (!status.equals(getStatus()))
-            throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status));
+        if (!ProductStatus.CREATED.equals(getStatus()) && !ProductStatus.DELETED.equals(getStatus())) {
+            close();
+            throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), ProductStatus.CREATED));
+        }
     }
 
     //Удалить рекурсивно
@@ -218,7 +228,7 @@ public abstract class IProduct extends Entity {
         }
         if (productId == null) {
             productId = new ProductCatalogSteps(Product.productName).
-                    getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(getProductName(),
+                    getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(Objects.requireNonNull(getProductName()),
                             "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironment().getEnvType().toLowerCase()));
         }
     }

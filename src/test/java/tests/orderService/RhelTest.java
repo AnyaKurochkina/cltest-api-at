@@ -1,12 +1,11 @@
 package tests.orderService;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.portalBack.AccessGroup;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.Rhel;
+import models.portalBack.AccessGroup;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -35,7 +34,6 @@ public class RhelTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.expandMountPoint();
         }
     }
@@ -46,7 +44,6 @@ public class RhelTest extends Tests {
     @Disabled
     void checkCreate(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             AccessGroup accessGroup = AccessGroup.builder().projectName(rhel.getProjectId()).build().createObject();
             Assertions.assertTrue(accessGroup.getUsers().size() > 0, String.format("Нет пользователей в группе %s", accessGroup.getPrefixName()));
             rhel.checkCreateUseSsh(accessGroup.getUsers().get(0));
@@ -59,7 +56,6 @@ public class RhelTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.restart();
         }
     }
@@ -70,7 +66,6 @@ public class RhelTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.stopSoft();
             rhel.start();
         }
@@ -82,7 +77,6 @@ public class RhelTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.stopHard();
             try {
                 rhel.resize(rhel.getMaxFlavor());
@@ -98,7 +92,6 @@ public class RhelTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.stopHard();
             rhel.start();
         }
@@ -110,7 +103,6 @@ public class RhelTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.checkPreconditionStatusProduct(ProductStatus.CREATED);
             rhel.stopHard();
             rhel.start();
         }

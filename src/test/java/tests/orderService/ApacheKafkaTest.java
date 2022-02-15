@@ -1,11 +1,10 @@
 package tests.orderService;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.interfaces.ProductStatus;
 import models.orderService.products.ApacheKafka;
+import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -32,7 +31,6 @@ public class ApacheKafkaTest extends Tests {
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.expandMountPoint();
         }
     }
@@ -43,7 +41,6 @@ public class ApacheKafkaTest extends Tests {
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.restart();
         }
     }
@@ -54,7 +51,6 @@ public class ApacheKafkaTest extends Tests {
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.stopSoft();
             kafka.start();
         }
@@ -66,7 +62,6 @@ public class ApacheKafkaTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.stopHard();
             try {
                 kafka.resize(kafka.getMaxFlavor());
@@ -82,7 +77,6 @@ public class ApacheKafkaTest extends Tests {
     @ParameterizedTest(name = "Включить {0}")
     void start(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.stopHard();
             kafka.start();
         }
@@ -94,7 +88,6 @@ public class ApacheKafkaTest extends Tests {
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(ApacheKafka product) {
         try (ApacheKafka kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             kafka.stopHard();
             kafka.start();
         }
