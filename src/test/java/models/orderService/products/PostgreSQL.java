@@ -14,7 +14,11 @@ import models.subModels.DbUser;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.postgresql.ssl.PGjdbcHostnameVerifier;
+import org.postgresql.util.JdbcBlackHole;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,9 +32,11 @@ import java.util.Objects;
 @SuperBuilder
 public class PostgreSQL extends IProduct {
     private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.any{it.db_name=='%s'}";
-//    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
+    //    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
     private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
-//    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
+    private final static String DB_OWNER_NAME_PATH = "data.find{it.config.containsKey('db_owners')}.config.db_owners.user_name";
+    private final static String DB_CONNECTION_URL = "data.find{it.config.containsKey('connection_url')}.config.connection_url";
+    //    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -45,6 +51,10 @@ public class PostgreSQL extends IProduct {
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
+    String dbAdminPass;
+    //URL example = jdbc:postgresql://dhzorg-pgc001ln.corp.dev.vtb:5432/createdb12345
+    String dbUrl;
+    String dbAdminUser;
 
     @Override
     @Step("Заказ продукта")
@@ -58,13 +68,13 @@ public class PostgreSQL extends IProduct {
         jsonTemplate = "/orders/postgresql.json";
         productName = "PostgreSQL";
         initProduct();
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(postgresqlVersion == null)
+        if (postgresqlVersion == null)
             postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
-        if(dataCentre == null)
+        if (dataCentre == null)
             dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
@@ -100,11 +110,15 @@ public class PostgreSQL extends IProduct {
     }
 
     public void createDb(String dbName) {
-        if(database.contains(new Db(dbName)))
+        if (database.contains(new Db(dbName)))
             return;
-        orderServiceSteps.executeAction("create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
+        dbAdminPass = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
+        orderServiceSteps.executeAction("create_db", this,
+                new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: %s}", dbName, dbAdminPass)));
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
+        dbAdminUser = dbName + "_admin";
+        dbUrl = "jdbc:" + orderServiceSteps.getProductsField(this, DB_CONNECTION_URL) + "/" + dbName;
         database.add(new Db(dbName));
         log.info("database = " + database);
         save();
@@ -145,7 +159,7 @@ public class PostgreSQL extends IProduct {
     public void removeDbmsUser(String username, String dbName) {
         orderServiceSteps.executeAction("remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))));
         Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(
-                this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
+                        this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));
         users.remove(new DbUser(dbName, username));
         log.info("users = " + users);
@@ -158,6 +172,20 @@ public class PostgreSQL extends IProduct {
         int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter);
         Assertions.assertEquals(flavor.data.memory, memoryAfter);
+    }
+
+    @SneakyThrows
+    public void checkConnection(String url, String user, String password) {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+            Assertions.assertTrue(connection.isValid(1));
+        }catch (Throwable t){
+            t.printStackTrace();
+        }  finally {
+            assert connection != null;
+            connection.close();
+        }
     }
 
     public void restart() {
