@@ -45,6 +45,18 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+    @TmsLink("687790")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверить подключение к БД {0}")
+    void checkDbConnection(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.createDb("bd_for_check_connection");
+            postgreSQL.checkConnection(postgreSQL.getDbUrl(), postgreSQL.getDbAdminUser(), postgreSQL.getDbAdminPass());
+            postgreSQL.removeDb("bd_for_check_connection");
+        }
+    }
+
     @TmsLink("377678")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
