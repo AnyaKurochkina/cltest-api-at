@@ -82,11 +82,11 @@ public class ClickHouse extends IProduct {
     }
 
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction(REFRESH_VM_CONFIG, this, null);
+        OrderServiceSteps.executeAction(REFRESH_VM_CONFIG, this, null, this.getProjectId());
     }
 
     public void removeDb(String dbName) {
-        OrderServiceSteps.executeAction(CLICKHOUSE_DELETE_DB, this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
+        OrderServiceSteps.executeAction(CLICKHOUSE_DELETE_DB, this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
@@ -95,11 +95,11 @@ public class ClickHouse extends IProduct {
     //Сбросить пароль
     public void resetPassword(String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)));
+        OrderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
     }
 
     public void removeDbmsUser(String username, String dbName) {
-        OrderServiceSteps.executeAction(CLICKHOUSE_DELETE_DBMS_USER, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)));
+        OrderServiceSteps.executeAction(CLICKHOUSE_DELETE_DBMS_USER, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, username)),
                 String.format("Пользователь: %s не удалился из базы данных: %s",  username, dbName));
@@ -110,7 +110,7 @@ public class ClickHouse extends IProduct {
     public void createDb(String dbName) {
         if(database.contains(new Db(dbName)))
             return;
-        OrderServiceSteps.executeAction(CLICKHOUSE_CREATE_DB, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
+        OrderServiceSteps.executeAction(CLICKHOUSE_CREATE_DB, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем " + dbName);
         database.add(new Db(dbName));
         log.info("database = " + database);
@@ -120,7 +120,7 @@ public class ClickHouse extends IProduct {
     public void createDbmsUser(String username, String dbRole, String dbName) {
         OrderServiceSteps.executeAction(CLICKHOUSE_CREATE_DBMS_USER,
                 this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"txLhQ3UoykznQ2i2qD_LEMUQ_-U\"}",
-                        dbName, dbRole, username)));
+                        dbName, dbRole, username)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, username)),
                 "Имя пользователя отличается от создаваемого");

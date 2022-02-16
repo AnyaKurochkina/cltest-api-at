@@ -6,9 +6,9 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.portalBack.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +16,6 @@ import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -91,7 +90,7 @@ public class RabbitMQCluster extends IProduct {
     //Создать пользователя RabbitMQ
     public void rabbitmqCreateUser() {
         String user = "testapiuser";
-        OrderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
+        OrderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)), this.getProjectId());
         Assertions.assertTrue(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта отсутствует пользователь "+ user);
     }
 
@@ -116,7 +115,7 @@ public class RabbitMQCluster extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null);
+        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
     }
 
     public void resize() {

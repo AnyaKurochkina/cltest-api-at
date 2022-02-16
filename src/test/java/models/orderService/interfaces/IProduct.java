@@ -54,7 +54,7 @@ public abstract class IProduct extends Entity {
     public static final String START = "Включить";
     public static final String STOP_HARD = "Выключить принудительно";
     public static final String RESIZE = "Изменить конфигурацию";
-    
+
     @Builder.Default
     protected transient ReferencesStep referencesStep = new ReferencesStep();
     protected String jsonTemplate;
@@ -111,27 +111,27 @@ public abstract class IProduct extends Entity {
 
     //Обновить сертификаты
     protected void updateCerts(String action) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"));
+        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"), this.getProjectId());
     }
 
     //Перезагрузить
     protected void restart(String action) {
-        OrderServiceSteps.executeAction(action, this, null);
+        OrderServiceSteps.executeAction(action, this, null, this.getProjectId());
     }
 
     //Выключить принудительно
     protected void stopHard(String action) {
-        OrderServiceSteps.executeAction(action, this, null, ProductStatus.STOPPED);
+        OrderServiceSteps.executeAction(action, this, null, ProductStatus.STOPPED, this.getProjectId());
     }
 
     //Выключить
     protected void stopSoft(String action) {
-        OrderServiceSteps.executeAction(action, this, null, ProductStatus.STOPPED);
+        OrderServiceSteps.executeAction(action, this, null, ProductStatus.STOPPED, this.getProjectId());
     }
 
     //Включить
     protected void start(String action) {
-        OrderServiceSteps.executeAction(action, this, null, ProductStatus.CREATED);
+        OrderServiceSteps.executeAction(action, this, null, ProductStatus.CREATED, this.getProjectId());
     }
 
     @SneakyThrows
@@ -147,7 +147,7 @@ public abstract class IProduct extends Entity {
     @Step("Удаление продукта")
     protected void delete(String action) {
         CalcCostSteps calcCostSteps = new CalcCostSteps();
-        OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED);
+        OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
         Assertions.assertEquals(0.0F, calcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
     }
 
@@ -157,7 +157,7 @@ public abstract class IProduct extends Entity {
 
     //Изменить конфигурацию
     protected void resize(String action, Flavor flavor) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
+        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"), this.getProjectId());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
@@ -170,7 +170,7 @@ public abstract class IProduct extends Entity {
         List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
         Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
-        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"));
+        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"), this.getProjectId());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
@@ -211,7 +211,7 @@ public abstract class IProduct extends Entity {
     //Расширить
     protected void expandMountPoint(String action, String mount, int size) {
         Float sizeBefore = (Float) OrderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount, mount));
-        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}"));
+        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}"), this.getProjectId());
         float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
         Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }

@@ -92,7 +92,7 @@ public class ScyllaDb extends IProduct {
     public void createDb(String dbName) {
         if(database.contains(new Db(dbName)))
             return;
-        OrderServiceSteps.executeAction("scylladb_create_db", this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
+        OrderServiceSteps.executeAction("scylladb_create_db", this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
         database.add(new Db(dbName));
@@ -102,7 +102,7 @@ public class ScyllaDb extends IProduct {
 
     // [a-z0-9]+ 3-16
     public void createDbmsUser(String username, String password, String role) {
-        OrderServiceSteps.executeAction("scylladb_create_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\",\"dbms_role\":\"%s\"}", username, password, role)));
+        OrderServiceSteps.executeAction("scylladb_create_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\",\"dbms_role\":\"%s\"}", username, password, role)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)), "Имя пользователя отличается от создаваемого");
         log.info("createDbmsUser = " + username);
         save();
@@ -127,12 +127,12 @@ public class ScyllaDb extends IProduct {
 
     //16-63
     public void resetPassword(String username, String password) {
-        OrderServiceSteps.executeAction("scylladb_reset_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)));
+        OrderServiceSteps.executeAction("scylladb_reset_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
     }
 
     //Удалить пользователя
     public void removeDbmsUser(String username) {
-        OrderServiceSteps.executeAction("scylladb_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)));
+        OrderServiceSteps.executeAction("scylladb_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)),
                 String.format("Пользователь: %s не удалился", username));
         save();
@@ -140,7 +140,7 @@ public class ScyllaDb extends IProduct {
 
     //Удалить БД
     public void removeDb(String dbName) {
-        OrderServiceSteps.executeAction("scylladb_remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
+        OrderServiceSteps.executeAction("scylladb_remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
@@ -148,7 +148,7 @@ public class ScyllaDb extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null);
+        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
     }
 
     public void expandMountPoint() {

@@ -84,7 +84,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null);
+        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
     }
 
     //Перезагрузить по питанию

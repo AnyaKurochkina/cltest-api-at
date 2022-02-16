@@ -14,7 +14,6 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import steps.orderService.OrderServiceSteps;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -106,7 +105,7 @@ public class Elasticsearch extends IProduct {
 
     //Удалить хост
     public void deleteHost(String action) {
-        OrderServiceSteps.executeAction("delete_vm", this, null);
+        OrderServiceSteps.executeAction("delete_vm", this, null, this.getProjectId());
     }
 
     //Перезагрузить по питанию

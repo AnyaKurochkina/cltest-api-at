@@ -95,7 +95,7 @@ public class PostgresSQLCluster extends IProduct {
     public void createDb(String dbName) {
         if(database.contains(new Db(dbName)))
             return;
-        OrderServiceSteps.executeAction("postgresql_cluster_create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
+        OrderServiceSteps.executeAction("postgresql_cluster_create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем" + dbName);
         database.add(new Db(dbName));
         log.info("database = " + database);
@@ -104,7 +104,7 @@ public class PostgresSQLCluster extends IProduct {
 
     //Удалить БД
     public void removeDb(String dbName) {
-        OrderServiceSteps.executeAction("postgresql_cluster_remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
+        OrderServiceSteps.executeAction("postgresql_cluster_remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
@@ -113,7 +113,7 @@ public class PostgresSQLCluster extends IProduct {
     public void createDbmsUser(String username, String dbRole, String dbName) {
         OrderServiceSteps.executeAction("postgresql_cluster_create_dbms_user",
                 this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}",
-                        dbName, dbRole, username)));
+                        dbName, dbRole, username)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 "Имя пользователя отличается от создаваемого");
@@ -125,19 +125,19 @@ public class PostgresSQLCluster extends IProduct {
     //Сбросить пароль пользователя
     public void resetPassword(String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("postgresql_cluster_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", username, password)));
+        OrderServiceSteps.executeAction("postgresql_cluster_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
     }
 
     //Сбросить пароль владельца
     public void resetDbOwnerPassword(String dbName) {
         Assertions.assertTrue(database.stream().anyMatch(db -> db.getNameDB().equals(dbName)), String.format("Базы %s не существует", dbName));
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("postgresql_cluster_reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", dbName + "_admin", password)));
+        OrderServiceSteps.executeAction("postgresql_cluster_reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", dbName + "_admin", password)), this.getProjectId());
     }
 
     //Удалить пользователя
     public void removeDbmsUser(String username, String dbName) {
-        OrderServiceSteps.executeAction("postgresql_cluster_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))));
+        OrderServiceSteps.executeAction("postgresql_cluster_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));

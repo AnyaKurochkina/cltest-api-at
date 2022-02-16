@@ -109,13 +109,23 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Отправка action {action}")
+    public static Response sendAction(String action, IProduct product, JSONObject jsonData, String projectId) {
+        Item item = getItemIdByOrderIdAndActionTitle(action, product);
+        return JsonHelper.getJsonTemplate("/actions/template.json")
+                .set("$.item_id", item.getId())
+                .set("$.order.data", jsonData)
+                .send(OrderServiceURL)
+                .setProjectId(projectId)
+                .patch("projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
+    }
+
+    @Step("Отправка action {action}")
     public static Response sendAction(String action, IProduct product, JSONObject jsonData) {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.getId())
                 .set("$.order.data", jsonData)
                 .send(OrderServiceURL)
-                .setProjectId(product.getProjectId())
                 .patch("projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
 
@@ -132,19 +142,19 @@ public class OrderServiceSteps extends Steps {
         product.setProjectId(target.getId());
     }
 
-    public static void executeAction(String action, IProduct product, JSONObject jsonData) {
+    public static void executeAction(String action, IProduct product, JSONObject jsonData, String projectId) {
         executeAction(action, product, jsonData, null);
     }
 
     /**
      * Метод выполняет экшен по его имени
-     *
+     * @param projectId id проекта
      * @param action   имя экшена
      * @param product  объект продукта
      * @param jsonData параметр дата в запросе, к примеру: "order":{"data":{}}}
      */
     @Step("Выполнение action \"{action}\"")
-    public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status) {
+    public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId) {
         CostSteps costSteps = new CostSteps();
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         //Получение item'ов для экшена
@@ -160,7 +170,7 @@ public class OrderServiceSteps extends Steps {
                     costPreBilling.set(costSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
-                () -> actionId.set(sendAction(action, product, jsonData)
+                () -> actionId.set(sendAction(action, product, jsonData, projectId)
                         .assertStatus(200)
                         .jsonPath()
                         .get("action_id")),
@@ -184,6 +194,53 @@ public class OrderServiceSteps extends Steps {
             Assertions.assertNotNull(cost, "Стоимость списания равна null");
             Assertions.assertEquals(costPreBilling.get(), cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
         }
+    }
+
+    /**
+     * Метод выполняет экшен по его имени
+     * @param action   имя экшена
+     * @param product  объект продукта
+     * @param jsonData параметр дата в запросе, к примеру: "order":{"data":{}}}
+     */
+    @Step("Выполнение action \"{action}\"")
+    public static void executeAction(String action, IProduct product, JSONObject jsonData) {
+        CostSteps costSteps = new CostSteps();
+        CalcCostSteps calcCostSteps = new CalcCostSteps();
+        //Получение item'ов для экшена
+        Item item = getItemIdByOrderIdAndActionTitle(action, product);
+        log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
+        //TODO: Возможно стоит сделать более детальную проверку на значение
+
+        AtomicReference<Float> costPreBilling = new AtomicReference<>();
+        AtomicReference<String> actionId = new AtomicReference<>();
+
+        Assertions.assertAll("Проверка выполнения action - " + item.getName() + " у продукта " + product.getOrderId(),
+                () -> {
+                    costPreBilling.set(costSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
+                    Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
+                },
+                () -> actionId.set(sendAction(action, product, jsonData)
+                        .assertStatus(200)
+                        .jsonPath()
+                        .get("action_id")),
+                () -> checkActionStatusMethod("success", product, actionId.get()),
+                () -> {
+                    if (costPreBilling.get() != null) {
+                        Float cost = null;
+                        for (int i = 0; i < 20; i++) {
+                            Waiting.sleep(20000);
+                            cost = calcCostSteps.getCostByUid(product);
+                            if (cost == null)
+                                continue;
+                            if (Math.abs(cost - costPreBilling.get()) > 0.00001)
+                                continue;
+                            break;
+                        }
+                        Assertions.assertNotNull(cost, "Стоимость списания равна null");
+                        Assertions.assertEquals(costPreBilling.get(), cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
+                    }
+                });
+
     }
 
     @Step("Ожидание успешного выполнения action")

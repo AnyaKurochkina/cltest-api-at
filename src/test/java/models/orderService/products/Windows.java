@@ -103,21 +103,21 @@ public class Windows extends IProduct {
 
     //Добавить диск
     public void addDisk(String disk) {
-        OrderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"" + disk + "\", size: 10, file_system: \"ntfs\"}"));
+        OrderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"" + disk + "\", size: 10, file_system: \"ntfs\"}"), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk)));
     }
 
     //Расширить диск
     public void expandMountPoint(String disk) {
         int sizeBefore = (Integer) OrderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
-        OrderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 1}"));
+        OrderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 1}"), this.getProjectId());
         int sizeAfter = (Integer) OrderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
         Assertions.assertEquals(sizeBefore, sizeAfter - 1, "sizeBefore >= sizeAfter");
     }
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null);
+        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
     }
 
 
