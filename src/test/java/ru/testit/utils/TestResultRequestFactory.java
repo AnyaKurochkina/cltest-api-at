@@ -33,12 +33,13 @@ public class TestResultRequestFactory {
         currentTest.setConfigurationId(test.getConfigurationId());
         this.processTestSteps(currentTest, step, null);
         this.processUtilsMethodsSteps(currentTest, utilsMethodSteps);
+        currentTest.setMessage(currentTest.getMessage().replaceAll("\n", "\t \n"));
         req.getTestResults().add(currentTest);
         String testResultId = TestITClient.sendTestResult(req);
 
         if(Tests.isAttachLog()) {
             Attachment log = new Attachment();
-            log.setFileName("http-request.log");
+            log.setFileName("log4j.log");
             log.setBytes(Tests.getAttachLog().getBytes());
             if (log.getBytes().length > 0)
                 step.getAttachments().add(log);

@@ -14,6 +14,7 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Flavor;
 import org.json.JSONObject;
+import steps.orderService.OrderServiceSteps;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -35,25 +36,34 @@ public class Elasticsearch extends IProduct {
     Flavor flavorData;
     Flavor flavorMaster;
     Flavor flavorKibana;
+    String adminPassword;
+    String kibanaPassword;
+    String fluentdPassword;
 
     @Override
     public Entity init() {
         jsonTemplate = "/orders/elasticsearch.json";
         productName = "Elasticsearch X-pack cluster";
         initProduct();
+        if(adminPassword == null)
+            adminPassword = "F5pFBbA23mvugDibV";
+        if(kibanaPassword == null)
+            kibanaPassword = "RnXLM4Ms3XQi";
+        if(fluentdPassword == null)
+            fluentdPassword = "jP9W4Yqsz8iSNX532dO";
         if(osVersion == null)
             osVersion = getRandomOsVersion();
         if(elasticsearchVersion == null)
             elasticsearchVersion = getRandomProductVersionByPathEnum("elasticsearch_version.enum");
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = orderServiceSteps.getDomainBySegment(this, segment);
+        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 
@@ -73,6 +83,9 @@ public class Elasticsearch extends IProduct {
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.admin_password", adminPassword)
+                .set("$.order.attrs.kibana_password", kibanaPassword)
+                .set("$.order.attrs.fluentd_password", fluentdPassword)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
@@ -93,7 +106,7 @@ public class Elasticsearch extends IProduct {
 
     //Удалить хост
     public void deleteHost(String action) {
-        orderServiceSteps.executeAction("delete_vm", this, null, this.getProjectId());
+        OrderServiceSteps.executeAction("delete_vm", this, null, this.getProjectId());
     }
 
     //Перезагрузить по питанию

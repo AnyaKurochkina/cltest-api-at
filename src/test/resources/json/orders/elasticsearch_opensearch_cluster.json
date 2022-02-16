@@ -67,7 +67,6 @@
       ]
     },
     "count": 1,
-    "label": "Elasticsearch Opensearch cluster",
-    "graph_version": "1.0.11"
+    "label": "Elasticsearch Opensearch cluster"
   }
 }

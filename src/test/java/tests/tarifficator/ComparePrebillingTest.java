@@ -4,7 +4,9 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.orderService.interfaces.IProduct;
+import models.orderService.products.Rhel;
 import org.json.JSONArray;
+import org.junit.DisabledIfEnv;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
@@ -21,9 +23,10 @@ public class ComparePrebillingTest extends Tests {
     final CostSteps costSteps = new CostSteps();
 
     @Source(ProductArgumentsProvider.PRODUCTS)
+    @DisabledIfEnv("prod")
     @TmsLink("654182")
     @ParameterizedTest(name = "Сравнение стоимости продукта {0} в предбиллинге с ценами активного ТПО")
-    public void compareTariffs(IProduct resource){
+    public void compareTariffs(Rhel resource){
         try (IProduct product = resource.createObjectExclusiveAccess()) {
             String tariffPlanId = costSteps.getActiveTariffId();
             HashMap<String, Double> activeTariffPlanPrice = costSteps.getPrices(tariffPlanId);

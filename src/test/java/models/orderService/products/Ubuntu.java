@@ -14,6 +14,7 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Flavor;
 import org.json.JSONObject;
+import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
 
@@ -44,14 +45,14 @@ public class Ubuntu extends IProduct {
         if(osVersion == null)
             osVersion = getRandomOsVersion();
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = orderServiceSteps.getDomainBySegment(this, segment);
+        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 
@@ -75,7 +76,7 @@ public class Ubuntu extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        orderServiceSteps.executeAction("check_vm", this, null,  this.getProjectId());
+        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
     }
 
     //Перезагрузить по питанию
