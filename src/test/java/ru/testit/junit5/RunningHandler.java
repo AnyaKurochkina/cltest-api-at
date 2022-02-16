@@ -69,8 +69,6 @@ public class RunningHandler
             if(thrown instanceof CreateEntityException)
                 parentStep.setOutcome(Outcome.BLOCKED.getValue());
             parentStep.setFailureReason(thrown);
-            if(thrown != null)
-                Tests.putAttachLog(thrown.toString());
             parentStep.setCompletedOn(new Date());
         }
         alreadyFinished.add(test);
