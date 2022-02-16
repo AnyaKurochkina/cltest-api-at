@@ -70,12 +70,12 @@ public class RunningHandler
             if(thrown instanceof CreateEntityException)
                 parentStep.setOutcome(Outcome.BLOCKED.getValue());
             parentStep.setFailureReason(thrown);
-            if(thrown != null)
-                Tests.putAttachLog(ExceptionUtils.getStackTrace(thrown));
             parentStep.setCompletedOn(new Date());
         }
         alreadyFinished.add(test);
         createTestItemRequestFactory.processFinishLaunchUniqueTest(utilsMethodSteps, parentStep, test);
+        if(thrown != null)
+            Tests.putAttachLog(ExceptionUtils.getStackTrace(thrown));
         testITClient.sendTestItemsUniqueTest(createTestItemRequestFactory.getCreateTestRequests(test));
         testResultRequestFactory.processFinishLaunchUniqueTest(test, utilsMethodSteps, parentStep);
         removeCurrentStep();
