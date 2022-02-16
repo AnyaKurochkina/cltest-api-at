@@ -46,6 +46,19 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Order(3)
+    @DisplayName("Проверить подключение к БД PostgresPRO OLD")
+    @Test
+    void checkBdConnection() {
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
+        postgresPro.createDb("bd_for_check_connection");
+        postgresPro.checkConnection(postgresPro.getDbUrl(), postgresPro.getDbAdminUser(), postgresPro.getDbAdminPass());
+        postgresPro.removeDb("bd_for_check_connection");
+    }
+
+
+    @Order(4)
     @DisplayName("Добавить пользователя PostgresPRO OLD")
     @Test
     void createDbmsUser() {
@@ -59,7 +72,7 @@ public class OldPostgresProTest extends Tests {
         postgresPro.removeDb("createdbforuser2");
     }
 
-    @Order(4)
+    @Order(5)
     @DisplayName("Сбросить пароль PostgresPRO OLD")
     @Test
     void resetPassword() {
@@ -74,7 +87,7 @@ public class OldPostgresProTest extends Tests {
         postgresPro.removeDb("createdbforreset3");
     }
 
-    @Order(5)
+    @Order(6)
     @DisplayName("Сбросить пароль владельца PostgresPRO OLD")
     @Test
     void resetDbOwnerPassword() {
@@ -87,7 +100,7 @@ public class OldPostgresProTest extends Tests {
         postgresPro.removeDb("createdbforreset8");
     }
 
-    @Order(6)
+    @Order(7)
     @DisplayName("Удалить пользователя PostgresPRO OLD")
     @Test
     void removeDbmsUser() {
@@ -101,7 +114,7 @@ public class OldPostgresProTest extends Tests {
         postgresPro.removeDb("createdbforreset4");
     }
 
-    @Order(7)
+    @Order(8)
     @DisplayName("Перезагрузить PostgresPRO OLD")
     @Test
     void restart() {
@@ -111,7 +124,7 @@ public class OldPostgresProTest extends Tests {
         postgresPro.restart();
     }
 
-    @Order(8)
+    @Order(9)
     @DisplayName("Удалить БД PostgresPRO Old")
     @Test
     void removeDb() {
@@ -122,7 +135,7 @@ public class OldPostgresProTest extends Tests {
         postgresPro.removeDb("createdbforremove5");
     }
 
-    @Order(9)
+    @Order(10)
     @DisplayName("Выключить PostgresPRO OLD")
     @Test
     void stopSoft() {
@@ -133,7 +146,7 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Tag("resize")
-    @Order(10)
+    @Order(11)
     @DisplayName("Изменить конфигурацию PostgresPRO Old")
     @Test
     void resize() {
@@ -144,7 +157,7 @@ public class OldPostgresProTest extends Tests {
         postgresPro.resize(postgresPro.getMinFlavor());
     }
 
-    @Order(11)
+    @Order(12)
     @DisplayName("Включить PostgresPRO OLD")
     @Test
     void start() {
@@ -154,7 +167,7 @@ public class OldPostgresProTest extends Tests {
         postgresPro.start();
     }
 
-    @Order(12)
+    @Order(13)
     @DisplayName("Выключить принудительно PostgresPRO OLD")
     @Test
     void stopHard() {

@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.orderService.products.PostgreSQL;
 import models.orderService.products.PostgresPro;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -42,6 +43,18 @@ public class PostgresProTest extends Tests {
     void createDb(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
             postgresPro.createDb("cached_bd");
+        }
+    }
+
+    @TmsLink("390817")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка подключения к БД {0}")
+    void checkDbConnection(PostgresPro product) {
+        try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
+            postgresPro.createDb("bd_for_check_connection");
+            postgresPro.checkConnection(postgresPro.getDbUrl(), postgresPro.getDbAdminUser(), postgresPro.getDbAdminPass());
+            postgresPro.removeDb("bd_for_check_connection");
         }
     }
 

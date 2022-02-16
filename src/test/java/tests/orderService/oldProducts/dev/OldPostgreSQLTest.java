@@ -2,6 +2,7 @@ package tests.orderService.oldProducts.dev;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import lombok.SneakyThrows;
 import models.orderService.products.PostgreSQL;
 import org.junit.jupiter.api.*;
 import tests.Tests;
@@ -44,7 +45,20 @@ public class OldPostgreSQLTest extends Tests {
         postgreSQL.removeDb("createdb1");
     }
 
+    @SneakyThrows
     @Order(3)
+    @DisplayName("Проверить подключение к бд PorstgreSQL OLD")
+    @Test
+    void checkConnection() {
+        if (postgreSQL.productStatusIs(STOPPED)) {
+            postgreSQL.start();
+        }
+        postgreSQL.createDb("bd_for_check_connect");
+        postgreSQL.checkConnection(postgreSQL.getDbUrl(), postgreSQL.getDbAdminUser(), postgreSQL.getDbAdminPass());
+        postgreSQL.removeDb("bd_for_check_connect");
+    }
+
+    @Order(4)
     @DisplayName("Создать пользователя БД PorstgreSQL OLD")
     @Test
     void createDbmsUser() {
@@ -58,7 +72,7 @@ public class OldPostgreSQLTest extends Tests {
         postgreSQL.removeDb("createdbforuser2");
     }
 
-    @Order(4)
+    @Order(5)
     @DisplayName("Сбросить пароль пользователя БД PorstgreSQL OLD")
     @Test
     void resetPassword() {
@@ -74,7 +88,7 @@ public class OldPostgreSQLTest extends Tests {
 
     }
 
-    @Order(5)
+    @Order(6)
     @DisplayName("Сбросить пароль владельца БД PorstgreSQL OLD")
     @Test
     void resetDbOwnerPassword() {
@@ -87,7 +101,7 @@ public class OldPostgreSQLTest extends Tests {
         postgreSQL.removeDb("createdbforreset8");
     }
 
-    @Order(6)
+    @Order(7)
     @DisplayName("Удалить пользователя БД PorstgreSQL OLD")
     @Test
     void removeDbmsUser() {
@@ -102,14 +116,14 @@ public class OldPostgreSQLTest extends Tests {
 
     }
 
-    @Order(7)
+    @Order(8)
     @DisplayName("Перезагрузить PorstgreSQL OLD")
     @Test
     void restart() {
         postgreSQL.restart();
     }
 
-    @Order(8)
+    @Order(9)
     @DisplayName("Удалить БД")
     @Test
     void removeDb() {
@@ -121,7 +135,7 @@ public class OldPostgreSQLTest extends Tests {
 
     }
 
-    @Order(9)
+    @Order(10)
     @DisplayName("Выключить PorstgreSQL OLD")
     @Test
     void stopSoft() {
@@ -131,7 +145,7 @@ public class OldPostgreSQLTest extends Tests {
         postgreSQL.stopSoft();
     }
 
-    @Order(10)
+    @Order(11)
     @DisplayName("Изменить конфигурацию PorstgreSQL OLD")
     @Test
     void resize() {
@@ -141,7 +155,7 @@ public class OldPostgreSQLTest extends Tests {
         postgreSQL.resize(postgreSQL.getMaxFlavor());
     }
 
-    @Order(11)
+    @Order(12)
     @DisplayName("Включить PorstgreSQL OLD")
     @Test
     void start() {
@@ -151,7 +165,7 @@ public class OldPostgreSQLTest extends Tests {
         postgreSQL.start();
     }
 
-    @Order(12)
+    @Order(13)
     @DisplayName("Выключить принудительно PorstgreSQL OLD")
     @Test
     void stopHard() {
