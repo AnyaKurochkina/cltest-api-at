@@ -42,7 +42,7 @@ public class TestResultRequestFactory {
 
         if(Tests.isAttachLog()) {
             Attachment log = new Attachment();
-            log.setFileName("log4j.log");
+            log.setFileName("test-log.log");
             log.setBytes(Tests.getAttachLog().getBytes());
             if (log.getBytes().length > 0)
                 step.getAttachments().add(log);
