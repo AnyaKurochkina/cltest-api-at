@@ -2,6 +2,7 @@ package ru.testit.junit5;
 
 import core.exception.CreateEntityException;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.Nullable;
 import ru.testit.annotations.Description;
 import ru.testit.annotations.Title;
@@ -69,6 +70,8 @@ public class RunningHandler
             if(thrown instanceof CreateEntityException)
                 parentStep.setOutcome(Outcome.BLOCKED.getValue());
             parentStep.setFailureReason(thrown);
+            if(thrown != null)
+                Tests.putAttachLog(ExceptionUtils.getStackTrace(thrown));
             parentStep.setCompletedOn(new Date());
         }
         alreadyFinished.add(test);
