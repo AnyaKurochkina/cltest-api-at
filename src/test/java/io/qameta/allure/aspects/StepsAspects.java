@@ -60,7 +60,7 @@ public class StepsAspects {
     public void stepFailed(Throwable e) {
         getLifecycle().updateStep((s) -> s.setStatus(ResultsUtils.getStatus(e).orElse(Status.BROKEN)).setStatusDetails(ResultsUtils.getStatusDetails(e).orElse(null)));
         getLifecycle().stopStep();
-        failedNestedStep(e);
+        failedNestedStep();
     }
 
     @AfterReturning(

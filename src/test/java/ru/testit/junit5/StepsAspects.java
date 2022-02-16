@@ -49,7 +49,7 @@ public class StepsAspects {
         currentStep.set(currStep.getParent());
     }
 
-    public static void failedNestedStep(Throwable e) {
+    public static void failedNestedStep() {
         if (Objects.isNull(currentStep.get()))
             return;
         if (!isIntegrationTestIt())
@@ -57,7 +57,6 @@ public class StepsAspects {
         final StepNode currStep = currentStep.get();
         currStep.setCompletedOn(new Date());
         currStep.setOutcome(Outcome.FAILED.getValue());
-        Tests.putAttachLog(e.toString());
         currentStep.set(currStep.getParent());
     }
 

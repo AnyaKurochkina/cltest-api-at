@@ -7,6 +7,7 @@ import ru.testit.annotations.Description;
 import ru.testit.annotations.Title;
 import ru.testit.services.TestITClient;
 import ru.testit.utils.*;
+import tests.Tests;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -68,6 +69,8 @@ public class RunningHandler
             if(thrown instanceof CreateEntityException)
                 parentStep.setOutcome(Outcome.BLOCKED.getValue());
             parentStep.setFailureReason(thrown);
+            if(thrown != null)
+                Tests.putAttachLog(thrown.toString());
             parentStep.setCompletedOn(new Date());
         }
         alreadyFinished.add(test);
