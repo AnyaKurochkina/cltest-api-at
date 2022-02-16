@@ -8,6 +8,7 @@ import models.Entity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import ru.testit.services.TestITClient;
+import tests.Tests;
 
 import java.lang.reflect.Method;
 
@@ -107,6 +108,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         if (!isIntegrationTestIt())
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
+        Tests.putAttachLog(cause.toString());
         RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId);
     }
 
