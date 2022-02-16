@@ -8,7 +8,6 @@ import models.Entity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import ru.testit.services.TestITClient;
-import tests.Tests;
 
 import java.lang.reflect.Method;
 
