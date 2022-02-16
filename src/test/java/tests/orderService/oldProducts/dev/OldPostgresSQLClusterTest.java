@@ -58,7 +58,7 @@ public class OldPostgresSQLClusterTest extends Tests {
         }
         postgres.createDb("bd_for_check_connect");
         postgres.checkConnection(postgres.getDbUrl(), postgres.getDbAdminUser(), postgres.getDbAdminPass());
-        postgres.removeDb("cached_bd");
+        postgres.removeDb("bd_for_check_connect");
     }
 
     @Order(4)

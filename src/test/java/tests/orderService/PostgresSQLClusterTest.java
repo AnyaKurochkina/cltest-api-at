@@ -52,9 +52,9 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Проверить подключение к БД PostgresSQLCluster {0}")
     void checkBdConnection(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd");
+            postgres.createDb("bd_for_check_connect");
             postgres.checkConnection(postgres.getDbUrl(), postgres.getDbAdminUser(), postgres.getDbAdminPass());
-            postgres.removeDb("cached_bd");
+            postgres.removeDb("bd_for_check_connect");
         }
     }
 

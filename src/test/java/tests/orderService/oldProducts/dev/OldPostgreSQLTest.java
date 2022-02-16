@@ -53,9 +53,9 @@ public class OldPostgreSQLTest extends Tests {
         if (postgreSQL.productStatusIs(STOPPED)) {
             postgreSQL.start();
         }
-        postgreSQL.createDb("createdb123456");
+        postgreSQL.createDb("bd_for_check_connect");
         postgreSQL.checkConnection(postgreSQL.getDbUrl(), postgreSQL.getDbAdminUser(), postgreSQL.getDbAdminPass());
-        postgreSQL.removeDb("createdb123456");
+        postgreSQL.removeDb("bd_for_check_connect");
     }
 
     @Order(4)
