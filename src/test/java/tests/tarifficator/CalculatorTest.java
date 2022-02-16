@@ -34,7 +34,6 @@ import java.util.Objects;
 @Feature("Калькулятор")
 @Tags({@Tag("regress"), @Tag("prod")})
 public class CalculatorTest extends Tests {
-    final OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
     final AccountSteps accountSteps = new AccountSteps();
     final AuthorizerSteps authorizerSteps = new AuthorizerSteps();
     final CostSteps costSteps = new CostSteps();
@@ -68,7 +67,7 @@ public class CalculatorTest extends Tests {
                 while (cost < 0.01f)
                     cost += cost;
                 Waiting.sleep(60000);
-                orderServiceSteps.changeProjectForOrder(product, projectTarget);
+                OrderServiceSteps.changeProjectForOrder(product, projectTarget);
                 Float spent = null;
                 for (int i = 0; i < 15; i++) {
                     Waiting.sleep(20000);
@@ -80,13 +79,13 @@ public class CalculatorTest extends Tests {
                 Assertions.assertEquals(cost, (1000.0f - Objects.requireNonNull(spent)), 0.01, "Сумма списания отличается от ожидаемой суммы");
             } catch (Throwable t) {
                 try {
-                    orderServiceSteps.changeProjectForOrder(product, projectSource);
+                    OrderServiceSteps.changeProjectForOrder(product, projectSource);
                 } catch (Throwable t2) {
                     log.error(t2.toString());
                 }
                 throw t;
             }
-            orderServiceSteps.changeProjectForOrder(product, projectSource);
+            OrderServiceSteps.changeProjectForOrder(product, projectSource);
         }
     }
 

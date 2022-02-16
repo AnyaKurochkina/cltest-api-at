@@ -35,7 +35,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tags({@Tag("regress"), @Tag("tariff")})
 public class OrganizationTariffPlanTest extends Tests {
     final TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
-    final OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @Test
     @Order(1)
@@ -133,7 +132,7 @@ public class OrganizationTariffPlanTest extends Tests {
     void activateTariffPlanWithoutUpdateOrders(Rhel product) {
         String tariffPlanIdPath = "attrs.tariff_plan_id";
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            String tariffPlanId = ((String) orderServiceSteps.getProductsField(rhel, tariffPlanIdPath));
+            String tariffPlanId = ((String) OrderServiceSteps.getProductsField(rhel, tariffPlanIdPath));
             Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
             TariffPlan tariffPlan = TariffPlan.builder()
                     .base(false)
@@ -154,7 +153,7 @@ public class OrganizationTariffPlanTest extends Tests {
                     () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15, "Время архивации ТП не соответствует действительному"),
                     () -> assertEquals(TariffPlanStatus.active, updatedTariffPlan.getStatus(), "Тарифный план не перешел в статус активный"),
                     () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"),
-                    () -> assertEquals(tariffPlanId, orderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта изменился"));
+                    () -> assertEquals(tariffPlanId, OrderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта изменился"));
         }
     }
 
@@ -186,7 +185,7 @@ public class OrganizationTariffPlanTest extends Tests {
                     () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15, "Время архивации ТП не соответствует действительному"),
                     () -> assertEquals(TariffPlanStatus.active, updatedTariffPlan.getStatus(), "Тарифный план не перешел в статус активный"),
                     () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"),
-                    () -> assertEquals(updatedTariffPlan.getId(), orderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта не изменился"));
+                    () -> assertEquals(updatedTariffPlan.getId(), OrderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта не изменился"));
         }
     }
 }

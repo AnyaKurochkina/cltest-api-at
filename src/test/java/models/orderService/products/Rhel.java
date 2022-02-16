@@ -17,6 +17,7 @@ import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
+import steps.orderService.OrderServiceSteps;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -50,13 +51,13 @@ public class Rhel extends IProduct {
         }
         initProduct();
         if (domain == null)
-            domain = orderServiceSteps.getDomainBySegment(this, segment);
+            domain = OrderServiceSteps.getDomainBySegment(this, segment);
         if(flavor == null)
             flavor = getMinFlavor();
         if(osVersion == null)
             osVersion = getRandomOsVersion();
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -120,7 +121,7 @@ public class Rhel extends IProduct {
 
     public void checkCreateUseSsh(String userName) {
         User user = User.builder().username(userName).build().createObject();
-        String host = (String) orderServiceSteps.getProductsField(this, "product_data.find{it.type=='vm'}.hostname");
+        String host = (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.type=='vm'}.hostname");
         SshClient ssh = new SshClient(host, user.getUsername(), user.getPassword());
         ssh.connectAndExecuteListCommand("ls");
     }

@@ -25,7 +25,6 @@ import tests.Tests;
 @Feature("Действия над продуктами")
 @Tags({@Tag("regress"), @Tag("prod")})
 public class ProductTest extends Tests {
-    OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
     AccountSteps accountSteps = new AccountSteps();
     AuthorizerSteps authorizerSteps = new AuthorizerSteps();
 
@@ -68,14 +67,14 @@ public class ProductTest extends Tests {
             String accountTo2 = ((Account) Account.builder().folder(folderTarget2).build().createObject()).getAccountId();
             accountSteps.transferMoney(accountFrom, accountTo2, "1000.00", "Перевод в рамках тестирования");
             Waiting.sleep(60000);
-            orderServiceSteps.changeProjectForOrder(product, projectTarget);
+            OrderServiceSteps.changeProjectForOrder(product, projectTarget);
             Waiting.sleep(60000);
             try {
-                orderServiceSteps.changeProjectForOrder(product, projectTarget2);
+                OrderServiceSteps.changeProjectForOrder(product, projectTarget2);
                 Waiting.sleep(120000);
 
 //          Заказ отсутствует в списке продуктов исходного проекта
-                Assertions.assertFalse(orderServiceSteps.getProductsWithStatus(projectTarget.getId(), "success").stream().anyMatch(id -> id.equals(product.getOrderId())),
+                Assertions.assertFalse(OrderServiceSteps.getProductsWithStatus(projectTarget.getId(), "success").stream().anyMatch(id -> id.equals(product.getOrderId())),
                         "Заказ присутствует в списке продуктов исходного проекта");
                 Float spent = accountSteps.getCurrentBalance(folderTarget.getName());
                 Waiting.sleep(60000);
@@ -84,10 +83,10 @@ public class ProductTest extends Tests {
                 Assertions.assertEquals(spent, accountSteps.getCurrentBalance(folderTarget.getName()), 0.01, "Сумма списания отличается от ожидаемой суммы");
 
 //            Заказ отображается в списке продуктов целевого проекта
-                Assertions.assertTrue(orderServiceSteps.getProductsWithStatus(projectTarget2.getId(), "success").stream().anyMatch(id -> id.equals(product.getOrderId())),
+                Assertions.assertTrue(OrderServiceSteps.getProductsWithStatus(projectTarget2.getId(), "success").stream().anyMatch(id -> id.equals(product.getOrderId())),
                         "Заказ отсутствует в списке продуктов целевого проекта");
             } finally {
-                orderServiceSteps.changeProjectForOrder(product, projectSource);
+                OrderServiceSteps.changeProjectForOrder(product, projectSource);
             }
         }
     }
@@ -115,8 +114,8 @@ public class ProductTest extends Tests {
 //            String accountFrom = accountSteps.getAccountIdByContext(parentFolderId);
 //            String accountTo = ((Account) Account.builder().folder(folderTarget).build().createObject()).getAccountId();
 //            accountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
-//            orderServiceSteps.changeProjectForOrder(product, projectTarget);
-//            orderServiceSteps.changeProjectForOrder(product, projectSource);
+//            OrderServiceSteps.changeProjectForOrder(product, projectTarget);
+//            OrderServiceSteps.changeProjectForOrder(product, projectSource);
 //        }
 //    }
 

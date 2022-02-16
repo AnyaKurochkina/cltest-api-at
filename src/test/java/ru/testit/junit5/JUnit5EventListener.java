@@ -1,5 +1,6 @@
 package ru.testit.junit5;
 
+import core.helper.Configure;
 import core.helper.StringUtils;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +20,8 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     private static final ExtensionContext.Namespace configurationSpace = ExtensionContext.Namespace.create(JUnit5EventListener.class);
 
     static {
-        JUnit5EventListener.HANDLER.startLaunch();
+        if(Configure.isIntegrationTestIt())
+            JUnit5EventListener.HANDLER.startLaunch();
     }
 
     public void beforeAll(final ExtensionContext context) {

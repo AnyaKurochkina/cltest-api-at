@@ -1,16 +1,26 @@
 package tests.orderService;
 
+import core.helper.http.Http;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.restassured.path.json.JsonPath;
 import models.orderService.products.Elasticsearch;
+import org.json.JSONObject;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
+import steps.orderService.OrderServiceSteps;
 import tests.Tests;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 
 @Epic("Продукты")
 @Feature("ElasticSearch")
@@ -22,7 +32,57 @@ public class ElasticsearchTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(Elasticsearch product) {
         //noinspection EmptyTryBlock
-        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {}
+        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
+        }
+    }
+
+    @TmsLink("401283")
+    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @ParameterizedTest(name = "Проверка создания. API Elasticsearch {0}")
+    void checkElasticsearchApi(Elasticsearch product) {
+        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
+            JsonPath path = JsonPath.from(new JSONObject((Map) OrderServiceSteps.getProductsField(elastic, "", JSONObject.class)).toString());
+            String apiUrl = path.getString("data.find{it.config.containsKey('api_url')}.config.api_url");
+            List<String> ipList = path.getList("data.findAll{it.config.containsKey('default_v4_address')}.config.default_v4_address");
+            String response = new Http(apiUrl)
+                    .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
+                    .get("/_cat/nodes?v=true&pretty")
+                    .assertStatus(200)
+                    .toString();
+            for(String ip : ipList)
+                Assertions.assertTrue(response.contains(ip), "В списке нет ноды с адресом " + ip);
+        }
+    }
+
+    @TmsLink("688500")
+    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @ParameterizedTest(name = "Проверка создания. Exporter {0}")
+    void checkElasticsearchExporter(Elasticsearch product) {
+        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
+            String exporterUrl = ((String) OrderServiceSteps.getProductsField(elastic,
+                    "data.find{it.config.containsKey('api_url')}.config.additional_urls.elasticsearch-exporter"));
+            String response = new Http(exporterUrl)
+                    .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
+                    .get("/metrics")
+                    .assertStatus(200)
+                    .toString();
+            Assertions.assertTrue(response.contains(",color=\"green\"} 1"),
+                    "elasticsearch_cluster_health_status != 1");
+        }
+    }
+
+    @TmsLink("401342")
+    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @ParameterizedTest(name = "Проверка создания. Kibana {0}")
+    void checkElasticsearchKibana(Elasticsearch product) {
+        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
+            String kibanaUrl = ((String) OrderServiceSteps.getProductsField(elastic,
+                    "data.find{it.config.containsKey('api_url')}.config.additional_urls.kibana"));
+            new Http(kibanaUrl)
+                    .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
+                    .get("/status")
+                    .assertStatus(200);
+        }
     }
 
     @TmsLink("425724")
