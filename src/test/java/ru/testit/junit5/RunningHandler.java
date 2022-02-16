@@ -7,6 +7,7 @@ import ru.testit.annotations.Description;
 import ru.testit.annotations.Title;
 import ru.testit.services.TestITClient;
 import ru.testit.utils.*;
+import tests.Tests;
 
 import java.lang.reflect.Method;
 import java.util.*;
