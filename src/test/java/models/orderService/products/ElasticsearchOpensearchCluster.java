@@ -13,6 +13,7 @@ import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
+import steps.orderService.OrderServiceSteps;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -44,7 +45,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
         if(elasticsearchVersion == null)
             elasticsearchVersion = getRandomProductVersionByPathEnum("elasticsearch_version.enum");
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -77,13 +78,13 @@ public class ElasticsearchOpensearchCluster extends IProduct {
 
     @Override
     protected void create() {
-        domain = orderServiceSteps.getDomainBySegment(this, segment);
+        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        orderServiceSteps.executeAction("check_vm", this, null);
+        OrderServiceSteps.executeAction("check_vm", this, null);
     }
 
     //Перезагрузить по питанию

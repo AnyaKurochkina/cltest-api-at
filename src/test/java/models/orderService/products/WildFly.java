@@ -12,6 +12,7 @@ import models.orderService.interfaces.IProduct;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,7 +55,7 @@ public class WildFly extends IProduct {
         if(wildFlyVersion == null)
             wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -85,16 +86,16 @@ public class WildFly extends IProduct {
         Date dateBeforeUpdate;
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
         super.updateCerts("wildfly_update_certs");
-        dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+        dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
 //        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
         Assertions.assertNotEquals(0, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        orderServiceSteps.executeAction("check_vm", this, null);
+        OrderServiceSteps.executeAction("check_vm", this, null);
     }
 
     public void expandMountPoint() {

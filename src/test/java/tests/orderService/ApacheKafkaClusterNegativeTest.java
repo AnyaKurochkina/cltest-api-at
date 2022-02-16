@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Feature("ApacheKafkaCluster")
 @Tags({@Tag("regress"), @Tag("negative"), @Tag("prod"), @Tag("apachekafkacluster")})
 public class ApacheKafkaClusterNegativeTest extends Tests {
-    final OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @Tag("actions")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
@@ -49,7 +48,7 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
     }
 
     public void checkIncorrectTopic(ApacheKafkaCluster kafkaCluster, KafkaTopic topic){
-        orderServiceSteps.sendAction(KAFKA_CREATE_TOPICS, kafkaCluster, new JSONObject("{\"topics\": " + JsonHelper.toJson(topic) + "}"))
+        OrderServiceSteps.sendAction(KAFKA_CREATE_TOPICS, kafkaCluster, new JSONObject("{\"topics\": " + JsonHelper.toJson(topic) + "}"))
                 .assertStatus(422);
     }
 

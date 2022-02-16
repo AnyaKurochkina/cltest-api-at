@@ -33,7 +33,7 @@ import static core.helper.Configure.OrderServiceURL;
 @Log4j2
 public class OrderServiceSteps extends Steps {
 
-    public void checkOrderStatus(String exp_status, IProduct product) {
+    public static void checkOrderStatus(String exp_status, IProduct product) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
         String orderStatus = "";
         int counter = 60;
@@ -73,7 +73,7 @@ public class OrderServiceSteps extends Steps {
      * @return возвращает список ID продуктов
      */
     @Step("Получение продуктов со статусом")
-    public List<String> getProductsWithStatus(String projectId, String... statuses) {
+    public static List<String> getProductsWithStatus(String projectId, String... statuses) {
         List<String> idOfAllSuccessProductsOnOnePage;
         List<String> idOfAllSuccessProducts = new ArrayList<>();
         int i = 0;
@@ -109,7 +109,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Отправка action {action}")
-    public Response sendAction(String action, IProduct product, JSONObject jsonData) {
+    public static Response sendAction(String action, IProduct product, JSONObject jsonData) {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.getId())
@@ -119,20 +119,20 @@ public class OrderServiceSteps extends Steps {
                 .patch("projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
 
-    public Response changeProjectForOrderRequest(IProduct product, Project target) {
+    public static Response changeProjectForOrderRequest(IProduct product, Project target) {
         return new Http(OrderServiceURL)
                 .body(new JSONObject(String.format("{target_project_name: \"%s\"}", target.getId())))
                 .patch("projects/{}/orders/{}/change_project", product.getProjectId(), product.getOrderId());
     }
 
     @Step("Перенос продукта {product} в проект {target}")
-    public void changeProjectForOrder(IProduct product, Project target) {
+    public static void changeProjectForOrder(IProduct product, Project target) {
         changeProjectForOrderRequest(product, target)
                 .assertStatus(200);
         product.setProjectId(target.getId());
     }
 
-    public void executeAction(String action, IProduct product, JSONObject jsonData) {
+    public static void executeAction(String action, IProduct product, JSONObject jsonData) {
         executeAction(action, product, jsonData, null);
     }
 
@@ -144,7 +144,7 @@ public class OrderServiceSteps extends Steps {
      * @param jsonData параметр дата в запросе, к примеру: "order":{"data":{}}}
      */
     @Step("Выполнение action \"{action}\"")
-    public void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status) {
+    public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status) {
         CostSteps costSteps = new CostSteps();
         CalcCostSteps calcCostSteps = new CalcCostSteps();
         //Получение item'ов для экшена
@@ -187,7 +187,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Ожидание успешного выполнения action")
-    public void checkActionStatusMethod(String exp_status, IProduct product, String action_id) {
+    public static void checkActionStatusMethod(String exp_status, IProduct product, String action_id) {
         StateServiceSteps stateServiceSteps = new StateServiceSteps();
         String actionStatus = "";
         int counter = 20;
@@ -215,7 +215,7 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    public String getDomainBySegment(IProduct product, String netSegment) {
+    public static String getDomainBySegment(IProduct product, String netSegment) {
         log.info("Получение домена для сегмента сети " + netSegment);
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
@@ -225,7 +225,7 @@ public class OrderServiceSteps extends Steps {
                 .get("list.collect{e -> e}.shuffled()[0].code");
     }
 
-    public String getDataCentreBySegment(IProduct product, String netSegment) {
+    public static String getDataCentreBySegment(IProduct product, String netSegment) {
         log.info("Получение ДЦ для сегмента сети " + netSegment);
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
@@ -240,7 +240,7 @@ public class OrderServiceSteps extends Steps {
      * @param product продукт
      * @return - возвращаем ID айтема
      */
-    public Item getItemIdByOrderIdAndActionTitle(String action, IProduct product) {
+    public static Item getItemIdByOrderIdAndActionTitle(String action, IProduct product) {
         log.info("Получение item_id для " + Objects.requireNonNull(action));
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
@@ -270,7 +270,7 @@ public class OrderServiceSteps extends Steps {
      * @param product продукт
      * @return true если включен, false выключен
      */
-    public boolean productStatusIs(IProduct product, ProductStatus status) {
+    public static boolean productStatusIs(IProduct product, ProductStatus status) {
         log.info("Получение статуса для для продукта " + Objects.requireNonNull(product));
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
@@ -288,7 +288,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Получение списка ресурсных пулов для категории {category} и проекта {projectId}")
-    public List<ResourcePool> getResourcesPoolList(String category, String projectId) {
+    public static List<ResourcePool> getResourcesPoolList(String category, String projectId) {
         String jsonArray = new Http(OrderServiceURL)
                 .setProjectId(projectId)
                 .get("products/resource_pools?category={}&project_name={}", category, projectId)
@@ -301,13 +301,13 @@ public class OrderServiceSteps extends Steps {
         return new Gson().fromJson(jsonArray, type);
     }
 
-    public <T extends Comparable<T>> Comparable<T> getProductsField(IProduct product, String path) {
+    public static <T extends Comparable<T>> Comparable<T> getProductsField(IProduct product, String path) {
         return (Comparable<T>) getProductsField(product, path, Comparable.class);
     }
 
 
     @Step("Получение значения по пути {path}")
-    public Object getProductsField(IProduct product, String path, Class<?> clazz) {
+    public static Object getProductsField(IProduct product, String path, Class<?> clazz) {
         Object s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(OrderServiceURL)
@@ -322,7 +322,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Удаление всех заказов")
-    public void deleteOrders(String env) {
+    public static void deleteOrders(String env) {
         Project project = Project.builder().projectEnvironment(new ProjectEnvironment(Objects.requireNonNull(env)))
                 .isForOrders(true).build().createObject();
         List<String> orders = new Http(OrderServiceURL)

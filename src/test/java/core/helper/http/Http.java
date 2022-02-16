@@ -41,6 +41,7 @@ public class Http {
     private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
     private String fileName;
     private byte[] bytes;
+    Map<String, String> headers = new HashMap<>();
 
     static {
         disableHostnameVerifier();
@@ -58,6 +59,11 @@ public class Http {
 
     public Http disableAttachmentLog() {
 //        this.isLogged = false;
+        return this;
+    }
+
+    public Http addHeader(String key, String value) {
+        headers.put(key, value);
         return this;
     }
 
@@ -166,7 +172,7 @@ public class Http {
 
     private Response filterRequest() {
         HttpURLConnection http;
-        List<String> headers = new ArrayList<>();
+        List<String> responseHeaders = new ArrayList<>();
         String responseMessage = null;
         int status = 0;
         try {
@@ -176,6 +182,7 @@ public class Http {
             URLConnection connection = url.openConnection();
             http = (HttpURLConnection) connection;
             http.setRequestProperty("Content-Type", contentType);
+            headers.forEach(http::setRequestProperty);
             http.setRequestProperty("Accept", "application/json, text/plain, */*");
             if (isUsedToken) {
                 if (token.length() == 0)
@@ -211,7 +218,7 @@ public class Http {
                 }
                 if (entries.getKey() == null)
                     continue;
-                headers.add(String.format("\t\t%s: %s", entries.getKey(), values));
+                responseHeaders.add(String.format("\t\t%s: %s", entries.getKey(), values));
             }
 
             http.disconnect();
@@ -228,7 +235,7 @@ public class Http {
             if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
         }
-        return new Response(status, responseMessage, headers, this);
+        return new Response(status, responseMessage, responseHeaders, this);
     }
 
     public static class StatusResponseException extends AssertionError {

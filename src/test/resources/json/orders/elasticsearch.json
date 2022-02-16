@@ -22,7 +22,7 @@
         "memory": 8
       },
       "nodes_count": "1,2",
-      "cluster_name": "elastic1",
+      "cluster_name": "hjgfgjhj",
       "flavor_master": {
         "cpus": 2,
         "name": "c2m4",
@@ -30,10 +30,10 @@
         "memory": 4
       },
       "ad_integration": true,
-      "admin_password": "YZazjckWJ257GwHbL3A",
-      "install_kibana": false,
-      "kibana_password": "xGeGr2DBbh0TqvwXtG",
-      "fluentd_password": "ro6tL6JqHSRnDGmxv7FIOCtPnl",
+      "admin_password": "Zh6fko7r4Qdmu1nCKAkK",
+      "install_kibana": true,
+      "kibana_password": "cIjgn9ldwZFzojSFehHxnds0ydI4",
+      "fluentd_password": "LPiBB981y8raYxYsHo5rqSm",
       "data_extra_mounts": [
         {
           "path": "/app/",
@@ -53,8 +53,22 @@
         {
           "role": "superuser",
           "groups": [
-            "cloud-d5zorg-dev-group"
+            "cloud-zorg-xfgbboi"
           ]
+        }
+      ],
+      "flavor_kibana": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "kibana_location": "master",
+      "kibana_extra_mounts": [
+        {
+          "path": "/app/kibana",
+          "size": 100,
+          "file_system": "xfs"
         }
       ]
     },

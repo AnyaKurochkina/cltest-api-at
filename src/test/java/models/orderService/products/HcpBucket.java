@@ -14,6 +14,7 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.OrderServiceSteps;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -37,7 +38,7 @@ public class HcpBucket extends IProduct {
         productName = "HCP bucket";
         initProduct();
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -61,21 +62,21 @@ public class HcpBucket extends IProduct {
 
     @Step("Измененить параметры версионирования")
     public void changeBucketVersioning(){
-        orderServiceSteps.executeAction("change_bucket_versioning", this, new JSONObject("{\"bucket\":{\"versioning\":{\"prune\":true,\"enabled\":true,\"pruneDays\":10}}}"));
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.prune"), "Очистка не активирована");
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.enabled"), "Версионирование не активировалось");
+        OrderServiceSteps.executeAction("change_bucket_versioning", this, new JSONObject("{\"bucket\":{\"versioning\":{\"prune\":true,\"enabled\":true,\"pruneDays\":10}}}"));
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.prune"), "Очистка не активирована");
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.enabled"), "Версионирование не активировалось");
     }
 
     @Step("Измененить конфигурацию бакета")
     public void changeBucketConfig(){
-        orderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20.48,\"service_plan\":\"Sata_Tier\",\"replication_enabled\":false}}"));
-        Float hardQuota = (Float) orderServiceSteps.getProductsField(this, "data[0].config.bucket.hard_quota");
+        OrderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20.48,\"service_plan\":\"Sata_Tier\",\"replication_enabled\":false}}"));
+        Float hardQuota = (Float) OrderServiceSteps.getProductsField(this, "data[0].config.bucket.hard_quota");
         Assertions.assertEquals(20.48F, hardQuota, "Макс. объем не изменился! Макс. объем = " + hardQuota);
     }
 
     @Step("Настроить ACL")
     public void createOrChangeBucketAcls(String serviceAccId, String serviceAccTitle){
-        orderServiceSteps.executeAction("create_or_change_bucket_acls", this,
+        OrderServiceSteps.executeAction("create_or_change_bucket_acls", this,
                 new JSONObject(String.format("{\"user_name\":{\"name\":\"%s\",\"title\":\"%s\"},\"permissions\":[\"READ\",\"READ_ACL\",\"WRITE\",\"WRITE_ACL\"]}", serviceAccId, serviceAccTitle)));
     }
 

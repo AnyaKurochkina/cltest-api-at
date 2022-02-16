@@ -1,7 +1,7 @@
 package steps.tarifficator;
 
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -89,7 +89,6 @@ public class CostSteps extends Steps {
     }
 
     public Float getPreBillingCostPath(IProduct product, String path) {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
         Project project = Project.builder()
                 .projectEnvironment(new ProjectEnvironment(product.getEnv()))
                 .isForOrders(true)
@@ -108,7 +107,7 @@ public class CostSteps extends Steps {
 
         if (Objects.nonNull(product.getOrderId())) {
             template = JsonHelper.getJsonTemplate("/tarifficator/costItems.json").build();
-            JSONObject vm = new JSONObject((Map) orderServiceSteps.getProductsField(product, "", JSONObject.class));
+            JSONObject vm = new JSONObject((Map) OrderServiceSteps.getProductsField(product, "", JSONObject.class));
             template.put("tariff_plan_id", vm.query("/attrs/tariff_plan_id"));
 
             JSONArray items = (JSONArray) vm.query("/data");

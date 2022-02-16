@@ -16,6 +16,7 @@ import models.subModels.DbUser;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +53,13 @@ public class ScyllaDb extends IProduct {
             productName = "ScyllaDB";
         initProduct();
         if (domain == null)
-            domain = orderServiceSteps.getDomainBySegment(this, segment);
+            domain = OrderServiceSteps.getDomainBySegment(this, segment);
         if(flavor == null)
             flavor = getMinFlavor();
         if(osVersion == null)
             osVersion = getRandomOsVersion();
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -91,8 +92,8 @@ public class ScyllaDb extends IProduct {
     public void createDb(String dbName) {
         if(database.contains(new Db(dbName)))
             return;
-        orderServiceSteps.executeAction("scylladb_create_db", this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
+        OrderServiceSteps.executeAction("scylladb_create_db", this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)));
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
         database.add(new Db(dbName));
         log.info("createDb: " + database);
@@ -101,24 +102,24 @@ public class ScyllaDb extends IProduct {
 
     // [a-z0-9]+ 3-16
     public void createDbmsUser(String username, String password, String role) {
-        orderServiceSteps.executeAction("scylladb_create_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\",\"dbms_role\":\"%s\"}", username, password, role)));
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)), "Имя пользователя отличается от создаваемого");
+        OrderServiceSteps.executeAction("scylladb_create_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\",\"dbms_role\":\"%s\"}", username, password, role)));
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)), "Имя пользователя отличается от создаваемого");
         log.info("createDbmsUser = " + username);
         save();
     }
 
     // admin, user
     public void addPermissionsUser(String dbName, String username){
-        orderServiceSteps.executeAction("scylladb_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\", \"id\":\"%s:%s\"}", dbName, username, username, dbName)));
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, username)), "Права пользователю не выданы");
+        OrderServiceSteps.executeAction("scylladb_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\", \"id\":\"%s:%s\"}", dbName, username, username, dbName)));
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, username)), "Права пользователю не выданы");
         users.add(new DbUser(dbName, username));
         log.info("addPermissionsUser = " + username);
         save();
     }
 
     public void removePermissionsUser(String dbName, String username){
-        orderServiceSteps.executeAction("scylladb_remove_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\"}", dbName, username)));
-        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, username)), "Права у пользователя остались");
+        OrderServiceSteps.executeAction("scylladb_remove_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\"}", dbName, username)));
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, username)), "Права у пользователя остались");
         users.remove(new DbUser(dbName, username));
         log.info("removePermissionsUser = " + username);
         save();
@@ -126,28 +127,28 @@ public class ScyllaDb extends IProduct {
 
     //16-63
     public void resetPassword(String username, String password) {
-        orderServiceSteps.executeAction("scylladb_reset_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)));
+        OrderServiceSteps.executeAction("scylladb_reset_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)));
     }
 
     //Удалить пользователя
     public void removeDbmsUser(String username) {
-        orderServiceSteps.executeAction("scylladb_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)));
-        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)),
+        OrderServiceSteps.executeAction("scylladb_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)));
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)),
                 String.format("Пользователь: %s не удалился", username));
         save();
     }
 
     //Удалить БД
     public void removeDb(String dbName) {
-        orderServiceSteps.executeAction("scylladb_remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
-        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        OrderServiceSteps.executeAction("scylladb_remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
     }
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        orderServiceSteps.executeAction("check_vm", this, null);
+        OrderServiceSteps.executeAction("check_vm", this, null);
     }
 
     public void expandMountPoint() {

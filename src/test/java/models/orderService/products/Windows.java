@@ -15,6 +15,7 @@ import models.orderService.interfaces.IProduct;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
 import java.util.Map;
@@ -57,9 +58,9 @@ public class Windows extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = orderServiceSteps.getDomainBySegment(this, segment);
+        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
-        String host = (String) orderServiceSteps.getProductsField(this, "product_data[0].hostname");
+        String host = (String) OrderServiceSteps.getProductsField(this, "product_data[0].hostname");
         Assertions.assertTrue(host.contains("-" + roles.get(role)));
     }
 
@@ -76,7 +77,7 @@ public class Windows extends IProduct {
         if(osVersion == null)
             osVersion = getRandomOsVersion();
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -102,21 +103,21 @@ public class Windows extends IProduct {
 
     //Добавить диск
     public void addDisk(String disk) {
-        orderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"" + disk + "\", size: 10, file_system: \"ntfs\"}"));
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk)));
+        OrderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"" + disk + "\", size: 10, file_system: \"ntfs\"}"));
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk)));
     }
 
     //Расширить диск
     public void expandMountPoint(String disk) {
-        int sizeBefore = (Integer) orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
-        orderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 1}"));
-        int sizeAfter = (Integer) orderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
+        int sizeBefore = (Integer) OrderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
+        OrderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 1}"));
+        int sizeAfter = (Integer) OrderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
         Assertions.assertEquals(sizeBefore, sizeAfter - 1, "sizeBefore >= sizeAfter");
     }
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        orderServiceSteps.executeAction("check_vm", this, null);
+        OrderServiceSteps.executeAction("check_vm", this, null);
     }
 
 

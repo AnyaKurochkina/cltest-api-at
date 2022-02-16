@@ -13,6 +13,7 @@ import models.orderService.interfaces.IProduct;
 import models.subModels.Role;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.OrderServiceSteps;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +46,7 @@ public class OpenShiftProject extends IProduct {
             roles = Collections.singletonList(new Role("edit", accessGroup.getPrefixName()));
         }
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -59,7 +60,7 @@ public class OpenShiftProject extends IProduct {
     @Override
     public JSONObject toJson() {
         AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
-        List<ResourcePool> resourcePoolList = orderServiceSteps.getResourcesPoolList("container", projectId);
+        List<ResourcePool> resourcePoolList = OrderServiceSteps.getResourcesPoolList("container", projectId);
         ResourcePool resourcePool = resourcePoolList.stream().
                 filter(r -> r.getLabel().equals(resourcePoolLabel)).findFirst().orElseThrow(NoSuchFieldException::new);
         return JsonHelper.getJsonTemplate(jsonTemplate)
@@ -81,12 +82,12 @@ public class OpenShiftProject extends IProduct {
                 shdQuoteValue,
                 roles.get(0).getGroupId());
         roles.get(0).setName("view");
-        orderServiceSteps.executeAction("update_openshift_project", this, new JSONObject(data));
+        OrderServiceSteps.executeAction("update_openshift_project", this, new JSONObject(data));
         save();
-        Assertions.assertEquals(2, orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.memory"), "Память не изменилась");
-        Assertions.assertEquals("view", orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.roles[0].role"), "Роль не изменилась");
+        Assertions.assertEquals(2, OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.memory"), "Память не изменилась");
+        Assertions.assertEquals("view", OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.roles[0].role"), "Роль не изменилась");
         if (shdQuoteValue.equals("1")){
-            Assertions.assertEquals(1, orderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"), "СХД не изменился на 1");
+            Assertions.assertEquals(1, OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"), "СХД не изменился на 1");
         }
     }
 

@@ -12,6 +12,7 @@ import models.orderService.interfaces.IProduct;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +40,7 @@ public class RabbitMQCluster extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = orderServiceSteps.getDomainBySegment(this, segment);
+        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 
@@ -54,7 +55,7 @@ public class RabbitMQCluster extends IProduct {
         if(osVersion == null)
             osVersion = getRandomOsVersion();
         if(dataCentre == null)
-            dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -90,8 +91,8 @@ public class RabbitMQCluster extends IProduct {
     //Создать пользователя RabbitMQ
     public void rabbitmqCreateUser() {
         String user = "testapiuser";
-        orderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
-        Assertions.assertTrue(((Boolean) orderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта отсутствует пользователь "+ user);
+        OrderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)));
+        Assertions.assertTrue(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта отсутствует пользователь "+ user);
     }
 
     @Step("Удаление продукта")
@@ -105,17 +106,17 @@ public class RabbitMQCluster extends IProduct {
         Date dateBeforeUpdate;
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
         super.updateCerts("rabbitmq_update_certs");
-//        dateBeforeUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
-        dateAfterUpdate = dateFormat.parse((String) orderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+//        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+        dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
 //        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
         Assertions.assertNotEquals(0, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        orderServiceSteps.executeAction("check_vm", this, null);
+        OrderServiceSteps.executeAction("check_vm", this, null);
     }
 
     public void resize() {

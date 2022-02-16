@@ -4,17 +4,14 @@ package org.junit;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.utils.Encrypt;
-import models.ObjectPoolService;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import models.ObjectPoolService;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
-import ru.testit.junit5.JUnit5EventListener;
+import ru.testit.junit5.RunningHandler;
 
-
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
@@ -43,7 +40,8 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     @SneakyThrows
     public void testPlanExecutionFinished(TestPlan testPlan) {
-        JUnit5EventListener.HANDLER.finishLaunch();
+        if(Configure.isIntegrationTestIt())
+            RunningHandler.finishLaunch();
         ObjectPoolService.saveEntities(Configure.getAppProp("data.folder") + "/shareFolder/logData.json");
         new File(Configure.getAppProp("allure.results")).mkdir();
         FileWriter fooWriter = new FileWriter(Configure.getAppProp("allure.results") + "environment.properties", false);
