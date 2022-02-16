@@ -45,7 +45,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("687790")
+    @TmsLink("15778")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка подключения к БД {0}")
