@@ -37,6 +37,7 @@ public class Tests {
     }
 
     public static void putAttachLog(String text) {
+        UniqueTest.writeStepLog(text);
         String stepId = getLifecycle().getCurrentTestCase().orElse(null);
         if (stepId == null)
             return;
@@ -44,7 +45,6 @@ public class Tests {
         DataFileHelper.appendToFile(Configure.getAppProp("allure.results") + source, text + "\n");
         Attachment attachment = new Attachment().setSource(source).setName("log-test.log");
         getLifecycle().updateTestCase(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
-        UniqueTest.writeStepLog(text);
     }
 
     public static String getAttachLog() {
