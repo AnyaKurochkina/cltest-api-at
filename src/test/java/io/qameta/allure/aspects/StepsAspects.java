@@ -16,7 +16,6 @@ import io.qameta.allure.util.ResultsUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
-import tests.Tests;
 
 import java.util.List;
 import java.util.UUID;
