@@ -11,6 +11,7 @@ import org.aspectj.lang.annotation.Aspect;
 import ru.testit.utils.Outcome;
 import ru.testit.utils.StepNode;
 import ru.testit.utils.StepUtils;
+import tests.Tests;
 
 import java.util.Date;
 import java.util.Objects;
@@ -49,7 +50,6 @@ public class StepsAspects {
     }
 
     public static void failedNestedStep(Throwable e) {
-        log.error(e.toString());
         if (Objects.isNull(currentStep.get()))
             return;
         if (!isIntegrationTestIt())
@@ -57,6 +57,7 @@ public class StepsAspects {
         final StepNode currStep = currentStep.get();
         currStep.setCompletedOn(new Date());
         currStep.setOutcome(Outcome.FAILED.getValue());
+        Tests.putAttachLog(e.toString());
         currentStep.set(currStep.getParent());
     }
 
