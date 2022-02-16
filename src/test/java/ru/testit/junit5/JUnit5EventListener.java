@@ -49,7 +49,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     @SneakyThrows
     public void interceptTestMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
         if (isIntegrationTestIt()) {
-            JUnit5EventListener.HANDLER.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), TestITClient.getConfigurationId(), extensionContext.getTags());
+            RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), TestITClient.getConfigurationId(), extensionContext.getTags());
             extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), TestITClient.getConfigurationId());
         }
         try {
@@ -59,7 +59,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
                 invocation.proceed();
         } catch (Throwable throwable) {
             if (isIntegrationTestIt())
-                JUnit5EventListener.HANDLER.finishTest(extensionContext.getRequiredTestMethod(), throwable, /*getSubId(extensionContext)*/ TestITClient.getConfigurationId());
+                RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, /*getSubId(extensionContext)*/ TestITClient.getConfigurationId());
 //            throw new Exception(throwable.getMessage());
             throw throwable;
         }
@@ -74,7 +74,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     public void interceptTestTemplateMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Throwable {
         Entity entity = (Entity) invocationContext.getArguments().stream().filter(o -> Entity.class.isAssignableFrom(o.getClass())).findFirst().orElse(null);
         if (isIntegrationTestIt() && entity != null) {
-            JUnit5EventListener.HANDLER.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), entity.getConfigurationId(), extensionContext.getTags());
+            RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), entity.getConfigurationId(), extensionContext.getTags());
             extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), entity.getConfigurationId());
         }
         try {
@@ -84,7 +84,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
                 invocation.proceed();
         } catch (Throwable throwable) {
             if (isIntegrationTestIt() && entity != null)
-                JUnit5EventListener.HANDLER.finishTest(extensionContext.getRequiredTestMethod(), throwable, entity.getConfigurationId());
+                RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, entity.getConfigurationId());
             throw throwable;
         }
     }
@@ -93,21 +93,21 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         if (!isIntegrationTestIt())
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
-        JUnit5EventListener.HANDLER.finishTest(context.getRequiredTestMethod(), null, configurationId);
+        RunningHandler.finishTest(context.getRequiredTestMethod(), null, configurationId);
     }
 
     public void testAborted(final ExtensionContext context, final Throwable cause) {
         if (!isIntegrationTestIt())
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
-        JUnit5EventListener.HANDLER.finishTest(context.getRequiredTestMethod(), cause, configurationId);
+        RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId);
     }
 
     public void testFailed(final ExtensionContext context, final Throwable cause) {
         if (!isIntegrationTestIt())
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
-        JUnit5EventListener.HANDLER.finishTest(context.getRequiredTestMethod(), cause, configurationId);
+        RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId);
     }
 
     public void interceptAfterEachMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Exception {
@@ -123,7 +123,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     private void startUtilMethod(final MethodType methodType, final ReflectiveInvocationContext<Method> context) {
         if (!isIntegrationTestIt())
             return;
-        JUnit5EventListener.HANDLER.startUtilMethod(methodType, (Method) context.getExecutable());
+        RunningHandler.startUtilMethod(methodType, (Method) context.getExecutable());
     }
 
     @SneakyThrows
@@ -134,10 +134,10 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             else
                 invocation.proceed();
             if (isIntegrationTestIt())
-                JUnit5EventListener.HANDLER.finishUtilMethod(methodType, null);
+                RunningHandler.finishUtilMethod(methodType, null);
         } catch (Throwable throwable) {
             if (isIntegrationTestIt())
-                JUnit5EventListener.HANDLER.finishUtilMethod(methodType, throwable);
+                RunningHandler.finishUtilMethod(methodType, throwable);
 //            throw new Exception(throwable.getMessage());
             throw throwable;
         }

@@ -33,7 +33,8 @@ public class TestResultRequestFactory {
         currentTest.setConfigurationId(test.getConfigurationId());
         this.processTestSteps(currentTest, step, null);
         this.processUtilsMethodsSteps(currentTest, utilsMethodSteps);
-        currentTest.setMessage(currentTest.getMessage().replaceAll("\n", "\t \n"));
+        if(currentTest.getMessage() != null)
+            currentTest.setMessage(currentTest.getMessage().replaceAll("\n", "\t \n"));
         req.getTestResults().add(currentTest);
         String testResultId = TestITClient.sendTestResult(req);
 
