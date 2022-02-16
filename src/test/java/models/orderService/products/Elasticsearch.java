@@ -93,7 +93,7 @@ public class Elasticsearch extends IProduct {
 
     //Удалить хост
     public void deleteHost(String action) {
-        orderServiceSteps.executeAction("delete_vm", this, null);
+        orderServiceSteps.executeAction("delete_vm", this, null, this.getProjectId());
     }
 
     //Перезагрузить по питанию

@@ -75,7 +75,7 @@ public class Ubuntu extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        orderServiceSteps.executeAction("check_vm", this, null);
+        orderServiceSteps.executeAction("check_vm", this, null,  this.getProjectId());
     }
 
     //Перезагрузить по питанию

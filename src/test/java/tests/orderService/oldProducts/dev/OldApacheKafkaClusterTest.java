@@ -133,7 +133,7 @@ public class OldApacheKafkaClusterTest extends Tests {
     @Order(10)
     @DisplayName("Синхронизировать конфигурацию Apache Kafka Cluster OLD")
     @Test
-    void resize() {
+    void sincInfo() {
         if (kafka.productStatusIs(STOPPED)) {
             kafka.start();
         }
@@ -141,6 +141,16 @@ public class OldApacheKafkaClusterTest extends Tests {
     }
 
     @Order(11)
+    @DisplayName("Прислать конфигурацию Apache Kafka Cluster OLD")
+    @Test
+    void sendConfig() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
+        kafka.sendConfig();
+    }
+
+    @Order(12)
     @DisplayName("Выключить Apache Kafka Cluster OLD")
     @Test
     void stopSoft() {

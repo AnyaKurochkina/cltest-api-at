@@ -5,11 +5,11 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.orderService.products.ApacheKafkaCluster;
+import org.json.JSONObject;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
@@ -18,6 +18,9 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster")
@@ -105,6 +108,27 @@ public class ApacheKafkaClusterTest extends Tests {
             kafka.restart();
         }
     }
+
+    @TmsLink("659265")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Синхронизировать конфигурацию кластера Kafka {0}")
+    void syncInfo(ApacheKafkaCluster product) {
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.syncInfo();
+        }
+    }
+
+    @TmsLink("659273")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Прислать конфигурацию кластера Kafka {0}")
+    void sendConfig(ApacheKafkaCluster product) {
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.sendConfig();
+        }
+    }
+
 
     @TmsLink("377730")
     @Tag("actions")
