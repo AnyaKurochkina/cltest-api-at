@@ -35,8 +35,6 @@ public class TestResultRequestFactory {
         this.processUtilsMethodsSteps(currentTest, utilsMethodSteps);
         if(currentTest.getMessage() != null)
             currentTest.setMessage(currentTest.getMessage().replaceAll("\n", "\t \n"));
-        if(currentTest.getTraces() != null)
-            Tests.putAttachLog(currentTest.getTraces());
         req.getTestResults().add(currentTest);
         String testResultId = TestITClient.sendTestResult(req);
 
