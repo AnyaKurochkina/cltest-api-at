@@ -46,6 +46,19 @@ public class OldPostgresProTest extends Tests {
     }
 
     @Order(3)
+    @DisplayName("Добавить БД PostgresPRO OLD")
+    @Test
+    void checkBdConnection() {
+        if (postgresPro.productStatusIs(STOPPED)) {
+            postgresPro.start();
+        }
+        postgresPro.createDb("bd_for_check_connection");
+        postgresPro.checkConnection(postgresPro.getDbUrl(), postgresPro.getDbAdminUser(), postgresPro.getDbAdminPass());
+        postgresPro.removeDb("bd_for_check_connection");
+    }
+
+
+    @Order(3)
     @DisplayName("Добавить пользователя PostgresPRO OLD")
     @Test
     void createDbmsUser() {

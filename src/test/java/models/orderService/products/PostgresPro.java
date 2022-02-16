@@ -15,6 +15,8 @@ import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +28,10 @@ import java.util.List;
 @SuperBuilder
 public class PostgresPro extends IProduct {
     private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.any{it.db_name=='%s'}";
-//    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
+    //    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
     private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
-//    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
+    //    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
+    private final static String DB_CONNECTION_URL = "data.find{it.config.containsKey('connection_url')}.config.connection_url";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -43,6 +46,10 @@ public class PostgresPro extends IProduct {
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
+    String dbAdminPass;
+    //URL example = jdbc:postgresql://dhzorg-pgc001ln.corp.dev.vtb:5432/createdb12345
+    String dbUrl;
+    String dbAdminUser;
 
     @Override
     @Step("Заказ продукта")
@@ -56,13 +63,13 @@ public class PostgresPro extends IProduct {
         jsonTemplate = "/orders/postgresPro.json";
         productName = "PostgresPro";
         initProduct();
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(postgresproVersion == null)
+        if (postgresproVersion == null)
             postgresproVersion = getRandomProductVersionByPathEnum("postgrespro_version.enum");
-        if(dataCentre == null)
+        if (dataCentre == null)
             dataCentre = orderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
@@ -99,13 +106,31 @@ public class PostgresPro extends IProduct {
     }
 
     public void createDb(String dbName) {
-        if(database.contains(new Db(dbName)))
+        if (database.contains(new Db(dbName)))
             return;
-        orderServiceSteps.executeAction("create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
+        dbAdminPass = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
+        orderServiceSteps.executeAction("create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, dbAdminPass)));
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем" + dbName);
+        dbAdminUser = dbName + "_admin";
+        dbUrl = "jdbc:" + orderServiceSteps.getProductsField(this, DB_CONNECTION_URL) + "/" + dbName;
         database.add(new Db(dbName));
         log.info("database = " + database);
         save();
+    }
+
+    //Проверка подключения к бд
+    @SneakyThrows
+    public void checkConnection(String url, String user, String password) {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+            Assertions.assertTrue(connection.isValid(1));
+        } catch (Throwable t) {
+            t.printStackTrace();
+        } finally {
+            assert connection != null;
+            connection.close();
+        }
     }
 
     //Удалить БД

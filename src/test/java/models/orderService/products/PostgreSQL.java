@@ -114,7 +114,7 @@ public class PostgreSQL extends IProduct {
             return;
         dbAdminPass = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
         orderServiceSteps.executeAction("create_db", this,
-                new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: %s}", dbName, dbAdminPass)));
+                new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, dbAdminPass)));
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
         dbAdminUser = dbName + "_admin";
