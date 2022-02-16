@@ -108,7 +108,6 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         if (!isIntegrationTestIt())
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
-        Tests.putAttachLog(cause.toString());
         RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId);
     }
 
