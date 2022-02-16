@@ -61,14 +61,14 @@ public class HcpBucket extends IProduct {
 
     @Step("Измененить параметры версионирования")
     public void changeBucketVersioning(){
-        orderServiceSteps.executeAction("change_bucket_versioning", this, new JSONObject("{\"bucket\":{\"versioning\":{\"prune\":true,\"enabled\":true,\"pruneDays\":10}}}"));
+        orderServiceSteps.executeAction("change_bucket_versioning", this, new JSONObject("{\"bucket\":{\"versioning\":{\"prune\":true,\"enabled\":true,\"pruneDays\":10}}}"), this.getProjectId());
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.prune"), "Очистка не активирована");
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.enabled"), "Версионирование не активировалось");
     }
 
     @Step("Измененить конфигурацию бакета")
     public void changeBucketConfig(){
-        orderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20.48,\"service_plan\":\"Sata_Tier\",\"replication_enabled\":false}}"));
+        orderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20.48,\"service_plan\":\"Sata_Tier\",\"replication_enabled\":false}}"), this.getProjectId());
         Float hardQuota = (Float) orderServiceSteps.getProductsField(this, "data[0].config.bucket.hard_quota");
         Assertions.assertEquals(20.48F, hardQuota, "Макс. объем не изменился! Макс. объем = " + hardQuota);
     }
@@ -76,7 +76,7 @@ public class HcpBucket extends IProduct {
     @Step("Настроить ACL")
     public void createOrChangeBucketAcls(String serviceAccId, String serviceAccTitle){
         orderServiceSteps.executeAction("create_or_change_bucket_acls", this,
-                new JSONObject(String.format("{\"user_name\":{\"name\":\"%s\",\"title\":\"%s\"},\"permissions\":[\"READ\",\"READ_ACL\",\"WRITE\",\"WRITE_ACL\"]}", serviceAccId, serviceAccTitle)));
+                new JSONObject(String.format("{\"user_name\":{\"name\":\"%s\",\"title\":\"%s\"},\"permissions\":[\"READ\",\"READ_ACL\",\"WRITE\",\"WRITE_ACL\"]}", serviceAccId, serviceAccTitle)), this.getProjectId());
     }
 
     @Step("Удаление продукта")

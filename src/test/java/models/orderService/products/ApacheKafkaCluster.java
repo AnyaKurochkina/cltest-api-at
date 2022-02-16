@@ -85,7 +85,7 @@ public class ApacheKafkaCluster extends IProduct {
         List<KafkaTopic> kafkaTopics = new ArrayList<>();
         for (String name : names)
             kafkaTopics.add(new KafkaTopic("delete", 1, 1, 1, 1800000, name));
-        orderServiceSteps.executeAction(KAFKA_CREATE_TOPICS, this, new JSONObject("{\"topics\": " + JsonHelper.toJson(kafkaTopics) + "}"));
+        orderServiceSteps.executeAction(KAFKA_CREATE_TOPICS, this, new JSONObject("{\"topics\": " + JsonHelper.toJson(kafkaTopics) + "}"), this.getProjectId());
         for (String name : names)
             Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)), "Отсутствует в списке топик " + name);
         topics.addAll(kafkaTopics);
@@ -93,7 +93,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void deleteTopics(List<String> names) {
-        orderServiceSteps.executeAction("kafka_delete_topics", this, new JSONObject("{\"topics\": " + JsonHelper.toJson(names) + "}"));
+        orderServiceSteps.executeAction("kafka_delete_topics", this, new JSONObject("{\"topics\": " + JsonHelper.toJson(names) + "}"), this.getProjectId());
         for (String name : names)
             Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)));
         for (String name : names)
@@ -102,13 +102,13 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void createAcl(String topicNameRegex) {
-        orderServiceSteps.executeAction("kafka_create_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}"));
+        orderServiceSteps.executeAction("kafka_create_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}"), this.getProjectId());
         save();
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)), "ACL топик не создался");
     }
 
     public void createAclTransaction(String transactionRegex) {
-        orderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}"));
+        orderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}"), this.getProjectId());
         save();
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)), "ACL транзакция не создалась");
     }
@@ -117,7 +117,7 @@ public class ApacheKafkaCluster extends IProduct {
      * @param topicNameRegex имя Acl, Если в aclName передать "*" то удалятся все Acl
      */
     public void deleteAcl(String topicNameRegex) {
-        orderServiceSteps.executeAction("kafka_delete_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}]}}"));
+        orderServiceSteps.executeAction("kafka_delete_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}]}}"), this.projectId);
         save();
         Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)), "ACL топики не удалились");
     }
@@ -126,7 +126,7 @@ public class ApacheKafkaCluster extends IProduct {
      * @param transactionRegex имя Acl транзакции, Если в aclTransactionName передать "*" то удалятся все Acl транзакции
      */
     public void deleteAclTransaction(String transactionRegex) {
-        orderServiceSteps.executeAction("kafka_delete_transaction_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}]}}"));
+        orderServiceSteps.executeAction("kafka_delete_transaction_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}]}}"), this.projectId);
         save();
         Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)), "ACL транзакции не удалились");
     }
@@ -156,8 +156,13 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void syncInfo() {
-        orderServiceSteps.executeAction("kafka_sync_info", this, null);
+        orderServiceSteps.executeAction("kafka_sync_info", this, null, this.getProjectId());
     }
+
+    public void sendConfig() {
+        orderServiceSteps.executeAction("kafka_send_config", this, null);
+    }
+
 
     public void stopSoft() {
         stopSoft("stop_kafka");
