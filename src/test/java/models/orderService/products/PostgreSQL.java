@@ -119,7 +119,7 @@ public class PostgreSQL extends IProduct {
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
         dbAdminUser = dbName + "_admin";
-        dbUrl = "jdbc:" + orderServiceSteps.getProductsField(this, DB_CONNECTION_URL) + "/" + dbName;
+        dbUrl = "jdbc:" + OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL) + "/" + dbName;
         database.add(new Db(dbName));
         log.info("database = " + database);
         save();
