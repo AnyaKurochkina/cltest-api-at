@@ -74,9 +74,9 @@ public class RunningHandler
         }
         alreadyFinished.add(test);
         createTestItemRequestFactory.processFinishLaunchUniqueTest(utilsMethodSteps, parentStep, test);
+        testITClient.sendTestItemsUniqueTest(createTestItemRequestFactory.getCreateTestRequests(test));
         if(thrown != null)
             Tests.putAttachLog(ExceptionUtils.getStackTrace(thrown));
-        testITClient.sendTestItemsUniqueTest(createTestItemRequestFactory.getCreateTestRequests(test));
         testResultRequestFactory.processFinishLaunchUniqueTest(test, utilsMethodSteps, parentStep);
         removeCurrentStep();
     }
