@@ -2,9 +2,16 @@ package tests.orderService.oldProducts.dev;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.products.PostgresSQLCluster;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
+
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
 
 @Epic("Старые продукты DEV")
 @Feature("PostgresSQL Cluster OLD")
@@ -24,28 +31,43 @@ public class OldPostgresSQLClusterTest extends Tests {
     @DisplayName("Расширить PostgreSQLCluster OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (postgres.productStatusIs(STOPPED)) {
             postgres.start();
-        }catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            postgres.expandMountPoint();
         }
+        postgres.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Создать бд PostgreSQLCluster OLD")
     @Test
     void createDb() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.createDb("dbcreate1");
 
         postgres.removeDb("dbcreate1");
     }
 
     @Order(3)
+    @DisplayName("Проверить подключение к БД PostgresSQLCluster OLD")
+    @Test
+    void checkBdConnection() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
+        postgres.createDb("bd_for_check_connect");
+        postgres.checkConnection(postgres.getDbUrl(), postgres.getDbAdminUser(), postgres.getDbAdminPass());
+        postgres.removeDb("cached_bd");
+    }
+
+    @Order(4)
     @DisplayName("Создать пользователя PostgreSQLCluster OLD")
     @Test
     void createDbmsUser() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.createDb("dbforuser2");
         postgres.createDbmsUser("testchelik1", "user", "dbforuser2");
 
@@ -53,10 +75,13 @@ public class OldPostgresSQLClusterTest extends Tests {
         postgres.removeDbmsUser("testchelik1", "dbforuser2");
     }
 
-    @Order(4)
+    @Order(5)
     @DisplayName("Сбросить пароль пользователя PostgreSQLCluster OLD")
     @Test
     void resetPassword() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.createDb("createdbforreset3");
         postgres.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
         postgres.resetPassword("chelikforreset1");
@@ -66,10 +91,13 @@ public class OldPostgresSQLClusterTest extends Tests {
     }
 
     @Tag("remove")
-    @Order(5)
+    @Order(6)
     @DisplayName("Удалить пользователя PostgreSQLCluster OLD")
     @Test
     void removeDbmsUser() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.createDb("createdbforremove4");
         postgres.createDbmsUser("chelikforremove2", "user", "createdbforremove4");
         postgres.removeDbmsUser("chelikforremove2", "createdbforremove4");
@@ -77,51 +105,67 @@ public class OldPostgresSQLClusterTest extends Tests {
         postgres.removeDb("createdbforremove4");
     }
 
-    @Order(6)
+    @Order(7)
     @DisplayName("Сбросить пароль владельца PostgreSQLCluster OLD")
     @Test
     void resetDbOwnerPassword() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.createDb("createdbforreset8");
         postgres.resetDbOwnerPassword("createdbforreset8");
 
         postgres.removeDb("createdbforreset8");
     }
 
-    @Order(7)
+    @Order(8)
     @DisplayName("Удалить бд PostgreSQLCluster OLD")
     @Test
     void removeDb() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.createDb("createdbforremove5");
         postgres.removeDb("createdbforremove5");
     }
 
-    @Order(8)
+    @Order(9)
     @DisplayName("Перезагрузить PostgreSQLCluster OLD")
     @Test
     void restart() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.restart();
     }
 
-    @Order(9)
+    @Order(10)
     @DisplayName("Выключить PostgreSQLCluster OLD")
     @Test
     void stopSoft() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.stopSoft();
-        postgres.start();
-    }
-
-    @Order(10)
-    @DisplayName("Включить PostgreSQLCluster OLD")
-    @Test
-    void start() {
-        postgres.stopHard();
-        postgres.start();
     }
 
     @Order(11)
+    @DisplayName("Включить PostgreSQLCluster OLD")
+    @Test
+    void start() {
+        if (postgres.productStatusIs(STARTED)) {
+            postgres.stopHard();
+        }
+        postgres.start();
+    }
+
+    @Order(12)
     @DisplayName("Выключить принудительно PostgreSQLCluster OLD")
     @Test
     void stopHard() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.stopHard();
     }
 }

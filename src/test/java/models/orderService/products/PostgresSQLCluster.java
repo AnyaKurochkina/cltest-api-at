@@ -15,6 +15,8 @@ import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,11 @@ public class PostgresSQLCluster extends IProduct {
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
+    String dbAdminPass;
+    //URL example = jdbc:postgresql://dhzorg-pgc001ln.corp.dev.vtb:5432/createdb12345
+    String dbUrl;
+    String dbAdminUser;
+    private final static String DB_CONNECTION_URL = "data.find{it.config.containsKey('connection_url')}.config.connection_url";
 
     @Override
     @Step("Заказ продукта")
@@ -96,9 +103,26 @@ public class PostgresSQLCluster extends IProduct {
             return;
         orderServiceSteps.executeAction("postgresql_cluster_create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
         Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем" + dbName);
+        dbAdminUser = dbName + "_admin";
+        dbUrl = "jdbc:" + orderServiceSteps.getProductsField(this, DB_CONNECTION_URL) + "/" + dbName;
         database.add(new Db(dbName));
         log.info("database = " + database);
         save();
+    }
+
+    //Проверка подключения к бд
+    @SneakyThrows
+    public void checkConnection(String url, String user, String password) {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+            Assertions.assertTrue(connection.isValid(1));
+        } catch (Throwable t) {
+            t.printStackTrace();
+        } finally {
+            assert connection != null;
+            connection.close();
+        }
     }
 
     //Удалить БД

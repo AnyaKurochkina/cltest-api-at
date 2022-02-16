@@ -22,7 +22,8 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(PostgresSQLCluster product) {
         //noinspection EmptyTryBlock
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {}
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+        }
     }
 
     @TmsLink("461791")
@@ -45,6 +46,18 @@ public class PostgresSQLClusterTest extends Tests {
         }
     }
 
+    @TmsLink("413968")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверить подключение к БД PostgresSQLCluster {0}")
+    void checkBdConnection(PostgresSQLCluster product) {
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.createDb("cached_bd");
+            postgres.checkConnection(postgres.getDbUrl(), postgres.getDbAdminUser(), postgres.getDbAdminPass());
+            postgres.removeDb("cached_bd");
+        }
+    }
+
     @TmsLink("461801")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -63,7 +76,7 @@ public class PostgresSQLClusterTest extends Tests {
     void resetPassword(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb("cached_bd");
-            postgres.createDbmsUser("chelikforreset1", "user","cached_bd");
+            postgres.createDbmsUser("chelikforreset1", "user", "cached_bd");
             postgres.resetPassword("chelikforreset1");
         }
     }
