@@ -14,15 +14,12 @@ import models.subModels.DbUser;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import org.postgresql.ssl.PGjdbcHostnameVerifier;
-import org.postgresql.util.JdbcBlackHole;
 import steps.orderService.OrderServiceSteps;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
