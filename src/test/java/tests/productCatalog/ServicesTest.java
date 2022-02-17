@@ -52,6 +52,7 @@ public class ServicesTest extends Tests {
 
     @Order(2)
     @DisplayName("Проверка значения next в запросе на получение списка сервисов")
+    @TmsLink("682758")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetServiceListResponse.class).getNext();

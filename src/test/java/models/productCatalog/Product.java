@@ -42,8 +42,6 @@ public class Product extends Entity {
     private String productId;
     private String category;
     private String jsonTemplate;
-//    @Builder.Default
-//    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("products/", "productCatalog/products/createProduct.json");
 
     public static final String productName = "products/";
 
@@ -64,6 +62,7 @@ public class Product extends Entity {
                 .set("$.graph_id", graphId)
                 .set("$.envs", new JSONArray(envs))
                 .set("$.version", version)
+                .set("$.category", category)
                 .build();
     }
 
