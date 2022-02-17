@@ -14,7 +14,7 @@ import static core.helper.Configure.AuthorizerURL;
 public class AuthorizerSteps extends Steps {
 
     @Step("Получить все проекты папки")
-    public void getAllProjectFromFolder(String folderId) {
+    public static void getAllProjectFromFolder(String folderId) {
         ArrayList<String> projectId = new Http(AuthorizerURL)
                 .get("folders/" + Objects.requireNonNull(folderId) + "/children")
                 .assertStatus(200)
@@ -24,7 +24,7 @@ public class AuthorizerSteps extends Steps {
     }
 
     @Step("Получение пути до папки/проекта")
-    public String getPathToFolder(String target) {
+    public static String getPathToFolder(String target) {
         String url;
         if (Objects.requireNonNull(target).startsWith("fold")) {
             url = "folders/" + target + "/path";
@@ -44,7 +44,7 @@ public class AuthorizerSteps extends Steps {
     }
 
     @Step("Получение родителя папки/проекта")
-    public String getParentProject(String target) {
+    public static String getParentProject(String target) {
         String url;
         if (Objects.requireNonNull(target).startsWith("fold")) {
             url = "folders/" + target + "/ancestors";

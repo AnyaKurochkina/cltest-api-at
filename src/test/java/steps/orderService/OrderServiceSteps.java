@@ -2,8 +2,8 @@ package steps.orderService;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import core.helper.http.Response;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -34,7 +34,6 @@ import static core.helper.Configure.OrderServiceURL;
 public class OrderServiceSteps extends Steps {
 
     public static void checkOrderStatus(String exp_status, IProduct product) {
-        StateServiceSteps stateServiceSteps = new StateServiceSteps();
         String orderStatus = "";
         int counter = 60;
 
@@ -53,7 +52,7 @@ public class OrderServiceSteps extends Steps {
         if (!orderStatus.equals(exp_status.toLowerCase())) {
             String error = "null";
             try {
-                error = stateServiceSteps.GetErrorFromStateService(product);
+                error = StateServiceSteps.GetErrorFromStateService(product);
             } catch (Throwable e) {
                 e.printStackTrace();
                 log.error("Ошибка в GetErrorFromStateService " + e);
@@ -155,8 +154,6 @@ public class OrderServiceSteps extends Steps {
      */
     @Step("Выполнение action \"{action}\"")
     public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId) {
-        CostSteps costSteps = new CostSteps();
-        CalcCostSteps calcCostSteps = new CalcCostSteps();
         //Получение item'ов для экшена
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
@@ -167,7 +164,7 @@ public class OrderServiceSteps extends Steps {
 
         Assertions.assertAll("Проверка выполнения action - " + item.getName() + " у продукта " + product.getOrderId(),
                 () -> {
-                    costPreBilling.set(costSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
+                    costPreBilling.set(CostSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
                 () -> actionId.set(sendAction(action, product, jsonData, projectId)
@@ -184,7 +181,7 @@ public class OrderServiceSteps extends Steps {
             Float cost = null;
             for (int i = 0; i < 20; i++) {
                 Waiting.sleep(20000);
-                cost = calcCostSteps.getCostByUid(product);
+                cost = CalcCostSteps.getCostByUid(product);
                 if (cost == null)
                     continue;
                 if (Math.abs(cost - costPreBilling.get()) > 0.00001)
@@ -204,8 +201,6 @@ public class OrderServiceSteps extends Steps {
      */
     @Step("Выполнение action \"{action}\"")
     public static void executeAction(String action, IProduct product, JSONObject jsonData) {
-        CostSteps costSteps = new CostSteps();
-        CalcCostSteps calcCostSteps = new CalcCostSteps();
         //Получение item'ов для экшена
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
@@ -216,7 +211,7 @@ public class OrderServiceSteps extends Steps {
 
         Assertions.assertAll("Проверка выполнения action - " + item.getName() + " у продукта " + product.getOrderId(),
                 () -> {
-                    costPreBilling.set(costSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
+                    costPreBilling.set(CostSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
                 () -> actionId.set(sendAction(action, product, jsonData)
@@ -229,7 +224,7 @@ public class OrderServiceSteps extends Steps {
                         Float cost = null;
                         for (int i = 0; i < 20; i++) {
                             Waiting.sleep(20000);
-                            cost = calcCostSteps.getCostByUid(product);
+                            cost = CalcCostSteps.getCostByUid(product);
                             if (cost == null)
                                 continue;
                             if (Math.abs(cost - costPreBilling.get()) > 0.00001)
@@ -245,7 +240,6 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Ожидание успешного выполнения action")
     public static void checkActionStatusMethod(String exp_status, IProduct product, String action_id) {
-        StateServiceSteps stateServiceSteps = new StateServiceSteps();
         String actionStatus = "";
         int counter = 20;
         log.info("Проверка статуса выполнения действия");
@@ -262,7 +256,7 @@ public class OrderServiceSteps extends Steps {
         if (!actionStatus.equals(exp_status.toLowerCase())) {
             String error = null;
             try {
-                error = stateServiceSteps.GetErrorFromStateService(product);
+                error = StateServiceSteps.GetErrorFromStateService(product);
             } catch (Throwable e) {
                 e.printStackTrace();
             }

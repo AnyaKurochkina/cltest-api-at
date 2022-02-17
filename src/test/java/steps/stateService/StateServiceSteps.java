@@ -11,7 +11,7 @@ import static core.helper.Configure.StateServiceURL;
 @Log4j2
 public class StateServiceSteps extends Steps {
 
-    public String GetErrorFromStateService(IProduct product) {
+    public static String GetErrorFromStateService(IProduct product) {
         String traceback = null;
         try {
             traceback = new Http(StateServiceURL)

@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import models.Entity;
 import org.json.JSONObject;
-import steps.authorizer.AuthorizerSteps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,6 @@ public class Folder extends Entity {
     public String parentId;
     public List<String> informationSystemIds;
 
-    @Builder.Default
-    transient AuthorizerSteps authorizerSteps = new AuthorizerSteps();
     transient static final public String BUSINESS_BLOCK = "business_block";
     transient static final public String DEPARTMENT = "department";
     transient static final public String DEFAULT = "default";

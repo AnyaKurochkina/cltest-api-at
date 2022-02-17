@@ -21,7 +21,7 @@ public class ProjectSteps extends Steps {
      * @param projectEnvId ID среды проекта
      * @return - возвращаем рандомный префикс из доступных
      */
-    public String getPrefixEnv(String projectId, String infoSystems, String projectEnvId) {
+    public static String getPrefixEnv(String projectId, String infoSystems, String projectEnvId) {
         //Получение префикосв среды
         JsonPath jsonPath = new Http(PortalBackURL)
                 .get(String.format("folders/%s/information_systems/%s/environment_prefixes?project_environment_id=%s&reserved=false",

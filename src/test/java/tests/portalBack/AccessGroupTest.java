@@ -1,19 +1,18 @@
 package tests.portalBack;
 
 import com.mifmif.common.regex.Generex;
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.authorizer.InformationSystem;
+import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
 import models.portalBack.AccessGroup;
-import models.authorizer.Project;
 import org.junit.DisabledIfEnv;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-
 import steps.portalBack.AccessGroupSteps;
 import steps.portalBack.PortalBackSteps;
 import tests.Tests;
@@ -52,15 +51,13 @@ public class AccessGroupTest extends Tests {
     @TmsLink("377442")
     @DisplayName("Добавление пользователя в группу доступа для среды TEST")
     void addUserAccessGroupTest() {
-        AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
-        PortalBackSteps portalBackSteps = new PortalBackSteps();
         String informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
-        ProjectEnvironment projectEnvironment = new PortalBackSteps().getProjectEnvironment("TEST", informationSystem);
+        ProjectEnvironment projectEnvironment = PortalBackSteps.getProjectEnvironment("TEST", informationSystem);
         Project project = Project.builder()
                 .projectEnvironment(projectEnvironment)
                 .build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").projectName(project.getId()).build().createObject();
-        accessGroupSteps.addUsersToGroup(accessGroup, portalBackSteps.getUsers(project, "VTB4043473"));
+        AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(project, "VTB4043473"));
     }
 
     @Test
@@ -68,12 +65,10 @@ public class AccessGroupTest extends Tests {
     @TmsLink("377440")
     @DisplayName("Добавление пользователя в группу доступа для среды DEV")
     void addUserAccessGroupDev() {
-        AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
-        PortalBackSteps portalBackSteps = new PortalBackSteps();
         Project project = Project.builder()
                 .projectEnvironment(new ProjectEnvironment("DEV")).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").projectName(project.getId()).build().createObject();
-        accessGroupSteps.addUsersToGroup(accessGroup, portalBackSteps.getUsers(project, "VTB4043473"));
+        AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(project, "VTB4043473"));
     }
 
     @Test
@@ -81,13 +76,11 @@ public class AccessGroupTest extends Tests {
     @TmsLink("377441")
     @DisplayName("Удаление пользователя из группы доступа")
     void deleteUserAccessGroup() {
-        AccessGroupSteps accessGroupSteps = new AccessGroupSteps();
-        PortalBackSteps portalBackSteps = new PortalBackSteps();
         AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").build().createObject();
         Project project = Project.builder().id(accessGroup.getProjectName()).build().createObject();
-        String user = portalBackSteps.getUsers(project, "VTB4043473");
-        accessGroupSteps.addUsersToGroup(accessGroup, user);
-        accessGroupSteps.removeUserFromGroup(accessGroup, user);
+        String user = PortalBackSteps.getUsers(project, "VTB4043473");
+        AccessGroupSteps.addUsersToGroup(accessGroup, user);
+        AccessGroupSteps.removeUserFromGroup(accessGroup, user);
     }
 
     @Test

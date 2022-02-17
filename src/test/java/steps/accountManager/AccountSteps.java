@@ -1,7 +1,7 @@
 package steps.accountManager;
 
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import steps.Steps;
@@ -14,7 +14,7 @@ import static core.helper.Configure.AccountManagerURL;
 public class AccountSteps extends Steps {
 
     @Step("Перевод со счета {from} на счет {to} суммы {amount} c комментарием {reason}")
-    public void transferMoney(String from, String to, String amount, String reason) {
+    public static void transferMoney(String from, String to, String amount, String reason) {
         JsonHelper.getJsonTemplate("/accountManager/transaction.json")
                 .set("$.from_account_id", Objects.requireNonNull(from))
                 .set("$.to_account_id", Objects.requireNonNull(to))
@@ -26,7 +26,7 @@ public class AccountSteps extends Steps {
     }
 
     @Step("Запрос текущего баланса для папки {folderId}")
-    public Float getCurrentBalance(String folderId) {
+    public static Float getCurrentBalance(String folderId) {
         String res = new Http(AccountManagerURL)
                 .get("folders/{}/accounts", folderId)
                 .assertStatus(200)
@@ -35,7 +35,7 @@ public class AccountSteps extends Steps {
         return Float.valueOf(Objects.requireNonNull(res));
     }
 
-    public String getAccountIdByContext(String context) {
+    public static String getAccountIdByContext(String context) {
         log.info("Получение account_id для контекста - " + Objects.requireNonNull(context));
         String account_id = null;
         int total_count = new Http(AccountManagerURL)

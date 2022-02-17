@@ -22,7 +22,7 @@ public class AccessGroupSteps extends Steps {
      * @param username пользователь
      */
     @Step("Добавление пользователя в группу доступа для проекта среды {env}")
-    public void addUsersToGroup(AccessGroup group, String username) {
+    public static void addUsersToGroup(AccessGroup group, String username) {
         String[] arr = new String[]{username};
         JsonHelper.getJsonTemplate("/accessGroup/users.json")
                 .set("$.users", arr)
@@ -34,7 +34,7 @@ public class AccessGroupSteps extends Steps {
 
     @SneakyThrows
     @Step("Добавление пользователя в группу доступа для проекта среды {env}")
-    public void removeUserFromGroup(AccessGroup group, String user) {
+    public static void removeUserFromGroup(AccessGroup group, String user) {
         new Http(PortalBackURL)
                 .delete("projects/{}/access_groups/{}/group_users?unique_name={}", group.getProjectName(), group.getPrefixName(), URLEncoder.encode(user, String.valueOf(StandardCharsets.UTF_8)))
                 .assertStatus(204);

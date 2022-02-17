@@ -2,8 +2,8 @@ package models.authorizer;
 
 import com.mifmif.common.regex.Generex;
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,14 +33,13 @@ public class Project extends Entity {
             informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
         }
         if(projectEnvironment == null){
-            projectEnvironment = new PortalBackSteps().getProjectEnvironment("DEV", informationSystem);
+            projectEnvironment = PortalBackSteps.getProjectEnvironment("DEV", informationSystem);
         }
         if(folderName == null){
             folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
         }
         if(prefix == null){
-            ProjectSteps projectSteps = new ProjectSteps();
-            prefix = projectSteps.getPrefixEnv(folderName, informationSystem, projectEnvironment.getId());
+            prefix = ProjectSteps.getPrefixEnv(folderName, informationSystem, projectEnvironment.getId());
         }
         if(projectName == null){
             projectName = new Generex("project [0-9a-zA-Z]{5,15}").random();
