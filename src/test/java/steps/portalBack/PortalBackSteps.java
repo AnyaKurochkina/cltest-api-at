@@ -17,7 +17,7 @@ public class PortalBackSteps extends Steps {
 
     @SneakyThrows
     @Step("Получение ID project env")
-    public ProjectEnvironment getProjectEnvironment(String envType, String informationSystemId) {
+    public static ProjectEnvironment getProjectEnvironment(String envType, String informationSystemId) {
         String folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
 
         JsonPath jsonPath = new Http(PortalBackURL)
@@ -42,7 +42,7 @@ public class PortalBackSteps extends Steps {
     }
 
     @Step("Получение пользователя из LDAP")
-    public String getUsers(Project project, String username) {
+    public static String getUsers(Project project, String username) {
         return  new Http(PortalBackURL)
                 .get("users?q={}&project_name={}", username, project.getId())
                 .assertStatus(200)

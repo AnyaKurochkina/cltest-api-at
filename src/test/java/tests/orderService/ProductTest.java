@@ -25,8 +25,6 @@ import tests.Tests;
 @Feature("Действия над продуктами")
 @Tags({@Tag("regress"), @Tag("prod")})
 public class ProductTest extends Tests {
-    AccountSteps accountSteps = new AccountSteps();
-    AuthorizerSteps authorizerSteps = new AuthorizerSteps();
 
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @TmsLink("584453")
@@ -34,7 +32,7 @@ public class ProductTest extends Tests {
     public void moveProductWithEqualsPrefix(Rhel resource) {
         try (Rhel product = resource.createObjectExclusiveAccess()) {
             Project projectSource = Project.builder().id(product.getProjectId()).build().createObject();
-            String parentFolderId = authorizerSteps.getParentProject(product.getProjectId());
+            String parentFolderId = AuthorizerSteps.getParentProject(product.getProjectId());
             Folder folderTarget = Folder.builder()
                     .title("folderForMoveProductWithEqualsPrefix")
                     .kind(Folder.DEFAULT)
@@ -61,11 +59,11 @@ public class ProductTest extends Tests {
                     .folderName(folderTarget2.getName())
                     .build()
                     .createObjectPrivateAccess();
-            String accountFrom = accountSteps.getAccountIdByContext(parentFolderId);
+            String accountFrom = AccountSteps.getAccountIdByContext(parentFolderId);
             String accountTo = ((Account) Account.builder().folder(folderTarget).build().createObject()).getAccountId();
-            accountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
+            AccountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
             String accountTo2 = ((Account) Account.builder().folder(folderTarget2).build().createObject()).getAccountId();
-            accountSteps.transferMoney(accountFrom, accountTo2, "1000.00", "Перевод в рамках тестирования");
+            AccountSteps.transferMoney(accountFrom, accountTo2, "1000.00", "Перевод в рамках тестирования");
             Waiting.sleep(60000);
             OrderServiceSteps.changeProjectForOrder(product, projectTarget);
             Waiting.sleep(60000);
@@ -76,11 +74,11 @@ public class ProductTest extends Tests {
 //          Заказ отсутствует в списке продуктов исходного проекта
                 Assertions.assertFalse(OrderServiceSteps.getProductsWithStatus(projectTarget.getId(), "success").stream().anyMatch(id -> id.equals(product.getOrderId())),
                         "Заказ присутствует в списке продуктов исходного проекта");
-                Float spent = accountSteps.getCurrentBalance(folderTarget.getName());
+                Float spent = AccountSteps.getCurrentBalance(folderTarget.getName());
                 Waiting.sleep(60000);
 
 //            Расход в исходном проекте уменьшился на сумму перенесенного продукта
-                Assertions.assertEquals(spent, accountSteps.getCurrentBalance(folderTarget.getName()), 0.01, "Сумма списания отличается от ожидаемой суммы");
+                Assertions.assertEquals(spent, AccountSteps.getCurrentBalance(folderTarget.getName()), 0.01, "Сумма списания отличается от ожидаемой суммы");
 
 //            Заказ отображается в списке продуктов целевого проекта
                 Assertions.assertTrue(OrderServiceSteps.getProductsWithStatus(projectTarget2.getId(), "success").stream().anyMatch(id -> id.equals(product.getOrderId())),

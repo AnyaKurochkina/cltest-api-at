@@ -1,6 +1,5 @@
 package tests.accountManager;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -8,6 +7,7 @@ import models.accountManager.Account;
 import models.authorizer.Folder;
 import models.authorizer.Organization;
 import org.junit.DisabledIfEnv;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -20,7 +20,6 @@ import tests.Tests;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class AccountTest extends Tests {
-     final AccountSteps accountSteps = new AccountSteps();
 
     @Order(1)
     @Test
@@ -58,11 +57,11 @@ public class AccountTest extends Tests {
     @DisplayName("Перевод средств между организацией и любой другой папкой")
     void transferMoneyFromAccountOrganizationToBusinessBlock() {
         Organization organization = Organization.builder().build().createObject();
-        String accountFrom = accountSteps.getAccountIdByContext(organization.getName());
+        String accountFrom = AccountSteps.getAccountIdByContext(organization.getName());
         Folder folderTo = Folder.builder().build().createObject();
         String accountTo = ((Account) Account.builder().folder(folderTo).build().createObject()).getAccountId();
-        accountSteps.transferMoney(accountFrom, accountTo, "10000.00", "Перевод в рамках тестирования");
-        accountSteps.transferMoney(accountTo, accountFrom, "10000.00", "Перевод в рамках тестирования");
+        AccountSteps.transferMoney(accountFrom, accountTo, "10000.00", "Перевод в рамках тестирования");
+        AccountSteps.transferMoney(accountTo, accountFrom, "10000.00", "Перевод в рамках тестирования");
     }
 
     @Test

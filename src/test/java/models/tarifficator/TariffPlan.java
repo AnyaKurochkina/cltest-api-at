@@ -1,17 +1,21 @@
 package models.tarifficator;
 
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import models.Entity;
 import models.authorizer.Organization;
 import org.json.JSONObject;
 import steps.tarifficator.TariffPlanSteps;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Builder
 @Data
@@ -36,10 +40,6 @@ public class TariffPlan extends Entity {
     Boolean updateOrders;
     Date updatedAt;
 
-    @Builder.Default
-    transient TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
-
-
     public JSONObject toJson() {
         return new JSONObject("{\"tariff_plan\":" + JsonHelper.toJson(this) + "}");
     }
@@ -54,7 +54,7 @@ public class TariffPlan extends Entity {
         if(base == null)
             base = true;
         if(oldTariffPlanId == null) {
-            TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
+            TariffPlan activeTariff = TariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
             oldTariffPlanId = activeTariff.getId();
         }
         if(!base && organizationName == null) {
@@ -71,7 +71,7 @@ public class TariffPlan extends Entity {
                 .post("tariff_plans")
                 .assertStatus(201)
                 .toString();
-        StringUtils.copyAvailableFields(tariffPlanSteps.deserialize(object), this);
+        StringUtils.copyAvailableFields(TariffPlanSteps.deserialize(object), this);
     }
 
 

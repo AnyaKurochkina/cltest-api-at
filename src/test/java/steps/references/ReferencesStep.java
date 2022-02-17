@@ -19,7 +19,7 @@ import static core.helper.Configure.ReferencesURL;
 public class ReferencesStep {
 
     @Step("Получение списка flavors для продукта {product}")
-    public List<Flavor> getProductFlavorsLinkedList(IProduct product) {
+    public static List<Flavor> getProductFlavorsLinkedList(IProduct product) {
         String jsonArray = new Http(ReferencesURL)
                 .setProjectId(Objects.requireNonNull(product.getProjectId()))
                 .get("pages/?directory__name=flavors&tags={}", product.getProductId())
@@ -34,7 +34,7 @@ public class ReferencesStep {
     }
 
     @Step("Получение списка flavors по page_filter {pageFilter}")
-    public List<Flavor> getFlavorsByPageFilterLinkedList(IProduct product, String pageFilter) {
+    public static List<Flavor> getFlavorsByPageFilterLinkedList(IProduct product, String pageFilter) {
         String jsonArray = new Http(ReferencesURL)
                 .setProjectId(Objects.requireNonNull(product).getProjectId())
                 .get("pages/?page_filter={}", pageFilter)

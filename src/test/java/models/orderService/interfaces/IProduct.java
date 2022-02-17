@@ -55,8 +55,6 @@ public abstract class IProduct extends Entity {
     public static final String STOP_HARD = "Выключить принудительно";
     public static final String RESIZE = "Изменить конфигурацию";
 
-    @Builder.Default
-    protected transient ReferencesStep referencesStep = new ReferencesStep();
     protected String jsonTemplate;
 
     @Getter
@@ -94,9 +92,8 @@ public abstract class IProduct extends Entity {
     @Step("Сравнение стоимости продукта с ценой предбиллинга при заказе")
     protected void compareCostOrderAndPrice() {
         try {
-            CostSteps costSteps = new CostSteps();
-            Float preBillingCost = costSteps.getPreBillingTotalCost(this);
-            Float currentCost = costSteps.getCurrentCost(this);
+            Float preBillingCost = CostSteps.getPreBillingTotalCost(this);
+            Float currentCost = CostSteps.getCurrentCost(this);
             for (int i = 0; i < 15; i++) {
                 Waiting.sleep(20000);
                 if (Float.compare(currentCost, preBillingCost) > 0.00001)
@@ -146,9 +143,8 @@ public abstract class IProduct extends Entity {
     //Удалить рекурсивно
     @Step("Удаление продукта")
     protected void delete(String action) {
-        CalcCostSteps calcCostSteps = new CalcCostSteps();
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
-        Assertions.assertEquals(0.0F, calcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
+        Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
     }
 
     public boolean productStatusIs(ProductStatus status) {
@@ -167,7 +163,7 @@ public abstract class IProduct extends Entity {
 
     //Изменить конфигурацию
     protected void resize(String action) {
-        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
+        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
         Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
         OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"), this.getProjectId());
@@ -199,12 +195,12 @@ public abstract class IProduct extends Entity {
     }
 
     public Flavor getMaxFlavor() {
-        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
+        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
         return list.get(list.size() - 1);
     }
 
     public Flavor getMinFlavor(){
-        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
+        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
         return list.get(0);
     }
 

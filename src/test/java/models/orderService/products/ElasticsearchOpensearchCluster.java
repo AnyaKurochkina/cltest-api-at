@@ -14,6 +14,7 @@ import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
+import steps.references.ReferencesStep;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -53,8 +54,8 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        flavorData = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_data:DEV").get(0);
-        flavorMaster = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_master:DEV").get(0);
+        flavorData = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_data:DEV").get(0);
+        flavorMaster = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_master:DEV").get(0);
 //        flavorKibana = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_kibana:DEV").get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
