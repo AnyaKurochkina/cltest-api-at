@@ -41,78 +41,113 @@ public class WindowsTest extends Tests {
     @ParameterizedTest(name = "Расширить диск {0}")
     void expandMountPoint(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
-            windows.addDisk("I");
-            windows.expandMountPoint("I");
+            windows.addDisk("K");
+            windows.expandMountPoint("K");
         }
     }
 
-    @TmsLink("377717")
+    @TmsLink("694091")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
-    void restart(Windows product) {
+    @ParameterizedTest(name = "Удалить диск {0}")
+    void deleteMountPoint(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
-            windows.restart();
+            windows.addDisk("K");
+            windows.unmountDisk("K");
+            windows.deleteDisk("K");
         }
     }
 
-    @TmsLink("377720")
+    @TmsLink("694092")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
-    void stopSoft(Windows product) {
+    @ParameterizedTest(name = "Подключить диск {0}")
+    void mountPoint(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
-            windows.stopSoft();
-            windows.start();
+            windows.addDisk("S");
+            windows.unmountDisk("S");
+            windows.mountDisk("S");
         }
     }
 
-    @TmsLink("377722")
+    @TmsLink("694093")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
-    void resize(Windows product) {
+    @ParameterizedTest(name = "Отключить диск {0}")
+    void unmountPoint(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
-            windows.stopHard();
-            try {
-                windows.resize(windows.getMaxFlavor());
-            } finally {
-                windows.start();
-            }
+            windows.addDisk("T");
+            windows.unmountDisk("T");
         }
     }
 
-    @TmsLink("654229")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверить конфигурацию {0}")
-    void refreshVmConfig(Windows product) {
-        try (Windows windows = product.createObjectExclusiveAccess()) {
-            windows.refreshVmConfig();
-        }
-    }
-
-    @TmsLink("377719")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(Windows product) {
-        try (Windows windows = product.createObjectExclusiveAccess()) {
-            windows.stopHard();
-            windows.start();
-        }
-    }
-
-    @TmsLink("377718")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
-    void stopHard(Windows product) {
-        try (Windows windows = product.createObjectExclusiveAccess()) {
-            windows.stopHard();
-            windows.start();
-        }
-    }
+//    @TmsLink("377717")
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Перезагрузить {0}")
+//    void restart(Windows product) {
+//        try (Windows windows = product.createObjectExclusiveAccess()) {
+//            windows.restart();
+//        }
+//    }
+//
+//    @TmsLink("377720")
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Выключить {0}")
+//    void stopSoft(Windows product) {
+//        try (Windows windows = product.createObjectExclusiveAccess()) {
+//            windows.stopSoft();
+//            windows.start();
+//        }
+//    }
+//
+//    @TmsLink("377722")
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+//    void resize(Windows product) {
+//        try (Windows windows = product.createObjectExclusiveAccess()) {
+//            windows.stopHard();
+//            try {
+//                windows.resize(windows.getMaxFlavor());
+//            } finally {
+//                windows.start();
+//            }
+//        }
+//    }
+//
+//    @TmsLink("654229")
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Проверить конфигурацию {0}")
+//    void refreshVmConfig(Windows product) {
+//        try (Windows windows = product.createObjectExclusiveAccess()) {
+//            windows.refreshVmConfig();
+//        }
+//    }
+//
+//    @TmsLink("377719")
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Включить {0}")
+//    void start(Windows product) {
+//        try (Windows windows = product.createObjectExclusiveAccess()) {
+//            windows.stopHard();
+//            windows.start();
+//        }
+//    }
+//
+//    @TmsLink("377718")
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Выключить принудительно {0}")
+//    void stopHard(Windows product) {
+//        try (Windows windows = product.createObjectExclusiveAccess()) {
+//            windows.stopHard();
+//            windows.start();
+//        }
+//    }
 
     @TmsLink("377716")
     @Source(ProductArgumentsProvider.PRODUCTS)

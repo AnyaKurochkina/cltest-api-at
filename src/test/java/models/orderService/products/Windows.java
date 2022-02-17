@@ -2,21 +2,20 @@ package models.orderService.products;
 
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.portalBack.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.subModels.DbUser;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,9 +38,13 @@ public class Windows extends IProduct {
     String role;
     public String domain;
     Flavor flavor;
-    private static String ADD_DISK_PATH = "data.find{it.type=='vm'}.config.extra_disks.any{it.path=='%s'}";
-    private static String DISK_SIZE = "data.find{it.type=='vm'}.config.extra_disks.find{it.path=='%s'}.size";
+    private static String ADD_DISK_PATH = "data.find{it.type=='vm'}.data.config.extra_disks.any{it.path=='%s'}";
+    private static String DISK_SIZE = "data.find{it.type=='vm'}.data.config.extra_disks.find{it.path=='%s'}.size";
+    private static String DISK_SERIAL = "data.find{it.type=='vm'}.data.config.extra_disks.find{it.path=='%s'}.serial";
+    private static String DISK_IS_CONNECTED = "data.find{it.type=='vm'}.data.config.extra_disks.find{it.path=='%s'}.is_connected";
     public static String ADD_DISK = "Добавить диск";
+    @Builder.Default
+    public List<String> disks = new ArrayList<>();
 
     private final static Map<String, String> roles = Stream.of(new String[][] {
             { "generic_application", "ap" },
@@ -103,8 +106,11 @@ public class Windows extends IProduct {
 
     //Добавить диск
     public void addDisk(String disk) {
+        if(disks.contains(disk))
+            return;
         OrderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"" + disk + "\", size: 10, file_system: \"ntfs\"}"), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk)));
+        disks.add(disk);
     }
 
     //Расширить диск
@@ -113,6 +119,33 @@ public class Windows extends IProduct {
         OrderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 1}"), this.getProjectId());
         int sizeAfter = (Integer) OrderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
         Assertions.assertEquals(sizeBefore, sizeAfter - 1, "sizeBefore >= sizeAfter");
+    }
+
+    public void unmountDisk(String disk) {
+        String serial = (String) OrderServiceSteps.getProductsField(this, String.format(DISK_SERIAL, disk));
+        OrderServiceSteps.executeAction("windows_unmount_disk", this,
+                new JSONObject("{path: \"" + disk + "\", serial: \"" + serial + "\", is_connected: true}"), getProjectId());
+        boolean isConnected = (Boolean) OrderServiceSteps.getProductsField(this, String.format(DISK_IS_CONNECTED, disk));
+        Assertions.assertFalse(isConnected, "Диск не отключен");
+    }
+
+    public void mountDisk(String disk) {
+        String serial = (String) OrderServiceSteps.getProductsField(this, String.format(DISK_SERIAL, disk));
+        OrderServiceSteps.executeAction("windows_delete_disk", this,
+                new JSONObject("{path: \"" + disk + "\", serial: \"" + serial + "\", is_connected: false}"), getProjectId());
+        boolean isConnected = (Boolean) OrderServiceSteps.getProductsField(this, String.format(DISK_IS_CONNECTED, disk));
+        Assertions.assertTrue(isConnected, "Диск не подключен");
+    }
+
+    public void deleteDisk(String disk) {
+        if(!disks.contains(disk))
+            return;
+        String serial = (String) OrderServiceSteps.getProductsField(this, String.format(DISK_SERIAL, disk));
+        OrderServiceSteps.executeAction("windows_mount_disk", this,
+                new JSONObject("{path: \"" + disk + "\", serial: \"" + serial + "\", is_connected: false}"), getProjectId());
+        boolean isCreatedDisk = (Boolean) OrderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk));
+        Assertions.assertFalse(isCreatedDisk, "Диск не удален");
+        disks.remove(disk);
     }
 
     //Проверить конфигурацию
