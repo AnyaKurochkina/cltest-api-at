@@ -68,6 +68,16 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.deleteTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
     }
 
+    @Order(234)
+    @DisplayName("Удалить топик Apache Kafka Cluster OLD")
+    @Test
+    void consume() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
+        kafka.consumeKafkaMessages("PacketTopicName1");
+    }
+
     @Order(5)
     @DisplayName("Создать ACL Apache Kafka Cluster OLD")
     @Test

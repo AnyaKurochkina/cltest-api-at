@@ -1,6 +1,8 @@
 package models.orderService.products;
 
 import core.helper.JsonHelper;
+import core.kafka.KafkaConsumer;
+import core.kafka.KafkaProducer;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -11,6 +13,7 @@ import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
 import models.subModels.Flavor;
 import models.subModels.KafkaTopic;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
@@ -53,13 +56,13 @@ public class ApacheKafkaCluster extends IProduct {
         jsonTemplate = "/orders/apache_kafka_cluster.json";
         productName = "Apache Kafka Cluster";
         initProduct();
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(kafkaVersion == null)
+        if (kafkaVersion == null)
             kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
-        if(dataCentre == null)
+        if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
@@ -80,6 +83,17 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .set("$.order.label", getLabel())
                 .build();
+    }
+
+    public void consumeKafkaMessages(String topicName) {
+        String kafkaUrl = "dhzorg-kfc001lk.corp.dev.vtb:9092";
+        KafkaProducer kafkaProducer = new KafkaProducer("Text from producer", kafkaUrl, topicName);
+        KafkaConsumer kafkaConsumer = new KafkaConsumer(topicName, kafkaUrl);
+        kafkaProducer.doProduce();
+        kafkaConsumer.doConsume();
+        List<ConsumerRecord<String, String>> consumerRecords = kafkaConsumer.getConsumerRecordList();
+        kafkaConsumer.stopConsume();
+        System.out.println();
     }
 
     public void createTopics(List<String> names) {
