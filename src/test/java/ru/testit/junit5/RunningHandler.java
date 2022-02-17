@@ -2,6 +2,7 @@ package ru.testit.junit5;
 
 import core.exception.CreateEntityException;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.Nullable;
 import ru.testit.annotations.Description;
 import ru.testit.annotations.Title;
@@ -74,6 +75,8 @@ public class RunningHandler
         alreadyFinished.add(test);
         createTestItemRequestFactory.processFinishLaunchUniqueTest(utilsMethodSteps, parentStep, test);
         testITClient.sendTestItemsUniqueTest(createTestItemRequestFactory.getCreateTestRequests(test));
+        if(thrown != null)
+            Tests.putAttachLog(ExceptionUtils.getStackTrace(thrown));
         testResultRequestFactory.processFinishLaunchUniqueTest(test, utilsMethodSteps, parentStep);
         removeCurrentStep();
     }

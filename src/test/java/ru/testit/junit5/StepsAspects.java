@@ -11,7 +11,6 @@ import org.aspectj.lang.annotation.Aspect;
 import ru.testit.utils.Outcome;
 import ru.testit.utils.StepNode;
 import ru.testit.utils.StepUtils;
-import tests.Tests;
 
 import java.util.Date;
 import java.util.Objects;
