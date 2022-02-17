@@ -53,6 +53,7 @@ public class GraphTest extends Tests {
 
     @Order(2)
     @DisplayName("Проверка значения next в запросе на получение списка графа")
+    @TmsLink("679029")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetGraphsListResponse.class).getNext();
@@ -115,7 +116,7 @@ public class GraphTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
-    @Order(50)
+    @Order(51)
     @DisplayName("Негативный тест на копирование графа по Id без токена")
     @TmsLink("642645")
     @Test

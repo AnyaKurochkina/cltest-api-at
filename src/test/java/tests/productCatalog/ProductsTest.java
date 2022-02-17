@@ -45,6 +45,23 @@ public class ProductsTest extends Tests {
     }
 
     @Order(2)
+    @DisplayName("Создание продукта в продуктовом каталоге с категорией gitlab_group")
+    @TmsLink("679086")
+    @Test
+    public void createProductWithCategory() {
+        Product testProduct = Product.builder()
+                .name("category_test_api")
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
+                .category("gitlab_group")
+                .build()
+                .createObject();
+        assertEquals(testProduct.getCategory(), "gitlab_group");
+    }
+
+
+    @Order(4)
     @DisplayName("Получение списка продуктов")
     @TmsLink("643387")
     @Test
@@ -53,8 +70,9 @@ public class ProductsTest extends Tests {
                 .size() > 0);
     }
 
-    @Order(6)
+    @Order(5)
     @DisplayName("Проверка значения next в запросе на получение списка продуктов")
+    @TmsLink("679088")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetProductsResponse.class).getNext();
@@ -63,7 +81,7 @@ public class ProductsTest extends Tests {
         }
     }
 
-    @Order(3)
+    @Order(10)
     @DisplayName("Проверка существования продукта по имени")
     @TmsLink("643392")
     @Test
@@ -72,7 +90,7 @@ public class ProductsTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists("not_exists_name"));
     }
 
-    @Order(4)
+    @Order(15)
     @DisplayName("Импорт продукта")
     @TmsLink("643393")
     @Test
@@ -85,7 +103,7 @@ public class ProductsTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 
-    @Order(5)
+    @Order(20)
     @DisplayName("Получение продукта по Id")
     @TmsLink("643395")
     @Test
@@ -94,7 +112,7 @@ public class ProductsTest extends Tests {
         Assertions.assertEquals(productCatalogGet.getName(), product.getName());
     }
 
-    @Order(6)
+    @Order(25)
     @DisplayName("Негативный тест на получение продукта по Id без токена")
     @TmsLink("643397")
     @Test
@@ -102,7 +120,7 @@ public class ProductsTest extends Tests {
         productCatalogSteps.getByIdWithOutToken(product.getProductId());
     }
 
-    @Order(20)
+    @Order(30)
     @DisplayName("Частичное обновление продукта")
     @TmsLink("643402")
     @Test
@@ -114,7 +132,7 @@ public class ProductsTest extends Tests {
         Assertions.assertEquals(expectedValue, actual);
     }
 
-    @Order(21)
+    @Order(35)
     @DisplayName("Негативный тест на обновление продукта по Id без токена")
     @TmsLink("643407")
     @Test
@@ -123,7 +141,7 @@ public class ProductsTest extends Tests {
                 new JSONObject().put("description", "UpdateDescription"));
     }
 
-    @Order(30)
+    @Order(40)
     @DisplayName("Негативный тест на попытку обновления продукта до текущей версии")
     @TmsLink("643409")
     @Test
@@ -133,7 +151,7 @@ public class ProductsTest extends Tests {
                 .put("version", currentVersion)).assertStatus(500);
     }
 
-    @Order(40)
+    @Order(45)
     @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
     @TmsLink("643412")
     @Test
@@ -154,7 +172,7 @@ public class ProductsTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
-    @Order(51)
+    @Order(55)
     @DisplayName("Негативный тест на копирование продукта по Id без токена")
     @TmsLink("643416")
     @Test
@@ -170,7 +188,7 @@ public class ProductsTest extends Tests {
         product.updateProduct();
     }
 
-    @Order(70)
+    @Order(65)
     @DisplayName("Негативный тест на создание продукта с существующим именем")
     @TmsLink("643420")
     @Test
@@ -180,7 +198,7 @@ public class ProductsTest extends Tests {
                 .assertStatus(400);
     }
 
-    @Order(80)
+    @Order(70)
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
     @TmsLink("643423")
     @Test
@@ -203,7 +221,7 @@ public class ProductsTest extends Tests {
         );
     }
 
-    @Order(89)
+    @Order(75)
     @DisplayName("Обновление продукта с указанием версии в граничных значениях")
     @TmsLink("643426")
     @Test
@@ -223,7 +241,7 @@ public class ProductsTest extends Tests {
                 .assertStatus(500);
     }
 
-    @Order(90)
+    @Order(80)
     @DisplayName("Получение время отклика на запрос")
     @TmsLink("643431")
     @Test

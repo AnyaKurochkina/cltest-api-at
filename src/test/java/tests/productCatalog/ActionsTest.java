@@ -46,6 +46,7 @@ public class ActionsTest extends Tests {
 
     @Order(11)
     @DisplayName("Проверка значения next в запросе на получение списка действий")
+    @TmsLink("679025")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(ActionResponse.class).getNext();
