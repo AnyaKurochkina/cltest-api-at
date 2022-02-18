@@ -6,7 +6,7 @@ public class JsonPathRestAssured {
 
     public static void main(String[] args) {
         JsonPath jsonPath = new JsonPath(json);
-        Object o = jsonPath.get("data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}");
+        Object o = jsonPath.get("data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}");
         System.out.println(o);
     }
 

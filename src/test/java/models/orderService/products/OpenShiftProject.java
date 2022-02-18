@@ -84,10 +84,10 @@ public class OpenShiftProject extends IProduct {
         roles.get(0).setName("view");
         OrderServiceSteps.executeAction("update_openshift_project", this, new JSONObject(data), this.getProjectId());
         save();
-        Assertions.assertEquals(2, OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.memory"), "Память не изменилась");
-        Assertions.assertEquals("view", OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.roles[0].role"), "Роль не изменилась");
+        Assertions.assertEquals(2, OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.data.config.quota.memory"), "Память не изменилась");
+        Assertions.assertEquals("view", OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.data.config.roles[0].role"), "Роль не изменилась");
         if (shdQuoteValue.equals("1")){
-            Assertions.assertEquals(1, OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.config.quota.storage.sc-nfs-netapp-q"), "СХД не изменился на 1");
+            Assertions.assertEquals(1, OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.data.config.quota.storage.sc-nfs-netapp-q"), "СХД не изменился на 1");
         }
     }
 
