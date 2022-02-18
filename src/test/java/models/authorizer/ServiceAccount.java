@@ -97,14 +97,14 @@ public class ServiceAccount extends Entity {
     @Step("Изменение сервисного аккаунта")
     public void editServiceAccount(String title) {
         JsonPath jsonPath = JsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.service_account.policy.bindings.[0].role", "role/viewer")
+                .set("$.service_account.policy.bindings.[0].role", "roles/viewer")
                 .set("$.service_account.title", title)
                 .send(Configure.AuthorizerURL)
                 .patch("projects/{}/service_accounts/{}", projectId, id)
                 .assertStatus(200)
                 .jsonPath();
 
-        Assertions.assertTrue((Boolean) jsonPath.get("data.roles.any{it.name='viewer'}"));
+        Assertions.assertTrue((Boolean) jsonPath.get("data.roles.any{it.name='roles/viewer'}"));
     }
 
     @Override
