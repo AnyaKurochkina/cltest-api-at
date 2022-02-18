@@ -342,7 +342,7 @@ public class OrderServiceSteps extends Steps {
     public static List<ResourcePool> getResourcesPoolList(String category, String projectId) {
         String jsonArray = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .get("products/resource_pools?category={}&project_name={}", category, projectId)
+                .get("products/resource_pools?category={}&project_name={}&resource_type=cluster:openshift", category, projectId)
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("list")

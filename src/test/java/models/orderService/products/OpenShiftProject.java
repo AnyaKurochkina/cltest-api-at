@@ -101,7 +101,7 @@ public class OpenShiftProject extends IProduct {
     private boolean hasShdQuote() {
         String jsonArray = new Http(OrderServiceURL)
                 .setProjectId(getProjectId())
-                .get(String.format("products/resource_pools?category=container&project_name=%s&quota[storage][sc-nfs-netapp-q]=1",
+                .get(String.format("products/resource_pools?category=container&project_name=%s&quota[storage][sc-nfs-netapp-q]=1&resource_type=cluster:openshift",
                         getProjectId()))
                 .assertStatus(200)
                 .toJson()
