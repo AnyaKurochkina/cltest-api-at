@@ -97,7 +97,7 @@ public class ServiceAccount extends Entity {
     @Step("Изменение сервисного аккаунта")
     public void editServiceAccount(String title) {
         JsonPath jsonPath = JsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.service_account.policy.bindings.[0].role", "viewer")
+                .set("$.service_account.policy.bindings.[0].role", "role/viewer")
                 .set("$.service_account.title", title)
                 .send(Configure.AuthorizerURL)
                 .patch("projects/{}/service_accounts/{}", projectId, id)
