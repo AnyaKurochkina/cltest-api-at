@@ -40,6 +40,7 @@ public class WildFly extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
+        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 
