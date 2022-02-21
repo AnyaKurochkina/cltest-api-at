@@ -1,9 +1,8 @@
 package models.productCatalog;
 
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
+import core.helper.http.Http;
 import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
@@ -42,15 +41,15 @@ public class Product extends Entity {
     private String productId;
     private String category;
     private String jsonTemplate;
+    private String info;
 
     public static final String productName = "products/";
 
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/products/createProduct.json";
-        ProductCatalogSteps graphSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
-        graphId = graphSteps
-                .getProductObjectIdByNameWithMultiSearch("graph_for_api_test", GetGraphsListResponse.class);
+        Graph graph = Graph.builder().name("graph_for_product_api_test").build().createObject();
+        graphId = graph.getGraphId();
         return this;
     }
 
@@ -63,6 +62,7 @@ public class Product extends Entity {
                 .set("$.envs", new JSONArray(envs))
                 .set("$.version", version)
                 .set("$.category", category)
+                .set("$.info", info)
                 .build();
     }
 

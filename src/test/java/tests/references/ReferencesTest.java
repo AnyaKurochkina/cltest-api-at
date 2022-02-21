@@ -10,7 +10,6 @@ import models.references.Pages;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import steps.references.ReferencesStep;
-import tests.Tests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,62 +21,62 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("references")
-@Epic("Справчники")
-@Feature("Directions")
-public class ReferencesTest extends Tests {
+@Epic("Справочники")
+@Feature("Справочники")
+public class ReferencesTest extends ReferencesStep {
     private static final String NAME = "create_directory_api_test";
     private static final String DESCRIPTION = "description_create_directory_api_test";
     private static final String PAGES_JSON_TEMPLATE = "references/createPages.json";
     List<String> deleteList = new ArrayList<>();
     List<String> deletePageFiltersList = new ArrayList<>();
-    ReferencesStep step = new ReferencesStep();
     Directories directories;
     Pages page;
     PageFilter pageFilter;
 
 
-    @DisplayName("Создание Directories, Pages для приватных ролей")
+    @DisplayName("Создание тестовых данных")
     @BeforeAll
     public void createTestData() {
-        directories = step.createDirectory(new JSONObject()
+        directories = createDirectory(new JSONObject()
                 .put("name", NAME)
                 .put("description", DESCRIPTION));
         deleteList.add(directories.getName());
         String expectedName = "create_pages_test_api";
         String expectedDirectory = directories.getId();
-        page = step.createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
+        page = createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
                 .set("name", expectedName)
                 .set("directory", expectedDirectory)
                 .build());
         assertEquals(expectedName, page.getName());
         assertEquals(expectedDirectory, page.getDirectoryId());
-        pageFilter = step.createPrivatePageFilter(new JSONObject().put("key", "create_page_filter_api")
+        pageFilter = createPrivatePageFilter(new JSONObject().put("key", "create_page_filter_api")
                 .put("value", Arrays.asList("value", "value2")));
         deletePageFiltersList.add(pageFilter.getKey());
 
     }
 
-    @DisplayName("Удаление Directories для приватных ролей")
+    @DisplayName("Удаление тестовых данных")
     @AfterAll
     public void deleteTestData() {
         for (String name : deleteList) {
-            step.deletePrivateDirectoryByName(name);
+            deletePrivateDirectoryByName(name);
         }
         for (String key : deletePageFiltersList) {
-            step.deletePrivatePageFiltersByKey(key);
+            deletePrivatePageFiltersByKey(key);
         }
     }
 
     @DisplayName("Получение списка Directories для приватных ролей")
     @Test
-    public void getPrivateDirectionsList() {
-        assertTrue(step.getPrivateDirectoriesList().size() > 0);
+    public void getPrivateDirList() {
+        assertTrue(getPrivateDirectoriesList().size() > 0);
     }
 
     @DisplayName("Получение Directory по имени для приватных ролей")
     @Test
     public void getPrivateDirectoryByName() {
-        assertEquals("create_directory_api_test", directories.getName());
+        Directories getDirectory = getPrivateDirectoryByName(directories.getName());
+        assertEquals(getDirectory.getName(), directories.getName());
     }
 
     @DisplayName("Изменение Directory по имени для приватных ролей")
@@ -85,10 +84,10 @@ public class ReferencesTest extends Tests {
     public void updatePrivateDirectoryByName() {
         String expectedName = "updateName";
         String expectedDisc = "updateDisc";
-        Directories createdDir = step.createDirectory(new JSONObject()
+        Directories createdDir = createDirectory(new JSONObject()
                 .put("name", "created_dir")
                 .put("description", "desc"));
-        Directories updatedDir = step.updatePrivateDirectoryByName(createdDir.getName(), new JSONObject()
+        Directories updatedDir = updatePrivateDirectoryByName(createdDir.getName(), new JSONObject()
                 .put("name", expectedName)
                 .put("description", expectedDisc));
         deleteList.add(updatedDir.getName());
@@ -100,10 +99,10 @@ public class ReferencesTest extends Tests {
     @Test
     public void partialUpdatePrivateDirectoryByName() {
         String expectedDisc = "updateDisc";
-        Directories createdDir = step.createDirectory(new JSONObject()
+        Directories createdDir = createDirectory(new JSONObject()
                 .put("name", "created_dir")
                 .put("description", "desc"));
-        Directories updatedDir = step.partialUpdatePrivateDirectoryByName(createdDir.getName(), new JSONObject()
+        Directories updatedDir = partialUpdatePrivateDirectoryByName(createdDir.getName(), new JSONObject()
                 .put("description", expectedDisc));
         deleteList.add(updatedDir.getName());
         assertEquals(expectedDisc, updatedDir.getDescription());
@@ -113,7 +112,7 @@ public class ReferencesTest extends Tests {
     @DisplayName("Получение списка Pages по имени Directory для приватных ролей")
     @Test
     public void getPrivatePagesList() {
-        assertTrue(step.getPrivatePagesListByDirectoryName(directories.getName()).size() > 0);
+        assertTrue(getPrivatePagesListByDirectoryName(directories.getName()).size() > 0);
     }
 
     @DisplayName("Получение Pages по Id для приватных ролей")
@@ -121,11 +120,11 @@ public class ReferencesTest extends Tests {
     public void getPrivatePagesById() {
         String name = "get_pages_test_api";
         String directory = page.getDirectoryId();
-        Pages createPage = step.createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
+        Pages createPage = createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
                 .set("name", name)
                 .set("directory", directory)
                 .build());
-        Pages getPage = step.getPrivatePagesById(directories.getName(), createPage.getId());
+        Pages getPage = getPrivatePagesById(directories.getName(), createPage.getId());
         assertEquals(getPage.getName(), name);
         assertEquals(getPage.getDirectoryId(), directory);
     }
@@ -133,12 +132,12 @@ public class ReferencesTest extends Tests {
     @DisplayName("Обновление Pages по Id для приватных ролей")
     @Test
     public void updatePrivatePagesById() {
-        Pages createdPage = step.createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
+        Pages createdPage = createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
                 .set("name", "update_test_api")
                 .set("directory", directories.getName())
                 .build());
         String expectedName = "updated_pages_test_api";
-        Pages updatedPage = step.updatePrivatePagesById(directories.getName(), createdPage.getId(), JsonHelper
+        Pages updatedPage = updatePrivatePagesById(directories.getName(), createdPage.getId(), JsonHelper
                 .getJsonTemplate(PAGES_JSON_TEMPLATE)
                 .set("name", "updated_pages_test_api")
                 .set("directory", createdPage.getDirectoryId())
@@ -150,13 +149,13 @@ public class ReferencesTest extends Tests {
     @DisplayName("Частичное обновление Pages по Id для приватных ролей")
     @Test
     public void partialUpdatePrivatePagesById() {
-        Pages createdPage = step.createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
+        Pages createdPage = createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
                 .set("name", "partialUpdate_test_api")
                 .set("directory", directories.getName())
                 .build());
         String expectedName = "partial_updated_pages_test_api";
         String expectedDirectory = createdPage.getDirectoryId();
-        Pages updatedPage = step.partialUpdatePrivatePagesById(directories.getName(), createdPage.getId(), new JSONObject()
+        Pages updatedPage = partialUpdatePrivatePagesById(directories.getName(), createdPage.getId(), new JSONObject()
                 .put("name", expectedName)
                 .put("directory", expectedDirectory));
         assertEquals(expectedName, updatedPage.getName());
@@ -166,7 +165,7 @@ public class ReferencesTest extends Tests {
     @DisplayName("Обновление Data в Pages по Id для приватных ролей")
     @Test
     public void updateDataPrivatePagesById() {
-        Response response = step.createPrivatePages(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
+        Response response = createPrivatePages(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
                 .set("name", "updateDataPage")
                 .set("directory", directories.getName())
                 .set("data", new JSONObject()
@@ -174,16 +173,16 @@ public class ReferencesTest extends Tests {
                 .build());
         String id = response.jsonPath().get("id");
         String updateExpectedKeyValue = "updateValue";
-        step.updateDataPrivatePagesById(directories.getName(), id, new JSONObject()
+        updateDataPrivatePagesById(directories.getName(), id, new JSONObject()
                 .put("key", updateExpectedKeyValue));
-        Response updateValue = step.getPrivateResponsePagesById(directories.getName(), id);
+        Response updateValue = getPrivateResponsePagesById(directories.getName(), id);
         String getUpdateKeyValue = updateValue.jsonPath().get("data.key").toString();
         assertEquals(updateExpectedKeyValue, getUpdateKeyValue);
 
         String str = "secondValue";
-        step.updateDataPrivatePagesById(directories.getName(), response.jsonPath().get("id"), new JSONObject()
+        updateDataPrivatePagesById(directories.getName(), response.jsonPath().get("id"), new JSONObject()
                 .put("secondKey", str));
-        Response getResponse = step.getPrivateResponsePagesById(directories.getName(), id);
+        Response getResponse = getPrivateResponsePagesById(directories.getName(), id);
         String data = getResponse.jsonPath().get("data").toString();
         assertEquals("{key=updateValue, secondKey=secondValue}", data);
     }
@@ -191,24 +190,24 @@ public class ReferencesTest extends Tests {
     @DisplayName("Удаление Pages для приватных полей")
     @Test
     public void deletePrivatePages() {
-        Pages pages = step.createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
+        Pages pages = createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
                 .set("name", "delete_pages_test_api")
                 .set("directory", directories.getName())
                 .build());
-        step.deletePrivatePagesById(directories.getName(), pages.getId());
+        deletePrivatePagesById(directories.getName(), pages.getId());
     }
 
     @DisplayName("Получение списка page_filters для приватных ролей")
     @Test
-    public void getPrivatePageFiltersList() {
-        assertTrue(step.getPrivatePageFiltersList().size() > 0);
+    public void getPrivatePageFilterList() {
+        assertTrue(getPrivatePageFiltersList().size() > 0);
     }
 
     @DisplayName("Создание page_filters для приватных ролей")
     @Test
     public void createPrivatePageFilter() {
         String key = "create_page_filter_test_api";
-        PageFilter pageFilter = step.createPrivatePageFilter(new JSONObject().put("key", key)
+        PageFilter pageFilter = createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
         deletePageFiltersList.add(pageFilter.getKey());
         assertEquals(pageFilter.getKey(), key);
@@ -219,9 +218,9 @@ public class ReferencesTest extends Tests {
     @Test
     public void getPrivatePageFilter() {
         String key = "get_page_filter_test_api";
-        PageFilter pageFilter = step.createPrivatePageFilter(new JSONObject().put("key", key)
+        PageFilter pageFilter = createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
-        PageFilter getPage = step.getPrivatePageFilter(key);
+        PageFilter getPage = getPrivatePageFilter(key);
         deletePageFiltersList.add(pageFilter.getKey());
         assertEquals(getPage.getKey(), key);
         assertEquals(getPage.getValue().size(), 2);
@@ -231,9 +230,9 @@ public class ReferencesTest extends Tests {
     @Test
     public void updatePrivatePageFilter() {
         String key = "update_page_filter_test_api";
-        step.createPrivatePageFilter(new JSONObject().put("key", key)
+        createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
-        PageFilter updatedFilter = step.updatePrivatePageFilter(key, new JSONObject()
+        PageFilter updatedFilter = updatePrivatePageFilter(key, new JSONObject()
                 .put("key", "updated_key")
                 .put("value", Collections.singletonList("update")));
         deletePageFiltersList.add(updatedFilter.getKey());
@@ -245,9 +244,9 @@ public class ReferencesTest extends Tests {
     @Test
     public void partialUpdatePrivatePageFilter() {
         String key = "partial_update_page_filter_test_api";
-        step.createPrivatePageFilter(new JSONObject().put("key", key)
+        createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
-        PageFilter partialUpdatedFilter = step.partialUpdatePrivatePageFilter(key, new JSONObject()
+        PageFilter partialUpdatedFilter = partialUpdatePrivatePageFilter(key, new JSONObject()
                 .put("value", Collections.singletonList("partial_update")));
         deletePageFiltersList.add(partialUpdatedFilter.getKey());
         assertEquals(partialUpdatedFilter.getValue().get(0), "partial_update");
@@ -256,26 +255,26 @@ public class ReferencesTest extends Tests {
     @DisplayName("Получение списка Directories")
     @Test
     public void getDirectionsList() {
-        assertTrue(step.getDirectoriesList().size() > 0);
+        assertTrue(getDirectoriesList().size() > 0);
     }
 
     @DisplayName("Получение Directory по имени")
     @Test
     public void getDirectoryByName() {
-        Directories directories = step.getDirectoryByName("create_directory_api_test");
+        Directories directories = getDirectoryByName("create_directory_api_test");
         assertEquals("create_directory_api_test", directories.getName());
     }
 
     @DisplayName("Получение списка page_filters")
     @Test
     public void getPageFilters() {
-        assertTrue(step.getPageFiltersList().size() > 0);
+        assertTrue(getPageFiltersList().size() > 0);
     }
 
     @DisplayName("Получение page_filter по ключу")
     @Test
     public void getPageFilter() {
-        PageFilter getPage = step.getPageFilter(pageFilter.getKey());
+        PageFilter getPage = getPageFilter(pageFilter.getKey());
         assertEquals(getPage.getKey(), pageFilter.getKey());
         assertEquals(getPage.getValue().size(), pageFilter.getValue().size());
     }
@@ -283,7 +282,7 @@ public class ReferencesTest extends Tests {
     @DisplayName("Получение списка pages")
     @Test
     public void getPagesFilters() {
-        assertTrue(step.getPagesList().size() > 0);
+        assertTrue(getPagesList().size() > 0);
     }
 
     @DisplayName("Получение Pages по Id")
@@ -291,11 +290,11 @@ public class ReferencesTest extends Tests {
     public void getPagesById() {
         String name = "get_pages_by_id_test_api";
         String directory = page.getDirectoryId();
-        Pages createPage = step.createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
+        Pages createPage = createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
                 .set("name", name)
                 .set("directory", directory)
                 .build());
-        Pages getPage = step.getPagesById(createPage.getId());
+        Pages getPage = getPagesById(createPage.getId());
         assertEquals(getPage.getName(), name);
         assertEquals(getPage.getDirectoryId(), directory);
     }

@@ -12,6 +12,7 @@ import models.references.PageFilter;
 import models.references.Pages;
 import models.subModels.Flavor;
 import org.json.JSONObject;
+import tests.Tests;
 
 import java.lang.reflect.Type;
 import java.util.Comparator;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 
 import static core.helper.Configure.ReferencesURL;
 
-public class ReferencesStep {
+public class ReferencesStep extends Tests {
 
     @Step("Получение списка flavors для продукта {product}")
     public static List<Flavor> getProductFlavorsLinkedList(IProduct product) {

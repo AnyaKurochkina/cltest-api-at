@@ -41,7 +41,7 @@ public class ActionsTest extends Tests {
     @TmsLink("642429")
     @Test
     public void getActionList() {
-        Assertions.assertTrue(productCatalogSteps.getProductObjectList(ActionResponse.class).size() > 0);
+        assertTrue(productCatalogSteps.getProductObjectList(ActionResponse.class).size() > 0);
     }
 
     @Order(11)
@@ -60,8 +60,8 @@ public class ActionsTest extends Tests {
     @TmsLink("642432")
     @Test
     public void checkActionExists() {
-        Assertions.assertTrue(productCatalogSteps.isExists(action.getActionName()));
-        Assertions.assertFalse(productCatalogSteps.isExists("NoExistsAction"));
+        assertTrue(productCatalogSteps.isExists(action.getActionName()));
+        assertFalse(productCatalogSteps.isExists("NoExistsAction"));
     }
 
     @Order(4)
@@ -72,9 +72,9 @@ public class ActionsTest extends Tests {
         String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
         String actionName = new JsonPath(data).get("Action.json.name");
         productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
-        Assertions.assertTrue(productCatalogSteps.isExists(actionName));
+        assertTrue(productCatalogSteps.isExists(actionName));
         productCatalogSteps.deleteByName(actionName, ActionResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(actionName));
+        assertFalse(productCatalogSteps.isExists(actionName));
     }
 
     @Order(5)
@@ -83,7 +83,7 @@ public class ActionsTest extends Tests {
     @Test
     public void getActionById() {
         GetImpl productCatalogGet = productCatalogSteps.getById(action.getActionId(), GetActionResponse.class);
-        Assertions.assertEquals(action.getActionName(), productCatalogGet.getName());
+        assertEquals(action.getActionName(), productCatalogGet.getName());
     }
 
     @Order(6)
@@ -101,9 +101,9 @@ public class ActionsTest extends Tests {
     public void copyActionById() {
         String cloneName = action.getActionName() + "-clone";
         productCatalogSteps.copyById(action.getActionId());
-        Assertions.assertTrue(productCatalogSteps.isExists(cloneName));
+        assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(cloneName, ActionResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
+        assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
     @Order(8)
@@ -116,13 +116,13 @@ public class ActionsTest extends Tests {
         String cloneId = productCatalogSteps.getProductObjectIdByNameWithMultiSearch(cloneName, ActionResponse.class);
         productCatalogSteps.partialUpdateObject(cloneId, new JSONObject().put("description", "descr_api"));
         GetImpl importedAction = productCatalogSteps.getByIdAndVersion(cloneId, "1.0.1", GetActionResponse.class);
-        Assertions.assertAll(
+        assertAll(
                 () -> assertEquals("1.0.1", importedAction.getVersion()),
                 () -> assertEquals("descr_api", importedAction.getDescription())
         );
-        Assertions.assertTrue(productCatalogSteps.isExists(cloneName));
+        assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(cloneName, ActionResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
+        assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
     @Order(60)
@@ -202,7 +202,7 @@ public class ActionsTest extends Tests {
         String version = productCatalogSteps
                 .patchObject(GetActionResponse.class, "test_object_at2021", action.getGraphId(), action.getActionId())
                 .getVersion();
-        Assertions.assertEquals("1.0.1", version);
+        assertEquals("1.0.1", version);
     }
 
     @Order(94)
@@ -248,7 +248,7 @@ public class ActionsTest extends Tests {
     }
 
     @Order(97)
-    @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
+    @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос в действиях")
     @TmsLink("642524")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {

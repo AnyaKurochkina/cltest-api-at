@@ -167,7 +167,7 @@ public class TemplatesTest extends Tests {
     }
 
     @Order(13)
-    @DisplayName("Обновление сервиса с указанием версии в граничных значениях")
+    @DisplayName("Обновление шаблона узла с указанием версии в граничных значениях")
     @TmsLink("643613")
     @Test
     public void updateTemplateAndGetVersion() {
