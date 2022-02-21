@@ -3,9 +3,9 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
-import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
+import httpModels.productCatalog.itemVisualItem.createVisualTemplate.*;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
 import io.qameta.allure.Epic;
@@ -14,10 +14,12 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.ItemVisualTemplates;
 import org.json.JSONObject;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,6 +44,8 @@ public class VisualTemplateTest extends Tests {
         visualTemplates = ItemVisualTemplates.builder().name(VISUAL_TEMPLATE_NAME)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
+                .compactTemplate(new CompactTemplate(new Name("name"), new Type("type"), new Status("status")))
+                .fullTemplate(new FullTemplate("type", Arrays.asList("value", "value2")))
                 .build()
                 .createObject();
     }
@@ -216,8 +220,8 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void createVisualTemplateWithNonUniqueName() {
         {
-            productCatalogSteps.createProductObject(productCatalogSteps
-                    .createJsonObject(VISUAL_TEMPLATE_NAME)).assertStatus(400);
+            productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject(VISUAL_TEMPLATE_NAME))
+                    .assertStatus(400);
         }
     }
 
@@ -242,6 +246,23 @@ public class VisualTemplateTest extends Tests {
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
                         .createJsonObject(" ")).assertStatus(400)
         );
+    }
+
+    @Order(98)
+    @DisplayName("Проверка на наличие ключей в FullTemplate")
+    @Test
+    public void fullTemplateFields() {
+        assertEquals("type", visualTemplates.getFullTemplate().getType());
+        assertEquals(Arrays.asList("value", "value2"), visualTemplates.getFullTemplate().getValue());
+    }
+
+    @Order(99)
+    @DisplayName("Проверка на наличие ключей в CompactTemplate")
+    @Test
+    public void compactTemplateFields() {
+        assertEquals("name", visualTemplates.getCompactTemplate().getName().getValue());
+        assertEquals("status", visualTemplates.getCompactTemplate().getStatus().getValue());
+        assertEquals("type", visualTemplates.getCompactTemplate().getType().getValue());
     }
 
     @Order(100)

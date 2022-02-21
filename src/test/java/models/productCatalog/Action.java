@@ -1,10 +1,9 @@
 package models.productCatalog;
 
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import httpModels.productCatalog.action.createAction.response.CreateActionResponse;
-import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,9 +28,8 @@ public class Action extends Entity {
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/actions/createAction.json";
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
-        graphId = productCatalogSteps
-                .getProductObjectIdByNameWithMultiSearch("graph_for_api_test", GetGraphsListResponse.class);
+        Graph graph = Graph.builder().name("graph_for_action_api_test").build().createObject();
+        graphId = graph.getGraphId();
         return this;
     }
 
