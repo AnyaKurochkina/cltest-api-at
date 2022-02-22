@@ -123,7 +123,7 @@ public class Windows extends IProduct {
 
     public void mountDisk(String disk) {
         String serial = (String) OrderServiceSteps.getProductsField(this, String.format(DISK_SERIAL, disk));
-        OrderServiceSteps.executeAction("windows_delete_disk", this,
+        OrderServiceSteps.executeAction("windows_mount_disk", this,
                 new JSONObject("{path: \"" + disk + "\", serial: \"" + serial + "\", is_connected: false}"), getProjectId());
         boolean isConnected = (Boolean) OrderServiceSteps.getProductsField(this, String.format(DISK_IS_CONNECTED, disk));
         Assertions.assertTrue(isConnected, "Диск не подключен");
@@ -131,7 +131,7 @@ public class Windows extends IProduct {
 
     public void deleteDisk(String disk) {
         String serial = (String) OrderServiceSteps.getProductsField(this, String.format(DISK_SERIAL, disk));
-        OrderServiceSteps.executeAction("windows_mount_disk", this,
+        OrderServiceSteps.executeAction("windows_delete_disk", this,
                 new JSONObject("{path: \"" + disk + "\", serial: \"" + serial + "\", is_connected: false}"), getProjectId());
         boolean isCreatedDisk = (Boolean) OrderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk));
         Assertions.assertFalse(isCreatedDisk, "Диск не удален");
