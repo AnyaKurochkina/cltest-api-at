@@ -40,13 +40,13 @@ import static core.helper.Configure.OrderServiceURL;
 @Log4j2
 public abstract class IProduct extends Entity {
     //    public static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm'}.config.extra_disks.size()";
-    private static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm' && it.config.extra_mounts.find{it.mount=='%s'}}.config.extra_mounts.find{it.mount=='%s'}.size";
-    private static final String CHECK_EXPAND_MOUNT_SIZE = "data.find{it.type=='vm' && it.config.extra_mounts.find{it.mount=='%s'}}.config.extra_mounts.find{it.mount=='%s' && it.size>%d}.size";
-    public static final String CPUS = "data.find{it.type=='vm'}.config.flavor.cpus";
-    public static final String MEMORY = "data.find{it.type=='vm'}.config.flavor.memory";
-    public static final String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.config.topics.any{it.topic_name=='%s'}";
-    public static final String KAFKA_CLUSTER_ACL_TOPICS = "data.find{it.type=='cluster'}.config.acls.any{it.topic_name=='%s'}";
-    public static final String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.config.transaction_acls.any{it.transaction_id=='%s'}";
+    private static final String EXPAND_MOUNT_SIZE = "data.find{it.type=='vm' && it.data.config.extra_mounts.find{it.mount=='%s'}}.data.config.extra_mounts.find{it.mount=='%s'}.size";
+    private static final String CHECK_EXPAND_MOUNT_SIZE = "data.find{it.type=='vm' && it.data.config.extra_mounts.find{it.mount=='%s'}}.data.config.extra_mounts.find{it.mount=='%s' && it.size>%d}.size";
+    public static final String CPUS = "data.find{it.type=='vm'}.data.config.flavor.cpus";
+    public static final String MEMORY = "data.find{it.type=='vm'}.data.config.flavor.memory";
+    public static final String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.data.config.topics.any{it.topic_name=='%s'}";
+    public static final String KAFKA_CLUSTER_ACL_TOPICS = "data.find{it.type=='cluster'}.data.config.acls.any{it.topic_name=='%s'}";
+    public static final String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.data.config.transaction_acls.any{it.transaction_id=='%s'}";
 
     public static final String EXPAND_MOUNT_POINT = "Расширить";
     public static final String RESTART = "Перезагрузить";
@@ -175,7 +175,6 @@ public abstract class IProduct extends Entity {
     }
 
     @SneakyThrows
-    //TODO: впилить во все продукты
     protected String getRandomOsVersion(){
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
@@ -186,7 +185,14 @@ public abstract class IProduct extends Entity {
     }
 
     @SneakyThrows
-    //TODO: впилить во все продукты
+    protected boolean getSupport(){
+        GetServiceResponse productResponse = (GetServiceResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetServiceResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
+        Boolean support = (Boolean) graphResponse.getStaticData().get("on_support");
+        return Objects.requireNonNull(support, "on_support не найден в графе");
+    }
+
+    @SneakyThrows
     protected String getRandomProductVersionByPathEnum(String path){
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);

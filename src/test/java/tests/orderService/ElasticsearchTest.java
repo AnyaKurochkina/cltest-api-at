@@ -1,6 +1,7 @@
 package tests.orderService;
 
 import core.helper.http.Http;
+import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -42,8 +43,8 @@ public class ElasticsearchTest extends Tests {
     void checkElasticsearchApi(Elasticsearch product) {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             JsonPath path = JsonPath.from(new JSONObject((Map) OrderServiceSteps.getProductsField(elastic, "", JSONObject.class)).toString());
-            String apiUrl = path.getString("data.find{it.config.containsKey('api_url')}.config.api_url");
-            List<String> ipList = path.getList("data.findAll{it.config.containsKey('default_v4_address')}.config.default_v4_address");
+            String apiUrl = path.getString("data.find{it.data.config.containsKey('api_url')}.data.config.api_url");
+            List<String> ipList = path.getList("data.findAll{it.data.config.containsKey('default_v4_address')}.data.config.default_v4_address");
             String response = new Http(apiUrl)
                     .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
                     .get("/_cat/nodes?v=true&pretty")
@@ -60,7 +61,7 @@ public class ElasticsearchTest extends Tests {
     void checkElasticsearchExporter(Elasticsearch product) {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             String exporterUrl = ((String) OrderServiceSteps.getProductsField(elastic,
-                    "data.find{it.config.containsKey('api_url')}.config.additional_urls.elasticsearch-exporter"));
+                    "data.find{it.data.config.containsKey('api_url')}.data.config.additional_urls.elasticsearch-exporter"));
             String response = new Http(exporterUrl)
                     .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
                     .get("/metrics")
@@ -75,9 +76,10 @@ public class ElasticsearchTest extends Tests {
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Проверка создания. Kibana {0}")
     void checkElasticsearchKibana(Elasticsearch product) {
+        Waiting.sleep(60000);
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             String kibanaUrl = ((String) OrderServiceSteps.getProductsField(elastic,
-                    "data.find{it.config.containsKey('api_url')}.config.additional_urls.kibana"));
+                    "data.find{it.data.config.containsKey('api_url')}.data.config.additional_urls.kibana"));
             new Http(kibanaUrl)
                     .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
                     .get("/status")
