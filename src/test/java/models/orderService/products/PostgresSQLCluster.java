@@ -29,7 +29,7 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 public class PostgresSQLCluster extends IProduct {
-    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.any{it.db_name=='%s'}";
+    private final static String DB_NAME_PATH = "data.find{it.data.containsKey('config')}.data.config.dbs.any{it.db_name=='%s'}";
     private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
     @ToString.Include
     String segment;
@@ -49,7 +49,7 @@ public class PostgresSQLCluster extends IProduct {
     //URL example = jdbc:postgresql://dhzorg-pgc001ln.corp.dev.vtb:5432/createdb12345
     String dbUrl;
     String dbAdminUser;
-    private final static String DB_CONNECTION_URL = "data.find{it.config.containsKey('connection_url')}.config.connection_url";
+    private final static String DB_CONNECTION_URL = "data.find{it.data.containsKey('config')}data.config.connection_url";
 
     @Override
     @Step("Заказ продукта")
@@ -63,13 +63,13 @@ public class PostgresSQLCluster extends IProduct {
         jsonTemplate = "/orders/postgressql_cluster.json";
         productName = "PostgreSQL Cluster";
         initProduct();
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(postgresqlVersion == null)
+        if (postgresqlVersion == null)
             postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
-        if(dataCentre == null)
+        if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
@@ -100,13 +100,14 @@ public class PostgresSQLCluster extends IProduct {
     }
 
     public void createDb(String dbName) {
-        if(database.contains(new Db(dbName)))
+        if (database.contains(new Db(dbName)))
             return;
         dbAdminPass = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
         OrderServiceSteps.executeAction("postgresql_cluster_create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, dbAdminPass)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем" + dbName);
         dbAdminUser = dbName + "_admin";
-        dbUrl = "jdbc:" + OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL) + "/" + dbName;
+        String url = (String) OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL);
+        dbUrl = "jdbc:" + url.split(",")[0] + "/" + dbName;
         database.add(new Db(dbName));
         log.info("database = " + database);
         save();
