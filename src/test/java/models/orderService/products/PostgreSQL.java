@@ -183,7 +183,6 @@ public class PostgreSQL extends IProduct {
             t.printStackTrace();
         }  finally {
             Objects.requireNonNull(connection, "Подключение завершилось ошибкой").close();
-            connection.close();
         }
     }
 
