@@ -1,6 +1,7 @@
 package tests.orderService;
 
 import core.helper.http.Http;
+import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -75,6 +76,7 @@ public class ElasticsearchTest extends Tests {
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Проверка создания. Kibana {0}")
     void checkElasticsearchKibana(Elasticsearch product) {
+        Waiting.sleep(60000);
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             String kibanaUrl = ((String) OrderServiceSteps.getProductsField(elastic,
                     "data.find{it.data.config.containsKey('api_url')}.data.config.additional_urls.kibana"));
