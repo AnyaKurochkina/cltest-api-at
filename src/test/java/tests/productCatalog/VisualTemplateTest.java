@@ -3,9 +3,9 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
-import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
+import httpModels.productCatalog.itemVisualItem.createVisualTemplate.*;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
 import io.qameta.allure.Epic;
@@ -14,10 +14,12 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.ItemVisualTemplates;
 import org.json.JSONObject;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,12 +44,15 @@ public class VisualTemplateTest extends Tests {
         visualTemplates = ItemVisualTemplates.builder().name(VISUAL_TEMPLATE_NAME)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
+                .compactTemplate(new CompactTemplate(new Name("name"), new Type("type"), new Status("status")))
+                .fullTemplate(new FullTemplate("type", Arrays.asList("value", "value2")))
                 .build()
                 .createObject();
     }
 
     @Order(5)
     @DisplayName("Негативный тест на создание шаблона визуализации с неуникальной связкой EventType-EventProvider")
+    @TmsLink("682836")
     @Test
     public void createVisualTemplateWithNotUniqueEventTypeEventProvider() {
         JSONObject jsonObject = JsonHelper.getJsonTemplate("productCatalog/itemVisualTemplate/createItemVisual.json")
@@ -56,7 +61,7 @@ public class VisualTemplateTest extends Tests {
                 .set("event_type", Collections.singletonList("app")).build();
         Response response = productCatalogSteps.createProductObject(jsonObject).assertStatus(422);
         assertEquals(VISUAL_TEMPLATE_NAME, response.jsonPath().get("name[0]").toString());
-        assertEquals(visualTemplates.getItemId(), response.jsonPath().get("id").toString());
+        assertEquals(visualTemplates.getItemId(), response.jsonPath().get("id[0]").toString());
     }
 
 
@@ -71,12 +76,22 @@ public class VisualTemplateTest extends Tests {
 
     @Order(11)
     @DisplayName("Проверка значения next в запросе на получение списка шаблонов визуализаций")
+    @TmsLink("682862")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetVisualTemplateListResponse.class).getNext();
         if (!(str == null)) {
             assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
         }
+    }
+
+    @Order(12)
+    @DisplayName("Проверка существования шаблона визуализации по имени")
+    @TmsLink("682865")
+    @Test
+    public void checkVisualTemplateExists() {
+        Assertions.assertTrue(productCatalogSteps.isExists(visualTemplates.getName()));
+        Assertions.assertFalse(productCatalogSteps.isExists("NoExistsTemplate"));
     }
 
     @Order(15)
@@ -153,6 +168,20 @@ public class VisualTemplateTest extends Tests {
         productCatalogSteps.getByIdWithOutToken(visualTemplates.getItemId());
     }
 
+    @Order(42)
+    @DisplayName("Копирование шаблона визуализации по Id")
+    @TmsLink("682886")
+    @Test
+    public void copyVisualTemplateById() {
+        String cloneName = visualTemplates.getName() + "-clone";
+        productCatalogSteps.copyById(visualTemplates.getItemId());
+        String cloneId = productCatalogSteps.getProductObjectIdByNameWithMultiSearch(cloneName, GetVisualTemplateListResponse.class);
+        boolean isActive = productCatalogSteps.getJsonPath(cloneId).get("is_active");
+        assertFalse(isActive);
+        productCatalogSteps.deleteByName(cloneName, GetVisualTemplateListResponse.class);
+        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
+    }
+
     @Order(45)
     @DisplayName("Экспорт шаблона визуализации по Id")
     @TmsLink("643667")
@@ -187,11 +216,12 @@ public class VisualTemplateTest extends Tests {
 
     @Order(60)
     @DisplayName("Негативный тест на создание шаблона отображения с неуникальным именем")
+    @TmsLink("682891")
     @Test
     public void createVisualTemplateWithNonUniqueName() {
         {
-            productCatalogSteps.createProductObject(productCatalogSteps
-                    .createJsonObject(VISUAL_TEMPLATE_NAME)).assertStatus(400);
+            productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject(VISUAL_TEMPLATE_NAME))
+                    .assertStatus(400);
         }
     }
 
@@ -216,6 +246,23 @@ public class VisualTemplateTest extends Tests {
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
                         .createJsonObject(" ")).assertStatus(400)
         );
+    }
+
+    @Order(98)
+    @DisplayName("Проверка на наличие ключей в FullTemplate")
+    @Test
+    public void fullTemplateFields() {
+        assertEquals("type", visualTemplates.getFullTemplate().getType());
+        assertEquals(Arrays.asList("value", "value2"), visualTemplates.getFullTemplate().getValue());
+    }
+
+    @Order(99)
+    @DisplayName("Проверка на наличие ключей в CompactTemplate")
+    @Test
+    public void compactTemplateFields() {
+        assertEquals("name", visualTemplates.getCompactTemplate().getName().getValue());
+        assertEquals("status", visualTemplates.getCompactTemplate().getStatus().getValue());
+        assertEquals("type", visualTemplates.getCompactTemplate().getType().getValue());
     }
 
     @Order(100)

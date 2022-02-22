@@ -5,7 +5,7 @@ import core.helper.JsonHelper;
 import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
-import httpModels.productCatalog.product.getProduct.response.GetServiceResponse;
+import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -29,6 +29,8 @@ public class ProductsTest extends Tests {
 
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("products/", "productCatalog/products/createProduct.json");
     Product product;
+    private static final String INFO = "information";
+    private static final String NAME = "product_test_api-:2022.";
 
     @Order(1)
     @DisplayName("Создание продукта в продуктовом каталоге")
@@ -36,15 +38,33 @@ public class ProductsTest extends Tests {
     @Test
     public void createProduct() {
         product = Product.builder()
-                .name("at_test_api_product55")
+                .name(NAME)
                 .title("AtTestApiProduct")
                 .envs(Collections.singletonList("dev"))
                 .version("1.0.0")
+                .info(INFO)
                 .build()
                 .createObject();
     }
 
     @Order(2)
+    @DisplayName("Создание продукта в продуктовом каталоге с категорией gitlab_group")
+    @TmsLink("679086")
+    @Test
+    public void createProductWithCategory() {
+        Product testProduct = Product.builder()
+                .name("category_test_api")
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
+                .category("gitlab_group")
+                .build()
+                .createObject();
+        assertEquals(testProduct.getCategory(), "gitlab_group");
+    }
+
+
+    @Order(4)
     @DisplayName("Получение списка продуктов")
     @TmsLink("643387")
     @Test
@@ -53,8 +73,9 @@ public class ProductsTest extends Tests {
                 .size() > 0);
     }
 
-    @Order(6)
+    @Order(5)
     @DisplayName("Проверка значения next в запросе на получение списка продуктов")
+    @TmsLink("679088")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetProductsResponse.class).getNext();
@@ -63,16 +84,16 @@ public class ProductsTest extends Tests {
         }
     }
 
-    @Order(3)
+    @Order(10)
     @DisplayName("Проверка существования продукта по имени")
     @TmsLink("643392")
     @Test
     public void checkProductExists() {
-        Assertions.assertTrue(productCatalogSteps.isExists(product.getName()));
-        Assertions.assertFalse(productCatalogSteps.isExists("not_exists_name"));
+        assertTrue(productCatalogSteps.isExists(product.getName()));
+        assertFalse(productCatalogSteps.isExists("not_exists_name"));
     }
 
-    @Order(4)
+    @Order(15)
     @DisplayName("Импорт продукта")
     @TmsLink("643393")
     @Test
@@ -80,21 +101,21 @@ public class ProductsTest extends Tests {
         String data = JsonHelper.getStringFromFile("/productCatalog/products/importProduct.json");
         String name = new JsonPath(data).get("Product.json.name");
         productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProduct.json");
-        Assertions.assertTrue(productCatalogSteps.isExists(name));
+        assertTrue(productCatalogSteps.isExists(name));
         productCatalogSteps.deleteByName(name, GetProductsResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(name));
+        assertFalse(productCatalogSteps.isExists(name));
     }
 
-    @Order(5)
+    @Order(20)
     @DisplayName("Получение продукта по Id")
     @TmsLink("643395")
     @Test
     public void getProductById() {
-        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetServiceResponse.class);
-        Assertions.assertEquals(productCatalogGet.getName(), product.getName());
+        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetProductResponse.class);
+        assertEquals(productCatalogGet.getName(), product.getName());
     }
 
-    @Order(6)
+    @Order(25)
     @DisplayName("Негативный тест на получение продукта по Id без токена")
     @TmsLink("643397")
     @Test
@@ -102,7 +123,7 @@ public class ProductsTest extends Tests {
         productCatalogSteps.getByIdWithOutToken(product.getProductId());
     }
 
-    @Order(20)
+    @Order(30)
     @DisplayName("Частичное обновление продукта")
     @TmsLink("643402")
     @Test
@@ -110,11 +131,11 @@ public class ProductsTest extends Tests {
         String expectedValue = "UpdateDescription";
         productCatalogSteps.partialUpdateObject(product.getProductId(), new JSONObject().put("description", expectedValue))
                 .assertStatus(200);
-        String actual = productCatalogSteps.getById(product.getProductId(), GetServiceResponse.class).getDescription();
+        String actual = productCatalogSteps.getById(product.getProductId(), GetProductResponse.class).getDescription();
         Assertions.assertEquals(expectedValue, actual);
     }
 
-    @Order(21)
+    @Order(35)
     @DisplayName("Негативный тест на обновление продукта по Id без токена")
     @TmsLink("643407")
     @Test
@@ -123,7 +144,7 @@ public class ProductsTest extends Tests {
                 new JSONObject().put("description", "UpdateDescription"));
     }
 
-    @Order(30)
+    @Order(40)
     @DisplayName("Негативный тест на попытку обновления продукта до текущей версии")
     @TmsLink("643409")
     @Test
@@ -133,13 +154,13 @@ public class ProductsTest extends Tests {
                 .put("version", currentVersion)).assertStatus(500);
     }
 
-    @Order(40)
-    @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
+    @Order(45)
+    @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос в продуктах")
     @TmsLink("643412")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {
-        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetServiceResponse.class);
-        Assertions.assertNotNull(productCatalogGet.getGraphVersionCalculated());
+        GetImpl productCatalogGet = productCatalogSteps.getById(product.getProductId(), GetProductResponse.class);
+        assertNotNull(productCatalogGet.getGraphVersionCalculated());
     }
 
     @Order(50)
@@ -149,12 +170,12 @@ public class ProductsTest extends Tests {
     public void copyProductById() {
         String cloneName = product.getName() + "-clone";
         productCatalogSteps.copyById(product.getProductId());
-        Assertions.assertTrue(productCatalogSteps.isExists(cloneName));
+        assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(cloneName, GetProductsResponse.class);
-        Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
+        assertFalse(productCatalogSteps.isExists(cloneName));
     }
 
-    @Order(51)
+    @Order(55)
     @DisplayName("Негативный тест на копирование продукта по Id без токена")
     @TmsLink("643416")
     @Test
@@ -170,18 +191,16 @@ public class ProductsTest extends Tests {
         product.updateProduct();
     }
 
-    @Order(70)
+    @Order(65)
     @DisplayName("Негативный тест на создание продукта с существующим именем")
     @TmsLink("643420")
     @Test
     public void createProductWithSameName() {
-        productCatalogSteps.createProductObject(productCatalogSteps
-                        .createJsonObject(product.getName()))
-                .assertStatus(400);
+        productCatalogSteps.createProductObject(productCatalogSteps.createJsonObject(product.getName())).assertStatus(400);
     }
 
-    @Order(80)
-    @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
+    @Order(70)
+    @DisplayName("Негативный тест на создание продукта с недопустимыми символами в имени")
     @TmsLink("643423")
     @Test
     public void createProductWithInvalidCharacters() {
@@ -203,19 +222,22 @@ public class ProductsTest extends Tests {
         );
     }
 
-    @Order(89)
+    @Order(75)
     @DisplayName("Обновление продукта с указанием версии в граничных значениях")
     @TmsLink("643426")
     @Test
     public void updateProductAndGetVersion() {
         Product productTest = Product.builder().name("product_version_test_api").version("1.0.999").build().createObject();
-        productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api2"));
-        String currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetServiceResponse.class).getVersion();
+        productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject()
+                .put("name", "product_version_test_api2"));
+        String currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetProductResponse.class).getVersion();
         assertEquals("1.1.0", currentVersion);
-        productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api3")
+        productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject()
+                .put("name", "product_version_test_api3")
                 .put("version", "1.999.999"));
-        productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api4"));
-        currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetServiceResponse.class).getVersion();
+        productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject()
+                .put("name", "product_version_test_api4"));
+        currentVersion = productCatalogSteps.getById(productTest.getProductId(), GetProductResponse.class).getVersion();
         assertEquals("2.0.0", currentVersion);
         productCatalogSteps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api5")
                 .put("version", "999.999.999"));
@@ -223,14 +245,21 @@ public class ProductsTest extends Tests {
                 .assertStatus(500);
     }
 
-    @Order(90)
+    @Order(80)
     @DisplayName("Получение время отклика на запрос")
     @TmsLink("643431")
     @Test
     public void getTime() {
-        Assertions.assertTrue(2500 < productCatalogSteps.getTime("http://d4-product-catalog.apps" +
+        Assertions.assertTrue(2000 > productCatalogSteps.getTime("http://d4-product-catalog.apps" +
                 ".d0-oscp.corp.dev.vtb/products/?is_open=true&env=dev&information_systems=c9fd31c7-25a5-45ca-863c-18425d1ae927&page=1&per_page=100"));
     }
+
+//    @Order(99)
+//    @DisplayName("Получение значения ключа info")
+//    @Test
+//    public void getProductInfo() {
+//        assertEquals(productCatalogSteps.getInfoProduct(product.getProductId()).getInfo(), INFO);
+//    }
 
     @Order(99)
     @DisplayName("Негативный тест на удаление продукта без токена")
@@ -247,7 +276,7 @@ public class ProductsTest extends Tests {
     @MarkDelete
     public void deleteProduct() {
         try (Product product = Product.builder()
-                .name("at_test_api_product55")
+                .name(NAME)
                 .title("AtTestApiProduct")
                 .envs(Collections.singletonList("dev"))
                 .build()

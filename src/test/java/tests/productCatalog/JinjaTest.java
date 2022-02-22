@@ -46,6 +46,7 @@ public class JinjaTest extends Tests {
 
     @Order(6)
     @DisplayName("Проверка значения next в запросе на получение списка jinja")
+    @TmsLink("")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetJinjaListResponse.class).getNext();

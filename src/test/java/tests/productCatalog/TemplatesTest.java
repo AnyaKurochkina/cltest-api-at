@@ -48,6 +48,7 @@ public class TemplatesTest extends Tests {
 
     @Order(2)
     @DisplayName("Проверка значения next в запросе на получение списка шаблонов")
+    @TmsLink("682827")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetTemplateListResponse.class).getNext();
@@ -166,7 +167,7 @@ public class TemplatesTest extends Tests {
     }
 
     @Order(13)
-    @DisplayName("Обновление сервиса с указанием версии в граничных значениях")
+    @DisplayName("Обновление шаблона узла с указанием версии в граничных значениях")
     @TmsLink("643613")
     @Test
     public void updateTemplateAndGetVersion() {

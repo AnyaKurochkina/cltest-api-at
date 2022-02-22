@@ -31,7 +31,7 @@ public class WindowsTest extends Tests {
     @ParameterizedTest(name = "Добавить диск {0}")
     void addDisk(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
-            windows.addDisk("K");
+            windows.addDisk("I");
         }
     }
 
@@ -41,8 +41,43 @@ public class WindowsTest extends Tests {
     @ParameterizedTest(name = "Расширить диск {0}")
     void expandMountPoint(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
-            windows.addDisk("I");
-            windows.expandMountPoint("I");
+            windows.addDisk("K");
+            windows.expandMountPoint("K");
+        }
+    }
+
+    @TmsLink("694091")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Удалить диск {0}")
+    void deleteMountPoint(Windows product) {
+        try (Windows windows = product.createObjectExclusiveAccess()) {
+            windows.addDisk("L");
+            windows.unmountDisk("L");
+            windows.deleteDisk("L");
+        }
+    }
+
+    @TmsLink("694092")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Подключить диск {0}")
+    void mountPoint(Windows product) {
+        try (Windows windows = product.createObjectExclusiveAccess()) {
+            windows.addDisk("S");
+            windows.unmountDisk("S");
+            windows.mountDisk("S");
+        }
+    }
+
+    @TmsLink("694093")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Отключить диск {0}")
+    void unmountPoint(Windows product) {
+        try (Windows windows = product.createObjectExclusiveAccess()) {
+            windows.addDisk("T");
+            windows.unmountDisk("T");
         }
     }
 

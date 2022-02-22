@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -29,8 +30,9 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 public class PostgresSQLCluster extends IProduct {
-    private final static String DB_NAME_PATH = "data.find{it.data.containsKey('config')}.data.config.dbs.any{it.db_name=='%s'}";
-    private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
+    private final static String DB_NAME_PATH = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.any{it.db_name=='%s'}";
+    private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
+    private final static String DB_CONNECTION_URL = "data.find{it.data.config.containsKey('connection_url')}.data.config.connection_url";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -49,7 +51,6 @@ public class PostgresSQLCluster extends IProduct {
     //URL example = jdbc:postgresql://dhzorg-pgc001ln.corp.dev.vtb:5432/createdb12345
     String dbUrl;
     String dbAdminUser;
-    private final static String DB_CONNECTION_URL = "data.find{it.data.containsKey('config')}data.config.connection_url";
 
     @Override
     @Step("Заказ продукта")
@@ -119,12 +120,11 @@ public class PostgresSQLCluster extends IProduct {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, user, password);
-            Assertions.assertTrue(connection.isValid(1));
+            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение завершилось ошибкой").isValid(1));
         } catch (Throwable t) {
             t.printStackTrace();
         } finally {
-            assert connection != null;
-            connection.close();
+            Objects.requireNonNull(connection, "Подключение завершилось ошибкой").close();
         }
     }
 

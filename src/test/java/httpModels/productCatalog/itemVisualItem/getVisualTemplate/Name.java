@@ -6,17 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FullTemplate{
-    @JsonProperty("type")
-    private String type;
+public class Name{
 
-    @JsonProperty("value")
-    private List<String> value;
-
+	@JsonProperty("value")
+	private String value;
 }

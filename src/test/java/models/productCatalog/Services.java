@@ -1,9 +1,8 @@
 package models.productCatalog;
 
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
+import core.helper.http.Http;
 import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
 import httpModels.productCatalog.service.createService.response.DataSource;
 import httpModels.productCatalog.service.createService.response.ExtraData;
@@ -50,9 +49,8 @@ public class Services extends Entity {
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/services/createServices.json";
-        ProductCatalogSteps graphSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
-        graphId = graphSteps
-                .getProductObjectIdByNameWithMultiSearch("graph_for_api_test", GetGraphsListResponse.class);
+        Graph graph = Graph.builder().name("graph_for_services_api_test").build().createObject();
+        graphId = graph.getGraphId();
         return this;
     }
 
