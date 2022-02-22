@@ -52,6 +52,7 @@ public class ServicesTest extends Tests {
 
     @Order(2)
     @DisplayName("Проверка значения next в запросе на получение списка сервисов")
+    @TmsLink("682758")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetServiceListResponse.class).getNext();
@@ -61,7 +62,7 @@ public class ServicesTest extends Tests {
     }
 
     @Order(3)
-    @DisplayName("Проверка существования продукта по имени")
+    @DisplayName("Проверка существования сервиса по имени")
     @TmsLink("643453")
     @Test
     public void checkServiceExists() {
@@ -149,7 +150,7 @@ public class ServicesTest extends Tests {
     }
 
     @Order(60)
-    @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос")
+    @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос в сервисах")
     @TmsLink("643516")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {

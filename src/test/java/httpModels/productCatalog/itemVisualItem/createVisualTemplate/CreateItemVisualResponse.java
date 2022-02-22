@@ -1,4 +1,4 @@
-package httpModels.productCatalog.itemVisualItem;
+package httpModels.productCatalog.itemVisualItem.createVisualTemplate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 public class CreateItemVisualResponse{
 
 	@JsonProperty("event_type")
-	private List<String> eventType;
+	private List<Object> eventType;
 
 	@JsonProperty("compact_template")
 	private CompactTemplate compactTemplate;
@@ -27,7 +27,7 @@ public class CreateItemVisualResponse{
 	private FullTemplate fullTemplate;
 
 	@JsonProperty("event_provider")
-	private List<String> eventProvider;
+	private List<Object> eventProvider;
 
 	@JsonProperty("name")
 	private String name;

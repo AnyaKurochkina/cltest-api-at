@@ -6,7 +6,7 @@ import core.exception.CreateEntityException;
 import core.helper.http.Http;
 import core.utils.Waiting;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
-import httpModels.productCatalog.product.getProduct.response.GetServiceResponse;
+import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
@@ -176,7 +176,7 @@ public abstract class IProduct extends Entity {
 
     @SneakyThrows
     protected String getRandomOsVersion(){
-        GetServiceResponse productResponse = (GetServiceResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetServiceResponse.class);
+        GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
         String urlAttrs = JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("os_version")))
                         .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')");
@@ -194,7 +194,7 @@ public abstract class IProduct extends Entity {
 
     @SneakyThrows
     protected String getRandomProductVersionByPathEnum(String path){
-        GetServiceResponse productResponse = (GetServiceResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetServiceResponse.class);
+        GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
         return Objects.requireNonNull(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getJsonSchema().get("properties")))
                 .getString(path + ".collect{e -> e}.shuffled()[0]"), "Версия продукта не найдена");
