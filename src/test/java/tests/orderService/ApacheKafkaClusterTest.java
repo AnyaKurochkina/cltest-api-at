@@ -43,7 +43,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(ApacheKafkaCluster product) {
-        Waiting.sleep(6000);
+        Waiting.sleep(120000);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.updateCerts();
         }
@@ -54,7 +54,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Пакетное создание Topic-ов Kafka {0}")
     void createTopic(ApacheKafkaCluster product) {
-        Waiting.sleep(6000);
+        Waiting.sleep(120000);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createTopics(Stream.generate(new Generex("[a-zA-Z0-9][a-zA-Z0-9.\\-_]*")::random)
                     .limit(new Random().nextInt(20) + 1).distinct().collect(Collectors.toList()));
@@ -66,7 +66,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Пакетное удаление Topic-ов Kafka {0}")
     void deleteTopic(ApacheKafkaCluster product) {
-        Waiting.sleep(6000);
+        Waiting.sleep(120000);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
             kafka.deleteTopics(Arrays.asList("PacketTopicName01", "PacketTopicName03"));
@@ -78,7 +78,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать ACL Kafka {0}")
     void createAcl(ApacheKafkaCluster product) {
-        Waiting.sleep(6000);
+        Waiting.sleep(120000);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
             kafka.createAcl("*");
@@ -121,7 +121,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Синхронизировать конфигурацию кластера Kafka {0}")
     void syncInfo(ApacheKafkaCluster product) {
-        Waiting.sleep(6000);
+        Waiting.sleep(120000);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.syncInfo();
         }
@@ -132,7 +132,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Прислать конфигурацию кластера Kafka {0}")
     void sendConfig(ApacheKafkaCluster product) {
-        Waiting.sleep(6000);
+        Waiting.sleep(120000);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.sendConfig();
         }
