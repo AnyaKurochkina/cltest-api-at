@@ -7,6 +7,7 @@ import core.helper.http.Http;
 import core.utils.Waiting;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
 import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
+import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.*;

@@ -167,6 +167,26 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
+//    @TmsLink("377665")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Изменить default_transaction_isolation {0}")
+    void updateDti(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.updateDti("REPEATABLE READ");
+        }
+    }
+
+//    @TmsLink("377665")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Изменить max_connections {0}")
+    void updateMaxConnections(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.updateMaxConnections("REPEATABLE READ", 101);
+        }
+    }
+
     @TmsLink("377662")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
