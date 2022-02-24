@@ -29,23 +29,27 @@ public class Pipeline {
         SSLSocketFactory clientAuthFactory = new SSLSocketFactory(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build());
         SSLConfig config = new SSLConfig().with().sslSocketFactory(clientAuthFactory).and().allowAllHostnames();
         Set<String> externalIds = new HashSet<>();
-        Map<String, String> argsMap = Arrays.stream(args).map(e -> e.split("=")).collect(Collectors.toMap(s -> s[0], s -> s[1]));
+        Map<String, String> argsMap = Arrays.stream(args).map(e -> e.split("=")).filter(s -> s.length > 1)
+                .collect(Collectors.toMap(s -> s[0], s -> s[1]));
 
-        if(System.getProperty(TEST_IT_TOKEN) != null)
+        if (System.getProperty(TEST_IT_TOKEN) != null)
             properties.setPrivateToken(System.getProperty(TEST_IT_TOKEN));
-        if(argsMap.containsKey(TEST_IT_TOKEN))
+        if (argsMap.containsKey(TEST_IT_TOKEN))
             properties.setPrivateToken(argsMap.get(TEST_IT_TOKEN));
 
-        String testPlanName = RestAssured.given()
-                .config(RestAssured.config().sslConfig(config))
-                .header("Authorization", "PrivateToken " + properties.getPrivateToken())
-                .get(properties.getUrl() + "/api/v2/testPlans/" + argsMap.get(TEST_PLAN_ID))
-                .then()
-                .statusCode(200)
-                .extract()
-                .response()
-                .jsonPath()
-                .getString("name");
+        String testPlanName = null;
+        if((argsMap.get(TEST_PLAN_ID)) != null) {
+            testPlanName = RestAssured.given()
+                    .config(RestAssured.config().sslConfig(config))
+                    .header("Authorization", "PrivateToken " + properties.getPrivateToken())
+                    .get(properties.getUrl() + "/api/v2/testPlans/" + argsMap.get(TEST_PLAN_ID))
+                    .then()
+                    .statusCode(200)
+                    .extract()
+                    .response()
+                    .jsonPath()
+                    .getString("name");
+        }
 
         setEnv(testPlanName, Arrays.asList("dev", "ift"));
 
@@ -75,6 +79,8 @@ public class Pipeline {
     }
 
     private static void setEnv(String testPlanName, List<String> environments) {
+        if(testPlanName == null)
+            return;
         String name = testPlanName.toLowerCase();
         for (String env : environments) {
             if (name.contains(env)) {

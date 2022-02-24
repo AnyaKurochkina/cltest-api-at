@@ -148,10 +148,15 @@ public class PostgreSQL extends IProduct {
     }
 
     //Сбросить пароль владельца
-    public void resetDbOwnerPassword(String dbName) {
-        Assertions.assertTrue(database.stream().anyMatch(db -> db.getNameDB().equals(dbName)), String.format("Базы %s не существует", dbName));
+    public void resetDbOwnerPassword(String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName + "_admin", password)), this.getProjectId());
+        OrderServiceSteps.executeAction("reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
+    }
+
+    //Изменить default_transaction_isolation
+    public void updateDti(String defaultTransactionIsolation) {
+        OrderServiceSteps.executeAction("postgresql_update_dti", this,
+                new JSONObject(String.format("{\"default_transaction_isolation\":\"%s\"}", defaultTransactionIsolation)), this.getProjectId());
     }
 
     //Удалить пользователя
@@ -200,6 +205,11 @@ public class PostgreSQL extends IProduct {
 
     public void stopHard() {
         stopHard("stop_hard_two_layer");
+    }
+
+    public void updateMaxConnections(String loadProfile, int maxConnections) {
+        OrderServiceSteps.executeAction("postgresql_update_max_connections", this,
+                new JSONObject(String.format("{\"load_profile\":\"%s\", max_connections: %d}", loadProfile, maxConnections)), this.getProjectId());
     }
 }
 
