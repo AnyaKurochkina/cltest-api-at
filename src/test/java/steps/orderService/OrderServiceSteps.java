@@ -331,10 +331,10 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath();
         if (status.equals(ProductStatus.STARTED)) {
             log.info("Статус продукта ВКЛЮЧЕН");
-            return jsonPath.getString("data.find{it.type=='vm'}.state").equals("on");
+            return jsonPath.getString("attrs.preview_items.find{it.data.containsKey('state')}.data.state").equals("on");
         } else {
             log.info("Статус продукта ВЫКЛЮЧЕН");
-            return jsonPath.getString("data.find{it.type=='vm'}.state").equals("off");
+            return jsonPath.getString("attrs.preview_items.find{it.data.containsKey('state')}.data.state").equals("off");
         }
     }
 
