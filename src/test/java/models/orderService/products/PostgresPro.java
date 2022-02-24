@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -125,12 +126,11 @@ public class PostgresPro extends IProduct {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, user, password);
-            Assertions.assertTrue(connection.isValid(1));
+            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось, текущий url подключения: " + url).isValid(1));
         } catch (Throwable t) {
             t.printStackTrace();
         } finally {
-            assert connection != null;
-            connection.close();
+            Objects.requireNonNull(connection, "Подключение не создалось, текущий url подключения: " + url).close();
         }
     }
 
