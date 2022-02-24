@@ -147,14 +147,14 @@ public class PostgreSQL extends IProduct {
         OrderServiceSteps.executeAction("reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
     }
 
-    //Изменить default_transaction_isolation
-    public void updateDti(String username) {
+    //Сбросить пароль владельца
+    public void resetDbOwnerPassword(String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         OrderServiceSteps.executeAction("reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
     }
 
-    //Сбросить пароль владельца
-    public void resetDbOwnerPassword(String defaultTransactionIsolation) {
+    //Изменить default_transaction_isolation
+    public void updateDti(String defaultTransactionIsolation) {
         OrderServiceSteps.executeAction("postgresql_update_dti", this,
                 new JSONObject(String.format("{\"default_transaction_isolation\":\"%s\"}", defaultTransactionIsolation)), this.getProjectId());
     }
