@@ -183,7 +183,7 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Изменить max_connections {0}")
     void updateMaxConnections(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.updateMaxConnections("REPEATABLE READ", 101);
+            postgreSQL.updateMaxConnections("REPEATABLE READ", 99);
         }
     }
 
