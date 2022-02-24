@@ -178,11 +178,11 @@ public class PostgreSQL extends IProduct {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, user, password);
-            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение завершилось ошибкой").isValid(1));
+            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение завершилось ошибкой, текущий url подключения: " + url).isValid(1));
         }catch (Throwable t){
             t.printStackTrace();
         }  finally {
-            Objects.requireNonNull(connection, "Подключение завершилось ошибкой").close();
+            Objects.requireNonNull(connection, "Подключение завершилось ошибкой, текущий url подключения: " + url).close();
         }
     }
 

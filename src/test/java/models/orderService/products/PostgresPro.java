@@ -126,11 +126,11 @@ public class PostgresPro extends IProduct {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, user, password);
-            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось").isValid(1));
+            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось, текущий url подключения: " + url).isValid(1));
         } catch (Throwable t) {
             t.printStackTrace();
         } finally {
-            Objects.requireNonNull(connection, "Подключение не создалось").close();
+            Objects.requireNonNull(connection, "Подключение не создалось, текущий url подключения: " + url).close();
         }
     }
 
