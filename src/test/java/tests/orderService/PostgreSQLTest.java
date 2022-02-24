@@ -167,7 +167,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-//    @TmsLink("377665")
+    @TmsLink("705397")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить default_transaction_isolation {0}")
@@ -177,7 +177,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-//    @TmsLink("377665")
+    @TmsLink("705398")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить max_connections {0}")

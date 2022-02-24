@@ -208,8 +208,8 @@ public class PostgreSQL extends IProduct {
     }
 
     public void updateMaxConnections(String loadProfile, int maxConnections) {
-//        OrderServiceSteps.executeAction("postgresql_update_dti", this,
-//                new JSONObject(String.format("{\"default_transaction_isolation\":\"%s\"}", defaultTransactionIsolation)), this.getProjectId());
+        OrderServiceSteps.executeAction("postgresql_update_max_connections", this,
+                new JSONObject(String.format("{\"load_profile\":\"%s\", max_connections: %d}", loadProfile, maxConnections)), this.getProjectId());
     }
 }
 
