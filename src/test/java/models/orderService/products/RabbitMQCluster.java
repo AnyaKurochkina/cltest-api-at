@@ -10,12 +10,15 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
+import models.subModels.Vhost;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -25,7 +28,9 @@ import java.util.Date;
 @NoArgsConstructor
 @SuperBuilder
 public class RabbitMQCluster extends IProduct {
-    static String RABBITMQ_USER = "data.find{it.type=='cluster'}.data.config.users.any{it.name=='%s'}";
+    private final static String RABBITMQ_USER = "data.find{it.type=='cluster'}.data.config.users.any{it.name=='%s'}";
+    private final static String RABBIT_CLUSTER_VHOST = "data.find{it.data.config.containsKey('vhosts')}.data.config.vhosts.any{it.name=='%s'}";
+    private final static String RABBIT_CLUSTER_VHOST_ACCESS = "data.find{it.data.config.containsKey('vhost_access')}.data.config.vhost_access.any{it.vhost_name=='%s'}";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -49,11 +54,11 @@ public class RabbitMQCluster extends IProduct {
         productName = "RabbitMQ Cluster";
         role = "administrator";
         initProduct();
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(dataCentre == null)
+        if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
@@ -88,10 +93,9 @@ public class RabbitMQCluster extends IProduct {
     }
 
     //Создать пользователя RabbitMQ
-    public void rabbitmqCreateUser() {
-        String user = "testapiuser";
+    public void rabbitmqCreateUser(String user) {
         OrderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)), this.getProjectId());
-        Assertions.assertTrue(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта отсутствует пользователь "+ user);
+        Assertions.assertTrue(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта отсутствует пользователь " + user);
     }
 
     @Step("Удаление продукта")
@@ -111,6 +115,37 @@ public class RabbitMQCluster extends IProduct {
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration"));
 //        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
         Assertions.assertNotEquals(0, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
+    }
+
+    public void addVhost(List<String> collect) {
+        List<Vhost> vhosts = new ArrayList<>();
+        for (String name : collect)
+            vhosts.add(new Vhost(name));
+        OrderServiceSteps.executeAction("rabbitmq_create_vhosts", this, new JSONObject("{\"rabbitmq_vhosts\": " + JsonHelper.toJson(vhosts) + "}"), projectId);
+        for (String name : collect)
+            Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this,
+                    String.format(RABBIT_CLUSTER_VHOST, name)), "Отсутствует vhost " + name);
+    }
+
+    public void deleteVhost(List<String> collect) {
+        OrderServiceSteps.executeAction("rabbitmq_delete_vhosts", this, new JSONObject("{\"vhosts\": " + JsonHelper.toJson(collect) + "}"), projectId);
+        for (String name : collect)
+            Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this,
+                    String.format(RABBIT_CLUSTER_VHOST, name)), "Присутствует vhost " + name);
+    }
+
+    public void addVhostAccess(String user, List<String> permissions, String vhost) {
+        OrderServiceSteps.executeAction("rabbitmq_add_vhost_access", this,
+                new JSONObject("{\"user_name\": \"" + user + "\", \"vhost_permissions\": [{\"permissions\": " + JsonHelper.toJson(permissions) + ", \"vhost_name\": \"" + vhost + "\"}]}"), projectId);
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this,
+                String.format(RABBIT_CLUSTER_VHOST_ACCESS, vhost)), "Отсутствует vhost access " + vhost);
+    }
+
+    public void deleteVhostAccess(String user, String vhost) {
+        OrderServiceSteps.executeAction("rabbitmq_delete_vhost_access", this,
+                new JSONObject("{\"user_name\": \"" + user + "\", \"vhost_name\": \"" + vhost + "\"}"), projectId);
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this,
+                String.format(RABBIT_CLUSTER_VHOST_ACCESS, vhost)), "Присутствует vhost access " + vhost);
     }
 
     //Проверить конфигурацию
