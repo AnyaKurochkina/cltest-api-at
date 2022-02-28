@@ -88,4 +88,7 @@ public class CreateProductResponse{
 
 	@JsonProperty("version_changed_by_user")
 	private String version_changed_by_user;
+
+	@JsonProperty("info")
+	private Info info;
 }

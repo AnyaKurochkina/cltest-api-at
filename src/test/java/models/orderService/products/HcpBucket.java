@@ -62,14 +62,14 @@ public class HcpBucket extends IProduct {
     @Step("Измененить параметры версионирования")
     public void changeBucketVersioning(){
         OrderServiceSteps.executeAction("change_bucket_versioning", this, new JSONObject("{\"bucket\":{\"versioning\":{\"prune\":true,\"enabled\":true,\"pruneDays\":10}}}"), this.getProjectId());
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.prune"), "Очистка не активирована");
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.enabled"), "Версионирование не активировалось");
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, "data[0].data.config.bucket.versioning.prune"), "Очистка не активирована");
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, "data[0].data.config.bucket.versioning.enabled"), "Версионирование не активировалось");
     }
 
     @Step("Измененить конфигурацию бакета")
     public void changeBucketConfig(){
         OrderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20.48,\"service_plan\":\"Sata_Tier\",\"replication_enabled\":false}}"), this.getProjectId());
-        Float hardQuota = (Float) OrderServiceSteps.getProductsField(this, "data[0].config.bucket.hard_quota");
+        Float hardQuota = (Float) OrderServiceSteps.getProductsField(this, "data[0].data.config.bucket.hard_quota");
         Assertions.assertEquals(20.48F, hardQuota, "Макс. объем не изменился! Макс. объем = " + hardQuota);
     }
 

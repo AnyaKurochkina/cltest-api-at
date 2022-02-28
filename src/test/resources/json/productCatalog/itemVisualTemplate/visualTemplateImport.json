@@ -10,8 +10,23 @@
     "event_provider": [
       "s3"
     ],
-    "full_template": {},
-    "compact_template": {},
+    "full_template": {
+      "type": "asd",
+      "value": [
+        "sdf"
+      ]
+    },
+    "compact_template": {
+      "name": {
+        "value": "${item::data.config.hostname}"
+      },
+      "type": {
+        "value": "vm"
+      },
+      "status": {
+        "value": "${item::data.state}"
+      }
+    },
     "is_active": true,
     "default_item": {
       "key": "value"
