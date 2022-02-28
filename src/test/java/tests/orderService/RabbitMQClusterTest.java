@@ -123,7 +123,8 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "Удаление vhosts {0}")
     void deleteVhostAccessVhost(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            List<String> vhosts = Arrays.asList("vhost1", "vhost2", "vhost3");
+            List<String> vhosts = Stream.generate(new Generex("[a-zA-Z0-9]{2,16}")::random)
+                    .limit(new Random().nextInt(20) + 1).distinct().collect(Collectors.toList());
             rabbit.addVhost(vhosts);
             rabbit.deleteVhost(vhosts);
         }
