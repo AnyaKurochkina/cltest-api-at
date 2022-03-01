@@ -33,7 +33,6 @@ public class PostgresPro extends IProduct {
     //    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
     private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
     //    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
-    private final static String DB_CONNECTION_URL = "data.find{it.data.config.containsKey('connection_url')}.data.config.connection_url";
     @ToString.Include
     String segment;
     String dataCentre;

@@ -49,6 +49,7 @@ public abstract class IProduct extends Entity {
     public static final String KAFKA_CLUSTER_ACL_TOPICS = "data.find{it.type=='cluster'}.data.config.acls.any{it.topic_name=='%s'}";
     public static final String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.data.config.transaction_acls.any{it.transaction_id=='%s'}";
 
+    public static final String DB_CONNECTION_URL = "data.find{it.data.config.containsKey('connection_url')}.data.config.connection_url";
     public static final String EXPAND_MOUNT_POINT = "Расширить";
     public static final String RESTART = "Перезагрузить";
     public static final String STOP_SOFT = "Выключить";
