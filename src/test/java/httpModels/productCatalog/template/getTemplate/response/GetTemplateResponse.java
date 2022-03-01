@@ -27,6 +27,9 @@ public class GetTemplateResponse implements GetImpl {
 	@JsonProperty("icon")
 	private String icon;
 
+	@JsonProperty("type")
+	private String type;
+
 	@JsonProperty("description")
 	private String description;
 

@@ -4,6 +4,7 @@
   "version": "",
   "run": "run",
   "rollback": "Rollback",
+  "type": "check_vm",
   "timeout": 1,
   "input": {},
   "output": {},
