@@ -1,0 +1,26 @@
+{
+  "title": "invalid_visual_template_test_api",
+  "name": "invalid_visual_template_test_api",
+  "description": "",
+  "event_type": [
+  ],
+  "event_provider": [
+  ],
+  "full_template": {
+    "type": "asd",
+    "value": [
+      "sdf"
+    ]
+  },
+  "compact_template": {
+    "name": {
+      "value": ""
+    },
+    "type": {
+      "value": ""
+    }
+  },
+  "is_active": false,
+  "default_item": {
+  }
+}

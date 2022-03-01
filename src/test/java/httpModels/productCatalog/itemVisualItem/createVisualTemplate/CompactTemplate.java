@@ -16,7 +16,7 @@ public class CompactTemplate{
 	private Name name;
 
 	@JsonProperty("type")
-	private Type type;
+	private Type  type;
 
 	@JsonProperty("status")
 	private Status status;

@@ -14,6 +14,7 @@ import models.subModels.Flavor;
 import org.json.JSONObject;
 import tests.Tests;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.Comparator;
 import java.util.List;
@@ -171,6 +172,16 @@ public class ReferencesStep extends Tests {
         return new Gson().fromJson(jsonArray, type);
     }
 
+    @Step("Получение списка Pages по имени Directory и имени Page для приватных ролей")
+    public List<Pages> getPrivatePagesListByDirectoryNameAndPageName(String directoryName, String pageName) {
+        String jsonArray = new Http(ReferencesURL).get("private/directories/" + directoryName + "/pages?name=" + pageName)
+                .assertStatus(200)
+                .toString();
+        Type type = new TypeToken<List<Pages>>() {
+        }.getType();
+        return new Gson().fromJson(jsonArray, type);
+    }
+
     @Step("Получение Pages по Id для приватных ролей")
     public Pages getPrivatePagesById(String directoryName, String pageId) {
         return new Http(ReferencesURL).get("private/directories/" + directoryName + "/pages/" + pageId)
@@ -210,6 +221,14 @@ public class ReferencesStep extends Tests {
                 .extractAs(Pages.class);
     }
 
+    @Step("Частичное обновление Pages по Id для приватных ролей")
+    public void partUpdatePrivatePagesById(String directoryName, String pageId, JSONObject object) {
+        new Http(ReferencesURL)
+                .body(object)
+                .patch("private/directories/" + directoryName + "/pages/" + pageId)
+                .assertStatus(200);
+    }
+
     @Step("Удаление Pages по Id для приватных ролей")
     public void deletePrivatePagesById(String directoryName, String pageId) {
         new Http(ReferencesURL)
@@ -228,7 +247,7 @@ public class ReferencesStep extends Tests {
 
     @Step("Создание Pages для приватных ролей")
     public Response createPrivatePages(String directoryName, JSONObject object) {
-         return new Http(ReferencesURL)
+        return new Http(ReferencesURL)
                 .body(object)
                 .post("private/directories/" + directoryName + "/pages")
                 .assertStatus(201);
@@ -292,5 +311,46 @@ public class ReferencesStep extends Tests {
         new Http(ReferencesURL)
                 .delete("private/page_filters/" + key + "/")
                 .assertStatus(204);
+    }
+
+    @Step("Импорт Directories для приватных ролей")
+    public void importPrivateDirectories(String path) {
+        new Http(ReferencesURL)
+                .multiPart("private/directories/obj_import/", "file", new File(path))
+                .assertStatus(200);
+    }
+
+    @Step("Экспорт Directories для приватных ролей")
+    public void exportPrivateDirectories(String name) {
+        new Http(ReferencesURL)
+                .get("private/directories/" + name + "/obj_export/")
+                .assertStatus(200);
+    }
+
+    @Step("Импорт Pages для приватных ролей")
+    public void importPrivatePages(String path, String directoryName) {
+         new Http(ReferencesURL)
+                .multiPart("private/directories/" +directoryName + "/pages/import", "file", new File(path))
+                .assertStatus(200);
+    }
+
+    @Step("Экспорт Pages для приватных ролей")
+    public void exportPrivatePages(String directoryName, String id) {
+        new Http(ReferencesURL)
+                .get("private/directories/" + directoryName + "/pages/" + id + "/export")
+                .assertStatus(200);
+    }
+
+    @Step("Импорт Page_filter для приватных ролей")
+    public void importPrivatePageFilter(String path) {
+        new Http(ReferencesURL)
+                .multiPart("private/page_filters/obj_import/", "file", new File(path))
+                .assertStatus(200);
+    }
+    @Step("Экспорт Page_filter для приватных ролей")
+    public void exportPrivatePageFilter(String key) {
+        new Http(ReferencesURL)
+                .get("private/page_filters/" + key + "/obj_export/")
+                .assertStatus(200);
     }
 }

@@ -16,6 +16,9 @@ import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -33,7 +36,7 @@ public class ActionsTest extends Tests {
     @TmsLink("640545")
     @Test
     public void createAction() {
-        action = Action.builder().actionName("test_object_at2021").build().createObject();
+        action = Action.builder().actionName("test_object_at2021").version("1.0.1").build().createObject();
     }
 
     @Order(2)
@@ -152,6 +155,21 @@ public class ActionsTest extends Tests {
                 () -> assertEquals(action.getActionId(), actionIdWithMultiSearch));
     }
 
+    @Order(89)
+    @DisplayName("Проверка независимых от версии параметров в действиях")
+    @Test
+    public void checkVersionWhenIndependentParamUpdated() {
+        String version = action.getVersion();
+        String id = action.getActionId();
+        List<String> list = Arrays.asList("restricted");
+        productCatalogSteps.partialUpdateObject(action.getActionId(), new JSONObject().put("restricted_groups", list));
+        List<String> allowed_groups = productCatalogSteps.getJsonPath(id).get("restricted_groups");
+        String newVersion = productCatalogSteps.getById(id, GetActionResponse.class).getVersion();
+        assertEquals(list, allowed_groups);
+        assertEquals(version, newVersion);
+
+    }
+
     @Order(90)
     @DisplayName("Обновление действия с указанием версии в граничных значениях")
     @TmsLink("642507")
@@ -202,7 +220,7 @@ public class ActionsTest extends Tests {
         String version = productCatalogSteps
                 .patchObject(GetActionResponse.class, "test_object_at2021", action.getGraphId(), action.getActionId())
                 .getVersion();
-        assertEquals("1.0.1", version);
+        assertEquals("1.0.2", version);
     }
 
     @Order(94)

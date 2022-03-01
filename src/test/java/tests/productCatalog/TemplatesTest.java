@@ -91,7 +91,7 @@ public class TemplatesTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
     @Order(7)
-    @DisplayName("Негатичный тест на копирование сервиса по Id без токена")
+    @DisplayName("Негатичный тест на копирование шаблона по Id без токена")
     @TmsLink("643559")
     @Test
     public void copyTemplateByIdWithOutToken() {
