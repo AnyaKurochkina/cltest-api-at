@@ -51,8 +51,8 @@ public class ClickHouse extends IProduct {
     //Удалить пользователя
     private static final String CLICKHOUSE_DELETE_DBMS_USER = "clickhouse_remove_dbms_user";
 
-    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.any{it.db_name=='%s'}";
-    private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
+    private final static String DB_NAME_PATH = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.any{it.db_name=='%s'}";
+    private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
 
     @Override
     @Step("Заказ продукта")

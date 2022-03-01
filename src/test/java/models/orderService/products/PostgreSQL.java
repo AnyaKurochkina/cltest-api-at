@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -29,11 +30,11 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 public class PostgreSQL extends IProduct {
-    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.any{it.db_name=='%s'}";
+    private final static String DB_NAME_PATH = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.any{it.db_name=='%s'}";
     //    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
-    private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
-    private final static String DB_OWNER_NAME_PATH = "data.find{it.config.containsKey('db_owners')}.config.db_owners.user_name";
-    private final static String DB_CONNECTION_URL = "data.find{it.config.containsKey('connection_url')}.config.connection_url";
+    private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
+    private final static String DB_OWNER_NAME_PATH = "data.find{it.data.config.containsKey('db_owners')}.data.config.db_owners.user_name";
+    private final static String DB_CONNECTION_URL = "data.find{it.data.config.containsKey('connection_url')}.data.config.connection_url";
     //    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
     @ToString.Include
     String segment;
@@ -147,10 +148,15 @@ public class PostgreSQL extends IProduct {
     }
 
     //Сбросить пароль владельца
-    public void resetDbOwnerPassword(String dbName) {
-        Assertions.assertTrue(database.stream().anyMatch(db -> db.getNameDB().equals(dbName)), String.format("Базы %s не существует", dbName));
+    public void resetDbOwnerPassword(String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName + "_admin", password)), this.getProjectId());
+        OrderServiceSteps.executeAction("reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
+    }
+
+    //Изменить default_transaction_isolation
+    public void updateDti(String defaultTransactionIsolation) {
+        OrderServiceSteps.executeAction("postgresql_update_dti", this,
+                new JSONObject(String.format("{\"default_transaction_isolation\":\"%s\"}", defaultTransactionIsolation)), this.getProjectId());
     }
 
     //Удалить пользователя
@@ -177,12 +183,11 @@ public class PostgreSQL extends IProduct {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, user, password);
-            Assertions.assertTrue(connection.isValid(1));
+            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение завершилось ошибкой, текущий url подключения: " + url).isValid(1));
         }catch (Throwable t){
             t.printStackTrace();
         }  finally {
-            assert connection != null;
-            connection.close();
+            Objects.requireNonNull(connection, "Подключение завершилось ошибкой, текущий url подключения: " + url).close();
         }
     }
 
@@ -200,6 +205,11 @@ public class PostgreSQL extends IProduct {
 
     public void stopHard() {
         stopHard("stop_hard_two_layer");
+    }
+
+    public void updateMaxConnections(String loadProfile, int maxConnections) {
+        OrderServiceSteps.executeAction("postgresql_update_max_connections", this,
+                new JSONObject(String.format("{\"load_profile\":\"%s\", max_connections: %d}", loadProfile, maxConnections)), this.getProjectId());
     }
 }
 

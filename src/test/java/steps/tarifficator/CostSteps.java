@@ -116,7 +116,7 @@ public class CostSteps extends Steps {
                 JSONObject costItem = new JSONObject();
                 costItem.put("item_id", item.get("item_id"));
                 costItem.put("type", item.get("type"));
-                costItem.put("data", item);
+                costItem.put("data", item.get("data"));
                 template.append("items", costItem);
             }
             return new Http(TarifficatorURL)

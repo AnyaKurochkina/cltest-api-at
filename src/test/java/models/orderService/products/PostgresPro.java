@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -28,11 +29,11 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 public class PostgresPro extends IProduct {
-    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.any{it.db_name=='%s'}";
+    private final static String DB_NAME_PATH = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.any{it.db_name=='%s'}";
     //    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
-    private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
+    private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
     //    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
-    private final static String DB_CONNECTION_URL = "data.find{it.config.containsKey('connection_url')}.config.connection_url";
+    private final static String DB_CONNECTION_URL = "data.find{it.data.config.containsKey('connection_url')}.data.config.connection_url";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -125,12 +126,11 @@ public class PostgresPro extends IProduct {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, user, password);
-            Assertions.assertTrue(connection.isValid(1));
+            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось, текущий url подключения: " + url).isValid(1));
         } catch (Throwable t) {
             t.printStackTrace();
         } finally {
-            assert connection != null;
-            connection.close();
+            Objects.requireNonNull(connection, "Подключение не создалось, текущий url подключения: " + url).close();
         }
     }
 
