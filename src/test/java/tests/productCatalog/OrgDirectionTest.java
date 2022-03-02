@@ -1,5 +1,6 @@
 package tests.productCatalog;
 
+import core.helper.Configure;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
@@ -57,8 +58,10 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetOrgDirectionListResponse.class).getNext();
+        String env = Configure.ENV;
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
+                    "Значение поля next несоответсвует ожидаемому");
         }
     }
 

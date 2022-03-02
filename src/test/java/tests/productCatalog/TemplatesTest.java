@@ -52,8 +52,10 @@ public class TemplatesTest extends Tests {
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetTemplateListResponse.class).getNext();
+        String env = Configure.ENV;
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
+                    "Значение поля next несоответсвует ожидаемому");
         }
     }
 

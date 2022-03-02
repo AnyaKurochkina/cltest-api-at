@@ -44,7 +44,8 @@ public class ActionsTest extends Tests {
     @TmsLink("642429")
     @Test
     public void getActionList() {
-        assertTrue(productCatalogSteps.getProductObjectList(ActionResponse.class).size() > 0);
+        assertTrue(productCatalogSteps.getProductObjectList(ActionResponse.class).size() > 0,
+                "Список не содержит значений");
     }
 
     @Order(11)
@@ -53,8 +54,10 @@ public class ActionsTest extends Tests {
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(ActionResponse.class).getNext();
+        String env = Configure.ENV;
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"), "Значение поля next " +
+                    "несоответсвует ожидаемому");
         }
     }
 
@@ -63,8 +66,8 @@ public class ActionsTest extends Tests {
     @TmsLink("642432")
     @Test
     public void checkActionExists() {
-        assertTrue(productCatalogSteps.isExists(action.getActionName()));
-        assertFalse(productCatalogSteps.isExists("NoExistsAction"));
+        assertTrue(productCatalogSteps.isExists(action.getActionName()), "Действие не существует");
+        assertFalse(productCatalogSteps.isExists("NoExistsAction"), "Действие существует");
     }
 
     @Order(4)
@@ -75,9 +78,9 @@ public class ActionsTest extends Tests {
         String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
         String actionName = new JsonPath(data).get("Action.json.name");
         productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
-        assertTrue(productCatalogSteps.isExists(actionName));
+        assertTrue(productCatalogSteps.isExists(actionName), "Действие не существует");
         productCatalogSteps.deleteByName(actionName, ActionResponse.class);
-        assertFalse(productCatalogSteps.isExists(actionName));
+        assertFalse(productCatalogSteps.isExists(actionName), "Действие существует");
     }
 
     @Order(5)
@@ -104,9 +107,9 @@ public class ActionsTest extends Tests {
     public void copyActionById() {
         String cloneName = action.getActionName() + "-clone";
         productCatalogSteps.copyById(action.getActionId());
-        assertTrue(productCatalogSteps.isExists(cloneName));
+        assertTrue(productCatalogSteps.isExists(cloneName),"Действие не существует");
         productCatalogSteps.deleteByName(cloneName, ActionResponse.class);
-        assertFalse(productCatalogSteps.isExists(cloneName));
+        assertFalse(productCatalogSteps.isExists(cloneName), "Действие существует");
     }
 
     @Order(8)
@@ -152,11 +155,12 @@ public class ActionsTest extends Tests {
         String actionIdWithMultiSearch = productCatalogSteps.getProductObjectIdByNameWithMultiSearch(action.getActionName(), ActionResponse.class);
         assertAll(
                 () -> assertNotNull(actionIdWithMultiSearch, String.format("Действие с именем: %s не найден", "test_object_at2021")),
-                () -> assertEquals(action.getActionId(), actionIdWithMultiSearch));
+                () -> assertEquals(action.getActionId(), actionIdWithMultiSearch, "Id действия не совпадают"));
     }
 
     @Order(89)
     @DisplayName("Проверка независимых от версии параметров в действиях")
+    @TmsLink("716373")
     @Test
     public void checkVersionWhenIndependentParamUpdated() {
         String version = action.getVersion();
@@ -165,8 +169,8 @@ public class ActionsTest extends Tests {
         productCatalogSteps.partialUpdateObject(action.getActionId(), new JSONObject().put("restricted_groups", list));
         List<String> allowed_groups = productCatalogSteps.getJsonPath(id).get("restricted_groups");
         String newVersion = productCatalogSteps.getById(id, GetActionResponse.class).getVersion();
-        assertEquals(list, allowed_groups);
-        assertEquals(version, newVersion);
+        assertEquals(list, allowed_groups, "Доступные группы не соврадают");
+        assertEquals(version, newVersion, "Версии не совпадают");
 
     }
 
@@ -220,7 +224,7 @@ public class ActionsTest extends Tests {
         String version = productCatalogSteps
                 .patchObject(GetActionResponse.class, "test_object_at2021", action.getGraphId(), action.getActionId())
                 .getVersion();
-        assertEquals("1.0.2", version);
+        assertEquals("1.0.2", version, "Версии не совпадают");
     }
 
     @Order(94)

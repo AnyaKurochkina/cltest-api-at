@@ -84,8 +84,10 @@ public class ProductsTest extends Tests {
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetProductsResponse.class).getNext();
+        String env = Configure.ENV;
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
+                    "Значение поля next несоответсвует ожидаемому");
         }
     }
 
@@ -93,6 +95,7 @@ public class ProductsTest extends Tests {
     @DisplayName("Создание продукта в продуктовом каталоге c новой категорией")
     @Test
     public void createProductWithUpdateCategory() {
+        //todo переделать когда на ифт вольют изменения, пока тест падает.
         ReferencesStep referencesStep = new ReferencesStep();
         Map<String, String> data = referencesStep.getPrivateResponsePagesById("enums", "bc55d445-5310-461c-a984-bf4c3bf1a6f5").jsonPath().get("data");
         referencesStep.updateDataPrivatePagesById("enums", "bc55d445-5310-461c-a984-bf4c3bf1a6f5",
