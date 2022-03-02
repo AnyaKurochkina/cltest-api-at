@@ -60,7 +60,7 @@ public class OldRabbitMQClusterTest extends Tests {
         if (rabbit.productStatusIs(STOPPED)) {
             rabbit.start();
         }
-        rabbit.rabbitmqCreateUser();
+        rabbit.rabbitmqCreateUser("testapiuser");
     }
 
     @Order(5)
