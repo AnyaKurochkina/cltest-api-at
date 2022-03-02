@@ -75,7 +75,7 @@ public class OldApacheKafkaClusterTest extends Tests {
         if (kafka.productStatusIs(STOPPED)) {
             kafka.start();
         }
-        kafka.consumeKafkaMessages("PacketTopicName1");
+        kafka.consumeKafkaMessages("TutorialTopic");
     }
 
     @Order(5)

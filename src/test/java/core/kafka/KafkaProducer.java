@@ -3,10 +3,14 @@ package core.kafka;
 import core.helper.Configure;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -14,8 +18,14 @@ import java.util.UUID;
 
 @Log4j2
 public class KafkaProducer {
-    private static final String BOOTSTRAP_SERVERS = "kafka.bootstrap.servers";
+
+    private static final String KAFKA_PATH = new File("src/test/java/core/kafka").getAbsolutePath();
+    private static final String KAFKA_KEYSTORE_PATH = "kafka.keystore.cert";
+    private static final String KAFKA_TRUSTSTORE_PATH = "kafka.truststore.cert";
+    private static final String KAFKA_KEYSTORE_PASSWORD = "keystore.password";
+    private static final String KAFKA_TRUSTSTORE_PASSWORD = "truststore.password";
     private static final String ACKS = "kafka.acks";
+    private static final String SECURITY_PROTOCOL = "security.protocol";
     private static final String RETRIES = "kafka.retries";
     private static final String BATCH_SIZE = "kafka.batch.size";
     private static final String LINGER_MS = "kafka.linger.ms";
@@ -44,14 +54,19 @@ public class KafkaProducer {
 
     public void doProduce() {
         Properties props = new Properties();
-        props.put("bootstrap.servers", bootstrapServers);
-        props.put("acks", Configure.getAppProp(ACKS));
-        props.put("retries", Integer.parseInt(Configure.getAppProp(RETRIES)));
-        props.put("batch.size", Integer.parseInt(Configure.getAppProp(BATCH_SIZE)));
-        props.put("linger.ms", Integer.parseInt(Configure.getAppProp(LINGER_MS)));
-        props.put("buffer.memory", Integer.parseInt(Configure.getAppProp(BUFFER_MEMORY)));
-        props.put("key.serializer", Configure.getAppProp(KEY_SERIALIZER));
-        props.put("value.serializer", Configure.getAppProp(VALUE_SERIALIZER));
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, Configure.getAppProp(SECURITY_PROTOCOL));
+        props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, KAFKA_PATH + "\\" + Configure.getAppProp(KAFKA_KEYSTORE_PATH));
+        props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, Configure.getAppProp(KAFKA_KEYSTORE_PASSWORD));
+        props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, KAFKA_PATH + "\\" + Configure.getAppProp(KAFKA_TRUSTSTORE_PATH));
+        props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, Configure.getAppProp(KAFKA_TRUSTSTORE_PASSWORD));
+        props.put(ProducerConfig.ACKS_CONFIG, Configure.getAppProp(ACKS));
+        props.put(ProducerConfig.RETRIES_CONFIG, Integer.parseInt(Configure.getAppProp(RETRIES)));
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, Integer.parseInt(Configure.getAppProp(BATCH_SIZE)));
+        props.put(ProducerConfig.LINGER_MS_CONFIG, Integer.parseInt(Configure.getAppProp(LINGER_MS)));
+        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, Integer.parseInt(Configure.getAppProp(BUFFER_MEMORY)));
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, Configure.getAppProp(KEY_SERIALIZER));
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, Configure.getAppProp(VALUE_SERIALIZER));
 
         Producer<String, String> producer = new org.apache.kafka.clients.producer.KafkaProducer<>(props);
         RecordHeaders headers = new RecordHeaders();
@@ -61,10 +76,10 @@ public class KafkaProducer {
         producer.send(new ProducerRecord<>(this.topic, 0, UUID.randomUUID().toString(), this.data, headers), ((recordMetadata, exception) ->
         {
             if (exception == null) {
-                log.info("Отправлено новое сообщение, топик " + recordMetadata.topic() + ", Сообщение " + data);
+                log.info("Отправлено новое сообщение, топик: " + recordMetadata.topic() + ", Сообщение: " + data);
 
             }else {
-                log.error("Ошибка отправки ", exception);
+                log.error("Ошибка отправки: ", exception);
             }
         }));
 
