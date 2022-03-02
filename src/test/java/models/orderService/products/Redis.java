@@ -2,10 +2,7 @@ package models.orderService.products;
 
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -15,6 +12,7 @@ import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import redis.clients.jedis.Jedis;
 import steps.orderService.OrderServiceSteps;
 
 
@@ -33,6 +31,7 @@ public class Redis extends IProduct {
     String domain;
     @ToString.Include
     String osVersion;
+    String redisPassword;
 
     @Override
     @Step("Заказ продукта")
@@ -46,9 +45,11 @@ public class Redis extends IProduct {
         jsonTemplate = "/orders/redis.json";
         productName = "Redis";
         initProduct();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(dataCentre == null)
+        if (redisPassword == null)
+            redisPassword = "8AEv023pMDHVw1w4zZZE23HjPAKmVDvdtpK8Qddme94VJBHKhgy";
+        if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
@@ -66,6 +67,7 @@ public class Redis extends IProduct {
                 .set("$.order.project_name", projectId)
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .set("$.order.attrs.os_version", osVersion)
+                .set("$.order.attrs.redis_password", redisPassword)
                 .set("$.order.label", getLabel())
                 .build();
     }
@@ -77,6 +79,20 @@ public class Redis extends IProduct {
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
         Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
+    }
+
+    @SneakyThrows
+    public void checkConnect() {
+        String url = "";
+        try {
+            url = (String) OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL);
+            Jedis jedis = new Jedis(url);
+            jedis.auth(redisPassword);
+            jedis.close();
+        } catch (Exception e) {
+            throw new Exception("Ошибка подключения к Redis по url " + url + " : " + e);
+        }
+        log.debug("Успешное подключение к Redis");
     }
 
     //Расширить

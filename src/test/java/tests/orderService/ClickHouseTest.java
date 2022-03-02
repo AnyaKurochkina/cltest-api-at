@@ -99,16 +99,15 @@ public class ClickHouseTest extends Tests {
         }
     }
 
-//    @TmsLink("377688")
-//    @Tag("actions")
-//    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "Удалить БД {0}")
-//    void removeDb(ClickHouse product) {
-//        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-//            clickHouse.createDb("cached_bd");
-//            clickHouse.removeDb("cached_bd");
-//        }
-//    }
+    @TmsLink("711827")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка создания {0}")
+    void checkConnectDb(ClickHouse product) {
+        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+            clickHouse.checkConnectDb();
+        }
+    }
 
     @TmsLink("377798")
     @Tag("actions")

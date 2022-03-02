@@ -14,10 +14,14 @@ import models.subModels.DbUser;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import redis.clients.jedis.Jedis;
 import steps.orderService.OrderServiceSteps;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -39,6 +43,9 @@ public class ClickHouse extends IProduct {
     public List<Db> database = new ArrayList<>();
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
+    String clickhousePassword;
+    String clickhouseUser;
+    String clickhouseBb;
 
     //Проверить конфигурацию
     private static final String REFRESH_VM_CONFIG = "check_vm";
@@ -72,6 +79,12 @@ public class ClickHouse extends IProduct {
             osVersion = getRandomOsVersion();
         if(dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+        if (clickhouseUser == null)
+            clickhouseUser = "username_created";
+        if (clickhousePassword == null)
+            clickhousePassword = "vrItfk0k8sf8ICbwsMs7nB3";
+        if (clickhouseBb == null)
+            clickhouseBb = "dbname";
         return this;
     }
 
@@ -166,9 +179,25 @@ public class ClickHouse extends IProduct {
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.clickhouse_user", clickhouseUser)
+                .set("$.order.attrs.clickhouse_password", clickhousePassword)
                 .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .set("$.order.label", getLabel())
                 .build();
 
     }
+
+    @SneakyThrows
+    public void checkConnectDb() {
+        String url = "";
+        try {
+            url = "jdbc:" + OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL) + "/" + clickhouseBb;
+            Connection connection = DriverManager.getConnection(url, clickhouseUser, clickhousePassword);
+            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось, текущий url подключения: " + url).isValid(1));
+        } catch (Exception e) {
+            throw new Exception("Ошибка подключения к ClickHouse по url " + url + " : " + e);
+        }
+        log.debug("Успешное подключение к ClickHouse");
+    }
+
 }
