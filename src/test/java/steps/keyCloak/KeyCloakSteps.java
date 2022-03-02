@@ -17,14 +17,11 @@ public class KeyCloakSteps {
     private static final String URL = Configure.getAppProp("url.keycloak");
     private static final int TOKEN_LIFETIME_SEC = 200;
 
-
     /**
      * @return - возвращаем токен
      */
     @Step("Получение нового UserToken")
     public static synchronized String getNewUserToken(Role role) {
-        //Получение сервис из памяти
-//        Service service = Service.builder().build().createObject();
         //Получение пользователя из памяти
         User user = User.builder().role(role).build().createObject();
         //Отправка запроса на получение токена
@@ -32,9 +29,6 @@ public class KeyCloakSteps {
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()
                 .disableAttachmentLog()
-//                .post("auth/realms/Portal/protocol/openid-connect/token",
-//                        String.format("client_id=%s&client_secret=%s&grant_type=password&username=%s&password=%s",
-//                                service.clientId, service.clientSecret, user.username, user.password))
                 .body(String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
                                 Objects.requireNonNull(user.getUsername()), Objects.requireNonNull(user.getPassword())))
                 .post("auth/realms/Portal/protocol/openid-connect/token")
@@ -47,17 +41,17 @@ public class KeyCloakSteps {
      * @return возвращаем токен
      */
     public static synchronized String getUserToken(Role role) {
-        UserToken userToken = UserToken.builder().build().createObject();
+        UserToken userToken = UserToken.builder().role(role).build().createObject();
         long currentTime = System.currentTimeMillis() / 1000L;
 
-        if (currentTime - userToken.time > TOKEN_LIFETIME_SEC) {
-            userToken.token = getNewUserToken(role);
-            userToken.time = currentTime;
+        if (currentTime - userToken.getTime() > TOKEN_LIFETIME_SEC) {
+            userToken.setToken(getNewUserToken(role));
+            userToken.setTime(currentTime);
             //Если он не Null и время его существования не превышено, то просто возвращаем токен из памяти
         }
         //Сохраняем токен
         userToken.save();
-        return userToken.token;
+        return userToken.getToken();
     }
 
     //    @Step("Получение ServiceAccountToken")
