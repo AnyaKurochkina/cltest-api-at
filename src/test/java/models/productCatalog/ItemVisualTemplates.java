@@ -1,8 +1,8 @@
 package models.productCatalog;
 
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.CompactTemplate;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.CreateItemVisualResponse;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.DefaultItem;
@@ -52,6 +52,8 @@ public class ItemVisualTemplates extends Entity {
                 .set("$.is_active", isActive)
                 .set("$.event_provider", eventProvider)
                 .set("$.event_type", eventType)
+                .set("$.compact_template", new JSONObject(compactTemplate))
+                .set("$.full_template", new JSONObject(fullTemplate))
                 .build();
     }
 

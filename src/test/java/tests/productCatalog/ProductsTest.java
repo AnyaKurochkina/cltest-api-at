@@ -2,21 +2,24 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
+import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Product;
 import org.json.JSONObject;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
+import steps.references.ReferencesStep;
 import tests.Tests;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +32,9 @@ public class ProductsTest extends Tests {
 
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("products/", "productCatalog/products/createProduct.json");
     Product product;
-    private static final String INFO = "information";
+    Map<String, String> info = new LinkedHashMap<String, String>() {{
+        put("information", "testData");
+    }};
     private static final String NAME = "product_test_api-:2022.";
 
     @Order(1)
@@ -42,7 +47,7 @@ public class ProductsTest extends Tests {
                 .title("AtTestApiProduct")
                 .envs(Collections.singletonList("dev"))
                 .version("1.0.0")
-                .info(INFO)
+                .info(info)
                 .build()
                 .createObject();
     }
@@ -57,10 +62,10 @@ public class ProductsTest extends Tests {
                 .title("AtTestApiProduct")
                 .envs(Collections.singletonList("dev"))
                 .version("1.0.0")
-                .category("gitlab_group")
+                .category("gitlab")
                 .build()
                 .createObject();
-        assertEquals(testProduct.getCategory(), "gitlab_group");
+        assertEquals("gitlab", testProduct.getCategory());
     }
 
 
@@ -79,9 +84,34 @@ public class ProductsTest extends Tests {
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetProductsResponse.class).getNext();
+        String env = Configure.ENV;
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
+                    "Значение поля next несоответсвует ожидаемому");
         }
+    }
+
+    @Order(6)
+    @DisplayName("Создание продукта в продуктовом каталоге c новой категорией")
+    @Test
+    public void createProductWithUpdateCategory() {
+        //todo переделать когда на ифт вольют изменения, пока тест падает.
+        ReferencesStep referencesStep = new ReferencesStep();
+        Map<String, String> data = referencesStep.getPrivateResponsePagesById("enums", "bc55d445-5310-461c-a984-bf4c3bf1a6f5").jsonPath().get("data");
+        referencesStep.updateDataPrivatePagesById("enums", "bc55d445-5310-461c-a984-bf4c3bf1a6f5",
+                new JSONObject().put("test", "test"));
+        Product product = Product.builder()
+                .name("test_category")
+                .title("test_category")
+                .category("test")
+                .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
+                .info(info)
+                .build()
+                .createObject();
+        assertEquals("test", product.getCategory());
+        referencesStep.partUpdatePrivatePagesById("enums", "bc55d445-5310-461c-a984-bf4c3bf1a6f5", new JSONObject()
+                .put("data", new JSONObject(data)));
     }
 
     @Order(10)
@@ -254,12 +284,13 @@ public class ProductsTest extends Tests {
                 ".d0-oscp.corp.dev.vtb/products/?is_open=true&env=dev&information_systems=c9fd31c7-25a5-45ca-863c-18425d1ae927&page=1&per_page=100"));
     }
 
-//    @Order(99)
-//    @DisplayName("Получение значения ключа info")
-//    @Test
-//    public void getProductInfo() {
-//        assertEquals(productCatalogSteps.getInfoProduct(product.getProductId()).getInfo(), INFO);
-//    }
+    @Order(98)
+    @DisplayName("Получение значения ключа info")
+    @Test
+    public void getProductInfo() {
+        Map<String, String> info = product.getInfo();
+        assertEquals(info.get("information"), "testData");
+    }
 
     @Order(99)
     @DisplayName("Негативный тест на удаление продукта без токена")

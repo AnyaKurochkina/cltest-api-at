@@ -2,6 +2,8 @@ package httpModels.productCatalog.service.getService.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.service.createService.response.DataSource;
+import httpModels.productCatalog.service.createService.response.ExtraData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 public class GetServiceResponse implements GetImpl {
 
-	@JsonProperty("allowed_paths")
-	private List<Object> allowedPaths;
+	@JsonProperty("turn_off_inventory")
+	private Boolean turnOffInventory;
 
 	@JsonProperty("version_list")
 	private List<String> versionList;
@@ -27,17 +29,44 @@ public class GetServiceResponse implements GetImpl {
 	@JsonProperty("icon")
 	private String icon;
 
-	@JsonProperty("version_create_dt")
-	private String versionCreateDt;
-
 	@JsonProperty("description")
 	private String description;
+
+	@JsonProperty("service_info")
+	private String serviceInfo;
 
 	@JsonProperty("graph_version")
 	private String graphVersion;
 
+	@JsonProperty("title")
+	private String title;
+
+	@JsonProperty("direction_id")
+	private String directionId;
+
+	@JsonProperty("inventory_actions")
+	private List<Object> inventoryActions;
+
+	@JsonProperty("graph_version_pattern")
+	private String graphVersionPattern;
+
+	@JsonProperty("hide_node_name_output")
+	private Boolean hideNodeNameOutput;
+
+	@JsonProperty("id")
+	private String id;
+
+	@JsonProperty("direction")
+	private String direction;
+
+	@JsonProperty("start_btn_label")
+	private Object startBtnLabel;
+
+	@JsonProperty("version_create_dt")
+	private String versionCreateDt;
+
 	@JsonProperty("restricted_groups")
-	private List<Object> restrictedGroups;
+	private List<String> restrictedGroups;
 
 	@JsonProperty("graph_id")
 	private String graphId;
@@ -48,11 +77,14 @@ public class GetServiceResponse implements GetImpl {
 	@JsonProperty("data_source")
 	private DataSource dataSource;
 
-	@JsonProperty("number")
-	private Integer number;
+	@JsonProperty("check_rules")
+	private List<Object> checkRules;
 
-	@JsonProperty("direction_id")
-	private String directionId;
+	@JsonProperty("auto_open_form")
+	private Boolean autoOpenForm;
+
+	@JsonProperty("last_version")
+	private String lastVersion;
 
 	@JsonProperty("extra_data")
 	private ExtraData extraData;
@@ -63,30 +95,9 @@ public class GetServiceResponse implements GetImpl {
 	@JsonProperty("name")
 	private String name;
 
-	@JsonProperty("restricted_paths")
-	private List<Object> restrictedPaths;
-
 	@JsonProperty("allowed_groups")
-	private List<Object> allowedGroups;
-
-	@JsonProperty("graph_version_pattern")
-	private String graphVersionPattern;
-
-	@JsonProperty("id")
-	private String id;
+	private List<String> allowedGroups;
 
 	@JsonProperty("graph_version_calculated")
 	private String graphVersionCalculated;
-
-	@JsonProperty("direction")
-	private String direction;
-
-	@JsonProperty("last_version")
-	private String lastVersion;
-
-	@JsonProperty("title")
-	private String title;
-
-	@JsonProperty("service_info")
-	private String service_info;
 }

@@ -1,8 +1,8 @@
 package models.productCatalog;
 
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import httpModels.productCatalog.orgDirection.createOrgDirection.response.CreateOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.createOrgDirection.response.ExtraData;
 import io.qameta.allure.Step;
@@ -24,6 +24,7 @@ public class OrgDirection extends Entity {
     private String description;
     private String orgDirectionId;
     private String jsonTemplate;
+    private String title;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/", "productCatalog/orgDirection/orgDirection.json");
 
@@ -39,6 +40,7 @@ public class OrgDirection extends Entity {
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", orgDirectionName)
+                .set("$.title", title)
                 .set("$.description", description)
                 .build();
     }

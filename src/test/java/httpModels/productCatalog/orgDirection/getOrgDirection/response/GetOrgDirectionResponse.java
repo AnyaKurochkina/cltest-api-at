@@ -29,6 +29,9 @@ public class GetOrgDirectionResponse implements GetImpl {
     @JsonProperty("id")
     private String id;
 
+    @JsonProperty("title")
+    private String title;
+
     @Override
     public String getTitle() {
         return null;

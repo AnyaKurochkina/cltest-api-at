@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @Builder
@@ -41,7 +42,7 @@ public class Product extends Entity {
     private String productId;
     private String category;
     private String jsonTemplate;
-    private String info;
+    private Map<String, String> info;
 
     public static final String productName = "products/";
 
