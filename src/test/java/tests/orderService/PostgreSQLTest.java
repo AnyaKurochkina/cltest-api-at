@@ -16,6 +16,7 @@ import tests.Tests;
 @Feature("PostgreSQL")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql"), @Tag("prod")})
 public class PostgreSQLTest extends Tests {
+    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
 
     @TmsLink("377668")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -41,7 +42,7 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd");
+            postgreSQL.createDb("cached_bd", adminPassword);
         }
     }
 
@@ -51,9 +52,10 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Проверка подключения к БД {0}")
     void checkDbConnection(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("bd_for_check_connection");
-            postgreSQL.checkConnection(postgreSQL.getDbUrl(), postgreSQL.getDbAdminUser(), postgreSQL.getDbAdminPass());
-            postgreSQL.removeDb("bd_for_check_connection");
+            String db = "bd_for_check_connection";
+            postgreSQL.createDb(db, adminPassword);
+            postgreSQL.checkConnection(db, adminPassword);
+            postgreSQL.removeDb(db);
         }
     }
 
@@ -63,7 +65,7 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd");
+            postgreSQL.createDb("cached_bd", adminPassword);
             postgreSQL.createDbmsUser("chelik1", "user", "cached_bd");
         }
     }
@@ -74,7 +76,7 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd");
+            postgreSQL.createDb("cached_bd", adminPassword);
             postgreSQL.createDbmsUser("chelikforreset1", "user", "cached_bd");
             postgreSQL.resetPassword("chelikforreset1");
         }
@@ -86,7 +88,7 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd");
+            postgreSQL.createDb("cached_bd", adminPassword);
             postgreSQL.resetDbOwnerPassword("cached_bd");
         }
     }
@@ -97,7 +99,7 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd");
+            postgreSQL.createDb("cached_bd", adminPassword);
             postgreSQL.createDbmsUser("chelikforreset2", "user", "cached_bd");
             postgreSQL.removeDbmsUser("chelikforreset2", "cached_bd");
         }
@@ -119,7 +121,7 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd");
+            postgreSQL.createDb("cached_bd", adminPassword);
             postgreSQL.removeDb("cached_bd");
         }
     }

@@ -49,10 +49,6 @@ public class PostgreSQL extends IProduct {
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
-    String dbAdminPass;
-    //URL example = jdbc:postgresql://dhzorg-pgc001ln.corp.dev.vtb:5432/createdb12345
-    String dbUrl;
-    String dbAdminUser;
 
     @Override
     @Step("Заказ продукта")
@@ -107,16 +103,14 @@ public class PostgreSQL extends IProduct {
         expandMountPoint("expand_mount_point", "/pg_data", 10);
     }
 
-    public void createDb(String dbName) {
+    public void createDb(String dbName, String dbAdminPass) {
         if (database.contains(new Db(dbName)))
             return;
-        dbAdminPass = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
+
         OrderServiceSteps.executeAction("create_db", this,
                 new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, dbAdminPass)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
-        dbAdminUser = dbName + "_admin";
-        dbUrl = "jdbc:" + OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL) + "/" + dbName;
         database.add(new Db(dbName));
         log.info("database = " + database);
         save();
@@ -177,17 +171,8 @@ public class PostgreSQL extends IProduct {
         Assertions.assertEquals(flavor.data.memory, memoryAfter);
     }
 
-    @SneakyThrows
-    public void checkConnection(String url, String user, String password) {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(url, user, password);
-            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение завершилось ошибкой, текущий url подключения: " + url).isValid(1));
-        }catch (Throwable t){
-            t.printStackTrace();
-        }  finally {
-            Objects.requireNonNull(connection, "Подключение завершилось ошибкой, текущий url подключения: " + url).close();
-        }
+    public void checkConnection(String dbName, String password) {
+        checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL)));
     }
 
     public void restart() {
