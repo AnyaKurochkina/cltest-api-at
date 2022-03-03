@@ -73,7 +73,7 @@ public class ServiceAccount extends Entity {
                 .assertStatus(204);
 
         String keyStatus = "";
-        int counter = 60;
+        int counter = 6;
         JsonPath jsonPath = null;
         log.info("Проверка статуса статического ключа");
         while ((keyStatus.equals("[deleting]") || keyStatus.equals("")) || keyStatus.equals("[active]") && counter > 0) {

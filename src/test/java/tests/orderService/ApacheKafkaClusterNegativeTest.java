@@ -3,6 +3,7 @@ package tests.orderService;
 import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.orderService.products.ApacheKafkaCluster;
 import models.subModels.KafkaTopic;
 import org.json.JSONObject;
@@ -23,8 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class ApacheKafkaClusterNegativeTest extends Tests {
 
     @Tag("actions")
+    @TmsLink("719578")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "Негативные тесты создания топика над {0}")
+    @ParameterizedTest(name = "Негативные тесты создания топика {0}")
     public void negativeCreateKafkaTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             assertAll("Проверка ошибки при передачи неверных параметров топика",
