@@ -1,14 +1,12 @@
 package models.orderService.products;
 
 import core.helper.JsonHelper;
-import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.authorizer.Project;
-import models.authorizer.User;
 import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
 import models.subModels.Db;
@@ -177,4 +175,7 @@ public class ScyllaDb extends IProduct {
         delete("delete_two_layer");
     }
 
+    public void checkConnectDb(String db, String user, String password) {
+        super.checkConnectDb(db, user, password, ((String) OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL)));
+    }
 }
