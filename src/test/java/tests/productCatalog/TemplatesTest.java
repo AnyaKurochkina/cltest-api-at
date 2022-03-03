@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TemplatesTest extends Tests {
 
     Template template;
-    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("templates/", "productCatalog/products/createProduct.json");
+    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("templates/", "productCatalog/templates/createTemplate.json");
 
     @Order(1)
     @DisplayName("Создание шаблона в продуктовом каталоге")
@@ -52,8 +52,10 @@ public class TemplatesTest extends Tests {
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetTemplateListResponse.class).getNext();
+        String env = Configure.ENV;
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
+                    "Значение поля next несоответсвует ожидаемому");
         }
     }
 
@@ -91,7 +93,7 @@ public class TemplatesTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists(cloneName));
     }
     @Order(7)
-    @DisplayName("Негатичный тест на копирование сервиса по Id без токена")
+    @DisplayName("Негатичный тест на копирование шаблона по Id без токена")
     @TmsLink("643559")
     @Test
     public void copyTemplateByIdWithOutToken() {

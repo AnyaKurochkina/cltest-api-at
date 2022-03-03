@@ -1,8 +1,8 @@
 package models.productCatalog;
 
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import httpModels.productCatalog.template.createTemplate.response.CreateTemplateResponse;
 import httpModels.productCatalog.template.createTemplate.response.Input;
 import httpModels.productCatalog.template.createTemplate.response.Output;
@@ -50,6 +50,7 @@ public class Template extends Entity {
     private Boolean additionalOutput;
     private String jsonTemplate;
     private String version;
+    private String type;
 
     private final String productName = "templates/";
 
@@ -64,6 +65,7 @@ public class Template extends Entity {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", templateName)
                 .set("$.version", version)
+                .set("$.type", type)
                 .build();
     }
 

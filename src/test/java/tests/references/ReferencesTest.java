@@ -4,6 +4,7 @@ import core.helper.JsonHelper;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.restassured.path.json.JsonPath;
 import models.references.Directories;
 import models.references.PageFilter;
 import models.references.Pages;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -27,6 +29,9 @@ public class ReferencesTest extends ReferencesStep {
     private static final String NAME = "create_directory_api_test";
     private static final String DESCRIPTION = "description_create_directory_api_test";
     private static final String PAGES_JSON_TEMPLATE = "references/createPages.json";
+    private static final String DIR_IMPORT_PATH = RESOURCE_PATH + "/json/references/import_directories.json";
+    private static final String PAGES_IMPORT_PATH = RESOURCE_PATH + "/json/references/import_pages_api.json";
+    private static final String PAGES_FILTER_IMPORT_PATH = RESOURCE_PATH + "/json/references/import_page_filter_api.json";
     List<String> deleteList = new ArrayList<>();
     List<String> deletePageFiltersList = new ArrayList<>();
     Directories directories;
@@ -297,5 +302,55 @@ public class ReferencesTest extends ReferencesStep {
         Pages getPage = getPagesById(createPage.getId());
         assertEquals(getPage.getName(), name);
         assertEquals(getPage.getDirectoryId(), directory);
+    }
+
+    @DisplayName("Импорт Directories")
+    @Test
+    public void importDirectories() {
+        String data = JsonHelper.getStringFromFile("/references/import_directories.json");
+        String directoryName = new JsonPath(data).get("Directory.name");
+        importPrivateDirectories(DIR_IMPORT_PATH);
+        Directories directories = getPrivateDirectoryByName(directoryName);
+        deleteList.add(directories.getName());
+        assertEquals(directories.getName(), directoryName);
+    }
+
+    @DisplayName("Экспорт Directories")
+    @Test
+    public void exportDirectories() {
+        exportPrivateDirectories(directories.getName());
+    }
+
+    @DisplayName("Импорт Pages")
+    @Test
+    public void importPages() {
+        String data = JsonHelper.getStringFromFile("/references/import_pages_api.json");
+        String directoryName = new JsonPath(data).get("rel_foreign_models.directory.Directory.name");
+        String pageName = new JsonPath(data).get("Page.name");
+        importPrivatePages(PAGES_IMPORT_PATH, directoryName);
+        List<Pages> list = getPrivatePagesListByDirectoryNameAndPageName(directoryName, pageName);
+        deletePrivatePagesById(directoryName, list.get(0).getId());
+        assertEquals(1, list.size());
+        assertEquals(pageName, list.get(0).getName());
+    }
+
+    @DisplayName("Экспорт Pages")
+    @Test
+    public void exportPages() {
+        exportPrivatePages(directories.getName(), page.getId());
+    }
+
+    @DisplayName("Импорт Page_filter")
+    @Test
+    public void importPageFilter() {
+        String data = JsonHelper.getStringFromFile("/references/import_page_filter_api.json");
+        String key = new JsonPath(data).get("PageFilterValues.key");
+        importPrivatePageFilter(PAGES_FILTER_IMPORT_PATH);
+        deletePageFiltersList.add(key);
+    }
+    @DisplayName("Экспорт Page_filter")
+    @Test
+    public void exportPageFilter() {
+        exportPrivatePageFilter(pageFilter.getKey());
     }
 }

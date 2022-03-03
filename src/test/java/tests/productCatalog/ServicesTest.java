@@ -2,6 +2,7 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
@@ -56,8 +57,10 @@ public class ServicesTest extends Tests {
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetServiceListResponse.class).getNext();
+        String env = Configure.ENV;
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
+                    "Значение поля next несоответсвует ожидаемому");
         }
     }
 
@@ -107,6 +110,17 @@ public class ServicesTest extends Tests {
     @Test
     public void getServiceByIdWithOutToken() {
         productCatalogSteps.getByIdWithOutToken(service.getServiceId());
+    }
+
+    @Order(30)
+    @DisplayName("Проверка независимых от версии параметров в сервисах")
+    @Test
+    public void checkVersionWhenIndependentParamUpdated() {
+        Services serv = Services.builder().serviceName("services_api_test").version("1.0.0").isPublished(false).build().createObject();
+        String version = serv.getVersion();
+        Response response = productCatalogSteps.partialUpdateObject(serv.getServiceId(), new JSONObject().put("is_published", true));
+        String newVersion = response.jsonPath().get("version");
+        assertEquals(version, newVersion);
     }
 
     @Order(40)

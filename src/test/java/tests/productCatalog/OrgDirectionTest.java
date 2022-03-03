@@ -2,7 +2,6 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
@@ -12,10 +11,12 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import org.json.JSONObject;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
+import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class OrgDirectionTest extends Tests {
 
     private static final String ORG_DIRECTION_NAME = "org_direction_at_test-:2022.";
+    private static final String ORG_DIRECTION_TITLE = "title_org_direction_at_test-:2022.";
     OrgDirection orgDirection;
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/", "productCatalog/orgDirection/orgDirection.json");
 
@@ -37,6 +39,7 @@ public class OrgDirectionTest extends Tests {
     public void createOrgDirection() {
         orgDirection = OrgDirection.builder()
                 .orgDirectionName(ORG_DIRECTION_NAME)
+                .title(ORG_DIRECTION_TITLE)
                 .build()
                 .createObject();
     }
@@ -55,8 +58,10 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetOrgDirectionListResponse.class).getNext();
+        String env = Configure.ENV;
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
+                    "Значение поля next несоответсвует ожидаемому");
         }
     }
 
@@ -78,7 +83,7 @@ public class OrgDirectionTest extends Tests {
     public void importOrgDirection() {
         String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
         String orgDirectionName = new JsonPath(data).get("OrgDirection.name");
-        productCatalogSteps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirection.json");
+        productCatalogSteps.importObject(RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirection.json");
         Assertions.assertTrue(productCatalogSteps.isExists(orgDirectionName));
         productCatalogSteps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
         Assertions.assertFalse(productCatalogSteps.isExists(orgDirectionName));

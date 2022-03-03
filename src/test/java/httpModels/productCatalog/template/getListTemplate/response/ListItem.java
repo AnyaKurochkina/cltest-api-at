@@ -22,6 +22,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("color")
     private String color;
 
+    @JsonProperty("type")
+    private String type;
+
     @JsonProperty("version_list")
     private List<String> versionList;
 

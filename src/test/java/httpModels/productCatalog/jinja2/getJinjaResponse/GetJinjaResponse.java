@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -30,6 +32,9 @@ public class GetJinjaResponse implements GetImpl {
 
 	@JsonProperty("title")
 	private String title;
+
+	@JsonProperty("error")
+	private Map<String, String> error;
 
 	@Override
 	public String getVersion() {
