@@ -98,6 +98,18 @@ public class BaseTariffPlanTest extends Tests {
     @TmsLink("531500")
     @DisplayName("Черновик -> Планируемый")
     public void tariffPlanToPlanned() {
+        toPlannedOrToDraft();
+    }
+
+    @Test
+    @Order(5)
+    @TmsLink("723953")
+    @DisplayName("Планируемый -> Черновик")
+    public void tariffPlanToDraft() {
+        toPlannedOrToDraft();
+    }
+
+    public void toPlannedOrToDraft() {
         Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(true)
@@ -108,12 +120,12 @@ public class BaseTariffPlanTest extends Tests {
         tariffPlan.setBeginDate(date);
         tariffPlan = TariffPlanSteps.editTariffPlan(tariffPlan);
         Assertions.assertEquals(TariffPlanStatus.planned, tariffPlan.getStatus(), String.format("Статус тарифного: %s, плана не соответсвует ожидаемому", tariffPlan.getStatus()));
-
         tariffPlan.setStatus(TariffPlanStatus.draft);
         TariffPlanSteps.editTariffPlan(tariffPlan);
     }
 
-    @Order(5)
+
+    @Order(6)
     @Test
     @TmsLink("531464")
     @DisplayName("Активация и Архивация")
