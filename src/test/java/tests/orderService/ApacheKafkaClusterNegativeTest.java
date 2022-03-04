@@ -15,6 +15,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 import tests.Tests;
 
+import java.util.Collections;
+
 import static models.orderService.products.ApacheKafkaCluster.KAFKA_CREATE_TOPICS;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -46,6 +48,18 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
                             new KafkaTopic("delete", 1, 1, 7, 1800000, "TopicName")),
                     () -> checkIncorrectTopic(kafka,
                             new KafkaTopic("create", 1, 1, 7, 1800000, "TopicName")));
+        }
+    }
+
+    @Tag("actions")
+    @TmsLink("725948")
+    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @ParameterizedTest(name = "Создание Topic Kafka(топик существует) {0}")
+    public void CreateKafkaTopicIfExist(ApacheKafkaCluster product) {
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            String topicName = "CreateKafkaTopicIfExist";
+            kafka.createTopics(Collections.singletonList(topicName));
+            checkIncorrectTopic(kafka, new KafkaTopic("delete", 1, 1, 1, 1800000, topicName));
         }
     }
 
