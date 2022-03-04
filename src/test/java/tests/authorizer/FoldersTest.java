@@ -1,5 +1,6 @@
 package tests.authorizer;
 
+import models.Entity;
 import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -46,6 +47,17 @@ public class FoldersTest extends Tests {
 
     @Test
     @Order(4)
+    @TmsLink("720840")
+    @DisplayName("Создание Папки")
+    void editFolder() {
+        try (Folder folder = Folder.builder().kind(Folder.DEFAULT).build().createObjectExclusiveAccess()) {
+            folder.setTitle("newTitle");
+            folder.edit();
+        }
+    }
+
+    @Test
+    @Order(5)
     @TmsLink("377753")
     @DisplayName("Удаление Папки")
     @MarkDelete
@@ -54,7 +66,7 @@ public class FoldersTest extends Tests {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     @TmsLink("647022")
     @DisabledIfEnv("prod")
     @DisplayName("Удаление Департамента")
@@ -64,7 +76,7 @@ public class FoldersTest extends Tests {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     @TmsLink("647024")
     @DisabledIfEnv("prod")
     @DisplayName("Удаление Бизнес-блока")

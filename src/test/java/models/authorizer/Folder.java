@@ -7,14 +7,17 @@ import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import models.Entity;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 @Getter
+@Setter
 public class Folder extends Entity {
     public String name;
     public String kind;
@@ -57,7 +60,7 @@ public class Folder extends Entity {
         return this;
     }
 
-    //    @Override
+    @Override
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("/structure/create_folder.json")
                 .set("$.folder.kind", kind)
@@ -65,6 +68,17 @@ public class Folder extends Entity {
                 .set("$.folder.name", name)
                 .set("$.folder.information_system_ids", informationSystemIds)
                 .build();
+    }
+
+    public void edit(){
+        String titleNew = new Http(Configure.AuthorizerURL)
+                .body(toJson())
+                .patch("folders/{}", name)
+                .assertStatus(200)
+                .jsonPath()
+                .getString("data.title");
+        Assertions.assertEquals(title, titleNew, "Title папки не изменился");
+        setTitle(titleNew);
     }
 
     @Override
