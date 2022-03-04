@@ -109,6 +109,18 @@ public class OrganizationTariffPlanTest extends Tests {
     @TmsLink("531476")
     @DisplayName("Черновик -> Планируемый")
     void tariffPlanToPlanned() {
+        toPlannedOrToDraft();
+    }
+
+    @Test
+    @Order(5)
+    @TmsLink("725939")
+    @DisplayName("Планируемый -> Черновик")
+    void tariffPlanToDraft() {
+        toPlannedOrToDraft();
+    }
+
+    public void toPlannedOrToDraft() {
         Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(false)
@@ -124,7 +136,7 @@ public class OrganizationTariffPlanTest extends Tests {
         TariffPlanSteps.editTariffPlan(tariffPlan);
     }
 
-    @Order(5)
+    @Order(6)
     @TmsLink("531467")
     @ParameterizedTest(name = "Активация и Архивация (без update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
@@ -156,7 +168,7 @@ public class OrganizationTariffPlanTest extends Tests {
         }
     }
 
-    @Order(6)
+    @Order(7)
     @TmsLink("531468")
     @ParameterizedTest(name = "Активация и Архивация (с update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
