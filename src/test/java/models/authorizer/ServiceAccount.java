@@ -69,7 +69,7 @@ public class ServiceAccount extends Entity {
     @Step("Удаление статического ключа досутпа hcp bucket")
     public void deleteStaticKey() {
         new Http(Configure.AuthorizerURL)
-                .delete("projects/{}/service_accounts/{}/access_keys/{}", projectId, id, id)
+                .delete("projects/{}/service_accounts/{}", projectId, id, id)
                 .assertStatus(204);
 
         String keyStatus = "";
