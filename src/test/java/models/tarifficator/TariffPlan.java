@@ -5,10 +5,7 @@ import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import models.Entity;
 import models.authorizer.Organization;
 import org.json.JSONObject;
@@ -21,6 +18,8 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class TariffPlan extends Entity {
     Boolean base;
     String baseTariffPlanId;
@@ -40,8 +39,9 @@ public class TariffPlan extends Entity {
     Boolean updateOrders;
     Date updatedAt;
 
+    @SneakyThrows
     public JSONObject toJson() {
-        return new JSONObject("{\"tariff_plan\":" + JsonHelper.toJson(this) + "}");
+        return new JSONObject("{\"tariff_plan\":" + JsonHelper.getCustomObjectMapper().writeValueAsString(this) + "}");
     }
 
     @Override

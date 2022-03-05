@@ -1,15 +1,15 @@
 package steps.tarifficator;
 
-import com.google.gson.reflect.TypeToken;
-import core.helper.http.Http;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.tarifficator.TariffPlan;
-import org.json.JSONArray;
 import steps.Steps;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +18,9 @@ import static core.helper.Configure.TarifficatorURL;
 @Log4j2
 public class TariffPlanSteps extends Steps {
 
+    @SneakyThrows
     public static TariffPlan deserialize(String object) {
-        return JsonHelper.getCustomGson().fromJson(object, TariffPlan.class);
+        return JsonHelper.getCustomObjectMapper().readValue(object, TariffPlan.class);
     }
 
     /**
@@ -46,8 +47,8 @@ public class TariffPlanSteps extends Steps {
      */
     @Step("Получение списка тарифных планов c параметрами '{urlParameters}'")
     public static List<TariffPlan> getTariffPlanList(String urlParameters) {
-        Type type = new TypeToken<List<TariffPlan>>() {
-        }.getType();
+        ObjectMapper objectMapper = JsonHelper.getCustomObjectMapper();
+        JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, TariffPlan.class);
         List<Object> allResponseList = new ArrayList<>();
         List<Object> responseList;
         int i = 1;
@@ -60,7 +61,7 @@ public class TariffPlanSteps extends Steps {
             allResponseList.addAll(responseList);
             i++;
         } while (responseList.size() > 0);
-        return JsonHelper.getCustomGson().fromJson(new JSONArray(allResponseList).toString(), type);
+        return objectMapper.convertValue(allResponseList, type);
     }
 
     /**
