@@ -7,10 +7,12 @@ import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import models.tarifficator.TariffClass;
 import models.tarifficator.TariffPlan;
 import steps.Steps;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.TarifficatorURL;
@@ -19,8 +21,8 @@ import static core.helper.Configure.TarifficatorURL;
 public class TariffPlanSteps extends Steps {
 
     @SneakyThrows
-    public static TariffPlan deserialize(String object) {
-        return JsonHelper.getCustomObjectMapper().readValue(object, TariffPlan.class);
+    public static <T> T deserialize(String object, Class<?> clazz) {
+        return (T) JsonHelper.getCustomObjectMapper().readValue(object, clazz);
     }
 
     /**
@@ -36,7 +38,7 @@ public class TariffPlanSteps extends Steps {
                 .post("tariff_plans")
                 .assertStatus(201)
                 .toString();
-        return deserialize(object);
+        return deserialize(object, TariffPlan.class);
     }
 
     /**
@@ -76,7 +78,7 @@ public class TariffPlanSteps extends Steps {
                 .get("tariff_plans/{}?include=tariff_classes", tariffPlanId)
                 .assertStatus(200)
                 .toString();
-        return deserialize(object);
+        return deserialize(object, TariffPlan.class);
     }
 
     /**
@@ -93,7 +95,19 @@ public class TariffPlanSteps extends Steps {
                 .assertStatus(200)
                 .toString();
         tariffPlan.save();
-        return deserialize(object);
+        return deserialize(object, TariffPlan.class);
+    }
+
+    @SneakyThrows
+    @Step("Редактирование тарифного класса {tariffClass}")
+    public static TariffClass editTariffClass(TariffClass tariffClass, TariffPlan tariffPlan) {
+        String object = new Http(TarifficatorURL)
+                .body(tariffClass.toJson())
+                .patch("tariff_plans/{}/tariff_classes/{}", tariffPlan.getId(), tariffClass.getId())
+                .assertStatus(200)
+                .toString();
+        tariffPlan.save();
+        return deserialize(object, TariffClass.class);
     }
 
 }

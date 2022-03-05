@@ -71,7 +71,7 @@ public class TariffPlan extends Entity {
                 .post("tariff_plans")
                 .assertStatus(201)
                 .toString();
-        StringUtils.copyAvailableFields(TariffPlanSteps.deserialize(object), this);
+        StringUtils.copyAvailableFields(TariffPlanSteps.deserialize(object, TariffPlan.class), this);
     }
 
 

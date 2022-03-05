@@ -1,6 +1,9 @@
 package models.tarifficator;
 
+import core.helper.JsonHelper;
 import lombok.Data;
+import lombok.SneakyThrows;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -15,10 +18,15 @@ public class TariffClass {
 	private String title;
 	private String script;
 	private String priceUnit;
-	private Double price;
+	private Float price;
 	private String calculationEntityFieldName;
 	private String name;
 	private String id;
 	private List<String> itemStates;
 	private CalculateAttrs calculateAttrs;
+
+	@SneakyThrows
+	public JSONObject toJson() {
+		return new JSONObject("{\"tariff_class\":" + JsonHelper.getCustomObjectMapper().writeValueAsString(this) + "}");
+	}
 }
