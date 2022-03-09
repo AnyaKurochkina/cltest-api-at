@@ -25,6 +25,17 @@ public class ProjectTest extends Tests {
 
     @Order(2)
     @Test
+    @TmsLink("720818")
+    @DisplayName("Роедактирование проекта")
+    void editProject() {
+        try(Project project = Project.builder().isForOrders(false).build().createObjectExclusiveAccess()) {
+            project.setProjectName("newProjectName");
+            project.edit();
+        }
+    }
+
+    @Order(3)
+    @Test
     @TmsLink("377748")
     @DisplayName("Удаление проекта")
     @MarkDelete
