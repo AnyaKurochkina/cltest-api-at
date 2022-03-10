@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Singular;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.keyCloak.KeyCloakClient;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
@@ -22,7 +23,7 @@ import static core.utils.Waiting.sleep;
 @Builder
 @Getter
 @Log4j2
-public class ServiceAccount extends Entity {
+public class ServiceAccount extends Entity implements KeyCloakClient {
     String projectId;
     String secret;
     String id;

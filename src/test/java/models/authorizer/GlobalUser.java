@@ -1,5 +1,6 @@
-package models.keyCloak;
+package models.authorizer;
 
+import core.enums.Role;
 import lombok.Builder;
 import lombok.Getter;
 import models.Entity;
@@ -7,9 +8,10 @@ import org.json.JSONObject;
 
 @Builder
 @Getter
-public class Service extends Entity implements KeyCloakClient {
-    public String id;
-    public String secret;
+public class GlobalUser extends Entity {
+    String username;
+    String password;
+    Role role;
 
     @Override
     public Entity init() {
