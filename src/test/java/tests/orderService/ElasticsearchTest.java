@@ -38,7 +38,7 @@ public class ElasticsearchTest extends Tests {
     }
 
     @TmsLink("401283")
-    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания. API Elasticsearch {0}")
     void checkElasticsearchApi(Elasticsearch product) {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
@@ -56,7 +56,7 @@ public class ElasticsearchTest extends Tests {
     }
 
     @TmsLink("688500")
-    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания. Exporter {0}")
     void checkElasticsearchExporter(Elasticsearch product) {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
@@ -73,7 +73,7 @@ public class ElasticsearchTest extends Tests {
     }
 
     @TmsLink("401342")
-    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания. Kibana {0}")
     void checkElasticsearchKibana(Elasticsearch product) {
         Waiting.sleep(60000);

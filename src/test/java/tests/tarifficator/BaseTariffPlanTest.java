@@ -8,6 +8,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.tarifficator.TariffClass;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
 import org.json.JSONObject;
@@ -98,6 +99,18 @@ public class BaseTariffPlanTest extends Tests {
     @TmsLink("531500")
     @DisplayName("Черновик -> Планируемый")
     public void tariffPlanToPlanned() {
+        toPlannedOrToDraft();
+    }
+
+    @Test
+    @Order(5)
+    @TmsLink("723953")
+    @DisplayName("Планируемый -> Черновик")
+    public void tariffPlanToDraft() {
+        toPlannedOrToDraft();
+    }
+
+    public void toPlannedOrToDraft() {
         Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(true)
@@ -108,12 +121,11 @@ public class BaseTariffPlanTest extends Tests {
         tariffPlan.setBeginDate(date);
         tariffPlan = TariffPlanSteps.editTariffPlan(tariffPlan);
         Assertions.assertEquals(TariffPlanStatus.planned, tariffPlan.getStatus(), String.format("Статус тарифного: %s, плана не соответсвует ожидаемому", tariffPlan.getStatus()));
-
         tariffPlan.setStatus(TariffPlanStatus.draft);
         TariffPlanSteps.editTariffPlan(tariffPlan);
     }
 
-    @Order(5)
+    @Order(6)
     @Test
     @TmsLink("531464")
     @DisplayName("Активация и Архивация")
@@ -137,6 +149,23 @@ public class BaseTariffPlanTest extends Tests {
                 () -> AssertUtils.AssertDate(date, archiveTariff.getEndDate(), 60 * 15, "Время архивации ТП не соответствует действительному"),
                 () -> assertEquals(TariffPlanStatus.active, updatedTariffPlan.getStatus(), "Тарифный план не перешел в статус активный"),
                 () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"));
+    }
+
+    @Test
+    @Order(7)
+    @TmsLink("726835")
+    @DisplayName("Редактировать ТК")
+    public void editTariffClass() {
+        TariffPlan tariffPlan = TariffPlan.builder()
+                .base(true)
+                .status(TariffPlanStatus.draft)
+                .build()
+                .createObject();
+
+        TariffClass tariffClass = tariffPlan.getTariffClasses().get(0);
+        tariffClass.setPrice(tariffClass.getPrice() + 1.0f);
+        TariffClass updatedTariffClass = TariffPlanSteps.editTariffClass(tariffClass, tariffPlan);
+        Assertions.assertEquals(tariffClass.getPrice(), updatedTariffClass.getPrice(), "Стоимость не изменилась");
     }
 
 }

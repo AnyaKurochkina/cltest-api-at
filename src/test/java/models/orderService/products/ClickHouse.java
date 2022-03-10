@@ -187,17 +187,9 @@ public class ClickHouse extends IProduct {
 
     }
 
-    @SneakyThrows
+
     public void checkConnectDb() {
-        String url = "";
-        try {
-            url = "jdbc:" + OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL) + "/" + clickhouseBb;
-            Connection connection = DriverManager.getConnection(url, clickhouseUser, clickhousePassword);
-            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось, текущий url подключения: " + url).isValid(1));
-        } catch (Exception e) {
-            throw new Exception("Ошибка подключения к ClickHouse по url " + url + " : " + e);
-        }
-        log.debug("Успешное подключение к ClickHouse");
+        checkConnectDb(clickhouseBb, clickhouseUser, clickhousePassword, ((String) OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL)));
     }
 
 }

@@ -1,8 +1,12 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.experimental.SuperBuilder;
 import org.json.JSONObject;
 
@@ -16,6 +20,7 @@ public abstract class Entity implements AutoCloseable {
 
     public abstract JSONObject toJson();
 
+    @JsonIgnore
     public JsonTemplate getTemplate(){
         return new JsonTemplate(toJson());
     }

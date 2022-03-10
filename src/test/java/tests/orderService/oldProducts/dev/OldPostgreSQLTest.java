@@ -16,6 +16,7 @@ import static models.orderService.interfaces.ProductStatus.STOPPED;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgreSQLTest extends Tests {
+    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
 
     final PostgreSQL postgreSQL = PostgreSQL.builder()
             .projectId("proj-67nljbzjtt")
@@ -41,7 +42,7 @@ public class OldPostgreSQLTest extends Tests {
         if (postgreSQL.productStatusIs(STOPPED)) {
             postgreSQL.start();
         }
-        postgreSQL.createDb("createdb1");
+        postgreSQL.createDb("createdb1", adminPassword);
         postgreSQL.removeDb("createdb1");
     }
 
@@ -53,9 +54,10 @@ public class OldPostgreSQLTest extends Tests {
         if (postgreSQL.productStatusIs(STOPPED)) {
             postgreSQL.start();
         }
-        postgreSQL.createDb("bd_for_check_connect");
-        postgreSQL.checkConnection(postgreSQL.getDbUrl(), postgreSQL.getDbAdminUser(), postgreSQL.getDbAdminPass());
-        postgreSQL.removeDb("bd_for_check_connect");
+        String bd = "bd_for_check_connect";
+        postgreSQL.createDb(bd, adminPassword);
+        postgreSQL.checkConnection(bd, adminPassword);
+        postgreSQL.removeDb(bd);
     }
 
     @Order(4)
@@ -65,7 +67,7 @@ public class OldPostgreSQLTest extends Tests {
         if (postgreSQL.productStatusIs(STOPPED)) {
             postgreSQL.start();
         }
-        postgreSQL.createDb("createdb1");
+        postgreSQL.createDb("createdb1", adminPassword);
         postgreSQL.removeDb("createdb1");
         postgreSQL.createDbmsUser("chelik1", "user", "createdbforuser2");
         postgreSQL.removeDbmsUser("chelik1", "createdbforuser2");
@@ -79,7 +81,7 @@ public class OldPostgreSQLTest extends Tests {
         if (postgreSQL.productStatusIs(STOPPED)) {
             postgreSQL.start();
         }
-        postgreSQL.createDb("createdbforreset3");
+        postgreSQL.createDb("createdbforreset3", adminPassword);
         postgreSQL.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
         postgreSQL.resetPassword("chelikforreset1");
 
@@ -95,7 +97,7 @@ public class OldPostgreSQLTest extends Tests {
         if (postgreSQL.productStatusIs(STOPPED)) {
             postgreSQL.start();
         }
-        postgreSQL.createDb("createdbforreset8");
+        postgreSQL.createDb("createdbforreset8", adminPassword);
         postgreSQL.resetDbOwnerPassword("createdbforreset8");
 
         postgreSQL.removeDb("createdbforreset8");
@@ -108,7 +110,7 @@ public class OldPostgreSQLTest extends Tests {
         if (postgreSQL.productStatusIs(STOPPED)) {
             postgreSQL.start();
         }
-        postgreSQL.createDb("createdbforremove4");
+        postgreSQL.createDb("createdbforremove4", adminPassword);
         postgreSQL.createDbmsUser("chelikforreset2", "user", "createdbforremove4");
         postgreSQL.removeDbmsUser("chelikforreset2", "createdbforremove4");
 
@@ -130,7 +132,7 @@ public class OldPostgreSQLTest extends Tests {
         if (postgreSQL.productStatusIs(STOPPED)) {
             postgreSQL.start();
         }
-        postgreSQL.createDb("createdbforremove5");
+        postgreSQL.createDb("createdbforremove5", adminPassword);
         postgreSQL.removeDb("createdbforremove5");
 
     }

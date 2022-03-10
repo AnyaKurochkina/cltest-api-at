@@ -1,13 +1,15 @@
 package models.keyCloak;
 
 import lombok.Builder;
+import lombok.Getter;
 import models.Entity;
 import org.json.JSONObject;
 
 @Builder
-public class Service extends Entity {
-    public String clientId;
-    public String clientSecret;
+@Getter
+public class Service extends Entity implements KeyCloakClient {
+    public String id;
+    public String secret;
 
     @Override
     public Entity init() {

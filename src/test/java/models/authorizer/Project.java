@@ -5,16 +5,16 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import models.Entity;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import steps.authorizer.ProjectSteps;
 import steps.portalBack.PortalBackSteps;
 
 @Builder
 @Getter
+@Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class Project extends Entity {
     @ToString.Include
@@ -29,19 +29,19 @@ public class Project extends Entity {
 
 
     public Entity init() {
-        if(informationSystem == null){
+        if (informationSystem == null) {
             informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
         }
-        if(projectEnvironment == null){
+        if (projectEnvironment == null) {
             projectEnvironment = PortalBackSteps.getProjectEnvironment("DEV", informationSystem);
         }
-        if(folderName == null){
+        if (folderName == null) {
             folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
         }
-        if(prefix == null){
+        if (prefix == null) {
             prefix = ProjectSteps.getPrefixEnv(folderName, informationSystem, projectEnvironment.getId());
         }
-        if(projectName == null){
+        if (projectName == null) {
             projectName = new Generex("project [0-9a-zA-Z]{5,15}").random();
         }
         return this;
@@ -54,6 +54,17 @@ public class Project extends Entity {
                 .set("$.project.project_environment_id", projectEnvironment.getId())
                 .set("$.project.environment_prefix_id", prefix)
                 .build();
+    }
+
+    public void edit() {
+        String projectNameNew = new Http(Configure.AuthorizerURL)
+                .body("{\"project\":{\"title\":\"" + projectName + "\"}}")
+                .patch(String.format("projects/%s", id))
+                .assertStatus(200)
+                .jsonPath()
+                .getString("data.title");
+        Assertions.assertEquals(projectName, projectNameNew, "Title проекта не изменился");
+        setProjectName(projectNameNew);
     }
 
     @Override

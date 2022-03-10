@@ -3,7 +3,6 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.products.PostgreSQL;
 import models.orderService.products.PostgresPro;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -17,6 +16,7 @@ import tests.Tests;
 @Feature("PostgresPro")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresPro"), @Tag("prod")})
 public class PostgresProTest extends Tests {
+    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
 
     @TmsLink("392138")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -42,7 +42,7 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("cached_bd");
+            postgresPro.createDb("cached_bd", adminPassword);
         }
     }
 
@@ -52,9 +52,10 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Проверка подключения к БД {0}")
     void checkDbConnection(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("bd_for_check_connection");
-            postgresPro.checkConnection(postgresPro.getDbUrl(), postgresPro.getDbAdminUser(), postgresPro.getDbAdminPass());
-            postgresPro.removeDb("bd_for_check_connection");
+            String db = "bd_for_check_connection";
+            postgresPro.createDb(db, adminPassword);
+            postgresPro.checkConnection(db, adminPassword);
+            postgresPro.removeDb(db);
         }
     }
 
@@ -64,7 +65,7 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("cached_bd");
+            postgresPro.createDb("cached_bd", adminPassword);
             postgresPro.createDbmsUser("chelik1", "user", "cached_bd");
         }
     }
@@ -75,7 +76,7 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("cached_bd");
+            postgresPro.createDb("cached_bd", adminPassword);
             postgresPro.createDbmsUser("chelikforreset1", "user", "cached_bd");
             postgresPro.resetPassword("chelikforreset1");
         }
@@ -87,7 +88,7 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("cached_bd");
+            postgresPro.createDb("cached_bd", adminPassword);
             postgresPro.resetDbOwnerPassword("cached_bd");
         }
     }
@@ -98,7 +99,7 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("cached_bd");
+            postgresPro.createDb("cached_bd", adminPassword);
             postgresPro.createDbmsUser("chelikforreset2", "user", "cached_bd");
             postgresPro.removeDbmsUser("chelikforreset2", "cached_bd");
         }
@@ -120,7 +121,7 @@ public class PostgresProTest extends Tests {
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(PostgresPro product) {
         try (PostgresPro postgresPro = product.createObjectExclusiveAccess()) {
-            postgresPro.createDb("cached_bd");
+            postgresPro.createDb("cached_bd", adminPassword);
             postgresPro.removeDb("cached_bd");
         }
     }

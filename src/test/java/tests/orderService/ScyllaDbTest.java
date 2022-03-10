@@ -26,6 +26,18 @@ public class ScyllaDbTest extends Tests {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {}
     }
 
+    @TmsLink("717086")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка подключения {0}")
+    void checkConnect(ScyllaDb product) {
+        try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
+            scyllaDb.createDb("cachedbd");
+            scyllaDb.createDbmsUser("chelik5", password, "admin");
+            scyllaDb.addPermissionsUser("cachedbd", "chelik5");
+            scyllaDb.checkConnectDb("cachedbd", "chelik5", password);
+        }
+    }
+
     @TmsLink("622619")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
