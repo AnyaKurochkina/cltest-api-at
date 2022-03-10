@@ -2,6 +2,7 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.jinja2.getJinjaListResponse.GetJinjaListResponse;
 import httpModels.productCatalog.jinja2.getJinjaResponse.GetJinjaResponse;
 import io.qameta.allure.Epic;
@@ -13,6 +14,9 @@ import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,6 +58,34 @@ public class JinjaTest extends Tests {
         if (!(str == null)) {
             assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
                     "Значение поля next несоответсвует ожидаемому");
+        }
+    }
+
+    @Order(8)
+    @DisplayName("Проверка сортировки по дате создания в шаблонах Jinja")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetJinjaListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(9)
+    @DisplayName("Проверка сортировки по дате обновления в шаблонах Jinja")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetJinjaListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
         }
     }
 

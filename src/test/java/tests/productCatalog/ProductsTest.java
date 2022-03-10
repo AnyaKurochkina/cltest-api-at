@@ -3,6 +3,7 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import io.qameta.allure.Epic;
@@ -17,8 +18,10 @@ import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import tests.Tests;
 
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -121,6 +124,34 @@ public class ProductsTest extends Tests {
     public void checkProductExists() {
         assertTrue(productCatalogSteps.isExists(product.getName()));
         assertFalse(productCatalogSteps.isExists("not_exists_name"));
+    }
+
+    @Order(11)
+    @DisplayName("Проверка сортировки по дате создания в продуктах")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetProductsResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(12)
+    @DisplayName("Проверка сортировки по дате обновления в продуктах")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetProductsResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
     }
 
     @Order(15)
@@ -288,8 +319,8 @@ public class ProductsTest extends Tests {
     @DisplayName("Получение значения ключа info")
     @Test
     public void getProductInfo() {
-        Map<String, String> info = product.getInfo();
-        assertEquals(info.get("information"), "testData");
+        GetProductResponse response = productCatalogSteps.getInfoProduct(product.getProductId());
+        assertEquals(response.getInfo(), info);
     }
 
     @Order(99)

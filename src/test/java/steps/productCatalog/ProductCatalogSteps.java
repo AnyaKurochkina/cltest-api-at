@@ -261,6 +261,14 @@ public class ProductCatalogSteps {
                 .extractAs(clazz);
     }
 
+    @Step("Получение объекта продуктового каталога по title")
+    public GetListImpl getObjectByTitle(String title, Class<?> clazz) {
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?title=" + title)
+                .assertStatus(200)
+                .extractAs(clazz);
+    }
+
     @Step("Получение info продукта")
     public GetProductResponse getInfoProduct(String id) {
         return new Http(ProductCatalogURL)
@@ -275,6 +283,22 @@ public class ProductCatalogSteps {
                 .get("item_visual_templates/item_visual_template/" + eventType + "/" + eventProvider + "/")
                 .assertStatus(200)
                 .extractAs(GetVisualTemplateResponse.class);
+    }
+
+    @Step("Сортировка объектов по дате создания")
+    public GetListImpl orderingByCreateData(Class<?> clazz) {
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?ordering=create_dt")
+                .assertStatus(200)
+                .extractAs(clazz);
+    }
+
+    @Step("Сортировка объектов по дате обновления")
+    public GetListImpl orderingByUpDateData(Class<?> clazz) {
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?ordering=update_dt")
+                .assertStatus(200)
+                .extractAs(clazz);
     }
 
     private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {

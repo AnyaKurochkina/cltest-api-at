@@ -2,8 +2,8 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.action.getActionList.response.ActionResponse;
 import io.qameta.allure.Epic;
@@ -12,10 +12,12 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
 import org.json.JSONObject;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -107,7 +109,7 @@ public class ActionsTest extends Tests {
     public void copyActionById() {
         String cloneName = action.getActionName() + "-clone";
         productCatalogSteps.copyById(action.getActionId());
-        assertTrue(productCatalogSteps.isExists(cloneName),"Действие не существует");
+        assertTrue(productCatalogSteps.isExists(cloneName), "Действие не существует");
         productCatalogSteps.deleteByName(cloneName, ActionResponse.class);
         assertFalse(productCatalogSteps.isExists(cloneName), "Действие существует");
     }
@@ -129,6 +131,36 @@ public class ActionsTest extends Tests {
         assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(cloneName, ActionResponse.class);
         assertFalse(productCatalogSteps.isExists(cloneName));
+    }
+
+    @Order(9)
+    @DisplayName("Проверка сортировки по дате создания в действиях")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(ActionResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    String.format("Даты обновлений действий с именами %s и %s не соответсвуют условию сортировки."
+                            , list.get(i).getName(), list.get(i + 1).getName()));
+        }
+    }
+
+    @Order(10)
+    @DisplayName("Проверка сортировки по дате обновления в действиях")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(ActionResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    String.format("Даты обновлений действий с именами %s и %s не соответсвуют условию сортировки."
+                            , list.get(i).getName(), list.get(i + 1).getName()));
+        }
     }
 
     @Order(60)

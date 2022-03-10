@@ -95,6 +95,12 @@ public class ListItem implements ItemImpl {
     @JsonProperty("info")
     private Info info;
 
+    @JsonProperty("create_dt")
+    private String create_dt;
+
+    @JsonProperty("update_dt")
+    private String update_dt;
+
 
     @Override
     public String getName() {
@@ -104,5 +110,15 @@ public class ListItem implements ItemImpl {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String getCreateData() {
+        return create_dt;
+    }
+
+    @Override
+    public String getUpDateData() {
+        return update_dt;
     }
 }

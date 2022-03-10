@@ -2,9 +2,9 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import org.junit.MarkDelete;
 import core.helper.StringUtils;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.action.createAction.response.CreateActionResponse;
 import httpModels.productCatalog.graphs.createGraph.response.CreateGraphResponse;
 import httpModels.productCatalog.graphs.deleteGraph.response.DeleteGraphResponse;
@@ -18,9 +18,13 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Graph;
 import org.json.JSONObject;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -102,6 +106,34 @@ public class GraphTest extends Tests {
     @Test
     public void getGraphByIdWithOutToken() {
         productCatalogSteps.getByIdWithOutToken(graph.getGraphId());
+    }
+
+    @Order(9)
+    @DisplayName("Проверка сортировки по дате создания в графах")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetGraphsListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(10)
+    @DisplayName("Проверка сортировки по дате обновления в графах")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetGraphsListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
     }
 
     @Order(50)

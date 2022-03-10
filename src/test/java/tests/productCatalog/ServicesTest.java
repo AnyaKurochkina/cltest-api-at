@@ -3,20 +3,25 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
-import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
+import httpModels.productCatalog.service.getServiceList.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Services;
 import org.json.JSONObject;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,6 +42,7 @@ public class ServicesTest extends Tests {
     public void createService() {
         service = Services.builder()
                 .serviceName("create_service_test_api")
+                .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
@@ -112,6 +118,44 @@ public class ServicesTest extends Tests {
         productCatalogSteps.getByIdWithOutToken(service.getServiceId());
     }
 
+    @Order(8)
+    @DisplayName("Получение сервиса по title")
+    @Test
+    public void getServiceByTitle() {
+        GetServiceListResponse list = (GetServiceListResponse) productCatalogSteps.getObjectByTitle(service.getTitle(), GetServiceListResponse.class);
+        ListItem item = (ListItem) list.getItemsList().get(0);
+        String title = item.getTitle();
+        assertEquals(service.getTitle(), title, "Title не совпадают");
+    }
+
+    @Order(9)
+    @DisplayName("Проверка сортировки по дате создания в сервисах")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetServiceListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(10)
+    @DisplayName("Проверка сортировки по дате обновления в сервисах")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetServiceListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
     @Order(30)
     @DisplayName("Проверка независимых от версии параметров в сервисах")
     @Test
@@ -179,19 +223,19 @@ public class ServicesTest extends Tests {
     public void createServiceWithInvalidCharacters() {
         assertAll("Сервис создался с недопустимым именем",
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("NameWithUppercase")).assertStatus(500),
+                        .createJsonObject("NameWithUppercase")).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("nameWithUppercaseInMiddle")).assertStatus(500),
+                        .createJsonObject("nameWithUppercaseInMiddle")).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("имя")).assertStatus(500),
+                        .createJsonObject("имя")).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("Имя")).assertStatus(500),
+                        .createJsonObject("Имя")).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("a&b&c")).assertStatus(500),
+                        .createJsonObject("a&b&c")).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("")).assertStatus(400),
+                        .createJsonObject("")).assertStatus(400),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject(" ")).assertStatus(400)
+                        .createJsonObject(" ")).assertStatus(400)
         );
     }
 

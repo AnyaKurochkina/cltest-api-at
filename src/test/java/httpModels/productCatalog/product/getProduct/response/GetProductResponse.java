@@ -94,6 +94,12 @@ public class GetProductResponse implements GetImpl {
 	@JsonProperty("info")
 	private Map<String, String> info;
 
+	@JsonProperty("create_dt")
+	private String create_dt;
+
+	@JsonProperty("update_dt")
+	private String update_dt;
+
 	public List<Object> getAllowedPaths(){
 		return allowedPaths;
 	}

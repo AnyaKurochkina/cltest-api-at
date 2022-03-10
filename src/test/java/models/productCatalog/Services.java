@@ -72,6 +72,7 @@ public class Services extends Entity {
                 .set("$.graph_id", graphId)
                 .set("$.version", version)
                 .set("$.isPublished", isPublished)
+                .set("$.title", title)
                 .build();
     }
 

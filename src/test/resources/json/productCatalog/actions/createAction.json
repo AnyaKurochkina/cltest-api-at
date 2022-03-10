@@ -4,6 +4,7 @@
   "name": "NegativeAction",
   "title": "NegativeAction",
   "description": "NegativeAction",
+  "multiple": false,
   "icon": "",
   "required_order_statuses": [
     "new"

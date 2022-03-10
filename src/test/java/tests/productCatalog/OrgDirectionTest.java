@@ -3,6 +3,7 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Epic;
@@ -15,6 +16,9 @@ import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -53,7 +57,7 @@ public class OrgDirectionTest extends Tests {
                 .getProductObjectList(GetOrgDirectionListResponse.class).size() > 0);
     }
 
-    @Order(6)
+    @Order(2)
     @DisplayName("Проверка значения next в запросе на получение списка направлений")
     @Test
     public void getMeta() {
@@ -156,6 +160,35 @@ public class OrgDirectionTest extends Tests {
         {
             productCatalogSteps.createProductObject(productCatalogSteps
                     .createJsonObject(ORG_DIRECTION_NAME)).assertStatus(400);
+        }
+    }
+
+    @Order(12)
+    @DisplayName("Проверка сортировки по дате создания в направлениях")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetOrgDirectionListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(13)
+    @DisplayName("Проверка сортировки по дате обновления в направлениях")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetOrgDirectionListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    String.format("Даты обновлений направлений с именами %s и %s не соответсвуют условию сортировки."
+                            , list.get(i).getName(), list.get(i + 1).getName()));
         }
     }
 
