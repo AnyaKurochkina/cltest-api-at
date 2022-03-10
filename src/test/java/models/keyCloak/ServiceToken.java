@@ -7,9 +7,8 @@ import org.json.JSONObject;
 import steps.keyCloak.KeyCloakSteps;
 
 @Builder
-public class ServiceAccountToken extends Entity {
+public class ServiceToken extends Entity {
     public String token;
-    public String serviceAccountName;
     public Long time;
 
     @Override
@@ -24,8 +23,8 @@ public class ServiceAccountToken extends Entity {
 
     @Override
     protected void create() {
-        ServiceAccount serviceAccount = ServiceAccount.builder().id(serviceAccountName).build().createObject();
-        token = KeyCloakSteps.getNewToken(serviceAccount);
+        Service service = Service.builder().build().createObject();
+        token = KeyCloakSteps.getNewToken(service);
         time = System.currentTimeMillis() / 1000L;
     }
 

@@ -149,6 +149,11 @@ public class Http {
         return this;
     }
 
+    public Http withServiceToken() {
+        this.token = "bearer " + KeyCloakSteps.getServiceToken();
+        return this;
+    }
+
     private Response request() {
         Response response = null;
         for (int i = 0; i < 3; i++) {

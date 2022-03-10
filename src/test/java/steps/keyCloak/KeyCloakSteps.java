@@ -5,10 +5,9 @@ import core.helper.Configure;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
+import models.authorizer.GlobalUser;
 import models.authorizer.ServiceAccount;
-import models.authorizer.User;
-import models.keyCloak.ServiceAccountToken;
-import models.keyCloak.UserToken;
+import models.keyCloak.*;
 
 import java.util.Objects;
 
@@ -23,14 +22,14 @@ public class KeyCloakSteps {
     @Step("Получение нового UserToken")
     public static synchronized String getNewUserToken(Role role) {
         //Получение пользователя из памяти
-        User user = User.builder().role(role).build().createObject();
+        GlobalUser globalUser = GlobalUser.builder().role(role).build().createObject();
         //Отправка запроса на получение токена
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()
                 .disableAttachmentLog()
                 .body(String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
-                                Objects.requireNonNull(user.getUsername()), Objects.requireNonNull(user.getPassword())))
+                                Objects.requireNonNull(globalUser.getUsername()), Objects.requireNonNull(globalUser.getPassword())))
                 .post("auth/realms/Portal/protocol/openid-connect/token")
                 .assertStatus(200)
                 .jsonPath()
@@ -60,23 +59,35 @@ public class KeyCloakSteps {
         ServiceAccountToken saToken = ServiceAccountToken.builder().serviceAccountName(serviceAccount.getId()).build().createObject();
         long currentTime = System.currentTimeMillis() / 1000L;
         if (currentTime - saToken.time > TOKEN_LIFETIME_SEC) {
-            saToken.token = getNewServiceAccountToken(serviceAccount);
+            saToken.token = getNewToken(serviceAccount);
             saToken.time = currentTime;
         }
         saToken.save();
         return saToken.token;
     }
 
-    @Step("Получение нового ServiceAccountToken")
-    public static synchronized String getNewServiceAccountToken(ServiceAccount serviceAccount) {
+    @Step("Получение нового Token")
+    public static synchronized String getNewToken(KeyCloakClient client) {
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()
                 .body(String.format("client_id=%s&client_secret=%s&grant_type=client_credentials",
-                                Objects.requireNonNull(serviceAccount.getId()), Objects.requireNonNull(serviceAccount.getSecret())))
+                                Objects.requireNonNull(client.getId()), Objects.requireNonNull(client.getSecret())))
                 .post("auth/realms/Portal/protocol/openid-connect/token")
                 .assertStatus(200)
                 .jsonPath()
                 .get("access_token");
+    }
+
+    public static synchronized String getServiceToken() {
+        Service service = Service.builder().build().createObject();
+        ServiceToken sToken = ServiceToken.builder().build().createObject();
+        long currentTime = System.currentTimeMillis() / 1000L;
+        if (currentTime - sToken.time > TOKEN_LIFETIME_SEC) {
+            sToken.token = getNewToken(service);
+            sToken.time = currentTime;
+        }
+        sToken.save();
+        return sToken.token;
     }
 }
