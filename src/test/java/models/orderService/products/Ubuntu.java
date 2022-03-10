@@ -38,7 +38,7 @@ public class Ubuntu extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/ubuntu_general_application.json";
-        productName = "Ubuntu Linux (DEV only)";
+        productName = "Ubuntu Linux";
         initProduct();
         if(flavor == null)
             flavor = getMinFlavor();
