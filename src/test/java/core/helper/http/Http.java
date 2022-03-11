@@ -35,9 +35,7 @@ public class Http {
     private Role role = Role.ADMIN;
     private String contentType = "application/json";
     private boolean isUsedToken = true;
-//    private boolean isLogged = true;
     private static final Semaphore SEMAPHORE = new Semaphore(1, true);
-//    private final StringBuilder sbLog = new StringBuilder();
     private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
     private String fileName;
     private byte[] bytes;
@@ -160,12 +158,13 @@ public class Http {
             try {
                 response = filterRequest();
             } catch (AssertionFailedError e) {
-                Waiting.sleep(5000);
-                response = filterRequest();
-            }
-            if (!(response.status() == 504 && method.equals("GET")))
+                Waiting.sleep(6000);
                 break;
-            Waiting.sleep(1000);
+            }
+            if (!(response.status() == 504 && method.equals("GET"))) {
+                Waiting.sleep(2000);
+                break;
+            }
         }
         return response;
     }
