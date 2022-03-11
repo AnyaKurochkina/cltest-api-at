@@ -31,7 +31,7 @@
       "ad_integration": true,
       "ad_logon_grants": [
         {
-          "role": "superuser",
+          "role": "user",
           "groups": [
             "cloud-d5zorg-dev-group"
           ]
