@@ -17,7 +17,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 @Log4j2
-public class KafkaProducer {
+public class CustomKafkaProducer {
 
     private static final String KAFKA_PATH = new File("src/test/java/core/kafka").getAbsolutePath();
     private static final String KAFKA_KEYSTORE_PATH = "kafka.keystore.cert";
@@ -38,14 +38,14 @@ public class KafkaProducer {
     @Setter
     private String bootstrapServers;
 
-    public KafkaProducer(String data, String bootstrapServers, String topic) {
+    public CustomKafkaProducer(String data, String bootstrapServers, String topic) {
         this.bootstrapServers = bootstrapServers;
         this.data = data;
         this.topic = topic;
         this.headersmap = new HashMap<String, String>();
     }
 
-    public KafkaProducer(String data, String bootstrapServers, String topic, Map<String, String> headers) {
+    public CustomKafkaProducer(String data, String bootstrapServers, String topic, Map<String, String> headers) {
         this.bootstrapServers = bootstrapServers;
         this.data = data;
         this.topic = topic;
@@ -76,7 +76,7 @@ public class KafkaProducer {
         producer.send(new ProducerRecord<>(this.topic, 0, UUID.randomUUID().toString(), this.data, headers), ((recordMetadata, exception) ->
         {
             if (exception == null) {
-                log.info("Отправлено новое сообщение, топик: " + recordMetadata.topic() + ", Сообщение: " + data);
+                log.info("Отправлено новое сообщение, в топик: " + recordMetadata.topic() + ", Сообщение: " + data);
 
             }else {
                 log.error("Ошибка отправки: ", exception);

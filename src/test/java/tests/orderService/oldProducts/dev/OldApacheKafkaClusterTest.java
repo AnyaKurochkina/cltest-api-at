@@ -1,22 +1,30 @@
 package tests.orderService.oldProducts.dev;
 
+import core.kafka.CustomKafkaConsumer;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import lombok.extern.log4j.Log4j2;
 import models.orderService.products.ApacheKafkaCluster;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
+import static core.enums.KafkaRoles.CONSUMER;
+import static core.enums.KafkaRoles.PRODUCER;
 import static models.orderService.interfaces.ProductStatus.STARTED;
 import static models.orderService.interfaces.ProductStatus.STOPPED;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @Epic("Старые продукты DEV")
 @Feature("ApacheKafkaCluster OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_apachekafkacluster"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Log4j2
 public class OldApacheKafkaClusterTest extends Tests {
 
     final ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
@@ -68,17 +76,37 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.deleteTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
     }
 
-    @Order(234)
+    @Order(5)
     @DisplayName("Удалить топик Apache Kafka Cluster OLD")
     @Test
     void consume() {
         if (kafka.productStatusIs(STOPPED)) {
             kafka.start();
         }
-        kafka.consumeKafkaMessages("TutorialTopic");
+        String message = "This message from autotest";
+        String topicName = "PacketTopicNameForAcl5";
+        try {
+            kafka.createTopics(Collections.singletonList(topicName));
+            kafka.createAcl(topicName, PRODUCER);
+            kafka.createAcl(topicName, CONSUMER);
+            CustomKafkaConsumer consumer = kafka.consumeMessage(topicName);
+            kafka.produceMessage(topicName, message);
+            List<ConsumerRecord<String, String>> consumerRecords = consumer.getConsumerRecordList();
+            log.info(String.format("Сообщения из топика %s : %s", topicName, consumerRecords));
+            Assertions.assertTrue(
+                    consumerRecords.stream().anyMatch(record -> record.value().equals(message)),
+                    "Сообщения в топике отсутствуют");
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage() + " ," + e.getCause());
+        } finally {
+            kafka.deleteAcl(topicName, CONSUMER);
+            kafka.deleteAcl(topicName, PRODUCER);
+            kafka.deleteTopics(Collections.singletonList(topicName));
+        }
     }
 
-    @Order(5)
+    @Order(6)
     @DisplayName("Создать ACL Apache Kafka Cluster OLD")
     @Test
     void createAcl() {
@@ -86,13 +114,13 @@ public class OldApacheKafkaClusterTest extends Tests {
             kafka.start();
         }
         kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
-        kafka.createAcl("*");
+        kafka.createAcl("PacketTopicNameForAcl", PRODUCER);
 
-        kafka.deleteAcl("*");
+        kafka.deleteAcl("PacketTopicNameForAcl", PRODUCER);
         kafka.deleteTopics(Collections.singletonList("PacketTopicNameForAcl"));
     }
 
-    @Order(6)
+    @Order(7)
     @DisplayName("Удалить ACL Apache Kafka Cluster OLD")
     @Test
     void deleteAcl() {
@@ -100,13 +128,13 @@ public class OldApacheKafkaClusterTest extends Tests {
             kafka.start();
         }
         kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl1"));
-        kafka.createAcl("*");
+        kafka.createAcl("PacketTopicNameForAcl1", PRODUCER);
 
-        kafka.deleteAcl("*");
+        kafka.deleteAcl("PacketTopicNameForAcl1", PRODUCER);
         kafka.deleteTopics(Collections.singletonList("PacketTopicNameForAcl1"));
     }
 
-    @Order(7)
+    @Order(8)
     @DisplayName("Удалить ACL транзакцию Apache Kafka Cluster OLD")
     @Test
     void deleteAclTransaction() {
@@ -118,7 +146,7 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.deleteAclTransaction("*");
     }
 
-    @Order(8)
+    @Order(9)
     @DisplayName("Создать ACL транзакцию Apache Kafka Cluster OLD")
     @Test
     void createAclTransaction() {
@@ -130,7 +158,7 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.deleteAclTransaction("*");
     }
 
-    @Order(9)
+    @Order(10)
     @DisplayName("Включить Apache Kafka Cluster OLD")
     @Test
     void start() {
@@ -140,7 +168,7 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.start();
     }
 
-    @Order(10)
+    @Order(11)
     @DisplayName("Синхронизировать конфигурацию Apache Kafka Cluster OLD")
     @Test
     void sincInfo() {
@@ -150,7 +178,7 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.syncInfo();
     }
 
-    @Order(11)
+    @Order(12)
     @DisplayName("Прислать конфигурацию Apache Kafka Cluster OLD")
     @Test
     void sendConfig() {
@@ -160,7 +188,7 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.sendConfig();
     }
 
-    @Order(12)
+    @Order(13)
     @DisplayName("Выключить Apache Kafka Cluster OLD")
     @Test
     void stopSoft() {
