@@ -26,4 +26,7 @@ public class CreateOrgDirectionResponse{
 
 	@JsonProperty("id")
 	private String id;
+
+	@JsonProperty("title")
+	private String title;
 }

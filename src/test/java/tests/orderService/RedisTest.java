@@ -98,6 +98,16 @@ public class RedisTest extends Tests {
         }
     }
 
+    @TmsLink("173242")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка создания {0}")
+    void checkConnect(Redis product) {
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+            redis.checkConnect();
+        }
+    }
+
     @TmsLink("377695")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")

@@ -10,6 +10,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.authorizer.Organization;
 import models.orderService.products.Rhel;
+import models.tarifficator.TariffClass;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
 import org.json.JSONObject;
@@ -109,6 +110,18 @@ public class OrganizationTariffPlanTest extends Tests {
     @TmsLink("531476")
     @DisplayName("Черновик -> Планируемый")
     void tariffPlanToPlanned() {
+        toPlannedOrToDraft();
+    }
+
+    @Test
+    @Order(5)
+    @TmsLink("725939")
+    @DisplayName("Планируемый -> Черновик")
+    void tariffPlanToDraft() {
+        toPlannedOrToDraft();
+    }
+
+    public void toPlannedOrToDraft() {
         Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(false)
@@ -124,7 +137,7 @@ public class OrganizationTariffPlanTest extends Tests {
         TariffPlanSteps.editTariffPlan(tariffPlan);
     }
 
-    @Order(5)
+    @Order(6)
     @TmsLink("531467")
     @ParameterizedTest(name = "Активация и Архивация (без update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
@@ -156,7 +169,7 @@ public class OrganizationTariffPlanTest extends Tests {
         }
     }
 
-    @Order(6)
+    @Order(7)
     @TmsLink("531468")
     @ParameterizedTest(name = "Активация и Архивация (с update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
@@ -186,5 +199,22 @@ public class OrganizationTariffPlanTest extends Tests {
                     () -> assertEquals(TariffPlanStatus.archived, archiveTariff.getStatus(), "Тарифный план не перешел в статус архивный"),
                     () -> assertEquals(updatedTariffPlan.getId(), OrderServiceSteps.getProductsField(rhel, tariffPlanIdPath), "Тарифный план у продукта не изменился"));
         }
+    }
+
+    @Test
+    @Order(8)
+    @TmsLink("729753")
+    @DisplayName("Редактировать ТК")
+    public void editTariffClass() {
+        TariffPlan tariffPlan = TariffPlan.builder()
+                .base(false)
+                .status(TariffPlanStatus.draft)
+                .build()
+                .createObject();
+
+        TariffClass tariffClass = tariffPlan.getTariffClasses().get(0);
+        tariffClass.setPrice(tariffClass.getPrice() + 1.0f);
+        TariffClass updatedTariffClass = TariffPlanSteps.editTariffClass(tariffClass, tariffPlan);
+        Assertions.assertEquals(tariffClass.getPrice(), updatedTariffClass.getPrice(), "Стоимость не изменилась");
     }
 }

@@ -28,6 +28,8 @@ import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -49,6 +51,7 @@ public abstract class IProduct extends Entity {
     public static final String KAFKA_CLUSTER_ACL_TOPICS = "data.find{it.type=='cluster'}.data.config.acls.any{it.topic_name=='%s'}";
     public static final String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.data.config.transaction_acls.any{it.transaction_id=='%s'}";
 
+    public static final String DB_CONNECTION_URL = "data.find{it.data.config.containsKey('connection_url')}.data.config.connection_url";
     public static final String EXPAND_MOUNT_POINT = "Расширить";
     public static final String RESTART = "Перезагрузить";
     public static final String STOP_SOFT = "Выключить";
@@ -141,6 +144,18 @@ public abstract class IProduct extends Entity {
         }
     }
 
+    @SneakyThrows
+    protected void checkConnectDb(String dbName, String user, String password, String url) {
+        String connectUrl = "jdbc:" + url + "/" + dbName;
+        try {
+            Connection connection = DriverManager.getConnection(connectUrl, user, password);
+            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось по url: " + connectUrl).isValid(1));
+        } catch (Exception e) {
+            throw new Exception("Ошибка подключения к " + getProductName() + " по url " + connectUrl + " : " + e);
+        }
+        log.debug("Успешное подключение к " + getProductName());
+    }
+
     //Удалить рекурсивно
     @Step("Удаление продукта")
     protected void delete(String action) {
@@ -176,17 +191,17 @@ public abstract class IProduct extends Entity {
     }
 
     @SneakyThrows
-    protected String getRandomOsVersion(){
+    protected String getRandomOsVersion() {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
         String urlAttrs = JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("os_version")))
-                        .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')");
+                .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')");
         return Objects.requireNonNull(ReferencesStep.getJsonPathList(urlAttrs)
-                        .getString("collect{it.data.os.version}.shuffled()[0]"), "Версия ОС не найдена");
+                .getString("collect{it.data.os.version}.shuffled()[0]"), "Версия ОС не найдена");
     }
 
     @SneakyThrows
-    protected boolean getSupport(){
+    protected boolean getSupport() {
         GetServiceResponse productResponse = (GetServiceResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetServiceResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
         Boolean support = (Boolean) graphResponse.getStaticData().get("on_support");
@@ -194,7 +209,7 @@ public abstract class IProduct extends Entity {
     }
 
     @SneakyThrows
-    protected String getRandomProductVersionByPathEnum(String path){
+    protected String getRandomProductVersionByPathEnum(String path) {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
         return Objects.requireNonNull(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getJsonSchema().get("properties")))
@@ -206,7 +221,7 @@ public abstract class IProduct extends Entity {
         return list.get(list.size() - 1);
     }
 
-    public Flavor getMinFlavor(){
+    public Flavor getMinFlavor() {
         List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
         return list.get(0);
     }

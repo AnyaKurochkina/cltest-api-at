@@ -1,7 +1,7 @@
 package tests.productCatalog;
 
+import core.helper.Configure;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.jinja2.getJinjaListResponse.GetJinjaListResponse;
 import httpModels.productCatalog.jinja2.getJinjaResponse.GetJinjaResponse;
 import io.qameta.allure.Epic;
@@ -46,12 +46,14 @@ public class JinjaTest extends Tests {
 
     @Order(6)
     @DisplayName("Проверка значения next в запросе на получение списка jinja")
-    @TmsLink("")
+    @TmsLink("716386")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetJinjaListResponse.class).getNext();
+        String env = Configure.ENV;
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
+                    "Значение поля next несоответсвует ожидаемому");
         }
     }
 
@@ -70,8 +72,12 @@ public class JinjaTest extends Tests {
     @TmsLink("660101")
     @Test
     public void getJinjaById() {
-        GetImpl productCatalogGet = productCatalogSteps.getById(jinja2.getJinjaId(), GetJinjaResponse.class);
-        Assertions.assertEquals(jinja2.getName(), productCatalogGet.getName());
+        GetJinjaResponse productCatalogGet = (GetJinjaResponse) productCatalogSteps.getById(jinja2.getJinjaId(), GetJinjaResponse.class);
+        if (productCatalogGet.getError() != null) {
+            fail("Ошибка: " + productCatalogGet.getError());
+        } else {
+            Assertions.assertEquals(jinja2.getName(), productCatalogGet.getName());
+        }
     }
 
     @Order(20)
@@ -118,9 +124,13 @@ public class JinjaTest extends Tests {
         String expectedDescription = "UpdateDescription";
         productCatalogSteps.partialUpdateObject(jinja2.getJinjaId(), new JSONObject()
                 .put("description", expectedDescription)).assertStatus(200);
-        GetImpl getResponse = productCatalogSteps.getById(jinja2.getJinjaId(), GetJinjaResponse.class);
-        String actualDescription = getResponse.getDescription();
-        assertEquals(expectedDescription, actualDescription);
+        GetJinjaResponse getResponse = (GetJinjaResponse) productCatalogSteps.getById(jinja2.getJinjaId(), GetJinjaResponse.class);
+        if (getResponse.getError() != null) {
+            fail("Ошибка: " + getResponse.getError());
+        } else {
+            String actualDescription = getResponse.getDescription();
+            assertEquals(expectedDescription, actualDescription);
+        }
     }
 
     @Order(45)
@@ -137,7 +147,10 @@ public class JinjaTest extends Tests {
                 .set("title", updateTitle)
                 .set("description", updateDescription)
                 .build());
-        GetImpl updatedJinja = productCatalogSteps.getById(jinjaObject.getJinjaId(), GetJinjaResponse.class);
+        GetJinjaResponse updatedJinja =(GetJinjaResponse) productCatalogSteps.getById(jinjaObject.getJinjaId(), GetJinjaResponse.class);
+        if (updatedJinja.getError() != null) {
+            fail("Ошибка: " + updatedJinja.getError());
+        }
         assertAll(
                 () -> assertEquals(updateName, updatedJinja.getName()),
                 () -> assertEquals(updateTitle, updatedJinja.getTitle()),
@@ -187,6 +200,7 @@ public class JinjaTest extends Tests {
                         .createJsonObject(" ")).assertStatus(400)
         );
     }
+
     @Order(99)
     @DisplayName("Негативный тест на удаление jinja без токена")
     @TmsLink("660179")

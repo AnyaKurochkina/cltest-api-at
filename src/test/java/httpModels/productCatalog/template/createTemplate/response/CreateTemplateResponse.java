@@ -31,6 +31,9 @@ public class CreateTemplateResponse{
 	@JsonProperty("run")
 	private String run;
 
+	@JsonProperty("type")
+	private String type;
+
 	@JsonProperty("priority_can_be_overridden")
 	private boolean priorityCanBeOverridden;
 

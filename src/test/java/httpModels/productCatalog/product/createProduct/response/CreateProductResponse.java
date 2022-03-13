@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Data
@@ -90,5 +91,5 @@ public class CreateProductResponse{
 	private String version_changed_by_user;
 
 	@JsonProperty("info")
-	private Info info;
+	private Map<String, String> info;
 }

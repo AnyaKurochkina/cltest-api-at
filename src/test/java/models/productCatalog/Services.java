@@ -23,22 +23,33 @@ import java.util.List;
 
 public class Services extends Entity {
 
-    private List<Object> allowedPaths;
+    private Boolean turnOffInventory;
+    private List<String> versionList;
     private Boolean isPublished;
-    private Object icon;
-    private String graphVersion;
+    private String icon;
     private String description;
-    private String version;
-    private List<Object> restrictedGroups;
-    private String graphId;
-    private DataSource dataSource;
-    private Integer number;
+    private String serviceInfo;
+    private String graphVersion;
+    private String title;
     private String directionId;
-    private ExtraData extraData;
-    private String serviceName;
-    private List<Object> restrictedPaths;
+    private List<Object> inventoryActions;
     private String graphVersionPattern;
-    private List<Object> allowedGroups;
+    private Boolean hideNodeNameOutput;
+    private String direction;
+    private Object startBtnLabel;
+    private String versionCreateDt;
+    private List<String> restrictedGroups;
+    private String graphId;
+    private String version;
+    private DataSource dataSource;
+    private List<Object> checkRules;
+    private Boolean autoOpenForm;
+    private String lastVersion;
+    private ExtraData extraData;
+    private String versionChangedByUser;
+    private String serviceName;
+    private List<String> allowedGroups;
+    private String graphVersionCalculated;
     private String serviceId;
     private String jsonTemplate;
     @Builder.Default
@@ -60,6 +71,7 @@ public class Services extends Entity {
                 .set("$.name", serviceName)
                 .set("$.graph_id", graphId)
                 .set("$.version", version)
+                .set("$.isPublished", isPublished)
                 .build();
     }
 

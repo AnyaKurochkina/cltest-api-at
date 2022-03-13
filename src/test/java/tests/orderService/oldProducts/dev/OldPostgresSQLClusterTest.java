@@ -2,12 +2,8 @@ package tests.orderService.oldProducts.dev;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import io.qameta.allure.TmsLink;
 import models.orderService.products.PostgresSQLCluster;
-import org.junit.ProductArgumentsProvider;
-import org.junit.Source;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 import static models.orderService.interfaces.ProductStatus.STARTED;
@@ -19,7 +15,7 @@ import static models.orderService.interfaces.ProductStatus.STOPPED;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgresSQLClusterTest extends Tests {
-
+    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
     final PostgresSQLCluster postgres = PostgresSQLCluster.builder()
             .projectId("proj-67nljbzjtt")
             .productId("9c97f55c-ab21-4724-be4d-cb90b8a815c6")
@@ -44,7 +40,7 @@ public class OldPostgresSQLClusterTest extends Tests {
         if (postgres.productStatusIs(STOPPED)) {
             postgres.start();
         }
-        postgres.createDb("dbcreate1");
+        postgres.createDb("dbcreate1", adminPassword);
 
         postgres.removeDb("dbcreate1");
     }
@@ -56,9 +52,10 @@ public class OldPostgresSQLClusterTest extends Tests {
         if (postgres.productStatusIs(STOPPED)) {
             postgres.start();
         }
-        postgres.createDb("bd_for_check_connect");
-        postgres.checkConnection(postgres.getDbUrl(), postgres.getDbAdminUser(), postgres.getDbAdminPass());
-        postgres.removeDb("bd_for_check_connect");
+        String db = "bd_for_check_connect";
+        postgres.createDb(db, adminPassword);
+        postgres.checkConnection(db, adminPassword);
+        postgres.removeDb(db);
     }
 
     @Order(4)
@@ -68,7 +65,7 @@ public class OldPostgresSQLClusterTest extends Tests {
         if (postgres.productStatusIs(STOPPED)) {
             postgres.start();
         }
-        postgres.createDb("dbforuser2");
+        postgres.createDb("dbforuser2", adminPassword);
         postgres.createDbmsUser("testchelik1", "user", "dbforuser2");
 
         postgres.removeDb("dbforuser2");
@@ -82,7 +79,7 @@ public class OldPostgresSQLClusterTest extends Tests {
         if (postgres.productStatusIs(STOPPED)) {
             postgres.start();
         }
-        postgres.createDb("createdbforreset3");
+        postgres.createDb("createdbforreset3", adminPassword);
         postgres.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
         postgres.resetPassword("chelikforreset1");
 
@@ -98,7 +95,7 @@ public class OldPostgresSQLClusterTest extends Tests {
         if (postgres.productStatusIs(STOPPED)) {
             postgres.start();
         }
-        postgres.createDb("createdbforremove4");
+        postgres.createDb("createdbforremove4", adminPassword);
         postgres.createDbmsUser("chelikforremove2", "user", "createdbforremove4");
         postgres.removeDbmsUser("chelikforremove2", "createdbforremove4");
 
@@ -112,7 +109,7 @@ public class OldPostgresSQLClusterTest extends Tests {
         if (postgres.productStatusIs(STOPPED)) {
             postgres.start();
         }
-        postgres.createDb("createdbforreset8");
+        postgres.createDb("createdbforreset8", adminPassword);
         postgres.resetDbOwnerPassword("createdbforreset8");
 
         postgres.removeDb("createdbforreset8");
@@ -125,7 +122,7 @@ public class OldPostgresSQLClusterTest extends Tests {
         if (postgres.productStatusIs(STOPPED)) {
             postgres.start();
         }
-        postgres.createDb("createdbforremove5");
+        postgres.createDb("createdbforremove5", adminPassword);
         postgres.removeDb("createdbforremove5");
     }
 

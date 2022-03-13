@@ -15,6 +15,7 @@ import static models.orderService.interfaces.ProductStatus.STOPPED;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgresProTest extends Tests {
+    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
 
     final PostgresPro postgresPro = PostgresPro.builder()
             .projectId("proj-67nljbzjtt")
@@ -40,7 +41,7 @@ public class OldPostgresProTest extends Tests {
         if (postgresPro.productStatusIs(STOPPED)) {
             postgresPro.start();
         }
-        postgresPro.createDb("createdb1");
+        postgresPro.createDb("createdb1", adminPassword);
 
         postgresPro.removeDb("createdb1");
     }
@@ -52,9 +53,10 @@ public class OldPostgresProTest extends Tests {
         if (postgresPro.productStatusIs(STOPPED)) {
             postgresPro.start();
         }
-        postgresPro.createDb("bd_for_check_connection");
-        postgresPro.checkConnection(postgresPro.getDbUrl(), postgresPro.getDbAdminUser(), postgresPro.getDbAdminPass());
-        postgresPro.removeDb("bd_for_check_connection");
+        String db = "bd_for_check_connection";
+        postgresPro.createDb(db, adminPassword);
+        postgresPro.checkConnection(db, adminPassword);
+        postgresPro.removeDb(db);
     }
 
 
@@ -65,7 +67,7 @@ public class OldPostgresProTest extends Tests {
         if (postgresPro.productStatusIs(STOPPED)) {
             postgresPro.start();
         }
-        postgresPro.createDb("createdbforuser2");
+        postgresPro.createDb("createdbforuser2", adminPassword);
         postgresPro.createDbmsUser("chelik1", "user", "createdbforuser2");
 
         postgresPro.removeDbmsUser("chelik1", "createdbforuser2");
@@ -79,7 +81,7 @@ public class OldPostgresProTest extends Tests {
         if (postgresPro.productStatusIs(STOPPED)) {
             postgresPro.start();
         }
-        postgresPro.createDb("createdbforreset3");
+        postgresPro.createDb("createdbforreset3", adminPassword);
         postgresPro.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
         postgresPro.resetPassword("chelikforreset1");
 
@@ -94,7 +96,7 @@ public class OldPostgresProTest extends Tests {
         if (postgresPro.productStatusIs(STOPPED)) {
             postgresPro.start();
         }
-        postgresPro.createDb("createdbforreset8");
+        postgresPro.createDb("createdbforreset8", adminPassword);
         postgresPro.resetDbOwnerPassword("createdbforreset8");
 
         postgresPro.removeDb("createdbforreset8");
@@ -107,7 +109,7 @@ public class OldPostgresProTest extends Tests {
         if (postgresPro.productStatusIs(STOPPED)) {
             postgresPro.start();
         }
-        postgresPro.createDb("createdbforreset4");
+        postgresPro.createDb("createdbforreset4", adminPassword);
         postgresPro.createDbmsUser("chelikforreset2", "user", "createdbforreset4");
         postgresPro.removeDbmsUser("chelikforreset2", "createdbforreset4");
 
@@ -131,7 +133,7 @@ public class OldPostgresProTest extends Tests {
         if (postgresPro.productStatusIs(STOPPED)) {
             postgresPro.start();
         }
-        postgresPro.createDb("createdbforremove5");
+        postgresPro.createDb("createdbforremove5", adminPassword);
         postgresPro.removeDb("createdbforremove5");
     }
 

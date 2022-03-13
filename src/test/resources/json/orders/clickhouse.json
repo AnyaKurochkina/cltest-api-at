@@ -28,10 +28,10 @@
           "file_system": "xfs"
         }
       ],
-      "clickhouse_db": "db_created",
+      "clickhouse_db": "dbname",
       "ad_integration": true,
       "clickhouse_user": "username_created",
-      "clickhouse_password": "ZmVaHB17UDe9AhU1kQxAAe231AZzqpV0VgemSywBCSnC4cfjueSHLShp",
+      "clickhouse_password": "vrItfk0k8sf8ICbwsMs7nB3",
       "ad_logon_grants": [
         {
           "role": "superuser",

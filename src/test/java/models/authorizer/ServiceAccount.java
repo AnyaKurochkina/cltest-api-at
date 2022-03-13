@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Singular;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.keyCloak.KeyCloakClient;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
@@ -22,7 +23,7 @@ import static core.utils.Waiting.sleep;
 @Builder
 @Getter
 @Log4j2
-public class ServiceAccount extends Entity {
+public class ServiceAccount extends Entity implements KeyCloakClient {
     String projectId;
     String secret;
     String id;
@@ -69,11 +70,11 @@ public class ServiceAccount extends Entity {
     @Step("Удаление статического ключа досутпа hcp bucket")
     public void deleteStaticKey() {
         new Http(Configure.AuthorizerURL)
-                .delete("projects/{}/service_accounts/{}/access_keys/{}", projectId, id, id)
+                .delete("projects/{}/service_accounts/{}", projectId, id, id)
                 .assertStatus(204);
 
         String keyStatus = "";
-        int counter = 60;
+        int counter = 6;
         JsonPath jsonPath = null;
         log.info("Проверка статуса статического ключа");
         while ((keyStatus.equals("[deleting]") || keyStatus.equals("")) || keyStatus.equals("[active]") && counter > 0) {

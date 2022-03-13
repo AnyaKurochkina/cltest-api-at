@@ -29,6 +29,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("id")
     private String id;
 
+    @JsonProperty("title")
+    private String title;
+
     @Override
     public String getName() {
         return name;

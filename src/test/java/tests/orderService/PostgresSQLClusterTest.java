@@ -16,6 +16,7 @@ import tests.Tests;
 @Feature("PostgresSQL Cluster")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgressqlcluster"), @Tag("prod")})
 public class PostgresSQLClusterTest extends Tests {
+    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
 
     @TmsLink("461798")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -42,7 +43,7 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd");
+            postgres.createDb("cached_bd", adminPassword);
         }
     }
 
@@ -52,9 +53,10 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Проверить подключение к БД PostgresSQLCluster {0}")
     void checkBdConnection(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("bd_for_check_connect");
-            postgres.checkConnection(postgres.getDbUrl(), postgres.getDbAdminUser(), postgres.getDbAdminPass());
-            postgres.removeDb("bd_for_check_connect");
+            String db = "bd_for_check_connect";
+            postgres.createDb(db, adminPassword);
+            postgres.checkConnection(db, adminPassword);
+            postgres.removeDb(db);
         }
     }
 
@@ -64,7 +66,7 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd");
+            postgres.createDb("cached_bd", adminPassword);
             postgres.createDbmsUser("testchelik1", "user", "cached_bd");
         }
     }
@@ -75,7 +77,7 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль пользователя {0}")
     void resetPassword(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd");
+            postgres.createDb("cached_bd", adminPassword);
             postgres.createDbmsUser("chelikforreset1", "user", "cached_bd");
             postgres.resetPassword("chelikforreset1");
         }
@@ -87,7 +89,7 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd");
+            postgres.createDb("cached_bd", adminPassword);
             postgres.createDbmsUser("chelikforremove2", "user", "cached_bd");
             postgres.removeDbmsUser("chelikforremove2", "cached_bd");
 //            postgres.removeDb("cached_bd");
@@ -100,7 +102,7 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd");
+            postgres.createDb("cached_bd", adminPassword);
             postgres.resetDbOwnerPassword("cached_bd");
         }
     }
@@ -111,7 +113,7 @@ public class PostgresSQLClusterTest extends Tests {
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd");
+            postgres.createDb("cached_bd", adminPassword);
             postgres.removeDb("cached_bd");
         }
     }

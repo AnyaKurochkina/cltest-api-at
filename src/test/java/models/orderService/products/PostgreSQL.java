@@ -34,7 +34,6 @@ public class PostgreSQL extends IProduct {
     //    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
     private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
     private final static String DB_OWNER_NAME_PATH = "data.find{it.data.config.containsKey('db_owners')}.data.config.db_owners.user_name";
-    private final static String DB_CONNECTION_URL = "data.find{it.data.config.containsKey('connection_url')}.data.config.connection_url";
     //    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
     @ToString.Include
     String segment;
@@ -50,10 +49,6 @@ public class PostgreSQL extends IProduct {
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
-    String dbAdminPass;
-    //URL example = jdbc:postgresql://dhzorg-pgc001ln.corp.dev.vtb:5432/createdb12345
-    String dbUrl;
-    String dbAdminUser;
 
     @Override
     @Step("Заказ продукта")
@@ -108,16 +103,14 @@ public class PostgreSQL extends IProduct {
         expandMountPoint("expand_mount_point", "/pg_data", 10);
     }
 
-    public void createDb(String dbName) {
+    public void createDb(String dbName, String dbAdminPass) {
         if (database.contains(new Db(dbName)))
             return;
-        dbAdminPass = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
+
         OrderServiceSteps.executeAction("create_db", this,
                 new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, dbAdminPass)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
-        dbAdminUser = dbName + "_admin";
-        dbUrl = "jdbc:" + OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL) + "/" + dbName;
         database.add(new Db(dbName));
         log.info("database = " + database);
         save();
@@ -178,17 +171,8 @@ public class PostgreSQL extends IProduct {
         Assertions.assertEquals(flavor.data.memory, memoryAfter);
     }
 
-    @SneakyThrows
-    public void checkConnection(String url, String user, String password) {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(url, user, password);
-            Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение завершилось ошибкой, текущий url подключения: " + url).isValid(1));
-        }catch (Throwable t){
-            t.printStackTrace();
-        }  finally {
-            Objects.requireNonNull(connection, "Подключение завершилось ошибкой, текущий url подключения: " + url).close();
-        }
+    public void checkConnection(String dbName, String password) {
+        checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL)));
     }
 
     public void restart() {

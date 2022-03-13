@@ -16,6 +16,7 @@
       "icon": "",
       "name": "template_import_test_api",
       "color": "",
+      "type": "check_vm",
       "input": {},
       "output": {},
       "timeout": 1,

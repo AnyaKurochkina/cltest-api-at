@@ -35,6 +35,9 @@ public class VisualTemplateTest extends Tests {
     private static final String VISUAL_TEMPLATE_NAME = "item_visual_template_test_api-:2022.";
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("item_visual_templates/", "productCatalog/itemVisualTemplate/createItemVisual.json");
     ItemVisualTemplates visualTemplates;
+    CompactTemplate compactTemplate = CompactTemplate.builder().name(new Name("name"))
+            .type(new Type("type")).status(new Status("status")).build();
+    FullTemplate fullTemplate = FullTemplate.builder().type("type").value(Arrays.asList("value", "value2")).build();
 
     @Order(1)
     @DisplayName("Создание шаблона визуализации в продуктовом каталоге")
@@ -44,8 +47,8 @@ public class VisualTemplateTest extends Tests {
         visualTemplates = ItemVisualTemplates.builder().name(VISUAL_TEMPLATE_NAME)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
-                .compactTemplate(new CompactTemplate(new Name("name"), new Type("type"), new Status("status")))
-                .fullTemplate(new FullTemplate("type", Arrays.asList("value", "value2")))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
                 .build()
                 .createObject();
     }
@@ -80,8 +83,10 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetVisualTemplateListResponse.class).getNext();
+        String env = Configure.ENV;
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://dev-kong-service.apps.d0-oscp.corp.dev.vtb/"));
+            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
+                    "Значение поля next несоответсвует ожидаемому");
         }
     }
 
@@ -246,6 +251,15 @@ public class VisualTemplateTest extends Tests {
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
                         .createJsonObject(" ")).assertStatus(400)
         );
+    }
+
+    @Order(97)
+    @DisplayName("Негативный тест на создание шаблона отображения без обязательного параметра status и статусом is_active true")
+    @Test
+    public void createInvalidVisualTemplate() {
+        productCatalogSteps.createProductObject(JsonHelper
+                .getJsonFromFile("productCatalog/itemVisualTemplate/InvalidItemVisual.json")).assertStatus(500);
+
     }
 
     @Order(98)

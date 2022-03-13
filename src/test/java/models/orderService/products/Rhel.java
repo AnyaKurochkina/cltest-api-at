@@ -12,7 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironment;
-import models.authorizer.User;
+import models.authorizer.GlobalUser;
 import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
@@ -120,9 +120,9 @@ public class Rhel extends IProduct {
     }
 
     public void checkCreateUseSsh(String userName) {
-        User user = User.builder().username(userName).build().createObject();
+        GlobalUser globalUser = GlobalUser.builder().username(userName).build().createObject();
         String host = (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.type=='vm'}.hostname");
-        SshClient ssh = new SshClient(host, user.getUsername(), user.getPassword());
+        SshClient ssh = new SshClient(host, globalUser.getUsername(), globalUser.getPassword());
         ssh.connectAndExecuteListCommand("ls");
     }
 }
