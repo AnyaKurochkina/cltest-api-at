@@ -77,7 +77,7 @@ public class OldApacheKafkaClusterTest extends Tests {
     }
 
     @Order(5)
-    @DisplayName("Удалить топик Apache Kafka Cluster OLD")
+    @DisplayName("Проверить подключение к Kafka")
     @Test
     void consume() {
         if (kafka.productStatusIs(STOPPED)) {

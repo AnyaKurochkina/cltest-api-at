@@ -92,14 +92,14 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void produceMessage(String topicName, String message) {
-        String bootstrapServerUrl = (String) OrderServiceSteps.getProductsField(this, KAFKA_CONNECTION_URL);
+        String bootstrapServerUrl = (String) OrderServiceSteps.getProductsField(this, CONNECTION_URL);
         CustomKafkaProducer customKafkaProducer = new CustomKafkaProducer(message, bootstrapServerUrl, topicName);
         customKafkaProducer.doProduce();
         sleep(10000);
     }
 
     public CustomKafkaConsumer consumeMessage(String topicName) {
-        String bootstrapServerUrl = (String) OrderServiceSteps.getProductsField(this, KAFKA_CONNECTION_URL);
+        String bootstrapServerUrl = (String) OrderServiceSteps.getProductsField(this, CONNECTION_URL);
         return new CustomKafkaConsumer(topicName, bootstrapServerUrl, true);
     }
 

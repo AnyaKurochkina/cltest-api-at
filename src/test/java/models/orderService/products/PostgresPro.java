@@ -111,7 +111,7 @@ public class PostgresPro extends IProduct {
     }
 
     public void checkConnection(String dbName, String password) {
-        checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL)));
+        checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
     }
 
     //Удалить БД
