@@ -8,13 +8,16 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.accountManager.Account;
 import models.authorizer.Folder;
+import models.authorizer.Organization;
 import models.authorizer.Project;
+import models.orderService.products.NT;
 import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.accountManager.AccountSteps;
 import steps.authorizer.AuthorizerSteps;
@@ -81,6 +84,50 @@ public class CalculatorTest extends Tests {
         }
     }
 
+    @Test
+    @SneakyThrows
+    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    public void bigIntegrationCalculatorTest() {
+        Organization organization = Organization.builder().build().createObject();
+        String accountOrganization = AccountSteps.getAccountIdByContext(organization.getName());
+        Folder businessBlock = Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObjectPrivateAccess();
+        Account accountBusinessBlock = Account.builder().parentId(accountOrganization).folder(businessBlock).build().createObjectPrivateAccess();
+        Folder department = Folder.builder().parentId(businessBlock.getName()).kind(Folder.DEPARTMENT).build().createObjectPrivateAccess();
+        Account accountDepartment = Account.builder().folder(department).parentId(accountBusinessBlock.getAccountId()).build().createObjectPrivateAccess();
+        Folder folder = Folder.builder()
+                .title("folder_for_big_integration_calculator_test")
+                .kind(Folder.DEFAULT)
+                .parentId(department.getName())
+                .build()
+                .createObjectPrivateAccess();
+        Account accountFolder = Account.builder().folder(folder).parentId(accountDepartment.getAccountId()).build().createObjectPrivateAccess();
+
+        AccountSteps.transferMoney(accountOrganization, accountFolder.getAccountId(), "1000.00", "Перевод в рамках тестирования");
+        Project project = Project.builder().projectName("project_for_big_integration_calculator_test")
+                .folderName(folder.getName())
+                .build()
+                .createObjectPrivateAccess();
+        NT product = NT.builder().projectId(project.getId()).build().createObjectPrivateAccess();
+
+        Float cost = CostSteps.getPreBillingTotalCost(product);
+        Float spent = null;
+        for (int i = 0; i < 15; i++) {
+            Waiting.sleep(20000);
+            spent = AccountSteps.getCurrentBalance(folder.getName());
+            if (spent.equals(1000.0f))
+                continue;
+            break;
+        }
+        Assertions.assertEquals(cost, (1000.0f - Objects.requireNonNull(spent)), 0.01, "Сумма списания отличается от ожидаемой суммы");
+
+//        accountFolder.deleteObject();
+//        product.deleteObject();
+
+
+
+
+        System.out.println(1);
+    }
 
     @TmsLink("648902")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
