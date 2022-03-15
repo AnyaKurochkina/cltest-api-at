@@ -1,20 +1,10 @@
 package core.helper;
 
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.WebDriverRunner;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.URL;
 import java.util.Properties;
-
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 @Log4j2
 public class Configure {
