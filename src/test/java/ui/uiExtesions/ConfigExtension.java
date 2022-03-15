@@ -25,7 +25,6 @@ public class ConfigExtension implements  BeforeEachCallback, AfterEachCallback {
     @SneakyThrows
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
-//        baseUrl = "http://10.89.10.10:5432/management";
         System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
         isRemote();
         baseUrl = URL;
