@@ -176,6 +176,6 @@ public class ScyllaDb extends IProduct {
     }
 
     public void checkConnectDb(String db, String user, String password) {
-        super.checkConnectDb(db, user, password, ((String) OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL)));
+        super.checkConnectDb(db, user, password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
     }
 }

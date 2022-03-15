@@ -1,6 +1,9 @@
 package models.orderService.products;
 
+import core.enums.KafkaRoles;
 import core.helper.JsonHelper;
+import core.kafka.CustomKafkaConsumer;
+import core.kafka.CustomKafkaProducer;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -12,6 +15,7 @@ import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import models.subModels.KafkaTopic;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
@@ -20,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static core.utils.Waiting.sleep;
 
 @Log4j2
 @Data
@@ -85,6 +91,18 @@ public class ApacheKafkaCluster extends IProduct {
                 .build();
     }
 
+    public void produceMessage(String topicName, String message) {
+        String bootstrapServerUrl = (String) OrderServiceSteps.getProductsField(this, CONNECTION_URL);
+        CustomKafkaProducer customKafkaProducer = new CustomKafkaProducer(message, bootstrapServerUrl, topicName);
+        customKafkaProducer.doProduce();
+        sleep(10000);
+    }
+
+    public CustomKafkaConsumer consumeMessage(String topicName) {
+        String bootstrapServerUrl = (String) OrderServiceSteps.getProductsField(this, CONNECTION_URL);
+        return new CustomKafkaConsumer(topicName, bootstrapServerUrl, true);
+    }
+
     public void createTopics(List<String> names) {
         List<KafkaTopic> kafkaTopics = new ArrayList<>();
         for (String name : names)
@@ -105,10 +123,10 @@ public class ApacheKafkaCluster extends IProduct {
         save();
     }
 
-    public void createAcl(String topicNameRegex) {
-        OrderServiceSteps.executeAction("kafka_create_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}"), this.projectId);
+    public void createAcl(String topicName, KafkaRoles role) {
+        OrderServiceSteps.executeAction("kafka_create_acl", this, new JSONObject("{\"acls\":[{\"client_cn\":\"APD09.26-1418-kafka-dh-client-devcorp.vtb\",\"topic_type\":\"by_name\",\"client_role\":\"" + role.getRole() + "\",\"topic_names\":[\"" + topicName + "\"]}]}"), this.projectId);
         save();
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)), "ACL топик не создался");
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, role.getRole(), topicName)), "ACL на топик не создался");
     }
 
     public void createAclTransaction(String transactionRegex) {
@@ -118,12 +136,12 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     /**
-     * @param topicNameRegex имя Acl, Если в aclName передать "*" то удалятся все Acl
+     * @param topicName имя Acl, Если в aclName передать "*" то удалятся все Acl
      */
-    public void deleteAcl(String topicNameRegex) {
-        OrderServiceSteps.executeAction("kafka_delete_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"topic_type\":\"all_topics\",\"client_role\":\"consumer\",\"topic_name\":\"" + topicNameRegex + "\"}]}}"), this.projectId);
+    public void deleteAcl(String topicName, KafkaRoles role) {
+        OrderServiceSteps.executeAction("kafka_delete_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"APD09.26-1418-kafka-dh-client-devcorp.vtb\",\"topic_type\":\"by_name\",\"client_role\":\"" + role.getRole() + "\",\"topic_names\":[\"" + topicName + "\"]}]}}"), this.projectId);
         save();
-        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, topicNameRegex)), "ACL топики не удалились");
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, role.getRole(), topicName)), "ACL на топик не удалился");
     }
 
     /**

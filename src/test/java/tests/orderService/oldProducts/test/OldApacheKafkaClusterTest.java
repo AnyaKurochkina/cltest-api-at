@@ -1,5 +1,6 @@
 package tests.orderService.oldProducts.test;
 
+import core.enums.KafkaRoles;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.products.ApacheKafkaCluster;
@@ -9,6 +10,7 @@ import tests.Tests;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static core.enums.KafkaRoles.PRODUCER;
 import static models.orderService.interfaces.ProductStatus.STARTED;
 import static models.orderService.interfaces.ProductStatus.STOPPED;
 
@@ -76,9 +78,9 @@ public class OldApacheKafkaClusterTest extends Tests {
             kafka.start();
         }
         kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
-        kafka.createAcl("*");
+        kafka.createAcl("PacketTopicNameForAcl", PRODUCER);
 
-        kafka.deleteAcl("*");
+        kafka.deleteAcl("PacketTopicNameForAcl", PRODUCER);
         kafka.deleteTopics(Collections.singletonList("PacketTopicNameForAcl"));
     }
 
@@ -90,9 +92,9 @@ public class OldApacheKafkaClusterTest extends Tests {
             kafka.start();
         }
         kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl1"));
-        kafka.createAcl("*");
+        kafka.createAcl("PacketTopicNameForAcl1", PRODUCER);
 
-        kafka.deleteAcl("*");
+        kafka.deleteAcl("PacketTopicNameForAcl1", PRODUCER);
         kafka.deleteTopics(Collections.singletonList("PacketTopicNameForAcl1"));
     }
 
