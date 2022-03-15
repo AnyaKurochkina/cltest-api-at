@@ -13,6 +13,10 @@ public class LoginPage implements Loadable {
     private final SelenideElement passwordInput = $(By.xpath("//input[@id='password']"));
     private final SelenideElement submitBtn = $(By.xpath("//button[@type='submit']"));
 
+    public LoginPage() {
+        checkPage();
+    }
+
     public void singIn(String username, String password){
         usernameInput.shouldBe(Condition.visible).val(username);
         passwordInput.shouldBe(Condition.visible).val(password);
