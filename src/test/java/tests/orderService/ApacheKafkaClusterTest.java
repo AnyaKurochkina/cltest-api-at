@@ -101,10 +101,10 @@ public class ApacheKafkaClusterTest extends Tests {
 //        }
 //    }
 
-    @TmsLink("")
+    @TmsLink("740326")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка подключения к вм Kafka {0}")
+    @ParameterizedTest(name = "Проверка создания ВМ и брокера Kafka {0}")
     void createAclTransaction(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             String topicName = "PacketTopicNameForAcl5";
