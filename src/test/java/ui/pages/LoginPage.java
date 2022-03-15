@@ -24,6 +24,7 @@ public class LoginPage implements Loadable {
     }
 
     public void singIn(){
+        //:TODO поменять на универсальное получение логина и пароля
         usernameInput.shouldBe(Condition.visible).val("portal_admin");
         passwordInput.shouldBe(Condition.visible).val("portal_admin");
         passwordInput.shouldBe(Condition.visible).submit();
