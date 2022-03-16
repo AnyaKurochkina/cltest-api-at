@@ -2,6 +2,7 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
@@ -128,6 +129,7 @@ public class ProductsTest extends Tests {
 
     @Order(11)
     @DisplayName("Проверка сортировки по дате создания в продуктах")
+    @TmsLink("737649")
     @Test
     public void orderingByCreateData() {
         List<ItemImpl> list = productCatalogSteps
@@ -142,16 +144,49 @@ public class ProductsTest extends Tests {
 
     @Order(12)
     @DisplayName("Проверка сортировки по дате обновления в продуктах")
+    @TmsLink("737651")
     @Test
     public void orderingByUpDateData() {
         List<ItemImpl> list = productCatalogSteps
-                .orderingByCreateData(GetProductsResponse.class).getItemsList();
+                .orderingByUpDateData(GetProductsResponse.class).getItemsList();
         for (int i = 0; i < list.size() - 1; i++) {
             ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
             ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
             assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
                     "Даты должны быть отсортированы по возрастанию");
         }
+    }
+
+    @Order(12)
+    @DisplayName("Удаление продукта со статусом is_open=true")
+    @TmsLink("737656")
+    @Test
+    public void deleteProductWithIsOpenTrue() {
+        Product productIsOpenTrue = Product.builder().name("create_product_is_open_test_api")
+                .isOpen(true)
+                .build()
+                .createObject();
+        String productId = productIsOpenTrue.getProductId();
+        Response deleteResponse = productCatalogSteps.getDeleteObjectResponse(productId)
+                .assertStatus(200);
+        productCatalogSteps.partialUpdateObject(productId, new JSONObject().put("is_open", false));
+        assertEquals(deleteResponse.jsonPath().get("error"), "Deletion not allowed (is_open=True)");
+
+    }
+
+    @Order(14)
+    @DisplayName("Проверка доступа для методов с публичным ключом в продуктах")
+    @TmsLink("737660")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(product.getName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(product.getProductId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(product.getProductId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(product.getProductId()).assertStatus(403);
     }
 
     @Order(15)
@@ -317,6 +352,7 @@ public class ProductsTest extends Tests {
 
     @Order(98)
     @DisplayName("Получение значения ключа info")
+    @TmsLink("737663")
     @Test
     public void getProductInfo() {
         GetProductResponse response = productCatalogSteps.getInfoProduct(product.getProductId());
@@ -337,13 +373,6 @@ public class ProductsTest extends Tests {
     @TmsLink("643434")
     @MarkDelete
     public void deleteProduct() {
-        try (Product product = Product.builder()
-                .name(NAME)
-                .title("AtTestApiProduct")
-                .envs(Collections.singletonList("dev"))
-                .build()
-                .createObjectExclusiveAccess()) {
             product.deleteObject();
-        }
     }
 }

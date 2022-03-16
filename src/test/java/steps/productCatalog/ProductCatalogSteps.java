@@ -1,5 +1,6 @@
 package steps.productCatalog;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import core.helper.http.Response;
@@ -299,6 +300,43 @@ public class ProductCatalogSteps {
                 .get(productName + "?ordering=update_dt")
                 .assertStatus(200)
                 .extractAs(clazz);
+    }
+
+    @Step("Получение объекта продуктового каталога по имени с публичным токеном")
+    public Response getObjectByNameWithPublicToken(String name) {
+        return  new Http(ProductCatalogURL)
+                .setRole(Role.VIEWER)
+                .get(productName + "?name=" + name);
+    }
+
+    @Step("Создание объекта продуктового каталога с публичным токеном")
+    public Response createProductObjectWithPublicToken(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.VIEWER)
+                .body(body)
+                .post(productName);
+    }
+
+    @Step("Обновление объекта продуктового каталога с публичным токеном")
+    public Response partialUpdateObjectWithPublicToken(String id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.VIEWER)
+                .body(object)
+                .patch(productName + id + "/");
+    }
+    @Step("Удаление объекта продуктового каталога с публичным токеном")
+    public Response deleteObjectWithPublicToken(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.VIEWER)
+                .delete(productName + id + "/");
+    }
+
+    @Step("Обновление всего объекта продуктового каталога по Id с публичным токеном")
+    public Response putObjectByIdWithPublicToken(String objectId, JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.VIEWER)
+                .body(body)
+                .put(productName + objectId + "/");
     }
 
     private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {

@@ -104,7 +104,7 @@ public class GetProductResponse implements GetImpl {
 		return allowedPaths;
 	}
 
-	public boolean isIsOpen(){
+	public boolean isOpen(){
 		return isOpen;
 	}
 

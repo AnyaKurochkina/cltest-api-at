@@ -10,7 +10,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.productCatalog.Jinja2;
 import org.json.JSONObject;
-import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
@@ -80,7 +79,7 @@ public class JinjaTest extends Tests {
     @Test
     public void orderingByUpDateData() {
         List<ItemImpl> list = productCatalogSteps
-                .orderingByCreateData(GetJinjaListResponse.class).getItemsList();
+                .orderingByUpDateData(GetJinjaListResponse.class).getItemsList();
         for (int i = 0; i < list.size() - 1; i++) {
             ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
             ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
@@ -98,6 +97,20 @@ public class JinjaTest extends Tests {
         assertFalse(productCatalogSteps.isExists("NoExistsJinja"));
     }
     //toDO тест по импорту.
+
+    @Order(11)
+    @DisplayName("Проверка доступа для методов с публичным ключом в шаблонах Jinja")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(jinja2.getName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(jinja2.getJinjaId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(jinja2.getJinjaId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(jinja2.getJinjaId()).assertStatus(403);
+    }
 
     @Order(15)
     @DisplayName("Получение jinja по Id")
@@ -179,7 +192,7 @@ public class JinjaTest extends Tests {
                 .set("title", updateTitle)
                 .set("description", updateDescription)
                 .build());
-        GetJinjaResponse updatedJinja =(GetJinjaResponse) productCatalogSteps.getById(jinjaObject.getJinjaId(), GetJinjaResponse.class);
+        GetJinjaResponse updatedJinja = (GetJinjaResponse) productCatalogSteps.getById(jinjaObject.getJinjaId(), GetJinjaResponse.class);
         if (updatedJinja.getError() != null) {
             fail("Ошибка: " + updatedJinja.getError());
         }
@@ -245,10 +258,7 @@ public class JinjaTest extends Tests {
     @Test
     @DisplayName("Удаление jinja")
     @TmsLink("660151")
-    @MarkDelete
     public void deleteJinja() {
-        try (Jinja2 jinja2 = Jinja2.builder().name(JINJA_NAME).build().createObjectExclusiveAccess()) {
             jinja2.deleteObject();
-        }
     }
 }

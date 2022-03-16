@@ -14,7 +14,6 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.ItemVisualTemplates;
 import org.json.JSONObject;
-import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
@@ -50,6 +49,7 @@ public class VisualTemplateTest extends Tests {
                 .eventType(Collections.singletonList("app"))
                 .compactTemplate(compactTemplate)
                 .fullTemplate(fullTemplate)
+                .isActive(true)
                 .build()
                 .createObject();
     }
@@ -68,6 +68,15 @@ public class VisualTemplateTest extends Tests {
         assertEquals(visualTemplates.getItemId(), response.jsonPath().get("id[0]").toString());
     }
 
+    @Order(6)
+    @DisplayName("Удаление шаблона визуализации со статусом is_active=true")
+    @TmsLink("")
+    @Test
+    public void deleteIsActiveTemplate() {
+        Response deleteResponse = productCatalogSteps.getDeleteObjectResponse(visualTemplates.getItemId())
+                .assertStatus(200);
+        assertEquals(deleteResponse.jsonPath().get("error"), "Deletion not allowed (is_active=True)");
+    }
 
     @Order(10)
     @DisplayName("Получение списка шаблонов визуализаций")
@@ -119,7 +128,7 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void orderingByUpDateData() {
         List<ItemImpl> list = productCatalogSteps
-                .orderingByCreateData(GetVisualTemplateListResponse.class).getItemsList();
+                .orderingByUpDateData(GetVisualTemplateListResponse.class).getItemsList();
         for (int i = 0; i < list.size() - 1; i++) {
             ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
             ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
@@ -141,6 +150,20 @@ public class VisualTemplateTest extends Tests {
             assertTrue(productCatalogSteps.getJsonPath(impl.getId()).getString("event_provider")
                     .contains(providerFilter));
         }
+    }
+
+    @Order(16)
+    @DisplayName("Проверка доступа для методов с публичным ключом в шаблонах отображения")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(visualTemplates.getName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(visualTemplates.getItemId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(visualTemplates.getItemId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(visualTemplates.getItemId()).assertStatus(403);
     }
 
     @Order(20)
@@ -311,11 +334,9 @@ public class VisualTemplateTest extends Tests {
     @Order(100)
     @DisplayName("Удаление шаблона визуализации")
     @TmsLink("643674")
-    @MarkDelete
     @Test
-    public void deleteAction() {
-        try (ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder().name(VISUAL_TEMPLATE_NAME).build().createObjectExclusiveAccess()) {
+    public void deleteTemplate() {
+            productCatalogSteps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
             visualTemplates.deleteObject();
-        }
     }
 }

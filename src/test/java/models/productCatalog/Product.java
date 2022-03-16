@@ -64,6 +64,7 @@ public class Product extends Entity {
                 .set("$.version", version)
                 .set("$.category", category)
                 .set("$.info", info)
+                .set("$.is_open", isOpen)
                 .build();
     }
 

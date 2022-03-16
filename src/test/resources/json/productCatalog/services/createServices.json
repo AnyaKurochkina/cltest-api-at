@@ -8,7 +8,7 @@
   "description": "Перезагрузка операционной системы",
   "data_source": {},
   "extra_data": {},
-  "is_published": true,
+  "is_published": false,
   "icon": "",
   "graph_version_pattern": "",
   "service_info": "",

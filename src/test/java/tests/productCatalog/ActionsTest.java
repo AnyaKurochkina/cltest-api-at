@@ -12,7 +12,6 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
 import org.json.JSONObject;
-import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
@@ -135,6 +134,7 @@ public class ActionsTest extends Tests {
 
     @Order(9)
     @DisplayName("Проверка сортировки по дате создания в действиях")
+    @TmsLink("737375")
     @Test
     public void orderingByCreateData() {
         List<ItemImpl> list = productCatalogSteps
@@ -150,10 +150,11 @@ public class ActionsTest extends Tests {
 
     @Order(10)
     @DisplayName("Проверка сортировки по дате обновления в действиях")
+    @TmsLink("737383")
     @Test
     public void orderingByUpDateData() {
         List<ItemImpl> list = productCatalogSteps
-                .orderingByCreateData(ActionResponse.class).getItemsList();
+                .orderingByUpDateData(ActionResponse.class).getItemsList();
         for (int i = 0; i < list.size() - 1; i++) {
             ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
             ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
@@ -161,6 +162,21 @@ public class ActionsTest extends Tests {
                     String.format("Даты обновлений действий с именами %s и %s не соответсвуют условию сортировки."
                             , list.get(i).getName(), list.get(i + 1).getName()));
         }
+    }
+
+    @Order(11)
+    @DisplayName("Проверка доступа для методов с публичным ключом в действиях")
+    @TmsLink("737385")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(action.getActionName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(action.getActionId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(action.getActionId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(action.getActionId()).assertStatus(403);
     }
 
     @Order(60)
@@ -338,11 +354,8 @@ public class ActionsTest extends Tests {
     @Test
     @DisplayName("Удаление действия")
     @TmsLink("642530")
-    @MarkDelete
     public void deleteAction() {
-        try (Action action = Action.builder().actionName("test_object_at2021").build().createObjectExclusiveAccess()) {
             action.deleteObject();
-        }
     }
 }
 

@@ -218,7 +218,7 @@ public class TemplatesTest extends Tests {
     @Test
     public void orderingByUpDateData() {
         List<ItemImpl> list = productCatalogSteps
-                .orderingByCreateData(GetTemplateListResponse.class).getItemsList();
+                .orderingByUpDateData(GetTemplateListResponse.class).getItemsList();
         for (int i = 0; i < list.size() - 1; i++) {
             ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
             ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
@@ -228,16 +228,25 @@ public class TemplatesTest extends Tests {
     }
 
     @Order(17)
+    @DisplayName("Проверка доступа для методов с публичным ключом в шаблонах")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(template.getTemplateName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(String.valueOf(template.getTemplateId()),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(String.valueOf(template.getTemplateId()), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(String.valueOf(template.getTemplateId())).assertStatus(403);
+    }
+
+    @Order(18)
     @DisplayName("Удаление шаблона")
     @TmsLink("643616")
     @MarkDelete
     @Test
     public void deleteTemplate() {
-        try (Template template = Template.builder()
-                .templateName("template_for_at_api")
-                .build()
-                .createObjectExclusiveAccess()) {
             template.deleteObject();
-        }
     }
 }

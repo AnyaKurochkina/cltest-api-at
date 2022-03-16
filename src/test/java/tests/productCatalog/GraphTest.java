@@ -18,7 +18,6 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Graph;
 import org.json.JSONObject;
-import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
@@ -110,6 +109,7 @@ public class GraphTest extends Tests {
 
     @Order(9)
     @DisplayName("Проверка сортировки по дате создания в графах")
+    @TmsLink("740080")
     @Test
     public void orderingByCreateData() {
         List<ItemImpl> list = productCatalogSteps
@@ -124,16 +124,32 @@ public class GraphTest extends Tests {
 
     @Order(10)
     @DisplayName("Проверка сортировки по дате обновления в графах")
+    @TmsLink("740082")
     @Test
     public void orderingByUpDateData() {
         List<ItemImpl> list = productCatalogSteps
-                .orderingByCreateData(GetGraphsListResponse.class).getItemsList();
+                .orderingByUpDateData(GetGraphsListResponse.class).getItemsList();
         for (int i = 0; i < list.size() - 1; i++) {
             ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
             ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
             assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
                     "Даты должны быть отсортированы по возрастанию");
         }
+    }
+
+    @Order(11)
+    @DisplayName("Проверка доступа для методов с публичным ключом в графах")
+    @TmsLink("740085")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(graph.getName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(graph.getGraphId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(graph.getGraphId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(graph.getGraphId()).assertStatus(403);
     }
 
     @Order(50)
@@ -340,10 +356,7 @@ public class GraphTest extends Tests {
     @DisplayName("Удаление графа")
     @TmsLink("642697")
     @Test
-    @MarkDelete
     public void deleteGraph() {
-        try (Graph graph = Graph.builder().name("at_test_graph_api").build().createObjectExclusiveAccess()) {
-            graph.deleteObject();
-        }
+        graph.deleteObject();
     }
 }

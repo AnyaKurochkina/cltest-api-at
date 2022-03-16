@@ -182,7 +182,7 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void orderingByUpDateData() {
         List<ItemImpl> list = productCatalogSteps
-                .orderingByCreateData(GetOrgDirectionListResponse.class).getItemsList();
+                .orderingByUpDateData(GetOrgDirectionListResponse.class).getItemsList();
         for (int i = 0; i < list.size() - 1; i++) {
             ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
             ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
@@ -190,6 +190,20 @@ public class OrgDirectionTest extends Tests {
                     String.format("Даты обновлений направлений с именами %s и %s не соответсвуют условию сортировки."
                             , list.get(i).getName(), list.get(i + 1).getName()));
         }
+    }
+
+    @Order(14)
+    @DisplayName("Проверка доступа для методов с публичным ключом в направлениях")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(orgDirection.getOrgDirectionName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(orgDirection.getOrgDirectionId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(orgDirection.getOrgDirectionId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(orgDirection.getOrgDirectionId()).assertStatus(403);
     }
 
     @Order(80)
@@ -237,11 +251,6 @@ public class OrgDirectionTest extends Tests {
     @MarkDelete
     @Test
     public void deleteOrgDirection() {
-        try (OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName(ORG_DIRECTION_NAME)
-                .build()
-                .createObjectExclusiveAccess()) {
             orgDirection.deleteObject();
-        }
     }
 }
