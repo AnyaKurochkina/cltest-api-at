@@ -2,9 +2,9 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import org.junit.MarkDelete;
 import core.helper.StringUtils;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.action.createAction.response.CreateActionResponse;
 import httpModels.productCatalog.graphs.createGraph.response.CreateGraphResponse;
 import httpModels.productCatalog.graphs.deleteGraph.response.DeleteGraphResponse;
@@ -21,6 +21,9 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -102,6 +105,51 @@ public class GraphTest extends Tests {
     @Test
     public void getGraphByIdWithOutToken() {
         productCatalogSteps.getByIdWithOutToken(graph.getGraphId());
+    }
+
+    @Order(9)
+    @DisplayName("Проверка сортировки по дате создания в графах")
+    @TmsLink("740080")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetGraphsListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(10)
+    @DisplayName("Проверка сортировки по дате обновления в графах")
+    @TmsLink("740082")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByUpDateData(GetGraphsListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(11)
+    @DisplayName("Проверка доступа для методов с публичным ключом в графах")
+    @TmsLink("740085")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(graph.getName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(graph.getGraphId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(graph.getGraphId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(graph.getGraphId()).assertStatus(403);
     }
 
     @Order(50)
@@ -308,10 +356,7 @@ public class GraphTest extends Tests {
     @DisplayName("Удаление графа")
     @TmsLink("642697")
     @Test
-    @MarkDelete
     public void deleteGraph() {
-        try (Graph graph = Graph.builder().name("at_test_graph_api").build().createObjectExclusiveAccess()) {
-            graph.deleteObject();
-        }
+        graph.deleteObject();
     }
 }

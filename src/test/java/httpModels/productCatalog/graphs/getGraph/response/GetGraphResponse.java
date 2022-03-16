@@ -73,6 +73,12 @@ public class GetGraphResponse implements GetImpl {
 	@JsonProperty("modifications")
 	private List<Object> modifications;
 
+	@JsonProperty("create_dt")
+	private String create_dt;
+
+	@JsonProperty("update_dt")
+	private String update_dt;
+
 	@Override
 	public String getGraphVersionCalculated() {
 		return null;

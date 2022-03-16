@@ -23,6 +23,9 @@ public class Action extends Entity {
     private String graphId;
     private String actionId;
     private String version;
+    private boolean isMultiple;
+    private String createDt;
+    private String updateDt;
     private final String productName = "actions/";
 
     @Override
@@ -41,6 +44,8 @@ public class Action extends Entity {
                 .set("$.description", actionName)
                 .set("$.graph_id", graphId)
                 .set("$.version", version)
+                .set("$.create_dt", createDt)
+                .set("$.update_dt", updateDt)
                 .build();
     }
 
