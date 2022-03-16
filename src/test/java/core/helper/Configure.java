@@ -30,6 +30,7 @@ public class Configure {
             properties.setProperty("testIt", "false");
 
             loadProperties(RESOURCE_PATH + "/config/application.properties");
+            loadProperties(RESOURCE_PATH + "/config/kafka.config.properties");
             if (System.getProperty("env") == null) {
                 if (getAppProp("env") == null) {
                     throw new Exception("Не задан параметр env");

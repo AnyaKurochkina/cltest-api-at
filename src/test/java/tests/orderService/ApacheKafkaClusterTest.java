@@ -1,14 +1,18 @@
 package tests.orderService;
 
 import com.mifmif.common.regex.Generex;
+import core.kafka.CustomKafkaConsumer;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import lombok.extern.log4j.Log4j2;
 import models.orderService.products.ApacheKafkaCluster;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,13 +20,18 @@ import tests.Tests;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static core.enums.KafkaRoles.CONSUMER;
+import static core.enums.KafkaRoles.PRODUCER;
+
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafkacluster"), @Tag("prod")})
+@Log4j2
 public class ApacheKafkaClusterTest extends Tests {
 
     //TODO: убрать Waiting.sleep(6000);
@@ -78,7 +87,7 @@ public class ApacheKafkaClusterTest extends Tests {
         Waiting.sleep(120000);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
-            kafka.createAcl("*");
+            kafka.createAcl("PacketTopicNameForAcl", PRODUCER);
         }
     }
 
@@ -91,6 +100,27 @@ public class ApacheKafkaClusterTest extends Tests {
 //            kafka.createAclTransaction("*");
 //        }
 //    }
+
+    @TmsLink("740326")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка создания ВМ и брокера Kafka {0}")
+    void createAclTransaction(ApacheKafkaCluster product) {
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            String topicName = "PacketTopicNameForAcl5";
+            String message = "This message from autotest";
+            kafka.createTopics(Collections.singletonList(topicName));
+            kafka.createAcl(topicName, PRODUCER);
+            kafka.createAcl(topicName, CONSUMER);
+            CustomKafkaConsumer consumer = kafka.consumeMessage(topicName);
+            kafka.produceMessage(topicName, message);
+            List<ConsumerRecord<String, String>> consumerRecords = consumer.getConsumerRecordList();
+            log.info(String.format("Сообщения из топика %s : %s", topicName, consumerRecords));
+            Assertions.assertTrue(
+                    consumerRecords.stream().anyMatch(record -> record.value().equals(message)),
+                    "Сообщения в топике отсутствуют");
+        }
+    }
 
     @TmsLink("377731")
     @Tag("actions")

@@ -85,7 +85,7 @@ public class Redis extends IProduct {
     public void checkConnect() {
         String url = "";
         try {
-            url = (String) OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL);
+            url = (String) OrderServiceSteps.getProductsField(this, CONNECTION_URL);
             Jedis jedis = new Jedis(url);
             jedis.auth(redisPassword);
             jedis.close();
