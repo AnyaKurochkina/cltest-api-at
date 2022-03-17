@@ -26,7 +26,7 @@ import java.util.List;
 import static core.utils.Waiting.sleep;
 
 @Log4j2
-@Data↕
+@Data
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
