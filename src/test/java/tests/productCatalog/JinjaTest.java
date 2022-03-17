@@ -62,6 +62,7 @@ public class JinjaTest extends Tests {
 
     @Order(8)
     @DisplayName("Проверка сортировки по дате создания в шаблонах Jinja")
+    @TmsLink("683716")
     @Test
     public void orderingByCreateData() {
         List<ItemImpl> list = productCatalogSteps
@@ -76,6 +77,7 @@ public class JinjaTest extends Tests {
 
     @Order(9)
     @DisplayName("Проверка сортировки по дате обновления в шаблонах Jinja")
+    @TmsLink("742342")
     @Test
     public void orderingByUpDateData() {
         List<ItemImpl> list = productCatalogSteps
@@ -100,6 +102,7 @@ public class JinjaTest extends Tests {
 
     @Order(11)
     @DisplayName("Проверка доступа для методов с публичным ключом в шаблонах Jinja")
+    @TmsLink("742344")
     @Test
     public void checkAccessWithPublicToken() {
         productCatalogSteps.getObjectByNameWithPublicToken(jinja2.getName()).assertStatus(200);
