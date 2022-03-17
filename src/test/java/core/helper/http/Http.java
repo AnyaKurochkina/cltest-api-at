@@ -128,7 +128,7 @@ public class Http {
     }
 
     public Http setProjectId(String projectId) {
-//        this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId);
+        this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId);
         return this;
     }
 
