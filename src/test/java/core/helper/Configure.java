@@ -1,7 +1,6 @@
 package core.helper;
 
 import lombok.extern.log4j.Log4j2;
-import org.aspectj.lang.annotation.Aspect;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +30,7 @@ public class Configure {
             properties.setProperty("testIt", "false");
 
             loadProperties(RESOURCE_PATH + "/config/application.properties");
+            loadProperties(RESOURCE_PATH + "/config/kafka.config.properties");
             if (System.getProperty("env") == null) {
                 if (getAppProp("env") == null) {
                     throw new Exception("Не задан параметр env");
@@ -46,7 +46,7 @@ public class Configure {
             PortalBackURL = kongURL + "portal/api/v1/";
             TarifficatorURL = kongURL + "tarifficator/api/v1/";
             CalculatorURL = kongURL + "calculator/";
-            ProductCatalogURL = kongURL + "product-catalog/";
+            ProductCatalogURL = kongURL + "product-catalog/api/v1/";
             OrderServiceURL = kongURL + "order-service/api/v1/";
             StateServiceURL = kongURL + "state-service/";
             ReferencesURL = kongURL + "references/api/v1/";

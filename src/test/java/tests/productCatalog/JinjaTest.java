@@ -2,6 +2,7 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.jinja2.getJinjaListResponse.GetJinjaListResponse;
 import httpModels.productCatalog.jinja2.getJinjaResponse.GetJinjaResponse;
 import io.qameta.allure.Epic;
@@ -9,10 +10,12 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.productCatalog.Jinja2;
 import org.json.JSONObject;
-import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -57,6 +60,36 @@ public class JinjaTest extends Tests {
         }
     }
 
+    @Order(8)
+    @DisplayName("Проверка сортировки по дате создания в шаблонах Jinja")
+    @TmsLink("683716")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetJinjaListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(9)
+    @DisplayName("Проверка сортировки по дате обновления в шаблонах Jinja")
+    @TmsLink("742342")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByUpDateData(GetJinjaListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
     @Order(10)
     @DisplayName("Проверка существования jinja по имени")
     @TmsLink("660073")
@@ -66,6 +99,21 @@ public class JinjaTest extends Tests {
         assertFalse(productCatalogSteps.isExists("NoExistsJinja"));
     }
     //toDO тест по импорту.
+
+    @Order(11)
+    @DisplayName("Проверка доступа для методов с публичным ключом в шаблонах Jinja")
+    @TmsLink("742344")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(jinja2.getName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(jinja2.getJinjaId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(jinja2.getJinjaId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(jinja2.getJinjaId()).assertStatus(403);
+    }
 
     @Order(15)
     @DisplayName("Получение jinja по Id")
@@ -147,7 +195,7 @@ public class JinjaTest extends Tests {
                 .set("title", updateTitle)
                 .set("description", updateDescription)
                 .build());
-        GetJinjaResponse updatedJinja =(GetJinjaResponse) productCatalogSteps.getById(jinjaObject.getJinjaId(), GetJinjaResponse.class);
+        GetJinjaResponse updatedJinja = (GetJinjaResponse) productCatalogSteps.getById(jinjaObject.getJinjaId(), GetJinjaResponse.class);
         if (updatedJinja.getError() != null) {
             fail("Ошибка: " + updatedJinja.getError());
         }
@@ -213,10 +261,7 @@ public class JinjaTest extends Tests {
     @Test
     @DisplayName("Удаление jinja")
     @TmsLink("660151")
-    @MarkDelete
     public void deleteJinja() {
-        try (Jinja2 jinja2 = Jinja2.builder().name(JINJA_NAME).build().createObjectExclusiveAccess()) {
             jinja2.deleteObject();
-        }
     }
 }

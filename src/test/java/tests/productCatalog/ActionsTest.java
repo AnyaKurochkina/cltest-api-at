@@ -2,8 +2,8 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.action.getActionList.response.ActionResponse;
 import io.qameta.allure.Epic;
@@ -16,6 +16,7 @@ import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -107,7 +108,7 @@ public class ActionsTest extends Tests {
     public void copyActionById() {
         String cloneName = action.getActionName() + "-clone";
         productCatalogSteps.copyById(action.getActionId());
-        assertTrue(productCatalogSteps.isExists(cloneName),"Действие не существует");
+        assertTrue(productCatalogSteps.isExists(cloneName), "Действие не существует");
         productCatalogSteps.deleteByName(cloneName, ActionResponse.class);
         assertFalse(productCatalogSteps.isExists(cloneName), "Действие существует");
     }
@@ -129,6 +130,53 @@ public class ActionsTest extends Tests {
         assertTrue(productCatalogSteps.isExists(cloneName));
         productCatalogSteps.deleteByName(cloneName, ActionResponse.class);
         assertFalse(productCatalogSteps.isExists(cloneName));
+    }
+
+    @Order(9)
+    @DisplayName("Проверка сортировки по дате создания в действиях")
+    @TmsLink("737375")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(ActionResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    String.format("Даты обновлений действий с именами %s и %s не соответсвуют условию сортировки."
+                            , list.get(i).getName(), list.get(i + 1).getName()));
+        }
+    }
+
+    @Order(10)
+    @DisplayName("Проверка сортировки по дате обновления в действиях")
+    @TmsLink("737383")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByUpDateData(ActionResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    String.format("Даты обновлений действий с именами %s и %s не соответсвуют условию сортировки."
+                            , list.get(i).getName(), list.get(i + 1).getName()));
+        }
+    }
+
+    @Order(11)
+    @DisplayName("Проверка доступа для методов с публичным ключом в действиях")
+    @TmsLink("737385")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(action.getActionName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(action.getActionId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(action.getActionId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(action.getActionId()).assertStatus(403);
     }
 
     @Order(60)
@@ -306,11 +354,8 @@ public class ActionsTest extends Tests {
     @Test
     @DisplayName("Удаление действия")
     @TmsLink("642530")
-    @MarkDelete
     public void deleteAction() {
-        try (Action action = Action.builder().actionName("test_object_at2021").build().createObjectExclusiveAccess()) {
             action.deleteObject();
-        }
     }
 }
 

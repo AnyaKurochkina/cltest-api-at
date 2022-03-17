@@ -46,6 +46,22 @@ public class ListItem implements ItemImpl {
 	@JsonProperty("version")
 	private String version;
 
+	@JsonProperty("create_dt")
+	private String create_dt;
+
+	@JsonProperty("update_dt")
+	private String update_dt;
+
+	@Override
+	public String getCreateData() {
+		return create_dt;
+	}
+
+	@Override
+	public String getUpDateData() {
+		return update_dt;
+	}
+
 	@Override
 	public String getName() {
 		return name;

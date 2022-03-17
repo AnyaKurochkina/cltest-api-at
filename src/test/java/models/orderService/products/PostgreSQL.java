@@ -16,11 +16,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -172,7 +169,7 @@ public class PostgreSQL extends IProduct {
     }
 
     public void checkConnection(String dbName, String password) {
-        checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, DB_CONNECTION_URL)));
+        checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
     }
 
     public void restart() {
