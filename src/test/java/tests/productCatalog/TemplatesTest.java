@@ -201,6 +201,7 @@ public class TemplatesTest extends Tests {
 
     @Order(15)
     @DisplayName("Проверка сортировки по дате создания в шаблонах")
+    @TmsLink("742475")
     @Test
     public void orderingByCreateData() {
         List<ItemImpl> list = productCatalogSteps
@@ -215,6 +216,7 @@ public class TemplatesTest extends Tests {
 
     @Order(16)
     @DisplayName("Проверка сортировки по дате обновления в шаблонах")
+    @TmsLink("742477")
     @Test
     public void orderingByUpDateData() {
         List<ItemImpl> list = productCatalogSteps
@@ -229,6 +231,7 @@ public class TemplatesTest extends Tests {
 
     @Order(17)
     @DisplayName("Проверка доступа для методов с публичным ключом в шаблонах")
+    @TmsLink("742478")
     @Test
     public void checkAccessWithPublicToken() {
         productCatalogSteps.getObjectByNameWithPublicToken(template.getTemplateName()).assertStatus(200);

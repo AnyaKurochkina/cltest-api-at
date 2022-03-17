@@ -59,6 +59,7 @@ public class OrgDirectionTest extends Tests {
 
     @Order(2)
     @DisplayName("Проверка значения next в запросе на получение списка направлений")
+    @TmsLink("679060")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetOrgDirectionListResponse.class).getNext();
@@ -165,6 +166,7 @@ public class OrgDirectionTest extends Tests {
 
     @Order(12)
     @DisplayName("Проверка сортировки по дате создания в направлениях")
+    @TmsLink("679074")
     @Test
     public void orderingByCreateData() {
         List<ItemImpl> list = productCatalogSteps
@@ -179,6 +181,7 @@ public class OrgDirectionTest extends Tests {
 
     @Order(13)
     @DisplayName("Проверка сортировки по дате обновления в направлениях")
+    @TmsLink("742465")
     @Test
     public void orderingByUpDateData() {
         List<ItemImpl> list = productCatalogSteps
@@ -194,6 +197,7 @@ public class OrgDirectionTest extends Tests {
 
     @Order(14)
     @DisplayName("Проверка доступа для методов с публичным ключом в направлениях")
+    @TmsLink("742468")
     @Test
     public void checkAccessWithPublicToken() {
         productCatalogSteps.getObjectByNameWithPublicToken(orgDirection.getOrgDirectionName()).assertStatus(200);
