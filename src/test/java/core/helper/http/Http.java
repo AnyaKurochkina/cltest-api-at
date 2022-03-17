@@ -159,12 +159,13 @@ public class Http {
                 response = filterRequest();
             } catch (AssertionFailedError e) {
                 Waiting.sleep(6000);
-                break;
+                continue;
             }
-            if (!(response.status() == 504 && method.equals("GET"))) {
+            if (response.status() == 504 && method.equals("GET")) {
                 Waiting.sleep(2000);
-                break;
+                continue;
             }
+            break;
         }
         return response;
     }
