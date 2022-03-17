@@ -2,12 +2,15 @@ package steps.authorizer;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
+import io.restassured.path.json.JsonPath;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.authorizer.Project;
 import models.authorizer.User;
 import models.authorizer.UserList;
@@ -74,7 +77,7 @@ public class AuthorizerSteps extends Steps {
 
     @Step("Получение пользователя из LDAP")
     public static String getUserList(Project project, String username) {
-        return  new Http(PortalBackURL)
+        return new Http(PortalBackURL)
                 .get("users?q={}&project_name={}", username, project.getId())
                 .assertStatus(200)
                 .jsonPath()
@@ -84,13 +87,9 @@ public class AuthorizerSteps extends Steps {
     @SneakyThrows
     @Step("Получение списка пользователей")
     public static List<User> getUserList(String projectId) {
-        ObjectMapper objectMapper = JsonHelper.getCustomObjectMapper();
-        String response = new Http(AuthorizerURL)
-                .withServiceToken()
-                .get("projects/{}/users?include=members,total_count&page=1&per_page=10", projectId)
-                .assertStatus(200)
-                .toString();
-        return objectMapper.readValue(response, UserList.class).getData();
+        @SuppressWarnings (value="unchecked")
+        List<User> users = (List<User>) listEntities(AuthorizerURL + "projects/" + projectId + "/users?", User.class);
+        return users;
     }
 
 }

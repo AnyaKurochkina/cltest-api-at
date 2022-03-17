@@ -2,12 +2,14 @@ package models.authorizer;
 
 import lombok.Setter;
 
+import java.util.Date;
+
 @Setter
 public class RolesItem{
-	private String updatedAt;
+	private Date updatedAt;
 	private String name;
 	private String description;
-	private String createdAt;
+	private Date createdAt;
 	private String title;
 	private String type;
 }

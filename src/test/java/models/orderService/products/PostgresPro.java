@@ -103,7 +103,7 @@ public class PostgresPro extends IProduct {
         if (database.contains(new Db(dbName)))
             return;
 //        dbAdminPass = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
-        OrderServiceSteps.executeAction("create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, dbAdminPass)), this.getProjectId());
+        OrderServiceSteps.executeAction("create_db_postgrespro", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, dbAdminPass)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем" + dbName);
         database.add(new Db(dbName));
         log.info("database = " + database);

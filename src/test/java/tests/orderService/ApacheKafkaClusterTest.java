@@ -91,21 +91,21 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
-//    @TmsLink("377735")
-//    @Tag("actions")
-//    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "Создание ACL на транзакцию Kafka {0}")
-//    void createAclTransaction(ApacheKafkaCluster product) {
-//        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-//            kafka.createAclTransaction("*");
-//        }
-//    }
+    @TmsLink("377735")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Создание ACL на транзакцию Kafka {0}")
+    void createAclTransaction(ApacheKafkaCluster product) {
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.createAclTransaction("*");
+        }
+    }
 
     @TmsLink("740326")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания ВМ и брокера Kafka {0}")
-    void createAclTransaction(ApacheKafkaCluster product) {
+    void checkConnection(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             String topicName = "PacketTopicNameForAcl5";
             String message = "This message from autotest";

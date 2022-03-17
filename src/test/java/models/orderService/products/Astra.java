@@ -38,7 +38,7 @@ public class Astra extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/astra_general_application.json";
-        productName = "Astra Linux (DEV only)";
+        productName = "Astra Linux";
         initProduct();
         if(flavor == null)
             flavor = getMinFlavor();
@@ -71,6 +71,7 @@ public class Astra extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
+                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
                 .build();
     }
 

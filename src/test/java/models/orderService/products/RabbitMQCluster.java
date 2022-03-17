@@ -94,7 +94,7 @@ public class RabbitMQCluster extends IProduct {
 
     //Создать пользователя RabbitMQ
     public void rabbitmqCreateUser(String user) {
-        OrderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\"}]}", user, user)), this.getProjectId());
+        OrderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\", rabbitmq_user_password: true}]}", user, user)), this.getProjectId());
         Assertions.assertTrue(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта отсутствует пользователь " + user);
     }
 
