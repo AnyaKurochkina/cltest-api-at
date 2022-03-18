@@ -10,6 +10,7 @@ import models.accountManager.Account;
 import models.authorizer.Folder;
 import models.authorizer.Organization;
 import models.authorizer.Project;
+import models.orderService.interfaces.IProduct;
 import models.orderService.products.NT;
 import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
@@ -109,25 +110,35 @@ public class CalculatorTest extends Tests {
                 .createObjectPrivateAccess();
         NT product = NT.builder().projectId(project.getId()).build().createObjectPrivateAccess();
 
-        Float cost = CostSteps.getPreBillingTotalCost(product);
-        Float spent = null;
-        for (int i = 0; i < 15; i++) {
-            Waiting.sleep(20000);
-            spent = AccountSteps.getCurrentBalance(folder.getName());
-            if (spent.equals(1000.0f))
-                continue;
-            break;
-        }
-        Assertions.assertEquals(cost, (1000.0f - Objects.requireNonNull(spent)), 0.01, "Сумма списания отличается от ожидаемой суммы");
+        float spent = checkSpentAccount(product, folder.getName(), 1000.f);
 
-//        accountFolder.deleteObject();
-//        product.deleteObject();
+        accountFolder.deleteObject();
+
+        spent = checkSpentAccount(product, department.getName(), spent);
 
 
 
 
         System.out.println(1);
     }
+
+    float checkSpentAccount(IProduct product, String folderId, Float currentBalance){
+        Float cost = CostSteps.getPreBillingTotalCost(product);
+        while (cost < 0.01f)
+            cost += cost;
+        Float spent = null;
+        for (int i = 0; i < 15; i++) {
+            Waiting.sleep(20000);
+            spent = AccountSteps.getCurrentBalance(folderId);
+            if (spent.equals(currentBalance))
+                continue;
+            break;
+        }
+        Assertions.assertEquals(cost, (currentBalance - Objects.requireNonNull(spent)), 0.01, "Сумма списания отличается от ожидаемой суммы");
+        return spent;
+    }
+
+
 
     @TmsLink("648902")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)

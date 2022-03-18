@@ -28,7 +28,7 @@ public class AccountSteps extends Steps {
     @Step("Запрос текущего баланса для папки {folderId}")
     public static Float getCurrentBalance(String folderId) {
         String res = new Http(AccountManagerURL)
-                .get("folders/{}/accounts", folderId)
+                .get("folders/{}/accounts?force_spent_update=1", folderId)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("account.current_balance");

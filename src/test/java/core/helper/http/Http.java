@@ -216,6 +216,7 @@ public class Http {
             else
                 responseMessage = IOUtils.toString(is, StandardCharsets.UTF_8);
 
+            String xRequestId = null;
             for (Map.Entry<String, List<String>> entries : http.getHeaderFields().entrySet()) {
                 StringJoiner values = new StringJoiner(",");
                 for (String value : entries.getValue()) {
@@ -223,6 +224,8 @@ public class Http {
                 }
                 if (entries.getKey() == null)
                     continue;
+                if (entries.getKey().equals("x-request-id"))
+                    xRequestId = values.toString();
                 responseHeaders.add(String.format("\t\t%s: %s", entries.getKey(), values));
             }
 
@@ -230,7 +233,7 @@ public class Http {
 //            if (responseMessage.length() > 10000)
 //                log(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
 //            else
-            log.debug(String.format("RESPONSE: %s\n\n", stringPrettyFormat(responseMessage)));
+            log.debug(String.format("RESPONSE (%s): %s\n\n", xRequestId, stringPrettyFormat(responseMessage)));
 //            if (isLogged) {
 //                log.debug(sbLog.toString());
 //            }
