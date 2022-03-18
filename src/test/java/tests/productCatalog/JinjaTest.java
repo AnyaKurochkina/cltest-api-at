@@ -10,6 +10,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.productCatalog.Jinja2;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Jinja2")
+@DisabledIfEnv("prod")
 public class JinjaTest extends Tests {
 
     private static final String JINJA_NAME = "jinja_template_test_api-:2022.";

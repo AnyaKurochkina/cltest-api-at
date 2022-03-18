@@ -12,6 +12,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Направления")
+@DisabledIfEnv("prod")
 public class OrgDirectionTest extends Tests {
 
     private static final String ORG_DIRECTION_NAME = "org_direction_at_test-:2022.";

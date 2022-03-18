@@ -11,6 +11,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Template;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны")
 @Tag("product_catalog")
+@DisabledIfEnv("prod")
 public class TemplatesTest extends Tests {
 
     Template template;
