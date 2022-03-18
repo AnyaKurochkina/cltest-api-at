@@ -14,6 +14,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.ItemVisualTemplates;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
@@ -30,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны отображения")
 @Tag("product_catalog")
+@DisabledIfEnv("prod")
 public class VisualTemplateTest extends Tests {
 
     private static final String VISUAL_TEMPLATE_NAME = "item_visual_template_test_api-:2022.";

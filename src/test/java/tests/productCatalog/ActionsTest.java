@@ -12,6 +12,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
+@DisabledIfEnv("prod")
 public class ActionsTest extends Tests {
 
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("actions/", "productCatalog/actions/createAction.json");

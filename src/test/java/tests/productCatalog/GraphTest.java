@@ -18,6 +18,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Graph;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
@@ -32,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Графы")
+@DisabledIfEnv("prod")
 public class GraphTest extends Tests {
 
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
