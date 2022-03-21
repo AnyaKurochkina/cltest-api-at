@@ -266,11 +266,20 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
+    @Step("Получение домена для сегмента сети {netSegment}")
     public static String getDomainBySegment(IProduct product, String netSegment) {
-        log.info("Получение домена для сегмента сети " + netSegment);
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
                 .get("domains?net_segment_code={}&page=1&per_page=25", netSegment)
+                .assertStatus(200)
+                .jsonPath()
+                .get("list.collect{e -> e}.shuffled()[0].code");
+    }
+
+    @Step("Получение домена для проекта {project}")
+    public static String getDomainByProject(String project) {
+        return new Http(OrderServiceURL)
+                .get("domains?project_name={}&with_deleted=false&page=1&per_page=25", project)
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.collect{e -> e}.shuffled()[0].code");

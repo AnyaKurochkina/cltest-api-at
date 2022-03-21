@@ -11,6 +11,7 @@ import models.Entity;
 import models.authorizer.Project;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class AccessGroup extends Entity {
     String projectName;
     String description;
     List<String> users;
+    String domain;
 
     @Step("Добавление пользователя в группу доступа")
     public void addUser(String user){
@@ -46,6 +48,8 @@ public class AccessGroup extends Entity {
             description = projectName;
         if(users == null)
             users = new ArrayList<>();
+        if (domain == null)
+            domain = OrderServiceSteps.getDomainByProject(projectName);
         return this;
     }
 
@@ -54,6 +58,7 @@ public class AccessGroup extends Entity {
                 .set("$.access_group.name", name)
                 .set("$.access_group.description", description)
                 .set("$.access_group.project_name", projectName)
+                .set("$.access_group.domain", domain)
                 .build();
     }
 
