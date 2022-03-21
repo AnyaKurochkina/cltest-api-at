@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.authorizer.Project;
 import models.authorizer.User;
+import models.authorizer.UserItem;
 import models.authorizer.UserList;
 import models.tarifficator.TariffPlan;
 import steps.Steps;
@@ -76,7 +77,7 @@ public class AuthorizerSteps extends Steps {
     }
 
     @Step("Получение пользователя из LDAP")
-    public static String getUserList(Project project, String username) {
+    public static String getLDAPUserList(Project project, String username) {
         return new Http(PortalBackURL)
                 .get("users?q={}&project_name={}", username, project.getId())
                 .assertStatus(200)
@@ -86,9 +87,9 @@ public class AuthorizerSteps extends Steps {
 
     @SneakyThrows
     @Step("Получение списка пользователей")
-    public static List<User> getUserList(String projectId) {
+    public static List<UserItem> getUserList(String projectId) {
         @SuppressWarnings (value="unchecked")
-        List<User> users = (List<User>) listEntities(AuthorizerURL + "projects/" + projectId + "/users?", User.class);
+        List<UserItem> users = (List<UserItem>) listEntities(AuthorizerURL + "projects/" + projectId + "/users?", UserItem.class);
         return users;
     }
 
