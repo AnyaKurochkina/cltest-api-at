@@ -4,6 +4,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.authorizer.User;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -22,5 +23,14 @@ public class UserTest extends Tests {
     @DisplayName("Добавление пользователя")
     void addUser() {
         User.builder().build().createObject();
+    }
+
+    @Order(2)
+    @Test
+    @TmsLink("747955")
+    @MarkDelete
+    @DisplayName("Удаление пользователя")
+    void deleteUser() {
+        User.builder().build().createObjectExclusiveAccess().deleteObject();
     }
 }

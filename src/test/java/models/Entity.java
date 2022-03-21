@@ -47,7 +47,7 @@ public abstract class Entity implements AutoCloseable {
     }
 
     @SneakyThrows
-    public void deleteObject() {
+    void deleteObjectV2(){
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
         if (objectPoolEntity.getStatus() == ObjectStatus.DELETED)
             return;
@@ -62,6 +62,19 @@ public abstract class Entity implements AutoCloseable {
         }
     }
 
+    @SneakyThrows
+    public void deleteObject() {
+        ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
+        if (objectPoolEntity.getStatus() == ObjectStatus.DELETED)
+            return;
+        if(objectPoolEntity.getStatus() == ObjectStatus.FAILED_DELETE)
+            throw objectPoolEntity.getError();
+        try {
+            delete();
+        } finally {
+            objectPoolEntity.setStatus(ObjectStatus.DELETED);
+        }
+    }
 
     public <T extends Entity> T createObject() {
         return createObject(false, true);

@@ -25,7 +25,7 @@ public abstract class Steps {
 
     @JsonIgnore
     @SneakyThrows
-    protected static List<? extends Entity> listEntities(String url, Class<?> clazz) {
+    protected static List<?> listEntities(String url, Class<?> clazz) {
         ObjectMapper objectMapper = JsonHelper.getCustomObjectMapper();
         JavaType typeList = objectMapper.getTypeFactory().constructCollectionType(List.class, clazz);
         List<? extends Entity> entityList = new ArrayList<>();
