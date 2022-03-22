@@ -41,7 +41,7 @@ public class TariffPlan extends Entity {
 
     @SneakyThrows
     public JSONObject toJson() {
-        return new JSONObject("{\"id\": \"" + id + "\", \"tariff_plan\":" + JsonHelper.getCustomObjectMapper().writeValueAsString(this) + "}");
+        return new JSONObject("{\"tariff_plan\":" + JsonHelper.getCustomObjectMapper().writeValueAsString(this) + "}");
     }
 
     @Override
