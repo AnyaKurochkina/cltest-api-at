@@ -11,7 +11,7 @@ import models.authorizer.Organization;
 import org.json.JSONObject;
 import steps.tarifficator.TariffPlanSteps;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Builder
@@ -51,7 +51,7 @@ public class TariffPlan extends Entity {
     @Override
     public Entity init() {
         if (title == null)
-            title = "AT " + new Date();
+            title = "AT " + new java.util.Date();
         if (base == null)
             base = true;
         if (oldTariffPlanId == null) {
