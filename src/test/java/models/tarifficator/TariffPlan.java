@@ -41,23 +41,24 @@ public class TariffPlan extends Entity {
 
     @SneakyThrows
     public JSONObject toJson() {
-        return new JSONObject("{\"tariff_plan\":" + JsonHelper.getCustomObjectMapper().writeValueAsString(this) + "}");
+        return new JSONObject("{\"id\": \"" + id + "\", \"tariff_plan\":" + JsonHelper.getCustomObjectMapper().writeValueAsString(this) + "}");
     }
 
     @Override
-    protected void delete() {}
+    protected void delete() {
+    }
 
     @Override
     public Entity init() {
-        if(title == null)
+        if (title == null)
             title = "AT " + new Date();
-        if(base == null)
+        if (base == null)
             base = true;
-        if(oldTariffPlanId == null) {
+        if (oldTariffPlanId == null) {
             TariffPlan activeTariff = TariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
             oldTariffPlanId = activeTariff.getId();
         }
-        if(!base && organizationName == null) {
+        if (!base && organizationName == null) {
             organizationName = ((Organization) Organization.builder().build().createObject()).getName();
         }
         return this;
@@ -73,7 +74,6 @@ public class TariffPlan extends Entity {
                 .toString();
         StringUtils.copyAvailableFields(TariffPlanSteps.deserialize(object, TariffPlan.class), this);
     }
-
 
 
 }
