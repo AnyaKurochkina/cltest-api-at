@@ -10,8 +10,10 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Log4j2
 @Builder
@@ -58,7 +60,7 @@ public class Action extends Entity {
                 .assertStatus(201)
                 .extractAs(CreateActionResponse.class)
                 .getId();
-        Assertions.assertNotNull(actionId, "Экшен с именем: " + actionName + ", не создался");
+        assertNotNull(actionId, "Экшен с именем: " + actionName + ", не создался");
     }
 
     @Override
@@ -68,6 +70,6 @@ public class Action extends Entity {
                 .delete(productName + actionId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(actionName));
+        assertFalse(productCatalogSteps.isExists(actionName));
     }
 }

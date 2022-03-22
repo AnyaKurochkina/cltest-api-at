@@ -9,7 +9,6 @@ import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
-import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.AllArgsConstructor;
@@ -241,6 +240,7 @@ public class ProductCatalogSteps {
                 .delete(url + id + "/");
     }
 
+    @Step("Получение списка объектов продуктового каталога по фильтру")
     public List<ItemImpl> getProductObjectList(Class<?> clazz, String filter) {
         return ((GetListImpl) new Http(ProductCatalogURL)
                 .get(productName + filter)
@@ -262,6 +262,15 @@ public class ProductCatalogSteps {
                 .extractAs(clazz);
     }
 
+    @Step("Получение списка объектов продуктового каталога по именам")
+    public GetListImpl getListObjectsByName(Class<?> clazz, String... name) {
+        String names = String.join(",", name);
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?name__in=" + names)
+                .assertStatus(200)
+                .extractAs(clazz);
+    }
+
     @Step("Получение объекта продуктового каталога по title")
     public GetListImpl getObjectByTitle(String title, Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
@@ -271,11 +280,10 @@ public class ProductCatalogSteps {
     }
 
     @Step("Получение info продукта")
-    public GetProductResponse getInfoProduct(String id) {
+    public Response getInfoProduct(String id) {
         return new Http(ProductCatalogURL)
                 .get(productName + id + "/info/")
-                .assertStatus(200)
-                .extractAs(GetProductResponse.class);
+                .assertStatus(200);
     }
 
     @Step("Получение шаблона визуализации по event_type и event_provider")
@@ -304,7 +312,7 @@ public class ProductCatalogSteps {
 
     @Step("Получение объекта продуктового каталога по имени с публичным токеном")
     public Response getObjectByNameWithPublicToken(String name) {
-        return  new Http(ProductCatalogURL)
+        return new Http(ProductCatalogURL)
                 .setRole(Role.VIEWER)
                 .get(productName + "?name=" + name);
     }
@@ -324,6 +332,7 @@ public class ProductCatalogSteps {
                 .body(object)
                 .patch(productName + id + "/");
     }
+
     @Step("Удаление объекта продуктового каталога с публичным токеном")
     public Response deleteObjectWithPublicToken(String id) {
         return new Http(ProductCatalogURL)

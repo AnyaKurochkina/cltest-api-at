@@ -8,6 +8,7 @@ import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.*;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
+import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -310,6 +311,69 @@ public class VisualTemplateTest extends Tests {
         );
     }
 
+    @Order(94)
+    @DisplayName("Получение списка шаблонов визуализации по is_active")
+    @TmsLink("")
+    @Test
+    public void getVisualTemplateListByIsActive() {
+        ItemVisualTemplates.builder().name("get_visual_template_list_by_is_active")
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(false)
+                .build()
+                .createObject();
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetVisualTemplateListResponse.class,
+                "?is_active=false");
+        for (ItemImpl item : list) {
+            ListItem listItem = (ListItem) item;
+            assertFalse(listItem.getIsActive());
+        }
+    }
+
+    @Order(95)
+    @DisplayName("Получение списка шаблонов визуализации по провайдеру")
+    @TmsLink("")
+    @Test
+    public void getVisualTemplateListByEventProvider() {
+        ItemVisualTemplates.builder().name("get_visual_template_list_by_provider")
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(false)
+                .build()
+                .createObject();
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetVisualTemplateListResponse.class,
+                "?event_provider=docker");
+        for (ItemImpl item : list) {
+            ListItem listItem = (ListItem) item;
+            assertTrue(listItem.getEventProvider().contains("docker"));
+        }
+    }
+
+    @Order(96)
+    @DisplayName("Получение списка шаблонов визуализации по типу")
+    @TmsLink("")
+    @Test
+    public void getVisualTemplateListByEventType() {
+        List<String> eventType = Collections.singletonList("app");
+        ItemVisualTemplates.builder().name("get_visual_template_list_by_type")
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(eventType)
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(false)
+                .build()
+                .createObject();
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetVisualTemplateListResponse.class, "?event_type=app");
+        for (ItemImpl item : list) {
+            ListItem listItem = (ListItem) item;
+            assertTrue(listItem.getEventType().contains("app"));
+        }
+    }
+
     @Order(97)
     @DisplayName("Негативный тест на создание шаблона отображения без обязательного параметра status и статусом is_active true")
     @TmsLink("742493")
@@ -344,7 +408,7 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("643674")
     @Test
     public void deleteTemplate() {
-            productCatalogSteps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
-            visualTemplates.deleteObject();
+        productCatalogSteps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
+        visualTemplates.deleteObject();
     }
 }
