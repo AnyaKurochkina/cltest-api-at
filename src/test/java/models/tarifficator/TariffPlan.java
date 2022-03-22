@@ -11,7 +11,7 @@ import models.authorizer.Organization;
 import org.json.JSONObject;
 import steps.tarifficator.TariffPlanSteps;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 @Builder
