@@ -147,12 +147,14 @@ public abstract class IProduct extends Entity {
     @SneakyThrows
     protected void checkConnectDb(String dbName, String user, String password, String url) {
         String connectUrl = "jdbc:" + url + "/" + dbName;
+        Connection connection = null;
         try {
-            Connection connection = DriverManager.getConnection(connectUrl, user, password);
+            connection = DriverManager.getConnection(connectUrl, user, password);
             Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось по url: " + connectUrl).isValid(1));
         } catch (Exception e) {
             throw new Exception("Ошибка подключения к " + getProductName() + " по url " + connectUrl + " : " + e);
         }
+        connection.close();
         log.debug("Успешное подключение к " + getProductName());
     }
 
