@@ -2,13 +2,13 @@ package httpModels.productCatalog.product.getProducts.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.product.getProduct.response.Info;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Data
@@ -93,7 +93,7 @@ public class ListItem implements ItemImpl {
     private String version_changed_by_user;
 
     @JsonProperty("info")
-    private Info info;
+    private Map<String, String> info;
 
     @JsonProperty("create_dt")
     private String create_dt;
