@@ -18,8 +18,6 @@ import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Пример")
@@ -141,7 +139,7 @@ public class ExampleTest extends Tests {
                 .description("desc_multisearch_example_test_api")
                 .build()
                 .createObject();
-        String exampleId = steps.getProductObjectIdByNameWithMultiSearch(createExample.getName(), CreateExampleResponse.class);
+        String exampleId = steps.getProductObjectIdByNameWithMultiSearch(createExample.getName(), GetExampleListResponse.class);
         assertAll(
                 () -> assertNotNull(exampleId, String.format("Пример с именем: %s не найден", createExample.getName())),
                 () -> assertEquals(createExample.getId(), exampleId, "Id примера не совпадают"));
