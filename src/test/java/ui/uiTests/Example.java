@@ -37,7 +37,13 @@ public class Example {
         OrganizationPage organizationPage = new OrganizationPage();
         organizationPage.checkPage(fullOrgName);
         organizationPage.createVirtualDataCentre();
-        mainPage.getNotificationBar().shouldNotHave(Condition.text("Request failed with status code 502"));
+        VmWareDataCentreCreationPage vmWareDataCentreCreationPage = new VmWareDataCentreCreationPage();
+        vmWareDataCentreCreationPage
+                .setNameDataCentre(randomAlphabetic(5).toLowerCase(Locale.ROOT))
+                .setIpV4Value(10)
+                .setCpuValue(14)
+                .setWidthValue(15)
+                .setRamValue(35);
         listOfOrganizationsPage.deleteOrganization(fullOrgName);
     }
 

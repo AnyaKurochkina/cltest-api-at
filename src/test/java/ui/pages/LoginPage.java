@@ -6,8 +6,12 @@ import org.openqa.selenium.By;
 import ui.uiInterfaces.Loadable;
 
 import static com.codeborne.selenide.Selenide.$;
+import static core.helper.Configure.getAppProp;
 
 public class LoginPage implements Loadable {
+
+    private static final String login = getAppProp("user.login");
+    private static final String password = getAppProp("user.password");
 
     private final SelenideElement usernameInput = $(By.xpath("//input[@id='username']"));
     private final SelenideElement passwordInput = $(By.xpath("//input[@id='password']"));
@@ -25,8 +29,8 @@ public class LoginPage implements Loadable {
 
     public void singIn(){
         //:TODO поменять на универсальное получение логина и пароля
-        usernameInput.shouldBe(Condition.visible).val("portal_admin");
-        passwordInput.shouldBe(Condition.visible).val("portal_admin");
+        usernameInput.shouldBe(Condition.visible).val(login);
+        passwordInput.shouldBe(Condition.visible).val(password);
         passwordInput.shouldBe(Condition.visible).submit();
     }
 
