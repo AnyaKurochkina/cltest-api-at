@@ -1,17 +1,18 @@
 package ui.uiTests;
 
 import com.codeborne.selenide.Condition;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
+import ui.pages.*;
 import ui.uiExtesions.ConfigExtension;
-import ui.pages.LoginPage;
-import ui.pages.MainPage;
-import ui.pages.OrganizationsPage;
 
 import java.util.Locale;
 
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.open;
 import static core.utils.Waiting.sleep;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -19,6 +20,7 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 @ExtendWith(ConfigExtension.class)
 public class Example {
 
+    @DisplayName("Создание VmWare организации")
     @Test
     public void createOrg() {
         open("/");
@@ -26,12 +28,38 @@ public class Example {
         loginPage.singIn();
         MainPage mainPage = new MainPage();
         mainPage.goToListOfOrganizations();
-        OrganizationsPage organizationsPage = new OrganizationsPage();
-        String name = randomAlphabetic(5);
-        String nameOfOrg = (organizationsPage.getCurrentOrgName() + "-" + name).toLowerCase(Locale.ROOT);
-        organizationsPage.createOrganization(name);
-        organizationsPage.checkPage();
-        organizationsPage.deleteOrganization(nameOfOrg);
+        ListOfOrganizationsPage listOfOrganizationsPage = new ListOfOrganizationsPage();
+        String orgName = randomAlphabetic(5);
+        String fullOrgName = (listOfOrganizationsPage.getCurrentOrgName() + "-" + orgName).toLowerCase(Locale.ROOT);
+        listOfOrganizationsPage.createOrganization(orgName);
+        listOfOrganizationsPage.checkPage();
+        listOfOrganizationsPage.stepInOrganization(fullOrgName);
+        OrganizationPage organizationPage = new OrganizationPage();
+        organizationPage.checkPage(fullOrgName);
+        organizationPage.createVirtualDataCentre();
+        mainPage.getNotificationBar().shouldNotHave(Condition.text("Request failed with status code 502"));
+        listOfOrganizationsPage.deleteOrganization(fullOrgName);
+    }
+
+    @DisplayName("Удаление VmWare организации")
+    @Test
+    public void deleteOrg() {
+        open("/");
+        LoginPage loginPage = new LoginPage();
+        loginPage.singIn();
+        MainPage mainPage = new MainPage();
+        mainPage.goToListOfOrganizations();
+        ListOfOrganizationsPage listOfOrganizationsPage = new ListOfOrganizationsPage();
+        String orgName = randomAlphabetic(5);
+        String fullOrgName = (listOfOrganizationsPage.getCurrentOrgName() + "-" + orgName).toLowerCase(Locale.ROOT);
+        listOfOrganizationsPage.createOrganization(orgName);
+        listOfOrganizationsPage.checkPage();
+        listOfOrganizationsPage.stepInOrganization(fullOrgName);
+        OrganizationPage organizationPage = new OrganizationPage();
+        organizationPage.checkPage(fullOrgName);
+        organizationPage.createVirtualDataCentre();
+        mainPage.getNotificationBar().shouldNotHave(Condition.text("Request failed with status code 502"));
+        listOfOrganizationsPage.deleteOrganization(fullOrgName);
     }
 
     @Test

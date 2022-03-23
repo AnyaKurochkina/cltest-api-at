@@ -11,7 +11,7 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.*;
 
-public class OrganizationsPage implements Loadable {
+public class ListOfOrganizationsPage implements Loadable {
 
     private final SelenideElement plusBtn = $(By.xpath("//div[@data-testid='vdc-org-list-add-button']"));
     private final SelenideElement orgNameInput = $(By.xpath("//input[@name='name']"));
@@ -24,7 +24,7 @@ public class OrganizationsPage implements Loadable {
     private final SelenideElement confirmDeleBtn = $(By.xpath("//*[text()='Удалить']"));
     private final SelenideElement notificationBar = $(By.xpath("//div[@id='notistack-snackbar']"));
 
-    public OrganizationsPage() {
+    public ListOfOrganizationsPage() {
         checkPage();
     }
 
@@ -41,18 +41,38 @@ public class OrganizationsPage implements Loadable {
         $(By.cssSelector(".MuiCircularProgress-svg")).shouldBe(Condition.disappear);
     }
 
-    public void deleteOrganization(String orgName){
-        for (SelenideElement element: allOrganizations){
+    public void deleteOrganization(String orgName) {
+        for (SelenideElement element : allOrganizations) {
             if (element.$(By.cssSelector(".MuiTableCell-alignLeft"))
-                    .getText().equals(orgName)){
+                    .getText().equals(orgName)) {
                 element.$(By.cssSelector("div[title='Удалить']")).shouldBe(Condition.enabled).click();
                 break;
             }
         }
         idForDeleteInput.shouldBe(Condition.visible).val(idForDelete.getText());
         confirmDeleBtn.shouldBe(Condition.enabled).click();
-        notificationBar.shouldBe(Condition.visible).shouldHave(Condition.text("VMware организация "+ orgName +" удалена успешно"));
-        notificationBar.shouldBe(Condition.disappear, Duration.ofMillis(15000));
+        notificationBar.shouldBe(Condition.visible).shouldHave(Condition.text("VMware организация " + orgName + " удалена успешно"));
+    }
+
+    public void deleteAllOrganizations() {
+        for (int i = 0; i<20; i++) {
+            for (int j = 0; j<1; j++) {
+                allOrganizations.get(2).$(By.cssSelector("div[title='Удалить']")).shouldBe(Condition.enabled).click();
+                idForDeleteInput.shouldBe(Condition.visible).val(idForDelete.getText());
+                confirmDeleBtn.shouldBe(Condition.enabled).click();
+                sleep(2000);
+            }
+        }
+    }
+
+    public void stepInOrganization(String orgName) {
+        for (SelenideElement element : allOrganizations) {
+            if (element.$(By.cssSelector(".MuiTableCell-alignLeft"))
+                    .getText().equals(orgName)) {
+                element.$(By.cssSelector(".MuiTableCell-alignLeft")).shouldBe(Condition.enabled).click();
+                break;
+            }
+        }
     }
 
     @Override

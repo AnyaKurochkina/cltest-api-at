@@ -14,7 +14,6 @@ import java.io.File;
 import static com.codeborne.selenide.Configuration.baseUrl;
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static core.helper.Configure.getAppProp;
-
 import static ui.selenoidUtils.SelenoidUtils.isRemote;
 
 public class ConfigExtension implements  BeforeEachCallback, AfterEachCallback {

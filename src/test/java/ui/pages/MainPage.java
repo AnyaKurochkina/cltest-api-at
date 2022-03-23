@@ -2,6 +2,7 @@ package ui.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import lombok.Getter;
 import org.openqa.selenium.By;
 import ui.uiInterfaces.Loadable;
 
@@ -11,6 +12,8 @@ public class MainPage implements Loadable {
 
     private final SelenideElement cloudDirectorBtn = $(By.xpath("//a[@href='/vcloud/orgs']"));
     private final SelenideElement orgStructureBtn = $(By.xpath("//*[text()='Орг. структура']"));
+    @Getter
+    private final SelenideElement notificationBar = $(By.xpath("//div[@id='notistack-snackbar']"));
 
     public MainPage() {
         checkPage();
