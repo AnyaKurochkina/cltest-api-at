@@ -354,6 +354,30 @@ public class ProductsTest extends Tests {
                 ".d0-oscp.corp.dev.vtb/products/?is_open=true&env=dev&information_systems=c9fd31c7-25a5-45ca-863c-18425d1ae927&page=1&per_page=100"));
     }
 
+    @Order(80)
+    @DisplayName("Сортировка продуктов по статусу")
+    @TmsLink("")
+    @Test
+    public void orderingByStatus() {
+        List<ItemImpl> list = productCatalogSteps.orderingByStatus(GetProductsResponse.class).getItemsList();
+        boolean result = false;
+        int count = 0;
+        for (int i = 0; i < list.size() - 1; i++) {
+            ListItem item = (ListItem) list.get(i);
+            ListItem nextItem = (ListItem) list.get(i + 1);
+            if (item.getIsOpen().equals(nextItem.getIsOpen())) {
+                result = true;
+            } else {
+                count++;
+            }
+            if (count > 1) {
+                result = false;
+                break;
+            }
+        }
+        assertTrue(result, "Список не отсортирован.");
+    }
+
     @Order(96)
     @DisplayName("Получение списка продуктов по фильтру is_open")
     @TmsLink("")

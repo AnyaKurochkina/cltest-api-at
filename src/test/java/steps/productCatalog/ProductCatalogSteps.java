@@ -310,6 +310,14 @@ public class ProductCatalogSteps {
                 .extractAs(clazz);
     }
 
+    @Step("Сортировка объектов по статусу")
+    public GetListImpl orderingByStatus(Class<?> clazz) {
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?ordering=status")
+                .assertStatus(200)
+                .extractAs(clazz);
+    }
+
     @Step("Получение объекта продуктового каталога по имени с публичным токеном")
     public Response getObjectByNameWithPublicToken(String name) {
         return new Http(ProductCatalogURL)
