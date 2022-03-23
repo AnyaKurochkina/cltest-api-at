@@ -70,7 +70,7 @@ public class Pipeline {
                 externalIds.add(externalId);
                 writer.println(externalId + "=" + result.query("/configuration/id"));
             }
-            String command = "-Dmaven.test.skip=false -Dsecret=123456 -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestRunId=" + argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
+            String command = "-DfailIfNoTests=false -Dmaven.test.skip=false -Dsecret=123456 -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestRunId=" + argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
             System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");
             System.out.println("##teamcity[publishArtifacts '" + pathTestResourcesDir + "/configurations.txt => configurations']");
         }
