@@ -60,6 +60,7 @@ public class JsonHelper {
         return gsonBuilder.create().toJson(e, e.getClass());
     }
 
+    @SuppressWarnings("deprecation")
     public static ObjectMapper getCustomObjectMapper()  {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);

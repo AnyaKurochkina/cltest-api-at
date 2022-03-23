@@ -1,6 +1,7 @@
 package core.helper.http;
 
 import core.enums.Role;
+import core.helper.Configure;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import lombok.SneakyThrows;
@@ -128,7 +129,9 @@ public class Http {
     }
 
     public Http setProjectId(String projectId) {
-        this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId);
+        //TODO: временный костыль
+        if(!Configure.ENV.equals("dev"))
+            this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId);
         return this;
     }
 
