@@ -171,6 +171,8 @@ public class Http {
             }
             break;
         }
+        if(Objects.isNull(response))
+            Assertions.fail(String.format("Ошибка отправки http запроса %s. (Connection refused)", (host + path)));
         return response;
     }
 
