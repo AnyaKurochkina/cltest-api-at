@@ -30,6 +30,7 @@ import steps.tarifficator.CostSteps;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -255,7 +256,7 @@ public abstract class IProduct extends Entity {
         log.info("Отправка запроса на создание заказа " + productName);
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .body(toJson())
+                .body(deleteObjectIfNotFoundInUiSchema(toJson(), getProductId()))
                 .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
@@ -265,6 +266,18 @@ public abstract class IProduct extends Entity {
         compareCostOrderAndPrice();
     }
 
+    @SneakyThrows
+    private JSONObject deleteObjectIfNotFoundInUiSchema(JSONObject jsonObject, String productId) {
+        GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(productId, GetProductResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
+        List<String> parameters = (List<String>) graphResponse.getUiSchema().get("ui:order");
+        Iterator<String> iterator = jsonObject.getJSONObject("order").getJSONObject("attrs").keys();
+        while (iterator.hasNext()) {
+            if(!parameters.contains(iterator.next()))
+                iterator.remove();
+        }
+        return jsonObject;
+    }
 
 //    @SneakyThrows
 //    public void toStringProductStep() {

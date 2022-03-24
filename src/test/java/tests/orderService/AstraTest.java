@@ -19,7 +19,7 @@ public class AstraTest extends Tests {
 
     @TmsLink("391703")
     @Tag("actions")
-    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Astra product) {
         //noinspection EmptyTryBlock
