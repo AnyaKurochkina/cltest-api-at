@@ -40,6 +40,7 @@ public class Http {
     private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
     private String fileName;
     private byte[] bytes;
+    boolean isLogged = true;
     Map<String, String> headers = new HashMap<>();
 
     static {
@@ -57,7 +58,7 @@ public class Http {
     }
 
     public Http disableAttachmentLog() {
-//        this.isLogged = false;
+        this.isLogged = false;
         return this;
     }
 
@@ -173,11 +174,6 @@ public class Http {
         return response;
     }
 
-//    private void log(String str) {
-//        if (isLogged)
-//            sbLog.append(str);
-//    }
-
     private Response filterRequest() {
         HttpURLConnection http;
         List<String> responseHeaders = new ArrayList<>();
@@ -199,12 +195,14 @@ public class Http {
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
-            log.debug(String.format("%s URL: %s\n", method, (host + path)));
+            if(isLogged)
+                log.debug(String.format("%s URL: %s\n", method, (host + path)));
             if (field.length() > 0) {
                 addFilePart(http.getOutputStream(), fileName, bytes);
             } else {
                 if (body.length() > 0 || method.equals("POST")) {
-                    log.debug(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
+                    if(isLogged)
+                        log.debug(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
                     http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
                 }
             }
@@ -233,13 +231,9 @@ public class Http {
             }
 
             http.disconnect();
-//            if (responseMessage.length() > 10000)
-//                log(String.format("RESPONSE: %s ...\n\n", stringPrettyFormat(responseMessage.substring(0, 10000))));
-//            else
-            log.debug(String.format("RESPONSE (%s): %s\n\n", xRequestId, stringPrettyFormat(responseMessage)));
-//            if (isLogged) {
-//                log.debug(sbLog.toString());
-//            }
+            if(isLogged)
+                log.debug(String.format("RESPONSE (%s): %s\n\n", xRequestId, stringPrettyFormat(responseMessage)));
+
         } catch (Exception e) {
             Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
         } finally {
