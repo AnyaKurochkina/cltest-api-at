@@ -52,7 +52,6 @@ public class Project extends Entity {
     }
 
     public JSONObject toJson() {
-        log.debug("{}{}{}{}", informationSystem, projectEnvironmentPrefix.getProjectEnvironmentId(), prefix, projectEnvironmentPrefix.getDescription());
         return JsonHelper.getJsonTemplate("/structure/create_project.json")
                 .set("$.project.title", projectName)
                 .set("$.project.information_system_id", Objects.requireNonNull(informationSystem))
