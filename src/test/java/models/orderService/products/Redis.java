@@ -103,6 +103,7 @@ public class Redis extends IProduct {
     public void resetPassword() {
         String password = "yxjpjk7xvOImb1O9vZZiGUlsItkqLqtbB1VPZHzL6";
         OrderServiceSteps.executeAction("reset_redis_password", this, new JSONObject(String.format("{redis_password: \"%s\"}", password)), this.getProjectId());
+        redisPassword = password;
     }
 
     public void restart() {
