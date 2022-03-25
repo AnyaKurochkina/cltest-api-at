@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Assertions;
 import steps.authorizer.ProjectSteps;
 import steps.portalBack.PortalBackSteps;
 
+import java.util.Objects;
+
 @Builder
 @Getter
 @Setter
@@ -50,9 +52,9 @@ public class Project extends Entity {
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("/structure/create_project.json")
                 .set("$.project.title", projectName)
-                .set("$.project.information_system_id", informationSystem)
-                .set("$.project.project_environment_id", projectEnvironmentPrefix.getProjectEnvironmentId())
-                .set("$.project.environment_prefix_id", prefix)
+                .set("$.project.information_system_id", Objects.requireNonNull(informationSystem))
+                .set("$.project.project_environment_id", Objects.requireNonNull(projectEnvironmentPrefix.getProjectEnvironmentId()))
+                .set("$.project.environment_prefix_id", Objects.requireNonNull(prefix))
                 .build();
     }
 
