@@ -6,7 +6,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.authorizer.InformationSystem;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
+import models.authorizer.ProjectEnvironmentPrefix;
 import models.portalBack.AccessGroup;
 import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
@@ -52,7 +52,7 @@ public class AccessGroupTest extends Tests {
     @DisplayName("Добавление пользователя в группу доступа для среды TEST")
     void addUserAccessGroupTest() {
         String informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
-        ProjectEnvironment projectEnvironment = PortalBackSteps.getProjectEnvironment("TEST", informationSystem);
+        ProjectEnvironmentPrefix projectEnvironment = PortalBackSteps.getProjectEnvironmentPrefix("TEST", informationSystem);
         Project project = Project.builder()
                 .projectEnvironment(projectEnvironment)
                 .build().createObject();
@@ -66,7 +66,7 @@ public class AccessGroupTest extends Tests {
     @DisplayName("Добавление пользователя в группу доступа для среды DEV")
     void addUserAccessGroupDev() {
         Project project = Project.builder()
-                .projectEnvironment(new ProjectEnvironment("DEV")).build().createObject();
+                .projectEnvironment(new ProjectEnvironmentPrefix("DEV")).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").projectName(project.getId()).build().createObject();
         AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(project, "VTB4043473"));
     }

@@ -20,7 +20,7 @@ public class Project extends Entity {
     @ToString.Include
     public String id;
     public String informationSystem;
-    public ProjectEnvironment projectEnvironment;
+    public ProjectEnvironmentPrefix projectEnvironment;
     public String projectName;
     public Boolean isForOrders;
     public String prefix;
@@ -33,7 +33,7 @@ public class Project extends Entity {
             informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
         }
         if (projectEnvironment == null) {
-            projectEnvironment = PortalBackSteps.getProjectEnvironment("DEV", informationSystem);
+            projectEnvironment = PortalBackSteps.getProjectEnvironmentPrefix("DEV", informationSystem);
         }
         if (folderName == null) {
             folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();

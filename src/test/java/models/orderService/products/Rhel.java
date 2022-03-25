@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
+import models.authorizer.ProjectEnvironmentPrefix;
 import models.authorizer.GlobalUser;
 import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
@@ -39,7 +39,7 @@ public class Rhel extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/rhel.json";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
         if (projectId == null) {
             setProjectId(project.getId());
         }

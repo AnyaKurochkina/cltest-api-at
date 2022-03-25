@@ -14,8 +14,10 @@ import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 import tests.Tests;
 
 import java.nio.charset.StandardCharsets;
@@ -35,6 +37,11 @@ public class ElasticsearchTest extends Tests {
         //noinspection EmptyTryBlock
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
         }
+    }
+
+    @Test
+    void test(){
+        PortalBackSteps.getProjectEnvironmentPrefix("DEV", "8e33baf8-e181-457b-9d60-e5dc470fe8fa");
     }
 
     @TmsLink("401283")

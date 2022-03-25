@@ -7,7 +7,7 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
+import models.authorizer.ProjectEnvironmentPrefix;
 import models.orderService.interfaces.IProduct;
 import models.productCatalog.Product;
 import org.json.JSONArray;
@@ -90,7 +90,7 @@ public class CostSteps extends Steps {
 
     public static Float getPreBillingCostPath(IProduct product, String path) {
         Project project = Project.builder()
-                .projectEnvironment(new ProjectEnvironment(product.getEnv()))
+                .projectEnvironment(new ProjectEnvironmentPrefix(product.getEnv()))
                 .isForOrders(true)
                 .build()
                 .createObject();
@@ -143,7 +143,7 @@ public class CostSteps extends Steps {
     @Step("Получение предварительной стоимости продукта {product}")
     public static JSONArray getCost(IProduct product) {
         Project project = Project.builder()
-                .projectEnvironment(new ProjectEnvironment(product.getEnv()))
+                .projectEnvironment(new ProjectEnvironmentPrefix(product.getEnv()))
                 .isForOrders(true)
                 .build()
                 .createObject();

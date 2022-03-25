@@ -10,7 +10,7 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
+import models.authorizer.ProjectEnvironmentPrefix;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
@@ -383,7 +383,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Удаление всех заказов")
     public static void deleteOrders(String env) {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(Objects.requireNonNull(env)))
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironmentPrefix(Objects.requireNonNull(env)))
                 .isForOrders(true).build().createObject();
         List<String> orders = new Http(OrderServiceURL)
                 .setProjectId(project.id)

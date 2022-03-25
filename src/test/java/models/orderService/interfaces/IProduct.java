@@ -16,7 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.ObjectPoolService;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
+import models.authorizer.ProjectEnvironmentPrefix;
 import models.productCatalog.Graph;
 import models.productCatalog.Product;
 import models.subModels.Flavor;
@@ -238,7 +238,7 @@ public abstract class IProduct extends Entity {
     }
 
     protected void initProduct() {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        Project project = Project.builder().projectEnvironment(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
         if (projectId == null) {
             setProjectId(project.getId());
         }
