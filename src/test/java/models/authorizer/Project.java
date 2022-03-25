@@ -6,6 +6,7 @@ import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -18,6 +19,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@Log4j2
 public class Project extends Entity {
     @ToString.Include
     public String id;
@@ -50,6 +52,7 @@ public class Project extends Entity {
     }
 
     public JSONObject toJson() {
+        log.debug("{}{}{}{}", informationSystem, projectEnvironmentPrefix.getProjectEnvironmentId(), prefix, projectEnvironmentPrefix.getDescription());
         return JsonHelper.getJsonTemplate("/structure/create_project.json")
                 .set("$.project.title", projectName)
                 .set("$.project.information_system_id", Objects.requireNonNull(informationSystem))
