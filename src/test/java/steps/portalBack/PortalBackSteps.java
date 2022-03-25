@@ -33,17 +33,34 @@ public class PortalBackSteps extends Steps {
     @SneakyThrows
     @Step("Получение ProjectEnvironmentPrefix по envType {envType} и informationSystemId {informationSystemId}")
     public static ProjectEnvironmentPrefix getProjectEnvironmentPrefix(String envType, String informationSystemId) {
-        String folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
-        @SuppressWarnings(value = "unchecked")
-        List<ProjectEnvironmentPrefix> environmentPrefixes = (List<ProjectEnvironmentPrefix>) listEntities(PortalBackURL + "folders/" + folderName +
-                "/information_systems/" + informationSystemId + "/environment_prefixes?&reserved=false&status=available", ProjectEnvironmentPrefix.class, "list");
-        environmentPrefixes.forEach(PortalBackSteps::setEnvType);
+        List<ProjectEnvironmentPrefix> environmentPrefixes = getProjectEnvironmentPrefixes(informationSystemId);
         return environmentPrefixes
                 .stream()
                 .filter(e -> Objects.nonNull(e.getEnvType()))
                 .filter(e -> e.getEnvType().equals(envType.toUpperCase()))
                 .findFirst()
-                .orElseThrow(() -> new Exception("Не найден ProjectEnvironment с именем " + envType));
+                .orElseThrow(() -> new Exception("Не найден ProjectEnvironment с типом среды " + envType));
+    }
+
+    @SneakyThrows
+    @Step("Получение ProjectEnvironmentPrefix по env {env} и informationSystemId {informationSystemId}")
+    public static ProjectEnvironmentPrefix getProjectEnvironmentPrefixByEnv(String env, String informationSystemId) {
+        List<ProjectEnvironmentPrefix> environmentPrefixes = getProjectEnvironmentPrefixes(informationSystemId);
+        return environmentPrefixes
+                .stream()
+                .filter(e -> Objects.nonNull(e.getRisName()))
+                .filter(e -> e.getRisName().toUpperCase().startsWith(env.toUpperCase()))
+                .findFirst()
+                .orElseThrow(() -> new Exception("Не найден ProjectEnvironment со средой " + env));
+    }
+
+    public static List<ProjectEnvironmentPrefix> getProjectEnvironmentPrefixes(String informationSystemId) {
+        String folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
+        @SuppressWarnings(value = "unchecked")
+        List<ProjectEnvironmentPrefix> environmentPrefixes = (List<ProjectEnvironmentPrefix>) listEntities(PortalBackURL + "folders/" + folderName +
+                "/information_systems/" + informationSystemId + "/environment_prefixes?&reserved=false&status=available", ProjectEnvironmentPrefix.class, "list");
+        environmentPrefixes.forEach(PortalBackSteps::setEnvType);
+        return environmentPrefixes;
     }
 
     private static void setEnvType(ProjectEnvironmentPrefix environmentPrefix) {
