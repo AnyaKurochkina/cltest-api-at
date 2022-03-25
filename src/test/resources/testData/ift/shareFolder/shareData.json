@@ -7,10 +7,10 @@
     "id": "proj-ie2s5l0ycr",
     "projectName": "PROJECT_TEST",
     "prefix": "df8e9a1f-7bc2-4ada-9f92-005c1b5e59b3",
-    "projectEnvironment": {
+    "ProjectEnvironmentPrefix": {
       "env": "IFT",
       "envType": "TEST",
-      "id": "92f2acb2-aa33-4317-9352-dc1553e0097f"
+      "ProjectEnvironmentPrefixId": "92f2acb2-aa33-4317-9352-dc1553e0097f"
     },
     "isForOrders": true
   },
@@ -40,10 +40,10 @@
     "id": "proj-xazpppulba",
     "projectName": "PROJECT_DEV",
     "prefix": "2636779e-2ddc-4446-8cc4-ae1a71a23cd1",
-    "projectEnvironment": {
+    "ProjectEnvironmentPrefix": {
       "env": "DSO",
       "envType": "DEV",
-      "id": "395a0a01-e83a-4ede-80a5-7354f2a8db39"
+      "ProjectEnvironmentPrefixId": "395a0a01-e83a-4ede-80a5-7354f2a8db39"
     },
     "isForOrders": true
   },
