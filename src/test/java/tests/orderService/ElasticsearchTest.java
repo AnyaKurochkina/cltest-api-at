@@ -39,11 +39,6 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
-    @Test
-    void test(){
-        PortalBackSteps.getProjectEnvironmentPrefix("DEV", "8e33baf8-e181-457b-9d60-e5dc470fe8fa");
-    }
-
     @TmsLink("401283")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания. API Elasticsearch {0}")
