@@ -20,7 +20,7 @@ public class Project extends Entity {
     @ToString.Include
     public String id;
     public String informationSystem;
-    public ProjectEnvironmentPrefix projectEnvironment;
+    public ProjectEnvironmentPrefix projectEnvironmentPrefix;
     public String projectName;
     public Boolean isForOrders;
     public String prefix;
@@ -32,14 +32,14 @@ public class Project extends Entity {
         if (informationSystem == null) {
             informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
         }
-        if (projectEnvironment == null) {
-            projectEnvironment = PortalBackSteps.getProjectEnvironmentPrefix("DEV", informationSystem);
+        if (projectEnvironmentPrefix == null) {
+            projectEnvironmentPrefix = PortalBackSteps.getProjectEnvironmentPrefix("DEV", informationSystem);
         }
         if (folderName == null) {
             folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
         }
         if (prefix == null) {
-            prefix = ProjectSteps.getPrefixEnv(folderName, informationSystem, projectEnvironment.getId());
+            prefix = projectEnvironmentPrefix.getId();
         }
         if (projectName == null) {
             projectName = new Generex("project [0-9a-zA-Z]{5,15}").random();
@@ -51,7 +51,7 @@ public class Project extends Entity {
         return JsonHelper.getJsonTemplate("/structure/create_project.json")
                 .set("$.project.title", projectName)
                 .set("$.project.information_system_id", informationSystem)
-                .set("$.project.project_environment_id", projectEnvironment.getId())
+                .set("$.project.project_environment_id", projectEnvironmentPrefix.getProjectEnvironmentId())
                 .set("$.project.environment_prefix_id", prefix)
                 .build();
     }

@@ -54,7 +54,7 @@ public class AccessGroupTest extends Tests {
         String informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
         ProjectEnvironmentPrefix projectEnvironment = PortalBackSteps.getProjectEnvironmentPrefix("TEST", informationSystem);
         Project project = Project.builder()
-                .projectEnvironment(projectEnvironment)
+                .projectEnvironmentPrefix(projectEnvironment)
                 .build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").projectName(project.getId()).build().createObject();
         AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(project, "VTB4043473"));
@@ -66,7 +66,7 @@ public class AccessGroupTest extends Tests {
     @DisplayName("Добавление пользователя в группу доступа для среды DEV")
     void addUserAccessGroupDev() {
         Project project = Project.builder()
-                .projectEnvironment(new ProjectEnvironmentPrefix("DEV")).build().createObject();
+                .projectEnvironmentPrefix(new ProjectEnvironmentPrefix("DEV")).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").projectName(project.getId()).build().createObject();
         AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(project, "VTB4043473"));
     }

@@ -67,7 +67,7 @@ public class RabbitMQCluster extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        switch (project.getProjectEnvironment().getEnvType()) {
+        switch (project.getProjectEnvironmentPrefix().getEnvType()) {
             case ("TEST"):
                 role = "manager";
                 break;
@@ -87,7 +87,7 @@ public class RabbitMQCluster extends IProduct {
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", project.getProjectEnvironmentPrefix().getEnvType().contains("TEST"))
                 .set("$.order.label", getLabel())
                 .build();
     }

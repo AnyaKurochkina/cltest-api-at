@@ -56,7 +56,7 @@ public class CalculatorTest extends Tests {
             Project projectTarget = Project.builder().projectName("project_for_account_expense")
                     .prefix(projectSource.getPrefix())
                     .informationSystem(projectSource.getInformationSystem())
-                    .projectEnvironment(projectSource.getProjectEnvironment())
+                    .projectEnvironmentPrefix(projectSource.getProjectEnvironmentPrefix())
                     .folderName(folderTarget.getName())
                     .build()
                     .createObject();

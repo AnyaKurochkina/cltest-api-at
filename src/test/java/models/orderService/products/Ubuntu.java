@@ -71,7 +71,7 @@ public class Ubuntu extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", project.getProjectEnvironmentPrefix().getEnvType().contains("TEST"))
                 .build();
     }
 

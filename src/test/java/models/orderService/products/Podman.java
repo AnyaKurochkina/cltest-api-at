@@ -60,7 +60,7 @@ public class Podman extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        boolean isTestEnv = project.getProjectEnvironment().getEnvType().contains("TEST");
+        boolean isTestEnv = project.getProjectEnvironmentPrefix().getEnvType().contains("TEST");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)

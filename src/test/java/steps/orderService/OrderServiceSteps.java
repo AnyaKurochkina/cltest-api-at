@@ -383,7 +383,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Удаление всех заказов")
     public static void deleteOrders(String env) {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironmentPrefix(Objects.requireNonNull(env)))
+        Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(Objects.requireNonNull(env)))
                 .isForOrders(true).build().createObject();
         List<String> orders = new Http(OrderServiceURL)
                 .setProjectId(project.id)

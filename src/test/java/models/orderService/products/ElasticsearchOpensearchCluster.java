@@ -72,7 +72,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
                 .set("$.order.attrs.user_app_groups[0]", accessGroup.getPrefixName())
                 .set("$.order.attrs.adm_app_groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", project.getProjectEnvironmentPrefix().getEnvType().contains("TEST"))
                 .set("$.order.label", getLabel())
                 .build();
     }

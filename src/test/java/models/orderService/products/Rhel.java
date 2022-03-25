@@ -39,12 +39,12 @@ public class Rhel extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/rhel.json";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
+        Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
         if (projectId == null) {
             setProjectId(project.getId());
         }
         if(productName == null) {
-            if(project.getProjectEnvironment().getEnvType().toUpperCase().contains("TEST"))
+            if(project.getProjectEnvironmentPrefix().getEnvType().toUpperCase().contains("TEST"))
                 productName = "RHEL General Application";
             else
                 productName = "Rhel";
@@ -80,7 +80,7 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", getProjectId())
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", project.getProjectEnvironmentPrefix().getEnvType().contains("TEST"))
                 .set("$.order.label", getLabel())
                 .build();
     }

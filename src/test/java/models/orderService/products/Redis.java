@@ -65,7 +65,7 @@ public class Redis extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", projectId)
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", project.getProjectEnvironmentPrefix().getEnvType().contains("TEST"))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.redis_password", redisPassword)
                 .set("$.order.label", getLabel())

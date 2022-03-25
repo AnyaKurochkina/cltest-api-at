@@ -238,7 +238,7 @@ public abstract class IProduct extends Entity {
     }
 
     protected void initProduct() {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
+        Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
         if (projectId == null) {
             setProjectId(project.getId());
         }
@@ -248,7 +248,7 @@ public abstract class IProduct extends Entity {
         if (productId == null) {
             productId = new ProductCatalogSteps(Product.productName).
                     getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(Objects.requireNonNull(getProductName()),
-                            "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironment().getEnvType().toLowerCase()));
+                            "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()));
         }
     }
 

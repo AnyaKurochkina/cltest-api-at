@@ -48,14 +48,14 @@ public class ProductTest extends Tests {
             Project projectTarget = Project.builder().projectName("projectForMoveProductWithEqualsPrefix")
                     .prefix(projectSource.getPrefix())
                     .informationSystem(projectSource.getInformationSystem())
-                    .projectEnvironment(projectSource.getProjectEnvironment())
+                    .projectEnvironmentPrefix(projectSource.getProjectEnvironmentPrefix())
                     .folderName(folderTarget.getName())
                     .build()
                     .createObjectPrivateAccess();
             Project projectTarget2 = Project.builder().projectName("projectForMoveProductWithEqualsPrefix2")
                     .prefix(projectSource.getPrefix())
                     .informationSystem(projectSource.getInformationSystem())
-                    .projectEnvironment(projectSource.getProjectEnvironment())
+                    .projectEnvironmentPrefix(projectSource.getProjectEnvironmentPrefix())
                     .folderName(folderTarget2.getName())
                     .build()
                     .createObjectPrivateAccess();
