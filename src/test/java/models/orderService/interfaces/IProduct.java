@@ -289,7 +289,7 @@ public abstract class IProduct extends Entity {
 
 
     public void connectVmException(String message) throws ConnectException {
-        if (isTest())
+        if (!isTest())
             throw new ConnectException(message);
         Assumptions.assumeTrue(true, "Тест отключен для продуктов в TEST средах");
     }
