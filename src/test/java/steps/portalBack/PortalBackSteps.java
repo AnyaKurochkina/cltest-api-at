@@ -18,16 +18,16 @@ import static core.helper.Configure.PortalBackURL;
 
 public class PortalBackSteps extends Steps {
 
-    private final static Map<String, String> enviroments = Stream.of(new String[][]{
-            {"dso", "dev"},
-            {"dev", "dev"},
-            {"st", "dev"},
-            {"ift", "test"},
-            {"edu", "test"},
-            {"migr", "test"},
-            {"hotfix", "test"},
-            {"preprod", "test"},
-            {"lt", "test"}
+    private final static Map<String, String> environments = Stream.of(new String[][]{
+            {"dso", "DEV"},
+            {"dev", "DEV"},
+            {"st", "DEV"},
+            {"ift", "TEST"},
+            {"edu", "TEST"},
+            {"migr", "TEST"},
+            {"hotfix", "TEST"},
+            {"preprod", "TEST"},
+            {"lt", "TEST"}
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
     @SneakyThrows
@@ -41,7 +41,7 @@ public class PortalBackSteps extends Steps {
         return environmentPrefixes
                 .stream()
                 .filter(e -> Objects.nonNull(e.getEnvType()))
-                .filter(e -> e.getEnvType().equals(envType.toLowerCase()))
+                .filter(e -> e.getEnvType().equals(envType.toUpperCase()))
                 .findFirst()
                 .orElseThrow(() -> new Exception("Не найден ProjectEnvironment с именем " + envType));
     }
@@ -49,10 +49,10 @@ public class PortalBackSteps extends Steps {
     private static void setEnvType(ProjectEnvironmentPrefix environmentPrefix) {
         if (Objects.isNull(environmentPrefix.getRisName()))
             return;
-        for (String key : enviroments.keySet()) {
+        for (String key : environments.keySet()) {
             if (environmentPrefix.getRisName().toLowerCase().startsWith(key)) {
                 environmentPrefix.setEnv(key);
-                environmentPrefix.setEnvType(enviroments.get(key));
+                environmentPrefix.setEnvType(environments.get(key));
                 break;
             }
         }

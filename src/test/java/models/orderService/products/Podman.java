@@ -59,8 +59,7 @@ public class Podman extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        boolean isTestEnv = project.getProjectEnvironmentPrefix().getEnvType().contains("TEST");
+        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();;
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
@@ -70,8 +69,8 @@ public class Podman extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.ad_logon_grants[0].role", isTestEnv ? "podman_admin" : "superuser")
-                .set("$.order.attrs.on_support", isTestEnv)
+                .set("$.order.attrs.ad_logon_grants[0].role", isTest() ? "podman_admin" : "superuser")
+                .set("$.order.attrs.on_support", isTest())
                 .set("$.order.label", getLabel())
                 .build();
     }

@@ -172,7 +172,7 @@ public class Http {
             break;
         }
         if(Objects.isNull(response))
-            Assertions.fail(String.format("Ошибка отправки http запроса %s. (Connection refused)", (host + path)));
+            throw new ConnectException(String.format("Ошибка отправки http запроса %s. (Connection refused)", (host + path)));
         return response;
     }
 
@@ -247,6 +247,12 @@ public class Http {
 
     public static class StatusResponseException extends AssertionError {
         public StatusResponseException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
+
+    public static class ConnectException extends AssertionError {
+        public ConnectException(String errorMessage) {
             super(errorMessage);
         }
     }

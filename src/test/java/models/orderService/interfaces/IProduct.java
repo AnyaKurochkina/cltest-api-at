@@ -22,12 +22,14 @@ import models.productCatalog.Product;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
 
+import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Iterator;
@@ -153,8 +155,9 @@ public abstract class IProduct extends Entity {
             connection = DriverManager.getConnection(connectUrl, user, password);
             Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось по url: " + connectUrl).isValid(1));
         } catch (Exception e) {
-            throw new Exception("Ошибка подключения к " + getProductName() + " по url " + connectUrl + " : " + e);
+            connectVmException("Ошибка подключения к " + getProductName() + " по url " + connectUrl + " : " + e);
         }
+        assert connection != null;
         connection.close();
         log.debug("Успешное подключение к " + getProductName());
     }
@@ -273,32 +276,22 @@ public abstract class IProduct extends Entity {
         List<String> parameters = (List<String>) graphResponse.getUiSchema().get("ui:order");
         Iterator<String> iterator = jsonObject.getJSONObject("order").getJSONObject("attrs").keys();
         while (iterator.hasNext()) {
-            if(!parameters.contains(iterator.next()))
+            if (!parameters.contains(iterator.next()))
                 iterator.remove();
         }
         return jsonObject;
     }
 
-//    @SneakyThrows
-//    public void toStringProductStep() {
-//        AllureLifecycle allureLifecycle = Allure.getLifecycle();
-//        String id = allureLifecycle.getCurrentTestCaseOrStep().get();
-//        List<Parameter> list = new ArrayList<>();
-//        List<Field> fieldList = new ArrayList<>(Arrays.asList(getClass().getSuperclass().getDeclaredFields()));
-//        fieldList.addAll(Arrays.asList(getClass().getDeclaredFields()));
-//        for (Field field : fieldList) {
-//            if (Modifier.isStatic(field.getModifiers()))
-//                continue;
-//            field.setAccessible(true);
-//            if (field.get(this) != null) {
-//                Parameter parameter = new Parameter();
-//                parameter.setName(field.getName());
-//                parameter.setValue(field.get(this).toString());
-//                list.add(parameter);
-//            }
-//        }
-//        allureLifecycle.updateStep(id, s -> s.setName("Получен продукт " + getProductName() + " с параметрами"));
-//        allureLifecycle.updateStep(id, s -> s.setParameters(list));
-//    }
+    protected boolean isTest() {
+        Project project = Project.builder().id(projectId).build().createObject();
+        return project.getProjectEnvironmentPrefix().getEnvType().contains("TEST");
+    }
+
+
+    public void connectVmException(String message) throws ConnectException {
+        if (isTest())
+            throw new ConnectException(message);
+        Assumptions.assumeTrue(true, "Тест отключен для продуктов в TEST средах");
+    }
 
 }

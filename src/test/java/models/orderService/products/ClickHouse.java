@@ -6,9 +6,9 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.portalBack.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.portalBack.AccessGroup;
 import models.subModels.Db;
 import models.subModels.DbUser;
 import models.subModels.Flavor;
@@ -177,7 +177,7 @@ public class ClickHouse extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.clickhouse_user", clickhouseUser)
                 .set("$.order.attrs.clickhouse_password", clickhousePassword)
-                .set("$.order.attrs.on_support", project.getProjectEnvironmentPrefix().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", isTest())
                 .set("$.order.label", getLabel())
                 .build();
 
