@@ -23,6 +23,7 @@ import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
+import org.opentest4j.TestAbortedException;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.productCatalog.ProductCatalogSteps;
@@ -291,7 +292,7 @@ public abstract class IProduct extends Entity {
     public void connectVmException(String message) throws ConnectException {
         if (!isTest())
             throw new ConnectException(message);
-        Assumptions.assumeTrue(true, "Тест отключен для продуктов в TEST средах");
+        throw new TestAbortedException("Тест отключен для продуктов в TEST средах");
     }
 
 }
