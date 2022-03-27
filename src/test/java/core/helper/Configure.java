@@ -24,6 +24,7 @@ public class Configure {
 
     static {
         try {
+            Class.forName("com.dbschema.CassandraJdbcDriver");
             RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
 
