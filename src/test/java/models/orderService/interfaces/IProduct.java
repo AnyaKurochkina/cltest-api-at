@@ -152,6 +152,7 @@ public abstract class IProduct extends Entity {
         String connectUrl = "jdbc:" + url + "/" + dbName;
         Connection connection = null;
         try {
+            DriverManager.setLoginTimeout(3);
             connection = DriverManager.getConnection(connectUrl, user, password);
             Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось по url: " + connectUrl).isValid(1));
         } catch (Exception e) {
