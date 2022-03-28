@@ -1,7 +1,7 @@
 {
   "model_name": "Page",
   "Page": {
-    "name": "import_pages_api",
+    "name": "import_pages_test_api",
     "data": {},
     "tags": [],
     "weight": 0,

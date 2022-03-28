@@ -51,6 +51,7 @@ public class Template extends Entity {
     private String jsonTemplate;
     private String version;
     private String type;
+    private String title;
 
     private final String productName = "templates/";
 
@@ -66,6 +67,7 @@ public class Template extends Entity {
                 .set("$.name", templateName)
                 .set("$.version", version)
                 .set("$.type", type)
+                .set("$.title", title)
                 .build();
     }
 

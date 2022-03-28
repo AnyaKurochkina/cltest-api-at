@@ -48,8 +48,8 @@ public class TemplatesTest extends Tests {
     @TmsLink("643551")
     @Test
     public void getTemplateList() {
-        Assertions.assertTrue(productCatalogSteps.getProductObjectList(GetTemplateListResponse.class)
-                .size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetTemplateListResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
     @Order(2)

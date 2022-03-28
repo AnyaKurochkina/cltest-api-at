@@ -55,8 +55,8 @@ public class ServicesTest extends Tests {
     @TmsLink("643450")
     @Test
     public void getServiceList() {
-        Assertions.assertTrue(productCatalogSteps.getProductObjectList(GetServiceListResponse.class)
-                .size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetServiceListResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
     @Order(2)
@@ -324,6 +324,30 @@ public class ServicesTest extends Tests {
                         .set("graph_id", 56564)
                         .build()).assertStatus(500)
         );
+    }
+
+    @Order(97)
+    @DisplayName("Сортировка сервисов по статусу")
+    @TmsLink("")
+    @Test
+    public void orderingByStatus() {
+        List<ItemImpl> list = productCatalogSteps.orderingByStatus(GetServiceListResponse.class).getItemsList();
+        boolean result = false;
+        int count = 0;
+        for (int i = 0; i < list.size() - 1; i++) {
+            ListItem item = (ListItem) list.get(i);
+            ListItem nextItem = (ListItem) list.get(i + 1);
+            if (item.getIsPublished().equals(nextItem.getIsPublished())) {
+                result = true;
+            } else {
+                count++;
+            }
+            if (count > 1) {
+                result = false;
+                break;
+            }
+        }
+        assertTrue(result, "Список не отсортирован.");
     }
 
     @Order(98)

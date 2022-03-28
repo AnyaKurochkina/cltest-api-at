@@ -18,7 +18,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import java.time.ZonedDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,13 +43,13 @@ public class ActionsTest extends Tests {
     }
 
     @Order(2)
-    @DisplayName("Получение списка действий")
+    @DisplayName("Получение списка действий. Список отсортирован по дате создания от нового к старому и имени без учета спец. символов")
     @TmsLink("642429")
     @Test
     public void getActionList() {
-        assertTrue(productCatalogSteps.getProductObjectList(ActionResponse.class).size() > 0,
-                "Список не содержит значений");
-    }
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(ActionResponse.class);
+            assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
+        }
 
     @Order(11)
     @DisplayName("Проверка значения next в запросе на получение списка действий")
@@ -145,7 +145,7 @@ public class ActionsTest extends Tests {
             ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
             ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
             assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
-                    String.format("Даты обновлений действий с именами %s и %s не соответсвуют условию сортировки."
+                    String.format("Даты создания действий с именами %s и %s не соответсвуют условию сортировки."
                             , list.get(i).getName(), list.get(i + 1).getName()));
         }
     }
@@ -215,7 +215,7 @@ public class ActionsTest extends Tests {
     public void checkVersionWhenIndependentParamUpdated() {
         String version = action.getVersion();
         String id = action.getActionId();
-        List<String> list = Arrays.asList("restricted");
+        List<String> list = Collections.singletonList("restricted");
         productCatalogSteps.partialUpdateObject(action.getActionId(), new JSONObject().put("restricted_groups", list));
         List<String> allowed_groups = productCatalogSteps.getJsonPath(id).get("restricted_groups");
         String newVersion = productCatalogSteps.getById(id, GetActionResponse.class).getVersion();
@@ -357,7 +357,7 @@ public class ActionsTest extends Tests {
     @DisplayName("Удаление действия")
     @TmsLink("642530")
     public void deleteAction() {
-            action.deleteObject();
+        action.deleteObject();
     }
 }
 
