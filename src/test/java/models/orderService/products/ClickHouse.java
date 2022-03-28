@@ -185,7 +185,7 @@ public class ClickHouse extends IProduct {
 
 
     public void checkConnectDb() {
-        checkConnectDb(clickhouseBb, clickhouseUser, clickhousePassword, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
+        checkConnectDb(clickhouseBb, clickhouseUser, clickhousePassword, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)).replaceFirst(":8443", ":9440"));
     }
 
 }
