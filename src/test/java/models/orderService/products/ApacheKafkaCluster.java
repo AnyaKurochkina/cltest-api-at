@@ -89,10 +89,15 @@ public class ApacheKafkaCluster extends IProduct {
                 .build();
     }
 
+    @SneakyThrows
     public void produceMessage(String topicName, String message) {
         String bootstrapServerUrl = (String) OrderServiceSteps.getProductsField(this, CONNECTION_URL);
         CustomKafkaProducer customKafkaProducer = new CustomKafkaProducer(message, bootstrapServerUrl, topicName);
-        customKafkaProducer.doProduce();
+        try {
+            customKafkaProducer.doProduce();
+        } catch (Exception e) {
+            connectVmException("Ошибка подключения к " + getProductName() + " " + e);
+        }
         sleep(10000);
     }
 
