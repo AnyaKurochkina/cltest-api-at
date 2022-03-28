@@ -128,7 +128,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void createAclTransaction(String transactionRegex) {
-        OrderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}"), this.projectId);
+        OrderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}]}"), this.projectId);
         save();
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)), "ACL транзакция не создалась");
     }
