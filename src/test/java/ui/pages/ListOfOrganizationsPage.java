@@ -51,7 +51,7 @@ public class ListOfOrganizationsPage implements Loadable {
         }
         idForDeleteInput.shouldBe(Condition.visible).val(idForDelete.getText());
         confirmDeleBtn.shouldBe(Condition.enabled).click();
-        notificationBar.shouldBe(Condition.visible).shouldHave(Condition.text("VMware организация " + orgName + " удалена успешно"));
+        notificationBar.shouldBe(Condition.visible).shouldHave(Condition.text("VMware организация " + orgName + " удалена успешно"), Duration.ofMillis(15000));
     }
 
     public void deleteAllOrganizations() {

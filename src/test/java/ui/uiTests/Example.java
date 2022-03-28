@@ -33,17 +33,21 @@ public class Example {
         String fullOrgName = (listOfOrganizationsPage.getCurrentOrgName() + "-" + orgName).toLowerCase(Locale.ROOT);
         listOfOrganizationsPage.createOrganization(orgName);
         listOfOrganizationsPage.checkPage();
-        listOfOrganizationsPage.stepInOrganization(fullOrgName);
-        OrganizationPage organizationPage = new OrganizationPage();
-        organizationPage.checkPage(fullOrgName);
-        organizationPage.createVirtualDataCentre();
-        VmWareDataCentreCreationPage vmWareDataCentreCreationPage = new VmWareDataCentreCreationPage();
-        vmWareDataCentreCreationPage
-                .setNameDataCentre(randomAlphabetic(5).toLowerCase(Locale.ROOT))
-                .setIpV4Value(10)
-                .setCpuValue(14)
-                .setWidthValue(15)
-                .setRamValue(35);
+//        listOfOrganizationsPage.stepInOrganization(fullOrgName);
+//        OrganizationPage organizationPage = new OrganizationPage();
+//        organizationPage.checkPage(fullOrgName);
+//        organizationPage.createVirtualDataCentre();
+//        VmWareDataCentreCreationPage vmWareDataCentreCreationPage = new VmWareDataCentreCreationPage();
+//        vmWareDataCentreCreationPage
+//                .setNameDataCentre(randomAlphabetic(5).toLowerCase(Locale.ROOT))
+//                .setIpV4Value(10)
+//                .setCpuValue(14)
+//                .setWidthValue(15)
+//                .setRamValue(35)
+//                .confirmOrder();
+
+
+
         listOfOrganizationsPage.deleteOrganization(fullOrgName);
     }
 

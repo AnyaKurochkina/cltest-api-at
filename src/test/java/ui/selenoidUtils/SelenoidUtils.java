@@ -90,7 +90,7 @@ public class SelenoidUtils {
 
     @SneakyThrows
     public void attachAllureVideo(String sessionId) {
-        URL videoUrl = new URL("http://127.0.0.1:4444" + "/video/" + sessionId + ".mp4");
+        URL videoUrl = new URL(getAppProp("webdriver.remote.url") + "/video/" + sessionId + ".mp4");
         InputStream is = getSelenoidVideo(videoUrl);
         try {
             Allure.addAttachment("Video", "video/mp4", is, "mp4");
