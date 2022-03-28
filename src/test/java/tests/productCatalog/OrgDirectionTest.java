@@ -55,8 +55,8 @@ public class OrgDirectionTest extends Tests {
     @TmsLink("643305")
     @Test
     public void getOrgDirectionList() {
-        Assertions.assertTrue(productCatalogSteps
-                .getProductObjectList(GetOrgDirectionListResponse.class).size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetOrgDirectionListResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
     @Order(2)

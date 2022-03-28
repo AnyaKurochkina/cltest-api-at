@@ -55,8 +55,8 @@ public class ServicesTest extends Tests {
     @TmsLink("643450")
     @Test
     public void getServiceList() {
-        Assertions.assertTrue(productCatalogSteps.getProductObjectList(GetServiceListResponse.class)
-                .size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetServiceListResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
     @Order(2)

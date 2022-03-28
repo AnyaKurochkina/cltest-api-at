@@ -28,6 +28,7 @@ public class Action extends Entity {
     private boolean isMultiple;
     private String createDt;
     private String updateDt;
+    private Integer priority;
     private final String productName = "actions/";
 
     @Override
@@ -48,6 +49,7 @@ public class Action extends Entity {
                 .set("$.version", version)
                 .set("$.create_dt", createDt)
                 .set("$.update_dt", updateDt)
+                .set("$.priority", priority)
                 .build();
     }
 

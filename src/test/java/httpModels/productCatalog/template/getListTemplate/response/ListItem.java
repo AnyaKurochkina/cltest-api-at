@@ -19,6 +19,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("additional_input")
     private Boolean additionalInput;
 
+    @JsonProperty("title")
+    private String title;
+
     @JsonProperty("color")
     private String color;
 

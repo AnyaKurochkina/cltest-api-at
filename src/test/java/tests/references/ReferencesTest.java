@@ -54,7 +54,7 @@ public class ReferencesTest extends ReferencesStep {
                 .build());
         assertEquals(expectedName, page.getName());
         assertEquals(expectedDirectory, page.getDirectoryId());
-        pageFilter = createPrivatePageFilter(new JSONObject().put("key", "create_page_filter_api")
+        pageFilter = createPrivatePageFilter(new JSONObject().put("key", "create_page_filter_test_api")
                 .put("value", Arrays.asList("value", "value2")));
         deletePageFiltersList.add(pageFilter.getKey());
 
@@ -69,6 +69,26 @@ public class ReferencesTest extends ReferencesStep {
         for (String key : deletePageFiltersList) {
             deletePrivatePageFiltersByKey(key);
         }
+    }
+
+    @DisplayName("Негативный тест на создание directory c именем содержащим недопустимые символы")
+    @Disabled
+    @Test
+    public void createDirectoryWithInvalidName() {
+        createDirectoryWithInvalidName(new JSONObject()
+                .put("name", "create_dir_test_api@")
+                .put("description", DESCRIPTION))
+                .assertStatus(500);
+    }
+
+    @DisplayName("Негативный тест на создание pages c именем содержащим недопустимые символы")
+    @Test
+    public void createPageWithInvalidName() {
+        createPrivatePagesAndGetResponse(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
+                .set("name", "create_pages_with_invalid_name_test_!")
+                .set("directory", directories.getId())
+                .build())
+                .assertStatus(500);
     }
 
     @DisplayName("Получение списка Directories для приватных ролей")
@@ -87,7 +107,7 @@ public class ReferencesTest extends ReferencesStep {
     @DisplayName("Изменение Directory по имени для приватных ролей")
     @Test
     public void updatePrivateDirectoryByName() {
-        String expectedName = "updateName";
+        String expectedName = "updateName_test";
         String expectedDisc = "updateDisc";
         Directories createdDir = createDirectory(new JSONObject()
                 .put("name", "created_dir")
@@ -105,7 +125,7 @@ public class ReferencesTest extends ReferencesStep {
     public void partialUpdatePrivateDirectoryByName() {
         String expectedDisc = "updateDisc";
         Directories createdDir = createDirectory(new JSONObject()
-                .put("name", "created_dir")
+                .put("name", "created_dir_test")
                 .put("description", "desc"));
         Directories updatedDir = partialUpdatePrivateDirectoryByName(createdDir.getName(), new JSONObject()
                 .put("description", expectedDisc));
@@ -171,7 +191,7 @@ public class ReferencesTest extends ReferencesStep {
     @Test
     public void updateDataPrivatePagesById() {
         Response response = createPrivatePages(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
-                .set("name", "updateDataPage")
+                .set("name", "updateDataPage_test")
                 .set("directory", directories.getName())
                 .set("data", new JSONObject()
                         .put("key", "value"))
@@ -211,7 +231,7 @@ public class ReferencesTest extends ReferencesStep {
     @DisplayName("Создание page_filters для приватных ролей")
     @Test
     public void createPrivatePageFilter() {
-        String key = "create_page_filter_test_api";
+        String key = "create_page_filter_test_api2";
         PageFilter pageFilter = createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
         deletePageFiltersList.add(pageFilter.getKey());
@@ -238,10 +258,10 @@ public class ReferencesTest extends ReferencesStep {
         createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
         PageFilter updatedFilter = updatePrivatePageFilter(key, new JSONObject()
-                .put("key", "updated_key")
+                .put("key", "updated_key_test")
                 .put("value", Collections.singletonList("update")));
         deletePageFiltersList.add(updatedFilter.getKey());
-        assertEquals(updatedFilter.getKey(), "updated_key");
+        assertEquals(updatedFilter.getKey(), "updated_key_test");
         assertEquals(updatedFilter.getValue().size(), 1);
     }
 
@@ -348,6 +368,7 @@ public class ReferencesTest extends ReferencesStep {
         importPrivatePageFilter(PAGES_FILTER_IMPORT_PATH);
         deletePageFiltersList.add(key);
     }
+
     @DisplayName("Экспорт Page_filter")
     @Test
     public void exportPageFilter() {

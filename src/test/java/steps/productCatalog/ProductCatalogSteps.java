@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -230,6 +231,13 @@ public class ProductCatalogSteps {
                 .assertStatus(200).jsonPath();
     }
 
+    @Step("Получение массива объектов определенного типа в определенной среде используещих граф")
+    public JsonPath getObjectArrayUsedGraphByTypeAndEnv(String id, String type, String env) {
+        return new Http(ProductCatalogURL)
+                .get("graphs/" + id + "/used/?env=" + env + "&object_type=" + type)
+                .assertStatus(200).jsonPath();
+    }
+
     public Response getDeleteObjectResponse(String id) {
         return new Http(ProductCatalogURL)
                 .delete(productName + id + "/");
@@ -354,6 +362,32 @@ public class ProductCatalogSteps {
                 .setRole(Role.VIEWER)
                 .body(body)
                 .put(productName + objectId + "/");
+    }
+
+    @Step("Проверка сортировки списка")
+    public boolean isSorted(List<ItemImpl> list) {
+        if (list.isEmpty() || list.size() == 1) {
+            return true;
+        }
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            String currentName = delNoDigOrLet(list.get(i).getName());
+            String nextName = delNoDigOrLet(list.get(i + 1).getName());
+            if (currentTime.isBefore(nextTime) || (currentTime.isEqual(nextTime) && currentName.compareToIgnoreCase(nextName) > 0)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static String delNoDigOrLet (String s) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (Character .isLetterOrDigit(s.charAt(i)))
+                sb.append(s.charAt(i));
+        }
+        return sb.toString();
     }
 
     private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {

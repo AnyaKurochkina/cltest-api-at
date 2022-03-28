@@ -112,6 +112,9 @@ public class CreateTemplateResponse{
 	@JsonProperty("update_dt")
 	private String update_dt;
 
+	@JsonProperty("title")
+	private String title;
+
 	public boolean isAdditionalInput(){
 		return additionalInput;
 	}

@@ -4,6 +4,7 @@ import core.helper.Configure;
 import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.GetListImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.example.createExample.CreateExampleResponse;
 import httpModels.productCatalog.example.getExampleList.GetExampleListResponse;
 import io.qameta.allure.Epic;
@@ -12,9 +13,13 @@ import io.qameta.allure.TmsLink;
 import models.productCatalog.Example;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,8 +56,8 @@ public class ExampleTest extends Tests {
                 .description("create_example_for_list_test_api")
                 .build()
                 .createObject();
-        assertTrue(steps.getProductObjectList(GetExampleListResponse.class).size() > 0,
-                "Список не содержит значений");
+        List<ItemImpl> list = steps.getProductObjectList(GetExampleListResponse.class);
+        assertTrue(steps.isSorted(list), "Список не отсортирован.");
     }
 
     @DisplayName("Проверка значения next в запросе на получение списка Examples")

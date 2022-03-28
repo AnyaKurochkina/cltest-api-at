@@ -86,8 +86,8 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("643632")
     @Test
     public void getVisualTemplateList() {
-        assertTrue(productCatalogSteps.getProductObjectList(GetVisualTemplateListResponse.class)
-                .size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetVisualTemplateListResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
     @Order(11)

@@ -3,6 +3,7 @@
   "version": "",
   "name": "NegativeAction",
   "title": "NegativeAction",
+  "priority": 0,
   "description": "NegativeAction",
   "multiple": false,
   "icon": "",

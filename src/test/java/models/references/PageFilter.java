@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PageFilter {
-    Integer id;
+    String id;
     String key;
     List<String> value;
 }
