@@ -6,6 +6,8 @@ import core.helper.http.Http;
 import lombok.*;
 import models.Entity;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
+import steps.authorizer.AuthorizerSteps;
 
 import java.util.*;
 
@@ -16,19 +18,9 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends Entity {
-    private String firstname;
-    private Date updatedAt;
-    private List<MembersItem> members;
-    private Boolean active;
-    private Date createdAt;
-    private String id;
-    private String email;
-    private String username;
-    private String lastname;
-
     @Builder.Default
-    transient Set<UserMember> bindings = new HashSet<>();
-    transient String projectName;
+    Set<UserMember> bindings = new HashSet<>();
+    String projectName;
 
     @Override
     public Entity init() {
@@ -51,6 +43,9 @@ public class User extends Entity {
                 .body(toJson())
                 .post("projects/{}/policy/add-members", projectName)
                 .assertStatus(201);
+        List<UserItem> users = AuthorizerSteps.getUserList(projectName);
+        Assertions.assertTrue(bindings.stream().anyMatch(b -> b.getMembers().stream().anyMatch(m -> users.stream().anyMatch(u -> m.endsWith(u.getEmail())))),
+                "Пользователь не создан");
     }
 
     public static class UserBuilder {
@@ -76,10 +71,15 @@ public class User extends Entity {
         Set<String> members;
     }
 
-
     @Override
     protected void delete() {
-
+        new Http(Configure.AuthorizerURL)
+                .body(toJson())
+                .post("projects/{}/policy/remove-members", projectName)
+                .assertStatus(201);
+        List<UserItem> users = AuthorizerSteps.getUserList(projectName);
+        Assertions.assertFalse(bindings.stream().anyMatch(b -> b.getMembers().stream().anyMatch(m -> users.stream().anyMatch(u -> m.endsWith(u.getEmail())))),
+                "Пользователь не удален");
     }
 
 

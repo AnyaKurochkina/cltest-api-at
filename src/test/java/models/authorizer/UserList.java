@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 public class UserList {
-    private List<User> data;
+    private List<UserItem> data;
     private Meta meta;
 
     @Setter
