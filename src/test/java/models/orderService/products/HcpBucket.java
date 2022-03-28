@@ -46,6 +46,7 @@ public class HcpBucket extends IProduct {
         Project project = Project.builder().id(projectId).build().createObject();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.project_name", project.id)
+                .set("$.order.bucket_name", getLabel())
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.net_segment", segment)
                 .set("$.order.attrs.platform", platform)
