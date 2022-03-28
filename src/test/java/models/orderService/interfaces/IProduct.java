@@ -225,6 +225,7 @@ public abstract class IProduct extends Entity {
 
     public Flavor getMaxFlavor() {
         List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
+        Assertions.assertTrue(list.size() < 2, "Действие недоступно, либо кол-во flavor's < 2");
         return list.get(list.size() - 1);
     }
 
