@@ -2,6 +2,7 @@ package core.kafka;
 
 import core.helper.Configure;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.Producer;
@@ -78,12 +79,17 @@ public class CustomKafkaProducer {
             if (exception == null) {
                 log.info("Отправлено новое сообщение, в топик: " + recordMetadata.topic() + ", Сообщение: " + data);
 
-            }else {
-                log.error("Ошибка отправки: ", exception);
+            } else {
+                exception(exception);
             }
         }));
 
         producer.close();
+    }
+
+    @SneakyThrows
+    void exception(Exception e) {
+        throw e;
     }
 
 
