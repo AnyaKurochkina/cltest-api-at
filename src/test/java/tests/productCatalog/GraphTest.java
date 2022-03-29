@@ -52,8 +52,8 @@ public class GraphTest extends Tests {
     @TmsLink("642539")
     @Test
     public void getGraphsList() {
-        Assertions.assertTrue(productCatalogSteps
-                .getProductObjectList(GetGraphsListResponse.class).size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetGraphsListResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
     @Order(2)

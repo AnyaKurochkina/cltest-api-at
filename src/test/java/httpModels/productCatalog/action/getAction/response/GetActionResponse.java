@@ -21,6 +21,9 @@ public class GetActionResponse implements GetImpl {
     @JsonProperty("version_list")
     private List<String> versionList;
 
+    @JsonProperty("priority")
+    private Integer priority;
+
     @JsonProperty("icon")
     private String icon;
 

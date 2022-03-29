@@ -7,6 +7,7 @@ import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
+import httpModels.productCatalog.product.getProducts.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -80,8 +81,8 @@ public class ProductsTest extends Tests {
     @TmsLink("643387")
     @Test
     public void getProductList() {
-        Assertions.assertTrue(productCatalogSteps.getProductObjectList(GetProductsResponse.class)
-                .size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetProductsResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
     @Order(5)
@@ -98,6 +99,7 @@ public class ProductsTest extends Tests {
     }
 
     @Order(6)
+    @Disabled
     @DisplayName("Создание продукта в продуктовом каталоге c новой категорией")
     @Test
     public void createProductWithUpdateCategory() {
@@ -352,13 +354,72 @@ public class ProductsTest extends Tests {
                 ".d0-oscp.corp.dev.vtb/products/?is_open=true&env=dev&information_systems=c9fd31c7-25a5-45ca-863c-18425d1ae927&page=1&per_page=100"));
     }
 
+    @Order(80)
+    @DisplayName("Сортировка продуктов по статусу")
+    @TmsLink("")
+    @Test
+    public void orderingByStatus() {
+        List<ItemImpl> list = productCatalogSteps.orderingByStatus(GetProductsResponse.class).getItemsList();
+        boolean result = false;
+        int count = 0;
+        for (int i = 0; i < list.size() - 1; i++) {
+            ListItem item = (ListItem) list.get(i);
+            ListItem nextItem = (ListItem) list.get(i + 1);
+            if (item.getIsOpen().equals(nextItem.getIsOpen())) {
+                result = true;
+            } else {
+                count++;
+            }
+            if (count > 1) {
+                result = false;
+                break;
+            }
+        }
+        assertTrue(result, "Список не отсортирован.");
+    }
+
+    @Order(96)
+    @DisplayName("Получение списка продуктов по фильтру is_open")
+    @TmsLink("")
+    @Test
+    public void getProductListByIsOpen() {
+        Product.builder()
+                .name("get_products_by_status_test_api")
+                .title("AtTestApiProduct")
+                .build()
+                .createObject();
+        List<ItemImpl> productList = productCatalogSteps.getProductObjectList(GetProductsResponse.class, "?is_open=true");
+        for (ItemImpl item : productList) {
+            ListItem listItem = (ListItem) item;
+            assertTrue(listItem.getIsOpen());
+        }
+    }
+
+    @Order(97)
+    @DisplayName("Получение списка продуктов по фильтру category")
+    @TmsLink("")
+    @Test
+    public void getProductListByCategory() {
+        Product.builder()
+                .name("get_products_by_category_test_api")
+                .title("AtTestApiProduct")
+                .category("vm")
+                .build()
+                .createObject();
+        List<ItemImpl> productList = productCatalogSteps.getProductObjectList(GetProductsResponse.class, "?category=vm");
+        for (ItemImpl item : productList) {
+            ListItem listItem = (ListItem) item;
+            assertEquals("vm", listItem.getCategory());
+        }
+    }
+
     @Order(98)
     @DisplayName("Получение значения ключа info")
     @TmsLink("737663")
     @Test
     public void getProductInfo() {
-        GetProductResponse response = productCatalogSteps.getInfoProduct(product.getProductId());
-        assertEquals(response.getInfo(), info);
+        Response response = productCatalogSteps.getInfoProduct(product.getProductId());
+        assertEquals(response.jsonPath().get(), info);
     }
 
     @Order(99)
@@ -375,6 +436,6 @@ public class ProductsTest extends Tests {
     @TmsLink("643434")
     @MarkDelete
     public void deleteProduct() {
-            product.deleteObject();
+        product.deleteObject();
     }
 }

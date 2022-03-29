@@ -19,6 +19,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("available_without_money")
     private Boolean availableWithoutMoney;
 
+    @JsonProperty("priority")
+    private Integer priority;
+
     @JsonProperty("version_list")
     private List<String> versionList;
 

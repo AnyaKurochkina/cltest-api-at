@@ -46,7 +46,8 @@ public class JinjaTest extends Tests {
     @TmsLink("660061")
     @Test
     public void getJinjaList() {
-        assertTrue(productCatalogSteps.getProductObjectList(GetJinjaListResponse.class).size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetJinjaListResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
     @Order(6)

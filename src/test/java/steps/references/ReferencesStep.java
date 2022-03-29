@@ -136,6 +136,14 @@ public class ReferencesStep extends Tests {
                 .extractAs(Directories.class);
     }
 
+    @Step("Создание directory для приватных ролей")
+    public Response createDirectoryWithInvalidName(JSONObject object) {
+        return new Http(ReferencesURL)
+                .body(object)
+                .post("private/directories/")
+                .assertStatus(201);
+    }
+
     @Step("Получение directory по имени для приватных ролей")
     public Directories getPrivateDirectoryByName(String name) {
         return new Http(ReferencesURL)
@@ -251,6 +259,13 @@ public class ReferencesStep extends Tests {
                 .body(object)
                 .post("private/directories/" + directoryName + "/pages")
                 .assertStatus(201);
+    }
+
+    @Step("Создание Pages для приватных ролей")
+    public Response createPrivatePagesAndGetResponse(String directoryName, JSONObject object) {
+        return new Http(ReferencesURL)
+                .body(object)
+                .post("private/directories/" + directoryName + "/pages");
     }
 
     @Step("Удаление directory по имени для приватных ролей")

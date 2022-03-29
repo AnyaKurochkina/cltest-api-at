@@ -18,6 +18,9 @@ public class GetTemplateResponse implements GetImpl {
 	@JsonProperty("additional_input")
 	private Boolean additionalInput;
 
+	@JsonProperty("title")
+	private String title;
+
 	@JsonProperty("color")
 	private String color;
 
