@@ -6,24 +6,28 @@ import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.authorizer.ProjectSteps;
 import steps.portalBack.PortalBackSteps;
 
+import java.util.Objects;
+
 @Builder
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@Log4j2
 public class Project extends Entity {
     @ToString.Include
     public String id;
     public String informationSystem;
-    public ProjectEnvironment projectEnvironment;
+    public ProjectEnvironmentPrefix projectEnvironmentPrefix;
     public String projectName;
     public Boolean isForOrders;
-    public String prefix;
+//    public String prefix;
 
     transient String folderName;
 
@@ -32,14 +36,19 @@ public class Project extends Entity {
         if (informationSystem == null) {
             informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
         }
-        if (projectEnvironment == null) {
-            projectEnvironment = PortalBackSteps.getProjectEnvironment("DEV", informationSystem);
+        if (projectEnvironmentPrefix == null) {
+            projectEnvironmentPrefix = PortalBackSteps.getProjectEnvironmentPrefix("DEV", informationSystem);
+        }
+        if (projectEnvironmentPrefix.getProjectEnvironmentId() == null) {
+            ProjectEnvironmentPrefix pe = PortalBackSteps.getProjectEnvironmentPrefixByEnv(projectEnvironmentPrefix.getEnv(), informationSystem);
+            projectEnvironmentPrefix.setProjectEnvironmentId(pe.getProjectEnvironmentId());
+            projectEnvironmentPrefix.setEnvType(pe.getEnvType());
+            projectEnvironmentPrefix.setRisName(pe.getRisName());
+            projectEnvironmentPrefix.setId(pe.getId());
+            projectEnvironmentPrefix.setDescription(pe.getDescription());
         }
         if (folderName == null) {
             folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
-        }
-        if (prefix == null) {
-            prefix = ProjectSteps.getPrefixEnv(folderName, informationSystem, projectEnvironment.getId());
         }
         if (projectName == null) {
             projectName = new Generex("project [0-9a-zA-Z]{5,15}").random();
@@ -50,9 +59,9 @@ public class Project extends Entity {
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("/structure/create_project.json")
                 .set("$.project.title", projectName)
-                .set("$.project.information_system_id", informationSystem)
-                .set("$.project.project_environment_id", projectEnvironment.getId())
-                .set("$.project.environment_prefix_id", prefix)
+                .set("$.project.information_system_id", Objects.requireNonNull(informationSystem))
+                .set("$.project.project_environment_id", Objects.requireNonNull(projectEnvironmentPrefix.getProjectEnvironmentId()))
+                .set("$.project.environment_prefix_id", Objects.requireNonNull(projectEnvironmentPrefix.getId()))
                 .build();
     }
 

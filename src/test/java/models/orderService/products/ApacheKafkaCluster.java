@@ -84,15 +84,20 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", isTest())
                 .set("$.order.label", getLabel())
                 .build();
     }
 
+    @SneakyThrows
     public void produceMessage(String topicName, String message) {
         String bootstrapServerUrl = (String) OrderServiceSteps.getProductsField(this, CONNECTION_URL);
         CustomKafkaProducer customKafkaProducer = new CustomKafkaProducer(message, bootstrapServerUrl, topicName);
-        customKafkaProducer.doProduce();
+        try {
+            customKafkaProducer.doProduce();
+        } catch (Exception e) {
+            connectVmException("Ошибка подключения к " + getProductName() + " " + e);
+        }
         sleep(10000);
     }
 
@@ -128,7 +133,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void createAclTransaction(String transactionRegex) {
-        OrderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}"), this.projectId);
+        OrderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}]}"), this.projectId);
         save();
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)), "ACL транзакция не создалась");
     }

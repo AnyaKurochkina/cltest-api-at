@@ -13,6 +13,7 @@ import io.qameta.allure.model.Status;
 import io.qameta.allure.model.StepResult;
 import io.qameta.allure.util.AspectUtils;
 import io.qameta.allure.util.ResultsUtils;
+import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -23,6 +24,7 @@ import java.util.UUID;
 import static ru.testit.junit5.StepsAspects.*;
 
 @Aspect
+@Log4j2
 public class StepsAspects {
     private static final InheritableThreadLocal<AllureLifecycle> LIFECYCLE = new InheritableThreadLocal<AllureLifecycle>() {
         protected AllureLifecycle initialValue() {
@@ -51,6 +53,7 @@ public class StepsAspects {
         StepResult result = (new StepResult()).setName(name).setParameters(parameters);
         getLifecycle().startStep(uuid, result);
         startNestedStep(name, "");
+        log.debug(name);
     }
 
     @AfterThrowing(

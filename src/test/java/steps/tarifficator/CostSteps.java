@@ -7,7 +7,7 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
+import models.authorizer.ProjectEnvironmentPrefix;
 import models.orderService.interfaces.IProduct;
 import models.productCatalog.Product;
 import org.json.JSONArray;
@@ -90,13 +90,13 @@ public class CostSteps extends Steps {
 
     public static Float getPreBillingCostPath(IProduct product, String path) {
         Project project = Project.builder()
-                .projectEnvironment(new ProjectEnvironment(product.getEnv()))
+                .projectEnvironmentPrefix(new ProjectEnvironmentPrefix(product.getEnv()))
                 .isForOrders(true)
                 .build()
                 .createObject();
         String productId = new ProductCatalogSteps(Product.productName)
                 .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
-                        "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironment().getEnvType().toLowerCase()));
+                        "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()));
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
@@ -143,13 +143,13 @@ public class CostSteps extends Steps {
     @Step("Получение предварительной стоимости продукта {product}")
     public static JSONArray getCost(IProduct product) {
         Project project = Project.builder()
-                .projectEnvironment(new ProjectEnvironment(product.getEnv()))
+                .projectEnvironmentPrefix(new ProjectEnvironmentPrefix(product.getEnv()))
                 .isForOrders(true)
                 .build()
                 .createObject();
         String productId = new ProductCatalogSteps(Product.productName)
                 .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
-                        "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironment().getEnvType()).toLowerCase());
+                        "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType()).toLowerCase());
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");

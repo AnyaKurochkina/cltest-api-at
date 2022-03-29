@@ -1,7 +1,6 @@
 package core.helper;
 
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Predicate;
 import core.helper.http.Http;
 import org.intellij.lang.annotations.Language;
 import org.json.JSONObject;
@@ -13,9 +12,9 @@ public class JsonTemplate {
         this.template = template;
     }
 
-    public JsonTemplate set(@Language("JSONPath") String s, Object o, Predicate... p) {
+    public JsonTemplate set(@Language("JSONPath") String s, Object o) {
         if (o != null)
-            JsonPath.parse(template).set(s, o, p);
+            JsonPath.parse(template).set(s, o);
         return this;
     }
 

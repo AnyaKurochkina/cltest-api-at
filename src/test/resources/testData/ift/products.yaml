@@ -8,71 +8,71 @@ OpenShiftProject:
 
 Rhel:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 PostgreSQL:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 RabbitMQCluster:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 Windows:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 Nginx:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 WildFly:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 Redis:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 Ubuntu:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 Astra:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 PostgresPro:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 ApacheKafka:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
 
 ClickHouse:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 Podman:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
 
 PostgresSQLCluster:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 Elasticsearch:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 ApacheKafkaCluster:
   - options:
-      - { platform: "vsphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }

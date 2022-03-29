@@ -16,20 +16,23 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.ObjectPoolService;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
+import models.authorizer.ProjectEnvironmentPrefix;
 import models.productCatalog.Graph;
 import models.productCatalog.Product;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.opentest4j.TestAbortedException;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
 
+import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -147,12 +150,15 @@ public abstract class IProduct extends Entity {
     @SneakyThrows
     protected void checkConnectDb(String dbName, String user, String password, String url) {
         String connectUrl = "jdbc:" + url + "/" + dbName;
+        Connection connection = null;
         try {
-            Connection connection = DriverManager.getConnection(connectUrl, user, password);
+            connection = DriverManager.getConnection(connectUrl, user, password);
             Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось по url: " + connectUrl).isValid(1));
         } catch (Exception e) {
-            throw new Exception("Ошибка подключения к " + getProductName() + " по url " + connectUrl + " : " + e);
+            connectVmException("Ошибка подключения к " + getProductName() + " по url " + connectUrl + " : " + e);
         }
+        assert connection != null;
+        connection.close();
         log.debug("Успешное подключение к " + getProductName());
     }
 
@@ -218,6 +224,7 @@ public abstract class IProduct extends Entity {
 
     public Flavor getMaxFlavor() {
         List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
+        Assertions.assertTrue(list.size() < 2, "Действие недоступно, либо кол-во flavor's < 2");
         return list.get(list.size() - 1);
     }
 
@@ -235,7 +242,7 @@ public abstract class IProduct extends Entity {
     }
 
     protected void initProduct() {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
         if (projectId == null) {
             setProjectId(project.getId());
         }
@@ -245,7 +252,7 @@ public abstract class IProduct extends Entity {
         if (productId == null) {
             productId = new ProductCatalogSteps(Product.productName).
                     getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(Objects.requireNonNull(getProductName()),
-                            "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironment().getEnvType().toLowerCase()));
+                            "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()));
         }
     }
 
@@ -253,7 +260,7 @@ public abstract class IProduct extends Entity {
         log.info("Отправка запроса на создание заказа " + productName);
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .body(toJson())
+                .body(deleteObjectIfNotFoundInUiSchema(toJson(), getProductId()))
                 .post("projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
@@ -263,27 +270,29 @@ public abstract class IProduct extends Entity {
         compareCostOrderAndPrice();
     }
 
+    @SneakyThrows
+    private JSONObject deleteObjectIfNotFoundInUiSchema(JSONObject jsonObject, String productId) {
+        GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(productId, GetProductResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
+        List<String> parameters = (List<String>) graphResponse.getUiSchema().get("ui:order");
+        Iterator<String> iterator = jsonObject.getJSONObject("order").getJSONObject("attrs").keys();
+        while (iterator.hasNext()) {
+            if (!parameters.contains(iterator.next()))
+                iterator.remove();
+        }
+        return jsonObject;
+    }
 
-//    @SneakyThrows
-//    public void toStringProductStep() {
-//        AllureLifecycle allureLifecycle = Allure.getLifecycle();
-//        String id = allureLifecycle.getCurrentTestCaseOrStep().get();
-//        List<Parameter> list = new ArrayList<>();
-//        List<Field> fieldList = new ArrayList<>(Arrays.asList(getClass().getSuperclass().getDeclaredFields()));
-//        fieldList.addAll(Arrays.asList(getClass().getDeclaredFields()));
-//        for (Field field : fieldList) {
-//            if (Modifier.isStatic(field.getModifiers()))
-//                continue;
-//            field.setAccessible(true);
-//            if (field.get(this) != null) {
-//                Parameter parameter = new Parameter();
-//                parameter.setName(field.getName());
-//                parameter.setValue(field.get(this).toString());
-//                list.add(parameter);
-//            }
-//        }
-//        allureLifecycle.updateStep(id, s -> s.setName("Получен продукт " + getProductName() + " с параметрами"));
-//        allureLifecycle.updateStep(id, s -> s.setParameters(list));
-//    }
+    protected boolean isTest() {
+        Project project = Project.builder().id(projectId).build().createObject();
+        return project.getProjectEnvironmentPrefix().getEnvType().contains("TEST");
+    }
+
+
+    public void connectVmException(String message) throws ConnectException {
+        if (!isTest())
+            throw new ConnectException(message);
+        throw new TestAbortedException("Тест отключен для продуктов в TEST средах");
+    }
 
 }

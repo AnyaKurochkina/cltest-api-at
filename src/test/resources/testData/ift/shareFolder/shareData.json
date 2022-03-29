@@ -1,16 +1,15 @@
 [
   {
     "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
     "id": "proj-ie2s5l0ycr",
     "projectName": "PROJECT_TEST",
-    "prefix": "df8e9a1f-7bc2-4ada-9f92-005c1b5e59b3",
-    "projectEnvironment": {
+    "projectEnvironmentPrefix": {
       "env": "IFT",
+      "id": "df8e9a1f-7bc2-4ada-9f92-005c1b5e59b3",
       "envType": "TEST",
-      "id": "92f2acb2-aa33-4317-9352-dc1553e0097f"
+      "projectEnvironmentPrefixId": "92f2acb2-aa33-4317-9352-dc1553e0097f"
     },
     "isForOrders": true
   },
@@ -34,16 +33,15 @@
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
     "id": "proj-xazpppulba",
     "projectName": "PROJECT_DEV",
-    "prefix": "2636779e-2ddc-4446-8cc4-ae1a71a23cd1",
-    "projectEnvironment": {
+    "projectEnvironmentPrefix": {
       "env": "DSO",
+      "id": "2636779e-2ddc-4446-8cc4-ae1a71a23cd1",
       "envType": "DEV",
-      "id": "395a0a01-e83a-4ede-80a5-7354f2a8db39"
+      "projectEnvironmentPrefixId": "395a0a01-e83a-4ede-80a5-7354f2a8db39"
     },
     "isForOrders": true
   },
