@@ -1,7 +1,6 @@
 package core.helper.http;
 
 import core.enums.Role;
-import core.helper.Configure;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import lombok.SneakyThrows;
@@ -130,9 +129,8 @@ public class Http {
     }
 
     public Http setProjectId(String projectId) {
-        //TODO: временный костыль
-        if(!Configure.ENV.equals("dev"))
-            this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId);
+//        if(!Configure.ENV.equals("dev"))
+        this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId);
         return this;
     }
 
@@ -171,7 +169,7 @@ public class Http {
             }
             break;
         }
-        if(Objects.isNull(response))
+        if (Objects.isNull(response))
             throw new ConnectException(String.format("Ошибка отправки http запроса %s. (Connection refused)", (host + path)));
         return response;
     }
@@ -197,13 +195,13 @@ public class Http {
             }
             http.setDoOutput(true);
             http.setRequestMethod(method);
-            if(isLogged)
+            if (isLogged)
                 log.debug(String.format("%s URL: %s\n", method, (host + path)));
             if (field.length() > 0) {
                 addFilePart(http.getOutputStream(), fileName, bytes);
             } else {
                 if (body.length() > 0 || method.equals("POST")) {
-                    if(isLogged)
+                    if (isLogged)
                         log.debug(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
                     http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
                 }
@@ -233,7 +231,7 @@ public class Http {
             }
 
             http.disconnect();
-            if(isLogged)
+            if (isLogged)
                 log.debug(String.format("RESPONSE (%s): %s\n\n", xRequestId, stringPrettyFormat(responseMessage)));
 
         } catch (Exception e) {
