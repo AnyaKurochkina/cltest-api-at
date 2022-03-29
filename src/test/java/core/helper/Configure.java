@@ -41,7 +41,7 @@ public class Configure {
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
 
             String kongURL = getAppProp("url.kong");
-            AuthorizerURL = kongURL + "authorizer/api/v1/";
+            AuthorizerURL = kongURL + "iam/api/v1/";
             AccountManagerURL = kongURL + "accountmanager/api/v1/";
             PortalBackURL = kongURL + "portal/api/v1/";
             TarifficatorURL = kongURL + "tarifficator/api/v1/";

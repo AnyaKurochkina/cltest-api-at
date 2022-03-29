@@ -1,6 +1,7 @@
 package core.helper.http;
 
 import core.enums.Role;
+import core.helper.Configure;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import lombok.SneakyThrows;
