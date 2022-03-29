@@ -33,18 +33,26 @@ public class Example {
         String fullOrgName = (listOfOrganizationsPage.getCurrentOrgName() + "-" + orgName).toLowerCase(Locale.ROOT);
         listOfOrganizationsPage.createOrganization(orgName);
         listOfOrganizationsPage.checkPage();
-//        listOfOrganizationsPage.stepInOrganization(fullOrgName);
-//        OrganizationPage organizationPage = new OrganizationPage();
-//        organizationPage.checkPage(fullOrgName);
-//        organizationPage.createVirtualDataCentre();
-//        VmWareDataCentreCreationPage vmWareDataCentreCreationPage = new VmWareDataCentreCreationPage();
-//        vmWareDataCentreCreationPage
-//                .setNameDataCentre(randomAlphabetic(5).toLowerCase(Locale.ROOT))
-//                .setIpV4Value(10)
-//                .setCpuValue(14)
-//                .setWidthValue(15)
-//                .setRamValue(35)
-//                .confirmOrder();
+        listOfOrganizationsPage.stepInOrganization(fullOrgName);
+        OrganizationPage organizationPage = new OrganizationPage();
+        organizationPage.checkPage(fullOrgName);
+        organizationPage.createVirtualDataCentre();
+        VmWareDataCentreCreationPage vmWareDataCentreCreationPage = new VmWareDataCentreCreationPage();
+        String nameOfDataCentre = randomAlphabetic(5).toLowerCase(Locale.ROOT);
+        vmWareDataCentreCreationPage
+                .setNameDataCentre(nameOfDataCentre)
+                .setIpV4Value(10)
+                .setCpuValue(14)
+                .setWidthValue(15)
+                .setRamValue(35)
+                .confirmOrder();
+        organizationPage.checkPage(fullOrgName);
+        organizationPage.checkStatusOfDataCentre(nameOfDataCentre);
+
+
+        organizationPage.stepInDataCentre(nameOfDataCentre);
+
+        System.out.println();
 
 
 

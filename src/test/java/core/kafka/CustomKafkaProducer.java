@@ -11,10 +11,9 @@ import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 @Log4j2
 public class CustomKafkaProducer {

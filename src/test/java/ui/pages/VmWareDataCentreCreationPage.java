@@ -35,7 +35,6 @@ public class VmWareDataCentreCreationPage implements Loadable {
     }
 
     public VmWareDataCentreCreationPage setNameDataCentre(String nameDataCentre) {
-        nameInput.selectOption(5);
         nameInput.shouldBe(Condition.enabled).val(nameDataCentre);
         wrongNameAlert.shouldBe(Condition.disappear);
         return this;
