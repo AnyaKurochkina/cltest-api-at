@@ -42,6 +42,8 @@ public class ClickHouse extends IProduct {
     String clickhousePassword;
     String clickhouseUser;
     String clickhouseBb;
+    String chCustomerPassword;
+    String chVersion;
 
     //Проверить конфигурацию
     private static final String REFRESH_VM_CONFIG = "check_vm";
@@ -79,8 +81,12 @@ public class ClickHouse extends IProduct {
             clickhouseUser = "username_created";
         if (clickhousePassword == null)
             clickhousePassword = "vrItfk0k8sf8ICbwsMs7nB3";
+        if (chCustomerPassword == null)
+            chCustomerPassword = "XcMYBatz2KNlctnmRYitgcSNQxQejZKV4I71lJGu8t";
         if (clickhouseBb == null)
             clickhouseBb = "dbname";
+        if (chVersion == null)
+            chVersion = getRandomProductVersionByPathEnum("ch_version.default.split()");
         return this;
     }
 
@@ -101,10 +107,16 @@ public class ClickHouse extends IProduct {
         save();
     }
 
-    //Сбросить пароль
-    public void resetPassword(String username) {
+    public void resetPasswordOwner() {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
+        OrderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", clickhouseUser, password)), this.getProjectId());
+        clickhousePassword = password;
+    }
+
+    public void resetPasswordCustomer() {
+        String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
+        OrderServiceSteps.executeAction("clickhouse_reset_ch_customer_password", this, new JSONObject(String.format("{\"user_name\":\"ch_customer\",\"user_password\":\"%s\"}", password)), this.getProjectId());
+        chCustomerPassword = password;
     }
 
     public void removeDbmsUser(String username, String dbName) {
@@ -170,6 +182,8 @@ public class ClickHouse extends IProduct {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.ch_customer_password", chCustomerPassword)
+                .set("$.order.attrs.ch_version", chVersion)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)

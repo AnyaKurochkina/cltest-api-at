@@ -30,6 +30,8 @@
       ],
       "clickhouse_db": "dbname",
       "ad_integration": true,
+      "ch_customer_password": "XcMYBatz2KNlctnmRYitgcSNQxQejZKV4I71lJGu8t",
+      "ch_version": "21.9.4.35",
       "clickhouse_user": "username_created",
       "clickhouse_password": "vrItfk0k8sf8ICbwsMs7nB3",
       "ad_logon_grants": [
