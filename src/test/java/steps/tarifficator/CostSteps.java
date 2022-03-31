@@ -174,11 +174,11 @@ public class CostSteps extends Steps {
 //        Project project = Project.builder().id(product.getProjectId()).build().createObject();
         log.info("Отправка запроса на получение стоимости экшена: " + action + ", у продукта " + product.getProductName());
         return JsonHelper.getJsonTemplate("/tarifficator/costAction.json")
-                .set("$.order.attrs.project_name", product.getProjectId())
-                .set("$.order.attrs.item_id", itemId)
-                .set("$.order.attrs.action_name", action)
-                .set("$.order.attrs.id", product.getOrderId())
-                .set("$.order.attrs.order.data", data)
+                .set("$.project_name", product.getProjectId())
+                .set("$.item_id", itemId)
+                .set("$.action_name", action)
+                .set("$.id", product.getOrderId())
+                .set("$.order.attrs", data)
                 .send(TarifficatorURL)
                 .setProjectId(product.getProjectId())
                 .post("cost")

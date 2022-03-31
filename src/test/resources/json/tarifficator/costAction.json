@@ -1,13 +1,11 @@
 {
   "is_action": true,
-  "params": {
-    "order": {
-      "data": {}
-    },
-    "project_name": "proj-xazpppulba",
-    "item_id": "ce6071de-1859-4b55-8bde-a4f3be00503b",
-    "action_name": "stop_vm_hard",
-    "id": "88a96301-0395-498e-aa44-bd217483bb3f"
+  "order": {
+    "attrs": {}
   },
+  "project_name": "proj-xazpppulba",
+  "action_name": "stop_vm_hard",
+  "item_id": "ce6071de-1859-4b55-8bde-a4f3be00503b",
+  "id": "88a96301-0395-498e-aa44-bd217483bb3f",
   "include": "price_info"
 }
