@@ -25,7 +25,7 @@
       "graph_version": "",
       "allowed_groups": [],
       "event_provider": [],
-      "data_config_key": "",
+      "data_config_key": null,
       "data_config_path": "",
       "multiple": false,
       "item_restriction": null,

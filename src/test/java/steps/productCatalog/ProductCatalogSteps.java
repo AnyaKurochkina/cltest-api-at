@@ -165,7 +165,6 @@ public class ProductCatalogSteps {
         List<ItemImpl> list = ((GetListImpl) new Http(ProductCatalogURL)
                 .get(productName + "?include=total_count&page=1&per_page=10&multisearch=" + name)
                 .assertStatus(200).extractAs(clazz)).getItemsList();
-
         for (ItemImpl item : list) {
             if (item.getName().equals(name)) {
                 objectId = item.getId();
@@ -175,7 +174,6 @@ public class ProductCatalogSteps {
         Assertions.assertNotNull(objectId, String.format("Объект с именем: %s, с помощью multiSearch не найден", name));
         return objectId;
     }
-
 
     @Step("Поиск ID объекта продуктового каталога по Title")
     public String getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(String title, String parameters) {
@@ -263,7 +261,7 @@ public class ProductCatalogSteps {
     }
 
     @Step("Получение объекта продуктового каталога по имени")
-    public GetListImpl getObjectByName(String name, Class<?> clazz) {
+    public GetListImpl getObjectListByName(String name, Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
                 .get(productName + "?name=" + name)
                 .assertStatus(200)
@@ -271,7 +269,7 @@ public class ProductCatalogSteps {
     }
 
     @Step("Получение списка объектов продуктового каталога по именам")
-    public GetListImpl getListObjectsByName(Class<?> clazz, String... name) {
+    public GetListImpl getObjectsListByNames(Class<?> clazz, String... name) {
         String names = String.join(",", name);
         return (GetListImpl) new Http(ProductCatalogURL)
                 .get(productName + "?name__in=" + names)
@@ -283,6 +281,14 @@ public class ProductCatalogSteps {
     public GetListImpl getObjectByTitle(String title, Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
                 .get(productName + "?title=" + title)
+                .assertStatus(200)
+                .extractAs(clazz);
+    }
+
+    @Step("Получение объекта продуктового каталога по type")
+    public GetListImpl getObjectListByType(String type, Class<?> clazz) {
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?type=" + type)
                 .assertStatus(200)
                 .extractAs(clazz);
     }
