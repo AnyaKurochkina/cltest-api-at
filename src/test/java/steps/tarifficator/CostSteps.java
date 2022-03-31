@@ -104,7 +104,7 @@ public class CostSteps extends Steps {
         template.getJSONObject("order").put("attrs", attrs);
 //        template.put("params", attrs);
         template.put("project_name", project.id);
-        template.put("product_id", productId);
+        template.getJSONObject("order").put("product_id", productId);
 
         if (Objects.nonNull(product.getOrderId())) {
             template = JsonHelper.getJsonTemplate("/tarifficator/costItems.json").build();
@@ -156,7 +156,7 @@ public class CostSteps extends Steps {
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
         template.getJSONObject("order").put("attrs", attrs);
         template.put("project_name", project.id);
-        template.put("product_id", productId);
+        template.getJSONObject("order").put("product_id", productId);
 
         return new Http(TarifficatorURL)
                 .setProjectId(project.id)

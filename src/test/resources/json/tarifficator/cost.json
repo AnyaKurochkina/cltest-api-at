@@ -1,7 +1,7 @@
 {
-  "product_id": "c422069e-8f01-4328-b9dc-4a9e5dafd44e",
   "project_name": "proj-0p1rtz9mq9",
   "order": {
+    "product_id": "",
     "attrs": {
       "domain": "corp.dev.vtb",
       "flavor": {
