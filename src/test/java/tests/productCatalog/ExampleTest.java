@@ -83,7 +83,7 @@ public class ExampleTest extends Tests {
                 .description("create_example_for_list_by_name_test_api")
                 .build()
                 .createObject();
-        GetListImpl exampleListByName = steps.getObjectByName(exampleName, GetExampleListResponse.class);
+        GetListImpl exampleListByName = steps.getObjectListByName(exampleName, GetExampleListResponse.class);
         assertEquals(createExample.getName(), exampleListByName.getItemsList().get(0).getName());
         assertEquals(1, exampleListByName.getItemsList().size(),
                 "Список не содержит значений");
@@ -107,7 +107,7 @@ public class ExampleTest extends Tests {
                 .description("description_second_example_for_list_by_name_test_api")
                 .build()
                 .createObject();
-        GetListImpl exampleListByName = steps.getListObjectsByName(GetExampleListResponse.class, exampleName, exampleName2);
+        GetListImpl exampleListByName = steps.getObjectsListByNames(GetExampleListResponse.class, exampleName, exampleName2);
         assertEquals(2, exampleListByName.getItemsList().size(),
                 "Список не содержит значений");
     }
@@ -201,7 +201,7 @@ public class ExampleTest extends Tests {
         String exampleName = "example_delete_test_api";
         Response response = steps.createProductObject(steps.createJsonObject(exampleName));
         steps.deleteById(response.jsonPath().get("id"));
-        GetListImpl list = steps.getObjectByName(exampleName, GetExampleListResponse.class);
+        GetListImpl list = steps.getObjectListByName(exampleName, GetExampleListResponse.class);
         assertTrue(list.getItemsList().isEmpty());
     }
 }

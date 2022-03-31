@@ -28,6 +28,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("icon")
     private String icon;
 
+    @JsonProperty("location_restriction")
+    private String locationRestriction;
+
     @JsonProperty("graph_version")
     private String graphVersion;
 
