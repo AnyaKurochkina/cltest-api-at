@@ -23,6 +23,9 @@ public class CreateActionResponse{
 	@JsonProperty("priority")
 	private Integer priority;
 
+	@JsonProperty("location_restriction")
+	private String locationRestriction;
+
 	@JsonProperty("icon")
 	private String icon;
 

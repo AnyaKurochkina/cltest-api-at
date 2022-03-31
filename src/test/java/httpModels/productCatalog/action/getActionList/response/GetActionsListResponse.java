@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActionResponse implements GetListImpl {
+public class GetActionsListResponse implements GetListImpl {
 
 	@JsonProperty("meta")
 	private Meta meta;

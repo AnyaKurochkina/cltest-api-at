@@ -23,11 +23,15 @@ public class Action extends Entity {
     private String jsonTemplate;
     private String actionName;
     private String graphId;
+    private String title;
+    private String description;
     private String actionId;
     private String version;
+    private String type;
     private boolean isMultiple;
     private String createDt;
     private String updateDt;
+    private String locationRestriction;
     private Integer priority;
     private final String productName = "actions/";
 
@@ -43,13 +47,15 @@ public class Action extends Entity {
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", actionName)
-                .set("$.title", actionName)
-                .set("$.description", actionName)
+                .set("$.title", title)
+                .set("$.type", type)
+                .set("$.description", description)
                 .set("$.graph_id", graphId)
                 .set("$.version", version)
                 .set("$.create_dt", createDt)
                 .set("$.update_dt", updateDt)
                 .set("$.priority", priority)
+                .set("$.location_restriction", locationRestriction)
                 .build();
     }
 

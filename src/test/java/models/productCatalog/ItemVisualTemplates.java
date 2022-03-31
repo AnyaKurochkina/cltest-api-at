@@ -76,7 +76,7 @@ public class ItemVisualTemplates extends Entity {
                 .delete(productName + itemId + "/")
                 .assertStatus(204);
         ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertEquals(0, steps.getObjectByName(name, GetVisualTemplateListResponse.class)
+        Assertions.assertEquals(0, steps.getObjectListByName(name, GetVisualTemplateListResponse.class)
                 .getItemsList().size(), "Шаблон визуализации с именем: " + name + ", не удалился");
     }
 }
