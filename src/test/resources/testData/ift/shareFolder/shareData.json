@@ -9,7 +9,7 @@
       "env": "IFT",
       "id": "df8e9a1f-7bc2-4ada-9f92-005c1b5e59b3",
       "envType": "TEST",
-      "projectEnvironmentPrefixId": "92f2acb2-aa33-4317-9352-dc1553e0097f"
+      "projectEnvironmentId": "92f2acb2-aa33-4317-9352-dc1553e0097f"
     },
     "isForOrders": true
   },
@@ -41,7 +41,7 @@
       "env": "DSO",
       "id": "2636779e-2ddc-4446-8cc4-ae1a71a23cd1",
       "envType": "DEV",
-      "projectEnvironmentPrefixId": "395a0a01-e83a-4ede-80a5-7354f2a8db39"
+      "projectEnvironmentId": "395a0a01-e83a-4ede-80a5-7354f2a8db39"
     },
     "isForOrders": true
   },

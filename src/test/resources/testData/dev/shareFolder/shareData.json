@@ -8,7 +8,7 @@
     "projectEnvironmentPrefix": {
       "env": "DSO",
       "id": "7f7beb92-9901-43b7-9391-7ea72474863d",
-      "projectEnvironmentPrefixId": "3d294e04-13c5-439a-9397-6b79a140b7f2",
+      "projectEnvironmentId": "3d294e04-13c5-439a-9397-6b79a140b7f2",
       "envType": "DEV"
     }
   },
