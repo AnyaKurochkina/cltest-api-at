@@ -101,7 +101,8 @@ public class CostSteps extends Steps {
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
 
-        template.put("params", attrs);
+        template.getJSONObject("order").put("attrs", attrs);
+//        template.put("params", attrs);
         template.put("project_name", project.id);
         template.put("product_id", productId);
 
@@ -153,7 +154,7 @@ public class CostSteps extends Steps {
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
-        template.put("params", attrs);
+        template.getJSONObject("order").put("attrs", attrs);
         template.put("project_name", project.id);
         template.put("product_id", productId);
 
@@ -173,11 +174,11 @@ public class CostSteps extends Steps {
 //        Project project = Project.builder().id(product.getProjectId()).build().createObject();
         log.info("Отправка запроса на получение стоимости экшена: " + action + ", у продукта " + product.getProductName());
         return JsonHelper.getJsonTemplate("/tarifficator/costAction.json")
-                .set("$.params.project_name", product.getProjectId())
-                .set("$.params.item_id", itemId)
-                .set("$.params.action_name", action)
-                .set("$.params.id", product.getOrderId())
-                .set("$.params.order.data", data)
+                .set("$.order.attrs.project_name", product.getProjectId())
+                .set("$.order.attrs.item_id", itemId)
+                .set("$.order.attrs.action_name", action)
+                .set("$.order.attrs.id", product.getOrderId())
+                .set("$.order.attrs.order.data", data)
                 .send(TarifficatorURL)
                 .setProjectId(product.getProjectId())
                 .post("cost")
