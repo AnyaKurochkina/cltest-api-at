@@ -23,8 +23,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
@@ -32,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ActionsTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("actions/", "productCatalog/actions/createAction.json");
-    Action action;
 
     @DisplayName("Создание действия в продуктовом каталоге")
     @TmsLink("640545")
@@ -226,7 +223,6 @@ public class ActionsTest extends Tests {
         steps.exportById(action.getActionId());
     }
 
-    @Order(80)
     @DisplayName("Поиск действия по имени, с использованием multiSearch")
     @TmsLink("642503")
     @Test
@@ -239,15 +235,21 @@ public class ActionsTest extends Tests {
                 .createObject();
         String actionIdWithMultiSearch = steps.getProductObjectIdByNameWithMultiSearch(action.getActionName(), GetActionsListResponse.class);
         assertAll(
-                () -> assertNotNull(actionIdWithMultiSearch, String.format("Действие с именем: %s не найден", "test_object_at2021")),
+                () -> assertNotNull(actionIdWithMultiSearch, String.format("Действие с именем: %s не найден", actionName)),
                 () -> assertEquals(action.getActionId(), actionIdWithMultiSearch, "Id действия не совпадают"));
     }
 
-    @Order(89)
     @DisplayName("Проверка независимых от версии параметров в действиях")
     @TmsLink("716373")
     @Test
     public void checkVersionWhenIndependentParamUpdated() {
+        String actionName = "action_version_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .version("1.0.0")
+                .build()
+                .createObject();
         String version = action.getVersion();
         String id = action.getActionId();
         List<String> list = Collections.singletonList("restricted");
@@ -259,12 +261,15 @@ public class ActionsTest extends Tests {
 
     }
 
-    @Order(90)
     @DisplayName("Обновление действия с указанием версии в граничных значениях")
     @TmsLink("642507")
     @Test
     public void updateActionAndGetVersion() {
-        Action actionTest = Action.builder().actionName("action_version_test_api").version("1.0.999").build().createObject();
+        Action actionTest = Action.builder()
+                .actionName("action_version_test_api")
+                .version("1.0.999")
+                .build()
+                .createObject();
         steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api2"));
         String currentVersion = steps.getById(actionTest.getActionId(), GetActionResponse.class).getVersion();
         Assertions.assertEquals("1.1.0", currentVersion);
@@ -279,7 +284,6 @@ public class ActionsTest extends Tests {
                 .assertStatus(500);
     }
 
-    @Order(92)
     @DisplayName("Негативный тест на создание действия с двумя параметрами одновременно graph_version_pattern и graph_version")
     @TmsLink("642514")
     @Test
@@ -292,42 +296,63 @@ public class ActionsTest extends Tests {
                 .assertStatus(500);
     }
 
-    @Order(93)
     @DisplayName("Обновление действия без указания версии, версия должна инкрементироваться")
     @TmsLink("642515")
     @Test
     public void patchTest() {
+        String actionName = "action_patch_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .build()
+                .createObject();
         String version = steps
-                .patchObject(GetActionResponse.class, "test_object_at2021", action.getGraphId(), action.getActionId())
+                .patchObject(GetActionResponse.class, actionName, action.getGraphId(), action.getActionId())
                 .getVersion();
-        assertEquals("1.0.2", version, "Версии не совпадают");
+        assertEquals("1.0.1", version, "Версии не совпадают");
     }
 
-    @Order(94)
     @DisplayName("Негативный тест на обновление действия до той же версии/текущей")
     @TmsLink("642518")
     @Test
     public void sameVersionTest() {
-        steps.patchRow(Action.builder().actionName("test_object_at2021").build().init().getTemplate()
+        String actionName = "action_same_version_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .version("1.0.1")
+                .build()
+                .createObject();
+        steps.patchRow(Action.builder().actionName(actionName).build().init().getTemplate()
                 .set("$.version", "1.0.1")
                 .build(), action.getActionId()).assertStatus(500);
     }
 
-    @Order(97)
     @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос в действиях")
     @TmsLink("642524")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {
+        String actionName = "action_get_key_version_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .build()
+                .createObject();
         String graphVersionCalculated = steps.getById(action.getActionId(), GetActionResponse.class)
                 .getGraphVersionCalculated();
         Assertions.assertNotNull(graphVersionCalculated);
     }
 
-    @Order(100)
     @Test
     @DisplayName("Удаление действия")
     @TmsLink("642530")
     public void deleteAction() {
+        String actionName = "action_delete_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .build()
+                .createObject();
         action.deleteObject();
     }
 }

@@ -12,8 +12,7 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -60,7 +59,7 @@ public class ActionsNegativeTest extends Tests {
                 .build()
                 .createObject();
         steps.deleteObjectByIdWithOutToken(action.getActionId());
-        assertFalse(steps.isExists(actionName), "Действие существует");
+        assertTrue(steps.isExists(actionName), "Действие существует");
     }
 
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
