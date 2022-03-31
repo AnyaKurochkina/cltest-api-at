@@ -4,7 +4,8 @@ public enum Outcome
 {
     PASSED("Passed"), 
     FAILED("Failed"),
-    BLOCKED("Blocked");
+    BLOCKED("Blocked"),
+    SKIPPED("Skipped");
 
     private String value;
     

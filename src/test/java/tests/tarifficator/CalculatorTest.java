@@ -10,6 +10,8 @@ import models.accountManager.Account;
 import models.authorizer.Folder;
 import models.authorizer.Organization;
 import models.authorizer.Project;
+import models.calculator.DetailsItem;
+import models.calculator.DetailsOrderItem;
 import models.orderService.interfaces.IProduct;
 import models.orderService.products.NT;
 import models.orderService.products.Rhel;
@@ -22,10 +24,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.accountManager.AccountSteps;
 import steps.authorizer.AuthorizerSteps;
+import steps.calculator.CalculatorSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.tarifficator.CostSteps;
 import tests.Tests;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 @Log4j2
@@ -49,9 +54,9 @@ public class CalculatorTest extends Tests {
                     .build()
                     .createObject();
             Project projectTarget = Project.builder().projectName("project_for_account_expense")
-                    .prefix(projectSource.getPrefix())
+//                    .prefix(projectSource.getPrefix())
                     .informationSystem(projectSource.getInformationSystem())
-                    .projectEnvironment(projectSource.getProjectEnvironment())
+                    .projectEnvironmentPrefix(projectSource.getProjectEnvironmentPrefix())
                     .folderName(folderTarget.getName())
                     .build()
                     .createObject();
@@ -87,7 +92,7 @@ public class CalculatorTest extends Tests {
 
     @Test
     @SneakyThrows
-    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+//    @Source(ProductArgumentsProvider.ONE_PRODUCT)
     public void bigIntegrationCalculatorTest() {
         Organization organization = Organization.builder().build().createObject();
         String accountOrganization = AccountSteps.getAccountIdByContext(organization.getName());
@@ -115,9 +120,8 @@ public class CalculatorTest extends Tests {
         accountFolder.deleteObject();
 
         spent = checkSpentAccount(product, department.getName(), spent);
-
-
-
+        String newAccount = CalculatorSteps.getCostOrderByOrderId(product.getOrderId()).getDetails().get(0).getAccountId();
+        Assertions.assertEquals(accountDepartment.getAccountId(), newAccount, "Счет у продукта не изменился");
 
         System.out.println(1);
     }

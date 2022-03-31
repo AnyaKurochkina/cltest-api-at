@@ -26,6 +26,10 @@ public abstract class Steps {
     @JsonIgnore
     @SneakyThrows
     protected static List<?> listEntities(String url, Class<?> clazz) {
+        return listEntities(url, clazz,"data");
+    }
+
+    protected static List<?> listEntities(String url, Class<?> clazz, String pathData) {
         ObjectMapper objectMapper = JsonHelper.getCustomObjectMapper();
         JavaType typeList = objectMapper.getTypeFactory().constructCollectionType(List.class, clazz);
         List<? extends Entity> entityList = new ArrayList<>();
@@ -34,7 +38,7 @@ public abstract class Steps {
         do {
             JsonPath path = responseList(url, page++);
             totalCount = path.getInt("meta.total_count");
-            entityList.addAll(objectMapper.convertValue(path.getList("data"), typeList));
+            entityList.addAll(objectMapper.convertValue(path.getList(pathData), typeList));
         }
         while (totalCount > entityList.size());
         return entityList;

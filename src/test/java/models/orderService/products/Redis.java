@@ -65,7 +65,7 @@ public class Redis extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", projectId)
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", isTest())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.redis_password", redisPassword)
                 .set("$.order.label", getLabel())
@@ -90,7 +90,7 @@ public class Redis extends IProduct {
             jedis.auth(redisPassword);
             jedis.close();
         } catch (Exception e) {
-            throw new Exception("Ошибка подключения к Redis по url " + url + " : " + e);
+            connectVmException("Ошибка подключения к Redis по url " + url + " : " + e);
         }
         log.debug("Успешное подключение к Redis");
     }
@@ -103,6 +103,7 @@ public class Redis extends IProduct {
     public void resetPassword() {
         String password = "yxjpjk7xvOImb1O9vZZiGUlsItkqLqtbB1VPZHzL6";
         OrderServiceSteps.executeAction("reset_redis_password", this, new JSONObject(String.format("{redis_password: \"%s\"}", password)), this.getProjectId());
+        redisPassword = password;
     }
 
     public void restart() {

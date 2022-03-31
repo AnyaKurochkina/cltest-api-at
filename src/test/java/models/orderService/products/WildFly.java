@@ -76,7 +76,7 @@ public class WildFly extends IProduct {
                 .set("$.order.attrs.access_group[0]", accessGroup.getPrefixName())
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", isTest())
                 .set("$.order.label", getLabel())
                 .build();
     }

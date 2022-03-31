@@ -12,6 +12,7 @@ import models.tarifficator.TariffClass;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @Tags({@Tag("regress"), @Tag("tariff")})
+@DisabledIfEnv("prod")
 public class BaseTariffPlanTest extends Tests {
 
     @Test

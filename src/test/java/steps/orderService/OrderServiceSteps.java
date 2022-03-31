@@ -10,7 +10,7 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
+import models.authorizer.ProjectEnvironmentPrefix;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
@@ -266,11 +266,20 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
+    @Step("Получение домена для сегмента сети {netSegment}")
     public static String getDomainBySegment(IProduct product, String netSegment) {
-        log.info("Получение домена для сегмента сети " + netSegment);
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
                 .get("domains?net_segment_code={}&page=1&per_page=25", netSegment)
+                .assertStatus(200)
+                .jsonPath()
+                .get("list.collect{e -> e}.shuffled()[0].code");
+    }
+
+    @Step("Получение домена для проекта {project}")
+    public static String getDomainByProject(String project) {
+        return new Http(OrderServiceURL)
+                .get("domains?project_name={}&with_deleted=false&page=1&per_page=25", project)
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.collect{e -> e}.shuffled()[0].code");
@@ -374,7 +383,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Удаление всех заказов")
     public static void deleteOrders(String env) {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(Objects.requireNonNull(env)))
+        Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(Objects.requireNonNull(env)))
                 .isForOrders(true).build().createObject();
         List<String> orders = new Http(OrderServiceURL)
                 .setProjectId(project.id)

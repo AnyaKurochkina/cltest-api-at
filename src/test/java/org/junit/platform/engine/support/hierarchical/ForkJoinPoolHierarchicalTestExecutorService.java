@@ -130,45 +130,30 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (testDescriptor instanceof MethodBasedTestDescriptor) {
-            String match = StringUtils.findByRegex(":\\w+\\(models.orderService.products.(\\w+)\\)]", testDescriptor.getUniqueId().toString());
-            if (match != null) {
-                Map<String, List<Map>> products = ProductArgumentsProvider.getProductListMap();
-                for (Map.Entry<String, List<Map>> e : products.entrySet()) {
-                    if(e.getKey().endsWith(match)){
-                    List<Map<String, Object>> listProduct = ProductArgumentsProvider.findListInMapByKey("options", e.getValue());
-
-//                    Map <String, String> confMap = TestProperties.getInstance().getConfigMap(((MethodBasedTestDescriptor) testDescriptor).getTestMethod());
-//                    Iterator itr = listProduct.iterator();
-//                    while(itr.hasNext()) {
-//                        Map<String, Object> map = (Map<String, Object>) itr.next();
-//                        DocumentContext jsonPath = JsonPath.parse(new JSONObject(map));
-//                        boolean approved = true;
-//                        for (Map.Entry<String, String> entry : confMap.entrySet()) {
-//                            if (((JSONArray) jsonPath.read("$[?(@." + entry.getKey() + " =~ /.*" + entry.getValue() + "*/i)]")).isEmpty())
-//                                approved = false;
-//                        }
-//                        if(!approved)
-//                            itr.remove();
+//        if (testDescriptor instanceof MethodBasedTestDescriptor) {
+//            String match = StringUtils.findByRegex(":\\w+\\(models.orderService.products.(\\w+)\\)]", testDescriptor.getUniqueId().toString());
+//            if (match != null) {
+//                Map<String, List<Map>> products = ProductArgumentsProvider.getProductListMap();
+//                for (Map.Entry<String, List<Map>> e : products.entrySet()) {
+//                    if(e.getKey().endsWith(match)){
+//                    List<Map<String, Object>> listProduct = ProductArgumentsProvider.findListInMapByKey("options", e.getValue());
+//                    if(listProduct == null) {
+//                        skipTests.add(testDescriptor);
+//                        return;
 //                    }
-
-                    if(listProduct == null) {
-                        skipTests.add(testDescriptor);
-                        return;
-                    }
-                    if(listProduct.isEmpty())
-                        skipTests.add(testDescriptor);
-                    return;
-                    }
-                }
-                skipTests.add(testDescriptor);
-            }
-            Matcher matchProduct = Pattern.compile(":\\w+\\(models.orderService.interfaces.IProduct\\)]").matcher(testDescriptor.getUniqueId().toString());
-            if (matchProduct.find()) {
-                if(ProductArgumentsProvider.getProductListMap().size() == 0)
-                    skipTests.add(testDescriptor);
-            }
-        }
+//                    if(listProduct.isEmpty())
+//                        skipTests.add(testDescriptor);
+//                    return;
+//                    }
+//                }
+//                skipTests.add(testDescriptor);
+//            }
+//            Matcher matchProduct = Pattern.compile(":\\w+\\(models.orderService.interfaces.IProduct\\)]").matcher(testDescriptor.getUniqueId().toString());
+//            if (matchProduct.find()) {
+//                if(ProductArgumentsProvider.getProductListMap().size() == 0)
+//                    skipTests.add(testDescriptor);
+//            }
+//        }
     }
 
     public static boolean removeTestClass(JupiterTestDescriptor testDescriptor) {
