@@ -32,10 +32,7 @@ import steps.tarifficator.CostSteps;
 import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static core.helper.Configure.OrderServiceURL;
 
@@ -275,7 +272,7 @@ public abstract class IProduct extends Entity {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(productId, GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
         List<String> parameters = (List<String>) graphResponse.getUiSchema().get("ui:order");
-        parameters.addAll(graphResponse.getUiSchema().keySet());
+        parameters.addAll(((Map<String, Object>) graphResponse.getJsonSchema().get("dependencies")).keySet());
         Iterator<String> iterator = jsonObject.getJSONObject("order").getJSONObject("attrs").keys();
         while (iterator.hasNext()) {
             if (!parameters.contains(iterator.next()))
