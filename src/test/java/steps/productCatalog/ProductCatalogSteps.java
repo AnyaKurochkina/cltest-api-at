@@ -88,7 +88,7 @@ public class ProductCatalogSteps {
     @Step("Получение объекта продуктового каталога по Id и Env")
     public GetImpl getByIdAndEnv(String objectId, String env, Class<?> clazz) {
         return (GetImpl) new Http(ProductCatalogURL)
-                .get(productName + objectId + "/?env={}&json_name=orchestrator_json", env)
+                .get(productName + objectId + "/?env={}", env)
                 .extractAs(clazz);
     }
 
