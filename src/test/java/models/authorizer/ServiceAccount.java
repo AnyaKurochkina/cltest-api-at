@@ -119,12 +119,21 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
 
         Assertions.assertEquals(title, jsonPath.get("data.title"));
         id = jsonPath.get("data.name");
+
+        jsonPath = new Http(Configure.AuthorizerURL)
+                .body(toJson())
+                .post("projects/{}/service_accounts/{}/api_keys", projectId, id)
+                .assertStatus(201)
+                .jsonPath();
         secret = jsonPath.get("data.client_secret");
     }
 
     @Override
     @Step("Удаление сервисного аккаунта")
     protected void delete() {
+        new Http(Configure.AuthorizerURL)
+                .delete("projects/{}/service_accounts/{}/api_keys/{}", projectId, id, id)
+                .assertStatus(204);
         new Http(Configure.AuthorizerURL)
                 .delete("projects/{}/service_accounts/{}", projectId, id)
                 .assertStatus(204);
