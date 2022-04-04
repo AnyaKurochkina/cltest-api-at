@@ -8,6 +8,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.authorizer.Organization;
 import models.tarifficator.TariffClass;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
@@ -21,6 +22,7 @@ import tests.Tests;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -168,6 +170,21 @@ public class BaseTariffPlanTest extends Tests {
         tariffClass.setPrice(tariffClass.getPrice() + 1.0f);
         TariffClass updatedTariffClass = TariffPlanSteps.editTariffClass(tariffClass, tariffPlan);
         Assertions.assertEquals(tariffClass.getPrice(), updatedTariffClass.getPrice(), "Стоимость не изменилась");
+    }
+
+    @Test
+    @Order(8)
+    @TmsLink("783813")
+    @DisplayName("Фильтр по статусу таблицы ТП")
+    public void filterTariffPlanByStatus() {
+        List<TariffPlan> tariffPlans = TariffPlanSteps
+                .getTariffPlanList("f[base]=true&f[status][]=" + TariffPlanStatus.draft);
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(tariffPlans.stream().filter(tariffPlan -> tariffPlan.getStatus().equals(TariffPlanStatus.draft)).count(),
+                                tariffPlans.size(), "Не все ТП в статусе draft"),
+                () -> Assertions.assertEquals(tariffPlans.stream().filter(tariffPlan -> tariffPlan.getBase().equals(true)).count(),
+                        tariffPlans.size(), "Не все ТП в базовые")
+        );
     }
 
 }
