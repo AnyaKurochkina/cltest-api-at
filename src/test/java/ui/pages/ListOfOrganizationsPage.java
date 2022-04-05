@@ -28,7 +28,7 @@ public class ListOfOrganizationsPage implements Loadable {
         checkPage();
     }
 
-    public String getCurrentOrgName() {
+    public String getCurrentGlobalOrgName() {
         return StringUtils.substringAfter(webdriver().driver().url(), "&org=");
     }
 
