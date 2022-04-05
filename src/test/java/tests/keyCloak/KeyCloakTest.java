@@ -19,7 +19,7 @@ public class KeyCloakTest extends Tests {
     @Test
     @TmsLink("376589")
     @DisplayName("Получение токена")
-    void getToken() {
+    void getUserToken() {
         KeyCloakSteps.getUserToken(Role.ADMIN);
     }
 

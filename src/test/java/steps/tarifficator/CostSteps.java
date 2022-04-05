@@ -101,9 +101,10 @@ public class CostSteps extends Steps {
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
 
-        template.put("params", attrs);
+        template.getJSONObject("order").put("attrs", attrs);
+//        template.put("params", attrs);
         template.put("project_name", project.id);
-        template.put("product_id", productId);
+        template.getJSONObject("order").put("product_id", productId);
 
         if (Objects.nonNull(product.getOrderId())) {
             template = JsonHelper.getJsonTemplate("/tarifficator/costItems.json").build();
@@ -153,9 +154,9 @@ public class CostSteps extends Steps {
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
-        template.put("params", attrs);
+        template.getJSONObject("order").put("attrs", attrs);
         template.put("project_name", project.id);
-        template.put("product_id", productId);
+        template.getJSONObject("order").put("product_id", productId);
 
         return new Http(TarifficatorURL)
                 .setProjectId(project.id)
@@ -173,11 +174,11 @@ public class CostSteps extends Steps {
 //        Project project = Project.builder().id(product.getProjectId()).build().createObject();
         log.info("Отправка запроса на получение стоимости экшена: " + action + ", у продукта " + product.getProductName());
         return JsonHelper.getJsonTemplate("/tarifficator/costAction.json")
-                .set("$.params.project_name", product.getProjectId())
-                .set("$.params.item_id", itemId)
-                .set("$.params.action_name", action)
-                .set("$.params.id", product.getOrderId())
-                .set("$.params.order.data", data)
+                .set("$.project_name", product.getProjectId())
+                .set("$.item_id", itemId)
+                .set("$.action_name", action)
+                .set("$.id", product.getOrderId())
+                .set("$.order.attrs", data)
                 .send(TarifficatorURL)
                 .setProjectId(product.getProjectId())
                 .post("cost")

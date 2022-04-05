@@ -11,6 +11,7 @@ public class Configure {
     private static Properties properties;
     public static String RESOURCE_PATH;
     public static String ENV;
+    public static volatile boolean isTestItCreateAutotest = System.getProperty("testItCreateAutotest", "false").equals("true");
 
     public static String AuthorizerURL;
     public static String AccountManagerURL;
@@ -41,7 +42,7 @@ public class Configure {
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
 
             String kongURL = getAppProp("url.kong");
-            AuthorizerURL = kongURL + "authorizer/api/v1/";
+            AuthorizerURL = kongURL + "iam/api/v1/";
             AccountManagerURL = kongURL + "accountmanager/api/v1/";
             PortalBackURL = kongURL + "portal/api/v1/";
             TarifficatorURL = kongURL + "tarifficator/api/v1/";
@@ -69,5 +70,9 @@ public class Configure {
 
     public static String getAppProp(String propertyKey) {
         return properties.getProperty(propertyKey);
+    }
+
+    public static void setAppProp(String propertyKey, String propertyValue) {
+        properties.setProperty(propertyKey, propertyValue);
     }
 }

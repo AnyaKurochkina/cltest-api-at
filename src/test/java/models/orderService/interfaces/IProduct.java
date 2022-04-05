@@ -32,10 +32,7 @@ import steps.tarifficator.CostSteps;
 import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static core.helper.Configure.OrderServiceURL;
 
@@ -199,7 +196,7 @@ public abstract class IProduct extends Entity {
     @SneakyThrows
     protected String getRandomOsVersion() {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
-        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         String urlAttrs = JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("os_version")))
                 .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')");
         return Objects.requireNonNull(ReferencesStep.getJsonPathList(urlAttrs)
@@ -209,7 +206,7 @@ public abstract class IProduct extends Entity {
     @SneakyThrows
     protected boolean getSupport() {
         GetServiceResponse productResponse = (GetServiceResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetServiceResponse.class);
-        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         Boolean support = (Boolean) graphResponse.getStaticData().get("on_support");
         return Objects.requireNonNull(support, "on_support не найден в графе");
     }
@@ -217,14 +214,14 @@ public abstract class IProduct extends Entity {
     @SneakyThrows
     protected String getRandomProductVersionByPathEnum(String path) {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
-        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         return Objects.requireNonNull(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getJsonSchema().get("properties")))
                 .getString(path + ".collect{e -> e}.shuffled()[0]"), "Версия продукта не найдена");
     }
 
     public Flavor getMaxFlavor() {
         List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
-        Assertions.assertTrue(list.size() < 2, "Действие недоступно, либо кол-во flavor's < 2");
+        Assertions.assertFalse(list.size() < 2, "Действие недоступно, либо кол-во flavor's < 2");
         return list.get(list.size() - 1);
     }
 
@@ -273,8 +270,9 @@ public abstract class IProduct extends Entity {
     @SneakyThrows
     private JSONObject deleteObjectIfNotFoundInUiSchema(JSONObject jsonObject, String productId) {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(productId, GetProductResponse.class);
-        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getById(productResponse.getGraphId(), GetGraphResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         List<String> parameters = (List<String>) graphResponse.getUiSchema().get("ui:order");
+        parameters.addAll(((Map<String, Object>) graphResponse.getJsonSchema().get("dependencies")).keySet());
         Iterator<String> iterator = jsonObject.getJSONObject("order").getJSONObject("attrs").keys();
         while (iterator.hasNext()) {
             if (!parameters.contains(iterator.next()))
@@ -284,10 +282,13 @@ public abstract class IProduct extends Entity {
     }
 
     protected boolean isTest() {
-        Project project = Project.builder().id(projectId).build().createObject();
-        return project.getProjectEnvironmentPrefix().getEnvType().contains("TEST");
+        return envType().contains("test");
     }
 
+    protected String envType() {
+        Project project = Project.builder().id(projectId).build().createObject();
+        return project.getProjectEnvironmentPrefix().getEnvType().toLowerCase();
+    }
 
     public void connectVmException(String message) throws ConnectException {
         if (!isTest())
