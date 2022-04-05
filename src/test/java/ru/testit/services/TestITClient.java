@@ -34,11 +34,12 @@ public class TestITClient {
 
     static {
         properties = new AppProperties();
-        if(Configure.getAppProp(TEST_IT_TOKEN) != null)
+        if (Configure.getAppProp(TEST_IT_TOKEN) != null)
             properties.setPrivateToken(Configure.getAppProp(TEST_IT_TOKEN));
-        if(System.getProperty(TEST_IT_TOKEN) != null)
+        if (System.getProperty(TEST_IT_TOKEN) != null)
             properties.setPrivateToken(System.getProperty(TEST_IT_TOKEN));
     }
+
     private static ObjectMapper getObjectMapper() {
         return new ObjectMapper().setTimeZone(TimeZone.getTimeZone("GMT+3"));
     }
@@ -152,7 +153,7 @@ public class TestITClient {
         return null;
     }
 
-    private String filterTestName(String name){
+    private String filterTestName(String name) {
         return name.replaceAll("(\\(super=\\w+\\(\\w+\\)[,.+\\-\\s\\w]+\\))", "");
     }
 
@@ -209,7 +210,7 @@ public class TestITClient {
     }
 
     private void linkAutoTestWithTestCase(final String autoTestId, final LinkAutoTestRequest linkAutoTestRequest) {
-        if(linkAutoTestRequest.getId() == null)
+        if (linkAutoTestRequest.getId() == null)
             return;
         String body;
         Response response;
@@ -249,6 +250,13 @@ public class TestITClient {
         }
     }
 
+    static void disableTestsIsBadTestRun(Throwable e) {
+        if (e.getMessage().contains("the StateName is already Stopped") || e.getMessage().contains("TestRun is stopped!")) {
+            Configure.setAppProp("testIt", "false");
+            Configure.isTestItCreateAutotest = true;
+        }
+    }
+
     //Todo: synchronized пока есть баг
     @SneakyThrows
     public static synchronized String sendTestResult(final TestResultsRequest request) {
@@ -265,6 +273,7 @@ public class TestITClient {
                     .assertStatus(200);
         } catch (Throwable e) {
             log.error(e.toString());
+            disableTestsIsBadTestRun(e);
             throw e;
         }
 //        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
@@ -283,6 +292,7 @@ public class TestITClient {
                     .assertStatus(204);
         } catch (Throwable e) {
             log.error(e.toString());
+            disableTestsIsBadTestRun(e);
             return;
         }
 //        log.info("[{}] Response :{}", response.status(), response.toString());
