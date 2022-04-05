@@ -5,15 +5,13 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import ui.uiInterfaces.Loadable;
 
-import java.time.Duration;
-
 import static com.codeborne.selenide.Selenide.*;
 
-public class DataCentrePage implements Loadable {
+public class DataCenterPage implements Loadable {
 
-    private final SelenideElement titleOfDataCentrePage = $x("//div[@type='large'][@class='sc-heudyb hALtSu']");
+    private final SelenideElement titleOfDataCenterPage = $x("//div[@type='large'][@class='sc-heudyb hALtSu']");
     private final SelenideElement actionsBtn = $x("//button[@id='actions-menu-button']//div[text()='Действия']");
-    private final SelenideElement deleteDataCentreActionBtn = $x("//*[text()='Удалить']");
+    private final SelenideElement deleteDataCenterActionBtn = $x("//*[text()='Удалить']");
     private final SelenideElement idForDelete = $(By.cssSelector(".MuiTypography-colorTextSecondary>b"));
     private final SelenideElement idForDeleteInput = $x("//input[@name='id']");
     private final SelenideElement confirmDeleteBtn = $x("//span[text()='Удалить']");
@@ -22,21 +20,21 @@ public class DataCentrePage implements Loadable {
     private final SelenideElement checkBoxDeletionProtect = $x("//*[text()='Включить защиту от удаления']");
     private final SelenideElement acceptCheckBoxDeletionProtect = $x("//*[text()='Подтвердить']");
     private final SelenideElement actionMenuBtn = $x("//button[@id='actions-menu-button']");
-    private final SelenideElement dataCentreInfoTable = $x("//tr[@class='MuiTableRow-root MuiTableRow-hover']");
-    private final String dataCentreStatus = "./td[4]/div";
+    private final SelenideElement dataCenterInfoTable = $x("//tr[@class='MuiTableRow-root MuiTableRow-hover']");
+    private final String dataCenterStatus = "./td[4]/div";
     private final String deletionProtectStatus = "./td[3]";
 
-    public DataCentrePage(String dcName) {
-        checkPage(dcName);
+    public DataCenterPage(String nameOfDataCentre) {
+        checkPage(nameOfDataCentre);
     }
 
     @Override
     public void checkPage() {
-        titleOfDataCentrePage.shouldBe(Condition.visible);
+        titleOfDataCenterPage.shouldBe(Condition.visible);
     }
 
     public void checkPage(String dcName) {
-        titleOfDataCentrePage.shouldBe(Condition.visible).shouldHave(Condition.text(dcName));
+        titleOfDataCenterPage.shouldBe(Condition.visible).shouldHave(Condition.text(dcName));
     }
 
     public void removeDeletionProtection() {
@@ -47,9 +45,9 @@ public class DataCentrePage implements Loadable {
         }
 
 
-    public void deleteDataCentre(){
+    public void deleteDataCenter(){
         actionsBtn.shouldBe(Condition.enabled).click();
-        deleteDataCentreActionBtn.shouldBe(Condition.enabled).click();
+        deleteDataCenterActionBtn.shouldBe(Condition.enabled).click();
         idForDeleteInput.shouldBe(Condition.visible).val(idForDelete.getText());
         confirmDeleteBtn.shouldBe(Condition.enabled).click();
     }

@@ -1,9 +1,12 @@
 package org.junit;
 
 
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.logevents.SelenideLogger;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.utils.Encrypt;
+import io.qameta.allure.selenide.AllureSelenide;
 import lombok.SneakyThrows;
 import models.ObjectPoolService;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -16,19 +19,36 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
 
+import static com.codeborne.selenide.Configuration.baseUrl;
 import static core.helper.Configure.ENV;
+import static core.helper.Configure.getAppProp;
+import static ui.selenoidUtils.SelenoidUtils.isRemote;
 
 //@Log4j2
 public class TestsExecutionListener implements TestExecutionListener {
+    private static final String DRIVER_PATH = new File(getAppProp("driver.path")).getAbsolutePath();
+    private static final String URL = getAppProp("base.url");
+
     @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
+        //###Config for Ui###
+        System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
+        baseUrl = URL;
+        isRemote();
+        Configuration.browserSize = "1530x870";
+        Configuration.browserPosition = "2x2";
+        Configuration.timeout = 15000;
+        Configuration.driverManagerEnabled = false;
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
+        //####Config for Ui###
+
         String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
         if (Files.exists(Paths.get(fileSecret)))
             ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
         loadSecretJson();
     }
 
-    public void loadSecretJson() throws Exception {
+    public void loadSecretJson() {
         String secret = System.getProperty("secret");
         if(secret == null)
             secret = Configure.getAppProp("secret");
@@ -49,6 +69,4 @@ public class TestsExecutionListener implements TestExecutionListener {
         fooWriter.close();
         System.out.println("##teamcity[publishArtifacts 'logs => logs']");
     }
-
-
 }
