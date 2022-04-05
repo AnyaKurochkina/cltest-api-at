@@ -254,6 +254,7 @@ public class TestITClient {
         if (e.getMessage().contains("the StateName is already Stopped") || e.getMessage().contains("TestRun is stopped!")) {
             Configure.setAppProp("testIt", "false");
             Configure.isTestItCreateAutotest = true;
+            log.debug("Tests Stopped");
         }
     }
 
