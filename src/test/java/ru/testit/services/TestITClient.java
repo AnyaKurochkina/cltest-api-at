@@ -251,9 +251,9 @@ public class TestITClient {
     }
 
     static void disableTestsIsBadTestRun(Throwable e) {
-        log.debug("disableTestsIsBadTestRun "+ e.getMessage() + " - ");
         if (e.getMessage().contains("the StateName is already Stopped") || e.getMessage().contains("TestRun is stopped!")) {
             Configure.setAppProp("testIt", "false");
+            System.clearProperty("testRunId");
             Configure.isTestItCreateAutotest = true;
             log.debug("Tests Stopped");
         }
@@ -311,6 +311,7 @@ public class TestITClient {
                     .assertStatus(204);
         } catch (Throwable e) {
             log.error(e.toString());
+            disableTestsIsBadTestRun(e);
             return;
         }
 //        log.info("[{}] Response :{}", response.status(), response.toString());
