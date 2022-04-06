@@ -1,10 +1,7 @@
 package models.orderService.products;
 
-import core.helper.Configure;
-import core.helper.Http;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -12,17 +9,11 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.authorizer.AccessGroup;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
-import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-
-import java.util.List;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -44,62 +35,49 @@ public class HcpBucket extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/hcp_bucket.json";
         productName = "HCP bucket";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if (projectId == null) {
-            projectId = project.getId();
-        }
-        if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
+        if(dataCentre == null)
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.project_name", project.id)
+                .set("$.order.attrs.bucket_name", getLabel())
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.net_segment", segment)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.service_plan", servicePlan)
+                .set("$.order.label", getLabel())
                 .build();
     }
 
     @Override
     protected void create() {
-        log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = new Http(Configure.OrderServiceURL)
-                .setProjectId(projectId)
-                .body(toJson())
-                .post("projects/" + projectId + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = array.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        setStatus(ProductStatus.CREATED);
-        compareCostOrderAndPrice();
+        createProduct();
     }
 
     @Step("Измененить параметры версионирования")
     public void changeBucketVersioning(){
-        orderServiceSteps.executeAction("change_bucket_versioning", this, new JSONObject("{\"bucket\":{\"versioning\":{\"prune\":true,\"enabled\":true,\"pruneDays\":10}}}"));
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.prune"), "Очистка не активирована");
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, "data[0].config.bucket.versioning.enabled"), "Версионирование не активировалось");
+        OrderServiceSteps.executeAction("change_bucket_versioning", this, new JSONObject("{\"bucket\":{\"versioning\":{\"prune\":true,\"enabled\":true,\"pruneDays\":10}}}"), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, "data[0].data.config.bucket.versioning.prune"), "Очистка не активирована");
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, "data[0].data.config.bucket.versioning.enabled"), "Версионирование не активировалось");
     }
 
     @Step("Измененить конфигурацию бакета")
     public void changeBucketConfig(){
-        orderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20.48,\"service_plan\":\"Cold\",\"replication_enabled\":false}}"));
-        Float hardQuota = (Float) orderServiceSteps.getProductsField(this, "data[0].config.bucket.hard_quota");
+        OrderServiceSteps.executeAction("change_bucket_config", this, new JSONObject("{\"bucket\":{\"hard_quota\":20.48,\"service_plan\":\"Sata_Tier\",\"replication_enabled\":false}}"), this.getProjectId());
+        Float hardQuota = (Float) OrderServiceSteps.getProductsField(this, "data[0].data.config.bucket.hard_quota");
         Assertions.assertEquals(20.48F, hardQuota, "Макс. объем не изменился! Макс. объем = " + hardQuota);
     }
 
     @Step("Настроить ACL")
     public void createOrChangeBucketAcls(String serviceAccId, String serviceAccTitle){
-        orderServiceSteps.executeAction("create_or_change_bucket_acls", this,
-                new JSONObject(String.format("{\"user_name\":{\"name\":\"%s\",\"title\":\"%s\"},\"permissions\":[\"READ\",\"READ_ACL\",\"WRITE\",\"WRITE_ACL\"]}", serviceAccId, serviceAccTitle)));
+        OrderServiceSteps.executeAction("create_or_change_bucket_acls", this,
+                new JSONObject(String.format("{\"user_name\":{\"name\":\"%s\",\"title\":\"%s\"},\"permissions\":[\"READ\",\"READ_ACL\",\"WRITE\",\"WRITE_ACL\"]}", serviceAccId, serviceAccTitle)), this.getProjectId());
     }
 
     @Step("Удаление продукта")

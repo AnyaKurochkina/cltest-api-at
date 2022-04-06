@@ -1,8 +1,8 @@
 package models.accountManager;
 
 import core.helper.Configure;
-import core.helper.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,8 +31,7 @@ public class Account extends Entity {
             folderId = folder.getName();
         }
         if(parentId == null){
-            AccountSteps accountSteps = new AccountSteps();
-            parentId = accountSteps.getAccountIdByContext(folder.getParentId());
+            parentId = AccountSteps.getAccountIdByContext(folder.getParentId());
         }
         if(organization == null){
             organization = ((Organization) Organization.builder().build().createObject()).getName();

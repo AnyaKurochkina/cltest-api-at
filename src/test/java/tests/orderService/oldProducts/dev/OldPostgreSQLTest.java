@@ -2,21 +2,23 @@ package tests.orderService.oldProducts.dev;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.interfaces.ProductStatus;
+import lombok.SneakyThrows;
 import models.orderService.products.PostgreSQL;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
-@Epic("Старые продукты")
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+
+@Epic("Старые продукты DEV")
 @Feature("PostgreSQL OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_postgresql"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgreSQLTest extends Tests {
+    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
 
-    PostgreSQL postgreSQL = PostgreSQL.builder()
+    final PostgreSQL postgreSQL = PostgreSQL.builder()
             .projectId("proj-67nljbzjtt")
             .productId("3b3807a6-9ad0-4ca6-930a-a37efffcc605")
             .orderId("f6dd249c-b124-40b0-a99a-a40e55d5b5ce")
@@ -27,41 +29,59 @@ public class OldPostgreSQLTest extends Tests {
     @DisplayName("Расширить PorstgreSQL OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (postgreSQL.productStatusIs(STOPPED)) {
             postgreSQL.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            postgreSQL.expandMountPoint();
         }
+        postgreSQL.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Создать БД PorstgreSQL OLD")
     @Test
     void createDb() {
-        postgreSQL.createDb("createdb1");
-
+        if (postgreSQL.productStatusIs(STOPPED)) {
+            postgreSQL.start();
+        }
+        postgreSQL.createDb("createdb1", adminPassword);
         postgreSQL.removeDb("createdb1");
-
     }
 
+    @SneakyThrows
     @Order(3)
+    @DisplayName("Проверить подключение к бд PorstgreSQL OLD")
+    @Test
+    void checkConnection() {
+        if (postgreSQL.productStatusIs(STOPPED)) {
+            postgreSQL.start();
+        }
+        String bd = "bd_for_check_connect";
+        postgreSQL.createDb(bd, adminPassword);
+        postgreSQL.checkConnection(bd, adminPassword);
+        postgreSQL.removeDb(bd);
+    }
+
+    @Order(4)
     @DisplayName("Создать пользователя БД PorstgreSQL OLD")
     @Test
     void createDbmsUser() {
-        postgreSQL.createDb("createdbforuser2");
+        if (postgreSQL.productStatusIs(STOPPED)) {
+            postgreSQL.start();
+        }
+        postgreSQL.createDb("createdb1", adminPassword);
+        postgreSQL.removeDb("createdb1");
         postgreSQL.createDbmsUser("chelik1", "user", "createdbforuser2");
-
         postgreSQL.removeDbmsUser("chelik1", "createdbforuser2");
         postgreSQL.removeDb("createdbforuser2");
     }
 
-    @Order(4)
+    @Order(5)
     @DisplayName("Сбросить пароль пользователя БД PorstgreSQL OLD")
     @Test
     void resetPassword() {
-        postgreSQL.createDb("createdbforreset3");
+        if (postgreSQL.productStatusIs(STOPPED)) {
+            postgreSQL.start();
+        }
+        postgreSQL.createDb("createdbforreset3", adminPassword);
         postgreSQL.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
         postgreSQL.resetPassword("chelikforreset1");
 
@@ -70,21 +90,27 @@ public class OldPostgreSQLTest extends Tests {
 
     }
 
-    @Order(5)
+    @Order(6)
     @DisplayName("Сбросить пароль владельца БД PorstgreSQL OLD")
     @Test
     void resetDbOwnerPassword() {
-        postgreSQL.createDb("createdbforreset8");
+        if (postgreSQL.productStatusIs(STOPPED)) {
+            postgreSQL.start();
+        }
+        postgreSQL.createDb("createdbforreset8", adminPassword);
         postgreSQL.resetDbOwnerPassword("createdbforreset8");
 
         postgreSQL.removeDb("createdbforreset8");
     }
 
-    @Order(6)
+    @Order(7)
     @DisplayName("Удалить пользователя БД PorstgreSQL OLD")
     @Test
     void removeDbmsUser() {
-        postgreSQL.createDb("createdbforremove4");
+        if (postgreSQL.productStatusIs(STOPPED)) {
+            postgreSQL.start();
+        }
+        postgreSQL.createDb("createdbforremove4", adminPassword);
         postgreSQL.createDbmsUser("chelikforreset2", "user", "createdbforremove4");
         postgreSQL.removeDbmsUser("chelikforreset2", "createdbforremove4");
 
@@ -92,49 +118,62 @@ public class OldPostgreSQLTest extends Tests {
 
     }
 
-    @Order(7)
+    @Order(8)
     @DisplayName("Перезагрузить PorstgreSQL OLD")
     @Test
     void restart() {
         postgreSQL.restart();
     }
 
-    @Order(8)
+    @Order(9)
     @DisplayName("Удалить БД")
     @Test
     void removeDb() {
-        postgreSQL.createDb("createdbforremove5");
+        if (postgreSQL.productStatusIs(STOPPED)) {
+            postgreSQL.start();
+        }
+        postgreSQL.createDb("createdbforremove5", adminPassword);
         postgreSQL.removeDb("createdbforremove5");
 
     }
 
-    @Order(9)
+    @Order(10)
     @DisplayName("Выключить PorstgreSQL OLD")
     @Test
     void stopSoft() {
+        if (postgreSQL.productStatusIs(STOPPED)) {
+            postgreSQL.start();
+        }
         postgreSQL.stopSoft();
-        postgreSQL.start();
-    }
-
-    @Order(10)
-    @DisplayName("Изменить конфигурацию PorstgreSQL OLD")
-    @Test
-    void resize() {
-        postgreSQL.resize();
     }
 
     @Order(11)
-    @DisplayName("Включить PorstgreSQL OLD")
+    @DisplayName("Изменить конфигурацию PorstgreSQL OLD")
     @Test
-    void start() {
-        postgreSQL.stopHard();
-        postgreSQL.start();
+    void resize() {
+        if (postgreSQL.productStatusIs(STOPPED)) {
+            postgreSQL.start();
+        }
+        postgreSQL.resize(postgreSQL.getMaxFlavor());
     }
 
     @Order(12)
+    @DisplayName("Включить PorstgreSQL OLD")
+    @Test
+    void start() {
+        if (postgreSQL.productStatusIs(STARTED)) {
+            postgreSQL.stopHard();
+        }
+        postgreSQL.start();
+    }
+
+    @Order(13)
     @DisplayName("Выключить принудительно PorstgreSQL OLD")
     @Test
     void stopHard() {
+        if (postgreSQL.productStatusIs(STOPPED)) {
+            postgreSQL.start();
+        }
         postgreSQL.stopHard();
     }
 }

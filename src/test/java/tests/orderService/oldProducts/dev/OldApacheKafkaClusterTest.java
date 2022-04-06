@@ -1,22 +1,33 @@
 package tests.orderService.oldProducts.dev;
 
+import core.kafka.CustomKafkaConsumer;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import lombok.extern.log4j.Log4j2;
 import models.orderService.products.ApacheKafkaCluster;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.*;
 import tests.Tests;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
-@Epic("Старые продукты")
+import static core.enums.KafkaRoles.CONSUMER;
+import static core.enums.KafkaRoles.PRODUCER;
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+import static org.junit.jupiter.api.Assertions.fail;
+
+@Epic("Старые продукты DEV")
 @Feature("ApacheKafkaCluster OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_apachekafkacluster"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Log4j2
 public class OldApacheKafkaClusterTest extends Tests {
 
-    ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
+    final ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
             .projectId("proj-67nljbzjtt")
             .productId("d46dd919-defc-4ec6-a55b-2017b3981258")
             .orderId("62758afa-911e-4ee8-abd2-a59892e3426f")
@@ -27,19 +38,19 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Расширить Apache Kafka Cluster OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (kafka.productStatusIs(STOPPED)) {
             kafka.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            kafka.expandMountPoint();
         }
+        kafka.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Обновить сертификаты Apache Kafka Cluster OLD")
     @Test
     void updateCerts() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.updateCerts();
     }
 
@@ -47,6 +58,9 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Создать топик Apache Kafka Cluster OLD")
     @Test
     void createTopic() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.createTopics(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"));
         kafka.deleteTopics(Arrays.asList("PacketTopicName1", "PacketTopicName2", "PacketTopicName3"));
     }
@@ -55,69 +69,132 @@ public class OldApacheKafkaClusterTest extends Tests {
     @DisplayName("Удалить топик Apache Kafka Cluster OLD")
     @Test
     void deleteTopic() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.createTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
         kafka.deleteTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
     }
 
     @Order(5)
-    @DisplayName("Создать ACL Apache Kafka Cluster OLD")
+    @DisplayName("Проверить подключение к Kafka")
     @Test
-    void createAcl() {
-        kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
-        kafka.createAcl("*");
-
-        kafka.deleteAcl("*");
-        kafka.deleteTopics(Collections.singletonList("PacketTopicNameForAcl"));
+    void consume() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
+        String message = "This message from autotest";
+        String topicName = "PacketTopicNameForAcl5";
+        try {
+            kafka.createTopics(Collections.singletonList(topicName));
+            kafka.createAcl(topicName, PRODUCER);
+            kafka.createAcl(topicName, CONSUMER);
+            CustomKafkaConsumer consumer = kafka.consumeMessage(topicName);
+            kafka.produceMessage(topicName, message);
+            List<ConsumerRecord<String, String>> consumerRecords = consumer.getConsumerRecordList();
+            log.info(String.format("Сообщения из топика %s : %s", topicName, consumerRecords));
+            Assertions.assertTrue(
+                    consumerRecords.stream().anyMatch(record -> record.value().equals(message)),
+                    "Сообщения в топике отсутствуют");
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage() + " ," + e.getCause());
+        } finally {
+            kafka.deleteAcl(topicName, CONSUMER);
+            kafka.deleteAcl(topicName, PRODUCER);
+            kafka.deleteTopics(Collections.singletonList(topicName));
+        }
     }
 
     @Order(6)
-    @DisplayName("Удалить ACL Apache Kafka Cluster OLD")
+    @DisplayName("Создать ACL Apache Kafka Cluster OLD")
     @Test
-    void deleteAcl() {
-        kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl1"));
-        kafka.createAcl("*");
+    void createAcl() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
+        kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
+        kafka.createAcl("PacketTopicNameForAcl", PRODUCER);
 
-        kafka.deleteAcl("*");
-        kafka.deleteTopics(Collections.singletonList("PacketTopicNameForAcl1"));
+        kafka.deleteAcl("PacketTopicNameForAcl", PRODUCER);
+        kafka.deleteTopics(Collections.singletonList("PacketTopicNameForAcl"));
     }
 
     @Order(7)
-    @DisplayName("Удалить ACL транзакцию Apache Kafka Cluster OLD")
+    @DisplayName("Удалить ACL Apache Kafka Cluster OLD")
     @Test
-    void deleteAclTransaction() {
-        kafka.createAclTransaction("*");
+    void deleteAcl() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
+        kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl1"));
+        kafka.createAcl("PacketTopicNameForAcl1", PRODUCER);
 
-        kafka.deleteAclTransaction("*");
+        kafka.deleteAcl("PacketTopicNameForAcl1", PRODUCER);
+        kafka.deleteTopics(Collections.singletonList("PacketTopicNameForAcl1"));
     }
 
     @Order(8)
-    @DisplayName("Создать ACL транзакцию Apache Kafka Cluster OLD")
+    @DisplayName("Удалить ACL транзакцию Apache Kafka Cluster OLD")
     @Test
-    void createAclTransaction() {
+    void deleteAclTransaction() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.createAclTransaction("*");
 
         kafka.deleteAclTransaction("*");
     }
 
     @Order(9)
-    @DisplayName("Включить Apache Kafka Cluster OLD")
+    @DisplayName("Создать ACL транзакцию Apache Kafka Cluster OLD")
     @Test
-    void start() {
-        kafka.stopSoft();
-        kafka.start();
+    void createAclTransaction() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
+        kafka.createAclTransaction("*");
+
+        kafka.deleteAclTransaction("*");
     }
 
     @Order(10)
-    @DisplayName("Изменить конфигурацию Apache Kafka Cluster OLD")
+    @DisplayName("Включить Apache Kafka Cluster OLD")
     @Test
-    void resize() {
-        kafka.restart();
+    void start() {
+        if (kafka.productStatusIs(STARTED)) {
+            kafka.stopSoft();
+        }
+        kafka.start();
     }
 
     @Order(11)
+    @DisplayName("Синхронизировать конфигурацию Apache Kafka Cluster OLD")
+    @Test
+    void sincInfo() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
+        kafka.syncInfo();
+    }
+
+    @Order(12)
+    @DisplayName("Прислать конфигурацию Apache Kafka Cluster OLD")
+    @Test
+    void sendConfig() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
+        kafka.sendConfig();
+    }
+
+    @Order(13)
     @DisplayName("Выключить Apache Kafka Cluster OLD")
     @Test
     void stopSoft() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
         kafka.stopSoft();
     }
 }

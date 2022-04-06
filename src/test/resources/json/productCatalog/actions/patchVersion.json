@@ -2,6 +2,7 @@
   "id": "",
   "name": "NegativeAction",
   "title": "NegativeAction",
+  "multiple": false,
   "description": "NegativeAction",
   "icon": "",
   "required_order_statuses": [

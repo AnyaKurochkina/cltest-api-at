@@ -1,12 +1,11 @@
 package models.authorizer;
 
-import core.helper.Http;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
 import models.Entity;
 import org.json.JSONObject;
-import steps.authorizer.AuthorizerSteps;
 
 import static core.helper.Configure.AuthorizerURL;
 
@@ -37,5 +36,8 @@ public class Organization extends Entity {
                 .jsonPath()
                 .getString(String.format("data.find{it.title=='%s'}.name", title));
     }
+
+    @Override
+    protected void delete() {}
 
 }

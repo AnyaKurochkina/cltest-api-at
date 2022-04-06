@@ -15,13 +15,12 @@ import tests.Tests;
 @Tag("deleteorders")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DeleteAllOrders extends Tests {
-    OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @ParameterizedTest(name = "{0}")
     @Tag("deleteAll")
     @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Удаление всех успешных заказов из проекта")
-    public void DeleteOrders(String env, String tmsId)  {
-        orderServiceSteps.deleteOrders(env);
+    public void DeleteOrders(String env)  {
+        OrderServiceSteps.deleteOrders(env);
     }
 }

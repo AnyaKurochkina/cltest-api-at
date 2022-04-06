@@ -4,21 +4,22 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.products.PostgresSQLCluster;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
-@Epic("Старые продукты")
+import static models.orderService.interfaces.ProductStatus.STARTED;
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+
+@Epic("Старые продукты DEV")
 @Feature("PostgresSQL Cluster OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_postgressqlcluster"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldPostgresSQLClusterTest extends Tests {
-
-    PostgresSQLCluster postgres = PostgresSQLCluster.builder()
+    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
+    final PostgresSQLCluster postgres = PostgresSQLCluster.builder()
             .projectId("proj-67nljbzjtt")
             .productId("9c97f55c-ab21-4724-be4d-cb90b8a815c6")
-            .orderId("985858eb-7d78-4ce5-9134-20cdb610be5e")
+            .orderId("b8877469-5751-4ca5-acf2-86a99695f240")
             .productName("PostgreSQL Cluster")
             .build();
 
@@ -26,40 +27,59 @@ public class OldPostgresSQLClusterTest extends Tests {
     @DisplayName("Расширить PostgreSQLCluster OLD")
     @Test
     void expandMountPoint() {
-        try {
+        if (postgres.productStatusIs(STOPPED)) {
             postgres.start();
-        }catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            postgres.expandMountPoint();
         }
+        postgres.expandMountPoint();
     }
 
     @Order(2)
     @DisplayName("Создать бд PostgreSQLCluster OLD")
     @Test
     void createDb() {
-        postgres.createDb("dbcreate1");
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
+        postgres.createDb("dbcreate1", adminPassword);
 
         postgres.removeDb("dbcreate1");
     }
 
     @Order(3)
+    @DisplayName("Проверить подключение к БД PostgresSQLCluster OLD")
+    @Test
+    void checkBdConnection() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
+        String db = "bd_for_check_connect";
+        postgres.createDb(db, adminPassword);
+        postgres.checkConnection(db, adminPassword);
+        postgres.removeDb(db);
+    }
+
+    @Order(4)
     @DisplayName("Создать пользователя PostgreSQLCluster OLD")
     @Test
     void createDbmsUser() {
-        postgres.createDb("dbforuser2");
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
+        postgres.createDb("dbforuser2", adminPassword);
         postgres.createDbmsUser("testchelik1", "user", "dbforuser2");
 
         postgres.removeDb("dbforuser2");
         postgres.removeDbmsUser("testchelik1", "dbforuser2");
     }
 
-    @Order(4)
+    @Order(5)
     @DisplayName("Сбросить пароль пользователя PostgreSQLCluster OLD")
     @Test
     void resetPassword() {
-        postgres.createDb("createdbforreset3");
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
+        postgres.createDb("createdbforreset3", adminPassword);
         postgres.createDbmsUser("chelikforreset1", "user", "createdbforreset3");
         postgres.resetPassword("chelikforreset1");
 
@@ -68,62 +88,81 @@ public class OldPostgresSQLClusterTest extends Tests {
     }
 
     @Tag("remove")
-    @Order(5)
+    @Order(6)
     @DisplayName("Удалить пользователя PostgreSQLCluster OLD")
     @Test
     void removeDbmsUser() {
-        postgres.createDb("createdbforremove4");
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
+        postgres.createDb("createdbforremove4", adminPassword);
         postgres.createDbmsUser("chelikforremove2", "user", "createdbforremove4");
         postgres.removeDbmsUser("chelikforremove2", "createdbforremove4");
 
         postgres.removeDb("createdbforremove4");
     }
 
-    @Order(6)
+    @Order(7)
     @DisplayName("Сбросить пароль владельца PostgreSQLCluster OLD")
     @Test
     void resetDbOwnerPassword() {
-        postgres.createDb("createdbforreset8");
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
+        postgres.createDb("createdbforreset8", adminPassword);
         postgres.resetDbOwnerPassword("createdbforreset8");
 
         postgres.removeDb("createdbforreset8");
     }
 
-    @Order(7)
+    @Order(8)
     @DisplayName("Удалить бд PostgreSQLCluster OLD")
     @Test
     void removeDb() {
-        postgres.createDb("createdbforremove5");
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
+        postgres.createDb("createdbforremove5", adminPassword);
         postgres.removeDb("createdbforremove5");
     }
 
-    @Order(8)
+    @Order(9)
     @DisplayName("Перезагрузить PostgreSQLCluster OLD")
     @Test
     void restart() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.restart();
     }
 
-    @Order(9)
+    @Order(10)
     @DisplayName("Выключить PostgreSQLCluster OLD")
     @Test
     void stopSoft() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.stopSoft();
-        postgres.start();
-    }
-
-    @Order(10)
-    @DisplayName("Включить PostgreSQLCluster OLD")
-    @Test
-    void start() {
-        postgres.stopHard();
-        postgres.start();
     }
 
     @Order(11)
+    @DisplayName("Включить PostgreSQLCluster OLD")
+    @Test
+    void start() {
+        if (postgres.productStatusIs(STARTED)) {
+            postgres.stopHard();
+        }
+        postgres.start();
+    }
+
+    @Order(12)
     @DisplayName("Выключить принудительно PostgreSQLCluster OLD")
     @Test
     void stopHard() {
+        if (postgres.productStatusIs(STOPPED)) {
+            postgres.start();
+        }
         postgres.stopHard();
     }
 }

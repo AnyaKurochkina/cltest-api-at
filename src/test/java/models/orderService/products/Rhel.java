@@ -1,10 +1,8 @@
 package models.orderService.products;
 
-import core.helper.Http;
 import core.helper.JsonHelper;
 import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -12,19 +10,14 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.authorizer.AccessGroup;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
-import models.authorizer.User;
+import models.authorizer.ProjectEnvironmentPrefix;
+import models.authorizer.GlobalUser;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
+import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
-
-import java.util.List;
-
-import static core.helper.Configure.OrderServiceURL;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -46,35 +39,32 @@ public class Rhel extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/rhel.json";
-        if(productName == null)
-            productName = "Rhel";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
+        Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
         if (projectId == null) {
-            projectId = project.getId();
+            setProjectId(project.getId());
         }
-        if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
+        if(productName == null) {
+            if(isTest())
+                productName = "RHEL General Application";
+            else
+                productName = "Rhel";
         }
+        initProduct();
         if (domain == null)
-            domain = orderServiceSteps.getDomainBySegment(this, segment);
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
+            domain = OrderServiceSteps.getDomainBySegment(this, segment);
+        if(flavor == null)
+            flavor = getMinFlavor();
+        if(osVersion == null)
+            osVersion = getRandomOsVersion();
+        if(dataCentre == null)
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        JsonPath array = new Http(OrderServiceURL)
-                .setProjectId(projectId)
-                .body(toJson())
-                .post("projects/" + projectId + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = array.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        setStatus(ProductStatus.CREATED);
-        compareCostOrderAndPrice();
+        createProduct();
     }
 
     public JSONObject toJson() {
@@ -88,9 +78,11 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", getProjectId())
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST")).build();
+                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.label", getLabel())
+                .build();
     }
 
 
@@ -114,8 +106,8 @@ public class Rhel extends IProduct {
         start("start_vm");
     }
 
-    public void resize() {
-        resize("resize_vm");
+    public void resize(Flavor flavor) {
+        resize("resize_vm", flavor);
     }
     public void expandMountPoint(){
         expandMountPoint("expand_mount_point", "/app", 10);
@@ -128,9 +120,9 @@ public class Rhel extends IProduct {
     }
 
     public void checkCreateUseSsh(String userName) {
-        User user = User.builder().username(userName).build().createObject();
-        String host = (String) orderServiceSteps.getProductsField(this, "product_data.find{it.type=='vm'}.hostname");
-        SshClient ssh = new SshClient(host, user.getUsername(), user.getPassword());
+        GlobalUser globalUser = GlobalUser.builder().username(userName).build().createObject();
+        String host = (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.type=='vm'}.hostname");
+        SshClient ssh = new SshClient(host, globalUser.getUsername(), globalUser.getPassword());
         ssh.connectAndExecuteListCommand("ls");
     }
 }

@@ -33,7 +33,7 @@
 					"file_system": "xfs"
 				}
 			],
-			"redis_version": "5",
+			"redis_version": "5.0.5",
 			"ad_integration": true,
 			"redis_password": "vSrEzXhI2cfqBdvW3NXvvutpp9LbrEdU2S5uYFU2w1KwX1Z2yn0LrhYpENvT",
 			"ad_logon_grants": [

@@ -4,18 +4,19 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.orderService.products.Rhel;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import tests.Tests;
 
-@Epic("Старые продукты")
+import static models.orderService.interfaces.ProductStatus.STOPPED;
+import static models.orderService.interfaces.ProductStatus.STARTED;
+
+@Epic("Старые продукты DEV")
 @Feature("Rhel OLD")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_rhel"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OldRhelTest extends Tests {
 
-    Rhel rhel = Rhel.builder()
+    final Rhel rhel = Rhel.builder()
             .projectId("proj-67nljbzjtt")
             .productId("0da09981-c1ac-45b6-ba3b-7bfe52fd45bc")
             .orderId("fa58784b-69c8-4b2e-b42b-4f704e5bbf2c")
@@ -26,40 +27,40 @@ public class OldRhelTest extends Tests {
     @DisplayName("Перезагрузить Rhel OLD")
     @Test
     void restart() {
-        try {
+        if (rhel.productStatusIs(STOPPED)) {
             rhel.start();
-        } catch (Throwable t) {
-            t.getStackTrace();
-        } finally {
-            rhel.restart();
         }
+        rhel.restart();
     }
 
     @Order(3)
     @DisplayName("Выключить Rhel OLD")
     @Test
     void stopSoft() {
+        if (rhel.productStatusIs(STOPPED)) {
+            rhel.start();
+        }
         rhel.stopSoft();
-        rhel.start();
     }
 
     @Order(4)
     @DisplayName("Изменить конфигурацию Rhel OLD")
     @Test
     void resize() {
-        rhel.stopHard();
-        try {
-            rhel.resize();
-        } finally {
-            rhel.start();
+        if (rhel.productStatusIs(STARTED)) {
+            rhel.stopHard();
         }
+        rhel.resize(rhel.getMaxFlavor());
+        rhel.resize(rhel.getMinFlavor());
     }
 
     @Order(5)
     @DisplayName("Включить Rhel OLD")
     @Test
     void start() {
-        rhel.stopHard();
+        if (rhel.productStatusIs(STARTED)) {
+            rhel.stopHard();
+        }
         rhel.start();
     }
 
@@ -67,6 +68,9 @@ public class OldRhelTest extends Tests {
     @DisplayName("Выключить принудительно Rhel OLD")
     @Test
     void stopHard() {
+        if (rhel.productStatusIs(STOPPED)) {
+            rhel.start();
+        }
         rhel.stopHard();
     }
 }

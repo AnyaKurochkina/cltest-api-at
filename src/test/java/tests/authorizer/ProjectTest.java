@@ -1,6 +1,6 @@
 package tests.authorizer;
 
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import io.qameta.allure.*;
 import models.authorizer.Project;
 import org.junit.jupiter.api.*;
@@ -17,6 +17,7 @@ public class ProjectTest extends Tests {
 
     @Order(1)
     @Test
+    @TmsLink("377747")
     @DisplayName("Создание проекта")
     void createProject() {
         Project.builder().isForOrders(false).build().createObject();
@@ -24,6 +25,18 @@ public class ProjectTest extends Tests {
 
     @Order(2)
     @Test
+    @TmsLink("720818")
+    @DisplayName("Роедактирование проекта")
+    void editProject() {
+        try(Project project = Project.builder().isForOrders(false).build().createObjectExclusiveAccess()) {
+            project.setProjectName("newProjectName");
+            project.edit();
+        }
+    }
+
+    @Order(3)
+    @Test
+    @TmsLink("377748")
     @DisplayName("Удаление проекта")
     @MarkDelete
     void deleteProject() {

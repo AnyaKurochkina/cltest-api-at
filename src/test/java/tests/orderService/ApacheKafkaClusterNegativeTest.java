@@ -3,7 +3,7 @@ package tests.orderService;
 import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.orderService.interfaces.ProductStatus;
+import io.qameta.allure.TmsLink;
 import models.orderService.products.ApacheKafkaCluster;
 import models.subModels.KafkaTopic;
 import org.json.JSONObject;
@@ -15,21 +15,22 @@ import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 import tests.Tests;
 
+import java.util.Collections;
+
 import static models.orderService.products.ApacheKafkaCluster.KAFKA_CREATE_TOPICS;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster")
-@Tags({@Tag("regress"), @Tag("negative"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("negative"), @Tag("prod"), @Tag("apachekafkacluster")})
 public class ApacheKafkaClusterNegativeTest extends Tests {
-    OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
 
     @Tag("actions")
+    @TmsLink("719578")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "Негативные тесты создания топика над {0}")
+    @ParameterizedTest(name = "Негативные тесты создания топика {0}")
     public void negativeCreateKafkaTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.checkPreconditionStatusProduct(ProductStatus.CREATED);
             assertAll("Проверка ошибки при передачи неверных параметров топика",
                     () -> checkIncorrectTopic(kafka,
                             new KafkaTopic("delete", 1, 1, 1, 1209600001, "TopicName")),
@@ -50,8 +51,20 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
         }
     }
 
+    @Tag("actions")
+    @TmsLink("725948")
+    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @ParameterizedTest(name = "Создание Topic Kafka(топик существует) {0}")
+    public void CreateKafkaTopicIfExist(ApacheKafkaCluster product) {
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            String topicName = "CreateKafkaTopicIfExist";
+            kafka.createTopics(Collections.singletonList(topicName));
+            checkIncorrectTopic(kafka, new KafkaTopic("delete", 1, 1, 1, 1800000, topicName));
+        }
+    }
+
     public void checkIncorrectTopic(ApacheKafkaCluster kafkaCluster, KafkaTopic topic){
-        orderServiceSteps.sendAction(KAFKA_CREATE_TOPICS, kafkaCluster, new JSONObject("{\"topics\": " + JsonHelper.toJson(topic) + "}"))
+        OrderServiceSteps.sendAction(KAFKA_CREATE_TOPICS, kafkaCluster, new JSONObject("{\"topics\": " + JsonHelper.toJson(topic) + "}"), kafkaCluster.getProjectId())
                 .assertStatus(422);
     }
 

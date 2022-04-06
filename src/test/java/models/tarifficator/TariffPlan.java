@@ -1,9 +1,9 @@
 package models.tarifficator;
 
 import core.helper.Configure;
-import core.helper.Http;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.*;
 import models.Entity;
@@ -11,12 +11,15 @@ import models.authorizer.Organization;
 import org.json.JSONObject;
 import steps.tarifficator.TariffPlanSteps;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Builder
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class TariffPlan extends Entity {
     Boolean base;
     String baseTariffPlanId;
@@ -36,26 +39,26 @@ public class TariffPlan extends Entity {
     Boolean updateOrders;
     Date updatedAt;
 
-    @Builder.Default
-    transient TariffPlanSteps tariffPlanSteps = new TariffPlanSteps();
-
-
+    @SneakyThrows
     public JSONObject toJson() {
-        return new JSONObject("{\"tariff_plan\":" + JsonHelper.toJson(this) + "}");
+        return new JSONObject("{\"tariff_plan\":" + JsonHelper.getCustomObjectMapper().writeValueAsString(this) + "}");
     }
 
+    @Override
+    protected void delete() {
+    }
 
     @Override
     public Entity init() {
-        if(title == null)
-            title = "AT " + new Date();
-        if(base == null)
+        if (title == null)
+            title = "AT " + new java.util.Date();
+        if (base == null)
             base = true;
-        if(oldTariffPlanId == null) {
-            TariffPlan activeTariff = tariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
+        if (oldTariffPlanId == null) {
+            TariffPlan activeTariff = TariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
             oldTariffPlanId = activeTariff.getId();
         }
-        if(!base && organizationName == null) {
+        if (!base && organizationName == null) {
             organizationName = ((Organization) Organization.builder().build().createObject()).getName();
         }
         return this;
@@ -69,9 +72,8 @@ public class TariffPlan extends Entity {
                 .post("tariff_plans")
                 .assertStatus(201)
                 .toString();
-        StringUtils.copyAvailableFields(tariffPlanSteps.deserialize(object), this);
+        StringUtils.copyAvailableFields(TariffPlanSteps.deserialize(object, TariffPlan.class), this);
     }
-
 
 
 }

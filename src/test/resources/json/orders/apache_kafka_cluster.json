@@ -27,7 +27,15 @@
       ],
       "kafka_version": "2.13-2.4.1",
       "ad_integration": true,
-      "kafka_node_number": 1,
+      "ad_logon_grants": [
+        {
+          "role": "user",
+          "groups": [
+            ""
+          ]
+        }
+      ],
+      "kafka_node_number": "1:0",
       "kafka_log_retention_minutes": 30
     },
     "count": 1,

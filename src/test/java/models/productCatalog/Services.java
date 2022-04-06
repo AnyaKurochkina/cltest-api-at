@@ -1,11 +1,11 @@
 package models.productCatalog;
 
 import core.helper.Configure;
-import core.helper.Http;
 import core.helper.JsonHelper;
-import httpModels.productCatalog.Service.createService.response.CreateServiceResponse;
-import httpModels.productCatalog.Service.createService.response.DataSource;
-import httpModels.productCatalog.Service.createService.response.ExtraData;
+import core.helper.http.Http;
+import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
+import httpModels.productCatalog.service.createService.response.DataSource;
+import httpModels.productCatalog.service.createService.response.ExtraData;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,12 +13,9 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.GraphSteps;
-import steps.productCatalog.ServiceSteps;
+import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
-
-import static core.helper.JsonHelper.convertResponseOnClass;
 
 @Log4j2
 @Builder
@@ -26,28 +23,45 @@ import static core.helper.JsonHelper.convertResponseOnClass;
 
 public class Services extends Entity {
 
-    private List<Object> allowedPaths;
+    private Boolean turnOffInventory;
+    private List<String> versionList;
     private Boolean isPublished;
-    private Object icon;
-    private String graphVersion;
+    private String icon;
     private String description;
-    private List<Object> restrictedGroups;
-    private String graphId;
-    private DataSource dataSource;
-    private Integer number;
+    private String serviceInfo;
+    private String graphVersion;
+    private String title;
     private String directionId;
-    private ExtraData extraData;
-    private String serviceName;
-    private List<Object> restrictedPaths;
+    private List<Object> inventoryActions;
     private String graphVersionPattern;
-    private List<Object> allowedGroups;
+    private Boolean hideNodeNameOutput;
+    private String direction;
+    private Object startBtnLabel;
+    private String versionCreateDt;
+    private List<String> restrictedGroups;
+    private String graphId;
+    private String version;
+    private DataSource dataSource;
+    private List<Object> checkRules;
+    private Boolean autoOpenForm;
+    private String lastVersion;
+    private ExtraData extraData;
+    private String versionChangedByUser;
+    private String serviceName;
+    private List<String> allowedGroups;
+    private String graphVersionCalculated;
     private String serviceId;
     private String jsonTemplate;
+    @Builder.Default
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("services/", "productCatalog/services/createServices.json" );
+
+    private final String productName = "services/";
 
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/services/createServices.json";
-        graphId = new GraphSteps().getGraphId("AtTestServiceGraph");
+        Graph graph = Graph.builder().name("graph_for_services_api_test").build().createObject();
+        graphId = graph.getGraphId();
         return this;
     }
 
@@ -56,18 +70,20 @@ public class Services extends Entity {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", serviceName)
                 .set("$.graph_id", graphId)
+                .set("$.version", version)
+                .set("$.is_published", isPublished)
+                .set("$.title", title)
                 .build();
     }
 
     @Override
     @Step("Создание сервиса")
     protected void create() {
-        String response = new Http(Configure.ProductCatalogURL)
+        CreateServiceResponse createServiceResponse = new Http(Configure.ProductCatalogURL)
                 .body(toJson())
                 .post("services/")
                 .assertStatus(201)
-                .toString();
-        CreateServiceResponse createServiceResponse = convertResponseOnClass(response, CreateServiceResponse.class);
+                .extractAs(CreateServiceResponse.class);
         serviceId = createServiceResponse.getId();
         Assertions.assertNotNull(serviceId, "Сервис с именем: " + serviceName + ", не создался");
     }
@@ -78,9 +94,7 @@ public class Services extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete("services/" + serviceId + "/")
                 .assertStatus(204);
-
-        ServiceSteps serviceSteps = new ServiceSteps();
-        serviceId = serviceSteps.getServiceIdByName(serviceName);
-        Assertions.assertNull(serviceId, String.format("Сервис с именем: %s не удалился", serviceName));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        Assertions.assertFalse(productCatalogSteps.isExists(serviceName));
     }
 }

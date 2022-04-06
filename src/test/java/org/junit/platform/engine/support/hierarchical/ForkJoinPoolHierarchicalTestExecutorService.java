@@ -6,7 +6,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 
-import core.helper.MarkDelete;
+import org.junit.MarkDelete;
 import models.ObjectPoolService;
 import core.helper.StringUtils;
 import org.apiguardian.api.API;
@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
 )
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
     private final ForkJoinPool forkJoinPool;
-    private final int parallelism;
+    public static AtomicInteger parallelism = new AtomicInteger();
 
     public ForkJoinPoolHierarchicalTestExecutorService(ConfigurationParameters configurationParameters) {
         this(createConfiguration(configurationParameters));
@@ -53,10 +53,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
     )
     public ForkJoinPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration) {
         this.forkJoinPool = this.createForkJoinPool(configuration);
-        this.parallelism = this.forkJoinPool.getParallelism();
-        LoggerFactory.getLogger(this.getClass()).config(() -> {
-            return "Using ForkJoinPool with parallelism of " + this.parallelism;
-        });
+        parallelism.set(this.forkJoinPool.getParallelism());
+        LoggerFactory.getLogger(this.getClass()).config(() -> "Using ForkJoinPool with parallelism of " + parallelism.get());
     }
 
     private static ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
@@ -66,21 +64,17 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
     private ForkJoinPool createForkJoinPool(ParallelExecutionConfiguration configuration) {
         ForkJoinWorkerThreadFactory threadFactory = new ForkJoinPoolHierarchicalTestExecutorService.WorkerThreadFactory();
-        return (ForkJoinPool) Try.call(() -> {
+        return Try.call(() -> {
             Constructor<ForkJoinPool> constructor = ForkJoinPool.class.getDeclaredConstructor(Integer.TYPE, ForkJoinWorkerThreadFactory.class, UncaughtExceptionHandler.class, Boolean.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE, Predicate.class, Long.TYPE, TimeUnit.class);
             return (ForkJoinPool) constructor.newInstance(configuration.getParallelism(), threadFactory, null, false, configuration.getCorePoolSize(), configuration.getMaxPoolSize(), configuration.getMinimumRunnable(), null, configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
-        }).orElseTry(() -> {
-            return new ForkJoinPool(configuration.getParallelism(), threadFactory, (UncaughtExceptionHandler) null, false);
-        }).getOrThrow((cause) -> {
-            return new JUnitException("Failed to create ForkJoinPool", cause);
-        });
+        }).orElseTry(() -> new ForkJoinPool(configuration.getParallelism(), threadFactory, (UncaughtExceptionHandler) null, false)).getOrThrow((cause) -> new JUnitException("Failed to create ForkJoinPool", cause));
     }
 
     public Future<Void> submit(TestTask testTask) {
         ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask exclusiveTask = new ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask(testTask);
         if (!this.isAlreadyRunningInForkJoinPool()) {
             return this.forkJoinPool.submit(exclusiveTask);
-        } else if (testTask.getExecutionMode() == ExecutionMode.CONCURRENT && ForkJoinTask.getSurplusQueuedTaskCount() < this.parallelism) {
+        } else if (testTask.getExecutionMode() == ExecutionMode.CONCURRENT && ForkJoinTask.getSurplusQueuedTaskCount() < parallelism.get()) {
             return exclusiveTask.fork();
         } else {
             exclusiveTask.compute();
@@ -136,26 +130,30 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (testDescriptor instanceof MethodBasedTestDescriptor) {
-            String match = StringUtils.findByRegex(":\\w+\\(models.orderService.products.(\\w+)\\)]", testDescriptor.getUniqueId().toString());
-            if (match != null) {
-                Map<String, List<Map>> products = ProductArgumentsProvider.getProductListMap();
-                for (Map.Entry<String, List<Map>> e : products.entrySet()) {
-                    if(e.getKey().endsWith(match)){
-                    List listProduct = ProductArgumentsProvider.findListInMapByKey("options", e.getValue());
-                    if(listProduct == null)
-                        skipTests.add(testDescriptor);
-                    return;
-                    }
-                }
-                skipTests.add(testDescriptor);
-            }
-            Matcher matchProduct = Pattern.compile(":\\w+\\(models.orderService.interfaces.IProduct\\)]").matcher(testDescriptor.getUniqueId().toString());
-            if (matchProduct.find()) {
-                if(ProductArgumentsProvider.getProductListMap().size() == 0)
-                    skipTests.add(testDescriptor);
-            }
-        }
+//        if (testDescriptor instanceof MethodBasedTestDescriptor) {
+//            String match = StringUtils.findByRegex(":\\w+\\(models.orderService.products.(\\w+)\\)]", testDescriptor.getUniqueId().toString());
+//            if (match != null) {
+//                Map<String, List<Map>> products = ProductArgumentsProvider.getProductListMap();
+//                for (Map.Entry<String, List<Map>> e : products.entrySet()) {
+//                    if(e.getKey().endsWith(match)){
+//                    List<Map<String, Object>> listProduct = ProductArgumentsProvider.findListInMapByKey("options", e.getValue());
+//                    if(listProduct == null) {
+//                        skipTests.add(testDescriptor);
+//                        return;
+//                    }
+//                    if(listProduct.isEmpty())
+//                        skipTests.add(testDescriptor);
+//                    return;
+//                    }
+//                }
+//                skipTests.add(testDescriptor);
+//            }
+//            Matcher matchProduct = Pattern.compile(":\\w+\\(models.orderService.interfaces.IProduct\\)]").matcher(testDescriptor.getUniqueId().toString());
+//            if (matchProduct.find()) {
+//                if(ProductArgumentsProvider.getProductListMap().size() == 0)
+//                    skipTests.add(testDescriptor);
+//            }
+//        }
     }
 
     public static boolean removeTestClass(JupiterTestDescriptor testDescriptor) {
@@ -195,7 +193,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         invokeAll(tasks2);
     }
 
-    AtomicBoolean first = new AtomicBoolean(true);
+    final AtomicBoolean first = new AtomicBoolean(true);
 
     public void invokeAll(List<? extends TestTask> tasks2) {
         ArrayList<TestTask> tasks = new ArrayList<>(tasks2);
@@ -353,8 +351,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         if (tasks.size() == 1) {
             (new ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask((TestTask) tasks.get(0))).compute();
         } else {
-            Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> nonConcurrentTasks = new LinkedList();
-            Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> concurrentTasksInReverseOrder = new LinkedList();
+            Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> nonConcurrentTasks = new LinkedList<>();
+            Deque<ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask> concurrentTasksInReverseOrder = new LinkedList<>();
             this.forkConcurrentTasks(tasks, nonConcurrentTasks, concurrentTasksInReverseOrder);
             this.executeNonConcurrentTasks(nonConcurrentTasks);
             this.joinConcurrentTasksInReverseOrderToEnableWorkStealing(concurrentTasksInReverseOrder);
@@ -546,12 +544,26 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                     e.printStackTrace();
                 }
 
-
                 if (mapTests.isEmpty() && !del.get()) {
                     del.set(true);
                     ObjectPoolService.deleteAllResources();
                     invokeAllRef(invokeDeleteTest());
                 }
+
+                if (!mapTests.isEmpty()){
+                    Set<Class<?>> currentClassListArgument = new HashSet<>();
+                    for(JupiterTestDescriptor descriptor : mapTests.values()){
+                        if(!(descriptor instanceof MethodBasedTestDescriptor))
+                            continue;
+                        MethodBasedTestDescriptor methodBasedTestDescriptor = ((MethodBasedTestDescriptor) descriptor);
+                        MarkDelete deleted = methodBasedTestDescriptor.getTestMethod().getAnnotation(MarkDelete.class);
+                        if (deleted != null)
+                            continue;
+                        currentClassListArgument.addAll(Arrays.asList(((MethodBasedTestDescriptor) descriptor).getTestMethod().getParameterTypes()));
+                    }
+                    ObjectPoolService.removeProducts(currentClassListArgument);
+                }
+
 
 
 //                Integer order = null;

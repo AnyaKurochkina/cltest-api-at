@@ -1,0 +1,50 @@
+{
+  "order": {
+    "project_name": "proj-frybyv41jh",
+    "product_id": "52a4050d-a8e0-451b-8615-2f1e22813d2c",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "platform": "OpenStack",
+      "boot_disk": {
+        "size": 30
+      },
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "8.4",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "extra_mounts": [
+        {
+          "path": "/app/scylla/data",
+          "size": 30,
+          "file_system": "xfs"
+        },
+        {
+          "path": "/app/scylla/logs",
+          "size": 30,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_integration": true,
+      "scylladb_version": "4.4.8",
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-d5zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "ScyllaDB"
+  }
+}

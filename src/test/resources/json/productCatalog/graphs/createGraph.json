@@ -4,5 +4,6 @@
   "title": "AtTestGraph",
   "description": "for at tests",
   "graph": [],
-  "type": "action"
+  "type": "action",
+  "version": "1.0.0"
 }

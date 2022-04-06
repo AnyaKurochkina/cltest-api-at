@@ -1,24 +1,26 @@
 package steps.tarifficator;
 
-import core.helper.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
+import models.authorizer.ProjectEnvironmentPrefix;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
+import models.productCatalog.Product;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 import steps.orderService.OrderServiceSteps;
+import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static core.helper.Configure.CalculatorURL;
 import static core.helper.Configure.TarifficatorURL;
@@ -27,7 +29,7 @@ import static core.helper.Configure.TarifficatorURL;
 public class CostSteps extends Steps {
 
     @Step("Получение суммы расхода для продуктов")
-    public Float getConsumptionSumOfProducts(List<String> productsId) {
+    public static Float getConsumptionSumOfProducts(List<String> productsId) {
         Float consumptionOfOneProduct;
         float consumption = 0F;
         for (String product : productsId) {
@@ -41,13 +43,12 @@ public class CostSteps extends Steps {
             }
             log.info("Стоимость продукта : " + consumptionOfOneProduct);
         }
-        consumption = consumption;
         log.debug("Сумма расходов по всем продуктам: " + consumption);
         return consumption;
     }
 
     @Step("Получение расхода для папки/проекта")
-    public double getConsumptionByPath(String path) {
+    public static double getConsumptionByPath(String path) {
         double consumption = new Http(CalculatorURL)
                 .get("orders/cost/?folder__startswith={}", path)
                 .assertStatus(200)
@@ -58,8 +59,8 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение текущего расхода для заказа")
-    public Float getCurrentCost(IProduct product) {
-        Assertions.assertSame(ProductStatus.CREATED, product.getStatus(), "Продукт " + product + " не был заказан");
+    public static Float getCurrentCost(IProduct product) {
+        Assertions.assertNotSame(null, product.getStatus(), "Продукт " + product + " не был заказан");
         Float consumption = null;
         for (int i = 0; i < 15; i++) {
             Waiting.sleep(20000);
@@ -83,20 +84,50 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
-    public Float getPreBillingCost(IProduct product) {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+    public static Float getPreBillingTotalCost(IProduct product) {
+        return getPreBillingCostPath(product, "total_price");
+    }
+
+    public static Float getPreBillingCostPath(IProduct product, String path) {
         Project project = Project.builder()
-                .projectEnvironment(new ProjectEnvironment(product.getEnv()))
+                .projectEnvironmentPrefix(new ProjectEnvironmentPrefix(product.getEnv()))
                 .isForOrders(true)
                 .build()
                 .createObject();
-        String productId = orderServiceSteps.getProductId(product);
+        String productId = new ProductCatalogSteps(Product.productName)
+                .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
+                        "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()));
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
-        template.put("params", attrs);
+
+        template.getJSONObject("order").put("attrs", attrs);
+//        template.put("params", attrs);
         template.put("project_name", project.id);
-        template.put("product_id", productId);
+        template.getJSONObject("order").put("product_id", productId);
+
+        if (Objects.nonNull(product.getOrderId())) {
+            template = JsonHelper.getJsonTemplate("/tarifficator/costItems.json").build();
+            JSONObject vm = new JSONObject((Map) OrderServiceSteps.getProductsField(product, "", JSONObject.class));
+            template.put("tariff_plan_id", vm.query("/attrs/tariff_plan_id"));
+
+            JSONArray items = (JSONArray) vm.query("/data");
+            for(Object itemObj : items){
+                JSONObject item = (JSONObject) itemObj;
+                JSONObject costItem = new JSONObject();
+                costItem.put("item_id", item.get("item_id"));
+                costItem.put("type", item.get("type"));
+                costItem.put("data", item.get("data"));
+                template.append("items", costItem);
+            }
+            return new Http(TarifficatorURL)
+                    .setProjectId(project.id)
+                    .body(template)
+                    .post("cost_items")
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get(path);
+        }
 
         JsonPath response = new Http(TarifficatorURL)
                 .setProjectId(project.id)
@@ -107,24 +138,25 @@ public class CostSteps extends Steps {
 
         //TODO: Добавить проверки
 
-        return response.get("total_price");
+        return response.get(path);
     }
 
     @Step("Получение предварительной стоимости продукта {product}")
-    public JSONArray getCost(IProduct product) {
-        OrderServiceSteps orderServiceSteps = new OrderServiceSteps();
+    public static JSONArray getCost(IProduct product) {
         Project project = Project.builder()
-                .projectEnvironment(new ProjectEnvironment(product.getEnv()))
+                .projectEnvironmentPrefix(new ProjectEnvironmentPrefix(product.getEnv()))
                 .isForOrders(true)
                 .build()
                 .createObject();
-        String productId = orderServiceSteps.getProductId(product);
+        String productId = new ProductCatalogSteps(Product.productName)
+                .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
+                        "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType()).toLowerCase());
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
-        template.put("params", attrs);
+        template.getJSONObject("order").put("attrs", attrs);
         template.put("project_name", project.id);
-        template.put("product_id", productId);
+        template.getJSONObject("order").put("product_id", productId);
 
         return new Http(TarifficatorURL)
                 .setProjectId(project.id)
@@ -136,18 +168,19 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение предварительной стоимости action {action} продукта {product}")
-    public Float getCostAction(String action, String itemId, IProduct product, JSONObject data) {
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
-                .isForOrders(true).build().createObject();
-        log.info("Отправка запроса на получение стоимости экшена: "+ action +", у продукта " + product.getProductName());
+    public static Float getCostAction(String action, String itemId, IProduct product, JSONObject data) {
+//        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
+//                .isForOrders(true).build().createObject();
+//        Project project = Project.builder().id(product.getProjectId()).build().createObject();
+        log.info("Отправка запроса на получение стоимости экшена: " + action + ", у продукта " + product.getProductName());
         return JsonHelper.getJsonTemplate("/tarifficator/costAction.json")
-                .set("$.params.project_name", project.id)
-                .set("$.params.item_id", itemId)
-                .set("$.params.action_name", action)
-                .set("$.params.id", product.getOrderId())
-                .set("$.params.order.data", data)
+                .set("$.project_name", product.getProjectId())
+                .set("$.item_id", itemId)
+                .set("$.action_name", action)
+                .set("$.id", product.getOrderId())
+                .set("$.order.attrs", data)
                 .send(TarifficatorURL)
-                .setProjectId(project.id)
+                .setProjectId(product.getProjectId())
                 .post("cost")
                 .assertStatus(200)
                 .jsonPath()
@@ -155,7 +188,7 @@ public class CostSteps extends Steps {
     }
 
     @Step("Сравниение тарифов заказываемого продукта с тарфиным планом")
-    public void compareTariffs(HashMap<String, Double> activeTariffPlanPrice, JSONArray items) {
+    public static void compareTariffs(HashMap<String, Double> activeTariffPlanPrice, JSONArray items) {
         //Создаем 3 прайса ON, OFF, REBOOT
         HashMap<String, Double> priceListOn = new HashMap<>();
         HashMap<String, Double> priceListOff = new HashMap<>();
@@ -175,7 +208,7 @@ public class CostSteps extends Steps {
     }
 
     @Step("Запрос цен по ID тарифного плана")
-    public HashMap<String, Double> getPrices(String tariffPlanId) {
+    public static HashMap<String, Double> getPrices(String tariffPlanId) {
         JSONArray consumption = new Http(TarifficatorURL)
                 .get("tariff_plans/{}?include=tariff_classes", tariffPlanId)
                 .assertStatus(200)
@@ -191,7 +224,7 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение ID активного тарифного плана")
-    public String getActiveTariffId() {
+    public static String getActiveTariffId() {
         return new Http(TarifficatorURL)
                 .get("tariff_plans?include=total_count&page=1&per_page=10&f[base]=false&f[organization_name]=vtb&sort=status&acc=up&f[status][]=active")
                 .assertStatus(200)
@@ -199,14 +232,14 @@ public class CostSteps extends Steps {
                 .get("list[0].id");
     }
 
-    public void generatePriceForState(HashMap<String, Double> priceListWithState, JSONArray items, String state) {
+    public static void generatePriceForState(HashMap<String, Double> priceListWithState, JSONArray items, String state) {
         JSONArray statusOnData = ((JSONObject) (items.get(0))).getJSONObject("resources_statuses").getJSONArray(state);
         for (Object object : statusOnData) {
             priceListWithState.put(((JSONObject) object).getString("name"), ((JSONObject) object).getDouble("price"));
         }
     }
 
-    public void comparePrices(HashMap<String, Double> priceListWithState, HashMap<String, Double> activeTariffPlanPrice) {
+    public static void comparePrices(HashMap<String, Double> priceListWithState, HashMap<String, Double> activeTariffPlanPrice) {
         for (Map.Entry<String, Double> entry : priceListWithState.entrySet()) {
             String preBillingServiceName = entry.getKey();
             for (Map.Entry<String, Double> entry2 : activeTariffPlanPrice.entrySet()) {

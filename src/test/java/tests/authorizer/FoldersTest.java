@@ -1,9 +1,11 @@
 package tests.authorizer;
 
-import core.helper.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.authorizer.Folder;
+import org.junit.DisabledIfEnv;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -11,13 +13,15 @@ import tests.Tests;
 
 @Epic("Организационная структура")
 @Feature("Папки")
-@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke")})
+@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke"), @Tag("prod")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class FoldersTest extends Tests {
 
     @Test
     @Order(1)
+    @TmsLink("377750")
+    @DisabledIfEnv("prod")
     @DisplayName("Создание Бизнес-блока")
     void createBusinessBlock() {
         Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject();
@@ -25,6 +29,8 @@ public class FoldersTest extends Tests {
 
     @Test
     @Order(2)
+    @TmsLink("377751")
+    @DisabledIfEnv("prod")
     @DisplayName("Создание Департамента")
     void createDepartmentBlock() {
         Folder.builder().kind(Folder.DEPARTMENT).build().createObject();
@@ -32,6 +38,7 @@ public class FoldersTest extends Tests {
 
     @Test
     @Order(3)
+    @TmsLink("377752")
     @DisplayName("Создание Папки")
     void createFolder() {
         Folder.builder().kind(Folder.DEFAULT).build().createObject();
@@ -39,6 +46,18 @@ public class FoldersTest extends Tests {
 
     @Test
     @Order(4)
+    @TmsLink("720840")
+    @DisplayName("Создание Папки")
+    void editFolder() {
+        try (Folder folder = Folder.builder().kind(Folder.DEFAULT).build().createObjectExclusiveAccess()) {
+            folder.setTitle("newTitle");
+            folder.edit();
+        }
+    }
+
+    @Test
+    @Order(5)
+    @TmsLink("377753")
     @DisplayName("Удаление Папки")
     @MarkDelete
     public void deleteFolder() {
@@ -46,7 +65,9 @@ public class FoldersTest extends Tests {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
+    @TmsLink("647022")
+    @DisabledIfEnv("prod")
     @DisplayName("Удаление Департамента")
     @MarkDelete
     public void deleteDepartmentBlock() {
@@ -54,7 +75,9 @@ public class FoldersTest extends Tests {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
+    @TmsLink("647024")
+    @DisabledIfEnv("prod")
     @DisplayName("Удаление Бизнес-блока")
     @MarkDelete
     public void deleteBusinessBlock() {

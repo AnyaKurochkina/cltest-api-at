@@ -1,21 +1,23 @@
 package models.authorizer;
 
+import com.mifmif.common.regex.Generex;
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import core.helper.Http;
-import core.random.string.RandomStringGenerator;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import models.Entity;
 import org.json.JSONObject;
-import steps.authorizer.AuthorizerSteps;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 @Getter
+@Setter
 public class Folder extends Entity {
     public String name;
     public String kind;
@@ -23,8 +25,6 @@ public class Folder extends Entity {
     public String parentId;
     public List<String> informationSystemIds;
 
-    @Builder.Default
-    transient AuthorizerSteps authorizerSteps = new AuthorizerSteps();
     transient static final public String BUSINESS_BLOCK = "business_block";
     transient static final public String DEPARTMENT = "department";
     transient static final public String DEFAULT = "default";
@@ -50,7 +50,7 @@ public class Folder extends Entity {
             }
         }
         if (title == null) {
-            title = new RandomStringGenerator().generateByRegex("FOLDER .{1,20}");
+            title = new Generex("FOLDER \\w{1,20}").random();
         }
         if (informationSystemIds == null) {
             InformationSystem informationSystem = InformationSystem.builder().build().createObject();
@@ -60,7 +60,7 @@ public class Folder extends Entity {
         return this;
     }
 
-    //    @Override
+    @Override
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("/structure/create_folder.json")
                 .set("$.folder.kind", kind)
@@ -68,6 +68,17 @@ public class Folder extends Entity {
                 .set("$.folder.name", name)
                 .set("$.folder.information_system_ids", informationSystemIds)
                 .build();
+    }
+
+    public void edit(){
+        String titleNew = new Http(Configure.AuthorizerURL)
+                .body(toJson())
+                .patch("folders/{}", name)
+                .assertStatus(200)
+                .jsonPath()
+                .getString("data.title");
+        Assertions.assertEquals(title, titleNew, "Title папки не изменился");
+        setTitle(titleNew);
     }
 
     @Override

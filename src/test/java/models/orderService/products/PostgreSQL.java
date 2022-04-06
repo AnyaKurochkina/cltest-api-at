@@ -1,30 +1,23 @@
 package models.orderService.products;
 
-import core.helper.Http;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.authorizer.AccessGroup;
+import models.portalBack.AccessGroup;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
-import models.subModels.Flavor;
 import models.subModels.Db;
 import models.subModels.DbUser;
+import models.subModels.Flavor;
 import org.json.JSONObject;
-
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static core.helper.Configure.OrderServiceURL;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -34,10 +27,11 @@ import static core.helper.Configure.OrderServiceURL;
 @NoArgsConstructor
 @SuperBuilder
 public class PostgreSQL extends IProduct {
-    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.any{it.db_name=='%s'}";
-//    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
-    private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
-//    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
+    private final static String DB_NAME_PATH = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.any{it.db_name=='%s'}";
+    //    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
+    private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
+    private final static String DB_OWNER_NAME_PATH = "data.find{it.data.config.containsKey('db_owners')}.data.config.db_owners.user_name";
+    //    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -56,31 +50,23 @@ public class PostgreSQL extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = orderServiceSteps.getDomainBySegment(this, segment);
-        log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = new Http(OrderServiceURL)
-                .setProjectId(projectId)
-                .body(toJson())
-                .post("projects/" + projectId + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = array.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        setStatus(ProductStatus.CREATED);
-        compareCostOrderAndPrice();
+        domain = OrderServiceSteps.getDomainBySegment(this, segment);
+        createProduct();
     }
 
     @Override
     public Entity init() {
         jsonTemplate = "/orders/postgresql.json";
         productName = "PostgreSQL";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if (projectId == null) {
-            projectId = project.getId();
-        }
-        if (productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
+        if (flavor == null)
+            flavor = getMinFlavor();
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
+        if (postgresqlVersion == null)
+            postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
+        if(dataCentre == null)
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
 
@@ -88,8 +74,6 @@ public class PostgreSQL extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
@@ -99,9 +83,10 @@ public class PostgreSQL extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.postgresql_version", postgresqlVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.label", getLabel())
                 .build();
     }
 
@@ -115,11 +100,13 @@ public class PostgreSQL extends IProduct {
         expandMountPoint("expand_mount_point", "/pg_data", 10);
     }
 
-    public void createDb(String dbName) {
-        if(database.contains(new Db(dbName)))
+    public void createDb(String dbName, String dbAdminPass) {
+        if (database.contains(new Db(dbName)))
             return;
-        orderServiceSteps.executeAction("create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
+
+        OrderServiceSteps.executeAction("create_db", this,
+                new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, dbAdminPass)), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
         database.add(new Db(dbName));
         log.info("database = " + database);
@@ -128,18 +115,18 @@ public class PostgreSQL extends IProduct {
 
     //Удалить БД
     public void removeDb(String dbName) {
-        orderServiceSteps.executeAction("remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
-        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        OrderServiceSteps.executeAction("remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"), this.getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
     }
 
     public void createDbmsUser(String username, String dbRole, String dbName) {
-        orderServiceSteps.executeAction("create_dbms_user", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)));
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(
+        OrderServiceSteps.executeAction("create_dbms_user", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 "Имя пользователя отличается от создаваемого");
-        users.add(new DbUser(dbName, username, false));
+        users.add(new DbUser(dbName, username));
         log.info("users = " + users);
         save();
     }
@@ -147,35 +134,42 @@ public class PostgreSQL extends IProduct {
     //Сбросить пароль пользователя
     public void resetPassword(String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction("reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)));
+        OrderServiceSteps.executeAction("reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
     }
 
     //Сбросить пароль владельца
-    public void resetDbOwnerPassword(String dbName) {
-        Assertions.assertTrue(database.stream().anyMatch(db -> db.getNameDB().equals(dbName)), String.format("Базы %s не существует", dbName));
+    public void resetDbOwnerPassword(String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction("reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", dbName + "_admin", password)));
+        OrderServiceSteps.executeAction("reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
+    }
+
+    //Изменить default_transaction_isolation
+    public void updateDti(String defaultTransactionIsolation) {
+        OrderServiceSteps.executeAction("postgresql_update_dti", this,
+                new JSONObject(String.format("{\"default_transaction_isolation\":\"%s\"}", defaultTransactionIsolation)), this.getProjectId());
     }
 
     //Удалить пользователя
     public void removeDbmsUser(String username, String dbName) {
-        orderServiceSteps.executeAction("remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))));
-        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(
+        OrderServiceSteps.executeAction("remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))), this.getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                 this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));
+        users.remove(new DbUser(dbName, username));
         log.info("users = " + users);
         save();
     }
 
-    public void resize() {
-        List<Flavor> list = referencesStep.getProductFlavorsLinkedList(this);
-        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
-        Flavor flavor = list.get(list.size() - 1);
-        orderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}"));
-        int cpusAfter = (Integer) orderServiceSteps.getProductsField(this, CPUS);
-        int memoryAfter = (Integer) orderServiceSteps.getProductsField(this, MEMORY);
+    public void resize(Flavor flavor) {
+        OrderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}"), this.getProjectId());
+        int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
+        int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter);
         Assertions.assertEquals(flavor.data.memory, memoryAfter);
+    }
+
+    public void checkConnection(String dbName, String password) {
+        checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
     }
 
     public void restart() {
@@ -192,6 +186,11 @@ public class PostgreSQL extends IProduct {
 
     public void stopHard() {
         stopHard("stop_hard_two_layer");
+    }
+
+    public void updateMaxConnections(String loadProfile, int maxConnections) {
+        OrderServiceSteps.executeAction("postgresql_update_max_connections", this,
+                new JSONObject(String.format("{\"load_profile\":\"%s\", max_connections: %d}", loadProfile, maxConnections)), this.getProjectId());
     }
 }
 

@@ -1,29 +1,23 @@
 package models.orderService.products;
 
-import core.helper.Http;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.authorizer.AccessGroup;
 import models.authorizer.Project;
-import models.authorizer.ProjectEnvironment;
 import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
+import models.portalBack.AccessGroup;
+import models.subModels.Db;
 import models.subModels.DbUser;
 import models.subModels.Flavor;
-import models.subModels.Db;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static core.helper.Configure.OrderServiceURL;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -45,6 +39,11 @@ public class ClickHouse extends IProduct {
     public List<Db> database = new ArrayList<>();
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
+    String clickhousePassword;
+    String clickhouseUser;
+    String clickhouseBb;
+    String chCustomerPassword;
+    String chVersion;
 
     //Проверить конфигурацию
     private static final String REFRESH_VM_CONFIG = "check_vm";
@@ -57,37 +56,37 @@ public class ClickHouse extends IProduct {
     //Удалить пользователя
     private static final String CLICKHOUSE_DELETE_DBMS_USER = "clickhouse_remove_dbms_user";
 
-    private final static String DB_NAME_PATH = "data.find{it.config.containsKey('dbs')}.config.dbs.any{it.db_name=='%s'}";
-    private final static String DB_USERNAME_PATH = "data.find{it.config.containsKey('db_users')}.config.db_users.any{it.user_name=='%s'}";
+    private final static String DB_NAME_PATH = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.any{it.db_name=='%s'}";
+    private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
 
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = orderServiceSteps.getDomainBySegment(this, segment);
-        log.info("Отправка запроса на создание заказа для " + productName);
-        JsonPath array = new Http(OrderServiceURL)
-                .setProjectId(projectId)
-                .body(toJson())
-                .post("projects/" + projectId + "/orders")
-                .assertStatus(201)
-                .jsonPath();
-        orderId = array.get("[0].id");
-        orderServiceSteps.checkOrderStatus("success", this);
-        setStatus(ProductStatus.CREATED);
-        compareCostOrderAndPrice();
+        domain = OrderServiceSteps.getDomainBySegment(this, segment);
+        createProduct();
     }
 
     @Override
     public Entity init() {
         jsonTemplate = "/orders/clickhouse.json";
         productName = "ClickHouse";
-        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(env)).isForOrders(true).build().createObject();
-        if(projectId == null) {
-            projectId = project.getId();
-        }
-        if(productId == null) {
-            productId = orderServiceSteps.getProductId(this);
-        }
+        initProduct();
+        if (flavor == null)
+            flavor = getMinFlavor();
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
+        if (dataCentre == null)
+            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+        if (clickhouseUser == null)
+            clickhouseUser = "username_created";
+        if (clickhousePassword == null)
+            clickhousePassword = "vrItfk0k8sf8ICbwsMs7nB3";
+        if (chCustomerPassword == null)
+            chCustomerPassword = "XcMYBatz2KNlctnmRYitgcSNQxQejZKV4I71lJGu8t";
+        if (clickhouseBb == null)
+            clickhouseBb = "dbname";
+        if (chVersion == null)
+            chVersion = getRandomProductVersionByPathEnum("ch_version.default.split()");
         return this;
     }
 
@@ -98,60 +97,68 @@ public class ClickHouse extends IProduct {
     }
 
     public void refreshVmConfig() {
-        orderServiceSteps.executeAction(REFRESH_VM_CONFIG, this, null);
+        OrderServiceSteps.executeAction(REFRESH_VM_CONFIG, this, null, this.getProjectId());
     }
 
     public void removeDb(String dbName) {
-        orderServiceSteps.executeAction(CLICKHOUSE_DELETE_DB, this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"));
-        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
+        OrderServiceSteps.executeAction(CLICKHOUSE_DELETE_DB, this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"), this.getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
     }
 
-    //Сбросить пароль
-    public void resetPassword(String username) {
+    public void resetPasswordOwner() {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        orderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)));
+        OrderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", clickhouseUser, password)), this.getProjectId());
+        clickhousePassword = password;
+    }
+
+    public void resetPasswordCustomer() {
+        String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
+        OrderServiceSteps.executeAction("clickhouse_reset_ch_customer_password", this, new JSONObject(String.format("{\"user_name\":\"ch_customer\",\"user_password\":\"%s\"}", password)), this.getProjectId());
+        chCustomerPassword = password;
     }
 
     public void removeDbmsUser(String username, String dbName) {
-        orderServiceSteps.executeAction(CLICKHOUSE_DELETE_DBMS_USER, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)));
-        Assertions.assertFalse((Boolean) orderServiceSteps.getProductsField(
+        OrderServiceSteps.executeAction(CLICKHOUSE_DELETE_DBMS_USER, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)), this.getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, username)),
-                String.format("Пользователь: %s не удалился из базы данных: %s",  username, dbName));
+                String.format("Пользователь: %s не удалился из базы данных: %s", username, dbName));
         log.info("users = " + users);
         save();
     }
 
     public void createDb(String dbName) {
-        if(database.contains(new Db(dbName)))
+        if (database.contains(new Db(dbName)))
             return;
-        orderServiceSteps.executeAction(CLICKHOUSE_CREATE_DB, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)));
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем " + dbName);
+        OrderServiceSteps.executeAction(CLICKHOUSE_CREATE_DB, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем " + dbName);
         database.add(new Db(dbName));
         log.info("database = " + database);
         save();
     }
 
     public void createDbmsUser(String username, String dbRole, String dbName) {
-        orderServiceSteps.executeAction(CLICKHOUSE_CREATE_DBMS_USER,
+        OrderServiceSteps.executeAction(CLICKHOUSE_CREATE_DBMS_USER,
                 this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"txLhQ3UoykznQ2i2qD_LEMUQ_-U\"}",
-                        dbName, dbRole, username)));
-        Assertions.assertTrue((Boolean) orderServiceSteps.getProductsField(
+                        dbName, dbRole, username)), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, username)),
                 "Имя пользователя отличается от создаваемого");
-        users.add(new DbUser(dbName, username, false));
+        users.add(new DbUser(dbName, username));
         log.info("users = " + users);
         save();
     }
 
-    public void expandMountPoint(){
-        expandMountPoint("expand_mount_point", "/app", 10);
+    public void expandMountPoint() {
+        expandMountPoint("expand_mount_point", "/app/clickhouse", 10);
     }
+
     //Перезагрузить по питанию
     public void restart() {
         restart("reset_two_layer");
     }
+
     //Выключить принудительно
     public void stopHard() {
         stopHard("stop_hard_two_layer");
@@ -167,25 +174,34 @@ public class ClickHouse extends IProduct {
         start("start_two_layer");
     }
 
-//    @Override
+    //    @Override
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        List<Flavor> flavorList = referencesStep.getProductFlavorsLinkedList(this);
-        flavor = flavorList.get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.ch_customer_password", chCustomerPassword)
+                .set("$.order.attrs.ch_version", chVersion)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.clickhouse_user", clickhouseUser)
+                .set("$.order.attrs.clickhouse_password", clickhousePassword)
+                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.label", getLabel())
                 .build();
 
     }
+
+
+    public void checkConnectDb() {
+        checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
+    }
+
 }

@@ -1,0 +1,72 @@
+{
+  "order": {
+    "project_name": "proj-3d1jt57gm3",
+    "product_id": "c4b0c75b-068c-4879-a3c6-3a3308382e69",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "platform": "VCloud",
+      "boot_disk": {
+        "size": 30
+      },
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "8.4",
+      "data_center": "t",
+      "default_nic": {
+        "net_segment": "vtb-dos-ts"
+      },
+      "flavor_data": {
+        "cpus": 4,
+        "name": "c4m8",
+        "uuid": "1498c9c9-5f20-4c1e-8d53-683bb8c2c205",
+        "memory": 8
+      },
+      "nodes_count": "1,2",
+      "cluster_name": "elastic1",
+      "flavor_master": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "ad_integration": true,
+      "adm_app_groups": [
+        "cloud-crux-proj-3d1jt57gm3"
+      ],
+      "install_kibana": false,
+      "kibana_password": "7Nb07AM3s8ADC",
+      "user_app_groups": [
+        "cloud-crux-proj-3d1jt57gm3"
+      ],
+      "fluentd_password": "gKbmJ6bc8oUE",
+      "data_extra_mounts": [
+        {
+          "path": "/app/",
+          "size": 100,
+          "file_system": "xfs"
+        }
+      ],
+      "system_adm_groups": [
+        "cloud-crux-proj-3d1jt57gm3"
+      ],
+      "master_extra_mounts": [
+        {
+          "path": "/app/",
+          "size": 100,
+          "file_system": "xfs"
+        }
+      ],
+      "elasticsearch_version": "1.0.1 + Exporter 1.1.0",
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-crux-proj-3d1jt57gm3"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "Elasticsearch Opensearch cluster"
+  }
+}

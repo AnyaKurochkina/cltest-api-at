@@ -10,11 +10,11 @@
         "enabled": false,
         "pruneDays": 10
       },
-      "bucket_name": "hcpbucket",
+      "bucket_name": "hcpbucket1",
       "data_center": "5",
       "net_segment": "dev-srv-app",
       "replication": false,
-      "service_plan": "Cold"
+      "service_plan": "Sata_Tier"
     },
     "count": 1,
     "label": "HCP bucket"

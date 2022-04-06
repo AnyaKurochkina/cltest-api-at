@@ -1,0 +1,39 @@
+{
+  "model_name": "ItemVisualisationTemplate",
+  "ItemVisualisationTemplate": {
+    "title": "import_api",
+    "name": "import_api",
+    "description": "",
+    "event_type": [
+      "bm"
+    ],
+    "event_provider": [
+      "s3"
+    ],
+    "full_template": {
+      "type": "asd",
+      "value": [
+        "sdf"
+      ]
+    },
+    "compact_template": {
+      "name": {
+        "value": "${item::data.config.hostname}"
+      },
+      "type": {
+        "value": "vm"
+      },
+      "status": {
+        "value": "${item::data.state}"
+      }
+    },
+    "is_active": false,
+    "default_item": {
+      "key": "value"
+    }
+  },
+  "rel_foreign_models": {},
+  "dump_version": 4.0,
+  "dump_date": "2022-01-21 12:14:11",
+  "is_pinned_versions": false
+}

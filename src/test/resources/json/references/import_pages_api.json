@@ -1,0 +1,23 @@
+{
+  "model_name": "Page",
+  "Page": {
+    "name": "import_pages_test_api",
+    "data": {},
+    "tags": [],
+    "weight": 0,
+    "directory_id": "9e555c8e-f12e-427d-b212-85e45233320b"
+  },
+  "rel_foreign_models": {
+    "directory": {
+      "model_name": "Directory",
+      "Directory": {
+        "name": "import_directories_api",
+        "description": "import_directories_api"
+      },
+      "rel_foreign_models": {}
+    }
+  },
+  "dump_version": 4.0,
+  "dump_date": "2022-02-24 07:43:21",
+  "is_pinned_versions": false
+}

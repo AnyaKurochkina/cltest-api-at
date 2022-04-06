@@ -16,7 +16,7 @@
       },
       "extra_nics": [],
       "on_support": false,
-      "os_version": "7.9",
+      "os_version": "8.4",
       "data_center": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
@@ -30,8 +30,10 @@
       ],
       "ad_integration": true,
       "postgresql_config": {
-        "max_connections": 100
+        "default_transaction_isolation": "REPEATABLE READ",
+        "max_connections": 300.0
       },
+      "load_profile": "OLTP",
       "postgresql_version": "12",
       "ad_logon_grants": [
         {

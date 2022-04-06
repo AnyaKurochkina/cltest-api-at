@@ -1,10 +1,11 @@
 package models;
 
-import core.helper.JsonHelper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
-import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.experimental.SuperBuilder;
 import org.json.JSONObject;
@@ -19,16 +20,19 @@ public abstract class Entity implements AutoCloseable {
 
     public abstract JSONObject toJson();
 
+    @JsonIgnore
     public JsonTemplate getTemplate(){
         return new JsonTemplate(toJson());
     }
 
     protected abstract void create();
 
-    protected void delete() {
-    }
+    protected abstract void delete();
 
     public String uuid;
+    @Setter
+    @Getter
+    String configurationId;
 
     public void save() {
         ObjectPoolService.saveEntity(this);
@@ -43,7 +47,7 @@ public abstract class Entity implements AutoCloseable {
     }
 
     @SneakyThrows
-    public void deleteObject() {
+    void deleteObjectV2(){
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
         if (objectPoolEntity.getStatus() == ObjectStatus.DELETED)
             return;
@@ -58,6 +62,19 @@ public abstract class Entity implements AutoCloseable {
         }
     }
 
+    @SneakyThrows
+    public void deleteObject() {
+        ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
+        if (objectPoolEntity.getStatus() == ObjectStatus.DELETED)
+            return;
+        if(objectPoolEntity.getStatus() == ObjectStatus.FAILED_DELETE)
+            throw objectPoolEntity.getError();
+        try {
+            delete();
+        } finally {
+            objectPoolEntity.setStatus(ObjectStatus.DELETED);
+        }
+    }
 
     public <T extends Entity> T createObject() {
         return createObject(false, true);
@@ -66,8 +83,8 @@ public abstract class Entity implements AutoCloseable {
         return createObject(false, false);
     }
 
-    private <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
-        return ObjectPoolService.create(this, exclusiveAccess, true);
+    protected  <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
+        return ObjectPoolService.create(this, exclusiveAccess, isPublic);
     }
 
     public <T extends Entity> T createObjectExclusiveAccess() {

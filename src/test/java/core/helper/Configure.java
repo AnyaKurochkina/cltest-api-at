@@ -11,6 +11,7 @@ public class Configure {
     private static Properties properties;
     public static String RESOURCE_PATH;
     public static String ENV;
+    public static volatile boolean isTestItCreateAutotest = System.getProperty("testItCreateAutotest", "false").equals("true");
 
     public static String AuthorizerURL;
     public static String AccountManagerURL;
@@ -26,25 +27,29 @@ public class Configure {
         try {
             RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
+
+            properties.setProperty("testIt", "false");
+
             loadProperties(RESOURCE_PATH + "/config/application.properties");
+            loadProperties(RESOURCE_PATH + "/config/kafka.config.properties");
             if (System.getProperty("env") == null) {
                 if (getAppProp("env") == null) {
                     throw new Exception("Не задан параметр env");
                 } else ENV = getAppProp("env").toLowerCase();
             } else
                 ENV = System.getProperty("env").toLowerCase();
-            log.info("ENV = " + ENV);
+            log.info("SET ENVIRONMENT = " + ENV);
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
 
-            String kongURL = getAppProp("host_kong");
-            AuthorizerURL = kongURL + "authorizer/api/v1/";
+            String kongURL = getAppProp("url.kong");
+            AuthorizerURL = kongURL + "iam/api/v1/";
             AccountManagerURL = kongURL + "accountmanager/api/v1/";
             PortalBackURL = kongURL + "portal/api/v1/";
             TarifficatorURL = kongURL + "tarifficator/api/v1/";
             CalculatorURL = kongURL + "calculator/";
-            ProductCatalogURL = kongURL + "product-catalog/";
+            ProductCatalogURL = kongURL + "product-catalog/api/v1/";
             OrderServiceURL = kongURL + "order-service/api/v1/";
-            StateServiceURL = kongURL + "state-service/api/v1/";
+            StateServiceURL = kongURL + "state-service/";
             ReferencesURL = kongURL + "references/api/v1/";
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,7 +64,15 @@ public class Configure {
         }
     }
 
+    public static boolean isIntegrationTestIt(){
+        return (Configure.getAppProp("testIt").equals("true") || System.getProperty("testRunId") != null);
+    }
+
     public static String getAppProp(String propertyKey) {
         return properties.getProperty(propertyKey);
+    }
+
+    public static void setAppProp(String propertyKey, String propertyValue) {
+        properties.setProperty(propertyKey, propertyValue);
     }
 }
