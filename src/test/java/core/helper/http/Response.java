@@ -25,7 +25,7 @@ public class Response {
 
     public Response assertStatus(int s) {
         if (s != status())
-            throw new Http.StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\n%s\nResponse: %s\n", s, status(), http.method, http.token, String.join("\n", headers), http.host + http.path, http.body, responseMessage));
+            throw new Http.StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\n%s\nResponse: %s\n", s, status(), http.method, http.token, String.join("\n", headers), http.host + http.path, http.body, responseMessage), status);
         return this;
     }
 

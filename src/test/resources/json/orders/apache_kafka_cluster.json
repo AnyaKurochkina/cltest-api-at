@@ -35,7 +35,7 @@
           ]
         }
       ],
-      "kafka_node_number": "1:0",
+      "kafka_node_number": 1,
       "kafka_log_retention_minutes": 30
     },
     "count": 1,

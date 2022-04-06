@@ -3,6 +3,7 @@ package core.helper.http;
 import core.enums.Role;
 import core.helper.StringUtils;
 import core.utils.Waiting;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
@@ -40,6 +41,7 @@ public class Http {
     private String fileName;
     private byte[] bytes;
     boolean isLogged = true;
+    private static final InheritableThreadLocal<Role> fixedRole = new InheritableThreadLocal<>();
     Map<String, String> headers = new HashMap<>();
 
     static {
@@ -59,6 +61,18 @@ public class Http {
     public Http disableAttachmentLog() {
         this.isLogged = false;
         return this;
+    }
+
+    public static void setFixedRole(Role role) {
+        fixedRole.set(role);
+    }
+
+    private boolean isFixedRole() {
+        return Objects.nonNull(fixedRole.get());
+    }
+
+    public static void removeFixedRole() {
+        fixedRole.remove();
     }
 
     public Http addHeader(String key, String value) {
@@ -129,8 +143,8 @@ public class Http {
     }
 
     public Http setProjectId(String projectId) {
-//        if(!Configure.ENV.equals("dev"))
-        this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId);
+        if (!isFixedRole())
+            this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId);
         return this;
     }
 
@@ -189,6 +203,8 @@ public class Http {
             headers.forEach(http::setRequestProperty);
             http.setRequestProperty("Accept", "application/json, text/plain, */*");
             if (isUsedToken) {
+                if (isFixedRole())
+                    token = "bearer " + KeyCloakSteps.getUserToken(fixedRole.get());
                 if (token.length() == 0)
                     token = "bearer " + KeyCloakSteps.getUserToken(role);
                 http.setRequestProperty("Authorization", token);
@@ -244,8 +260,12 @@ public class Http {
     }
 
     public static class StatusResponseException extends AssertionError {
-        public StatusResponseException(String errorMessage) {
+        @Getter
+        int status;
+
+        public StatusResponseException(String errorMessage, int status) {
             super(errorMessage);
+            this.status = status;
         }
     }
 
