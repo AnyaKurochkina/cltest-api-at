@@ -2,6 +2,7 @@ package ru.testit.junit5;
 
 import core.helper.Configure;
 import core.helper.StringUtils;
+import core.helper.http.Http;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -62,6 +63,9 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
 //            throw new Exception(throwable.getMessage());
             throw throwable;
         }
+        finally {
+            Http.removeFixedRole();
+        }
     }
 
     private String getSubId(final ExtensionContext extensionContext) {
@@ -81,10 +85,14 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
                 invocation.skip();
             else
                 invocation.proceed();
-        } catch (Throwable throwable) {
+        }
+        catch (Throwable throwable) {
             if (isIntegrationTestIt() && entity != null)
                 RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, entity.getConfigurationId());
             throw throwable;
+        }
+        finally {
+            Http.removeFixedRole();
         }
     }
 
@@ -139,6 +147,9 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
                 RunningHandler.finishUtilMethod(methodType, throwable);
 //            throw new Exception(throwable.getMessage());
             throw throwable;
+        }
+        finally {
+            Http.removeFixedRole();
         }
     }
 

@@ -3,20 +3,20 @@ package tests;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import io.qameta.allure.Allure;
-import io.qameta.allure.aspects.StepsAspects;
 import io.qameta.allure.model.Attachment;
 import lombok.SneakyThrows;
 import org.junit.CustomDisplayNameGenerator;
 import org.junit.EnvironmentCondition;
 import org.junit.TmsLinkExtension;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.annotations.Title;
+import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.utils.UniqueTest;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collections;
 
 import static io.qameta.allure.Allure.getLifecycle;
 

@@ -3,6 +3,7 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
+import core.helper.http.Http;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -85,6 +86,25 @@ public abstract class Entity implements AutoCloseable {
 
     protected  <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
         return ObjectPoolService.create(this, exclusiveAccess, isPublic);
+    }
+
+    public void negativeCreateRequest(int expectedStatus) {
+        try {
+            init();
+            create();
+        } catch (Http.StatusResponseException e) {
+            if(e.getStatus() != expectedStatus)
+                throw e;
+        }
+    }
+
+    public void negativeDeleteRequest(int expectedStatus) {
+        try {
+            delete();
+        } catch (Http.StatusResponseException e) {
+            if(e.getStatus() != expectedStatus)
+                throw e;
+        }
     }
 
     public <T extends Entity> T createObjectExclusiveAccess() {
