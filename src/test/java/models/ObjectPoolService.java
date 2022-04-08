@@ -49,6 +49,11 @@ public class ObjectPoolService {
         }
         objectPoolEntity.lock();
 
+        if (Configure.isTestItCreateAutotest) {
+            objectPoolEntity.release();
+            throw new CreateEntityException("Создание объекта пропущенно (isTestItCreateAutotest = true)");
+        }
+
         if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
             objectPoolEntity.release();
             throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой:\n%s",
