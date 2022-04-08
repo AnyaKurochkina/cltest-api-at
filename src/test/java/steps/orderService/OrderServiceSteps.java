@@ -123,7 +123,7 @@ public class OrderServiceSteps extends Steps {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.getId())
-                .set("$.order.data", jsonData)
+                .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
                 .patch("projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
