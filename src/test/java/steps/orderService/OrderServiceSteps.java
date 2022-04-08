@@ -168,11 +168,12 @@ public class OrderServiceSteps extends Steps {
                     costPreBilling.set(CostSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
-                () -> actionId.set(sendAction(action, product, jsonData, projectId)
-                        .assertStatus(200)
-                        .jsonPath()
-                        .get("action_id")),
                 () -> {
+                    actionId.set(sendAction(action, product, jsonData, projectId)
+                            .assertStatus(200)
+                            .jsonPath()
+                            .get("action_id"));
+
                     checkActionStatusMethod("success", product, actionId.get());
                     if (Objects.nonNull(status))
                         product.setStatus(status);
