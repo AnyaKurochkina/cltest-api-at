@@ -244,7 +244,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Ожидание успешного выполнения action")
     public static void checkActionStatusMethod(String exp_status, IProduct product, String action_id) {
         String actionStatus = "";
-        int counter = 20;
+        int counter = 22;
         log.info("Проверка статуса выполнения действия");
         while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.equals("")) && counter > 0) {
             Waiting.sleep(30000);
