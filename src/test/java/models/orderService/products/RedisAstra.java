@@ -22,7 +22,7 @@ import steps.orderService.OrderServiceSteps;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class Redis extends IProduct {
+public class RedisAstra extends IProduct {
     @ToString.Include
     String segment;
     String dataCentre;
@@ -44,7 +44,7 @@ public class Redis extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/redis.json";
-        productName = "Redis";
+        productName = "Redis (Astra)";
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
