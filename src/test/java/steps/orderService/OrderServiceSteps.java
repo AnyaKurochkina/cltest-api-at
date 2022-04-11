@@ -123,7 +123,7 @@ public class OrderServiceSteps extends Steps {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
         return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.getId())
-                .set("$.order.data", jsonData)
+                .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
                 .patch("projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
@@ -147,10 +147,11 @@ public class OrderServiceSteps extends Steps {
 
     /**
      * Метод выполняет экшен по его имени
+     *
      * @param projectId id проекта
-     * @param action   имя экшена
-     * @param product  объект продукта
-     * @param jsonData параметр дата в запросе, к примеру: "order":{"data":{}}}
+     * @param action    имя экшена
+     * @param product   объект продукта
+     * @param jsonData  параметр дата в запросе, к примеру: "order":{"data":{}}}
      */
     @Step("Выполнение action \"{action}\"")
     public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId) {
@@ -167,11 +168,12 @@ public class OrderServiceSteps extends Steps {
                     costPreBilling.set(CostSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
-                () -> actionId.set(sendAction(action, product, jsonData, projectId)
-                        .assertStatus(200)
-                        .jsonPath()
-                        .get("action_id")),
                 () -> {
+                    actionId.set(sendAction(action, product, jsonData, projectId)
+                            .assertStatus(200)
+                            .jsonPath()
+                            .get("action_id"));
+
                     checkActionStatusMethod("success", product, actionId.get());
                     if (Objects.nonNull(status))
                         product.setStatus(status);
@@ -195,6 +197,7 @@ public class OrderServiceSteps extends Steps {
 
     /**
      * Метод выполняет экшен по его имени
+     *
      * @param action   имя экшена
      * @param product  объект продукта
      * @param jsonData параметр дата в запросе, к примеру: "order":{"data":{}}}
@@ -214,12 +217,12 @@ public class OrderServiceSteps extends Steps {
                     costPreBilling.set(CostSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
-                () -> actionId.set(sendAction(action, product, jsonData)
-                        .assertStatus(200)
-                        .jsonPath()
-                        .get("action_id")),
-                () -> checkActionStatusMethod("success", product, actionId.get()),
                 () -> {
+                    actionId.set(sendAction(action, product, jsonData)
+                            .assertStatus(200)
+                            .jsonPath()
+                            .get("action_id"));
+                    checkActionStatusMethod("success", product, actionId.get());
                     if (costPreBilling.get() != null) {
                         Float cost = null;
                         for (int i = 0; i < 20; i++) {
@@ -241,7 +244,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Ожидание успешного выполнения action")
     public static void checkActionStatusMethod(String exp_status, IProduct product, String action_id) {
         String actionStatus = "";
-        int counter = 20;
+        int counter = 22;
         log.info("Проверка статуса выполнения действия");
         while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.equals("")) && counter > 0) {
             Waiting.sleep(30000);

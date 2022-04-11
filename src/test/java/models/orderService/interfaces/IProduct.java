@@ -72,6 +72,7 @@ public abstract class IProduct extends Entity {
     @Setter
     protected String projectId;
     @Getter
+    @Setter
     protected String productName;
     @Getter
     @ToString.Include
@@ -272,7 +273,8 @@ public abstract class IProduct extends Entity {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(productId, GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         List<String> parameters = (List<String>) graphResponse.getUiSchema().get("ui:order");
-        parameters.addAll(((Map<String, Object>) graphResponse.getJsonSchema().get("dependencies")).keySet());
+        if(graphResponse.getJsonSchema().containsKey("dependencies"))
+            parameters.addAll(((Map<String, Object>) graphResponse.getJsonSchema().get("dependencies")).keySet());
         Iterator<String> iterator = jsonObject.getJSONObject("order").getJSONObject("attrs").keys();
         while (iterator.hasNext()) {
             if (!parameters.contains(iterator.next()))

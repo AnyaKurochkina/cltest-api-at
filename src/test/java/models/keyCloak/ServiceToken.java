@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import steps.keyCloak.KeyCloakSteps;
 
 @Builder
-public class ServiceToken extends Entity {
+public class ServiceToken extends Entity implements Token {
     public String token;
     public Long time;
 

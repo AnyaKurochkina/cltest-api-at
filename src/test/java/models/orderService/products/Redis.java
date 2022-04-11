@@ -32,6 +32,7 @@ public class Redis extends IProduct {
     @ToString.Include
     String osVersion;
     String redisPassword;
+    String redisVersion;
 
     @Override
     @Step("Заказ продукта")
@@ -43,7 +44,8 @@ public class Redis extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/redis.json";
-        productName = "Redis";
+        if (productName == null)
+            productName = "Redis";
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
@@ -51,6 +53,8 @@ public class Redis extends IProduct {
             redisPassword = "8AEv023pMDHVw1w4zZZE23HjPAKmVDvdtpK8Qddme94VJBHKhgy";
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+        if (redisVersion == null)
+            redisVersion = getRandomProductVersionByPathEnum("redis_version.enum");
         return this;
     }
 
@@ -63,6 +67,7 @@ public class Redis extends IProduct {
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.redis_version", redisVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", projectId)
                 .set("$.order.attrs.on_support", isTest())
