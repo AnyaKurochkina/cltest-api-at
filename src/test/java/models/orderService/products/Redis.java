@@ -44,7 +44,8 @@ public class Redis extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/redis.json";
-        productName = "Redis";
+        if (productName == null)
+            productName = "Redis";
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();

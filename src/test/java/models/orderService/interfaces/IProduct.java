@@ -72,6 +72,7 @@ public abstract class IProduct extends Entity {
     @Setter
     protected String projectId;
     @Getter
+    @Setter
     protected String productName;
     @Getter
     @ToString.Include
