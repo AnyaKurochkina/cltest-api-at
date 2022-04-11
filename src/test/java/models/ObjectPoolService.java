@@ -17,6 +17,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
 import models.keyCloak.ServiceAccountToken;
+import models.keyCloak.Token;
 import models.keyCloak.UserToken;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
@@ -49,7 +50,7 @@ public class ObjectPoolService {
         }
         objectPoolEntity.lock();
 
-        if (Configure.isTestItCreateAutotest) {
+        if (Configure.isTestItCreateAutotest && !objectPoolEntity.getClazz().isAssignableFrom(Token.class)) {
             objectPoolEntity.release();
             throw new CreateEntityException("Создание объекта пропущенно (isTestItCreateAutotest = true)");
         }
@@ -143,7 +144,7 @@ public class ObjectPoolService {
 
         for (String key : createdEntities) {
             ObjectPoolEntity objectPoolEntity = entities.get(key);
-            if (objectPoolEntity.getClazz().getName().endsWith("UserToken") || objectPoolEntity.getClazz().getName().endsWith("ServiceAccountToken"))
+            if (objectPoolEntity.getClazz().isAssignableFrom(Token.class))
                 continue;
             if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
                 continue;
@@ -171,7 +172,8 @@ public class ObjectPoolService {
                 } catch (Throwable e) {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
                     objectPoolEntity.setError(e);
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    log.error("##### deleteAllVm error: " + e);
                 }
             });
         }
