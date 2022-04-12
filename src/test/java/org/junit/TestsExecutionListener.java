@@ -39,7 +39,6 @@ public class TestsExecutionListener implements TestExecutionListener {
         Configuration.browserPosition = "2x2";
         Configuration.timeout = 15000;
         Configuration.driverManagerEnabled = false;
-        SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
         //####Config for Ui###
 
         String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";

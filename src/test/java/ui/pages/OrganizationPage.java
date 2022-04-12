@@ -83,7 +83,8 @@ public class OrganizationPage implements Loadable {
                         .shouldHave(Condition.attribute("title", startStatus.getStatus()))
                         .shouldNotHave(Condition.attribute("title", startStatus.getStatus()),
                                 Duration.ofMillis(480000));
-                e.$(statusColumn).shouldHave(Condition.attribute("title", endStatus.getStatus()));
+                e.$(statusColumn).shouldHave(Condition.attribute("title", endStatus.getStatus()),
+                        Duration.ofMillis(50000));
             }
         }
     }

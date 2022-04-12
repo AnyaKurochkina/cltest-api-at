@@ -16,6 +16,7 @@ import static com.codeborne.selenide.Selenide.sleep;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static core.helper.Configure.getAppProp;
 
+@Log4j2
 public class SelenoidUtils {
 
     private static boolean isRemote;
@@ -24,7 +25,7 @@ public class SelenoidUtils {
     public static void isRemote() {
         if (Boolean.parseBoolean(getAppProp("webdriver.is.remote"))) {
             isRemote = true;
-            System.out.println("Ui Тесты стартовали на selenoid сервере: " + getAppProp("webdriver.remote.url"));
+            log.info("Ui Тесты стартовали на selenoid сервере: " + getAppProp("webdriver.remote.url"));
             Configuration.remote = getAppProp("webdriver.remote.url");
             DesiredCapabilities capabilities = new DesiredCapabilities();
             capabilities.setCapability("enableVNC", true);
@@ -34,7 +35,7 @@ public class SelenoidUtils {
             Configuration.browserCapabilities = capabilities;
         } else {
             isRemote = false;
-            System.out.println("Ui Тесты стартовали локально");
+            log.info("Ui Тесты стартовали локально");
         }
     }
 }

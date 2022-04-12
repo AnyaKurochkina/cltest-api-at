@@ -1,12 +1,2 @@
 [
-  {
-    "objectClassName": "models.authorizer.Folder",
-    "kind": "department",
-    "informationSystemIds": [
-      "8e33baf8-e181-457b-9d60-e5dc470fe8fa"
-    ],
-    "name": "fold-21yhccp939",
-    "title": "Команда QA. Роль Администратор",
-    "parentId": "fold-dkj0exqf9q"
-  }
 ]

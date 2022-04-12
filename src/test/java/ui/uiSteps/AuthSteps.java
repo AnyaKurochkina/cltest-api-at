@@ -11,4 +11,11 @@ public class AuthSteps {
         LoginPage loginPage = new LoginPage();
         loginPage.singIn();
     }
+
+    @Step
+    public void signIn(String login, String password){
+        //Логинимся
+        LoginPage loginPage = new LoginPage();
+        loginPage.singIn(login, password);
+    }
 }
