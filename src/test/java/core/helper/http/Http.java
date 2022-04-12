@@ -34,7 +34,7 @@ public class Http {
     String token = "";
     private String field = "";
     private Role role = Role.ADMIN;
-    private String contentType = "application/json";
+    String contentType = "application/json";
     private boolean isUsedToken = true;
     private static final Semaphore SEMAPHORE = new Semaphore(1, true);
     private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
@@ -258,6 +258,18 @@ public class Http {
         }
         return new Response(status, responseMessage, responseHeaders, this);
     }
+
+//    public Map<String,String> getQueryParams() {
+//        String[] params = new URL(host + path).getQuery().split("&");
+//        Map<String, String> map = new HashMap<>();
+//        String value = null;
+//        for (String param : params) {
+//            String name = param.split("=")[0];
+//            String value = param.split("=")[1];
+//            map.put(name, value);
+//        }
+//        return map;
+//    }
 
     public static class StatusResponseException extends AssertionError {
         @Getter
