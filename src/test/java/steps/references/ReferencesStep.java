@@ -29,7 +29,7 @@ public class ReferencesStep extends Tests {
     public static List<Flavor> getProductFlavorsLinkedList(IProduct product) {
         String jsonArray = new Http(ReferencesURL)
                 .setProjectId(Objects.requireNonNull(product.getProjectId()))
-                .get("pages/?directory__name=flavors&tags={}", product.getProductId())
+                .get("/api/v1/pages/?directory__name=flavors&tags={}", product.getProductId())
                 .assertStatus(200)
                 .toString();
 
@@ -44,7 +44,7 @@ public class ReferencesStep extends Tests {
     public static List<Flavor> getFlavorsByPageFilterLinkedList(IProduct product, String pageFilter) {
         String jsonArray = new Http(ReferencesURL)
                 .setProjectId(Objects.requireNonNull(product).getProjectId())
-                .get("pages/?page_filter={}", pageFilter)
+                .get("/api/v1/pages/?page_filter={}", pageFilter)
                 .assertStatus(200)
                 .toString();
 
@@ -58,14 +58,14 @@ public class ReferencesStep extends Tests {
     @Step("Получение списка в справочнике по параметрам {attrs}")
     public static JsonPath getJsonPathList(String attrs) {
         return new Http(ReferencesURL)
-                .get("pages/?{}", attrs)
+                .get("/api/v1/pages/?{}", attrs)
                 .assertStatus(200)
                 .jsonPath();
     }
 
     @Step("Получение списка directories")
     public List<Directories> getDirectoriesList() {
-        String jsonArray = new Http(ReferencesURL).get("directories/")
+        String jsonArray = new Http(ReferencesURL).get("/api/v1/directories/")
                 .assertStatus(200)
                 .toString();
         Type type = new TypeToken<List<Directories>>() {
@@ -76,7 +76,7 @@ public class ReferencesStep extends Tests {
     @Step("Получение directory по имени")
     public Directories getDirectoryByName(String name) {
         return new Http(ReferencesURL)
-                .get("directories/" + name + "/")
+                .get("/api/v1/directories/" + name + "/")
                 .assertStatus(200)
                 .extractAs(Directories.class);
     }
@@ -84,7 +84,7 @@ public class ReferencesStep extends Tests {
     @Step("Получение списка page_filters")
     public List<PageFilter> getPageFiltersList() {
         String jsonArray = new Http(ReferencesURL)
-                .get("page_filters/")
+                .get("/api/v1/page_filters/")
                 .assertStatus(200)
                 .toString();
         Type type = new TypeToken<List<PageFilter>>() {
@@ -95,14 +95,14 @@ public class ReferencesStep extends Tests {
     @Step("Получение page_filters по ключу")
     public PageFilter getPageFilter(String key) {
         return new Http(ReferencesURL)
-                .get("page_filters/" + key + "/")
+                .get("/api/v1/page_filters/" + key + "/")
                 .assertStatus(200)
                 .extractAs(PageFilter.class);
     }
 
     @Step("Получение списка Pages")
     public List<Pages> getPagesList() {
-        String jsonArray = new Http(ReferencesURL).get("/pages/")
+        String jsonArray = new Http(ReferencesURL).get("/api/v1/pages/")
                 .assertStatus(200)
                 .toString();
         Type type = new TypeToken<List<Pages>>() {
@@ -112,14 +112,14 @@ public class ReferencesStep extends Tests {
 
     @Step("Получение Pages по Id")
     public Pages getPagesById(String pageId) {
-        return new Http(ReferencesURL).get("/pages/" + pageId + "/")
+        return new Http(ReferencesURL).get("/api/v1/pages/" + pageId + "/")
                 .assertStatus(200)
                 .extractAs(Pages.class);
     }
 
     @Step("Получение списка directories для приватных ролей")
     public List<Directories> getPrivateDirectoriesList() {
-        String jsonArray = new Http(ReferencesURL).get("private/directories/")
+        String jsonArray = new Http(ReferencesURL).get("/api/v1/private/directories/")
                 .assertStatus(200)
                 .toString();
         Type type = new TypeToken<List<Directories>>() {
@@ -131,7 +131,7 @@ public class ReferencesStep extends Tests {
     public Directories createDirectory(JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
-                .post("private/directories/")
+                .post("/api/v1/private/directories/")
                 .assertStatus(201)
                 .extractAs(Directories.class);
     }
@@ -140,14 +140,14 @@ public class ReferencesStep extends Tests {
     public Response createDirectoryWithInvalidName(JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
-                .post("private/directories/")
+                .post("/api/v1/private/directories/")
                 .assertStatus(201);
     }
 
     @Step("Получение directory по имени для приватных ролей")
     public Directories getPrivateDirectoryByName(String name) {
         return new Http(ReferencesURL)
-                .get("private/directories/" + name + "/")
+                .get("/api/v1/private/directories/" + name + "/")
                 .assertStatus(200)
                 .extractAs(Directories.class);
     }
@@ -156,7 +156,7 @@ public class ReferencesStep extends Tests {
     public Directories updatePrivateDirectoryByName(String name, JSONObject jsonObject) {
         return new Http(ReferencesURL)
                 .body(jsonObject)
-                .put("private/directories/" + name + "/")
+                .put("/api/v1/private/directories/" + name + "/")
                 .assertStatus(200)
                 .extractAs(Directories.class);
     }
@@ -165,14 +165,14 @@ public class ReferencesStep extends Tests {
     public Directories partialUpdatePrivateDirectoryByName(String name, JSONObject jsonObject) {
         return new Http(ReferencesURL)
                 .body(jsonObject)
-                .patch("private/directories/" + name + "/")
+                .patch("/api/v1/private/directories/" + name + "/")
                 .assertStatus(200)
                 .extractAs(Directories.class);
     }
 
     @Step("Получение списка Pages по имени Directory для приватных ролей")
     public List<Pages> getPrivatePagesListByDirectoryName(String directoryName) {
-        String jsonArray = new Http(ReferencesURL).get("private/directories/" + directoryName + "/pages")
+        String jsonArray = new Http(ReferencesURL).get("/api/v1/private/directories/" + directoryName + "/pages")
                 .assertStatus(200)
                 .toString();
         Type type = new TypeToken<List<Pages>>() {
@@ -182,7 +182,7 @@ public class ReferencesStep extends Tests {
 
     @Step("Получение списка Pages по имени Directory и имени Page для приватных ролей")
     public List<Pages> getPrivatePagesListByDirectoryNameAndPageName(String directoryName, String pageName) {
-        String jsonArray = new Http(ReferencesURL).get("private/directories/" + directoryName + "/pages?name=" + pageName)
+        String jsonArray = new Http(ReferencesURL).get("/api/v1/private/directories/" + directoryName + "/pages?name=" + pageName)
                 .assertStatus(200)
                 .toString();
         Type type = new TypeToken<List<Pages>>() {
@@ -192,14 +192,14 @@ public class ReferencesStep extends Tests {
 
     @Step("Получение Pages по Id для приватных ролей")
     public Pages getPrivatePagesById(String directoryName, String pageId) {
-        return new Http(ReferencesURL).get("private/directories/" + directoryName + "/pages/" + pageId)
+        return new Http(ReferencesURL).get("/api/v1/private/directories/" + directoryName + "/pages/" + pageId)
                 .assertStatus(200)
                 .extractAs(Pages.class);
     }
 
     @Step("Получение ответа на запрос Pages по Id для приватных ролей")
     public Response getPrivateResponsePagesById(String directoryName, String pageId) {
-        return new Http(ReferencesURL).get("private/directories/" + directoryName + "/pages/" + pageId)
+        return new Http(ReferencesURL).get("/api/v1/private/directories/" + directoryName + "/pages/" + pageId)
                 .assertStatus(200);
     }
 
@@ -207,7 +207,7 @@ public class ReferencesStep extends Tests {
     public Pages updatePrivatePagesById(String directoryName, String pageId, JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
-                .put("private/directories/" + directoryName + "/pages/" + pageId)
+                .put("/api/v1/private/directories/" + directoryName + "/pages/" + pageId)
                 .assertStatus(200)
                 .extractAs(Pages.class);
     }
@@ -216,7 +216,7 @@ public class ReferencesStep extends Tests {
     public void updateDataPrivatePagesById(String directoryName, String pageId, JSONObject object) {
         new Http(ReferencesURL)
                 .body(object)
-                .post("private/directories/" + directoryName + "/pages/" + pageId + "/update_data")
+                .post("/api/v1/private/directories/" + directoryName + "/pages/" + pageId + "/update_data")
                 .assertStatus(200);
     }
 
@@ -224,7 +224,7 @@ public class ReferencesStep extends Tests {
     public Pages partialUpdatePrivatePagesById(String directoryName, String pageId, JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
-                .patch("private/directories/" + directoryName + "/pages/" + pageId)
+                .patch("/api/v1/private/directories/" + directoryName + "/pages/" + pageId)
                 .assertStatus(200)
                 .extractAs(Pages.class);
     }
@@ -233,14 +233,14 @@ public class ReferencesStep extends Tests {
     public void partUpdatePrivatePagesById(String directoryName, String pageId, JSONObject object) {
         new Http(ReferencesURL)
                 .body(object)
-                .patch("private/directories/" + directoryName + "/pages/" + pageId)
+                .patch("/api/v1/private/directories/" + directoryName + "/pages/" + pageId)
                 .assertStatus(200);
     }
 
     @Step("Удаление Pages по Id для приватных ролей")
     public void deletePrivatePagesById(String directoryName, String pageId) {
         new Http(ReferencesURL)
-                .delete("private/directories/" + directoryName + "/pages/" + pageId)
+                .delete("/api/v1/private/directories/" + directoryName + "/pages/" + pageId)
                 .assertStatus(204);
     }
 
@@ -248,7 +248,7 @@ public class ReferencesStep extends Tests {
     public Pages createPrivatePagesAndGet(String directoryName, JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
-                .post("private/directories/" + directoryName + "/pages")
+                .post("/api/v1/private/directories/" + directoryName + "/pages")
                 .assertStatus(201)
                 .extractAs(Pages.class);
     }
@@ -257,7 +257,7 @@ public class ReferencesStep extends Tests {
     public Response createPrivatePages(String directoryName, JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
-                .post("private/directories/" + directoryName + "/pages")
+                .post("/api/v1/private/directories/" + directoryName + "/pages")
                 .assertStatus(201);
     }
 
@@ -265,20 +265,20 @@ public class ReferencesStep extends Tests {
     public Response createPrivatePagesAndGetResponse(String directoryName, JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
-                .post("private/directories/" + directoryName + "/pages");
+                .post("/api/v1/private/directories/" + directoryName + "/pages");
     }
 
     @Step("Удаление directory по имени для приватных ролей")
     public void deletePrivateDirectoryByName(String name) {
         new Http(ReferencesURL)
-                .delete("private/directories/" + name + "/")
+                .delete("/api/v1/private/directories/" + name + "/")
                 .assertStatus(204);
     }
 
     @Step("Получение списка page_filters для приватных ролей")
     public List<PageFilter> getPrivatePageFiltersList() {
         String jsonArray = new Http(ReferencesURL)
-                .get("private/page_filters/")
+                .get("/api/v1/private/page_filters/")
                 .assertStatus(200)
                 .toString();
         Type type = new TypeToken<List<PageFilter>>() {
@@ -290,7 +290,7 @@ public class ReferencesStep extends Tests {
     public PageFilter createPrivatePageFilter(JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
-                .post("private/page_filters/")
+                .post("/api/v1/private/page_filters/")
                 .assertStatus(201)
                 .extractAs(PageFilter.class);
     }
@@ -299,7 +299,7 @@ public class ReferencesStep extends Tests {
     public PageFilter updatePrivatePageFilter(String key, JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
-                .put("private/page_filters/" + key + "/")
+                .put("/api/v1/private/page_filters/" + key + "/")
                 .assertStatus(200)
                 .extractAs(PageFilter.class);
     }
@@ -307,7 +307,7 @@ public class ReferencesStep extends Tests {
     @Step("Получение page_filters по ключу для приватных ролей")
     public PageFilter getPrivatePageFilter(String key) {
         return new Http(ReferencesURL)
-                .get("private/page_filters/" + key + "/")
+                .get("/api/v1/private/page_filters/" + key + "/")
                 .assertStatus(200)
                 .extractAs(PageFilter.class);
     }
@@ -316,7 +316,7 @@ public class ReferencesStep extends Tests {
     public PageFilter partialUpdatePrivatePageFilter(String key, JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
-                .patch("private/page_filters/" + key + "/")
+                .patch("/api/v1/private/page_filters/" + key + "/")
                 .assertStatus(200)
                 .extractAs(PageFilter.class);
     }
@@ -324,48 +324,48 @@ public class ReferencesStep extends Tests {
     @Step("Удаление page_filters по ключу для приватных ролей")
     public void deletePrivatePageFiltersByKey(String key) {
         new Http(ReferencesURL)
-                .delete("private/page_filters/" + key + "/")
+                .delete("/api/v1/private/page_filters/" + key + "/")
                 .assertStatus(204);
     }
 
     @Step("Импорт Directories для приватных ролей")
     public void importPrivateDirectories(String path) {
         new Http(ReferencesURL)
-                .multiPart("private/directories/obj_import/", "file", new File(path))
+                .multiPart("/api/v1/private/directories/obj_import/", "file", new File(path))
                 .assertStatus(200);
     }
 
     @Step("Экспорт Directories для приватных ролей")
     public void exportPrivateDirectories(String name) {
         new Http(ReferencesURL)
-                .get("private/directories/" + name + "/obj_export/")
+                .get("/api/v1/private/directories/" + name + "/obj_export/")
                 .assertStatus(200);
     }
 
     @Step("Импорт Pages для приватных ролей")
     public void importPrivatePages(String path, String directoryName) {
          new Http(ReferencesURL)
-                .multiPart("private/directories/" +directoryName + "/pages/import", "file", new File(path))
+                .multiPart("/api/v1/private/directories/" +directoryName + "/pages/import", "file", new File(path))
                 .assertStatus(200);
     }
 
     @Step("Экспорт Pages для приватных ролей")
     public void exportPrivatePages(String directoryName, String id) {
         new Http(ReferencesURL)
-                .get("private/directories/" + directoryName + "/pages/" + id + "/export")
+                .get("/api/v1/private/directories/" + directoryName + "/pages/" + id + "/export")
                 .assertStatus(200);
     }
 
     @Step("Импорт Page_filter для приватных ролей")
     public void importPrivatePageFilter(String path) {
         new Http(ReferencesURL)
-                .multiPart("private/page_filters/obj_import/", "file", new File(path))
+                .multiPart("/api/v1/private/page_filters/obj_import/", "file", new File(path))
                 .assertStatus(200);
     }
     @Step("Экспорт Page_filter для приватных ролей")
     public void exportPrivatePageFilter(String key) {
         new Http(ReferencesURL)
-                .get("private/page_filters/" + key + "/obj_export/")
+                .get("/api/v1/private/page_filters/" + key + "/obj_export/")
                 .assertStatus(200);
     }
 }

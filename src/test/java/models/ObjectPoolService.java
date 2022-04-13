@@ -3,6 +3,7 @@ package models;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Throwables;
 import com.google.gson.Gson;
 import core.enums.ObjectStatus;
 import core.exception.CalculateException;
@@ -50,7 +51,7 @@ public class ObjectPoolService {
         }
         objectPoolEntity.lock();
 
-        if (Configure.isTestItCreateAutotest && !objectPoolEntity.getClazz().isAssignableFrom(Token.class)) {
+        if (Configure.isTestItCreateAutotest) {
             objectPoolEntity.release();
             throw new CreateEntityException("Создание объекта пропущенно (isTestItCreateAutotest = true)");
         }
@@ -128,6 +129,7 @@ public class ObjectPoolService {
     @SneakyThrows
     public static void deleteAllResources() {
         log.debug("##### deleteAllResources start #####");
+        Configure.isTestItCreateAutotest = false;
         Collections.reverse(createdEntities);
 
         List<ObjectPoolEntity> entityList = new ArrayList<>();
@@ -172,8 +174,7 @@ public class ObjectPoolService {
                 } catch (Throwable e) {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
                     objectPoolEntity.setError(e);
-//                    e.printStackTrace();
-                    log.error("##### deleteAllVm error: " + e);
+                    log.error("##### deleteAllVm error: " + e + "\n" + Throwables.getStackTraceAsString(e));
                 }
             });
         }

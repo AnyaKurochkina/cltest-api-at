@@ -259,7 +259,7 @@ public abstract class IProduct extends Entity {
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId)
                 .body(deleteObjectIfNotFoundInUiSchema(toJson(), getProductId()))
-                .post("projects/" + projectId + "/orders")
+                .post("/v1/projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");

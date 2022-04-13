@@ -5,12 +5,14 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.authorizer.ProjectSteps;
 import steps.portalBack.PortalBackSteps;
 
 import java.util.Objects;
@@ -66,9 +68,9 @@ public class Project extends Entity {
     }
 
     public void edit() {
-        String projectNameNew = new Http(Configure.AuthorizerURL)
+        String projectNameNew = new Http(Configure.IamURL)
                 .body("{\"project\":{\"title\":\"" + projectName + "\"}}")
-                .patch(String.format("projects/%s", id))
+                .patch(String.format("/v1/projects/%s", id))
                 .assertStatus(200)
                 .jsonPath()
                 .getString("data.title");
@@ -79,9 +81,9 @@ public class Project extends Entity {
     @Override
     @Step("Создание проекта")
     protected void create() {
-        id = new Http(Configure.AuthorizerURL)
+        id = new Http(Configure.IamURL)
                 .body(toJson())
-                .post(String.format("folders/%s/projects", folderName))
+                .post(String.format("/v1/folders/%s/projects", folderName))
                 .assertStatus(201)
                 .jsonPath()
                 .getString("data.name");
@@ -90,8 +92,8 @@ public class Project extends Entity {
     @Override
     @Step("Удаление проекта")
     protected void delete() {
-        new Http(Configure.AuthorizerURL)
-                .delete("projects/" + id)
+        new Http(Configure.IamURL)
+                .delete("/v1/projects/" + id)
                 .assertStatus(204);
     }
 }

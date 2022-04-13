@@ -27,7 +27,7 @@ public class AccessGroupSteps extends Steps {
         JsonHelper.getJsonTemplate("/accessGroup/users.json")
                 .set("$.users", arr)
                 .send(PortalBackURL)
-                .post("projects/{}/access_groups/{}/group_users", group.getProjectName(), group.getPrefixName())
+                .post("/v1/projects/{}/access_groups/{}/group_users", group.getProjectName(), group.getPrefixName())
                 .assertStatus(201);
         group.addUser(username);
     }
@@ -36,7 +36,7 @@ public class AccessGroupSteps extends Steps {
     @Step("Добавление пользователя в группу доступа для проекта среды {env}")
     public static void removeUserFromGroup(AccessGroup group, String user) {
         new Http(PortalBackURL)
-                .delete("projects/{}/access_groups/{}/group_users?unique_name={}", group.getProjectName(), group.getPrefixName(), URLEncoder.encode(user, String.valueOf(StandardCharsets.UTF_8)))
+                .delete("/v1/projects/{}/access_groups/{}/group_users?unique_name={}", group.getProjectName(), group.getPrefixName(), URLEncoder.encode(user, String.valueOf(StandardCharsets.UTF_8)))
                 .assertStatus(204);
         group.removeUser(user);
     }

@@ -71,9 +71,9 @@ public class Folder extends Entity {
     }
 
     public void edit(){
-        String titleNew = new Http(Configure.AuthorizerURL)
+        String titleNew = new Http(Configure.IamURL)
                 .body(toJson())
-                .patch("folders/{}", name)
+                .patch("/v1/folders/{}", name)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("data.title");
@@ -84,8 +84,8 @@ public class Folder extends Entity {
     @Override
     @Step("Создание папки")
     protected void create() {
-        String url = kind.equals(BUSINESS_BLOCK) ? "organizations/vtb/folders" : String.format("folders/%s/folders", parentId);
-        name = new Http(Configure.AuthorizerURL)
+        String url = kind.equals(BUSINESS_BLOCK) ? "/v1/organizations/vtb/folders" : String.format("/v1/folders/%s/folders", parentId);
+        name = new Http(Configure.IamURL)
                 .body(toJson())
                 .post(url)
                 .assertStatus(201)
@@ -96,8 +96,8 @@ public class Folder extends Entity {
     @Override
     @Step("Удаление папки")
     protected void delete() {
-        new Http(Configure.AuthorizerURL)
-                .delete("folders/" + name)
+        new Http(Configure.IamURL)
+                .delete("/v1/folders/" + name)
                 .assertStatus(204);
     }
 }
