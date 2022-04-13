@@ -62,7 +62,7 @@ public class Jinja2 extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete(productName + jinjaId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, Configure.ProductCatalogURL);
         Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 }

@@ -1,6 +1,5 @@
 package models.productCatalog;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
@@ -16,6 +15,8 @@ import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
 import java.util.Map;
+
+import static core.helper.Configure.ProductCatalogURL;
 
 @Log4j2
 @Builder
@@ -49,8 +50,10 @@ public class Product extends Entity {
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/products/createProduct.json";
-        Graph graph = Graph.builder().name("graph_for_product_api_test").build().createObject();
-        graphId = graph.getGraphId();
+        if (graphId == null) {
+            Graph graph = Graph.builder().name("graph_for_product_api_test").build().createObject();
+            graphId = graph.getGraphId();
+        }
         return this;
     }
 
@@ -70,7 +73,7 @@ public class Product extends Entity {
 
     @Override
     protected void create() {
-        CreateProductResponse createProductResponse = new Http(Configure.ProductCatalogURL)
+        CreateProductResponse createProductResponse = new Http(ProductCatalogURL)
                 .body(toJson())
                 .post("products/")
                 .assertStatus(201)
@@ -81,7 +84,7 @@ public class Product extends Entity {
 
     @Step("Обновление продукта")
     public void updateProduct() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(ProductCatalogURL)
                 .body(this.getTemplate().set("$.version", "1.1.1").build())
                 .patch("products/" + productId + "/")
                 .assertStatus(200);
@@ -89,10 +92,10 @@ public class Product extends Entity {
 
     @Override
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(ProductCatalogURL)
                 .delete(productName + productId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
         Assertions.assertFalse(productCatalogSteps.isExists(productName));
     }
 }

@@ -17,6 +17,7 @@ public class Configure {
     public static String PortalBackURL;
     public static String TarifficatorURL;
     public static String ProductCatalogURL;
+    public static String ProductCatalogDeprURL;
     public static String CalculatorURL;
     public static String StateServiceURL;
     public static String OrderServiceURL;
@@ -47,6 +48,7 @@ public class Configure {
             TarifficatorURL = kongURL + "tarifficator/api/v1/";
             CalculatorURL = kongURL + "calculator/";
             ProductCatalogURL = kongURL + "product-catalog/api/v1/";
+            ProductCatalogDeprURL = kongURL + "product-catalog/";
             OrderServiceURL = kongURL + "order-service/api/v1/";
             StateServiceURL = kongURL + "state-service/";
             ReferencesURL = kongURL + "references/api/v1/";

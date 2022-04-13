@@ -1,6 +1,5 @@
 package models.productCatalog;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.orgDirection.createOrgDirection.response.CreateOrgDirectionResponse;
@@ -14,6 +13,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
+import static core.helper.Configure.ProductCatalogURL;
+
 @Log4j2
 @Builder
 @Getter
@@ -26,7 +27,7 @@ public class OrgDirection extends Entity {
     private String jsonTemplate;
     private String title;
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/", "productCatalog/orgDirection/orgDirection.json");
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/", "productCatalog/orgDirection/orgDirection.json", ProductCatalogURL);
 
     private final String productName = "org_direction/";
 
@@ -48,7 +49,7 @@ public class OrgDirection extends Entity {
     @Override
     @Step("Создание направления")
     protected void create() {
-        CreateOrgDirectionResponse createOrgDirectionResponse = new Http(Configure.ProductCatalogURL)
+        CreateOrgDirectionResponse createOrgDirectionResponse = new Http(ProductCatalogURL)
                 .body(toJson())
                 .post("org_direction/")
                 .assertStatus(201)
@@ -60,10 +61,10 @@ public class OrgDirection extends Entity {
     @Override
     @Step("Удаление направления")
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(ProductCatalogURL)
                 .delete(productName + orgDirectionId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
         Assertions.assertFalse(productCatalogSteps.isExists(orgDirectionName));
     }
 }

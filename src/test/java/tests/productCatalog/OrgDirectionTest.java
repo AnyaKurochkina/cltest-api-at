@@ -36,7 +36,8 @@ public class OrgDirectionTest extends Tests {
     private static final String ORG_DIRECTION_NAME = "org_direction_at_test-:2022.";
     private static final String ORG_DIRECTION_TITLE = "title_org_direction_at_test-:2022.";
     OrgDirection orgDirection;
-    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/", "productCatalog/orgDirection/orgDirection.json");
+    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/",
+            "productCatalog/orgDirection/orgDirection.json", Configure.ProductCatalogURL);
 
     @Order(1)
     @DisplayName("Создание направления в продуктовом каталоге")

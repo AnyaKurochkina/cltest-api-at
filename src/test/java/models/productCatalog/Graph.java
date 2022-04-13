@@ -1,12 +1,13 @@
 package models.productCatalog;
 
-import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import httpModels.productCatalog.graphs.createGraph.response.CreateGraphResponse;
 import httpModels.productCatalog.graphs.createGraph.response.JsonSchema;
 import httpModels.productCatalog.graphs.createGraph.response.StaticData;
 import httpModels.productCatalog.graphs.createGraph.response.UiSchema;
+import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
+import httpModels.productCatalog.graphs.getUsedList.GetUsedListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,10 @@ import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
+
+import java.util.List;
+
+import static core.helper.Configure.ProductCatalogURL;
 
 @Log4j2
 @Builder
@@ -35,7 +40,8 @@ public class Graph extends Entity {
     private String createDt;
     private String updateDt;
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/",
+            "productCatalog/graphs/createGraph.json", ProductCatalogURL);
 
     public static final String productName = "graphs/";
 
@@ -62,7 +68,35 @@ public class Graph extends Entity {
     @Override
     @Step("Создание графа")
     protected void create() {
-        graphId = new Http(Configure.ProductCatalogURL)
+        if (productCatalogSteps.isExists(name)) {
+            String id = productCatalogSteps.getProductObjectIdByNameWithMultiSearch(name, GetGraphsListResponse.class);
+            List<GetUsedListResponse> list = productCatalogSteps.getObjectArrayUsedGraph(id).getList("", GetUsedListResponse.class);
+            for (GetUsedListResponse resp : list) {
+                String type = resp.getType();
+                switch (type) {
+                    case ("Action"):
+                        ProductCatalogSteps actionSteps = new ProductCatalogSteps("actions/", ProductCatalogURL);
+                        if (actionSteps.isExists(resp.getName())) {
+                            actionSteps.deleteById(resp.getId());
+                        }
+                        break;
+                    case ("Product"):
+                        ProductCatalogSteps productSteps = new ProductCatalogSteps("products/", ProductCatalogURL);
+                        if (productSteps.isExists(resp.getName())) {
+                            productSteps.deleteById(resp.getId());
+                        }
+                        break;
+                    case ("Service"):
+                        ProductCatalogSteps serviceSteps = new ProductCatalogSteps("services/", ProductCatalogURL);
+                        if (serviceSteps.isExists(resp.getName())) {
+                            serviceSteps.deleteById(resp.getId());
+                        }
+                        break;
+                }
+            }
+            productCatalogSteps.getDeleteObjectResponse(id).assertStatus(200);
+        }
+        graphId = new Http(ProductCatalogURL)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -74,10 +108,10 @@ public class Graph extends Entity {
     @Override
     @Step("Удаление графа")
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(ProductCatalogURL)
                 .delete(productName + graphId + "/")
                 .assertStatus(200);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
         Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 }

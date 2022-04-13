@@ -35,7 +35,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ServicesTest extends Tests {
 
     Services service;
-    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("services/", "/productCatalog/services/createServices.json");
+    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("services/",
+            "/productCatalog/services/createServices.json", Configure.ProductCatalogURL);
 
     @Order(1)
     @DisplayName("Создание сервиса в продуктовом каталоге")
@@ -355,7 +356,7 @@ public class ServicesTest extends Tests {
     @TmsLink("")
     @Test
     public void getServiceListByPublished() {
-        Services.builder()
+        Services service = Services.builder()
                 .serviceName("service_is_published_test_api")
                 .title("title_service_is_published_test_api")
                 .description("service_is_published_test_api")
@@ -363,6 +364,7 @@ public class ServicesTest extends Tests {
                 .build()
                 .createObject();
         List<ItemImpl> serviceList = productCatalogSteps.getProductObjectList(GetServiceListResponse.class, "?is_published=true");
+        productCatalogSteps.partialUpdateObject(service.getServiceId(), new JSONObject().put("is_published", false));
         for (ItemImpl item : serviceList) {
             ListItem listItem = (ListItem) item;
             assertTrue(listItem.getIsPublished());

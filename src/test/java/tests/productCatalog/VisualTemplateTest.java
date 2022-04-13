@@ -36,7 +36,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class VisualTemplateTest extends Tests {
 
     private static final String VISUAL_TEMPLATE_NAME = "item_visual_template_test_api-:2022.";
-    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("item_visual_templates/", "productCatalog/itemVisualTemplate/createItemVisual.json");
+    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("item_visual_templates/",
+            "productCatalog/itemVisualTemplate/createItemVisual.json", Configure.ProductCatalogURL);
     ItemVisualTemplates visualTemplates;
     CompactTemplate compactTemplate = CompactTemplate.builder().name(new Name("name"))
             .type(new Type("type")).status(new Status("status")).build();

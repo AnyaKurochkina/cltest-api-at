@@ -17,8 +17,8 @@ import tests.Tests;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -26,7 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisabledIfEnv("prod")
 public class ActionsListTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("actions/", "productCatalog/actions/createAction.json");
+    ProductCatalogSteps steps = new ProductCatalogSteps("actions/",
+            "productCatalog/actions/createAction.json", Configure.ProductCatalogURL);
 
     @DisplayName("Получение списка действий. Список отсортирован по дате создания от нового к старому и имени без учета спец. символов")
     @TmsLink("642429")
@@ -68,7 +69,7 @@ public class ActionsListTest extends Tests {
     }
 
     @DisplayName("Получение списка действий по именам")
-    @TmsLink("")
+    @TmsLink("783457")
     @Test
     public void getActionListByNames() {
         String actionName = "create_action_example_for_get_list_by_names_1_test_api";
@@ -89,7 +90,7 @@ public class ActionsListTest extends Tests {
     }
 
     @DisplayName("Получение списка действий по типу")
-    @TmsLink("")
+    @TmsLink("783463")
     @Test
     public void getActionListByType() {
         String actionName = "create_action_example_for_get_list_by_type_test_api";
@@ -103,5 +104,39 @@ public class ActionsListTest extends Tests {
         for (ListItem item : list.getList()) {
             assertEquals(actionType, item.getType());
         }
+    }
+
+    @DisplayName("Получение списка действий по title используя multisearch")
+    @TmsLink("783469")
+    @Test
+    public void getActionListByTitleWithMutisearch() {
+        String actionName = "create_action_example_for_get_list_by_title_with_multisearch_test_api";
+        String actionTitle = "action_title";
+        Action.builder()
+                .actionName(actionName)
+                .title(actionTitle)
+                .build()
+                .createObject();
+        List<ItemImpl> list =  steps.getProductObjectListWithMultiSearch(GetActionsListResponse.class, actionTitle);
+        for (ItemImpl item : list) {
+            ListItem listItem =(ListItem) item;
+            assertTrue(listItem.getTitle().contains(actionTitle));
+        }
+    }
+
+    @DisplayName("Поиск действия по имени, с использованием multiSearch")
+    @TmsLink("642503")
+    @Test
+    public void searchActionByName() {
+        String actionName = "action_multisearch_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .build()
+                .createObject();
+        String actionIdWithMultiSearch = steps.getProductObjectIdByNameWithMultiSearch(action.getActionName(), GetActionsListResponse.class);
+        assertAll(
+                () -> assertNotNull(actionIdWithMultiSearch, String.format("Действие с именем: %s не найден", actionName)),
+                () -> assertEquals(action.getActionId(), actionIdWithMultiSearch, "Id действия не совпадают"));
     }
 }

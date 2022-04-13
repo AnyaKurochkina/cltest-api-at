@@ -30,7 +30,8 @@ public class JinjaTest extends Tests {
 
     private static final String JINJA_NAME = "jinja_template_test_api-:2022.";
     String template = "productCatalog/jinja2/createJinja.json";
-    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("jinja2_templates/", template);
+    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("jinja2_templates/",
+            template, Configure.ProductCatalogURL);
     Jinja2 jinja2;
 
     @Order(1)
