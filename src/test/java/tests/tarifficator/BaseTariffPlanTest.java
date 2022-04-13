@@ -8,7 +8,6 @@ import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.authorizer.Organization;
 import models.tarifficator.TariffClass;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
@@ -74,7 +73,7 @@ public class BaseTariffPlanTest extends Tests {
                 .toJson();
         new Http(Configure.TarifficatorURL)
                 .body(object)
-                .post("tariff_plans")
+                .post("/v1/tariff_plans")
                 .assertStatus(422);
     }
 

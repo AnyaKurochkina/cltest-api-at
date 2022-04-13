@@ -37,7 +37,7 @@ public class CostSteps extends Steps {
                     .get("orders/cost/?uuid__in={}", product)
                     .assertStatus(200)
                     .jsonPath()
-                    .get("cost");
+                    .get("/cost");
             if (consumptionOfOneProduct != null) {
                 consumption += consumptionOfOneProduct;
             }
@@ -53,7 +53,7 @@ public class CostSteps extends Steps {
                 .get("orders/cost/?folder__startswith={}", path)
                 .assertStatus(200)
                 .jsonPath()
-                .getDouble("cost");
+                .getDouble("/cost");
         log.info("Расход для папки/проекта: " + consumption);
         return consumption;
     }
@@ -69,7 +69,7 @@ public class CostSteps extends Steps {
                     .get("orders/cost/?uuid__in={}", product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()
-                    .get("cost");
+                    .get("/cost");
             if (consumption == null) {
                 continue;
             }
@@ -123,7 +123,7 @@ public class CostSteps extends Steps {
             return new Http(TarifficatorURL)
                     .setProjectId(project.id)
                     .body(template)
-                    .post("cost_items")
+                    .post("/v1/cost_items")
                     .assertStatus(200)
                     .jsonPath()
                     .get(path);
@@ -132,7 +132,7 @@ public class CostSteps extends Steps {
         JsonPath response = new Http(TarifficatorURL)
                 .setProjectId(project.id)
                 .body(template)
-                .post("cost")
+                .post("/v1/cost")
                 .assertStatus(200)
                 .jsonPath();
 
@@ -161,7 +161,7 @@ public class CostSteps extends Steps {
         return new Http(TarifficatorURL)
                 .setProjectId(project.id)
                 .body(template)
-                .post("cost")
+                .post("/v1/cost")
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("items");
@@ -181,7 +181,7 @@ public class CostSteps extends Steps {
                 .set("$.order.attrs", data)
                 .send(TarifficatorURL)
                 .setProjectId(product.getProjectId())
-                .post("cost")
+                .post("/v1/cost")
                 .assertStatus(200)
                 .jsonPath()
                 .get("total_price");
@@ -210,7 +210,7 @@ public class CostSteps extends Steps {
     @Step("Запрос цен по ID тарифного плана")
     public static HashMap<String, Double> getPrices(String tariffPlanId) {
         JSONArray consumption = new Http(TarifficatorURL)
-                .get("tariff_plans/{}?include=tariff_classes", tariffPlanId)
+                .get("/v1/tariff_plans/{}?include=tariff_classes", tariffPlanId)
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("tariff_classes");
@@ -226,7 +226,7 @@ public class CostSteps extends Steps {
     @Step("Получение ID активного тарифного плана")
     public static String getActiveTariffId() {
         return new Http(TarifficatorURL)
-                .get("tariff_plans?include=total_count&page=1&per_page=10&f[base]=false&f[organization_name]=vtb&sort=status&acc=up&f[status][]=active")
+                .get("/v1/tariff_plans?include=total_count&page=1&per_page=10&f[base]=false&f[organization_name]=vtb&sort=status&acc=up&f[status][]=active")
                 .assertStatus(200)
                 .jsonPath()
                 .get("list[0].id");

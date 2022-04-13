@@ -67,7 +67,7 @@ public class AccessGroup extends Entity {
     protected void create() {
         prefixName = new Http(Configure.PortalBackURL)
                 .body(toJson())
-                .post("projects/{}/access_groups", projectName)
+                .post("/v1/projects/{}/access_groups", projectName)
                 .assertStatus(201)
                 .jsonPath()
                 .getString("name");
@@ -77,7 +77,7 @@ public class AccessGroup extends Entity {
     public void editGroup(String newDescription) {
         description = new Http(Configure.PortalBackURL)
                 .body(String.format("{\"access_group\":{\"description\":\"%s\"}}", newDescription))
-                .patch("projects/{}/access_groups/{}", projectName, prefixName)
+                .patch("/v1/projects/{}/access_groups/{}", projectName, prefixName)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("description");
@@ -88,7 +88,7 @@ public class AccessGroup extends Entity {
     @Step("Удаление группы доступа")
     protected void delete() {
         new Http(Configure.PortalBackURL)
-                .delete(String.format("projects/%s/access_groups/%s", projectName, prefixName))
+                .delete(String.format("/v1/projects/%s/access_groups/%s", projectName, prefixName))
                 .assertStatus(204)
                 .jsonPath();
     }

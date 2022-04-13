@@ -52,7 +52,7 @@ public class Account extends Entity {
     protected void create() {
         accountId = new Http(Configure.AccountManagerURL)
                 .body(toJson())
-                .post(String.format("organizations/%s/accounts", organization))
+                .post(String.format("/api/v1/organizations/%s/accounts", organization))
                 .assertStatus(200)
                 .jsonPath()
                 .getString("account.account_id");
@@ -62,7 +62,7 @@ public class Account extends Entity {
     @Step("Удаление счета")
     protected void delete() {
         new Http(Configure.AccountManagerURL)
-                .delete(String.format("organizations/%s/accounts/%s?force_unlink=1", organization, accountId))
+                .delete(String.format("/api/v1/organizations/%s/accounts/%s?force_unlink=1", organization, accountId))
                 .assertStatus(200);
     }
 }

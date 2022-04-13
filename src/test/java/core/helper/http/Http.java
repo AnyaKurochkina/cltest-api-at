@@ -20,9 +20,8 @@ import org.opentest4j.AssertionFailedError;
 import steps.keyCloak.KeyCloakSteps;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLDecoder;
+import java.io.IOException;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -176,30 +175,30 @@ public class Http {
     private Response request() {
         Response response = null;
         for (int i = 0; i < 3; i++) {
-            try {
+//            try {
                 response = filterRequest();
-            } catch (AssertionFailedError e) {
-                Waiting.sleep(6000);
-                continue;
-            }
+//            } catch (AssertionFailedError e) {
+//                Waiting.sleep(6000);
+//                continue;
+//            }
             if (response.status() == 504 && method.equals("GET")) {
                 Waiting.sleep(2000);
                 continue;
             }
             break;
         }
-        if (Objects.isNull(response))
-            throw new ConnectException(String.format("Ошибка отправки http запроса %s. (Connection refused)", (host + path)));
+//        if (Objects.isNull(response))
+//            throw new ConnectException(String.format("Ошибка отправки http запроса %s. (Connection refused)", (host + path)));
         return response;
     }
 
     @SneakyThrows
     @SuppressWarnings("deprecation")
     private Response filterRequest() {
+        Assertions.assertTrue(host.length() > 0, "Не задан host");
         int status = 0;
-        URL url = new URL(host + path);
-        host = StringUtils.findByRegex("(.*//[^/]*)/", host + path);
-        path = url.getFile();
+//        host = StringUtils.findByRegex("(.*//[^/]*)/", host + path);
+//        path = url.getFile();
         org.apache.http.conn.ssl.SSLSocketFactory clientAuthFactory = null;
         try {
             clientAuthFactory = new org.apache.http.conn.ssl.SSLSocketFactory(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build());
@@ -237,24 +236,24 @@ public class Http {
             if (body.length() > 0)
                 specification.body(body);
 
-            specification.params(getParamsUrl(url.toURI()));
+//            specification.params(getParamsUrl(url.toURI()));
 
             switch (method) {
                 case "POST":
-                    response = specification.post(url.getPath());
+                    response = specification.post(path);
                     break;
                 case "PUT":
-                    response = specification.put(url.getPath());
+                    response = specification.put(path);
                     break;
                 case "DELETE":
-                    response = specification.delete(url.getPath());
+                    response = specification.delete(path);
                     break;
                 case "PATCH":
-                    response = specification.patch(url.getPath());
+                    response = specification.patch(path);
                     break;
                 case "GET":
                 default:
-                    response = specification.get(url.getPath());
+                    response = specification.get(path);
             }
 
             if (isLogged)

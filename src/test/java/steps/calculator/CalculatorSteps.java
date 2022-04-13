@@ -19,7 +19,7 @@ public class CalculatorSteps extends Steps {
     @Step("Получение информации в калькуляторе о заказе {orderId}")
     public static CostOrder getCostOrderByOrderId(String orderId) {
         String response = new Http(CalculatorURL)
-                .get("orders/{}/", orderId)
+                .get("/orders/{}/", orderId)
                 .assertStatus(200)
                 .toString();
         return deserialize(response, CostOrder.class);

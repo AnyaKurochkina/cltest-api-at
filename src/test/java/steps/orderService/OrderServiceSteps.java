@@ -42,7 +42,7 @@ public class OrderServiceSteps extends Steps {
             Waiting.sleep(30000);
             Response res = new Http(OrderServiceURL)
                     .setProjectId(product.getProjectId())
-                    .get("projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
+                    .get("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
                     .assertStatus(200);
             orderStatus = res.jsonPath().get("status");
             log.info("orderId={} orderStatus={}", product.getOrderId(), orderStatus);
@@ -86,7 +86,7 @@ public class OrderServiceSteps extends Steps {
         }
         do {
             i++;
-            String endPoint = String.format("projects/%s/orders?include=total_count&page=" +
+            String endPoint = String.format("/v1/projects/%s/orders?include=total_count&page=" +
                             i + "&per_page=20&f" +
                             statusParams,
                     Objects.requireNonNull(projectId));
@@ -115,7 +115,7 @@ public class OrderServiceSteps extends Steps {
                 .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
                 .setProjectId(projectId)
-                .patch("projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
+                .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
 
     @Step("Отправка action {action}")
@@ -125,13 +125,13 @@ public class OrderServiceSteps extends Steps {
                 .set("$.item_id", item.getId())
                 .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
-                .patch("projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
+                .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
 
     public static Response changeProjectForOrderRequest(IProduct product, Project target) {
         return new Http(OrderServiceURL)
                 .body(new JSONObject(String.format("{target_project_name: \"%s\"}", target.getId())))
-                .patch("projects/{}/orders/{}/change_project", product.getProjectId(), product.getOrderId());
+                .patch("/v1/projects/{}/orders/{}/change_project", product.getProjectId(), product.getOrderId());
     }
 
     @Step("Перенос продукта {product} в проект {target}")
@@ -250,7 +250,7 @@ public class OrderServiceSteps extends Steps {
             Waiting.sleep(30000);
             actionStatus = new Http(OrderServiceURL)
                     .setProjectId(product.getProjectId())
-                    .get("projects/{}/orders/{}/actions/history/{}", product.getProjectId(), product.getOrderId(), action_id)
+                    .get("/v1/projects/{}/orders/{}/actions/history/{}", product.getProjectId(), product.getOrderId(), action_id)
                     .assertStatus(200)
                     .jsonPath()
                     .get("status");
@@ -273,7 +273,7 @@ public class OrderServiceSteps extends Steps {
     public static String getDomainBySegment(IProduct product, String netSegment) {
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
-                .get("domains?net_segment_code={}&page=1&per_page=25", netSegment)
+                .get("/v1/domains?net_segment_code={}&page=1&per_page=25", netSegment)
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.collect{e -> e}.shuffled()[0].code");
@@ -282,7 +282,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Получение домена для проекта {project}")
     public static String getDomainByProject(String project) {
         return new Http(OrderServiceURL)
-                .get("domains?project_name={}&with_deleted=false&page=1&per_page=25", project)
+                .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25", project)
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.collect{e -> e}.shuffled()[0].code");
@@ -292,7 +292,7 @@ public class OrderServiceSteps extends Steps {
         log.info("Получение ДЦ для сегмента сети " + netSegment);
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
-                .get("data_centers?net_segment_code={}&page=1&per_page=25", netSegment)
+                .get("/v1/data_centers?net_segment_code={}&page=1&per_page=25", netSegment)
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.collect{e -> e}.shuffled()[0].code");
@@ -308,7 +308,7 @@ public class OrderServiceSteps extends Steps {
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(Objects.requireNonNull(product).getProjectId())
-                .get("projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
+                .get("/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
 
@@ -338,7 +338,7 @@ public class OrderServiceSteps extends Steps {
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(Objects.requireNonNull(product).getProjectId())
-                .get("projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
+                .get("/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
         if (status.equals(ProductStatus.STARTED)) {
@@ -354,7 +354,7 @@ public class OrderServiceSteps extends Steps {
     public static List<ResourcePool> getResourcesPoolList(String category, String projectId) {
         String jsonArray = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .get("products/resource_pools?category={}&project_name={}&resource_type=cluster:openshift", category, projectId)
+                .get("/v1/products/resource_pools?category={}&project_name={}&resource_type=cluster:openshift", category, projectId)
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("list")
@@ -375,7 +375,7 @@ public class OrderServiceSteps extends Steps {
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
-                .get("projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
+                .get("/v1/projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
         s = jsonPath.get(path);
@@ -390,7 +390,7 @@ public class OrderServiceSteps extends Steps {
                 .isForOrders(true).build().createObject();
         List<String> orders = new Http(OrderServiceURL)
                 .setProjectId(project.id)
-                .get("projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success", project.id)
+                .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success", project.id)
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.findAll{it.status == 'success'}.id");
@@ -399,7 +399,7 @@ public class OrderServiceSteps extends Steps {
             try {
                 JsonPath jsonPath = new Http(OrderServiceURL)
                         .setProjectId(project.id)
-                        .get("projects/" + project.id + "/orders/" + order)
+                        .get("/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
                 String itemId = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.item_id");
                 String action = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.actions.find{it.type == 'delete'}.name");
@@ -410,7 +410,7 @@ public class OrderServiceSteps extends Steps {
                         .set("$.item_id", itemId)
                         .send(OrderServiceURL)
                         .setProjectId(project.id)
-                        .patch("projects/{}/orders/{}/actions/{}", project.id, order, action)
+                        .patch("/v1/projects/{}/orders/{}/actions/{}", project.id, order, action)
                         .assertStatus(200);
             } catch (Throwable e) {
                 e.printStackTrace();

@@ -13,7 +13,7 @@ public class Configure {
     public static String ENV;
     public static volatile boolean isTestItCreateAutotest = System.getProperty("testItCreateAutotest", "false").equals("true");
 
-    public static String AuthorizerURL;
+    public static String IamURL;
     public static String AccountManagerURL;
     public static String PortalBackURL;
     public static String TarifficatorURL;
@@ -42,15 +42,15 @@ public class Configure {
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
 
             String kongURL = getAppProp("url.kong");
-            AuthorizerURL = kongURL + "iam/api/v1/";
-            AccountManagerURL = kongURL + "accountmanager/api/v1/";
-            PortalBackURL = kongURL + "portal/api/v1/";
-            TarifficatorURL = kongURL + "tarifficator/api/v1/";
-            CalculatorURL = kongURL + "calculator/";
+            IamURL = kongURL + "iam/api";
+            AccountManagerURL = kongURL + "accountmanager";
+            PortalBackURL = kongURL + "portal/api";
+            TarifficatorURL = kongURL + "tarifficator/api";
+            CalculatorURL = kongURL + "calculator";
             ProductCatalogURL = kongURL + "product-catalog/api/v1/";
-            OrderServiceURL = kongURL + "order-service/api/v1/";
-            StateServiceURL = kongURL + "state-service/";
-            ReferencesURL = kongURL + "references/api/v1/";
+            OrderServiceURL = kongURL + "order-service/api";
+            StateServiceURL = kongURL + "state-service";
+            ReferencesURL = kongURL + "references";
         } catch (Exception e) {
             e.printStackTrace();
         }

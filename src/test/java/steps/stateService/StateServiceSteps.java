@@ -16,7 +16,7 @@ public class StateServiceSteps extends Steps {
         try {
             traceback = new Http(StateServiceURL)
                     .setProjectId(product.getProjectId())
-                    .get("actions/?order_id={}", product.getOrderId())
+                    .get("/actions/?order_id={}", product.getOrderId())
                     .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {
             log.error(e.getMessage());
