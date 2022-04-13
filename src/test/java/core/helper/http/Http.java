@@ -3,27 +3,37 @@ package core.helper.http;
 import core.enums.Role;
 import core.helper.StringUtils;
 import core.utils.Waiting;
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.config.SSLConfig;
+import io.restassured.specification.RequestSpecification;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.IOUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.conn.ssl.TrustAllStrategy;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import steps.keyCloak.KeyCloakSteps;
 
-import java.io.*;
-import java.net.HttpURLConnection;
+import java.io.File;
+import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.Semaphore;
+import java.util.stream.Collectors;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
-import static core.helper.http.ModifyHttpURLConnection.addHttpMethods;
-import static core.helper.http.ModifyHttpURLConnection.disableHostnameVerifier;
 
 @Log4j2
 public class Http {
@@ -37,17 +47,12 @@ public class Http {
     String contentType = "application/json";
     private boolean isUsedToken = true;
     private static final Semaphore SEMAPHORE = new Semaphore(1, true);
-    private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
     private String fileName;
     private byte[] bytes;
+    private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
     boolean isLogged = true;
     private static final InheritableThreadLocal<Role> fixedRole = new InheritableThreadLocal<>();
     Map<String, String> headers = new HashMap<>();
-
-    static {
-        disableHostnameVerifier();
-        addHttpMethods();
-    }
 
     public Http(String host) {
         this.host = host;
@@ -121,7 +126,7 @@ public class Http {
 
     @SneakyThrows
     public Response multiPart(String path, String field, File file) {
-        contentType = "multipart/form-data; boundary=" + boundary;
+        setContentType("multipart/form-data; boundary=" + boundary);
         this.field = field;
         this.bytes = Files.readAllBytes(file.toPath());
         this.fileName = file.getName();
@@ -129,7 +134,7 @@ public class Http {
     }
 
     public Response multiPart(String path, String field, String fileName, byte[] bytes) {
-        contentType = "multipart/form-data; boundary=" + boundary;
+        setContentType("multipart/form-data; boundary=" + boundary);
         this.field = field;
         this.fileName = fileName;
         this.bytes = bytes;
@@ -188,88 +193,90 @@ public class Http {
         return response;
     }
 
+    @SneakyThrows
+    @SuppressWarnings("deprecation")
     private Response filterRequest() {
-        HttpURLConnection http;
-        List<String> responseHeaders = new ArrayList<>();
-        String responseMessage = null;
         int status = 0;
+        URL url = new URL(host + path);
+        host = StringUtils.findByRegex("(.*//[^/]*)/", host + path);
+        path = url.getFile();
+        org.apache.http.conn.ssl.SSLSocketFactory clientAuthFactory = null;
         try {
-            URL url = new URL(host + path);
+            clientAuthFactory = new org.apache.http.conn.ssl.SSLSocketFactory(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build());
+        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+            e.printStackTrace();
+        }
+        SSLConfig config = new SSLConfig().with().sslSocketFactory(clientAuthFactory).and().allowAllHostnames();
+        io.restassured.response.Response response = null;
+        try {
+
             if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.acquire();
-            URLConnection connection = url.openConnection();
-            http = (HttpURLConnection) connection;
-            http.setRequestProperty("Content-Type", contentType);
-            headers.forEach(http::setRequestProperty);
-            http.setRequestProperty("Accept", "application/json, text/plain, */*");
+
+            RequestSpecBuilder build = new RequestSpecBuilder();
+            build.setBaseUri(host);
+            build.build();
+
+            RequestSpecification specification = RestAssured.given()
+                    .spec(build.build())
+                    .filter(new SwaggerCoverage())
+                    .config(RestAssured.config().sslConfig(config))
+                    .contentType(contentType)
+                    .headers(headers)
+                    .header("Accept", "application/json, text/plain, */*");
+
             if (isUsedToken) {
                 if (isFixedRole())
                     token = "bearer " + KeyCloakSteps.getUserToken(fixedRole.get());
                 if (token.length() == 0)
                     token = "bearer " + KeyCloakSteps.getUserToken(role);
-                http.setRequestProperty("Authorization", token);
+                specification.header("Authorization", token);
             }
-            http.setDoOutput(true);
-            http.setRequestMethod(method);
+            if (field.length() > 0)
+                specification.multiPart(field, fileName, bytes);
+            if (body.length() > 0)
+                specification.body(body);
+
+            specification.params(getParamsUrl(url.toURI()));
+
+            switch (method) {
+                case "POST":
+                    response = specification.post(url.getPath());
+                    break;
+                case "PUT":
+                    response = specification.put(url.getPath());
+                    break;
+                case "DELETE":
+                    response = specification.delete(url.getPath());
+                    break;
+                case "PATCH":
+                    response = specification.patch(url.getPath());
+                    break;
+                case "GET":
+                default:
+                    response = specification.get(url.getPath());
+            }
+
             if (isLogged)
                 log.debug(String.format("%s URL: %s\n", method, (host + path)));
-            if (field.length() > 0) {
-                addFilePart(http.getOutputStream(), fileName, bytes);
-            } else {
+            if (field.length() == 0) {
                 if (body.length() > 0 || method.equals("POST")) {
                     if (isLogged)
                         log.debug(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
-                    http.getOutputStream().write((body.trim()).getBytes(StandardCharsets.UTF_8));
                 }
             }
-            InputStream is;
-            if (http.getResponseCode() >= 400)
-                is = http.getErrorStream();
-            else
-                is = http.getInputStream();
-            status = http.getResponseCode();
-            if (status >= 400 && is == null)
-                responseMessage = "";
-            else
-                responseMessage = IOUtils.toString(is, StandardCharsets.UTF_8);
-
-            String xRequestId = null;
-            for (Map.Entry<String, List<String>> entries : http.getHeaderFields().entrySet()) {
-                StringJoiner values = new StringJoiner(",");
-                for (String value : entries.getValue()) {
-                    values.add(value);
-                }
-                if (entries.getKey() == null)
-                    continue;
-                if (entries.getKey().equals("x-request-id"))
-                    xRequestId = values.toString();
-                responseHeaders.add(String.format("\t\t%s: %s", entries.getKey(), values));
-            }
-
-            http.disconnect();
-            if (isLogged)
-                log.debug(String.format("RESPONSE (%s): %s\n\n", xRequestId, stringPrettyFormat(responseMessage)));
-
         } catch (Exception e) {
+            if (response != null)
+                status = response.getStatusCode();
             Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
         } finally {
             if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
         }
-        return new Response(status, responseMessage, responseHeaders, this);
+        if (isLogged)
+            log.debug(String.format("RESPONSE (%s): %s\n\n", response.getHeader("x-request-id"), response.getBody().asPrettyString()));
+        return new Response(response, this);
     }
-
-//    public Map<String,String> getQueryParams() {
-//        String[] params = new URL(host + path).getQuery().split("&");
-//        Map<String, String> map = new HashMap<>();
-//        String value = null;
-//        for (String param : params) {
-//            String name = param.split("=")[0];
-//            String value = param.split("=")[1];
-//            map.put(name, value);
-//        }
-//        return map;
-//    }
 
     public static class StatusResponseException extends AssertionError {
         @Getter
@@ -281,39 +288,15 @@ public class Http {
         }
     }
 
+    @SneakyThrows
+    public static Map<String, String> getParamsUrl(URI url) {
+        return URLEncodedUtils.parse(url, StandardCharsets.UTF_8).stream().collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
+    }
+
     public static class ConnectException extends AssertionError {
         public ConnectException(String errorMessage) {
             super(errorMessage);
         }
-    }
 
-    @SneakyThrows
-    public void addFilePart(OutputStream outputStream, String fileName, byte[] bytes) {
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8), true);
-        writer.append("--" + boundary)
-                .append("\r\n")
-                .append("Content-Disposition: form-data; name=\"")
-                .append(field)
-                .append("\"; filename=\"")
-                .append(fileName)
-                .append("\"\r\n")
-                .append("Content-Type: ")
-                .append(/*URLConnection.guessContentTypeFromName(fileName)*/ "application/octet-stream")
-                .append("\r\n")
-                .append("Content-Transfer-Encoding: binary\r\n\r\n")
-                .flush();
-
-        InputStream inputStream = new ByteArrayInputStream(bytes);
-        byte[] buffer = new byte[4096];
-        int bytesRead;
-        while ((bytesRead = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
-        }
-        outputStream.flush();
-        inputStream.close();
-        writer.append("\r\n--")
-                .append(boundary)
-                .append("--")
-                .flush();
     }
 }

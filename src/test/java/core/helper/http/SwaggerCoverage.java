@@ -2,63 +2,90 @@ package core.helper.http;
 
 import com.swagger.coverage.CoverageOutputWriter;
 import com.swagger.coverage.FileSystemOutputWriter;
-import io.swagger.models.Operation;
-import io.swagger.models.Swagger;
-import io.swagger.models.parameters.PathParameter;
-import io.swagger.models.parameters.QueryParameter;
+import io.restassured.filter.FilterContext;
+import io.restassured.filter.OrderedFilter;
+import io.restassured.response.Response;
+import io.restassured.specification.FilterableRequestSpecification;
+import io.restassured.specification.FilterableResponseSpecification;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.HeaderParameter;
+import io.swagger.v3.oas.models.parameters.PathParameter;
+import io.swagger.v3.oas.models.parameters.QueryParameter;
+import io.swagger.v3.oas.models.parameters.RequestBody;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.responses.ApiResponses;
+import io.swagger.v3.oas.models.servers.Server;
 
+import java.net.URI;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 import static com.swagger.coverage.SwaggerCoverageConstants.OUTPUT_DIRECTORY;
-import static io.swagger.models.Scheme.forValue;
 import static java.lang.String.valueOf;
 
-public class SwaggerCoverage {
-    private CoverageOutputWriter writer;
+public class SwaggerCoverage implements OrderedFilter {
+
+    private final CoverageOutputWriter writer;
 
     public SwaggerCoverage(CoverageOutputWriter writer) {
         this.writer = writer;
     }
 
     public SwaggerCoverage() {
-        this.writer = new FileSystemOutputWriter(Paths.get(OUTPUT_DIRECTORY));
+        this.writer = new FileSystemOutputWriter(Paths.get("target/" + OUTPUT_DIRECTORY));
     }
 
-    public Response filter(Response response, Http http) {
+    @Override
+    public int getOrder() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public Response filter(FilterableRequestSpecification requestSpec, FilterableResponseSpecification responseSpec, FilterContext ctx) {
         Operation operation = new Operation();
+        requestSpec.getPathParams().forEach((n, v) -> operation.addParametersItem(new PathParameter().name(n).example(v)));
+        //Ignore ClassCastException for https://github.com/rest-assured/rest-assured/issues/1232
+        try {
+            requestSpec.getQueryParams().forEach((n, v) -> operation.addParametersItem(new QueryParameter().name(n).example(v)));
+        } catch (ClassCastException ex) {
+            requestSpec.getQueryParams().keySet().forEach(n -> operation.addParametersItem(new QueryParameter().name(n)));
+        }
+        requestSpec.getHeaders().forEach(header -> operation.addParametersItem(new HeaderParameter().name(header.getName())
+                .example(header.getValue())));
 
-//        http.getPathParams().forEach((n, v) -> operation.addParameter(new PathParameter().name(n).example(v)));
+        final Response response = ctx.next(requestSpec, responseSpec);
 
-//        try {
-//            http.getQueryParams().forEach((n, v) -> operation.addParameter(new QueryParameter().name(n).example(v)));
-//        } catch (ClassCastException ex) {
-//            http.getQueryParams().keySet().forEach(n -> operation.addParameter(new QueryParameter().name(n)));
-//        }
-//        try {
-//            requestSpec.getFormParams().forEach((n, v) -> operation.addParameter(new FormParameter().name(n).example(v)));
-//        } catch (ClassCastException ex) {
-//            requestSpec.getFormParams().keySet().forEach((n -> operation.addParameter(new FormParameter().name(n))));
-//        }
-//        //end
-//        requestSpec.getHeaders().forEach(header -> operation.addParameter(new HeaderParameter().name(header.getName())
-//                .example(header.getValue())));
-//
-//        requestSpec.getMultiPartParams().forEach(multiPartSpecification -> operation.addParameter(new FormParameter()
-//                .name(multiPartSpecification.getControlName())));
-//
-//        if (Objects.nonNull(requestSpec.getBody())) {
-//            operation.addParameter(new BodyParameter().name(BODY_PARAM_NAME));
-//        }
+        if (Objects.nonNull(requestSpec.getBody())) {
+            MediaType mediaType = new MediaType();
+            mediaType.setSchema(new Schema());
+            //Ignore ClassCastException for https://github.com/rest-assured/rest-assured/issues/1232
+            try {
+                requestSpec.getFormParams().forEach((n, v) -> mediaType.getSchema().addProperties(n, new Schema().example(v)));
+            } catch (ClassCastException ex) {
+                requestSpec.getFormParams().keySet().forEach((n -> mediaType.getSchema().addProperties(n, new Schema())));
+            }
+            requestSpec.getMultiPartParams().forEach(multiPartSpecification -> mediaType.getSchema().addProperties(multiPartSpecification.getControlName(), new Schema()));
+            operation.requestBody(
+                    new RequestBody().content(new Content().addMediaType(requestSpec.getContentType(), mediaType)));
 
-        operation.addResponse(valueOf(response.status()), new io.swagger.models.Response());
-        Swagger swagger = new Swagger()
-                .scheme(forValue("http"))
-                .host(http.host)
-                .consumes(http.contentType)
-                .produces(http.contentType)
-                .path(http.path, new io.swagger.models.Path().set(http.method, operation));
+        }
 
-        writer.write(swagger);
+        operation.responses(new ApiResponses()
+                .addApiResponse(valueOf(response.statusCode()),
+                        new ApiResponse().content(new Content().addMediaType(response.getContentType(), new MediaType()))));
+
+        PathItem pathItem = new PathItem();
+        pathItem.operation(PathItem.HttpMethod.valueOf(requestSpec.getMethod().toUpperCase()), operation);
+        OpenAPI openAPI = new OpenAPI()
+                .addServersItem(new Server().url(URI.create(requestSpec.getURI()).getHost()))
+                .path(requestSpec.getUserDefinedPath(), pathItem);
+
+        writer.write(openAPI);
         return response;
     }
 }
