@@ -316,7 +316,7 @@ public class ObjectPoolService {
             if (StepsAspects.getCurrentStep().get() != null) {
                 String title = StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName());
                 StepsAspects.getCurrentStep().get().setTitle(title);
-                log.debug(title);
+                log.debug(title + ": " + org.apache.commons.lang3.StringUtils.join(parametersMap));
                 StepsAspects.getCurrentStep().get().setParameters(parametersMap);
             }
         }
