@@ -57,8 +57,8 @@ public class PortalBackSteps extends Steps {
     public static List<ProjectEnvironmentPrefix> getProjectEnvironmentPrefixes(String informationSystemId) {
         String folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
         @SuppressWarnings(value = "unchecked")
-        List<ProjectEnvironmentPrefix> environmentPrefixes = (List<ProjectEnvironmentPrefix>) listEntities(PortalBackURL + "folders/" + folderName +
-                "/information_systems/" + informationSystemId + "/environment_prefixes?&reserved=false&status=available", ProjectEnvironmentPrefix.class, "list");
+        List<ProjectEnvironmentPrefix> environmentPrefixes = (List<ProjectEnvironmentPrefix>) listEntities(PortalBackURL, "/v1/folders/" + folderName +
+                "/information_systems/" + informationSystemId + "/environment_prefixes?reserved=false&status=available", ProjectEnvironmentPrefix.class, "list");
         environmentPrefixes.forEach(PortalBackSteps::setEnvType);
         return environmentPrefixes;
     }
@@ -78,7 +78,7 @@ public class PortalBackSteps extends Steps {
     @Step("Получение пользователя из LDAP")
     public static String getUsers(Project project, String username) {
         return new Http(PortalBackURL)
-                .get("users?q={}&project_name={}", username, project.getId())
+                .get("/v1/users?q={}&project_name={}", username, project.getId())
                 .assertStatus(200)
                 .jsonPath()
                 .get("[0].unique_name");

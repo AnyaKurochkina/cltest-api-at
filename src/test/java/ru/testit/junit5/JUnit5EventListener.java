@@ -2,6 +2,7 @@ package ru.testit.junit5;
 
 import core.helper.Configure;
 import core.helper.StringUtils;
+import core.helper.http.Http;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -16,7 +17,6 @@ import static core.helper.Configure.isIntegrationTestIt;
 @Log4j2
 public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterAllCallback, InvocationInterceptor, TestWatcher {
     public static final RunningHandler HANDLER = new RunningHandler();
-    private static final boolean isTestItCreateAutotest = System.getProperty("testItCreateAutotest", "false").equals("true");
     private static final ExtensionContext.Namespace configurationSpace = ExtensionContext.Namespace.create(JUnit5EventListener.class);
 
     static {
@@ -53,7 +53,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), TestITClient.getConfigurationId());
         }
         try {
-            if (isTestItCreateAutotest)
+            if (Configure.isTestItCreateAutotest)
                 invocation.skip();
             else
                 invocation.proceed();
@@ -62,6 +62,9 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
                 RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, /*getSubId(extensionContext)*/ TestITClient.getConfigurationId());
 //            throw new Exception(throwable.getMessage());
             throw throwable;
+        }
+        finally {
+            Http.removeFixedRole();
         }
     }
 
@@ -78,14 +81,18 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), entity.getConfigurationId());
         }
         try {
-            if (isTestItCreateAutotest)
+            if (Configure.isTestItCreateAutotest)
                 invocation.skip();
             else
                 invocation.proceed();
-        } catch (Throwable throwable) {
+        }
+        catch (Throwable throwable) {
             if (isIntegrationTestIt() && entity != null)
                 RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, entity.getConfigurationId());
             throw throwable;
+        }
+        finally {
+            Http.removeFixedRole();
         }
     }
 
@@ -129,7 +136,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     @SneakyThrows
     private void finishUtilMethod(final MethodType methodType, final Invocation<Void> invocation) {
         try {
-            if (isTestItCreateAutotest)
+            if (Configure.isTestItCreateAutotest)
                 invocation.skip();
             else
                 invocation.proceed();
@@ -140,6 +147,9 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
                 RunningHandler.finishUtilMethod(methodType, throwable);
 //            throw new Exception(throwable.getMessage());
             throw throwable;
+        }
+        finally {
+            Http.removeFixedRole();
         }
     }
 

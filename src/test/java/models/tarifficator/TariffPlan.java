@@ -69,7 +69,7 @@ public class TariffPlan extends Entity {
     protected void create() {
         String object = new Http(Configure.TarifficatorURL)
                 .body(toJson())
-                .post("tariff_plans")
+                .post("/v1/tariff_plans")
                 .assertStatus(201)
                 .toString();
         StringUtils.copyAvailableFields(TariffPlanSteps.deserialize(object, TariffPlan.class), this);

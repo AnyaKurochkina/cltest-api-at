@@ -33,60 +33,60 @@ public class OldClickHouseTest extends Tests {
         clickHouse.expandMountPoint();
     }
 
-    @Order(2)
-    @Test
-    @DisplayName("Добавить БД CLickHouse OLD")
-    void createDb() {
-        if (clickHouse.productStatusIs(STOPPED)) {
-            clickHouse.start();
-        }
-        clickHouse.createDb("db_1");
+//    @Order(2)
+//    @Test
+//    @DisplayName("Добавить БД CLickHouse OLD")
+//    void createDb() {
+//        if (clickHouse.productStatusIs(STOPPED)) {
+//            clickHouse.start();
+//        }
+//        clickHouse.createDb("db_1");
+//
+//        clickHouse.removeDb("db_1");
+//
+//    }
 
-        clickHouse.removeDb("db_1");
+//    @Order(3)
+//    @Test
+//    @DisplayName("Добавить пользователя CLickHouse OLD")
+//    void createDbmsUser() {
+//        if (clickHouse.productStatusIs(STOPPED)) {
+//            clickHouse.start();
+//        }
+//        clickHouse.createDb("createdbforuser");
+//        clickHouse.createDbmsUser("chelik1", "user", "createdbforuser");
+//
+//        clickHouse.removeDb("createdbforuser");
+//    }
 
-    }
+//    @Order(4)
+//    @Test
+//    @DisplayName("Сбросить пароль CLickHouse OLD")
+//    void resetPassword() {
+//        if (clickHouse.productStatusIs(STOPPED)) {
+//            clickHouse.start();
+//        }
+//        clickHouse.createDb("createdbforreset1");
+//        clickHouse.createDbmsUser("chelikforreset1", "user", "createdbforreset1");
+//        clickHouse.resetPasswordOwner();
+//
+//        clickHouse.removeDbmsUser("chelikforreset1", "createdbforreset1");
+//        clickHouse.removeDb("createdbforreset1");
+//    }
 
-    @Order(3)
-    @Test
-    @DisplayName("Добавить пользователя CLickHouse OLD")
-    void createDbmsUser() {
-        if (clickHouse.productStatusIs(STOPPED)) {
-            clickHouse.start();
-        }
-        clickHouse.createDb("createdbforuser");
-        clickHouse.createDbmsUser("chelik1", "user", "createdbforuser");
-
-        clickHouse.removeDb("createdbforuser");
-    }
-
-    @Order(4)
-    @Test
-    @DisplayName("Сбросить пароль CLickHouse OLD")
-    void resetPassword() {
-        if (clickHouse.productStatusIs(STOPPED)) {
-            clickHouse.start();
-        }
-        clickHouse.createDb("createdbforreset1");
-        clickHouse.createDbmsUser("chelikforreset1", "user", "createdbforreset1");
-        clickHouse.resetPassword("chelikforreset1");
-
-        clickHouse.removeDbmsUser("chelikforreset1", "createdbforreset1");
-        clickHouse.removeDb("createdbforreset1");
-    }
-
-    @Order(5)
-    @Test
-    @DisplayName("Удалить пользователя CLickHouse OLD")
-    void removeDbmsUser() {
-        if (clickHouse.productStatusIs(STOPPED)) {
-            clickHouse.start();
-        }
-        clickHouse.createDb("createdbforreset2");
-        clickHouse.createDbmsUser("chelikforreset2", "user", "createdbforreset2");
-        clickHouse.removeDbmsUser("chelikforreset2", "createdbforreset2");
-
-        clickHouse.removeDb("createdbforreset2");
-    }
+//    @Order(5)
+//    @Test
+//    @DisplayName("Удалить пользователя CLickHouse OLD")
+//    void removeDbmsUser() {
+//        if (clickHouse.productStatusIs(STOPPED)) {
+//            clickHouse.start();
+//        }
+//        clickHouse.createDb("createdbforreset2");
+//        clickHouse.createDbmsUser("chelikforreset2", "user", "createdbforreset2");
+//        clickHouse.removeDbmsUser("chelikforreset2", "createdbforreset2");
+//
+//        clickHouse.removeDb("createdbforreset2");
+//    }
 
     @Order(6)
     @Test
@@ -98,16 +98,16 @@ public class OldClickHouseTest extends Tests {
         clickHouse.restart();
     }
 
-    @Order(7)
-    @Test
-    @DisplayName("Удалить БД CLickHouse OLD")
-    void removeDb() {
-        if (clickHouse.productStatusIs(STOPPED)) {
-            clickHouse.start();
-        }
-        clickHouse.createDb("createdbforremove3");
-        clickHouse.removeDb("createdbforremove3");
-    }
+//    @Order(7)
+//    @Test
+//    @DisplayName("Удалить БД CLickHouse OLD")
+//    void removeDb() {
+//        if (clickHouse.productStatusIs(STOPPED)) {
+//            clickHouse.start();
+//        }
+//        clickHouse.createDb("createdbforremove3");
+//        clickHouse.removeDb("createdbforremove3");
+//    }
 
     @Order(8)
     @Test

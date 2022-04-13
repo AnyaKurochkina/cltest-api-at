@@ -39,9 +39,9 @@ public class User extends Entity {
 
     @Override
     protected void create() {
-        new Http(Configure.AuthorizerURL)
+        new Http(Configure.IamURL)
                 .body(toJson())
-                .post("projects/{}/policy/add-members", projectName)
+                .post("/v1/projects/{}/policy/add-members", projectName)
                 .assertStatus(201);
         List<UserItem> users = AuthorizerSteps.getUserList(projectName);
         Assertions.assertTrue(bindings.stream().anyMatch(b -> b.getMembers().stream().anyMatch(m -> users.stream().anyMatch(u -> m.endsWith(u.getEmail())))),
@@ -73,9 +73,9 @@ public class User extends Entity {
 
     @Override
     protected void delete() {
-        new Http(Configure.AuthorizerURL)
+        new Http(Configure.IamURL)
                 .body(toJson())
-                .post("projects/{}/policy/remove-members", projectName)
+                .post("/v1/projects/{}/policy/remove-members", projectName)
                 .assertStatus(201);
         List<UserItem> users = AuthorizerSteps.getUserList(projectName);
         Assertions.assertFalse(bindings.stream().anyMatch(b -> b.getMembers().stream().anyMatch(m -> users.stream().anyMatch(u -> m.endsWith(u.getEmail())))),

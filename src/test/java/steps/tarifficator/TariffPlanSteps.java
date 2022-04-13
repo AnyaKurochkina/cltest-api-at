@@ -12,7 +12,6 @@ import models.tarifficator.TariffPlan;
 import steps.Steps;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.TarifficatorURL;
@@ -35,7 +34,7 @@ public class TariffPlanSteps extends Steps {
     public static TariffPlan createTariffPlan(TariffPlan tariffPlan) {
         String object = new Http(TarifficatorURL)
                 .body(tariffPlan.toJson())
-                .post("tariff_plans")
+                .post("/v1/tariff_plans")
                 .assertStatus(201)
                 .toString();
         return deserialize(object, TariffPlan.class);
@@ -56,7 +55,7 @@ public class TariffPlanSteps extends Steps {
         int i = 1;
         do {
             responseList = new Http(TarifficatorURL)
-                    .get("tariff_plans?page={}&per_page=100&{}", i, urlParameters)
+                    .get("/v1/tariff_plans?page={}&per_page=100&{}", i, urlParameters)
                     .assertStatus(200)
                     .jsonPath()
                     .getList("list");
@@ -75,7 +74,7 @@ public class TariffPlanSteps extends Steps {
     @Step("Получение тарифного плана {tariffPlanId}")
     public static TariffPlan getTariffPlan(String tariffPlanId) {
         String object = new Http(TarifficatorURL)
-                .get("tariff_plans/{}?include=tariff_classes", tariffPlanId)
+                .get("/v1/tariff_plans/{}?include=tariff_classes", tariffPlanId)
                 .assertStatus(200)
                 .toString();
         return deserialize(object, TariffPlan.class);
@@ -91,7 +90,7 @@ public class TariffPlanSteps extends Steps {
     public static TariffPlan editTariffPlan(TariffPlan tariffPlan) {
         String object = new Http(TarifficatorURL)
                 .body(tariffPlan.toJson())
-                .patch("tariff_plans/{}", tariffPlan.getId())
+                .patch("/v1/tariff_plans/{}", tariffPlan.getId())
                 .assertStatus(200)
                 .toString();
         tariffPlan.save();
@@ -103,7 +102,7 @@ public class TariffPlanSteps extends Steps {
     public static TariffClass editTariffClass(TariffClass tariffClass, TariffPlan tariffPlan) {
         String object = new Http(TarifficatorURL)
                 .body(tariffClass.toJson())
-                .patch("tariff_plans/{}/tariff_classes/{}", tariffPlan.getId(), tariffClass.getId())
+                .patch("/v1/tariff_plans/{}/tariff_classes/{}", tariffPlan.getId(), tariffClass.getId())
                 .assertStatus(200)
                 .toString();
         tariffPlan.save();

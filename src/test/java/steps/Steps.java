@@ -25,28 +25,28 @@ public abstract class Steps {
 
     @JsonIgnore
     @SneakyThrows
-    protected static List<?> listEntities(String url, Class<?> clazz) {
-        return listEntities(url, clazz,"data");
+    protected static List<?> listEntities(String host, String path, Class<?> clazz) {
+        return listEntities(host, path, clazz,"data");
     }
 
-    protected static List<?> listEntities(String url, Class<?> clazz, String pathData) {
+    protected static List<?> listEntities(String host, String path, Class<?> clazz, String pathData) {
         ObjectMapper objectMapper = JsonHelper.getCustomObjectMapper();
         JavaType typeList = objectMapper.getTypeFactory().constructCollectionType(List.class, clazz);
         List<? extends Entity> entityList = new ArrayList<>();
         int totalCount;
         int page = 1;
         do {
-            JsonPath path = responseList(url, page++);
-            totalCount = path.getInt("meta.total_count");
-            entityList.addAll(objectMapper.convertValue(path.getList(pathData), typeList));
+            JsonPath jsonPath = responseList(host, path, page++);
+            totalCount = jsonPath.getInt("meta.total_count");
+            entityList.addAll(objectMapper.convertValue(jsonPath.getList(pathData), typeList));
         }
         while (totalCount > entityList.size());
         return entityList;
     }
 
-    private static JsonPath responseList(String url, int page) {
-        return new Http(url)
-                .get("&include=members,total_count&page={}&per_page={}", page, perPage)
+    private static JsonPath responseList(String host, String path, int page) {
+        return new Http(host)
+                .get(path + "&include=members,total_count&page={}&per_page={}", page, perPage)
                 .assertStatus(200)
                 .jsonPath();
     }

@@ -18,7 +18,7 @@ public class CalcCostSteps extends Steps {
     @Step("Получение расхода для папки/проекта")
     public static Float getCostByPath(String path) {
         Float cost = new Http(CalculatorURL)
-                .get("orders/cost/?folder__startswith={}", path)
+                .get("/orders/cost/?folder__startswith={}", path)
                 .assertStatus(200)
                 .jsonPath()
                 .get("cost");
@@ -34,7 +34,7 @@ public class CalcCostSteps extends Steps {
     public static Float getCostByUid(IProduct product) {
         Float cost = new Http(CalculatorURL)
                     .setProjectId(product.getProjectId())
-                    .get("orders/cost/?uuid__in={}", product.getOrderId())
+                    .get("/orders/cost/?uuid__in={}", product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()
                     .get("cost");

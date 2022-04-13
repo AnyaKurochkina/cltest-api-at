@@ -3,6 +3,7 @@ package models;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Throwables;
 import com.google.gson.Gson;
 import core.enums.ObjectStatus;
 import core.exception.CalculateException;
@@ -17,6 +18,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
 import models.keyCloak.ServiceAccountToken;
+import models.keyCloak.Token;
 import models.keyCloak.UserToken;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
@@ -48,6 +50,11 @@ public class ObjectPoolService {
             objectPoolEntity.setPublic(isPublic);
         }
         objectPoolEntity.lock();
+
+        if (Configure.isTestItCreateAutotest) {
+            objectPoolEntity.release();
+            throw new CreateEntityException("Создание объекта пропущенно (isTestItCreateAutotest = true)");
+        }
 
         if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
             objectPoolEntity.release();
@@ -122,6 +129,7 @@ public class ObjectPoolService {
     @SneakyThrows
     public static void deleteAllResources() {
         log.debug("##### deleteAllResources start #####");
+        Configure.isTestItCreateAutotest = false;
         Collections.reverse(createdEntities);
 
         List<ObjectPoolEntity> entityList = new ArrayList<>();
@@ -138,7 +146,7 @@ public class ObjectPoolService {
 
         for (String key : createdEntities) {
             ObjectPoolEntity objectPoolEntity = entities.get(key);
-            if (objectPoolEntity.getClazz().getName().endsWith("UserToken") || objectPoolEntity.getClazz().getName().endsWith("ServiceAccountToken"))
+            if (objectPoolEntity.getClazz().isAssignableFrom(Token.class))
                 continue;
             if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
                 continue;
@@ -166,7 +174,7 @@ public class ObjectPoolService {
                 } catch (Throwable e) {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
                     objectPoolEntity.setError(e);
-                    e.printStackTrace();
+                    log.error("##### deleteAllVm error: " + e + "\n" + Throwables.getStackTraceAsString(e));
                 }
             });
         }
