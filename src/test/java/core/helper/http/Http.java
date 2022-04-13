@@ -236,24 +236,24 @@ public class Http {
             if (body.length() > 0)
                 specification.body(body);
 
-//            specification.params(getParamsUrl(url.toURI()));
-
+            specification.params(getParamsUrl(new URI(host + path)));
+            String pathWithoutParameters = path.replaceFirst("\\?.*", "");
             switch (method) {
                 case "POST":
-                    response = specification.post(path);
+                    response = specification.post(pathWithoutParameters);
                     break;
                 case "PUT":
-                    response = specification.put(path);
+                    response = specification.put(pathWithoutParameters);
                     break;
                 case "DELETE":
-                    response = specification.delete(path);
+                    response = specification.delete(pathWithoutParameters);
                     break;
                 case "PATCH":
-                    response = specification.patch(path);
+                    response = specification.patch(pathWithoutParameters);
                     break;
                 case "GET":
                 default:
-                    response = specification.get(path);
+                    response = specification.get(pathWithoutParameters);
             }
 
             if (isLogged)
