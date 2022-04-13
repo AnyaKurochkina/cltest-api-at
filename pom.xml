@@ -36,11 +36,6 @@
             <name>libs-snapshot</name>
             <url>http://nexus.corp.dev.vtb/repository/maven-public/</url>
         </repository>
-        <repository>
-            <id>maven_central</id>
-            <name>Maven Central</name>
-            <url>https://repo.maven.apache.org/maven2/</url>
-        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
