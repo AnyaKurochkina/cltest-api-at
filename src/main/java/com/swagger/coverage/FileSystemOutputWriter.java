@@ -3,7 +3,6 @@ package com.swagger.coverage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swagger.coverage.model.SwaggerCoverage2ModelJackson;
 import io.swagger.models.Swagger;
-import io.swagger.v3.oas.models.OpenAPI;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -44,17 +43,4 @@ public class FileSystemOutputWriter implements CoverageOutputWriter {
             throw new SwaggerCoverageWriteException("Could not write Swagger", e);
         }
     }
-
-    @Override
-    public void write(OpenAPI openAPI) {
-        final String swaggerResultName = SwaggerCoverageUtils.generateYamlCoverageOutputName();
-        createDirectories(outputDirectory);
-        Path file = outputDirectory.resolve(swaggerResultName);
-        try (OutputStream os = Files.newOutputStream(file, CREATE_NEW)) {
-            yamlMapper.writerWithDefaultPrettyPrinter().writeValue(os, openAPI);
-        } catch (IOException e) {
-            throw new SwaggerCoverageWriteException("Could not write Swagger", e);
-        }
-    }
-
 }
