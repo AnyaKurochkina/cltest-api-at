@@ -314,7 +314,9 @@ public class ObjectPoolService {
         }
         if (Configure.isIntegrationTestIt()) {
             if (StepsAspects.getCurrentStep().get() != null) {
-                StepsAspects.getCurrentStep().get().setTitle(StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName()));
+                String title = StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName());
+                StepsAspects.getCurrentStep().get().setTitle(title);
+                log.debug(title);
                 StepsAspects.getCurrentStep().get().setParameters(parametersMap);
             }
         }
