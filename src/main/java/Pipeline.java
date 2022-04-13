@@ -21,7 +21,6 @@ public class Pipeline {
     final static String TEST_PLAN_ID = "testPlanId";
 
     final static String pathTestResourcesDir = Paths.get("src/test/resources").toAbsolutePath().toString();
-    final static String pathSwaggerCoverageOutput = Paths.get("target/swagger-coverage-output").toAbsolutePath().toString();
     static String ENV = "prod";
 
     @SuppressWarnings("deprecation")
@@ -74,7 +73,6 @@ public class Pipeline {
             String command = "-DfailIfNoTests=false -Dmaven.test.skip=false -Dsecret=123456 -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestRunId=" + argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
             System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");
             System.out.println("##teamcity[publishArtifacts '" + pathTestResourcesDir + "/configurations.txt => configurations']");
-            System.out.println("##teamcity[publishArtifacts '" + pathSwaggerCoverageOutput + " => swagger-coverage-output.zip']");
         }
 
     }
