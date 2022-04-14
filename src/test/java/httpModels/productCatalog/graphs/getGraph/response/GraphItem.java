@@ -14,6 +14,8 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GraphItem{
+	@JsonProperty("hold")
+	private Boolean hold;
 
 	@JsonProperty("template_version")
 	private String templateVersion;
