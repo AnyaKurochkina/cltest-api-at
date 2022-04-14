@@ -37,7 +37,7 @@ public class CostSteps extends Steps {
                     .get("/orders/cost/?uuid__in={}", product)
                     .assertStatus(200)
                     .jsonPath()
-                    .get("/cost");
+                    .get("cost");
             if (consumptionOfOneProduct != null) {
                 consumption += consumptionOfOneProduct;
             }
@@ -53,7 +53,7 @@ public class CostSteps extends Steps {
                 .get("/orders/cost/?folder__startswith={}", path)
                 .assertStatus(200)
                 .jsonPath()
-                .getDouble("/cost");
+                .getDouble("cost");
         log.info("Расход для папки/проекта: " + consumption);
         return consumption;
     }
@@ -69,7 +69,7 @@ public class CostSteps extends Steps {
                     .get("/orders/cost/?uuid__in={}", product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()
-                    .get("/cost");
+                    .get("cost");
             if (consumption == null) {
                 continue;
             }
