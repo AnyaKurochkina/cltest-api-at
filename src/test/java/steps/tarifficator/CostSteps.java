@@ -34,7 +34,7 @@ public class CostSteps extends Steps {
         float consumption = 0F;
         for (String product : productsId) {
             consumptionOfOneProduct = new Http(CalculatorURL)
-                    .get("orders/cost/?uuid__in={}", product)
+                    .get("/orders/cost/?uuid__in={}", product)
                     .assertStatus(200)
                     .jsonPath()
                     .get("/cost");
@@ -50,7 +50,7 @@ public class CostSteps extends Steps {
     @Step("Получение расхода для папки/проекта")
     public static double getConsumptionByPath(String path) {
         double consumption = new Http(CalculatorURL)
-                .get("orders/cost/?folder__startswith={}", path)
+                .get("/orders/cost/?folder__startswith={}", path)
                 .assertStatus(200)
                 .jsonPath()
                 .getDouble("/cost");
@@ -66,7 +66,7 @@ public class CostSteps extends Steps {
             Waiting.sleep(20000);
             consumption = new Http(CalculatorURL)
                     .setProjectId(product.getProjectId())
-                    .get("orders/cost/?uuid__in={}", product.getOrderId())
+                    .get("/orders/cost/?uuid__in={}", product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()
                     .get("/cost");
