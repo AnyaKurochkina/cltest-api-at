@@ -9,7 +9,7 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class DataCenterPage implements Loadable {
 
-    private final SelenideElement titleOfDataCenterPage = $x("//div[@type='large'][@class='sc-heudyb hALtSu']");
+    private final SelenideElement titleOfDataCenterPage = $x("//div[@type='large']");
     private final SelenideElement actionsBtn = $x("//button[@id='actions-menu-button']//div[text()='Действия']");
     private final SelenideElement deleteDataCenterActionBtn = $x("//*[text()='Удалить']");
     private final SelenideElement idForDelete = $(By.cssSelector(".MuiTypography-colorTextSecondary>b"));

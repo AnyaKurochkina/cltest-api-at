@@ -3,10 +3,10 @@ package ui.uiTests;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import ui.pages.MainPage;
+import ui.pages.OrgStructurePage;
 import ui.uiExtesions.ConfigExtension;
-import ui.uiSteps.AuthSteps;
-import ui.uiSteps.DataCenterSteps;
-import ui.uiSteps.OrganizationSteps;
+import ui.uiSteps.*;
 
 import java.util.Locale;
 
@@ -23,6 +23,13 @@ public class DataCenterTests {
         open("/");
         AuthSteps authSteps = new AuthSteps();
         authSteps.signIn();
+        //Выбираем организацию
+        MainSteps mainSteps = new MainSteps();
+        mainSteps.goToOrgStructure();
+        OrgStructureSteps orgStructureSteps = new OrgStructureSteps();
+        orgStructureSteps
+                .chooseGlobalOrganization()
+                .chooseProject();
         //Создаем организацию
         OrganizationSteps organizationSteps = new OrganizationSteps();
         String orgName = organizationSteps.createOrganization();

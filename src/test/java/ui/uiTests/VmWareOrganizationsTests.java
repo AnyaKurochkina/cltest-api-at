@@ -3,17 +3,16 @@ package ui.uiTests;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ui.pages.*;
+import ui.pages.MainPage;
+import ui.pages.OrgStructurePage;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiSteps.AuthSteps;
-import ui.uiSteps.DataCenterSteps;
+import ui.uiSteps.MainSteps;
+import ui.uiSteps.OrgStructureSteps;
 import ui.uiSteps.OrganizationSteps;
 
-import java.util.Locale;
-
 import static com.codeborne.selenide.Selenide.open;
-import static core.enums.DataCentreStatus.*;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static com.codeborne.selenide.Selenide.*;
 
 @ExtendWith(ConfigExtension.class)
 public class VmWareOrganizationsTests {
@@ -26,6 +25,13 @@ public class VmWareOrganizationsTests {
         //Логинимся
         AuthSteps authSteps = new AuthSteps();
         authSteps.signIn();
+        //Выбираем организацию
+        MainSteps mainSteps = new MainSteps();
+        mainSteps.goToOrgStructure();
+        OrgStructureSteps orgStructureSteps = new OrgStructureSteps();
+        orgStructureSteps
+                .chooseGlobalOrganization()
+                .chooseProject();
         //Создаем организацию
         OrganizationSteps organizationSteps = new OrganizationSteps();
         String orgName = organizationSteps.createOrganization();

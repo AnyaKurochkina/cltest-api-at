@@ -18,4 +18,11 @@ public class MainSteps {
         mainPage.goToListOfOrganizations();
         ListOfOrganizationsPage listOfOrganizationsPage = new ListOfOrganizationsPage();
     }
+
+    @Step("Переход к оргструктуре")
+    public void goToOrgStructure(){
+        //Переходим к списку VmWare организаций
+        MainPage mainPage = new MainPage();
+        mainPage.goToOrgStructure();
+    }
 }
