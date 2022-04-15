@@ -50,7 +50,7 @@ public class HcpBucketTest extends Tests {
 
     @TmsLink("581200")
     @Tag("actions")
-    @Disabled("Статический ключ не работает")
+//    @Disabled("Статический ключ не работает")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Настроить ACL бакета {0}")
     void editAcl(HcpBucket product) {
