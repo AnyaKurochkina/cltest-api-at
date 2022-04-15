@@ -1,6 +1,5 @@
 package models.productCatalog;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.CompactTemplate;
@@ -18,6 +17,8 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
+
+import static core.helper.Configure.ProductCatalogURL;
 
 @Log4j2
 @Builder
@@ -60,7 +61,7 @@ public class ItemVisualTemplates extends Entity {
     @Override
     @Step("Создание шаблона визуализации")
     protected void create() {
-        itemId = new Http(Configure.ProductCatalogURL)
+        itemId = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -72,10 +73,10 @@ public class ItemVisualTemplates extends Entity {
     @Override
     @Step("Удаление шаблона визуализации")
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(ProductCatalogURL + "/api/v1/")
                 .delete(productName + itemId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
+        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL + "/api/v1/");
         Assertions.assertEquals(0, steps.getObjectListByName(name, GetVisualTemplateListResponse.class)
                 .getItemsList().size(), "Шаблон визуализации с именем: " + name + ", не удалился");
     }

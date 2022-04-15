@@ -55,5 +55,4 @@ public class CreateGraphResponse{
 
 	@JsonProperty("update_dt")
 	private String update_dt;
-
 }

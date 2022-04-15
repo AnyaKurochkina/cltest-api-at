@@ -29,7 +29,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisabledIfEnv("prod")
 public class ActionsTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("actions/", "productCatalog/actions/createAction.json");
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
+            "productCatalog/actions/createAction.json", Configure.ProductCatalogURL);
 
     @DisplayName("Создание действия в продуктовом каталоге")
     @TmsLink("640545")
@@ -59,8 +60,8 @@ public class ActionsTest extends Tests {
         assertFalse(steps.isExists("NoExistsAction"), "Действие существует");
     }
 
-    @DisplayName("Проверка дефолтного значения поля location_restriction")
-    @TmsLink("")
+    @DisplayName("Проверка дефолтного значения поля location_restriction в действиях")
+    @TmsLink("783425")
     @Test
     public void locationRestrictionCheckDefaultValue() {
         String actionName = "location_restriction_default_value_test_api";
@@ -73,8 +74,9 @@ public class ActionsTest extends Tests {
         assertEquals("", getAction.getLocationRestriction());
     }
 
-    @DisplayName("Проверка значения поля location_restriction")
-    @TmsLink("")
+
+    @DisplayName("Проверка значения поля location_restriction в действиях")
+    @TmsLink("783427")
     @Test
     public void locationRestrictionCheckValue() {
         String actionName = "location_restriction_value_test_api";
@@ -223,27 +225,12 @@ public class ActionsTest extends Tests {
         steps.exportById(action.getActionId());
     }
 
-    @DisplayName("Поиск действия по имени, с использованием multiSearch")
-    @TmsLink("642503")
-    @Test
-    public void searchActionByName() {
-        String actionName = "action_multisearch_test_api";
-        Action action = Action.builder()
-                .actionName(actionName)
-                .title(actionName)
-                .build()
-                .createObject();
-        String actionIdWithMultiSearch = steps.getProductObjectIdByNameWithMultiSearch(action.getActionName(), GetActionsListResponse.class);
-        assertAll(
-                () -> assertNotNull(actionIdWithMultiSearch, String.format("Действие с именем: %s не найден", actionName)),
-                () -> assertEquals(action.getActionId(), actionIdWithMultiSearch, "Id действия не совпадают"));
-    }
-
-    @DisplayName("Проверка независимых от версии параметров в действиях")
+    //todo Добавить проверку на allowed groups
+    @DisplayName("Проверка независимого от версии поля restricted_groups в действиях")
     @TmsLink("716373")
     @Test
     public void checkVersionWhenIndependentParamUpdated() {
-        String actionName = "action_version_test_api";
+        String actionName = "action_check_param_version_test_api";
         Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
@@ -254,11 +241,10 @@ public class ActionsTest extends Tests {
         String id = action.getActionId();
         List<String> list = Collections.singletonList("restricted");
         steps.partialUpdateObject(action.getActionId(), new JSONObject().put("restricted_groups", list));
-        List<String> allowed_groups = steps.getJsonPath(id).get("restricted_groups");
+        List<String> restricted_groups = steps.getJsonPath(id).get("restricted_groups");
         String newVersion = steps.getById(id, GetActionResponse.class).getVersion();
-        assertEquals(list, allowed_groups, "Доступные группы не соврадают");
+        assertEquals(list, restricted_groups, "Доступные группы не соврадают");
         assertEquals(version, newVersion, "Версии не совпадают");
-
     }
 
     @DisplayName("Обновление действия с указанием версии в граничных значениях")
@@ -284,18 +270,6 @@ public class ActionsTest extends Tests {
                 .assertStatus(500);
     }
 
-    @DisplayName("Негативный тест на создание действия с двумя параметрами одновременно graph_version_pattern и graph_version")
-    @TmsLink("642514")
-    @Test
-    public void doubleVersionTest() {
-        steps.createProductObject(Action.builder().actionName("negative_object").build().init().getTemplate()
-                        .set("$.version", "1.1.1")
-                        .set("$.graph_version", "1.0.0")
-                        .set("$.graph_version_pattern", "1.")
-                        .build())
-                .assertStatus(500);
-    }
-
     @DisplayName("Обновление действия без указания версии, версия должна инкрементироваться")
     @TmsLink("642515")
     @Test
@@ -310,22 +284,6 @@ public class ActionsTest extends Tests {
                 .patchObject(GetActionResponse.class, actionName, action.getGraphId(), action.getActionId())
                 .getVersion();
         assertEquals("1.0.1", version, "Версии не совпадают");
-    }
-
-    @DisplayName("Негативный тест на обновление действия до той же версии/текущей")
-    @TmsLink("642518")
-    @Test
-    public void sameVersionTest() {
-        String actionName = "action_same_version_test_api";
-        Action action = Action.builder()
-                .actionName(actionName)
-                .title(actionName)
-                .version("1.0.1")
-                .build()
-                .createObject();
-        steps.patchRow(Action.builder().actionName(actionName).build().init().getTemplate()
-                .set("$.version", "1.0.1")
-                .build(), action.getActionId()).assertStatus(500);
     }
 
     @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос в действиях")
