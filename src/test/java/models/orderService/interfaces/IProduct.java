@@ -206,7 +206,7 @@ public abstract class IProduct extends Entity {
 
     @SneakyThrows
     protected boolean getSupport() {
-        GetServiceResponse productResponse = (GetServiceResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetServiceResponse.class);
+        GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         Boolean support = (Boolean) graphResponse.getStaticData().get("on_support");
         return Objects.requireNonNull(support, "on_support не найден в графе");
