@@ -236,7 +236,7 @@ public class Http {
             if (body.length() > 0)
                 specification.body(body);
 
-            specification.params(getParamsUrl(new URI(host + path)));
+            specification.params(getParamsUrl(StringUtils.findByRegex("\\?(.*)", path)));
             String pathWithoutParameters = path.replaceFirst("\\?.*", "");
             switch (method) {
                 case "POST":
@@ -267,7 +267,7 @@ public class Http {
         } catch (Exception e) {
             if (response != null)
                 status = response.getStatusCode();
-            Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
+            Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e, status));
         } finally {
             if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
@@ -288,8 +288,8 @@ public class Http {
     }
 
     @SneakyThrows
-    public static Map<String, String> getParamsUrl(URI url) {
-        return URLEncodedUtils.parse(url, StandardCharsets.UTF_8).stream().collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
+    public static Map<String, String> getParamsUrl(String params) {
+        return URLEncodedUtils.parse(params, StandardCharsets.UTF_8).stream().collect(Collectors.toMap(NameValuePair::getName, p -> Optional.ofNullable(p.getValue()).orElse("")));
     }
 
     public static class ConnectException extends AssertionError {
