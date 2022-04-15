@@ -8,17 +8,19 @@ import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.*;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
+import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.ItemVisualTemplates;
 import org.json.JSONObject;
-import org.junit.MarkDelete;
+import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны отображения")
 @Tag("product_catalog")
+@DisabledIfEnv("prod")
 public class VisualTemplateTest extends Tests {
 
     private static final String VISUAL_TEMPLATE_NAME = "item_visual_template_test_api-:2022.";
@@ -49,6 +52,7 @@ public class VisualTemplateTest extends Tests {
                 .eventType(Collections.singletonList("app"))
                 .compactTemplate(compactTemplate)
                 .fullTemplate(fullTemplate)
+                .isActive(true)
                 .build()
                 .createObject();
     }
@@ -67,14 +71,23 @@ public class VisualTemplateTest extends Tests {
         assertEquals(visualTemplates.getItemId(), response.jsonPath().get("id[0]").toString());
     }
 
+    @Order(6)
+    @DisplayName("Удаление шаблона визуализации со статусом is_active=true")
+    @TmsLink("742485")
+    @Test
+    public void deleteIsActiveTemplate() {
+        Response deleteResponse = productCatalogSteps.getDeleteObjectResponse(visualTemplates.getItemId())
+                .assertStatus(200);
+        assertEquals(deleteResponse.jsonPath().get("error"), "Deletion not allowed (is_active=True)");
+    }
 
     @Order(10)
     @DisplayName("Получение списка шаблонов визуализаций")
     @TmsLink("643632")
     @Test
     public void getVisualTemplateList() {
-        assertTrue(productCatalogSteps.getProductObjectList(GetVisualTemplateListResponse.class)
-                .size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetVisualTemplateListResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
     @Order(11)
@@ -99,6 +112,36 @@ public class VisualTemplateTest extends Tests {
         Assertions.assertFalse(productCatalogSteps.isExists("NoExistsTemplate"));
     }
 
+    @Order(13)
+    @DisplayName("Проверка сортировки по дате создания в шаблонах визуализации")
+    @TmsLink("742486")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetVisualTemplateListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(14)
+    @DisplayName("Проверка сортировки по дате обновления в шаблонах визуализации")
+    @TmsLink("742490")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByUpDateData(GetVisualTemplateListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
     @Order(15)
     @DisplayName("Получение списка шаблонов визуализаций по фильтру event_provider")
     @TmsLink("643634")
@@ -112,6 +155,21 @@ public class VisualTemplateTest extends Tests {
             assertTrue(productCatalogSteps.getJsonPath(impl.getId()).getString("event_provider")
                     .contains(providerFilter));
         }
+    }
+
+    @Order(16)
+    @DisplayName("Проверка доступа для методов с публичным ключом в шаблонах отображения")
+    @TmsLink("742492")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(visualTemplates.getName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(visualTemplates.getItemId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(visualTemplates.getItemId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(visualTemplates.getItemId()).assertStatus(403);
     }
 
     @Order(20)
@@ -253,8 +311,96 @@ public class VisualTemplateTest extends Tests {
         );
     }
 
+    @Order(93)
+    @DisplayName("Сортировка шаблонов визуализации по статусу")
+    @TmsLink("")
+    @Test
+    public void orderingByStatus() {
+        List<ItemImpl> list = productCatalogSteps.orderingByStatus(GetVisualTemplateListResponse.class).getItemsList();
+        boolean result = false;
+        int count = 0;
+        for (int i = 0; i < list.size() - 1; i++) {
+            ListItem item = (ListItem) list.get(i);
+            ListItem nextItem = (ListItem) list.get(i + 1);
+            if (item.getIsActive().equals(nextItem.getIsActive())) {
+                result = true;
+            } else {
+                count++;
+            }
+            if (count > 1) {
+                result = false;
+                break;
+            }
+        }
+        assertTrue(result, "Список не отсортирован.");
+    }
+
+    @Order(94)
+    @DisplayName("Получение списка шаблонов визуализации по is_active")
+    @TmsLink("")
+    @Test
+    public void getVisualTemplateListByIsActive() {
+        ItemVisualTemplates.builder().name("get_visual_template_list_by_is_active")
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(false)
+                .build()
+                .createObject();
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetVisualTemplateListResponse.class,
+                "?is_active=false");
+        for (ItemImpl item : list) {
+            ListItem listItem = (ListItem) item;
+            assertFalse(listItem.getIsActive());
+        }
+    }
+
+    @Order(95)
+    @DisplayName("Получение списка шаблонов визуализации по провайдеру")
+    @TmsLink("")
+    @Test
+    public void getVisualTemplateListByEventProvider() {
+        ItemVisualTemplates.builder().name("get_visual_template_list_by_provider")
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(false)
+                .build()
+                .createObject();
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetVisualTemplateListResponse.class,
+                "?event_provider=docker");
+        for (ItemImpl item : list) {
+            ListItem listItem = (ListItem) item;
+            assertTrue(listItem.getEventProvider().contains("docker"));
+        }
+    }
+
+    @Order(96)
+    @DisplayName("Получение списка шаблонов визуализации по типу")
+    @TmsLink("")
+    @Test
+    public void getVisualTemplateListByEventType() {
+        List<String> eventType = Collections.singletonList("app");
+        ItemVisualTemplates.builder().name("get_visual_template_list_by_type")
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(eventType)
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(false)
+                .build()
+                .createObject();
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetVisualTemplateListResponse.class, "?event_type=app");
+        for (ItemImpl item : list) {
+            ListItem listItem = (ListItem) item;
+            assertTrue(listItem.getEventType().contains("app"));
+        }
+    }
+
     @Order(97)
     @DisplayName("Негативный тест на создание шаблона отображения без обязательного параметра status и статусом is_active true")
+    @TmsLink("742493")
     @Test
     public void createInvalidVisualTemplate() {
         productCatalogSteps.createProductObject(JsonHelper
@@ -264,6 +410,7 @@ public class VisualTemplateTest extends Tests {
 
     @Order(98)
     @DisplayName("Проверка на наличие ключей в FullTemplate")
+    @TmsLink("742494")
     @Test
     public void fullTemplateFields() {
         assertEquals("type", visualTemplates.getFullTemplate().getType());
@@ -272,6 +419,7 @@ public class VisualTemplateTest extends Tests {
 
     @Order(99)
     @DisplayName("Проверка на наличие ключей в CompactTemplate")
+    @TmsLink("742495")
     @Test
     public void compactTemplateFields() {
         assertEquals("name", visualTemplates.getCompactTemplate().getName().getValue());
@@ -282,11 +430,9 @@ public class VisualTemplateTest extends Tests {
     @Order(100)
     @DisplayName("Удаление шаблона визуализации")
     @TmsLink("643674")
-    @MarkDelete
     @Test
-    public void deleteAction() {
-        try (ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder().name(VISUAL_TEMPLATE_NAME).build().createObjectExclusiveAccess()) {
-            visualTemplates.deleteObject();
-        }
+    public void deleteTemplate() {
+        productCatalogSteps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
+        visualTemplates.deleteObject();
     }
 }

@@ -51,15 +51,15 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
 
     @Step("Создание статического ключа досутпа hcp bucket")
     public void createStaticKey() {
-        new Http(Configure.AuthorizerURL)
+        new Http(Configure.IamURL)
                 .body(new JSONObject("{\"access_key\":{\"description\":\"Ключ\",\"password\":\"JP1mD3rlh67Hek@zb%ClSCFUxvUj4q6Z0ZfjfnK3VQhXt5xMLplE$B7237FPHu\"}}"))
-                .post("projects/{}/service_accounts/{}/access_keys", projectId, id)
+                .post("/v1/projects/{}/service_accounts/{}/access_keys", projectId, id)
                 .assertStatus(201)
                 .jsonPath();
 
         sleep(3000);
-        JsonPath jsonPathStatus = new Http(Configure.AuthorizerURL)
-                .get("projects/{}/service_accounts/{}/access_keys", projectId, id)
+        JsonPath jsonPathStatus = new Http(Configure.IamURL)
+                .get("/v1/projects/{}/service_accounts/{}/access_keys", projectId, id)
                 .assertStatus(200)
                 .jsonPath();
 
@@ -69,8 +69,8 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
 
     @Step("Удаление статического ключа досутпа hcp bucket")
     public void deleteStaticKey() {
-        new Http(Configure.AuthorizerURL)
-                .delete("projects/{}/service_accounts/{}", projectId, id, id)
+        new Http(Configure.IamURL)
+                .delete("/v1/projects/{}/service_accounts/{}/access_keys/{}", projectId, id, id)
                 .assertStatus(204);
 
         String keyStatus = "";
@@ -79,8 +79,8 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         log.info("Проверка статуса статического ключа");
         while ((keyStatus.equals("[deleting]") || keyStatus.equals("")) || keyStatus.equals("[active]") && counter > 0) {
             sleep(30000);
-            jsonPath = new Http(Configure.AuthorizerURL)
-                    .get("projects/{}/service_accounts/{}/access_keys", projectId, id)
+            jsonPath = new Http(Configure.IamURL)
+                    .get("/v1/projects/{}/service_accounts/{}/access_keys", projectId, id)
                     .assertStatus(200)
                     .jsonPath();
 
@@ -100,8 +100,8 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         JsonPath jsonPath = JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.service_account.policy.bindings.[0].role", "roles/viewer")
                 .set("$.service_account.title", title)
-                .send(Configure.AuthorizerURL)
-                .patch("projects/{}/service_accounts/{}", projectId, id)
+                .send(Configure.IamURL)
+                .patch("/v1/projects/{}/service_accounts/{}", projectId, id)
                 .assertStatus(200)
                 .jsonPath();
 
@@ -111,22 +111,31 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
     @Override
     @Step("Создание сервисного аккаунта")
     protected void create() {
-        JsonPath jsonPath = new Http(Configure.AuthorizerURL)
+        JsonPath jsonPath = new Http(Configure.IamURL)
                 .body(toJson())
-                .post("projects/{}/service_accounts", projectId)
+                .post("/v1/projects/{}/service_accounts", projectId)
                 .assertStatus(201)
                 .jsonPath();
 
         Assertions.assertEquals(title, jsonPath.get("data.title"));
         id = jsonPath.get("data.name");
+
+        jsonPath = new Http(Configure.IamURL)
+                .body(toJson())
+                .post("/v1/projects/{}/service_accounts/{}/api_keys", projectId, id)
+                .assertStatus(201)
+                .jsonPath();
         secret = jsonPath.get("data.client_secret");
     }
 
     @Override
     @Step("Удаление сервисного аккаунта")
     protected void delete() {
-        new Http(Configure.AuthorizerURL)
-                .delete("projects/{}/service_accounts/{}", projectId, id)
+        new Http(Configure.IamURL)
+                .delete("/v1/projects/{}/service_accounts/{}/api_keys/{}", projectId, id, id)
+                .assertStatus(204);
+        new Http(Configure.IamURL)
+                .delete("/v1/projects/{}/service_accounts/{}", projectId, id)
                 .assertStatus(204);
     }
 }

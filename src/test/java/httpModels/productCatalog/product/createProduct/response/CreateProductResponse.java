@@ -90,6 +90,12 @@ public class CreateProductResponse{
 	@JsonProperty("version_changed_by_user")
 	private String version_changed_by_user;
 
+	@JsonProperty("create_dt")
+	private String create_dt;
+
+	@JsonProperty("update_dt")
+	private String update_dt;
+
 	@JsonProperty("info")
 	private Map<String, String> info;
 }

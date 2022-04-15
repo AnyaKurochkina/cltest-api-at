@@ -45,19 +45,20 @@ public class TariffPlan extends Entity {
     }
 
     @Override
-    protected void delete() {}
+    protected void delete() {
+    }
 
     @Override
     public Entity init() {
-        if(title == null)
-            title = "AT " + new Date();
-        if(base == null)
+        if (title == null)
+            title = "AT " + new java.util.Date();
+        if (base == null)
             base = true;
-        if(oldTariffPlanId == null) {
+        if (oldTariffPlanId == null) {
             TariffPlan activeTariff = TariffPlanSteps.getTariffPlanList("f[base]=true&f[status][]=active").get(0);
             oldTariffPlanId = activeTariff.getId();
         }
-        if(!base && organizationName == null) {
+        if (!base && organizationName == null) {
             organizationName = ((Organization) Organization.builder().build().createObject()).getName();
         }
         return this;
@@ -68,12 +69,11 @@ public class TariffPlan extends Entity {
     protected void create() {
         String object = new Http(Configure.TarifficatorURL)
                 .body(toJson())
-                .post("tariff_plans")
+                .post("/v1/tariff_plans")
                 .assertStatus(201)
                 .toString();
         StringUtils.copyAvailableFields(TariffPlanSteps.deserialize(object, TariffPlan.class), this);
     }
-
 
 
 }

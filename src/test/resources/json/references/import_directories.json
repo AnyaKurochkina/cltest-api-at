@@ -1,7 +1,7 @@
 {
   "model_name": "Directory",
   "Directory": {
-    "name": "import_directories_api",
+    "name": "import_directories_test_api",
     "description": "import_directories_api"
   },
   "rel_foreign_models": {},

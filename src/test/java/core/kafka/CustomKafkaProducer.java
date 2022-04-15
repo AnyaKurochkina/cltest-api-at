@@ -2,6 +2,7 @@ package core.kafka;
 
 import core.helper.Configure;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.Producer;
@@ -55,9 +56,9 @@ public class CustomKafkaProducer {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, Configure.getAppProp(SECURITY_PROTOCOL));
-        props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, KAFKA_PATH + "\\" + Configure.getAppProp(KAFKA_KEYSTORE_PATH));
+        props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, KAFKA_PATH + "/" + Configure.getAppProp(KAFKA_KEYSTORE_PATH));
         props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, Configure.getAppProp(KAFKA_KEYSTORE_PASSWORD));
-        props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, KAFKA_PATH + "\\" + Configure.getAppProp(KAFKA_TRUSTSTORE_PATH));
+        props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, KAFKA_PATH + "/" + Configure.getAppProp(KAFKA_TRUSTSTORE_PATH));
         props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, Configure.getAppProp(KAFKA_TRUSTSTORE_PASSWORD));
         props.put(ProducerConfig.ACKS_CONFIG, Configure.getAppProp(ACKS));
         props.put(ProducerConfig.RETRIES_CONFIG, Integer.parseInt(Configure.getAppProp(RETRIES)));
@@ -77,12 +78,17 @@ public class CustomKafkaProducer {
             if (exception == null) {
                 log.info("Отправлено новое сообщение, в топик: " + recordMetadata.topic() + ", Сообщение: " + data);
 
-            }else {
-                log.error("Ошибка отправки: ", exception);
+            } else {
+                exception(exception);
             }
         }));
 
         producer.close();
+    }
+
+    @SneakyThrows
+    void exception(Exception e) {
+        throw e;
     }
 
 

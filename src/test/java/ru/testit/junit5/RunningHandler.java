@@ -4,6 +4,7 @@ import core.exception.CreateEntityException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.Nullable;
+import org.opentest4j.TestAbortedException;
 import ru.testit.annotations.Description;
 import ru.testit.annotations.Title;
 import ru.testit.services.TestITClient;
@@ -69,6 +70,8 @@ public class RunningHandler
             parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
             if(thrown instanceof CreateEntityException)
                 parentStep.setOutcome(Outcome.BLOCKED.getValue());
+            if(thrown instanceof TestAbortedException)
+                parentStep.setOutcome(Outcome.SKIPPED.getValue());
             parentStep.setFailureReason(thrown);
             parentStep.setCompletedOn(new Date());
         }

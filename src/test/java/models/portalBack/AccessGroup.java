@@ -11,6 +11,7 @@ import models.Entity;
 import models.authorizer.Project;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class AccessGroup extends Entity {
     String projectName;
     String description;
     List<String> users;
+    String domain;
 
     @Step("Добавление пользователя в группу доступа")
     public void addUser(String user){
@@ -46,6 +48,8 @@ public class AccessGroup extends Entity {
             description = projectName;
         if(users == null)
             users = new ArrayList<>();
+        if (domain == null)
+            domain = OrderServiceSteps.getDomainByProject(projectName);
         return this;
     }
 
@@ -54,6 +58,7 @@ public class AccessGroup extends Entity {
                 .set("$.access_group.name", name)
                 .set("$.access_group.description", description)
                 .set("$.access_group.project_name", projectName)
+                .set("$.access_group.domain", domain)
                 .build();
     }
 
@@ -62,7 +67,7 @@ public class AccessGroup extends Entity {
     protected void create() {
         prefixName = new Http(Configure.PortalBackURL)
                 .body(toJson())
-                .post("projects/{}/access_groups", projectName)
+                .post("/v1/projects/{}/access_groups", projectName)
                 .assertStatus(201)
                 .jsonPath()
                 .getString("name");
@@ -72,7 +77,7 @@ public class AccessGroup extends Entity {
     public void editGroup(String newDescription) {
         description = new Http(Configure.PortalBackURL)
                 .body(String.format("{\"access_group\":{\"description\":\"%s\"}}", newDescription))
-                .patch("projects/{}/access_groups/{}", projectName, prefixName)
+                .patch("/v1/projects/{}/access_groups/{}", projectName, prefixName)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("description");
@@ -83,7 +88,7 @@ public class AccessGroup extends Entity {
     @Step("Удаление группы доступа")
     protected void delete() {
         new Http(Configure.PortalBackURL)
-                .delete(String.format("projects/%s/access_groups/%s", projectName, prefixName))
+                .delete(String.format("/v1/projects/%s/access_groups/%s", projectName, prefixName))
                 .assertStatus(204)
                 .jsonPath();
     }

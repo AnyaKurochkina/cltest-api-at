@@ -32,6 +32,8 @@ public class Graph extends Entity {
     private UiSchema uiSchema;
     private String version;
     private String jsonTemplate;
+    private String createDt;
+    private String updateDt;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/", "productCatalog/graphs/createGraph.json");
 
@@ -52,6 +54,8 @@ public class Graph extends Entity {
                 .set("$.type", type)
                 .set("$.author", author)
                 .set("$.version", version)
+                .set("$.create_dt", createDt)
+                .set("$.update_dt", updateDt)
                 .build();
     }
 

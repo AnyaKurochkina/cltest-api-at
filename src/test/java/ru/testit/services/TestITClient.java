@@ -34,11 +34,12 @@ public class TestITClient {
 
     static {
         properties = new AppProperties();
-        if(Configure.getAppProp(TEST_IT_TOKEN) != null)
+        if (Configure.getAppProp(TEST_IT_TOKEN) != null)
             properties.setPrivateToken(Configure.getAppProp(TEST_IT_TOKEN));
-        if(System.getProperty(TEST_IT_TOKEN) != null)
+        if (System.getProperty(TEST_IT_TOKEN) != null)
             properties.setPrivateToken(System.getProperty(TEST_IT_TOKEN));
     }
+
     private static ObjectMapper getObjectMapper() {
         return new ObjectMapper().setTimeZone(TimeZone.getTimeZone("GMT+3"));
     }
@@ -79,7 +80,7 @@ public class TestITClient {
             log.error(e.toString());
             return;
         }
-        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
+//        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
     }
 
 
@@ -120,7 +121,7 @@ public class TestITClient {
             log.error(e.toString());
             throw e;
         }
-        log.info("[{}] Response :{}", response.status(), response.toString());
+//        log.info("[{}] Response :{}", response.status(), response.toString());
 //        if (configurationResponse != null && StringUtils.isNotBlank((CharSequence)createTestItemResponse.getId())) {
 //            this.linkAutoTestWithTestCase(createTestItemResponse.getId(), new LinkAutoTestRequest(createTestItemRequest.getTestPlanId()));
 //        }
@@ -141,18 +142,18 @@ public class TestITClient {
             final CollectionType collectionType = getObjectMapper().getTypeFactory().constructCollectionType(List.class, GetTestItemResponse.class);
             final List<GetTestItemResponse> listTestItems = getObjectMapper().readValue(response.toString(), collectionType);
             if (!listTestItems.isEmpty()) {
-                log.info("[{}] Response :{}", response.status(), response.toString());
+//                log.info("[{}] Response :{}", response.status(), response.toString());
                 return listTestItems.get(0);
             }
         } catch (Throwable e) {
             log.error(e.toString());
             throw e;
         }
-        log.info("[{}] Response :{}", response.status(), response.toString());
+//        log.info("[{}] Response :{}", response.status(), response.toString());
         return null;
     }
 
-    private String filterTestName(String name){
+    private String filterTestName(String name) {
         return name.replaceAll("(\\(super=\\w+\\(\\w+\\)[,.+\\-\\s\\w]+\\))", "");
     }
 
@@ -176,7 +177,7 @@ public class TestITClient {
             log.error(e.toString());
             return;
         }
-        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
+//        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
 
         if (createTestItemResponse != null && StringUtils.isNotBlank(createTestItemResponse.getId())) {
             this.linkAutoTestWithTestCase(createTestItemResponse.getId(), new LinkAutoTestRequest(createTestItemRequest.getTestPlanId()));
@@ -202,14 +203,14 @@ public class TestITClient {
             log.error(e.toString());
             return;
         }
-        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
+//        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
         if (StringUtils.isNotBlank(createTestItemRequest.getTestPlanId())) {
             this.linkAutoTestWithTestCase(testId, new LinkAutoTestRequest(createTestItemRequest.getTestPlanId()));
         }
     }
 
     private void linkAutoTestWithTestCase(final String autoTestId, final LinkAutoTestRequest linkAutoTestRequest) {
-        if(linkAutoTestRequest.getId() == null)
+        if (linkAutoTestRequest.getId() == null)
             return;
         String body;
         Response response;
@@ -225,7 +226,7 @@ public class TestITClient {
             log.error(e.toString());
             return;
         }
-        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
+//       log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
     }
 
 //    public void finishLaunch(final TestResultsRequest request) {
@@ -241,11 +242,20 @@ public class TestITClient {
                     .setSourceToken("PrivateToken " + properties.getPrivateToken())
                     .multiPart("/api/v2/testResults/" + testResultId + "/attachments", "file", attachment.getFileName(), attachment.getBytes())
                     .assertStatus(200);
-            log.info("[{}] Response :{}", response.status(), response.toString());
+//            log.info("[{}] Response :{}", response.status(), response.toString());
             return response.toString();
         } catch (Throwable e) {
             log.error(e.toString());
             throw e;
+        }
+    }
+
+    static void disableTestsIsBadTestRun(Throwable e) {
+        if (e.getMessage().contains("the StateName is already Stopped") || e.getMessage().contains("TestRun is stopped!")) {
+            Configure.setAppProp("testIt", "false");
+            System.clearProperty("testRunId");
+            Configure.isTestItCreateAutotest = true;
+            log.debug("Tests Stopped");
         }
     }
 
@@ -265,9 +275,10 @@ public class TestITClient {
                     .assertStatus(200);
         } catch (Throwable e) {
             log.error(e.toString());
+            disableTestsIsBadTestRun(e);
             throw e;
         }
-        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
+//        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
         return core.helper.StringUtils.findByRegex("([\\w-]+)", response.toString());
     }
 
@@ -283,9 +294,10 @@ public class TestITClient {
                     .assertStatus(204);
         } catch (Throwable e) {
             log.error(e.toString());
+            disableTestsIsBadTestRun(e);
             return;
         }
-        log.info("[{}] Response :{}", response.status(), response.toString());
+//        log.info("[{}] Response :{}", response.status(), response.toString());
     }
 
     public void sendCompleteTestRun() {
@@ -299,9 +311,10 @@ public class TestITClient {
                     .assertStatus(204);
         } catch (Throwable e) {
             log.error(e.toString());
+            disableTestsIsBadTestRun(e);
             return;
         }
-        log.info("[{}] Response :{}", response.status(), response.toString());
+//        log.info("[{}] Response :{}", response.status(), response.toString());
     }
 
     @AddLink

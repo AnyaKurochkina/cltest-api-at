@@ -56,6 +56,7 @@ public class KeyCloakSteps {
     //    @Step("Получение ServiceAccountToken")
     public static synchronized String getServiceAccountToken(String projectId) {
         ServiceAccount serviceAccount = ServiceAccount.builder().projectId(projectId).build().createObject();
+        log.debug("Получен SA {} для проекта {}", serviceAccount.getId(), projectId);
         ServiceAccountToken saToken = ServiceAccountToken.builder().serviceAccountName(serviceAccount.getId()).build().createObject();
         long currentTime = System.currentTimeMillis() / 1000L;
         if (currentTime - saToken.time > TOKEN_LIFETIME_SEC) {

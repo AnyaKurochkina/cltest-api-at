@@ -20,6 +20,12 @@ public class CreateActionResponse{
 	@JsonProperty("version_list")
 	private List<String> versionList;
 
+	@JsonProperty("priority")
+	private Integer priority;
+
+	@JsonProperty("location_restriction")
+	private String locationRestriction;
+
 	@JsonProperty("icon")
 	private String icon;
 
@@ -106,4 +112,13 @@ public class CreateActionResponse{
 
 	@JsonProperty("version_changed_by_user")
 	private String version_changed_by_user;
+
+	@JsonProperty("multiple")
+	private boolean isMultiple;
+
+	@JsonProperty("create_dt")
+	private String create_dt;
+
+	@JsonProperty("update_dt")
+	private String update_dt;
 }

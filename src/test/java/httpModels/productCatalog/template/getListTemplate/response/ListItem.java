@@ -19,6 +19,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("additional_input")
     private Boolean additionalInput;
 
+    @JsonProperty("title")
+    private String title;
+
     @JsonProperty("color")
     private String color;
 
@@ -109,6 +112,12 @@ public class ListItem implements ItemImpl {
     @JsonProperty("version_changed_by_user")
     private String version_changed_by_user;
 
+    @JsonProperty("create_dt")
+    private String create_dt;
+
+    @JsonProperty("update_dt")
+    private String update_dt;
+
     @Override
     public String getName() {
         return name;
@@ -117,5 +126,15 @@ public class ListItem implements ItemImpl {
     @Override
     public String getId() {
         return String.valueOf(id);
+    }
+
+    @Override
+    public String getCreateData() {
+        return create_dt;
+    }
+
+    @Override
+    public String getUpDateData() {
+        return update_dt;
     }
 }

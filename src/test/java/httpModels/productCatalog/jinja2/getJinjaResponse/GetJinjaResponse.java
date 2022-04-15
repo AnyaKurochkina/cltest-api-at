@@ -33,6 +33,12 @@ public class GetJinjaResponse implements GetImpl {
 	@JsonProperty("title")
 	private String title;
 
+	@JsonProperty("create_dt")
+	private String create_dt;
+
+	@JsonProperty("update_dt")
+	private String update_dt;
+
 	@JsonProperty("error")
 	private Map<String, String> error;
 

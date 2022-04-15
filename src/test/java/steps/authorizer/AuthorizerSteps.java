@@ -1,25 +1,18 @@
 package steps.authorizer;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import core.helper.JsonHelper;
-import core.helper.StringUtils;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
-import models.authorizer.User;
-import models.authorizer.UserList;
-import models.tarifficator.TariffPlan;
+import models.authorizer.UserItem;
 import steps.Steps;
-import steps.tarifficator.TariffPlanSteps;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static core.helper.Configure.AuthorizerURL;
+import static core.helper.Configure.IamURL;
 import static core.helper.Configure.PortalBackURL;
 
 @Log4j2
@@ -27,8 +20,8 @@ public class AuthorizerSteps extends Steps {
 
     @Step("Получить все проекты папки")
     public static void getAllProjectFromFolder(String folderId) {
-        ArrayList<String> projectId = new Http(AuthorizerURL)
-                .get("folders/" + Objects.requireNonNull(folderId) + "/children")
+        ArrayList<String> projectId = new Http(IamURL)
+                .get("/v1/folders/" + Objects.requireNonNull(folderId) + "/children")
                 .assertStatus(200)
                 .jsonPath()
                 .get("data.name");
@@ -39,14 +32,14 @@ public class AuthorizerSteps extends Steps {
     public static String getPathToFolder(String target) {
         String url;
         if (Objects.requireNonNull(target).startsWith("fold")) {
-            url = "folders/" + target + "/path";
+            url = "/v1/folders/" + target + "/path";
         } else if (target.startsWith("proj")) {
-            url = "projects/" + target + "/path";
+            url = "/v1/projects/" + target + "/path";
         } else {
             throw new Error("Invalid target: " + target + "\nYour target must start with \"fold\" or \"proj\"");
         }
 
-        String path = new Http(AuthorizerURL)
+        String path = new Http(IamURL)
                 .get(url)
                 .assertStatus(200)
                 .jsonPath()
@@ -59,13 +52,13 @@ public class AuthorizerSteps extends Steps {
     public static String getParentProject(String target) {
         String url;
         if (Objects.requireNonNull(target).startsWith("fold")) {
-            url = "folders/" + target + "/ancestors";
+            url = "/v1/folders/" + target + "/ancestors";
         } else if (target.startsWith("proj")) {
-            url = "projects/" + target + "/ancestors";
+            url = "/v1/projects/" + target + "/ancestors";
         } else {
             throw new Error("Invalid target: " + target + "\nYour target must start with \"fold\" or \"proj\"");
         }
-        return Objects.requireNonNull(new Http(AuthorizerURL)
+        return Objects.requireNonNull(new Http(IamURL)
                 .get(url)
                 .assertStatus(200)
                 .jsonPath()
@@ -73,9 +66,9 @@ public class AuthorizerSteps extends Steps {
     }
 
     @Step("Получение пользователя из LDAP")
-    public static String getUserList(Project project, String username) {
-        return  new Http(PortalBackURL)
-                .get("users?q={}&project_name={}", username, project.getId())
+    public static String getLDAPUserList(Project project, String username) {
+        return new Http(PortalBackURL)
+                .get("/v1/users?q={}&project_name={}", username, project.getId())
                 .assertStatus(200)
                 .jsonPath()
                 .get("[0].unique_name");
@@ -83,14 +76,10 @@ public class AuthorizerSteps extends Steps {
 
     @SneakyThrows
     @Step("Получение списка пользователей")
-    public static List<User> getUserList(String projectId) {
-        ObjectMapper objectMapper = JsonHelper.getCustomObjectMapper();
-        String response = new Http(AuthorizerURL)
-                .withServiceToken()
-                .get("projects/{}/users?include=members,total_count&page=1&per_page=10", projectId)
-                .assertStatus(200)
-                .toString();
-        return objectMapper.readValue(response, UserList.class).getData();
+    public static List<UserItem> getUserList(String projectId) {
+        @SuppressWarnings (value="unchecked")
+        List<UserItem> users = (List<UserItem>) listEntities(IamURL, "/v1/projects/" + projectId + "/users?", UserItem.class);
+        return users;
     }
 
 }

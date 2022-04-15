@@ -3,6 +3,7 @@ package models;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Throwables;
 import com.google.gson.Gson;
 import core.enums.ObjectStatus;
 import core.exception.CalculateException;
@@ -17,6 +18,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.ServiceAccount;
 import models.keyCloak.ServiceAccountToken;
+import models.keyCloak.Token;
 import models.keyCloak.UserToken;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONArray;
@@ -43,11 +45,16 @@ public class ObjectPoolService {
     @SneakyThrows
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess, boolean isPublic) {
         ObjectPoolEntity objectPoolEntity;
-        synchronized(ObjectPoolService.class) {
+        synchronized (ObjectPoolService.class) {
             objectPoolEntity = createObjectPoolEntity(e);
             objectPoolEntity.setPublic(isPublic);
         }
         objectPoolEntity.lock();
+
+        if (Configure.isTestItCreateAutotest) {
+            objectPoolEntity.release();
+            throw new CreateEntityException("Создание объекта пропущенно (isTestItCreateAutotest = true)");
+        }
 
         if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
             objectPoolEntity.release();
@@ -122,39 +129,56 @@ public class ObjectPoolService {
     @SneakyThrows
     public static void deleteAllResources() {
         log.debug("##### deleteAllResources start #####");
-        ExecutorService threadPool = Executors.newFixedThreadPool(ForkJoinPoolHierarchicalTestExecutorService.parallelism.get());
+        Configure.isTestItCreateAutotest = false;
         Collections.reverse(createdEntities);
+
+        List<ObjectPoolEntity> entityList = new ArrayList<>();
         for (String key : createdEntities) {
             ObjectPoolEntity objectPoolEntity = entities.get(key);
-            if (objectPoolEntity.getClazz().getName().endsWith("UserToken") || objectPoolEntity.getClazz().getName().endsWith("ServiceAccountToken"))
+            if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
+                continue;
+            Entity entity = objectPoolEntity.get();
+            if (entity instanceof IProduct) {
+                entityList.add(objectPoolEntity);
+            }
+        }
+        deleteAllVm(entityList);
+
+        for (String key : createdEntities) {
+            ObjectPoolEntity objectPoolEntity = entities.get(key);
+            if (objectPoolEntity.getClazz().isAssignableFrom(Token.class))
                 continue;
             if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
                 continue;
 //            if (objectPoolEntity.isMock())
 //                continue;
             Entity entity = objectPoolEntity.get();
-            if (entity instanceof IProduct) {
-                threadPool.submit(() -> {
-                    try {
-                        entity.deleteObject();
-                    } catch (Throwable e) {
-                        objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
-                        objectPoolEntity.setError(e);
-                        e.printStackTrace();
-                    }
-                });
-            } else {
+            try {
+                entity.deleteObject();
+            } catch (Throwable e) {
+                objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
+                objectPoolEntity.setError(e);
+                e.printStackTrace();
+            }
+        }
+        log.debug("##### deleteAllResources end #####");
+    }
+
+    public static void deleteAllVm(List<ObjectPoolEntity> entityList) {
+        ExecutorService threadPool = Executors.newFixedThreadPool(ForkJoinPoolHierarchicalTestExecutorService.parallelism.get());
+        for (ObjectPoolEntity objectPoolEntity : entityList) {
+            Entity entity = objectPoolEntity.get();
+            threadPool.submit(() -> {
                 try {
                     entity.deleteObject();
                 } catch (Throwable e) {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
                     objectPoolEntity.setError(e);
-                    e.printStackTrace();
+                    log.error("##### deleteAllVm error: " + e + "\n" + Throwables.getStackTraceAsString(e));
                 }
-            }
+            });
         }
         awaitTerminationAfterShutdown(threadPool);
-        log.debug("##### deleteAllResources end #####");
     }
 
     public static void removeProducts(Set<Class<?>> currentClassListArgument) {
@@ -289,8 +313,10 @@ public class ObjectPoolService {
             allureLifecycle.updateStep(id, s -> s.setParameters(list));
         }
         if (Configure.isIntegrationTestIt()) {
-            if(StepsAspects.getCurrentStep().get() != null) {
-                StepsAspects.getCurrentStep().get().setTitle(StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName()));
+            if (StepsAspects.getCurrentStep().get() != null) {
+                String title = StringUtils.format("Получена сущность {} с параметрами", entity.getClass().getSimpleName());
+                StepsAspects.getCurrentStep().get().setTitle(title);
+                log.debug(title + ": " + org.apache.commons.lang3.StringUtils.join(parametersMap));
                 StepsAspects.getCurrentStep().get().setParameters(parametersMap);
             }
         }

@@ -113,7 +113,7 @@ public class RabbitMQClusterTest extends Tests {
     void addVhost(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             rabbit.addVhost(Stream.generate(new Generex("[a-zA-Z0-9]{2,16}")::random)
-                    .limit(new Random().nextInt(20) + 1).distinct().collect(Collectors.toList()));
+                    .limit(new Random().nextInt(14) + 1).distinct().collect(Collectors.toList()));
         }
     }
 
@@ -124,7 +124,7 @@ public class RabbitMQClusterTest extends Tests {
     void deleteVhostAccessVhost(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             List<String> vhosts = Stream.generate(new Generex("[a-zA-Z0-9]{2,16}")::random)
-                    .limit(new Random().nextInt(20) + 1).distinct().collect(Collectors.toList());
+                    .limit(new Random().nextInt(14) + 1).distinct().collect(Collectors.toList());
             rabbit.addVhost(vhosts);
             rabbit.deleteVhost(vhosts);
         }

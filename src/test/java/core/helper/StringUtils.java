@@ -2,6 +2,7 @@ package core.helper;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.intellij.lang.annotations.Language;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -12,7 +13,7 @@ import java.util.regex.Pattern;
 @Log4j2
 public final class StringUtils {
 
-    public static String findByRegex(String regex, String text) {
+    public static String findByRegex(@Language("regexp") String regex, String text) {
         Matcher matcher = Pattern.compile(regex).matcher(text);
         if (matcher.find())
             return matcher.group(1);

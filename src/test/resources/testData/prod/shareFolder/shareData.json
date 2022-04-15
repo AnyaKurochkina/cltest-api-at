@@ -69,112 +69,104 @@
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
     "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
     "id": "proj-frybyv41jh",
     "projectName": "DEV_AUTOTEST",
-    "prefix": "32dde62c-4f0b-4185-a6a5-2f14881abae2",
-    "projectEnvironment": {
+    "projectEnvironmentPrefix": {
       "env": "DEV",
-      "id": "ce11798a-e5f6-4e54-9582-78770f15b52a",
+      "id": "32dde62c-4f0b-4185-a6a5-2f14881abae2",
+      "projectEnvironmentId": "ce11798a-e5f6-4e54-9582-78770f15b52a",
       "envType": "DEV"
     },
     "isForOrders": true
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
     "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
     "id": "proj-b7iigm67tk",
     "projectName": "EDU_AUTOTEST",
-    "prefix": "4eee3a36-5d68-4aae-8665-e42c59a67ad5",
-    "projectEnvironment": {
+    "projectEnvironmentPrefix": {
       "env": "EDU",
-      "id": "feff8762-5f69-41a2-9054-3d03530945f8",
+      "id": "4eee3a36-5d68-4aae-8665-e42c59a67ad5",
+      "projectEnvironmentId": "feff8762-5f69-41a2-9054-3d03530945f8",
       "envType": "TEST"
     },
     "isForOrders": true
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
     "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
     "id": "proj-rr4ncna00e",
     "projectName": "HOTFIX_AUTOTEST",
-    "prefix": "024e96e5-3b83-4b88-8018-14ac680b85aa",
-    "projectEnvironment": {
+    "projectEnvironmentPrefix": {
       "env": "HOTFIX",
-      "id": "3aee543c-8867-4c0f-a1be-7681bd249d56",
+      "id": "024e96e5-3b83-4b88-8018-14ac680b85aa",
+      "projectEnvironmentId": "3aee543c-8867-4c0f-a1be-7681bd249d56",
       "envType": "TEST"
     },
     "isForOrders": true
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
     "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
     "id": "proj-sdt56df8rr",
     "projectName": "MIGR_AUTOTEST",
-    "prefix": "2b7939ac-4e77-4607-8a87-835ab6838e2c",
-    "projectEnvironment": {
+    "projectEnvironmentPrefix": {
       "env": "MIGR",
-      "id": "77a53624-787d-42ac-b478-cd3119560ed0",
+      "id": "2b7939ac-4e77-4607-8a87-835ab6838e2c",
+      "projectEnvironmentId": "77a53624-787d-42ac-b478-cd3119560ed0",
       "envType": "TEST"
     },
     "isForOrders": true
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
     "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
     "id": "proj-aiqk5zzot4",
     "projectName": "PREPROD_AUTOTEST",
-    "prefix": "73a7ce4b-27a2-4e1f-91a2-d0c78667aba2",
-    "projectEnvironment": {
+    "projectEnvironmentPrefix": {
       "env": "PREPROD",
-      "id": "df4d904e-f0b1-4c74-877e-fec4576666f3",
+      "id": "73a7ce4b-27a2-4e1f-91a2-d0c78667aba2",
+      "projectEnvironmentId": "df4d904e-f0b1-4c74-877e-fec4576666f3",
       "envType": "TEST"
     },
     "isForOrders": true
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
     "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
     "id": "proj-ovkcqq41d3",
     "projectName": "ST_AUTOTEST",
-    "prefix": "797527fe-0f02-4fed-992f-12a4064d8f92",
-    "projectEnvironment": {
+    "projectEnvironmentPrefix": {
       "env": "ST",
-      "id": "057a6be5-9677-4433-b0fd-3fe2f8b38aca",
+      "id": "797527fe-0f02-4fed-992f-12a4064d8f92",
+      "projectEnvironmentId": "057a6be5-9677-4433-b0fd-3fe2f8b38aca",
       "envType": "DEV"
     },
     "isForOrders": true
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
     "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
     "id": "proj-j5uzlpvbjz",
     "projectName": "LT_AUTOTEST",
-    "prefix": "4488b474-356a-43df-80da-4e43c6620253",
-    "projectEnvironment": {
+    "projectEnvironmentPrefix": {
       "env": "LT",
-      "id": "eeb890b0-e769-48a1-ba49-904821dbc2a2",
+      "id": "4488b474-356a-43df-80da-4e43c6620253",
+      "projectEnvironmentId": "eeb890b0-e769-48a1-ba49-904821dbc2a2",
       "envType": "TEST"
     },
     "isForOrders": true
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "isDeleted": false,
     "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
     "id": "proj-7ll0yy5zsc",
     "projectName": "IFT_AUTOTEST",
-    "prefix": "39b1400a-2b2b-4c5c-bc7a-6e1c17d751bb",
-    "projectEnvironment": {
+    "projectEnvironmentPrefix": {
       "env": "IFT",
-      "id": "3fd0e51e-bf33-45c1-afa6-8dcb2a4ee7bc",
+      "id": "39b1400a-2b2b-4c5c-bc7a-6e1c17d751bb",
+      "projectEnvironmentId": "3fd0e51e-bf33-45c1-afa6-8dcb2a4ee7bc",
       "envType": "TEST"
     },
     "isForOrders": true

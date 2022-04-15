@@ -27,7 +27,7 @@
         "value": "${item::data.state}"
       }
     },
-    "is_active": true,
+    "is_active": false,
     "default_item": {
       "key": "value"
     }

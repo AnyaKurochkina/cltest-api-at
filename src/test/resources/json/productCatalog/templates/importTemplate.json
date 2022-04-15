@@ -15,6 +15,7 @@
       "run": "run",
       "icon": "",
       "name": "template_import_test_api",
+      "title": "title_import_test_api",
       "color": "",
       "type": "check_vm",
       "input": {},

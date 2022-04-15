@@ -18,6 +18,9 @@ public class GetTemplateResponse implements GetImpl {
 	@JsonProperty("additional_input")
 	private Boolean additionalInput;
 
+	@JsonProperty("title")
+	private String title;
+
 	@JsonProperty("color")
 	private String color;
 
@@ -107,6 +110,12 @@ public class GetTemplateResponse implements GetImpl {
 
 	@JsonProperty("last_version")
 	private String last_version;
+
+	@JsonProperty("create_dt")
+	private String create_dt;
+
+	@JsonProperty("update_dt")
+	private String update_dt;
 
 	@Override
 	public String getName() {

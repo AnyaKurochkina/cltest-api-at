@@ -67,5 +67,6 @@ public class TestsExecutionListener implements TestExecutionListener {
         fooWriter.write("ENV=" + ENV);
         fooWriter.close();
         System.out.println("##teamcity[publishArtifacts 'logs => logs']");
+        System.out.println("##teamcity[publishArtifacts 'target/swagger-coverage-output => swagger-coverage-output.zip']");
     }
 }

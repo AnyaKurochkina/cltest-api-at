@@ -3,6 +3,7 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Epic;
@@ -11,10 +12,14 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -25,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Направления")
+@DisabledIfEnv("prod")
 public class OrgDirectionTest extends Tests {
 
     private static final String ORG_DIRECTION_NAME = "org_direction_at_test-:2022.";
@@ -49,12 +55,13 @@ public class OrgDirectionTest extends Tests {
     @TmsLink("643305")
     @Test
     public void getOrgDirectionList() {
-        Assertions.assertTrue(productCatalogSteps
-                .getProductObjectList(GetOrgDirectionListResponse.class).size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetOrgDirectionListResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
-    @Order(6)
+    @Order(2)
     @DisplayName("Проверка значения next в запросе на получение списка направлений")
+    @TmsLink("679060")
     @Test
     public void getMeta() {
         String str = productCatalogSteps.getMeta(GetOrgDirectionListResponse.class).getNext();
@@ -159,6 +166,52 @@ public class OrgDirectionTest extends Tests {
         }
     }
 
+    @Order(12)
+    @DisplayName("Проверка сортировки по дате создания в направлениях")
+    @TmsLink("679074")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetOrgDirectionListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(13)
+    @DisplayName("Проверка сортировки по дате обновления в направлениях")
+    @TmsLink("742465")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByUpDateData(GetOrgDirectionListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    String.format("Даты обновлений направлений с именами %s и %s не соответсвуют условию сортировки."
+                            , list.get(i).getName(), list.get(i + 1).getName()));
+        }
+    }
+
+    @Order(14)
+    @DisplayName("Проверка доступа для методов с публичным ключом в направлениях")
+    @TmsLink("742468")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(orgDirection.getOrgDirectionName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(orgDirection.getOrgDirectionId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(orgDirection.getOrgDirectionId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(orgDirection.getOrgDirectionId()).assertStatus(403);
+    }
+
     @Order(80)
     @DisplayName("Экспорт направления по Id")
     @TmsLink("643334")
@@ -204,11 +257,6 @@ public class OrgDirectionTest extends Tests {
     @MarkDelete
     @Test
     public void deleteOrgDirection() {
-        try (OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName(ORG_DIRECTION_NAME)
-                .build()
-                .createObjectExclusiveAccess()) {
             orgDirection.deleteObject();
-        }
     }
 }

@@ -39,7 +39,8 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/elasticsearch_opensearch_cluster.json";
-        productName = "Elasticsearch Opensearch cluster";
+        if(productName == null)
+            productName = "Elasticsearch Opensearch cluster";
         initProduct();
         if(osVersion == null)
             osVersion = getRandomOsVersion();
@@ -72,7 +73,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
                 .set("$.order.attrs.user_app_groups[0]", accessGroup.getPrefixName())
                 .set("$.order.attrs.adm_app_groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", isTest())
                 .set("$.order.label", getLabel())
                 .build();
     }

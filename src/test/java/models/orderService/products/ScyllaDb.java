@@ -81,7 +81,7 @@ public class ScyllaDb extends IProduct {
                 .set("$.order.attrs.scylladb_version", version)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", getProjectId())
-                .set("$.order.attrs.on_support", project.getProjectEnvironment().getEnvType().contains("TEST"))
+                .set("$.order.attrs.on_support", isTest())
                 .set("$.order.label", getLabel())
                 .build();
     }
@@ -108,7 +108,7 @@ public class ScyllaDb extends IProduct {
 
     // admin, user
     public void addPermissionsUser(String dbName, String username){
-        OrderServiceSteps.executeAction("scylladb_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\", \"id\":\"%s:%s\"}", dbName, username, username, dbName)));
+        OrderServiceSteps.executeAction("scylladb_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\"}", dbName, username)));
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, username)), "Права пользователю не выданы");
         users.add(new DbUser(dbName, username));
         log.info("addPermissionsUser = " + username);

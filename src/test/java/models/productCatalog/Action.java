@@ -10,8 +10,10 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Log4j2
 @Builder
@@ -21,8 +23,16 @@ public class Action extends Entity {
     private String jsonTemplate;
     private String actionName;
     private String graphId;
+    private String title;
+    private String description;
     private String actionId;
     private String version;
+    private String type;
+    private boolean isMultiple;
+    private String createDt;
+    private String updateDt;
+    private String locationRestriction;
+    private Integer priority;
     private final String productName = "actions/";
 
     @Override
@@ -37,10 +47,15 @@ public class Action extends Entity {
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", actionName)
-                .set("$.title", actionName)
-                .set("$.description", actionName)
+                .set("$.title", title)
+                .set("$.type", type)
+                .set("$.description", description)
                 .set("$.graph_id", graphId)
                 .set("$.version", version)
+                .set("$.create_dt", createDt)
+                .set("$.update_dt", updateDt)
+                .set("$.priority", priority)
+                .set("$.location_restriction", locationRestriction)
                 .build();
     }
 
@@ -53,7 +68,7 @@ public class Action extends Entity {
                 .assertStatus(201)
                 .extractAs(CreateActionResponse.class)
                 .getId();
-        Assertions.assertNotNull(actionId, "Экшен с именем: " + actionName + ", не создался");
+        assertNotNull(actionId, "Экшен с именем: " + actionName + ", не создался");
     }
 
     @Override
@@ -63,6 +78,6 @@ public class Action extends Entity {
                 .delete(productName + actionId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(actionName));
+        assertFalse(productCatalogSteps.isExists(actionName));
     }
 }

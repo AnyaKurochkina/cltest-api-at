@@ -12,7 +12,7 @@ import steps.keyCloak.KeyCloakSteps;
 @Builder
 @Getter
 @Setter
-public class UserToken extends Entity {
+public class UserToken extends Entity implements Token {
     String token;
     Long time;
     Role role;

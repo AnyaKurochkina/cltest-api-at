@@ -35,59 +35,25 @@ public class ClickHouseTest extends Tests {
         }
     }
 
-    //    @TmsLink("377800")
-//    @Tag("actions")
-//    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "Добавить БД {0}")
-//    void createDb(ClickHouse product) {
-//        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-//            clickHouse.createDb("cached_bd");
-//        }
-//    }
-
-    //    @TmsLink("377802")
-//    @Tag("actions")
-//    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "Добавить пользователя {0}")
-//    void createDbmsUser(ClickHouse product) {
-//        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-//            clickHouse.createDb("cached_bd");
-//            clickHouse.createDbmsUser("chelik1", "user", "cached_bd");
-//        }
-//    }
-
-//    @Tag("actions")
-//    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "Сбросить пароль {0}")
-//    void resetPassword(ClickHouse product) {
-//        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-//            clickHouse.createDb("cached_bd");
-//            clickHouse.createDbmsUser("chelikforreset1", "user", "cached_bd");
-//            clickHouse.resetPassword("chelikforreset1");
-//        }
-//    }
-
     @TmsLink("377689")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль {0}")
+    @ParameterizedTest(name = "Сбросить пароль владельца{0}")
     void resetPasswordOwner(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.resetPassword("username_created");
+            clickHouse.resetPasswordOwner();
         }
     }
 
-//    @TmsLink("")
-//    @Tag("actions")
-//    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "Удалить пользователя {0}")
-//    void removeDbmsUser(ClickHouse product) {
-//        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-//            clickHouse.createDb("cached_bd");
-//            clickHouse.createDbmsUser("chelikforreset2", "user", "cached_bd");
-//            clickHouse.removeDbmsUser("chelikforreset2", "cached_bd");
-//        }
-//    }
+//    @TmsLink("377689")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Сбросить пароль customer{0}")
+    void resetPasswordCustomer(ClickHouse product) {
+        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+            clickHouse.resetPasswordCustomer();
+        }
+    }
 
     @TmsLink("377795")
     @Tag("actions")

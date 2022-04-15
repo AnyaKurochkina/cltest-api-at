@@ -1,7 +1,6 @@
 import io.restassured.RestAssured;
 import io.restassured.config.SSLConfig;
 import io.restassured.path.json.JsonPath;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.json.JSONObject;
@@ -26,7 +25,7 @@ public class Pipeline {
 
     @SuppressWarnings("deprecation")
     public static void main(String[] args) throws Exception {
-        SSLSocketFactory clientAuthFactory = new SSLSocketFactory(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build());
+        org.apache.http.conn.ssl.SSLSocketFactory clientAuthFactory = new org.apache.http.conn.ssl.SSLSocketFactory(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build());
         SSLConfig config = new SSLConfig().with().sslSocketFactory(clientAuthFactory).and().allowAllHostnames();
         Set<String> externalIds = new HashSet<>();
         Map<String, String> argsMap = Arrays.stream(args).map(e -> e.split("=")).filter(s -> s.length > 1)
@@ -71,7 +70,7 @@ public class Pipeline {
                 externalIds.add(externalId);
                 writer.println(externalId + "=" + result.query("/configuration/id"));
             }
-            String command = "-Dmaven.test.skip=false -Dsecret=123456 -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestRunId=" + argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
+            String command = "-DfailIfNoTests=false -Dmaven.test.skip=false -Dsecret=123456 -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestRunId=" + argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
             System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");
             System.out.println("##teamcity[publishArtifacts '" + pathTestResourcesDir + "/configurations.txt => configurations']");
         }

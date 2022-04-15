@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class CalculateAttrs{
+	Integer amount;
 	private String provider;
 	private List<String> providerPath;
 	private List<String> environmentTypePath;

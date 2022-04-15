@@ -18,6 +18,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 import tests.Tests;
 
+import java.net.ConnectException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
@@ -40,17 +41,22 @@ public class ElasticsearchTest extends Tests {
     @TmsLink("401283")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания. API Elasticsearch {0}")
-    void checkElasticsearchApi(Elasticsearch product) {
+    void checkElasticsearchApi(Elasticsearch product) throws ConnectException {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             JsonPath path = JsonPath.from(new JSONObject((Map) OrderServiceSteps.getProductsField(elastic, "", JSONObject.class)).toString());
             String apiUrl = path.getString("data.find{it.data.config.containsKey('api_url')}.data.config.api_url");
             List<String> ipList = path.getList("data.findAll{it.data.config.containsKey('default_v4_address')}.data.config.default_v4_address");
-            String response = new Http(apiUrl)
-                    .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
-                    .get("/_cat/nodes?v=true&pretty")
-                    .assertStatus(200)
-                    .toString();
-            for(String ip : ipList)
+            String response = null;
+            try {
+                response = new Http(apiUrl)
+                        .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
+                        .get("/_cat/nodes?v=true&pretty")
+                        .assertStatus(200)
+                        .toString();
+            } catch (Http.ConnectException e) {
+                elastic.connectVmException(e.getMessage());
+            }
+            for (String ip : ipList)
                 Assertions.assertTrue(response.contains(ip), "В списке нет ноды с адресом " + ip);
         }
     }
@@ -58,15 +64,20 @@ public class ElasticsearchTest extends Tests {
     @TmsLink("688500")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания. Exporter {0}")
-    void checkElasticsearchExporter(Elasticsearch product) {
+    void checkElasticsearchExporter(Elasticsearch product) throws ConnectException {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             String exporterUrl = ((String) OrderServiceSteps.getProductsField(elastic,
                     "data.find{it.data.config.containsKey('api_url')}.data.config.additional_urls.elasticsearch-exporter"));
-            String response = new Http(exporterUrl)
-                    .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
-                    .get("/metrics")
-                    .assertStatus(200)
-                    .toString();
+            String response = null;
+            try {
+                response = new Http(exporterUrl)
+                        .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
+                        .get("/metrics")
+                        .assertStatus(200)
+                        .toString();
+            } catch (Http.ConnectException e) {
+                elastic.connectVmException(e.getMessage());
+            }
             Assertions.assertTrue(response.contains(",color=\"green\"} 1"),
                     "elasticsearch_cluster_health_status != 1");
         }
@@ -75,15 +86,19 @@ public class ElasticsearchTest extends Tests {
     @TmsLink("401342")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания. Kibana {0}")
-    void checkElasticsearchKibana(Elasticsearch product) {
+    void checkElasticsearchKibana(Elasticsearch product) throws ConnectException {
         Waiting.sleep(60000);
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             String kibanaUrl = ((String) OrderServiceSteps.getProductsField(elastic,
                     "data.find{it.data.config.containsKey('api_url')}.data.config.additional_urls.kibana"));
-            new Http(kibanaUrl)
-                    .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
-                    .get("/status")
-                    .assertStatus(200);
+            try {
+                new Http(kibanaUrl)
+                        .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
+                        .get("/status")
+                        .assertStatus(200);
+            } catch (Http.ConnectException e) {
+                elastic.connectVmException(e.getMessage());
+            }
         }
     }
 

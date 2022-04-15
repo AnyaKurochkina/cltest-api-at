@@ -12,6 +12,7 @@ import models.tarifficator.TariffClass;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -20,6 +21,7 @@ import tests.Tests;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @Tags({@Tag("regress"), @Tag("tariff")})
+@DisabledIfEnv("prod")
 public class BaseTariffPlanTest extends Tests {
 
     @Test
@@ -70,7 +73,7 @@ public class BaseTariffPlanTest extends Tests {
                 .toJson();
         new Http(Configure.TarifficatorURL)
                 .body(object)
-                .post("tariff_plans")
+                .post("/v1/tariff_plans")
                 .assertStatus(422);
     }
 
@@ -166,6 +169,21 @@ public class BaseTariffPlanTest extends Tests {
         tariffClass.setPrice(tariffClass.getPrice() + 1.0f);
         TariffClass updatedTariffClass = TariffPlanSteps.editTariffClass(tariffClass, tariffPlan);
         Assertions.assertEquals(tariffClass.getPrice(), updatedTariffClass.getPrice(), "Стоимость не изменилась");
+    }
+
+    @Test
+    @Order(8)
+    @TmsLink("783813")
+    @DisplayName("Фильтр по статусу таблицы ТП")
+    public void filterTariffPlanByStatus() {
+        List<TariffPlan> tariffPlans = TariffPlanSteps
+                .getTariffPlanList("f[base]=true&f[status][]=" + TariffPlanStatus.draft);
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(tariffPlans.stream().filter(tariffPlan -> tariffPlan.getStatus().equals(TariffPlanStatus.draft)).count(),
+                                tariffPlans.size(), "Не все ТП в статусе draft"),
+                () -> Assertions.assertEquals(tariffPlans.stream().filter(tariffPlan -> tariffPlan.getBase().equals(true)).count(),
+                        tariffPlans.size(), "Не все ТП в базовые")
+        );
     }
 
 }

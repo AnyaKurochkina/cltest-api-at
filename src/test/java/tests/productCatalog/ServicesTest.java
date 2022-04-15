@@ -3,20 +3,26 @@ package tests.productCatalog;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
-import org.junit.MarkDelete;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
+import httpModels.productCatalog.service.getServiceList.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Services;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Сервисы")
+@DisabledIfEnv("prod")
 public class ServicesTest extends Tests {
 
     Services service;
@@ -37,6 +44,7 @@ public class ServicesTest extends Tests {
     public void createService() {
         service = Services.builder()
                 .serviceName("create_service_test_api")
+                .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
@@ -47,8 +55,8 @@ public class ServicesTest extends Tests {
     @TmsLink("643450")
     @Test
     public void getServiceList() {
-        Assertions.assertTrue(productCatalogSteps.getProductObjectList(GetServiceListResponse.class)
-                .size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetServiceListResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
     @Order(2)
@@ -112,13 +120,86 @@ public class ServicesTest extends Tests {
         productCatalogSteps.getByIdWithOutToken(service.getServiceId());
     }
 
+    @Order(8)
+    @DisplayName("Получение сервиса по title")
+    @TmsLink("738673")
+    @Test
+    public void getServiceByTitle() {
+        GetServiceListResponse list = (GetServiceListResponse) productCatalogSteps.getObjectByTitle(service.getTitle(), GetServiceListResponse.class);
+        ListItem item = (ListItem) list.getItemsList().get(0);
+        String title = item.getTitle();
+        assertEquals(service.getTitle(), title, "Title не совпадают");
+    }
+
+    @Order(9)
+    @DisplayName("Проверка сортировки по дате создания в сервисах")
+    @TmsLink("738676")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetServiceListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(10)
+    @DisplayName("Проверка сортировки по дате обновления в сервисах")
+    @TmsLink("738680")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByUpDateData(GetServiceListResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(11)
+    @DisplayName("Проверка доступа для методов с публичным ключом в сервисах")
+    @TmsLink("738683")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(service.getServiceName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(service.getServiceId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(service.getServiceId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(service.getServiceId()).assertStatus(403);
+    }
+
+    @Order(12)
+    @DisplayName("Удаление сервиса со статусом is_published=true")
+    @TmsLink("738684")
+    @Test
+    public void deleteIsPublishedService() {
+        Services serviceIsPublished = Services.builder().serviceName("create_service_is_published_test_api")
+                .isPublished(true)
+                .build()
+                .createObject();
+        String serviceId = serviceIsPublished.getServiceId();
+        Response deleteResponse = productCatalogSteps.getDeleteObjectResponse(serviceId)
+                .assertStatus(200);
+        productCatalogSteps.partialUpdateObject(serviceId, new JSONObject().put("is_published", false));
+        assertEquals(deleteResponse.jsonPath().get("error"), "Deletion not allowed (is_published=True)");
+    }
+
     @Order(30)
     @DisplayName("Проверка независимых от версии параметров в сервисах")
+    @TmsLink("738686")
     @Test
     public void checkVersionWhenIndependentParamUpdated() {
-        Services serv = Services.builder().serviceName("services_api_test").version("1.0.0").isPublished(false).build().createObject();
+        Services serv = Services.builder().serviceName("services_api_test").version("1.0.0").isPublished(true).build().createObject();
         String version = serv.getVersion();
-        Response response = productCatalogSteps.partialUpdateObject(serv.getServiceId(), new JSONObject().put("is_published", true));
+        Response response = productCatalogSteps.partialUpdateObject(serv.getServiceId(), new JSONObject().put("is_published", false));
         String newVersion = response.jsonPath().get("version");
         assertEquals(version, newVersion);
     }
@@ -179,19 +260,19 @@ public class ServicesTest extends Tests {
     public void createServiceWithInvalidCharacters() {
         assertAll("Сервис создался с недопустимым именем",
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("NameWithUppercase")).assertStatus(500),
+                        .createJsonObject("NameWithUppercase")).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("nameWithUppercaseInMiddle")).assertStatus(500),
+                        .createJsonObject("nameWithUppercaseInMiddle")).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("имя")).assertStatus(500),
+                        .createJsonObject("имя")).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("Имя")).assertStatus(500),
+                        .createJsonObject("Имя")).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("a&b&c")).assertStatus(500),
+                        .createJsonObject("a&b&c")).assertStatus(500),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject("")).assertStatus(400),
+                        .createJsonObject("")).assertStatus(400),
                 () -> productCatalogSteps.createProductObject(productCatalogSteps
-                                .createJsonObject(" ")).assertStatus(400)
+                        .createJsonObject(" ")).assertStatus(400)
         );
     }
 
@@ -245,6 +326,49 @@ public class ServicesTest extends Tests {
         );
     }
 
+    @Order(97)
+    @DisplayName("Сортировка сервисов по статусу")
+    @TmsLink("")
+    @Test
+    public void orderingByStatus() {
+        List<ItemImpl> list = productCatalogSteps.orderingByStatus(GetServiceListResponse.class).getItemsList();
+        boolean result = false;
+        int count = 0;
+        for (int i = 0; i < list.size() - 1; i++) {
+            ListItem item = (ListItem) list.get(i);
+            ListItem nextItem = (ListItem) list.get(i + 1);
+            if (item.getIsPublished().equals(nextItem.getIsPublished())) {
+                result = true;
+            } else {
+                count++;
+            }
+            if (count > 1) {
+                result = false;
+                break;
+            }
+        }
+        assertTrue(result, "Список не отсортирован.");
+    }
+
+    @Order(98)
+    @DisplayName("Получение списка сервисов по фильтру is_published")
+    @TmsLink("")
+    @Test
+    public void getServiceListByPublished() {
+        Services.builder()
+                .serviceName("service_is_published_test_api")
+                .title("title_service_is_published_test_api")
+                .description("service_is_published_test_api")
+                .isPublished(true)
+                .build()
+                .createObject();
+        List<ItemImpl> serviceList = productCatalogSteps.getProductObjectList(GetServiceListResponse.class, "?is_published=true");
+        for (ItemImpl item : serviceList) {
+            ListItem listItem = (ListItem) item;
+            assertTrue(listItem.getIsPublished());
+        }
+    }
+
     @Order(99)
     @DisplayName("Негативный тест на удаление сервиса без токена")
     @TmsLink("643526")
@@ -259,11 +383,6 @@ public class ServicesTest extends Tests {
     @MarkDelete
     @Test
     public void deleteService() {
-        try (Services service = Services.builder()
-                .serviceName("create_service_test_api")
-                .build()
-                .createObjectExclusiveAccess()) {
-            service.deleteObject();
-        }
+        service.deleteObject();
     }
 }

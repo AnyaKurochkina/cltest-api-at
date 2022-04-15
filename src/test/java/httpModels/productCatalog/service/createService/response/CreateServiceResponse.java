@@ -97,4 +97,10 @@ public class CreateServiceResponse{
 
 	@JsonProperty("graph_version_calculated")
 	private String graphVersionCalculated;
+
+	@JsonProperty("create_dt")
+	private String create_dt;
+
+	@JsonProperty("update_dt")
+	private String update_dt;
 }

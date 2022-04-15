@@ -2,23 +2,29 @@ package tests.productCatalog;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
+import httpModels.productCatalog.product.getProducts.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Product;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import tests.Tests;
 
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Продукты")
+@DisabledIfEnv("prod")
 public class ProductsTest extends Tests {
 
     ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("products/", "productCatalog/products/createProduct.json");
@@ -74,8 +81,8 @@ public class ProductsTest extends Tests {
     @TmsLink("643387")
     @Test
     public void getProductList() {
-        Assertions.assertTrue(productCatalogSteps.getProductObjectList(GetProductsResponse.class)
-                .size() > 0);
+        List<ItemImpl> list = productCatalogSteps.getProductObjectList(GetProductsResponse.class);
+        assertTrue(productCatalogSteps.isSorted(list), "Список не отсортирован.");
     }
 
     @Order(5)
@@ -92,6 +99,7 @@ public class ProductsTest extends Tests {
     }
 
     @Order(6)
+    @Disabled
     @DisplayName("Создание продукта в продуктовом каталоге c новой категорией")
     @Test
     public void createProductWithUpdateCategory() {
@@ -121,6 +129,68 @@ public class ProductsTest extends Tests {
     public void checkProductExists() {
         assertTrue(productCatalogSteps.isExists(product.getName()));
         assertFalse(productCatalogSteps.isExists("not_exists_name"));
+    }
+
+    @Order(11)
+    @DisplayName("Проверка сортировки по дате создания в продуктах")
+    @TmsLink("737649")
+    @Test
+    public void orderingByCreateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByCreateData(GetProductsResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(12)
+    @DisplayName("Проверка сортировки по дате обновления в продуктах")
+    @TmsLink("737651")
+    @Test
+    public void orderingByUpDateData() {
+        List<ItemImpl> list = productCatalogSteps
+                .orderingByUpDateData(GetProductsResponse.class).getItemsList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+                    "Даты должны быть отсортированы по возрастанию");
+        }
+    }
+
+    @Order(12)
+    @DisplayName("Удаление продукта со статусом is_open=true")
+    @TmsLink("737656")
+    @Test
+    public void deleteProductWithIsOpenTrue() {
+        Product productIsOpenTrue = Product.builder().name("create_product_is_open_test_api")
+                .isOpen(true)
+                .build()
+                .createObject();
+        String productId = productIsOpenTrue.getProductId();
+        Response deleteResponse = productCatalogSteps.getDeleteObjectResponse(productId)
+                .assertStatus(200);
+        productCatalogSteps.partialUpdateObject(productId, new JSONObject().put("is_open", false));
+        assertEquals(deleteResponse.jsonPath().get("error"), "Deletion not allowed (is_open=True)");
+
+    }
+
+    @Order(14)
+    @DisplayName("Проверка доступа для методов с публичным ключом в продуктах")
+    @TmsLink("737660")
+    @Test
+    public void checkAccessWithPublicToken() {
+        productCatalogSteps.getObjectByNameWithPublicToken(product.getName()).assertStatus(200);
+        productCatalogSteps.createProductObjectWithPublicToken(productCatalogSteps
+                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.partialUpdateObjectWithPublicToken(product.getProductId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+        productCatalogSteps.putObjectByIdWithPublicToken(product.getProductId(), productCatalogSteps
+                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+        productCatalogSteps.deleteObjectWithPublicToken(product.getProductId()).assertStatus(403);
     }
 
     @Order(15)
@@ -284,12 +354,72 @@ public class ProductsTest extends Tests {
                 ".d0-oscp.corp.dev.vtb/products/?is_open=true&env=dev&information_systems=c9fd31c7-25a5-45ca-863c-18425d1ae927&page=1&per_page=100"));
     }
 
+    @Order(80)
+    @DisplayName("Сортировка продуктов по статусу")
+    @TmsLink("")
+    @Test
+    public void orderingByStatus() {
+        List<ItemImpl> list = productCatalogSteps.orderingByStatus(GetProductsResponse.class).getItemsList();
+        boolean result = false;
+        int count = 0;
+        for (int i = 0; i < list.size() - 1; i++) {
+            ListItem item = (ListItem) list.get(i);
+            ListItem nextItem = (ListItem) list.get(i + 1);
+            if (item.getIsOpen().equals(nextItem.getIsOpen())) {
+                result = true;
+            } else {
+                count++;
+            }
+            if (count > 1) {
+                result = false;
+                break;
+            }
+        }
+        assertTrue(result, "Список не отсортирован.");
+    }
+
+    @Order(96)
+    @DisplayName("Получение списка продуктов по фильтру is_open")
+    @TmsLink("")
+    @Test
+    public void getProductListByIsOpen() {
+        Product.builder()
+                .name("get_products_by_status_test_api")
+                .title("AtTestApiProduct")
+                .build()
+                .createObject();
+        List<ItemImpl> productList = productCatalogSteps.getProductObjectList(GetProductsResponse.class, "?is_open=true");
+        for (ItemImpl item : productList) {
+            ListItem listItem = (ListItem) item;
+            assertTrue(listItem.getIsOpen());
+        }
+    }
+
+    @Order(97)
+    @DisplayName("Получение списка продуктов по фильтру category")
+    @TmsLink("")
+    @Test
+    public void getProductListByCategory() {
+        Product.builder()
+                .name("get_products_by_category_test_api")
+                .title("AtTestApiProduct")
+                .category("vm")
+                .build()
+                .createObject();
+        List<ItemImpl> productList = productCatalogSteps.getProductObjectList(GetProductsResponse.class, "?category=vm");
+        for (ItemImpl item : productList) {
+            ListItem listItem = (ListItem) item;
+            assertEquals("vm", listItem.getCategory());
+        }
+    }
+
     @Order(98)
     @DisplayName("Получение значения ключа info")
+    @TmsLink("737663")
     @Test
     public void getProductInfo() {
-        Map<String, String> info = product.getInfo();
-        assertEquals(info.get("information"), "testData");
+        Response response = productCatalogSteps.getInfoProduct(product.getProductId());
+        assertEquals(response.jsonPath().get(), info);
     }
 
     @Order(99)
@@ -306,13 +436,6 @@ public class ProductsTest extends Tests {
     @TmsLink("643434")
     @MarkDelete
     public void deleteProduct() {
-        try (Product product = Product.builder()
-                .name(NAME)
-                .title("AtTestApiProduct")
-                .envs(Collections.singletonList("dev"))
-                .build()
-                .createObjectExclusiveAccess()) {
-            product.deleteObject();
-        }
+        product.deleteObject();
     }
 }

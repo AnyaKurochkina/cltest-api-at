@@ -1,5 +1,6 @@
 package steps.productCatalog;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import core.helper.http.Response;
@@ -8,7 +9,6 @@ import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
-import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.AllArgsConstructor;
@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -81,6 +82,13 @@ public class ProductCatalogSteps {
     public GetImpl getById(String objectId, Class<?> clazz) {
         return (GetImpl) new Http(ProductCatalogURL)
                 .get(productName + objectId + "/")
+                .extractAs(clazz);
+    }
+
+    @Step("Получение объекта продуктового каталога по Id и Env")
+    public GetImpl getByIdAndEnv(String objectId, String env, Class<?> clazz) {
+        return (GetImpl) new Http(ProductCatalogURL)
+                .get(productName + objectId + "/?env={}", env)
                 .extractAs(clazz);
     }
 
@@ -164,7 +172,6 @@ public class ProductCatalogSteps {
         List<ItemImpl> list = ((GetListImpl) new Http(ProductCatalogURL)
                 .get(productName + "?include=total_count&page=1&per_page=10&multisearch=" + name)
                 .assertStatus(200).extractAs(clazz)).getItemsList();
-
         for (ItemImpl item : list) {
             if (item.getName().equals(name)) {
                 objectId = item.getId();
@@ -174,7 +181,6 @@ public class ProductCatalogSteps {
         Assertions.assertNotNull(objectId, String.format("Объект с именем: %s, с помощью multiSearch не найден", name));
         return objectId;
     }
-
 
     @Step("Поиск ID объекта продуктового каталога по Title")
     public String getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(String title, String parameters) {
@@ -230,6 +236,13 @@ public class ProductCatalogSteps {
                 .assertStatus(200).jsonPath();
     }
 
+    @Step("Получение массива объектов определенного типа в определенной среде используещих граф")
+    public JsonPath getObjectArrayUsedGraphByTypeAndEnv(String id, String type, String env) {
+        return new Http(ProductCatalogURL)
+                .get("graphs/" + id + "/used/?env=" + env + "&object_type=" + type)
+                .assertStatus(200).jsonPath();
+    }
+
     public Response getDeleteObjectResponse(String id) {
         return new Http(ProductCatalogURL)
                 .delete(productName + id + "/");
@@ -240,6 +253,7 @@ public class ProductCatalogSteps {
                 .delete(url + id + "/");
     }
 
+    @Step("Получение списка объектов продуктового каталога по фильтру")
     public List<ItemImpl> getProductObjectList(Class<?> clazz, String filter) {
         return ((GetListImpl) new Http(ProductCatalogURL)
                 .get(productName + filter)
@@ -254,19 +268,43 @@ public class ProductCatalogSteps {
     }
 
     @Step("Получение объекта продуктового каталога по имени")
-    public GetListImpl getObjectByName(String name, Class<?> clazz) {
+    public GetListImpl getObjectListByName(String name, Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
                 .get(productName + "?name=" + name)
                 .assertStatus(200)
                 .extractAs(clazz);
     }
 
+    @Step("Получение списка объектов продуктового каталога по именам")
+    public GetListImpl getObjectsListByNames(Class<?> clazz, String... name) {
+        String names = String.join(",", name);
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?name__in=" + names)
+                .assertStatus(200)
+                .extractAs(clazz);
+    }
+
+    @Step("Получение объекта продуктового каталога по title")
+    public GetListImpl getObjectByTitle(String title, Class<?> clazz) {
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?title=" + title)
+                .assertStatus(200)
+                .extractAs(clazz);
+    }
+
+    @Step("Получение объекта продуктового каталога по type")
+    public GetListImpl getObjectListByType(String type, Class<?> clazz) {
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?type=" + type)
+                .assertStatus(200)
+                .extractAs(clazz);
+    }
+
     @Step("Получение info продукта")
-    public GetProductResponse getInfoProduct(String id) {
+    public Response getInfoProduct(String id) {
         return new Http(ProductCatalogURL)
                 .get(productName + id + "/info/")
-                .assertStatus(200)
-                .extractAs(GetProductResponse.class);
+                .assertStatus(200);
     }
 
     @Step("Получение шаблона визуализации по event_type и event_provider")
@@ -275,6 +313,94 @@ public class ProductCatalogSteps {
                 .get("item_visual_templates/item_visual_template/" + eventType + "/" + eventProvider + "/")
                 .assertStatus(200)
                 .extractAs(GetVisualTemplateResponse.class);
+    }
+
+    @Step("Сортировка объектов по дате создания")
+    public GetListImpl orderingByCreateData(Class<?> clazz) {
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?ordering=create_dt")
+                .assertStatus(200)
+                .extractAs(clazz);
+    }
+
+    @Step("Сортировка объектов по дате обновления")
+    public GetListImpl orderingByUpDateData(Class<?> clazz) {
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?ordering=update_dt")
+                .assertStatus(200)
+                .extractAs(clazz);
+    }
+
+    @Step("Сортировка объектов по статусу")
+    public GetListImpl orderingByStatus(Class<?> clazz) {
+        return (GetListImpl) new Http(ProductCatalogURL)
+                .get(productName + "?ordering=status")
+                .assertStatus(200)
+                .extractAs(clazz);
+    }
+
+    @Step("Получение объекта продуктового каталога по имени с публичным токеном")
+    public Response getObjectByNameWithPublicToken(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.VIEWER)
+                .get(productName + "?name=" + name);
+    }
+
+    @Step("Создание объекта продуктового каталога с публичным токеном")
+    public Response createProductObjectWithPublicToken(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.VIEWER)
+                .body(body)
+                .post(productName);
+    }
+
+    @Step("Обновление объекта продуктового каталога с публичным токеном")
+    public Response partialUpdateObjectWithPublicToken(String id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.VIEWER)
+                .body(object)
+                .patch(productName + id + "/");
+    }
+
+    @Step("Удаление объекта продуктового каталога с публичным токеном")
+    public Response deleteObjectWithPublicToken(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.VIEWER)
+                .delete(productName + id + "/");
+    }
+
+    @Step("Обновление всего объекта продуктового каталога по Id с публичным токеном")
+    public Response putObjectByIdWithPublicToken(String objectId, JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.VIEWER)
+                .body(body)
+                .put(productName + objectId + "/");
+    }
+
+    @Step("Проверка сортировки списка")
+    public boolean isSorted(List<ItemImpl> list) {
+        if (list.isEmpty() || list.size() == 1) {
+            return true;
+        }
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            String currentName = delNoDigOrLet(list.get(i).getName());
+            String nextName = delNoDigOrLet(list.get(i + 1).getName());
+            if (currentTime.isBefore(nextTime) || (currentTime.isEqual(nextTime) && currentName.compareToIgnoreCase(nextName) > 0)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static String delNoDigOrLet (String s) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (Character .isLetterOrDigit(s.charAt(i)))
+                sb.append(s.charAt(i));
+        }
+        return sb.toString();
     }
 
     private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {
