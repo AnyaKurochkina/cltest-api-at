@@ -1,6 +1,5 @@
 package models.productCatalog;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.productOrgInfoSystem.createInfoSystem.CreateInfoSystemResponse;
@@ -12,7 +11,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogDeprURL;
+import static core.helper.Configure.ProductCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Log4j2
@@ -43,7 +42,7 @@ public class ProductOrgInfoSystem extends Entity {
 
     @Override
     protected void create() {
-        id = new Http(ProductCatalogDeprURL)
+        id = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -54,7 +53,7 @@ public class ProductOrgInfoSystem extends Entity {
 
     @Override
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(ProductCatalogURL + "/api/v1/")
                 .delete(productName + product + "/organizations/" + organization + "/")
                 .assertStatus(204);
     }

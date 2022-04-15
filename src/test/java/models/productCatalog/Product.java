@@ -1,8 +1,10 @@
 package models.productCatalog;
 
+import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
+import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,8 +46,11 @@ public class Product extends Entity {
     private String category;
     private String jsonTemplate;
     private Map<String, String> info;
-
     public static final String productName = "products/";
+    @Builder.Default
+    protected transient ProductCatalogSteps steps = new ProductCatalogSteps("/products/",
+            "productCatalog/products/createProduct.json",
+            Configure.ProductCatalogURL + "/api/v1/");
 
     @Override
     public Entity init() {
@@ -73,7 +78,10 @@ public class Product extends Entity {
 
     @Override
     protected void create() {
-        CreateProductResponse createProductResponse = new Http(ProductCatalogURL)
+        if (steps.isExists(name)) {
+            steps.deleteByName(name, GetProductsResponse.class);
+        }
+        CreateProductResponse createProductResponse = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post("products/")
                 .assertStatus(201)
@@ -84,7 +92,7 @@ public class Product extends Entity {
 
     @Step("Обновление продукта")
     public void updateProduct() {
-        new Http(ProductCatalogURL)
+        new Http(ProductCatalogURL + "/api/v1/")
                 .body(this.getTemplate().set("$.version", "1.1.1").build())
                 .patch("products/" + productId + "/")
                 .assertStatus(200);
@@ -92,10 +100,11 @@ public class Product extends Entity {
 
     @Override
     protected void delete() {
-        new Http(ProductCatalogURL)
+        new Http(ProductCatalogURL + "/api/v1/")
                 .delete(productName + productId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
-        Assertions.assertFalse(productCatalogSteps.isExists(productName));
+        ProductCatalogSteps steps = new ProductCatalogSteps("/products/",
+                "productCatalog/products/createProduct.json", Configure.ProductCatalogURL + "/api/v1/");
+        Assertions.assertFalse(steps.isExists(productName));
     }
 }

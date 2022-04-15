@@ -13,6 +13,7 @@ import models.Entity;
 import org.json.JSONObject;
 import steps.productCatalog.ProductCatalogSteps;
 
+import static core.helper.Configure.ProductCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -34,8 +35,11 @@ public class Action extends Entity {
     private String updateDt;
     private String locationRestriction;
     private Integer priority;
-    private final String productName = "actions/";
-    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, Configure.ProductCatalogURL);
+    private final String productName = "/api/v1/actions/";
+    @Builder.Default
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/actions/",
+            "productCatalog/actions/createAction.json",
+            Configure.ProductCatalogURL);
 
     @Override
     public Entity init() {
@@ -66,9 +70,8 @@ public class Action extends Entity {
     @Override
     @Step("Создание экшена")
     protected void create() {
-        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate, Configure.ProductCatalogURL);
-        if (steps.isExists(actionName)) {
-            steps.deleteByName(actionName, GetActionsListResponse.class);
+        if (productCatalogSteps.isExists(actionName)) {
+            productCatalogSteps.deleteByName(actionName, GetActionsListResponse.class);
         }
         actionId = new Http(Configure.ProductCatalogURL)
                 .body(toJson())
@@ -85,7 +88,7 @@ public class Action extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete(productName + actionId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, Configure.ProductCatalogURL);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
         assertFalse(productCatalogSteps.isExists(actionName));
     }
 }

@@ -93,7 +93,7 @@ public class ProductCatalogSteps {
 
     @Step("Получение объекта продуктового каталога по Id и Env")
     public GetImpl getByIdAndEnv(String objectId, String env, Class<?> clazz) {
-        return (GetImpl) new Http(ProductCatalogURL)
+        return (GetImpl) new Http(Url)
                 .get(productName + objectId + "/?env={}", env)
                 .extractAs(clazz);
     }
@@ -218,7 +218,7 @@ public class ProductCatalogSteps {
                 .body(object)
                 .patch(productName + id + "/");
     }
-
+    //todo "Получить сообщение, сравнить с ответом"
     @Step("Частичное обновление продукта без токена")
     public void partialUpdateObjectWithOutToken(String id, JSONObject object) {
         new Http(Url)

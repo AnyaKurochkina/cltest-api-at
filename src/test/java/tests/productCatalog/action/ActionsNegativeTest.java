@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisabledIfEnv("prod")
 public class ActionsNegativeTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("actions/",
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
             "productCatalog/actions/createAction.json", Configure.ProductCatalogURL);
 
     @DisplayName("Негативный тест на получение действия по Id без токена")

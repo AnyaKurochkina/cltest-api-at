@@ -194,11 +194,16 @@ public class ServicesTest extends Tests {
     }
 
     @Order(30)
-    @DisplayName("Проверка независимых от версии параметров в сервисах")
+    @DisplayName("Проверка независимого от версии поля is_published в сервисах")
     @TmsLink("738686")
     @Test
     public void checkVersionWhenIndependentParamUpdated() {
-        Services serv = Services.builder().serviceName("services_api_test").version("1.0.0").isPublished(true).build().createObject();
+        Services serv = Services.builder()
+                .serviceName("services_api_test")
+                .version("1.0.0")
+                .isPublished(true)
+                .build()
+                .createObject();
         String version = serv.getVersion();
         Response response = productCatalogSteps.partialUpdateObject(serv.getServiceId(), new JSONObject().put("is_published", false));
         String newVersion = response.jsonPath().get("version");

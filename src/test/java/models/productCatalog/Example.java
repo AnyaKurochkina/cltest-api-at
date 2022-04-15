@@ -49,7 +49,7 @@ public class Example extends Entity {
     @Override
     @Step("Создание примера")
     protected void create() {
-        id = new Http(Configure.ProductCatalogURL)
+        id = new Http(Configure.ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -62,7 +62,7 @@ public class Example extends Entity {
     @Override
     @Step("Удаление примера")
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(Configure.ProductCatalogURL + "/api/v1/")
                 .delete(productName + id + "/")
                 .assertStatus(204);
     }

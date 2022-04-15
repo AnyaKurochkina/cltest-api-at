@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisabledIfEnv("prod")
 public class ActionsTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("actions/",
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
             "productCatalog/actions/createAction.json", Configure.ProductCatalogURL);
 
     @DisplayName("Создание действия в продуктовом каталоге")
@@ -225,7 +225,8 @@ public class ActionsTest extends Tests {
         steps.exportById(action.getActionId());
     }
 
-    @DisplayName("Проверка независимых от версии параметров в действиях")
+    //todo Добавить проверку на allowed groups
+    @DisplayName("Проверка независимого от версии поля restricted_groups в действиях")
     @TmsLink("716373")
     @Test
     public void checkVersionWhenIndependentParamUpdated() {
@@ -240,11 +241,10 @@ public class ActionsTest extends Tests {
         String id = action.getActionId();
         List<String> list = Collections.singletonList("restricted");
         steps.partialUpdateObject(action.getActionId(), new JSONObject().put("restricted_groups", list));
-        List<String> allowed_groups = steps.getJsonPath(id).get("restricted_groups");
+        List<String> restricted_groups = steps.getJsonPath(id).get("restricted_groups");
         String newVersion = steps.getById(id, GetActionResponse.class).getVersion();
-        assertEquals(list, allowed_groups, "Доступные группы не соврадают");
+        assertEquals(list, restricted_groups, "Доступные группы не соврадают");
         assertEquals(version, newVersion, "Версии не совпадают");
-
     }
 
     @DisplayName("Обновление действия с указанием версии в граничных значениях")

@@ -29,7 +29,7 @@ public class GraphListTest extends Tests {
             "productCatalog/graphs/createGraph.json", Configure.ProductCatalogURL);
 
     @DisplayName("Получение списка графов по title используя multisearch")
-    @TmsLink("")
+    @TmsLink("806274")
     @Test
     public void getGraphListByTitleWithMutisearch() {
         String graphName = "create_graph_example_for_get_list_by_title_with_multisearch_test_api";

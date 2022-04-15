@@ -61,7 +61,7 @@ public class ItemVisualTemplates extends Entity {
     @Override
     @Step("Создание шаблона визуализации")
     protected void create() {
-        itemId = new Http(ProductCatalogURL)
+        itemId = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -73,10 +73,10 @@ public class ItemVisualTemplates extends Entity {
     @Override
     @Step("Удаление шаблона визуализации")
     protected void delete() {
-        new Http(ProductCatalogURL)
+        new Http(ProductCatalogURL + "/api/v1/")
                 .delete(productName + itemId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
+        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL + "/api/v1/");
         Assertions.assertEquals(0, steps.getObjectListByName(name, GetVisualTemplateListResponse.class)
                 .getItemsList().size(), "Шаблон визуализации с именем: " + name + ", не удалился");
     }

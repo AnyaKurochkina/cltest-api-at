@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DisabledIfEnv("prod")
 public class ActionsListTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("actions/",
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
             "productCatalog/actions/createAction.json", Configure.ProductCatalogURL);
 
     @DisplayName("Получение списка действий. Список отсортирован по дате создания от нового к старому и имени без учета спец. символов")

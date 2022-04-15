@@ -74,7 +74,7 @@ public class Template extends Entity {
 
     @Override
     protected void create() {
-        CreateTemplateResponse createTemplateResponse = new Http(ProductCatalogURL)
+        CreateTemplateResponse createTemplateResponse = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -85,10 +85,11 @@ public class Template extends Entity {
 
     @Override
     protected void delete() {
-         new Http(ProductCatalogURL)
+         new Http(ProductCatalogURL + "/api/v1/")
                 .delete(productName + templateId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate,
+                ProductCatalogURL + "/api/v1/");
         Assertions.assertFalse(productCatalogSteps.isExists(templateName));
     }
 }

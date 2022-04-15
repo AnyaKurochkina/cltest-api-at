@@ -8,6 +8,7 @@ import httpModels.productCatalog.graphs.createGraph.response.StaticData;
 import httpModels.productCatalog.graphs.createGraph.response.UiSchema;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.graphs.getUsedList.GetUsedListResponse;
+import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,7 +42,7 @@ public class Graph extends Entity {
     private String updateDt;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/",
-            "productCatalog/graphs/createGraph.json", ProductCatalogURL);
+            "productCatalog/graphs/createGraph.json", ProductCatalogURL + "/api/v1/");
 
     public static final String productName = "graphs/";
 
@@ -68,35 +69,8 @@ public class Graph extends Entity {
     @Override
     @Step("Создание графа")
     protected void create() {
-        if (productCatalogSteps.isExists(name)) {
-            String id = productCatalogSteps.getProductObjectIdByNameWithMultiSearch(name, GetGraphsListResponse.class);
-            List<GetUsedListResponse> list = productCatalogSteps.getObjectArrayUsedGraph(id).getList("", GetUsedListResponse.class);
-            for (GetUsedListResponse resp : list) {
-                String type = resp.getType();
-                switch (type) {
-                    case ("Action"):
-                        ProductCatalogSteps actionSteps = new ProductCatalogSteps("actions/", ProductCatalogURL);
-                        if (actionSteps.isExists(resp.getName())) {
-                            actionSteps.deleteById(resp.getId());
-                        }
-                        break;
-                    case ("Product"):
-                        ProductCatalogSteps productSteps = new ProductCatalogSteps("products/", ProductCatalogURL);
-                        if (productSteps.isExists(resp.getName())) {
-                            productSteps.deleteById(resp.getId());
-                        }
-                        break;
-                    case ("Service"):
-                        ProductCatalogSteps serviceSteps = new ProductCatalogSteps("services/", ProductCatalogURL);
-                        if (serviceSteps.isExists(resp.getName())) {
-                            serviceSteps.deleteById(resp.getId());
-                        }
-                        break;
-                }
-            }
-            productCatalogSteps.getDeleteObjectResponse(id).assertStatus(200);
-        }
-        graphId = new Http(ProductCatalogURL)
+        deleteIfExist(name);
+        graphId = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -108,10 +82,52 @@ public class Graph extends Entity {
     @Override
     @Step("Удаление графа")
     protected void delete() {
-        new Http(ProductCatalogURL)
+        new Http(ProductCatalogURL + "/api/v1/")
                 .delete(productName + graphId + "/")
                 .assertStatus(200);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL + "/api/v1/");
         Assertions.assertFalse(productCatalogSteps.isExists(name));
+    }
+
+    private void deleteIfExist(String name) {
+        if (productCatalogSteps.isExists(name)) {
+            String id = productCatalogSteps.getProductObjectIdByNameWithMultiSearch(name, GetGraphsListResponse.class);
+            List<GetUsedListResponse> list = productCatalogSteps.getObjectArrayUsedGraph(id).getList("", GetUsedListResponse.class);
+            for (GetUsedListResponse resp : list) {
+                String type = resp.getType();
+                switch (type) {
+                    case ("Action"):
+                        ProductCatalogSteps actionSteps = new ProductCatalogSteps("actions/", ProductCatalogURL + "/api/v1/");
+                        if (actionSteps.isExists(resp.getName())) {
+                            actionSteps.deleteById(resp.getId());
+                        }
+                        break;
+                    case ("Product"):
+                        ProductCatalogSteps productSteps = new ProductCatalogSteps("products/", ProductCatalogURL + "/api/v1/");
+                        if (productSteps.isExists(resp.getName())) {
+                            GetProductResponse getProduct = (GetProductResponse) productSteps.getById(resp.getId(), GetProductResponse.class);
+                            if (getProduct.isOpen()) {
+                                productSteps.partialUpdateObject(getProduct.getId(), new JSONObject().put("is_open", false));
+                            }
+                            productSteps.deleteById(resp.getId());
+                        }
+                        break;
+                    case ("Service"):
+                        ProductCatalogSteps serviceSteps = new ProductCatalogSteps("services/", ProductCatalogURL + "/api/v1/");
+                        if (serviceSteps.isExists(resp.getName())) {
+                            serviceSteps.deleteById(resp.getId());
+                        }
+                        break;
+                    case ("Graph"):
+                        ProductCatalogSteps graphSteps = new ProductCatalogSteps("graphs/", ProductCatalogURL + "/api/v1/");
+                        if (graphSteps.isExists(resp.getName())) {
+                            deleteIfExist(resp.getName());
+                          //  graphSteps.deleteById(resp.getId());
+                        }
+                        break;
+                }
+            }
+            productCatalogSteps.getDeleteObjectResponse(id).assertStatus(200);
+        }
     }
 }

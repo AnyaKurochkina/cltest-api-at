@@ -1,10 +1,13 @@
 package httpModels.productCatalog.graphs.getUsedList;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Builder
 @Data
@@ -41,4 +44,7 @@ public class GetUsedListResponse{
 
 	@JsonProperty("icon")
 	private String icon;
+
+	@JsonIgnore()
+	private List<Object> graphs;
 }

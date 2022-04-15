@@ -4,6 +4,7 @@ import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.orgDirection.createOrgDirection.response.CreateOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.createOrgDirection.response.ExtraData;
+import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +28,8 @@ public class OrgDirection extends Entity {
     private String jsonTemplate;
     private String title;
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/", "productCatalog/orgDirection/orgDirection.json", ProductCatalogURL);
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/",
+            "productCatalog/orgDirection/orgDirection.json", ProductCatalogURL + "/api/v1/");
 
     private final String productName = "org_direction/";
 
@@ -49,9 +51,12 @@ public class OrgDirection extends Entity {
     @Override
     @Step("Создание направления")
     protected void create() {
-        CreateOrgDirectionResponse createOrgDirectionResponse = new Http(ProductCatalogURL)
+        if (productCatalogSteps.isExists(orgDirectionName)) {
+            productCatalogSteps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
+        }
+        CreateOrgDirectionResponse createOrgDirectionResponse = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
-                .post("org_direction/")
+                .post(productName)
                 .assertStatus(201)
                 .extractAs(CreateOrgDirectionResponse.class);
         orgDirectionId = createOrgDirectionResponse.getId();
@@ -61,10 +66,10 @@ public class OrgDirection extends Entity {
     @Override
     @Step("Удаление направления")
     protected void delete() {
-        new Http(ProductCatalogURL)
+        new Http(ProductCatalogURL + "/api/v1/")
                 .delete(productName + orgDirectionId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL + "/api/v1/");
         Assertions.assertFalse(productCatalogSteps.isExists(orgDirectionName));
     }
 }

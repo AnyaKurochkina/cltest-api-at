@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisabledIfEnv("prod")
 public class GraphTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("graphs/",
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json", Configure.ProductCatalogURL);
 
     @DisplayName("Создание графа")
@@ -232,10 +232,6 @@ public class GraphTest extends Tests {
                 () -> assertEquals(createActionResponse.getActionId(), jsonPath.getString("id[1]")),
                 () -> assertEquals(createServiceResponse.getServiceId(), jsonPath.getString("id[2]"))
         );
-        steps.deleteById("products/", createProductResponse.getProductId());
-        steps.deleteById("services/", createServiceResponse.getServiceId());
-        steps.deleteById("actions/", createActionResponse.getActionId());
-        steps.getDeleteObjectResponse(usedGraphId).assertStatus(200);
     }
 
     @DisplayName("Проверка отсутсвия ' в значениях ключя template_id")
@@ -262,29 +258,22 @@ public class GraphTest extends Tests {
                 .build()
                 .createObject();
         String mainGraphId = mainGraph.getGraphId();
-
-        Graph secondGraph = Graph.builder()
-                .name("second_graph")
-                .build()
-                .createObject();
-        String secondGraphId = secondGraph.getGraphId();
-
         steps.partialUpdateObject(mainGraphId, new JSONObject().put("description", "updateVersion2.0")
                 .put("version", "2.0.0"));
         steps.partialUpdateObject(mainGraphId, new JSONObject().put("description", "updateVersion3.0")
                 .put("version", "3.0.0"));
 
-        Product createProductResponse = Product.builder()
+        Product.builder()
                 .name("product_for_graph_test_api")
                 .graphId(mainGraphId)
                 .build().createObject();
 
-        Services createServiceResponse = Services.builder()
+        Services.builder()
                 .serviceName("service_for_graph_test_api")
                 .graphId(mainGraphId)
                 .build().createObject();
 
-        Action createActionResponse = Action.builder()
+        Action.builder()
                 .actionName("action_for_graph_test_api")
                 .graphId(mainGraphId)
                 .build().createObject();
@@ -295,11 +284,6 @@ public class GraphTest extends Tests {
                 .getErr();
         String version = StringUtils.findByRegex("version: ([0-9.]+)\\)", deleteResponse);
         Assertions.assertEquals("1.0.0", version);
-        steps.deleteById("products/", createProductResponse.getProductId());
-        steps.deleteById("services/", createServiceResponse.getServiceId());
-        steps.deleteById("actions/", createActionResponse.getActionId());
-        steps.getDeleteObjectResponse(mainGraphId).assertStatus(200);
-        steps.getDeleteObjectResponse(secondGraphId).assertStatus(200);
     }
 
     @DisplayName("Удаление графа")
