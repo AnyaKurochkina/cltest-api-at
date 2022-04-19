@@ -29,7 +29,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisabledIfEnv("prod")
 public class ExampleTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("example/", "productCatalog/examples/createExample.json");
+    ProductCatalogSteps steps = new ProductCatalogSteps("example/",
+            "productCatalog/examples/createExample.json", Configure.ProductCatalogURL);
 
     @DisplayName("Создание Example в продуктовом каталоге")
     @TmsLink("")

@@ -47,7 +47,7 @@ public class Configure {
             PortalBackURL = kongURL + "portal/api";
             TarifficatorURL = kongURL + "tarifficator/api";
             CalculatorURL = kongURL + "calculator";
-            ProductCatalogURL = kongURL + "product-catalog/api/v1/";
+            ProductCatalogURL = kongURL + "product-catalog";
             OrderServiceURL = kongURL + "order-service/api";
             StateServiceURL = kongURL + "state-service";
             ReferencesURL = kongURL + "references";

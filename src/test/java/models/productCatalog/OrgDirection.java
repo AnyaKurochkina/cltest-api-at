@@ -1,10 +1,10 @@
 package models.productCatalog;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.orgDirection.createOrgDirection.response.CreateOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.createOrgDirection.response.ExtraData;
+import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +13,8 @@ import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
+
+import static core.helper.Configure.ProductCatalogURL;
 
 @Log4j2
 @Builder
@@ -26,7 +28,8 @@ public class OrgDirection extends Entity {
     private String jsonTemplate;
     private String title;
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/", "productCatalog/orgDirection/orgDirection.json");
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/",
+            "productCatalog/orgDirection/orgDirection.json", ProductCatalogURL + "/api/v1/");
 
     private final String productName = "org_direction/";
 
@@ -48,9 +51,12 @@ public class OrgDirection extends Entity {
     @Override
     @Step("Создание направления")
     protected void create() {
-        CreateOrgDirectionResponse createOrgDirectionResponse = new Http(Configure.ProductCatalogURL)
+        if (productCatalogSteps.isExists(orgDirectionName)) {
+            productCatalogSteps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
+        }
+        CreateOrgDirectionResponse createOrgDirectionResponse = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
-                .post("org_direction/")
+                .post(productName)
                 .assertStatus(201)
                 .extractAs(CreateOrgDirectionResponse.class);
         orgDirectionId = createOrgDirectionResponse.getId();
@@ -60,10 +66,10 @@ public class OrgDirection extends Entity {
     @Override
     @Step("Удаление направления")
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(ProductCatalogURL + "/api/v1/")
                 .delete(productName + orgDirectionId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL + "/api/v1/");
         Assertions.assertFalse(productCatalogSteps.isExists(orgDirectionName));
     }
 }

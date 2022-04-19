@@ -4,6 +4,7 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.action.createAction.response.CreateActionResponse;
+import httpModels.productCatalog.action.getActionList.response.GetActionsListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import models.Entity;
 import org.json.JSONObject;
 import steps.productCatalog.ProductCatalogSteps;
 
+import static core.helper.Configure.ProductCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -28,18 +30,24 @@ public class Action extends Entity {
     private String actionId;
     private String version;
     private String type;
-    private boolean isMultiple;
+    private Boolean isMultiple;
     private String createDt;
     private String updateDt;
     private String locationRestriction;
     private Integer priority;
-    private final String productName = "actions/";
+    private final String productName = "/api/v1/actions/";
+    @Builder.Default
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/actions/",
+            "productCatalog/actions/createAction.json",
+            Configure.ProductCatalogURL);
 
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/actions/createAction.json";
-        Graph graph = Graph.builder().name("graph_for_action_api_test").build().createObject();
-        graphId = graph.getGraphId();
+        if (graphId == null) {
+            Graph graph = Graph.builder().name("graph_for_action_api_test").build().createObject();
+            graphId = graph.getGraphId();
+        }
         return this;
     }
 
@@ -62,6 +70,9 @@ public class Action extends Entity {
     @Override
     @Step("Создание экшена")
     protected void create() {
+        if (productCatalogSteps.isExists(actionName)) {
+            productCatalogSteps.deleteByName(actionName, GetActionsListResponse.class);
+        }
         actionId = new Http(Configure.ProductCatalogURL)
                 .body(toJson())
                 .post(productName)
@@ -77,7 +88,7 @@ public class Action extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete(productName + actionId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
         assertFalse(productCatalogSteps.isExists(actionName));
     }
 }

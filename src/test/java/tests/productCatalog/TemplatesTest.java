@@ -31,7 +31,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TemplatesTest extends Tests {
 
     Template template;
-    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("templates/", "productCatalog/templates/createTemplate.json");
+    ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("templates/",
+            "productCatalog/templates/createTemplate.json", Configure.ProductCatalogURL);
 
     @Order(1)
     @DisplayName("Создание шаблона в продуктовом каталоге")

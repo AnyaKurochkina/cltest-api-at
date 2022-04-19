@@ -1,6 +1,5 @@
 package models.productCatalog;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
@@ -16,6 +15,8 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
+
+import static core.helper.Configure.ProductCatalogURL;
 
 @Log4j2
 @Builder
@@ -53,15 +54,18 @@ public class Services extends Entity {
     private String serviceId;
     private String jsonTemplate;
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("services/", "productCatalog/services/createServices.json" );
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("services/",
+            "productCatalog/services/createServices.json", ProductCatalogURL + "/api/v1/");
 
     private final String productName = "services/";
 
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/services/createServices.json";
-        Graph graph = Graph.builder().name("graph_for_services_api_test").build().createObject();
-        graphId = graph.getGraphId();
+        if (graphId == null) {
+            Graph graph = Graph.builder().name("graph_for_services_api_test").build().createObject();
+            graphId = graph.getGraphId();
+        }
         return this;
     }
 
@@ -79,7 +83,7 @@ public class Services extends Entity {
     @Override
     @Step("Создание сервиса")
     protected void create() {
-        CreateServiceResponse createServiceResponse = new Http(Configure.ProductCatalogURL)
+        CreateServiceResponse createServiceResponse = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post("services/")
                 .assertStatus(201)
@@ -91,10 +95,10 @@ public class Services extends Entity {
     @Override
     @Step("Удаление сервиса")
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(ProductCatalogURL + "/api/v1/")
                 .delete("services/" + serviceId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL + "/api/v1/");
         Assertions.assertFalse(productCatalogSteps.isExists(serviceName));
     }
 }
