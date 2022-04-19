@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import steps.orderService.OrderServiceSteps;
 import ui.uiSteps.AuthSteps;
 import ui.uiSteps.MainSteps;
+import ui.uiSteps.OrgStructureSteps;
 import ui.uiSteps.OrganizationSteps;
 
 import static core.helper.Configure.*;
@@ -71,17 +72,34 @@ public class VmWareOrganization extends IProduct {
     }
 
     protected void createUi() {
+        //Логинимся
         AuthSteps authSteps = new AuthSteps();
-        authSteps.signIn(login, password);
+        authSteps.signIn();
+        //Выбираем организацию
+        MainSteps mainSteps = new MainSteps();
+        mainSteps.goToOrgStructure();
+        OrgStructureSteps orgStructureSteps = new OrgStructureSteps();
+        orgStructureSteps
+                .chooseGlobalOrganization()
+                .chooseProject();
+        //Создаем VmWare организацию
         OrganizationSteps organizationSteps = new OrganizationSteps();
         organizationName = organizationSteps.createOrganization();
     }
 
     protected void deleteUi() {
+        //Логинимся
         AuthSteps authSteps = new AuthSteps();
-        authSteps.signIn(login, password);
+        authSteps.signIn();
+        //Выбираем организацию
         MainSteps mainSteps = new MainSteps();
-        mainSteps.createOrganization();
+        mainSteps.goToOrgStructure();
+        OrgStructureSteps orgStructureSteps = new OrgStructureSteps();
+        orgStructureSteps
+                .chooseGlobalOrganization()
+                .chooseProject();
+        //Удаялем VmWare организацию
+        mainSteps.goToListOfOrganization();
         OrganizationSteps organizationSteps = new OrganizationSteps();
         organizationSteps.deleteOrganizationFromListOfOrganizations(organizationName);
     }

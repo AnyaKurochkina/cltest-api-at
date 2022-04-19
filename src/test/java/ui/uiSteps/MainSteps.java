@@ -25,4 +25,11 @@ public class MainSteps {
         MainPage mainPage = new MainPage();
         mainPage.goToOrgStructure();
     }
+
+    @Step("Переход к списку организаций")
+    public void goToListOfOrganization(){
+        MainPage mainPage = new MainPage();
+        mainPage.goToListOfOrganizations();
+        OrganizationPage organizationPage = new OrganizationPage();
+    }
 }

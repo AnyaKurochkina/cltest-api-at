@@ -28,7 +28,7 @@ public class DataCenterTests {
         orgStructureSteps
                 .chooseGlobalOrganization()
                 .chooseProject();
-        //Создаем организацию
+        //Создаем VmWare организацию
         OrganizationSteps organizationSteps = new OrganizationSteps();
         String orgName = organizationSteps.createOrganization();
         DataCenterSteps dataCenterSteps = new DataCenterSteps();
@@ -38,7 +38,7 @@ public class DataCenterTests {
         dataCenterSteps.stepInDataCenter(nameOfDataCentre);
         //Удаляем дата центр
         dataCenterSteps.deleteDataCenter(nameOfDataCentre);
-        //Удаляем организацию
+        //Удаляем VmWare организацию
         organizationSteps.deleteOrganizationFromOrganizationPage(orgName);
     }
 }

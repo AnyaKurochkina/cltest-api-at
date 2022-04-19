@@ -29,10 +29,10 @@ public class VmWareOrganizationsTests {
         orgStructureSteps
                 .chooseGlobalOrganization()
                 .chooseProject();
-        //Создаем организацию
+        //Создаем VmWare организацию
         OrganizationSteps organizationSteps = new OrganizationSteps();
         String orgName = organizationSteps.createOrganization();
-        //Удаялем организацию
+        //Удаялем VmWare организацию
         organizationSteps.deleteOrganizationFromOrganizationPage(orgName);
     }
 }
