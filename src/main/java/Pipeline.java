@@ -50,7 +50,7 @@ public class Pipeline {
                     .response()
                     .jsonPath();
             testPlanName = path.getString("name");
-            List<String> tags = path.getList("tags");
+            List<String> tags = path.getList("tags.name");
             threadCount = tags.stream().filter(s -> s.startsWith("thread_count=")).findFirst().orElse("thread_count=").substring(13);
             if (threadCount.length() > 0) {
                 threadCount = " -Djunit.jupiter.execution.parallel.config.fixed.parallelism=" + threadCount;
