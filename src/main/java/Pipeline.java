@@ -19,7 +19,7 @@ public class Pipeline {
     final static AppProperties properties = new AppProperties();
     final static String TEST_RUN_ID = "testRunId";
     final static String TEST_PLAN_ID = "testPlanId";
-    final static String TEST_SECRET = "Secret";
+//    final static String TEST_SECRET = "Secret";
 
     final static String pathTestResourcesDir = Paths.get("src/test/resources").toAbsolutePath().toString();
     static String ENV = "prod";
@@ -77,8 +77,8 @@ public class Pipeline {
                 externalIds.add(externalId);
                 writer.println(externalId + "=" + result.query("/configuration/id"));
             }
-            String command = "-DfailIfNoTests=false -Dmaven.test.skip=false -Dsecret=" + argsMap.get(TEST_SECRET) +
-                    threadCount + " -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestRunId=" +
+            String command = "-DfailIfNoTests=false -Dmaven.test.skip=false" + threadCount +
+                    " -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestRunId=" +
                     argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
 
             System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");
