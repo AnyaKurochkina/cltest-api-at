@@ -3,6 +3,7 @@ package models.orderService.interfaces;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
+import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.utils.Waiting;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
@@ -179,6 +180,14 @@ public abstract class IProduct extends Entity {
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
         Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
 
+    }
+
+    //example: https://cloud.vtb.ru/vm/orders/ecb3567b-afa6-43a4-8a49-6e0ef5b1a952/topics?context=proj-7ll0yy5zsc&type=project&org=vtb
+    public <T extends Entity> T buildFromLink(String link){
+        projectId = StringUtils.findByRegex("context=([^&]*)", link);
+        orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
+        productId = ((String) OrderServiceSteps.getProductsField(this, "product_id"));
+        return (T) this;
     }
 
     //Изменить конфигурацию
