@@ -57,6 +57,7 @@ public class OrganizationPage implements Loadable {
         deleteOrgBtn.shouldBe(Condition.enabled).click();
         idForDeleteInput.shouldBe(Condition.visible).val(idForDelete.getText());
         confirmDeleteBtn.shouldBe(Condition.enabled).click();
+        System.out.println();
     }
 
     public void checkLoader() {

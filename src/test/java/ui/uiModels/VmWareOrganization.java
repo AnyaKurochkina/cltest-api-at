@@ -5,15 +5,13 @@ import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.restassured.path.json.JsonPath;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.authorizer.Organization;
 import models.authorizer.Project;
+import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
 import models.portalBack.AccessGroup;
 import org.json.JSONObject;
@@ -26,17 +24,18 @@ import ui.uiSteps.OrganizationSteps;
 import static core.helper.Configure.*;
 import static core.helper.Configure.getAppProp;
 
-//@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
-//@EqualsAndHashCode(callSuper = true)
-//@Log4j2
-//@Data
-//@NoArgsConstructor
-//@SuperBuilder
-public class VmWareOrganization extends Entity {
+@ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
+@EqualsAndHashCode(callSuper = true)
+@Log4j2
+@Data
+@NoArgsConstructor
+@SuperBuilder
+public class VmWareOrganization extends IProduct {
     @JsonIgnore
     private static final String login = getAppProp("user.login");
     @JsonIgnore
     private static final String password = getAppProp("user.password");
+
     private String organizationName;
 
     @Override
@@ -56,37 +55,17 @@ public class VmWareOrganization extends Entity {
         JsonPath jsonPath = new Http(PortalBackURL)
                 .body(toJson())
                 .setRole(Role.T1ADMIN)
-                .post("projects/proj-4h86otzsew/vdc_organizations")
+                .post("/v1/projects/proj-4h86otzsew/vdc_organizations")
                 .assertStatus(201)
                 .jsonPath();
         organizationName = jsonPath.getString("name");
-    }
-
-    @Test
-    protected void testec() {
-
-        JsonPath jsonPath = new Http(PortalBackURL)
-                .body(toJson())
-                .setRole(Role.T1ADMIN)
-                .post("projects/proj-4h86otzsew/vdc_organizations")
-                .assertStatus(201)
-                .jsonPath();
-
-        organizationName = jsonPath.getString("name");
-
-        new Http(PortalBackURL)
-                .setRole(Role.T1ADMIN)
-                .delete("projects/proj-4h86otzsew/vdc_organizations/" + organizationName)
-                .assertStatus(204)
-                .jsonPath();
-        System.out.println();
     }
 
     @Override
     protected void delete() {
         new Http(PortalBackURL)
                 .setRole(Role.T1ADMIN)
-                .delete("projects/proj-4h86otzsew/vdc_organizations/" + organizationName)
+                .delete("/v1/projects/proj-4h86otzsew/vdc_organizations/" + organizationName)
                 .assertStatus(204)
                 .jsonPath();
     }

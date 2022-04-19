@@ -3,8 +3,6 @@ package ui.uiTests;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ui.pages.MainPage;
-import ui.pages.OrgStructurePage;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiSteps.AuthSteps;
 import ui.uiSteps.MainSteps;
@@ -12,7 +10,6 @@ import ui.uiSteps.OrgStructureSteps;
 import ui.uiSteps.OrganizationSteps;
 
 import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.Selenide.*;
 
 @ExtendWith(ConfigExtension.class)
 public class VmWareOrganizationsTests {
