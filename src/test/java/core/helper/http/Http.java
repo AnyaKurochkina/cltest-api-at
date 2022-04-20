@@ -84,7 +84,6 @@ public class Http {
         return this;
     }
 
-    @SneakyThrows
     public Response get(String path, Object... args) {
         this.method = "GET";
         for (Object arg : args)
@@ -93,6 +92,10 @@ public class Http {
                     .replaceAll(" ", "%20"));
         this.path = StringUtils.format(path, args);
         return request();
+    }
+
+    public Response getOrThrow(String path, Object... args) throws ConnectException{
+        return get(path, args);
     }
 
     public Response delete(String path, Object... args) {
@@ -192,7 +195,6 @@ public class Http {
         return response;
     }
 
-    @SneakyThrows
     @SuppressWarnings("deprecation")
     private Response filterRequest() {
         Assertions.assertTrue(host.length() > 0, "Не задан host");
@@ -292,10 +294,10 @@ public class Http {
         return URLEncodedUtils.parse(params, StandardCharsets.UTF_8).stream().collect(Collectors.toMap(NameValuePair::getName, p -> Optional.ofNullable(p.getValue()).orElse("")));
     }
 
-    public static class ConnectException extends AssertionError {
-        public ConnectException(String errorMessage) {
-            super(errorMessage);
-        }
-
-    }
+//    public static class ConnectException extends AssertionError {
+//        public ConnectException(String errorMessage) {
+//            super(errorMessage);
+//        }
+//
+//    }
 }

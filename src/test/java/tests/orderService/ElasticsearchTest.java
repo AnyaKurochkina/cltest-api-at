@@ -50,10 +50,10 @@ public class ElasticsearchTest extends Tests {
             try {
                 response = new Http(apiUrl)
                         .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
-                        .get("/_cat/nodes?v=true&pretty")
+                        .getOrThrow("/_cat/nodes?v=true&pretty")
                         .assertStatus(200)
                         .toString();
-            } catch (Http.ConnectException e) {
+            } catch (ConnectException e) {
                 elastic.connectVmException(e.getMessage());
             }
             for (String ip : ipList)
@@ -72,10 +72,10 @@ public class ElasticsearchTest extends Tests {
             try {
                 response = new Http(exporterUrl)
                         .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
-                        .get("/metrics")
+                        .getOrThrow("/metrics")
                         .assertStatus(200)
                         .toString();
-            } catch (Http.ConnectException e) {
+            } catch (ConnectException e) {
                 elastic.connectVmException(e.getMessage());
             }
             Assertions.assertTrue(response.contains(",color=\"green\"} 1"),
@@ -94,9 +94,9 @@ public class ElasticsearchTest extends Tests {
             try {
                 new Http(kibanaUrl)
                         .setSourceToken("Basic " + Base64.getEncoder().encodeToString(("admin:" + elastic.getAdminPassword()).getBytes(StandardCharsets.UTF_8)))
-                        .get("/status")
+                        .getOrThrow("/status")
                         .assertStatus(200);
-            } catch (Http.ConnectException e) {
+            } catch (ConnectException e) {
                 elastic.connectVmException(e.getMessage());
             }
         }
