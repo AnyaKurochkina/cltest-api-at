@@ -177,21 +177,23 @@ public class Http {
 
     private Response request() {
         Response response = null;
-        for (int i = 0; i < 3; i++) {
-//            try {
+        for (int i = 0; i < 2; i++) {
+            try {
                 response = filterRequest();
-//            } catch (AssertionFailedError e) {
-//                Waiting.sleep(6000);
-//                continue;
-//            }
+            } catch (AssertionFailedError e) {
+                Waiting.sleep(6000);
+                continue;
+            }
             if (response.status() == 504 && method.equals("GET")) {
                 Waiting.sleep(2000);
                 continue;
             }
             break;
         }
-//        if (Objects.isNull(response))
-//            throw new ConnectException(String.format("Ошибка отправки http запроса %s. (Connection refused)", (host + path)));
+        if (Objects.isNull(response)) {
+            Waiting.sleep(5000);
+            response = filterRequest();
+        }
         return response;
     }
 
