@@ -94,7 +94,7 @@ public class Http {
         return request();
     }
 
-    public Response getOrThrow(String path, Object... args) throws ConnectException{
+    public Response getOrThrow(String path, Object... args) throws ConnectException {
         return get(path, args);
     }
 
@@ -197,6 +197,7 @@ public class Http {
         return response;
     }
 
+    @SneakyThrows
     @SuppressWarnings("deprecation")
     private Response filterRequest() {
         Assertions.assertTrue(host.length() > 0, "Не задан host");
@@ -269,6 +270,8 @@ public class Http {
                 }
             }
         } catch (Exception e) {
+            if(e instanceof ConnectException)
+                throw e;
             if (response != null)
                 status = response.getStatusCode();
             Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e, status));
