@@ -25,6 +25,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @SuperBuilder
+@Deprecated
 public class PostgresPro extends IProduct {
     private final static String DB_NAME_PATH = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.any{it.db_name=='%s'}";
     //    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";

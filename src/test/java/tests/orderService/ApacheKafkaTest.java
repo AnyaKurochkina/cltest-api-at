@@ -15,6 +15,7 @@ import tests.Tests;
 @Epic("Продукты")
 @Feature("ApacheKafka")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafka"), @Tag("prod")})
+@Deprecated
 public class ApacheKafkaTest extends Tests {
 
     @TmsLink("377693")
