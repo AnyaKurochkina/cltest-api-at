@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class VisualTemplateListTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/item_visual_templates/",
-            "productCatalog/itemVisualTemplate/createItemVisual.json", Configure.ProductCatalogURL);
+            "productCatalog/itemVisualTemplate/createItemVisual.json");
     CompactTemplate compactTemplate = CompactTemplate.builder().name(new Name("name"))
             .type(new Type("type")).status(new Status("status")).build();
     FullTemplate fullTemplate = FullTemplate.builder().type("type").value(Arrays.asList("value", "value2")).build();

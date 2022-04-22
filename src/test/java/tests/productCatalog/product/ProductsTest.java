@@ -34,8 +34,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisabledIfEnv("prod")
 public class ProductsTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("/products/",
-            "productCatalog/products/createProduct.json", Configure.ProductCatalogURL + "/api/v1/");
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/products/",
+            "productCatalog/products/createProduct.json");
 
     Map<String, String> info = new LinkedHashMap<String, String>() {{
         put("information", "testData");

@@ -1,6 +1,5 @@
 package tests.productCatalog.example;
 
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import org.junit.DisabledIfEnv;
@@ -15,6 +14,6 @@ import tests.Tests;
 public class ExampleNegativeTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("example/",
-            "productCatalog/examples/createExample.json", Configure.ProductCatalogURL);
+            "productCatalog/examples/createExample.json");
 
 }

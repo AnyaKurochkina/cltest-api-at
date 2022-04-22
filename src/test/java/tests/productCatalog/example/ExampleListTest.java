@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ExampleListTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/example/",
-            "productCatalog/examples/createExample.json", Configure.ProductCatalogURL);
+            "productCatalog/examples/createExample.json");
 
     @DisplayName("Получение списка Examples")
     @TmsLink("822245")

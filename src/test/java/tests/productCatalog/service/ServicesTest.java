@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ServicesTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/services/",
-            "/productCatalog/services/createServices.json", Configure.ProductCatalogURL);
+            "/productCatalog/services/createServices.json");
 
     @DisplayName("Создание сервиса в продуктовом каталоге")
     @TmsLink("643448")

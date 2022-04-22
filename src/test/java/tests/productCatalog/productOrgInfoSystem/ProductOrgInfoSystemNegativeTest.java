@@ -1,6 +1,5 @@
 package tests.productCatalog.productOrgInfoSystem;
 
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -22,7 +21,7 @@ import java.util.Collections;
 public class ProductOrgInfoSystemNegativeTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/product_org_info_system/",
-            "productCatalog/productOrgInfoSystem/createInfoSystem.json", Configure.ProductCatalogURL);
+            "productCatalog/productOrgInfoSystem/createInfoSystem.json");
 
     @DisplayName("Негативный тест на создание product_org_info_system c несуществующей организацией")
     @TmsLink("822013")

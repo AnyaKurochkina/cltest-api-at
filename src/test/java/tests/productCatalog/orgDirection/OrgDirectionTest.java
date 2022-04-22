@@ -1,6 +1,5 @@
 package tests.productCatalog.orgDirection;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
@@ -34,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class OrgDirectionTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/org_direction/",
-            "productCatalog/orgDirection/orgDirection.json", Configure.ProductCatalogURL);
+            "productCatalog/orgDirection/orgDirection.json");
 
     @DisplayName("Создание направления в продуктовом каталоге")
     @TmsLink("643303")

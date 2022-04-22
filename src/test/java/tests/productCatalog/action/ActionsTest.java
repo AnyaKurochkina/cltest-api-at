@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ActionsTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
-            "productCatalog/actions/createAction.json", Configure.ProductCatalogURL);
+            "productCatalog/actions/createAction.json");
 
     @DisplayName("Создание действия в продуктовом каталоге")
     @TmsLink("640545")

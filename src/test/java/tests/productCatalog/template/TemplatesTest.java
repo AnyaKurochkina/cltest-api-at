@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TemplatesTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/templates/",
-            "productCatalog/templates/createTemplate.json", Configure.ProductCatalogURL);
+            "productCatalog/templates/createTemplate.json");
 
     @DisplayName("Создание шаблона в продуктовом каталоге")
     @TmsLink("643548")

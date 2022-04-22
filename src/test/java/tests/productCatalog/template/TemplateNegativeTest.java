@@ -1,6 +1,5 @@
 package tests.productCatalog.template;
 
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -21,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DisabledIfEnv("prod")
 public class TemplateNegativeTest extends Tests {
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/templates/",
-            "productCatalog/templates/createTemplate.json", Configure.ProductCatalogURL);
+            "productCatalog/templates/createTemplate.json");
 
     @DisplayName("Негативный тест на получение шаблона по Id без токена")
     @TmsLink("643556")
