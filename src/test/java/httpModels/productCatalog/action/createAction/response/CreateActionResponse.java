@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Data
@@ -28,6 +29,9 @@ public class CreateActionResponse{
 
 	@JsonProperty("icon")
 	private String icon;
+
+	@JsonProperty("current_version")
+	private String currentVersion;
 
 	@JsonProperty("graph_version")
 	private String graphVersion;
@@ -121,4 +125,7 @@ public class CreateActionResponse{
 
 	@JsonProperty("update_dt")
 	private String update_dt;
+
+	@JsonProperty("extra_data")
+	private Map<String, String> extraData;
 }

@@ -88,6 +88,7 @@ public abstract class Entity implements AutoCloseable {
         return ObjectPoolService.create(this, exclusiveAccess, isPublic);
     }
 
+    @SneakyThrows
     public void negativeCreateRequest(int expectedStatus) {
         try {
             init();
@@ -95,7 +96,9 @@ public abstract class Entity implements AutoCloseable {
         } catch (Http.StatusResponseException e) {
             if(e.getStatus() != expectedStatus)
                 throw e;
+            return;
         }
+        throw new Exception("Статус код в ответе не совпадает с ожидаемым");
     }
 
     public void negativeDeleteRequest(int expectedStatus) {

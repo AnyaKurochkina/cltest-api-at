@@ -4,6 +4,7 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
+import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,8 @@ import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
 import java.util.Map;
+
+import static core.helper.Configure.ProductCatalogURL;
 
 @Log4j2
 @Builder
@@ -43,14 +46,22 @@ public class Product extends Entity {
     private String category;
     private String jsonTemplate;
     private Map<String, String> info;
+    private String currentVersion;
+    private Map<String, String> extraData;
 
     public static final String productName = "products/";
+    @Builder.Default
+    protected transient ProductCatalogSteps steps = new ProductCatalogSteps("/products/",
+            "productCatalog/products/createProduct.json",
+            Configure.ProductCatalogURL + "/api/v1/");
 
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/products/createProduct.json";
-        Graph graph = Graph.builder().name("graph_for_product_api_test").build().createObject();
-        graphId = graph.getGraphId();
+        if (graphId == null) {
+            Graph graph = Graph.builder().name("graph_for_product_api_test").build().createObject();
+            graphId = graph.getGraphId();
+        }
         return this;
     }
 
@@ -65,12 +76,18 @@ public class Product extends Entity {
                 .set("$.category", category)
                 .set("$.info", info)
                 .set("$.is_open", isOpen)
+                .set("$.current_version", currentVersion)
+                .set("$.extra_data", extraData)
+                .set("$.information_systems", informationSystems)
                 .build();
     }
 
     @Override
     protected void create() {
-        CreateProductResponse createProductResponse = new Http(Configure.ProductCatalogURL)
+        if (steps.isExists(name)) {
+            steps.deleteByName(name, GetProductsResponse.class);
+        }
+        CreateProductResponse createProductResponse = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post("products/")
                 .assertStatus(201)
@@ -81,7 +98,7 @@ public class Product extends Entity {
 
     @Step("Обновление продукта")
     public void updateProduct() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(ProductCatalogURL + "/api/v1/")
                 .body(this.getTemplate().set("$.version", "1.1.1").build())
                 .patch("products/" + productId + "/")
                 .assertStatus(200);
@@ -89,10 +106,11 @@ public class Product extends Entity {
 
     @Override
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(ProductCatalogURL + "/api/v1/")
                 .delete(productName + productId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(productName));
+        ProductCatalogSteps steps = new ProductCatalogSteps("/products/",
+                "productCatalog/products/createProduct.json", Configure.ProductCatalogURL + "/api/v1/");
+        Assertions.assertFalse(steps.isExists(productName));
     }
 }

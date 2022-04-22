@@ -1,6 +1,5 @@
 package models.productCatalog;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.CompactTemplate;
@@ -19,6 +18,8 @@ import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
 
+import static core.helper.Configure.ProductCatalogURL;
+
 @Log4j2
 @Builder
 @Getter
@@ -35,7 +36,7 @@ public class ItemVisualTemplates extends Entity {
     private String itemId;
     private String title;
     private String jsonTemplate;
-    private final String productName = "item_visual_templates/";
+    private final String productName = "/api/v1/item_visual_templates/";
 
     @Override
     public Entity init() {
@@ -60,7 +61,11 @@ public class ItemVisualTemplates extends Entity {
     @Override
     @Step("Создание шаблона визуализации")
     protected void create() {
-        itemId = new Http(Configure.ProductCatalogURL)
+        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
+        if (steps.isExists(name)) {
+            steps.deleteByName(name, GetVisualTemplateListResponse.class);
+        }
+        itemId = new Http(ProductCatalogURL)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -72,10 +77,10 @@ public class ItemVisualTemplates extends Entity {
     @Override
     @Step("Удаление шаблона визуализации")
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
+        new Http(ProductCatalogURL)
                 .delete(productName + itemId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
+        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
         Assertions.assertEquals(0, steps.getObjectListByName(name, GetVisualTemplateListResponse.class)
                 .getItemsList().size(), "Шаблон визуализации с именем: " + name + ", не удалился");
     }

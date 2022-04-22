@@ -1,12 +1,12 @@
 package models.productCatalog;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.template.createTemplate.response.CreateTemplateResponse;
 import httpModels.productCatalog.template.createTemplate.response.Input;
 import httpModels.productCatalog.template.createTemplate.response.Output;
 import httpModels.productCatalog.template.createTemplate.response.PrintedOutput;
+import httpModels.productCatalog.template.getTemplate.response.GetTemplateResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
+
+import static core.helper.Configure.ProductCatalogURL;
 
 @Log4j2
 @Builder
@@ -73,7 +75,12 @@ public class Template extends Entity {
 
     @Override
     protected void create() {
-        CreateTemplateResponse createTemplateResponse = new Http(Configure.ProductCatalogURL)
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate,
+                ProductCatalogURL + "/api/v1/");
+        if (productCatalogSteps.isExists(templateName)) {
+            productCatalogSteps.deleteByName(templateName, GetTemplateResponse.class);
+        }
+        CreateTemplateResponse createTemplateResponse = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -84,10 +91,11 @@ public class Template extends Entity {
 
     @Override
     protected void delete() {
-         new Http(Configure.ProductCatalogURL)
+         new Http(ProductCatalogURL + "/api/v1/")
                 .delete(productName + templateId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate,
+                ProductCatalogURL + "/api/v1/");
         Assertions.assertFalse(productCatalogSteps.isExists(templateName));
     }
 }
