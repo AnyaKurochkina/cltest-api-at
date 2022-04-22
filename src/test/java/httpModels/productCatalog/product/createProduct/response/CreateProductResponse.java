@@ -18,6 +18,9 @@ public class CreateProductResponse{
 	@JsonProperty("allowed_paths")
 	private List<Object> allowedPaths;
 
+	@JsonProperty("current_version")
+	private String currentVersion;
+
 	@JsonProperty("version_list")
 	private List<String> versionList;
 
@@ -98,4 +101,7 @@ public class CreateProductResponse{
 
 	@JsonProperty("info")
 	private Map<String, String> info;
+
+	@JsonProperty("extra_data")
+	private Map<String, String> extra_data;
 }

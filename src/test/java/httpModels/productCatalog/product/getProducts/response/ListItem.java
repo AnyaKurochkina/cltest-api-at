@@ -20,6 +20,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("allowed_paths")
     private List<Object> allowedPaths;
 
+    @JsonProperty("current_version")
+    private String currentVersion;
+
     @JsonProperty("version_list")
     private List<String> versionList;
 
@@ -101,6 +104,8 @@ public class ListItem implements ItemImpl {
     @JsonProperty("update_dt")
     private String update_dt;
 
+    @JsonProperty("extra_data")
+    private Map<String, String> extraData;
 
     @Override
     public String getName() {

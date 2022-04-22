@@ -5,6 +5,7 @@ import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.jinja2.createJinja2.response.CreateJinjaResponse;
 import httpModels.productCatalog.jinja2.createJinja2.response.Jinja2Data;
+import httpModels.productCatalog.jinja2.getJinjaResponse.GetJinjaResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,6 +48,11 @@ public class Jinja2 extends Entity {
     @Override
     @Step("Создание jinja2")
     protected void create() {
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate,
+                Configure.ProductCatalogURL + "/api/v1/");
+        if (productCatalogSteps.isExists(name)) {
+            productCatalogSteps.deleteByName(name, GetJinjaResponse.class);
+        }
         jinjaId = new Http(Configure.ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post(productName)

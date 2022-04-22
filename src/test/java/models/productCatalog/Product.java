@@ -46,6 +46,9 @@ public class Product extends Entity {
     private String category;
     private String jsonTemplate;
     private Map<String, String> info;
+    private String currentVersion;
+    private Map<String, String> extraData;
+
     public static final String productName = "products/";
     @Builder.Default
     protected transient ProductCatalogSteps steps = new ProductCatalogSteps("/products/",
@@ -73,6 +76,9 @@ public class Product extends Entity {
                 .set("$.category", category)
                 .set("$.info", info)
                 .set("$.is_open", isOpen)
+                .set("$.current_version", currentVersion)
+                .set("$.extra_data", extraData)
+                .set("$.information_systems", informationSystems)
                 .build();
     }
 

@@ -3,6 +3,7 @@
   "version": "1.0.3",
   "direction_id": "5b4b6933-e0b1-41f8-aad7-07294e0ddf5c",
   "direction": "Linux",
+  "current_version": "",
   "name": "create_service_test",
   "title": "create_service_test",
   "description": "Перезагрузка операционной системы",
@@ -23,12 +24,8 @@
   "restricted_groups": [
   ],
   "graph_version": "",
-  "last_version": "1.0.3",
+  "last_version": "1.0.0",
   "version_list": [
-    "1.0.0",
-    "1.0.1",
-    "1.0.2",
-    "1.0.3"
   ],
   "graph_version_calculated": "1.0.60",
   "graph_id": "f23e9a26-1342-4130-b678-305886cf2fd8",

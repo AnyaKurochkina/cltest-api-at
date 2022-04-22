@@ -140,4 +140,18 @@ public class ProductNegativeTest extends Tests {
                 .createObject();
         steps.deleteObjectByIdWithOutToken(product.getProductId());
     }
+
+    @Test
+    @DisplayName("Негативный тест на передачу невалидного значения current_version в продуктах")
+    @TmsLink("821980")
+    public void setInvalidCurrentVersionProduct() {
+        String name = "invalid_current_version_product_test_api";
+        Product product = Product.builder()
+                .name(name)
+                .title(name)
+                .version("1.0.0")
+                .build().createObject();
+        String productId = product.getProductId();
+        steps.partialUpdateObject(productId, new JSONObject().put("current_version", "2")).assertStatus(500);
+    }
 }
