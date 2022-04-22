@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
+import tests.Tests;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Epic("Продуктовый каталог")
 @Feature("Примеры")
 @DisabledIfEnv("prod")
-public class ExampleListTest {
+public class ExampleListTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/example/",
             "productCatalog/examples/createExample.json", Configure.ProductCatalogURL);
