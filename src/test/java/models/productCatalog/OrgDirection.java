@@ -29,9 +29,9 @@ public class OrgDirection extends Entity {
     private String title;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/",
-            "productCatalog/orgDirection/orgDirection.json", ProductCatalogURL + "/api/v1/");
+            "productCatalog/orgDirection/orgDirection.json");
 
-    private final String productName = "org_direction/";
+    private final String productName = "/api/v1/org_direction/";
 
     @Override
     public Entity init() {
@@ -54,7 +54,7 @@ public class OrgDirection extends Entity {
         if (productCatalogSteps.isExists(orgDirectionName)) {
             productCatalogSteps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
         }
-        CreateOrgDirectionResponse createOrgDirectionResponse = new Http(ProductCatalogURL + "/api/v1/")
+        CreateOrgDirectionResponse createOrgDirectionResponse = new Http(ProductCatalogURL)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -66,10 +66,10 @@ public class OrgDirection extends Entity {
     @Override
     @Step("Удаление направления")
     protected void delete() {
-        new Http(ProductCatalogURL + "/api/v1/")
+        new Http(ProductCatalogURL)
                 .delete(productName + orgDirectionId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL + "/api/v1/");
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         Assertions.assertFalse(productCatalogSteps.isExists(orgDirectionName));
     }
 }

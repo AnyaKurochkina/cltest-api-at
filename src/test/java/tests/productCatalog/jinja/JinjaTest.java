@@ -1,6 +1,5 @@
 package tests.productCatalog.jinja;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
@@ -12,7 +11,10 @@ import io.qameta.allure.TmsLink;
 import models.productCatalog.Jinja2;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -28,8 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JinjaTest extends Tests {
 
     String template = "productCatalog/jinja2/createJinja.json";
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/jinja2_templates/",
-            template, Configure.ProductCatalogURL);
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/jinja2_templates/", template);
 
 
     @DisplayName("Создание jinja в продуктовом каталоге")

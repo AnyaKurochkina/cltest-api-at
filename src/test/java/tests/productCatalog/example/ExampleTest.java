@@ -1,6 +1,5 @@
 package tests.productCatalog.example;
 
-import core.helper.Configure;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.example.createExample.CreateExampleResponse;
 import httpModels.productCatalog.example.getExampleList.GetExampleListResponse;
@@ -25,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ExampleTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/example/",
-            "productCatalog/examples/createExample.json", Configure.ProductCatalogURL);
+            "productCatalog/examples/createExample.json");
 
     @DisplayName("Создание Example в продуктовом каталоге")
     @TmsLink("822241")

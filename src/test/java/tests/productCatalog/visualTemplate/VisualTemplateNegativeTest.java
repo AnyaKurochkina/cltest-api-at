@@ -1,6 +1,5 @@
 package tests.productCatalog.visualTemplate;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.*;
@@ -29,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class VisualTemplateNegativeTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/item_visual_templates/",
-            "productCatalog/itemVisualTemplate/createItemVisual.json", Configure.ProductCatalogURL);
+            "productCatalog/itemVisualTemplate/createItemVisual.json");
     CompactTemplate compactTemplate = CompactTemplate.builder().name(new Name("name"))
             .type(new Type("type")).status(new Status("status")).build();
     FullTemplate fullTemplate = FullTemplate.builder().type("type").value(Arrays.asList("value", "value2")).build();
@@ -79,7 +78,7 @@ public class VisualTemplateNegativeTest extends Tests {
     @Test
     public void createVisualTemplateWithNonUniqueName() {
         String name = "create_with_same_name_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplates.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))

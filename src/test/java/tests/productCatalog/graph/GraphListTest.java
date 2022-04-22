@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GraphListTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/graphs/",
-            "productCatalog/graphs/createGraph.json", Configure.ProductCatalogURL);
+            "productCatalog/graphs/createGraph.json");
 
     @DisplayName("Получение списка графов по title используя multisearch")
     @TmsLink("806274")

@@ -27,7 +27,7 @@ public class Jinja2 extends Entity {
     private String title;
     private String jsonTemplate;
     private String jinjaId;
-    private final String productName = "jinja2_templates/";
+    private final String productName = "/api/v1/jinja2_templates/";
 
     @Override
     public Entity init() {
@@ -48,12 +48,11 @@ public class Jinja2 extends Entity {
     @Override
     @Step("Создание jinja2")
     protected void create() {
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate,
-                Configure.ProductCatalogURL + "/api/v1/");
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         if (productCatalogSteps.isExists(name)) {
             productCatalogSteps.deleteByName(name, GetJinjaResponse.class);
         }
-        jinjaId = new Http(Configure.ProductCatalogURL + "/api/v1/")
+        jinjaId = new Http(Configure.ProductCatalogURL)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -65,11 +64,10 @@ public class Jinja2 extends Entity {
     @Override
     @Step("Удаление jinja2")
     protected void delete() {
-        new Http(Configure.ProductCatalogURL + "/api/v1/")
+        new Http(Configure.ProductCatalogURL)
                 .delete(productName + jinjaId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate,
-                Configure.ProductCatalogURL + "/api/v1/");
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 }

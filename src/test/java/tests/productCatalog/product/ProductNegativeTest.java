@@ -1,6 +1,5 @@
 package tests.productCatalog.product;
 
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -25,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DisabledIfEnv("prod")
 public class ProductNegativeTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("products/",
-            "productCatalog/products/createProduct.json", Configure.ProductCatalogURL + "/api/v1/");
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/products/",
+            "productCatalog/products/createProduct.json");
 
     Map<String, String> info = new LinkedHashMap<String, String>() {{
         put("information", "testData");

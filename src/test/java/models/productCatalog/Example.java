@@ -52,7 +52,7 @@ public class Example extends Entity {
     @Override
     @Step("Создание примера")
     protected void create() {
-        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
+        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
         if (steps.isExists(name)) {
             steps.deleteByName(name, GetExampleListResponse.class);
         }

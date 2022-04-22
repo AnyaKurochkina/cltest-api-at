@@ -1,6 +1,5 @@
 package tests.productCatalog.service;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DisabledIfEnv("prod")
 public class ServiceNegativeTest extends Tests {
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/services/",
-            "/productCatalog/services/createServices.json", Configure.ProductCatalogURL);
+            "/productCatalog/services/createServices.json");
 
     @DisplayName("Негативный тест на создание сервиса с существующим именем")
     @TmsLink("643458")

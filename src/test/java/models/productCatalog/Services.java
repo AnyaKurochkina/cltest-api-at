@@ -57,9 +57,9 @@ public class Services extends Entity {
     private String currentVersion;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("services/",
-            "productCatalog/services/createServices.json", ProductCatalogURL + "/api/v1/");
+            "productCatalog/services/createServices.json");
 
-    private final String productName = "services/";
+    private final String productName = "/api/v1/services/";
 
     @Override
     public Entity init() {
@@ -89,9 +89,9 @@ public class Services extends Entity {
         if (productCatalogSteps.isExists(serviceName)) {
             productCatalogSteps.deleteByName(serviceName, GetServiceListResponse.class);
         }
-        CreateServiceResponse createServiceResponse = new Http(ProductCatalogURL + "/api/v1/")
+        CreateServiceResponse createServiceResponse = new Http(ProductCatalogURL)
                 .body(toJson())
-                .post("services/")
+                .post(productName)
                 .assertStatus(201)
                 .extractAs(CreateServiceResponse.class);
         serviceId = createServiceResponse.getId();
@@ -101,10 +101,10 @@ public class Services extends Entity {
     @Override
     @Step("Удаление сервиса")
     protected void delete() {
-        new Http(ProductCatalogURL + "/api/v1/")
-                .delete("services/" + serviceId + "/")
+        new Http(ProductCatalogURL)
+                .delete(productName + serviceId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL + "/api/v1/");
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         Assertions.assertFalse(productCatalogSteps.isExists(serviceName));
     }
 }

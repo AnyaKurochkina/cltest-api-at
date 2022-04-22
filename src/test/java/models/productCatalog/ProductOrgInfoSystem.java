@@ -23,7 +23,7 @@ public class ProductOrgInfoSystem extends Entity {
     private String id;
     private String organization;
     private List<String> informationSystems;
-    private final String productName = "product_org_info_system/";
+    private final String productName = "/api/v1/product_org_info_system/";
     private String jsonTemplate;
 
     @Override
@@ -43,7 +43,7 @@ public class ProductOrgInfoSystem extends Entity {
 
     @Override
     protected void create() {
-        id = new Http(ProductCatalogURL + "/api/v1/")
+        id = new Http(ProductCatalogURL)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -54,7 +54,7 @@ public class ProductOrgInfoSystem extends Entity {
 
     @Override
     protected void delete() {
-        new Http(ProductCatalogURL + "/api/v1/")
+        new Http(ProductCatalogURL)
                 .delete(productName + product + "/organizations/" + organization + "/")
                 .assertStatus(204);
     }

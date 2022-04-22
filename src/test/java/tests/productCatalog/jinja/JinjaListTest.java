@@ -24,8 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class JinjaListTest extends Tests {
 
     String template = "productCatalog/jinja2/createJinja.json";
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/jinja2_templates/",
-            template, Configure.ProductCatalogURL);
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/jinja2_templates/", template);
 
     @DisplayName("Получение списка jinja")
     @TmsLink("660061")
