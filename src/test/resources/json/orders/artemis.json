@@ -1,0 +1,48 @@
+{
+  "order": {
+    "project_name": "proj-rr4ncna00e",
+    "product_id": "04ff13b0-57d2-42d6-a786-440aaae23337",
+    "attrs": {
+      "domain": "test.vtb.ru",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m8",
+        "uuid": "930a8be8-1c71-4730-b881-0633a56b7f2b",
+        "memory": 8
+      },
+      "platform": "OpenStack",
+      "boot_disk": {
+        "size": 30
+      },
+      "extra_nics": [],
+      "on_support": true,
+      "os_version": "7.9",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "test-srv-real-app"
+      },
+      "cluster_name": "vtb-artemis-0001",
+      "extra_mounts": [
+        {
+          "path": "/app",
+          "size": 30,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_integration": true,
+      "artemis_version": "2.19.1",
+      "type_load_balancer": "ON_DEMAND",
+      "artemis_node_number": 2,
+      "ad_logon_grants": [
+        {
+          "role": "user",
+          "groups": [
+            "cloud-hfzorg-hotfix-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "VTB Apache ActiveMQ Artemis"
+  }
+}
