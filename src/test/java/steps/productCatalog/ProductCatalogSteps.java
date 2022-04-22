@@ -160,11 +160,6 @@ public class ProductCatalogSteps {
         getDeleteObjectResponse(objectId).assertStatus(204);
     }
 
-    @Step("Удаление объекта продуктового каталога по Id")
-    public void deleteById(String url, String objectId) {
-        getDeleteObjectResponse(url, objectId).assertStatus(204);
-    }
-
     @Step("Удаление объекта продуктового каталога по Id без токена")
     public void deleteObjectByIdWithOutToken(String id) {
         new Http(Url)
@@ -247,11 +242,6 @@ public class ProductCatalogSteps {
                 .delete(productName + id + "/");
     }
 
-    public Response getDeleteObjectResponse(String url, String id) {
-        return new Http(Url)
-                .delete(url + id + "/");
-    }
-
     @Step("Получение списка объектов продуктового каталога по фильтру")
     public List<ItemImpl> getProductObjectList(Class<?> clazz, String filter) {
         return ((GetListImpl) new Http(Url)
@@ -263,6 +253,12 @@ public class ProductCatalogSteps {
     public JsonPath getJsonPath(String id) {
         return new Http(Url)
                 .get(productName + id + "/")
+                .assertStatus(200).jsonPath();
+    }
+
+    public JsonPath getVersionJsonPath(String id) {
+        return new Http(Url)
+                .get(productName + id + "/version_list/")
                 .assertStatus(200).jsonPath();
     }
 

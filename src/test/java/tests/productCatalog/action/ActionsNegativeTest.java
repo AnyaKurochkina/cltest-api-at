@@ -13,7 +13,8 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -144,5 +145,20 @@ public class ActionsNegativeTest extends Tests {
         steps.patchRow(Action.builder().actionName(actionName).build().init().getTemplate()
                 .set("$.version", "1.0.1")
                 .build(), action.getActionId()).assertStatus(500);
+    }
+
+    @Test
+    @DisplayName("Негативный тест на передачу невалидного значения current_version в действиях")
+    @TmsLink("821961")
+    public void setInvalidCurrentVersionAction() {
+        String actionName = "invalid_current_version_action_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .version("1.0.0")
+                .build()
+                .createObject();
+        String actionId = action.getActionId();
+        steps.partialUpdateObject(actionId, new JSONObject().put("current_version", "2")).assertStatus(500);
     }
 }

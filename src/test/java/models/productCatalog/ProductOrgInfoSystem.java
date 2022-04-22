@@ -37,6 +37,7 @@ public class ProductOrgInfoSystem extends Entity {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.organization", organization)
                 .set("$.product", product)
+                .set("$.information_systems", informationSystems)
                 .build();
     }
 

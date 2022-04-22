@@ -401,4 +401,64 @@ public class ProductsTest extends Tests {
                 .createObject();
         product.deleteObject();
     }
+
+    @Test
+    @DisplayName("Присвоение значения current_version из списка version_list в продуктах")
+    @TmsLink("821983")
+    public void setCurrentVersionProduct() {
+        String productName = "set_current_version_product_test_api";
+        Product product = Product.builder()
+                .name(productName)
+                .title(productName)
+                .version("1.0.0")
+                .build()
+                .createObject();
+        String productId = product.getProductId();
+        steps.partialUpdateObject(productId, new JSONObject().put("title", "update_title"));
+        steps.partialUpdateObject(productId, new JSONObject().put("current_version", "1.0.1"));
+        GetProductResponse getProduct = (GetProductResponse) steps.getById(productId, GetProductResponse.class);
+        assertEquals("1.0.1", getProduct.getCurrentVersion());
+        assertTrue(getProduct.getVersionList().contains(getProduct.getCurrentVersion()));
+    }
+
+    @Test
+    @DisplayName("Получение продукта версии указанной в current_version")
+    @TmsLink("821988")
+    public void getCurrentVersionProduct() {
+        String productName = "create_current_version_product_test_api";
+        Product product = Product.builder()
+                .name(productName)
+                .title(productName)
+                .version("1.0.0")
+                .build()
+                .createObject();
+        String productId = product.getProductId();
+        steps.partialUpdateObject(productId, new JSONObject().put("title", "update_title"));
+        steps.partialUpdateObject(productId, new JSONObject().put("current_version", "1.0.0"));
+        GetProductResponse getProduct = (GetProductResponse) steps.getById(productId, GetProductResponse.class);
+        assertEquals("1.0.0", getProduct.getCurrentVersion());
+        assertEquals(productName, getProduct.getTitle());
+    }
+
+    @Test
+    @DisplayName("Получение значения extra_data в продуктах")
+    @TmsLink("821990")
+    public void getExtraDataProduct() {
+        String productName = "extra_data_product_test_api";
+        String key = "extra";
+        String value = "data";
+        Product product = Product.builder()
+                .name(productName)
+                .title(productName)
+                .version("1.0.0")
+                .extraData(new LinkedHashMap<String, String>() {{
+                    put(key, value);
+                }})
+                .build()
+                .createObject();
+        GetProductResponse getProductById =(GetProductResponse) steps.getById(product.getProductId(),
+                GetProductResponse.class);
+        Map<String, String> extraData = getProductById.getExtraData();
+        assertEquals(extraData.get(key), value);
+    }
 }

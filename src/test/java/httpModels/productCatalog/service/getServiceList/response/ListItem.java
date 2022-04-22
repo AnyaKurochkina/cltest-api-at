@@ -21,6 +21,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("turn_off_inventory")
     private Boolean turnOffInventory;
 
+    @JsonProperty("current_version")
+    private String currentVersion;
+
     @JsonProperty("version_list")
     private List<String> versionList;
 

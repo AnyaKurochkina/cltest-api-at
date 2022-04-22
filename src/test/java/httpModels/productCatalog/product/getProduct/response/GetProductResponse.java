@@ -28,6 +28,9 @@ public class GetProductResponse implements GetImpl {
 	@JsonProperty("author")
 	private String author;
 
+	@JsonProperty("current_version")
+	private String currentVersion;
+
 	@JsonProperty("information_systems")
 	private List<Object> informationSystems;
 
@@ -100,99 +103,6 @@ public class GetProductResponse implements GetImpl {
 	@JsonProperty("update_dt")
 	private String update_dt;
 
-	public List<Object> getAllowedPaths(){
-		return allowedPaths;
-	}
-
-	public boolean isOpen(){
-		return isOpen;
-	}
-
-	public List<String> getVersionList(){
-		return versionList;
-	}
-
-	public String getAuthor(){
-		return author;
-	}
-
-	public List<Object> getInformationSystems(){
-		return informationSystems;
-	}
-
-	public String getIcon(){
-		return icon;
-	}
-
-	public String getVersionCreateDt(){
-		return versionCreateDt;
-	}
-
-	public List<String> getEnvs(){
-		return envs;
-	}
-
-	public String getDescription(){
-		return description;
-	}
-
-	public String getGraphVersion(){
-		return graphVersion;
-	}
-
-	public List<Object> getRestrictedGroups(){
-		return restrictedGroups;
-	}
-
-	public String getTitle(){
-		return title;
-	}
-
-	public String getGraphId(){
-		return graphId;
-	}
-
-	public String getVersion(){
-		return version;
-	}
-
-	public int getMaxCount(){
-		return maxCount;
-	}
-
-	public int getNumber(){
-		return number;
-	}
-
-	public String getVersionChangedByUser(){
-		return versionChangedByUser;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public List<Object> getRestrictedPaths(){
-		return restrictedPaths;
-	}
-
-	public List<Object> getAllowedGroups(){
-		return allowedGroups;
-	}
-
-	public String getGraphVersionPattern(){
-		return graphVersionPattern;
-	}
-
-	public String getId(){
-		return id;
-	}
-
-	public String getGraphVersionCalculated(){
-		return graphVersionCalculated;
-	}
-
-	public String getCategory(){
-		return category;
-	}
+	@JsonProperty("extra_data")
+	private Map<String, String> extraData;
 }

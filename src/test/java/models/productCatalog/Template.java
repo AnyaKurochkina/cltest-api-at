@@ -6,6 +6,7 @@ import httpModels.productCatalog.template.createTemplate.response.CreateTemplate
 import httpModels.productCatalog.template.createTemplate.response.Input;
 import httpModels.productCatalog.template.createTemplate.response.Output;
 import httpModels.productCatalog.template.createTemplate.response.PrintedOutput;
+import httpModels.productCatalog.template.getTemplate.response.GetTemplateResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -74,6 +75,11 @@ public class Template extends Entity {
 
     @Override
     protected void create() {
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate,
+                ProductCatalogURL + "/api/v1/");
+        if (productCatalogSteps.isExists(templateName)) {
+            productCatalogSteps.deleteByName(templateName, GetTemplateResponse.class);
+        }
         CreateTemplateResponse createTemplateResponse = new Http(ProductCatalogURL + "/api/v1/")
                 .body(toJson())
                 .post(productName)

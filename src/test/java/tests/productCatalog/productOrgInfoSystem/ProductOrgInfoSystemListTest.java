@@ -23,11 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisabledIfEnv("prod")
 public class ProductOrgInfoSystemListTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("product_org_info_system/",
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/product_org_info_system/",
             "productCatalog/productOrgInfoSystem/createInfoSystem.json", Configure.ProductCatalogURL);
 
     @DisplayName("Получение списка информационных систем")
-    @TmsLink("")
+    @TmsLink("822012")
     @Test
     public void getProductInfoSystemList() {
         List<ItemImpl> list = steps.getProductObjectList(GetInfoSystemListResponse.class);

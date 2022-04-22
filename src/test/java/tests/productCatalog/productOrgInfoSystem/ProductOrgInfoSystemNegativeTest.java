@@ -1,8 +1,6 @@
 package tests.productCatalog.productOrgInfoSystem;
 
 import core.helper.Configure;
-import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.productOrgInfoSystem.createInfoSystem.CreateInfoSystemResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -17,54 +15,47 @@ import tests.Tests;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("ProductOrgInfoSystem")
 @DisabledIfEnv("prod")
-public class ProductOrgInfoSystemTest extends Tests {
-
-    String orgName = "vtb";
+public class ProductOrgInfoSystemNegativeTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/product_org_info_system/",
             "productCatalog/productOrgInfoSystem/createInfoSystem.json", Configure.ProductCatalogURL);
 
+    @DisplayName("Негативный тест на создание product_org_info_system c несуществующей организацией")
+    @TmsLink("822013")
     @Test
-    @DisplayName("Создание productOrgInfoSystem")
-    @TmsLink("822022")
-    public void createInfoSystem() {
+    public void createOgrInfoSystemWithNotExistOrg() {
         Product product = Product.builder()
-                .name("product_for_create_info_system_test_api")
+                .name("product_for_create_info_system_with_not_exist_org_test_api")
                 .title("AtTestApiProduct")
                 .envs(Collections.singletonList("dev"))
                 .version("1.0.0")
                 .build()
                 .createObject();
-        ProductOrgInfoSystem productOrgInfoSystem = ProductOrgInfoSystem.builder()
-                .organization(orgName)
+        ProductOrgInfoSystem.builder()
+                .organization("organization")
                 .product(product.getProductId())
-                .build().createObject();
-        CreateInfoSystemResponse createdInfoSystem = steps.getProductOrgInfoSystem(product.getProductId(), orgName);
-        assertEquals(createdInfoSystem.getId(), productOrgInfoSystem.getId());
+                .build().negativeCreateRequest(500);
     }
 
+    @DisplayName("Негативный тест на создание product_org_info_system c несуществующей информационной системой")
+    @TmsLink("822018")
     @Test
-    @DisplayName("Удаление productOrgInfoSystem")
-    @TmsLink("822026")
-    public void deleteInfoSystem() {
+    public void createProductOgrInfoSystemWithNotExistInformSystem() {
         Product product = Product.builder()
-                .name("product_for_delete_info_system_test_api")
+                .name("product_for_create_info_system_with_not_exist_inform_system_test_api")
                 .title("AtTestApiProduct")
                 .envs(Collections.singletonList("dev"))
                 .version("1.0.0")
                 .build()
                 .createObject();
-        ProductOrgInfoSystem productOrgInfoSystem = ProductOrgInfoSystem.builder()
-                .organization(orgName)
+        ProductOrgInfoSystem.builder()
+                .organization("vtb")
+                .informationSystems(Collections.singletonList("54564654sdf"))
                 .product(product.getProductId())
-                .build().createObject();
-        GetImpl getProduct = steps.getById(productOrgInfoSystem.getId(), CreateInfoSystemResponse.class);
-        assertEquals(getProduct.getId(), productOrgInfoSystem.getId());
+                .build().negativeCreateRequest(400);
     }
 }
