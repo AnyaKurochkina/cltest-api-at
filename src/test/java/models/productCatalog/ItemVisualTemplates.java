@@ -61,7 +61,7 @@ public class ItemVisualTemplates extends Entity {
     @Override
     @Step("Создание шаблона визуализации")
     protected void create() {
-        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
+        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
         if (steps.isExists(name)) {
             steps.deleteByName(name, GetVisualTemplateListResponse.class);
         }
@@ -80,7 +80,7 @@ public class ItemVisualTemplates extends Entity {
         new Http(ProductCatalogURL)
                 .delete(productName + itemId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
+        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
         Assertions.assertEquals(0, steps.getObjectListByName(name, GetVisualTemplateListResponse.class)
                 .getItemsList().size(), "Шаблон визуализации с именем: " + name + ", не удалился");
     }

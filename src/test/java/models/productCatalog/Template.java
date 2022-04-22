@@ -55,7 +55,7 @@ public class Template extends Entity {
     private String type;
     private String title;
 
-    private final String productName = "templates/";
+    private final String productName = "/api/v1/templates/";
 
     @Override
     public Entity init() {
@@ -75,12 +75,11 @@ public class Template extends Entity {
 
     @Override
     protected void create() {
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate,
-                ProductCatalogURL + "/api/v1/");
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         if (productCatalogSteps.isExists(templateName)) {
             productCatalogSteps.deleteByName(templateName, GetTemplateResponse.class);
         }
-        CreateTemplateResponse createTemplateResponse = new Http(ProductCatalogURL + "/api/v1/")
+        CreateTemplateResponse createTemplateResponse = new Http(ProductCatalogURL)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -91,11 +90,10 @@ public class Template extends Entity {
 
     @Override
     protected void delete() {
-         new Http(ProductCatalogURL + "/api/v1/")
+         new Http(ProductCatalogURL)
                 .delete(productName + templateId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate,
-                ProductCatalogURL + "/api/v1/");
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         Assertions.assertFalse(productCatalogSteps.isExists(templateName));
     }
 }

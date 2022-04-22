@@ -15,7 +15,6 @@ import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.Map;
 
-import static core.helper.Configure.ProductCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -42,8 +41,7 @@ public class Action extends Entity {
     private final String productName = "/api/v1/actions/";
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/actions/",
-            "productCatalog/actions/createAction.json",
-            Configure.ProductCatalogURL);
+            "productCatalog/actions/createAction.json");
 
     @Override
     public Entity init() {
@@ -94,7 +92,7 @@ public class Action extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete(productName + actionId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         assertFalse(productCatalogSteps.isExists(actionName));
     }
 }

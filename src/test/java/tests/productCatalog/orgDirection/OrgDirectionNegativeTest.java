@@ -1,6 +1,5 @@
 package tests.productCatalog.orgDirection;
 
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class OrgDirectionNegativeTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/org_direction/",
-            "productCatalog/orgDirection/orgDirection.json", Configure.ProductCatalogURL);
+            "productCatalog/orgDirection/orgDirection.json");
 
     @DisplayName("Негативный тест на получение направления по Id без токена")
     @TmsLink("643315")

@@ -26,8 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisabledIfEnv("prod")
 public class ProductListTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("products/",
-            "productCatalog/products/createProduct.json", Configure.ProductCatalogURL + "/api/v1/");
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/products/",
+            "productCatalog/products/createProduct.json");
 
     @DisplayName("Получение списка продуктов")
     @TmsLink("643387")

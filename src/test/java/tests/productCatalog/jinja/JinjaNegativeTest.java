@@ -1,6 +1,5 @@
 package tests.productCatalog.jinja;
 
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -22,8 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class JinjaNegativeTest extends Tests {
 
     String template = "productCatalog/jinja2/createJinja.json";
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/jinja2_templates/",
-            template, Configure.ProductCatalogURL);
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/jinja2_templates/", template);
 
     @DisplayName("Негативный тест на копирование jinja по Id без токена")
     @TmsLink("660110")

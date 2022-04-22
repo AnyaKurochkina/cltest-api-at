@@ -1,6 +1,5 @@
 package tests.productCatalog.action;
 
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ActionsNegativeTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
-            "productCatalog/actions/createAction.json", Configure.ProductCatalogURL);
+            "productCatalog/actions/createAction.json");
 
     @DisplayName("Негативный тест на получение действия по Id без токена")
     @TmsLink("642485")
