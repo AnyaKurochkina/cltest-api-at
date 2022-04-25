@@ -26,19 +26,21 @@ import static ui.selenoidUtils.SelenoidUtils.isRemote;
 
 //@Log4j2
 public class TestsExecutionListener implements TestExecutionListener {
-    private static final String DRIVER_PATH = new File(getAppProp("driver.path")).getAbsolutePath();
     private static final String URL = getAppProp("base.url");
 
     @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
         //###Config for Ui###
-        System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
-        baseUrl = URL;
-        isRemote();
-        Configuration.browserSize = "1530x870";
-        Configuration.browserPosition = "2x2";
-        Configuration.timeout = 15000;
-        Configuration.driverManagerEnabled = false;
+        if(getAppProp("driver.path") != null) {
+            String DRIVER_PATH = new File(getAppProp("driver.path")).getAbsolutePath();
+            System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
+            baseUrl = URL;
+            isRemote();
+            Configuration.browserSize = "1530x870";
+            Configuration.browserPosition = "2x2";
+            Configuration.timeout = 15000;
+            Configuration.driverManagerEnabled = false;
+        }
         //####Config for Ui###
 
         String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
