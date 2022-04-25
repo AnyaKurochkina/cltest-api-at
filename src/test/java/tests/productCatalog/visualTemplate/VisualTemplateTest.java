@@ -64,8 +64,8 @@ public class VisualTemplateTest extends Tests {
         String name = "delete_with_active_true_item_visual_template_test_api";
         ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
                 .name(name)
-                .eventProvider(Collections.singletonList("docker"))
-                .eventType(Collections.singletonList("app"))
+                .eventProvider(Collections.singletonList("gitlab"))
+                .eventType(Collections.singletonList("vm"))
                 .compactTemplate(compactTemplate)
                 .fullTemplate(fullTemplate)
                 .isActive(true)
@@ -207,7 +207,7 @@ public class VisualTemplateTest extends Tests {
         String name = "copy_item_visual_template_test_api";
         ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
                 .name(name)
-                .eventProvider(Collections.singletonList("docker"))
+                .eventProvider(Collections.singletonList("gitlab"))
                 .eventType(Collections.singletonList("app"))
                 .compactTemplate(compactTemplate)
                 .fullTemplate(fullTemplate)

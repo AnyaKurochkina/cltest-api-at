@@ -52,6 +52,7 @@ public class VisualTemplateNegativeTest extends Tests {
                 .set("event_provider", Collections.singletonList("docker"))
                 .set("event_type", Collections.singletonList("app")).build();
         Response response = steps.createProductObject(jsonObject).assertStatus(422);
+        steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
         assertEquals(name, response.jsonPath().get("name[0]").toString());
         assertEquals(visualTemplates.getItemId(), response.jsonPath().get("id[0]").toString());
     }
