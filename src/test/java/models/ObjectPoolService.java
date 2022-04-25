@@ -51,7 +51,7 @@ public class ObjectPoolService {
         }
         objectPoolEntity.lock();
 
-        if (Configure.isTestItCreateAutotest) {
+        if (Configure.isTestItCreateAutotest && e instanceof IProduct) {
             objectPoolEntity.release();
             throw new CreateEntityException("Создание объекта пропущенно (isTestItCreateAutotest = true)");
         }
@@ -129,6 +129,7 @@ public class ObjectPoolService {
     @SneakyThrows
     public static void deleteAllResources() {
         log.debug("##### deleteAllResources start #####");
+        boolean isTestItCreateAutotest = Configure.isTestItCreateAutotest;
         Configure.isTestItCreateAutotest = false;
         Collections.reverse(createdEntities);
 
@@ -161,6 +162,7 @@ public class ObjectPoolService {
                 e.printStackTrace();
             }
         }
+        Configure.isTestItCreateAutotest = isTestItCreateAutotest;
         log.debug("##### deleteAllResources end #####");
     }
 

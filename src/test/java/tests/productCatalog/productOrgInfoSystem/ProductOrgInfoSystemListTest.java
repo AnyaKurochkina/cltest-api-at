@@ -1,6 +1,5 @@
 package tests.productCatalog.productOrgInfoSystem;
 
-import core.helper.Configure;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.GetInfoSystemListResponse;
 import io.qameta.allure.Epic;
@@ -23,11 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisabledIfEnv("prod")
 public class ProductOrgInfoSystemListTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("product_org_info_system/",
-            "productCatalog/productOrgInfoSystem/createInfoSystem.json", Configure.ProductCatalogURL);
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/product_org_info_system/",
+            "productCatalog/productOrgInfoSystem/createInfoSystem.json");
 
     @DisplayName("Получение списка информационных систем")
-    @TmsLink("")
+    @TmsLink("822012")
     @Test
     public void getProductInfoSystemList() {
         List<ItemImpl> list = steps.getProductObjectList(GetInfoSystemListResponse.class);

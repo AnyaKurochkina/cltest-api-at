@@ -1,6 +1,5 @@
 package tests.productCatalog.graph;
 
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -20,7 +19,7 @@ import tests.Tests;
 public class GraphNegativeTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("graphs/",
-            "productCatalog/graphs/createGraph.json", Configure.ProductCatalogURL);
+            "productCatalog/graphs/createGraph.json");
 
     @DisplayName("Негативный тест на получение графа по Id без токена")
     @TmsLink("642636")

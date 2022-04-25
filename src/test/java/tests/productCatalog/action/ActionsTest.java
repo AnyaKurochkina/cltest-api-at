@@ -13,13 +13,18 @@ import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ActionsTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
-            "productCatalog/actions/createAction.json", Configure.ProductCatalogURL);
+            "productCatalog/actions/createAction.json");
 
     @DisplayName("Создание действия в продуктовом каталоге")
     @TmsLink("640545")
@@ -312,6 +317,81 @@ public class ActionsTest extends Tests {
                 .build()
                 .createObject();
         action.deleteObject();
+    }
+
+    @Test
+    @DisplayName("Проверка значения current_version в действиях")
+    @TmsLink("821963")
+    public void checkCurrentVersionAction() {
+        String actionName = "current_version_action_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .build()
+                .createObject();
+        steps.partialUpdateObject(action.getActionId(), new JSONObject().put("current_version", "1.0.0"));
+        GetActionResponse getAction = (GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
+        assertEquals("1.0.0", getAction.getCurrentVersion());
+    }
+
+    @Test
+    @DisplayName("Присвоение значения current_version из списка version_list в действиях")
+    @TmsLink("821964")
+    public void setCurrentVersionAction() {
+        String actionName = "set_current_version_action_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .version("1.0.0")
+                .build()
+                .createObject();
+        String actionId = action.getActionId();
+        steps.partialUpdateObject(actionId, new JSONObject().put("title", "update_title"));
+        steps.partialUpdateObject(actionId, new JSONObject().put("current_version", "1.0.1"));
+        GetActionResponse getAction = (GetActionResponse) steps.getById(actionId, GetActionResponse.class);
+        assertEquals("1.0.1", getAction.getCurrentVersion());
+        assertTrue(getAction.getVersionList().contains(getAction.getCurrentVersion()));
+    }
+
+    @Test
+    @DisplayName("Получение экшена версии указанной в current_version")
+    @TmsLink("821967")
+    public void getCurrentVersionAction() {
+        String actionName = "create_current_version_action_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .version("1.0.0")
+                .build()
+                .createObject();
+        String actionId = action.getActionId();
+        steps.partialUpdateObject(actionId, new JSONObject().put("title", "update_title"));
+        steps.partialUpdateObject(actionId, new JSONObject().put("current_version", "1.0.0"));
+        GetActionResponse getAction = (GetActionResponse) steps.getById(actionId, GetActionResponse.class);
+        assertEquals("1.0.0", getAction.getCurrentVersion());
+        assertEquals(actionName, getAction.getTitle());
+    }
+
+    @Test
+    @DisplayName("Получение значения extra_data в действиях")
+    @TmsLink("821969")
+    public void getExtraDataAction() {
+        String actionName = "extra_data_action_test_api";
+        String key = "extra";
+        String value = "data";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .version("1.0.0")
+                .extraData(new LinkedHashMap<String, String>() {{
+                    put(key, value);
+                }})
+                .build()
+                .createObject();
+        GetActionResponse getActionById =(GetActionResponse) steps.getById(action.getActionId(),
+                GetActionResponse.class);
+        Map<String, String> extraData = getActionById.getExtraData();
+        assertEquals(extraData.get(key), value);
     }
 }
 

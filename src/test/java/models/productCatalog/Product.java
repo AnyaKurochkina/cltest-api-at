@@ -1,6 +1,5 @@
 package models.productCatalog;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
@@ -46,11 +45,13 @@ public class Product extends Entity {
     private String category;
     private String jsonTemplate;
     private Map<String, String> info;
-    public static final String productName = "products/";
+    private String currentVersion;
+    private Map<String, String> extraData;
+
+    public static final String productName = "/api/v1/products/";
     @Builder.Default
-    protected transient ProductCatalogSteps steps = new ProductCatalogSteps("/products/",
-            "productCatalog/products/createProduct.json",
-            Configure.ProductCatalogURL + "/api/v1/");
+    protected transient ProductCatalogSteps steps = new ProductCatalogSteps(productName,
+            "productCatalog/products/createProduct.json");
 
     @Override
     public Entity init() {
@@ -73,6 +74,9 @@ public class Product extends Entity {
                 .set("$.category", category)
                 .set("$.info", info)
                 .set("$.is_open", isOpen)
+                .set("$.current_version", currentVersion)
+                .set("$.extra_data", extraData)
+                .set("$.information_systems", informationSystems)
                 .build();
     }
 
@@ -81,9 +85,9 @@ public class Product extends Entity {
         if (steps.isExists(name)) {
             steps.deleteByName(name, GetProductsResponse.class);
         }
-        CreateProductResponse createProductResponse = new Http(ProductCatalogURL + "/api/v1/")
+        CreateProductResponse createProductResponse = new Http(ProductCatalogURL)
                 .body(toJson())
-                .post("products/")
+                .post(productName)
                 .assertStatus(201)
                 .extractAs(CreateProductResponse.class);
         productId = createProductResponse.getId();
@@ -92,19 +96,18 @@ public class Product extends Entity {
 
     @Step("Обновление продукта")
     public void updateProduct() {
-        new Http(ProductCatalogURL + "/api/v1/")
+        new Http(ProductCatalogURL)
                 .body(this.getTemplate().set("$.version", "1.1.1").build())
-                .patch("products/" + productId + "/")
+                .patch(productName + productId + "/")
                 .assertStatus(200);
     }
 
     @Override
     protected void delete() {
-        new Http(ProductCatalogURL + "/api/v1/")
+        new Http(ProductCatalogURL)
                 .delete(productName + productId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps steps = new ProductCatalogSteps("/products/",
-                "productCatalog/products/createProduct.json", Configure.ProductCatalogURL + "/api/v1/");
+        ProductCatalogSteps steps = new ProductCatalogSteps(productName,"productCatalog/products/createProduct.json");
         Assertions.assertFalse(steps.isExists(productName));
     }
 }

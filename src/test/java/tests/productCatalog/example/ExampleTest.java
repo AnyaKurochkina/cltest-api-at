@@ -1,10 +1,6 @@
-package tests.productCatalog;
+package tests.productCatalog.example;
 
-import core.helper.Configure;
-import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.GetListImpl;
-import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.example.createExample.CreateExampleResponse;
 import httpModels.productCatalog.example.getExampleList.GetExampleListResponse;
 import io.qameta.allure.Epic;
@@ -19,8 +15,6 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("product_catalog")
@@ -29,11 +23,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisabledIfEnv("prod")
 public class ExampleTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("example/",
-            "productCatalog/examples/createExample.json", Configure.ProductCatalogURL);
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/example/",
+            "productCatalog/examples/createExample.json");
 
     @DisplayName("Создание Example в продуктовом каталоге")
-    @TmsLink("")
+    @TmsLink("822241")
     @Test
     public void createExample() {
         String createName = "create_example_test_api";
@@ -47,75 +41,8 @@ public class ExampleTest extends Tests {
         assertEquals(createName, getCreateExample.getName());
     }
 
-    @DisplayName("Получение списка Examples")
-    @TmsLink("")
-    @Test
-    public void getExampleList() {
-        Example.builder()
-                .name("create_example_for_list_test_api")
-                .title("create_example_for_list_test_api")
-                .description("create_example_for_list_test_api")
-                .build()
-                .createObject();
-        List<ItemImpl> list = steps.getProductObjectList(GetExampleListResponse.class);
-        assertTrue(steps.isSorted(list), "Список не отсортирован.");
-    }
-
-    @DisplayName("Проверка значения next в запросе на получение списка Examples")
-    @TmsLink("")
-    @Test
-    public void getMeta() {
-        String str = steps.getMeta(GetExampleListResponse.class).getNext();
-        String env = Configure.ENV;
-        if (!(str == null)) {
-            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"), "Значение поля next " +
-                    "несоответсвует ожидаемому");
-        }
-    }
-
-    @DisplayName("Получение списка Examples по имени")
-    @TmsLink("")
-    @Test
-    public void getExampleListByName() {
-        String exampleName = "create_example_for_list_by_name_test_api";
-        Example createExample = Example.builder()
-                .name(exampleName)
-                .title("create_example_for_list_by_name_test_api")
-                .description("create_example_for_list_by_name_test_api")
-                .build()
-                .createObject();
-        GetListImpl exampleListByName = steps.getObjectListByName(exampleName, GetExampleListResponse.class);
-        assertEquals(createExample.getName(), exampleListByName.getItemsList().get(0).getName());
-        assertEquals(1, exampleListByName.getItemsList().size(),
-                "Список не содержит значений");
-    }
-
-    @DisplayName("Получение списка Examples по имени")
-    @TmsLink("")
-    @Test
-    public void getExamplesListByName() {
-        String exampleName = "first_example";
-        Example.builder()
-                .name(exampleName)
-                .title("title_first_example_for_list_by_name_test_api")
-                .description("description_first_example_for_list_by_name_test_api")
-                .build()
-                .createObject();
-        String exampleName2 = "second_example";
-        Example.builder()
-                .name(exampleName2)
-                .title("title_second_example_for_list_by_name_test_api")
-                .description("description_second_example_for_list_by_name_test_api")
-                .build()
-                .createObject();
-        GetListImpl exampleListByName = steps.getObjectsListByNames(GetExampleListResponse.class, exampleName, exampleName2);
-        assertEquals(2, exampleListByName.getItemsList().size(),
-                "Список не содержит значений");
-    }
-
-
     @DisplayName("Получение Example по Id")
-    @TmsLink("")
+    @TmsLink("822383")
     @Test
     public void getExampleById() {
         String exampleName = "get_example_by_id_test_api";
@@ -136,7 +63,7 @@ public class ExampleTest extends Tests {
     }
 
     @DisplayName("Поиск Example по имени, с использованием multiSearch")
-    @TmsLink("")
+    @TmsLink("822384")
     @Test
     public void searchByName() {
         Example createExample = Example.builder()
@@ -152,7 +79,7 @@ public class ExampleTest extends Tests {
     }
 
     @DisplayName("Обновление Example по Id")
-    @TmsLink("")
+    @TmsLink("822402")
     @Test
     public void updateExampleById() {
         Example example = Example.builder()
@@ -179,7 +106,7 @@ public class ExampleTest extends Tests {
     }
 
     @DisplayName("Частичное обновление Example по Id")
-    @TmsLink("")
+    @TmsLink("822409")
     @Test
     public void partialUpdateExampleById() {
         Example example = Example.builder()
@@ -196,13 +123,16 @@ public class ExampleTest extends Tests {
     }
 
     @DisplayName("Удаление Example по Id")
-    @TmsLink("")
+    @TmsLink("822423")
     @Test
     public void deleteExampleById() {
         String exampleName = "example_delete_test_api";
-        Response response = steps.createProductObject(steps.createJsonObject(exampleName));
-        steps.deleteById(response.jsonPath().get("id"));
-        GetListImpl list = steps.getObjectListByName(exampleName, GetExampleListResponse.class);
-        assertTrue(list.getItemsList().isEmpty());
+        Example example = Example.builder()
+                .name(exampleName)
+                .title("title_partial_update_example_test_api")
+                .description("desc_partial_update_example_test_api")
+                .build()
+                .createObject();
+        steps.deleteById(example.getId());
     }
 }

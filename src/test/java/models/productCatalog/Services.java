@@ -5,6 +5,7 @@ import core.helper.http.Http;
 import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
 import httpModels.productCatalog.service.createService.response.DataSource;
 import httpModels.productCatalog.service.createService.response.ExtraData;
+import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,11 +54,12 @@ public class Services extends Entity {
     private String graphVersionCalculated;
     private String serviceId;
     private String jsonTemplate;
+    private String currentVersion;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("services/",
-            "productCatalog/services/createServices.json", ProductCatalogURL + "/api/v1/");
+            "productCatalog/services/createServices.json");
 
-    private final String productName = "services/";
+    private final String productName = "/api/v1/services/";
 
     @Override
     public Entity init() {
@@ -77,15 +79,19 @@ public class Services extends Entity {
                 .set("$.version", version)
                 .set("$.is_published", isPublished)
                 .set("$.title", title)
+                .set("$.current_version", currentVersion)
                 .build();
     }
 
     @Override
     @Step("Создание сервиса")
     protected void create() {
-        CreateServiceResponse createServiceResponse = new Http(ProductCatalogURL + "/api/v1/")
+        if (productCatalogSteps.isExists(serviceName)) {
+            productCatalogSteps.deleteByName(serviceName, GetServiceListResponse.class);
+        }
+        CreateServiceResponse createServiceResponse = new Http(ProductCatalogURL)
                 .body(toJson())
-                .post("services/")
+                .post(productName)
                 .assertStatus(201)
                 .extractAs(CreateServiceResponse.class);
         serviceId = createServiceResponse.getId();
@@ -95,10 +101,10 @@ public class Services extends Entity {
     @Override
     @Step("Удаление сервиса")
     protected void delete() {
-        new Http(ProductCatalogURL + "/api/v1/")
-                .delete("services/" + serviceId + "/")
+        new Http(ProductCatalogURL)
+                .delete(productName + serviceId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL + "/api/v1/");
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         Assertions.assertFalse(productCatalogSteps.isExists(serviceName));
     }
 }

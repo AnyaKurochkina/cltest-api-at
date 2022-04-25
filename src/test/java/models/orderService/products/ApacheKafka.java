@@ -24,6 +24,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @SuperBuilder
+@Deprecated
 public class ApacheKafka extends IProduct {
     @ToString.Include
     String segment;

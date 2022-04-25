@@ -1,6 +1,5 @@
 package tests.productCatalog.productOrgInfoSystem;
 
-import core.helper.Configure;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.productOrgInfoSystem.createInfoSystem.CreateInfoSystemResponse;
 import io.qameta.allure.Epic;
@@ -27,12 +26,12 @@ public class ProductOrgInfoSystemTest extends Tests {
 
     String orgName = "vtb";
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("product_org_info_system/",
-            "productCatalog/productOrgInfoSystem/createInfoSystem.json", Configure.ProductCatalogURL);
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/product_org_info_system/",
+            "productCatalog/productOrgInfoSystem/createInfoSystem.json");
 
     @Test
     @DisplayName("Создание productOrgInfoSystem")
-    @TmsLink("")
+    @TmsLink("822022")
     public void createInfoSystem() {
         Product product = Product.builder()
                 .name("product_for_create_info_system_test_api")
@@ -51,7 +50,7 @@ public class ProductOrgInfoSystemTest extends Tests {
 
     @Test
     @DisplayName("Удаление productOrgInfoSystem")
-    @TmsLink("")
+    @TmsLink("822026")
     public void deleteInfoSystem() {
         Product product = Product.builder()
                 .name("product_for_delete_info_system_test_api")

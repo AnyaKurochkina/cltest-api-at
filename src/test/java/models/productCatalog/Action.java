@@ -13,7 +13,8 @@ import models.Entity;
 import org.json.JSONObject;
 import steps.productCatalog.ProductCatalogSteps;
 
-import static core.helper.Configure.ProductCatalogURL;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Getter
 public class Action extends Entity {
     private Graph graph;
+    private String currentVersion;
     private String jsonTemplate;
     private String actionName;
     private String graphId;
@@ -35,11 +37,11 @@ public class Action extends Entity {
     private String updateDt;
     private String locationRestriction;
     private Integer priority;
+    private Map<String, String> extraData;
     private final String productName = "/api/v1/actions/";
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/actions/",
-            "productCatalog/actions/createAction.json",
-            Configure.ProductCatalogURL);
+            "productCatalog/actions/createAction.json");
 
     @Override
     public Entity init() {
@@ -57,12 +59,14 @@ public class Action extends Entity {
                 .set("$.name", actionName)
                 .set("$.title", title)
                 .set("$.type", type)
+                .set("$.current_version", currentVersion)
                 .set("$.description", description)
                 .set("$.graph_id", graphId)
                 .set("$.version", version)
                 .set("$.create_dt", createDt)
                 .set("$.update_dt", updateDt)
                 .set("$.priority", priority)
+                .set("$.extra_data", extraData)
                 .set("$.location_restriction", locationRestriction)
                 .build();
     }
@@ -88,7 +92,7 @@ public class Action extends Entity {
         new Http(Configure.ProductCatalogURL)
                 .delete(productName + actionId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         assertFalse(productCatalogSteps.isExists(actionName));
     }
 }

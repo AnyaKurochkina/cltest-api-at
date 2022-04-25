@@ -41,10 +41,10 @@ public class Graph extends Entity {
     private String createDt;
     private String updateDt;
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("graphs/",
-            "productCatalog/graphs/createGraph.json", ProductCatalogURL + "/api/v1/");
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/graphs/",
+            "productCatalog/graphs/createGraph.json");
 
-    public static final String productName = "graphs/";
+    public static final String productName = "/api/v1/graphs/";
 
     @Override
     public Entity init() {
@@ -70,7 +70,7 @@ public class Graph extends Entity {
     @Step("Создание графа")
     protected void create() {
         deleteIfExist(name);
-        graphId = new Http(ProductCatalogURL + "/api/v1/")
+        graphId = new Http(ProductCatalogURL)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -82,10 +82,10 @@ public class Graph extends Entity {
     @Override
     @Step("Удаление графа")
     protected void delete() {
-        new Http(ProductCatalogURL + "/api/v1/")
+        new Http(ProductCatalogURL)
                 .delete(productName + graphId + "/")
                 .assertStatus(200);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate, ProductCatalogURL + "/api/v1/");
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 

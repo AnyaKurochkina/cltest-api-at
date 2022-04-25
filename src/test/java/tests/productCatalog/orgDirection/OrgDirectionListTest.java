@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisabledIfEnv("prod")
 public class OrgDirectionListTest extends Tests {
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/org_direction/",
-            "productCatalog/orgDirection/orgDirection.json", Configure.ProductCatalogURL);
+            "productCatalog/orgDirection/orgDirection.json");
 
     @DisplayName("Получение списка направлений")
     @TmsLink("643305")

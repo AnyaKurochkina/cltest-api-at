@@ -1,9 +1,9 @@
 package models.productCatalog;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.example.createExample.*;
+import httpModels.productCatalog.example.getExampleList.GetExampleListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +11,9 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.productCatalog.ProductCatalogSteps;
+
+import static core.helper.Configure.ProductCatalogURL;
 
 @Log4j2
 @Builder
@@ -27,7 +30,7 @@ public class Example extends Entity {
     private String title;
     private UiSchema uiSchema;
     private String jsonTemplate;
-    private final String productName = "example/";
+    private final String productName = "/api/v1/example/";
 
     @Override
     public Entity init() {
@@ -49,7 +52,11 @@ public class Example extends Entity {
     @Override
     @Step("Создание примера")
     protected void create() {
-        id = new Http(Configure.ProductCatalogURL + "/api/v1/")
+        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
+        if (steps.isExists(name)) {
+            steps.deleteByName(name, GetExampleListResponse.class);
+        }
+        id = new Http(ProductCatalogURL)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -62,7 +69,7 @@ public class Example extends Entity {
     @Override
     @Step("Удаление примера")
     protected void delete() {
-        new Http(Configure.ProductCatalogURL + "/api/v1/")
+        new Http(ProductCatalogURL)
                 .delete(productName + id + "/")
                 .assertStatus(204);
     }

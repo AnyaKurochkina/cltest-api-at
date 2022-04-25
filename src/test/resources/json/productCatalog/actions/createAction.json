@@ -4,6 +4,7 @@
   "title": "api_test",
   "description": "",
   "icon": "",
+  "current_version": "",
   "location_restriction": "",
   "required_order_statuses": [],
   "required_item_statuses": [],
@@ -25,5 +26,6 @@
   "restricted_groups": [],
   "version_list": [],
   "last_version": "",
+  "extra_data": {},
   "version": ""
 }

@@ -1,6 +1,5 @@
 package tests.productCatalog.product;
 
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -25,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DisabledIfEnv("prod")
 public class ProductNegativeTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("products/",
-            "productCatalog/products/createProduct.json", Configure.ProductCatalogURL + "/api/v1/");
+    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/products/",
+            "productCatalog/products/createProduct.json");
 
     Map<String, String> info = new LinkedHashMap<String, String>() {{
         put("information", "testData");
@@ -139,5 +138,19 @@ public class ProductNegativeTest extends Tests {
                 .build()
                 .createObject();
         steps.deleteObjectByIdWithOutToken(product.getProductId());
+    }
+
+    @Test
+    @DisplayName("Негативный тест на передачу невалидного значения current_version в продуктах")
+    @TmsLink("821980")
+    public void setInvalidCurrentVersionProduct() {
+        String name = "invalid_current_version_product_test_api";
+        Product product = Product.builder()
+                .name(name)
+                .title(name)
+                .version("1.0.0")
+                .build().createObject();
+        String productId = product.getProductId();
+        steps.partialUpdateObject(productId, new JSONObject().put("current_version", "2")).assertStatus(500);
     }
 }

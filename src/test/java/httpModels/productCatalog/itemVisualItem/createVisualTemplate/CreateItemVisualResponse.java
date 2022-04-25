@@ -1,6 +1,7 @@
 package httpModels.productCatalog.itemVisualItem.createVisualTemplate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.GetImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateItemVisualResponse{
+public class CreateItemVisualResponse implements GetImpl {
 
 	@JsonProperty("event_type")
 	private List<Object> eventType;
@@ -49,4 +50,14 @@ public class CreateItemVisualResponse{
 
 	@JsonProperty("update_dt")
 	private String update_dt;
+
+	@Override
+	public String getVersion() {
+		return null;
+	}
+
+	@Override
+	public String getGraphVersionCalculated() {
+		return null;
+	}
 }
