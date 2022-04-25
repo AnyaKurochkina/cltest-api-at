@@ -54,7 +54,8 @@ public class PostgresSQLCluster extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/postgressql_cluster.json";
-        productName = "PostgreSQL Cluster";
+        if(productName == null)
+            productName = "PostgreSQL Cluster";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();

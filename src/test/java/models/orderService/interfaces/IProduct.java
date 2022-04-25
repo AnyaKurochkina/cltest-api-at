@@ -3,6 +3,7 @@ package models.orderService.interfaces;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
+import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.utils.Waiting;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
@@ -181,6 +182,14 @@ public abstract class IProduct extends Entity {
 
     }
 
+    //example: https://cloud.vtb.ru/vm/orders/ecb3567b-afa6-43a4-8a49-6e0ef5b1a952/topics?context=proj-7ll0yy5zsc&type=project&org=vtb
+    public <T extends Entity> T buildFromLink(String link){
+        projectId = StringUtils.findByRegex("context=([^&]*)", link);
+        orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
+        productId = ((String) OrderServiceSteps.getProductsField(this, "product_id"));
+        return (T) this;
+    }
+
     //Изменить конфигурацию
     protected void resize(String action) {
         List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
@@ -206,7 +215,7 @@ public abstract class IProduct extends Entity {
 
     @SneakyThrows
     protected boolean getSupport() {
-        GetServiceResponse productResponse = (GetServiceResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetServiceResponse.class);
+        GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         Boolean support = (Boolean) graphResponse.getStaticData().get("on_support");
         return Objects.requireNonNull(support, "on_support не найден в графе");

@@ -108,7 +108,7 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
         if (properties == null) {
             return false;
         } else {
-            for(int i = 0; i < properties.length; ++i) {
+            for (int i = 0; i < properties.length; ++i) {
                 if (properties[i].isValueNeedsLookup()) {
                     return true;
                 }
@@ -141,7 +141,7 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
     public void removeAppender(final String name) {
         AppenderControl removed = null;
 
-        while((removed = this.appenders.remove(name)) != null) {
+        while ((removed = this.appenders.remove(name)) != null) {
             this.cleanupFilter(removed);
         }
 
@@ -157,11 +157,11 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
             AppenderControl[] var2 = original;
             int var3 = original.length;
 
-            for(int var4 = 0; var4 < var3; ++var4) {
+            for (int var4 = 0; var4 < var3; ++var4) {
                 AppenderControl ctl = var2[var4];
                 this.cleanupFilter(ctl);
             }
-        } while(!this.appenders.isEmpty());
+        } while (!this.appenders.isEmpty());
 
     }
 
@@ -206,7 +206,9 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
         return this.includeLocation;
     }
 
-    /** @deprecated */
+    /**
+     * @deprecated
+     */
     @Deprecated
     public Map<Property, Boolean> getProperties() {
         if (this.properties == null) {
@@ -215,8 +217,8 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
             if (this.propertiesMap == null) {
                 Map<Property, Boolean> result = new HashMap(this.properties.size() * 2);
 
-                for(int i = 0; i < this.properties.size(); ++i) {
-                    result.put(this.properties.get(i), ((Property)this.properties.get(i)).isValueNeedsLookup());
+                for (int i = 0; i < this.properties.size(); ++i) {
+                    result.put(this.properties.get(i), ((Property) this.properties.get(i)).isValueNeedsLookup());
                 }
 
                 this.propertiesMap = Collections.unmodifiableMap(result);
@@ -243,14 +245,14 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
             props = new ArrayList(this.properties.size());
             LogEvent event = Log4jLogEvent.newBuilder().setMessage(data).setMarker(marker).setLevel(level).setLoggerName(loggerName).setLoggerFqcn(fqcn).setThrown(t).build();
 
-            for(int i = 0; i < this.properties.size(); ++i) {
-                Property prop = (Property)this.properties.get(i);
+            for (int i = 0; i < this.properties.size(); ++i) {
+                Property prop = (Property) this.properties.get(i);
                 String value = prop.isValueNeedsLookup() ? this.config.getStrSubstitutor().replace(event, prop.getValue()) : prop.getValue();
-                ((List)props).add(Property.createProperty(prop.getName(), value));
+                ((List) props).add(Property.createProperty(prop.getName(), value));
             }
         }
 
-        LogEvent logEvent = this.logEventFactory instanceof LocationAwareLogEventFactory ? ((LocationAwareLogEventFactory)this.logEventFactory).createEvent(loggerName, marker, fqcn, this.requiresLocation() ? StackLocatorUtil.calcLocation(fqcn) : null, level, data, (List)props, t) : this.logEventFactory.createEvent(loggerName, marker, fqcn, level, data, (List)props, t);
+        LogEvent logEvent = this.logEventFactory instanceof LocationAwareLogEventFactory ? ((LocationAwareLogEventFactory) this.logEventFactory).createEvent(loggerName, marker, fqcn, this.requiresLocation() ? StackLocatorUtil.calcLocation(fqcn) : null, level, data, (List) props, t) : this.logEventFactory.createEvent(loggerName, marker, fqcn, level, data, (List) props, t);
 
         try {
             this.log(logEvent, LoggerConfig.LoggerConfigPredicate.ALL);
@@ -269,30 +271,32 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
             props = new ArrayList(this.properties.size());
             LogEvent event = Log4jLogEvent.newBuilder().setMessage(data).setMarker(marker).setLevel(level).setLoggerName(loggerName).setLoggerFqcn(fqcn).setThrown(t).build();
 
-            for(int i = 0; i < this.properties.size(); ++i) {
-                Property prop = (Property)this.properties.get(i);
+            for (int i = 0; i < this.properties.size(); ++i) {
+                Property prop = (Property) this.properties.get(i);
                 String value = prop.isValueNeedsLookup() ? this.config.getStrSubstitutor().replace(event, prop.getValue()) : prop.getValue();
-                ((List)props).add(Property.createProperty(prop.getName(), value));
+                ((List) props).add(Property.createProperty(prop.getName(), value));
             }
         }
 
-        LogEvent logEvent = this.logEventFactory instanceof LocationAwareLogEventFactory ? ((LocationAwareLogEventFactory)this.logEventFactory).createEvent(loggerName, marker, fqcn, location, level, data, (List)props, t) : this.logEventFactory.createEvent(loggerName, marker, fqcn, level, data, (List)props, t);
-        if(logEvent.getMessage().getFormattedMessage().equals("toStringProductStepFunc"))
+        LogEvent logEvent = this.logEventFactory instanceof LocationAwareLogEventFactory ? ((LocationAwareLogEventFactory) this.logEventFactory).createEvent(loggerName, marker, fqcn, location, level, data, (List) props, t) : this.logEventFactory.createEvent(loggerName, marker, fqcn, level, data, (List) props, t);
+        if (logEvent.getMessage().getFormattedMessage().equals("toStringProductStepFunc"))
             return;
         try {
             this.log(logEvent, LoggerConfig.LoggerConfigPredicate.ALL);
 
-            Date date = new Date(logEvent.getTimeMillis());
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            formatter.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-            String dateFormatted = formatter.format(date);
+            if (getAppenders().containsKey("CONSOLE")) {
+                Date date = new Date(logEvent.getTimeMillis());
+                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                formatter.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
+                String dateFormatted = formatter.format(date);
 
-            String s = String.format("%s %s %s:%s - %s",
-                    dateFormatted,
-                    logEvent.getLevel(),
-                    logEvent.getSource().getClassName(), logEvent.getSource().getLineNumber(),
-                    logEvent.getMessage().getFormattedMessage());
-            Tests.putAttachLog(s);
+                String s = String.format("%s %s %s:%s - %s",
+                        dateFormatted,
+                        logEvent.getLevel(),
+                        logEvent.getSource().getClassName(), logEvent.getSource().getLineNumber(),
+                        logEvent.getMessage().getFormattedMessage());
+                Tests.putAttachLog(s);
+            }
 
         } finally {
             ReusableLogEventFactory.release(logEvent);
@@ -331,14 +335,14 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
             AppenderControl[] controls = this.appenders.get();
             LoggerConfig loggerConfig = this;
 
-            while(loggerConfig != null) {
+            while (loggerConfig != null) {
                 AppenderControl[] var3 = controls;
                 int var4 = controls.length;
 
-                for(int var5 = 0; var5 < var4; ++var5) {
+                for (int var5 = 0; var5 < var4; ++var5) {
                     AppenderControl control = var3[var5];
                     Appender appender = control.getAppender();
-                    if (appender instanceof LocationAware && ((LocationAware)appender).requiresLocation()) {
+                    if (appender instanceof LocationAware && ((LocationAware) appender).requiresLocation()) {
                         return true;
                     }
                 }
@@ -368,7 +372,7 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
     protected void callAppenders(final LogEvent event) {
         AppenderControl[] controls = this.appenders.get();
 
-        for(int i = 0; i < controls.length; ++i) {
+        for (int i = 0; i < controls.length; ++i) {
             controls[i].callAppender(event);
         }
 
@@ -378,7 +382,9 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
         return Strings.isEmpty(this.name) ? "root" : this.name;
     }
 
-    /** @deprecated */
+    /**
+     * @deprecated
+     */
     @Deprecated
     public static LoggerConfig createLogger(final String additivity, final Level level, @PluginAttribute("name") final String loggerName, final String includeLocation, final AppenderRef[] refs, final Property[] properties, @PluginConfiguration final Configuration config, final Filter filter) {
         if (loggerName == null) {
@@ -393,15 +399,17 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
     }
 
     @PluginFactory
-    public static LoggerConfig createLogger(@PluginAttribute(value = "additivity",defaultBoolean = true) final boolean additivity, @PluginAttribute("level") final Level level, @Required(message = "Loggers cannot be configured without a name") @PluginAttribute("name") final String loggerName, @PluginAttribute("includeLocation") final String includeLocation, @PluginElement("AppenderRef") final AppenderRef[] refs, @PluginElement("Properties") final Property[] properties, @PluginConfiguration final Configuration config, @PluginElement("Filter") final Filter filter) {
+    public static LoggerConfig createLogger(@PluginAttribute(value = "additivity", defaultBoolean = true) final boolean additivity, @PluginAttribute("level") final Level level, @Required(message = "Loggers cannot be configured without a name") @PluginAttribute("name") final String loggerName, @PluginAttribute("includeLocation") final String includeLocation, @PluginElement("AppenderRef") final AppenderRef[] refs, @PluginElement("Properties") final Property[] properties, @PluginConfiguration final Configuration config, @PluginElement("Filter") final Filter filter) {
         String name = loggerName.equals("root") ? "" : loggerName;
         return new LoggerConfig(name, Arrays.asList(refs), filter, level, additivity, properties, config, includeLocation(includeLocation, config));
     }
 
-    /** @deprecated */
+    /**
+     * @deprecated
+     */
     @Deprecated
     protected static boolean includeLocation(final String includeLocationConfigValue) {
-        return includeLocation(includeLocationConfigValue, (Configuration)null);
+        return includeLocation(includeLocationConfigValue, (Configuration) null);
     }
 
     protected static boolean includeLocation(final String includeLocationConfigValue, final Configuration configuration) {
@@ -431,7 +439,7 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
             try {
                 Class<?> clazz = Loader.loadClass(factory);
                 if (clazz != null && LogEventFactory.class.isAssignableFrom(clazz)) {
-                    LOG_EVENT_FACTORY = (LogEventFactory)clazz.newInstance();
+                    LOG_EVENT_FACTORY = (LogEventFactory) clazz.newInstance();
                 }
             } catch (Exception var2) {
                 LOGGER.error("Unable to create LogEventFactory {}", factory, var2);
@@ -439,7 +447,7 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
         }
 
         if (LOG_EVENT_FACTORY == null) {
-            LOG_EVENT_FACTORY = (LogEventFactory)(Constants.ENABLE_THREADLOCALS ? new ReusableLogEventFactory() : new DefaultLogEventFactory());
+            LOG_EVENT_FACTORY = (LogEventFactory) (Constants.ENABLE_THREADLOCALS ? new ReusableLogEventFactory() : new DefaultLogEventFactory());
         }
 
     }

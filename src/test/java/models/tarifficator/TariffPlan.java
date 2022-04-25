@@ -67,12 +67,14 @@ public class TariffPlan extends Entity {
     @Override
     @Step("Создание тарифного плана")
     protected void create() {
-        String object = new Http(Configure.TarifficatorURL)
+        String id = new Http(Configure.TarifficatorURL)
                 .body(toJson())
                 .post("/v1/tariff_plans")
                 .assertStatus(201)
-                .toString();
-        StringUtils.copyAvailableFields(TariffPlanSteps.deserialize(object, TariffPlan.class), this);
+                .jsonPath()
+                .getString("id");
+        TariffPlan newTariffPlan = TariffPlanSteps.getTariffPlan(id);
+        StringUtils.copyAvailableFields(newTariffPlan, this);
     }
 
 

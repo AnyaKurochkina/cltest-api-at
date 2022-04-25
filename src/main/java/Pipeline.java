@@ -19,6 +19,7 @@ public class Pipeline {
     final static AppProperties properties = new AppProperties();
     final static String TEST_RUN_ID = "testRunId";
     final static String TEST_PLAN_ID = "testPlanId";
+//    final static String TEST_SECRET = "Secret";
 
     final static String pathTestResourcesDir = Paths.get("src/test/resources").toAbsolutePath().toString();
     static String ENV = "prod";
@@ -37,8 +38,9 @@ public class Pipeline {
             properties.setPrivateToken(argsMap.get(TEST_IT_TOKEN));
 
         String testPlanName = null;
-        if((argsMap.get(TEST_PLAN_ID)) != null) {
-            testPlanName = RestAssured.given()
+        String threadCount = "";
+        if ((argsMap.get(TEST_PLAN_ID)) != null) {
+            JsonPath path = RestAssured.given()
                     .config(RestAssured.config().sslConfig(config))
                     .header("Authorization", "PrivateToken " + properties.getPrivateToken())
                     .get(properties.getUrl() + "/api/v2/testPlans/" + argsMap.get(TEST_PLAN_ID))
@@ -46,8 +48,13 @@ public class Pipeline {
                     .statusCode(200)
                     .extract()
                     .response()
-                    .jsonPath()
-                    .getString("name");
+                    .jsonPath();
+            testPlanName = path.getString("name");
+            List<String> tags = path.getList("tags.name");
+            threadCount = tags.stream().filter(s -> s.startsWith("thread_count=")).findFirst().orElse("thread_count=").substring(13);
+            if (threadCount.length() > 0) {
+                threadCount = " -Djunit.jupiter.execution.parallel.config.fixed.parallelism=" + threadCount;
+            }
         }
 
         setEnv(testPlanName, Arrays.asList("dev", "ift"));
@@ -70,7 +77,10 @@ public class Pipeline {
                 externalIds.add(externalId);
                 writer.println(externalId + "=" + result.query("/configuration/id"));
             }
-            String command = "-DfailIfNoTests=false -Dmaven.test.skip=false -Dsecret=123456 -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestRunId=" + argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
+            String command = "-DfailIfNoTests=false -Dmaven.test.skip=false" + threadCount +
+                    " -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestRunId=" +
+                    argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
+
             System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");
             System.out.println("##teamcity[publishArtifacts '" + pathTestResourcesDir + "/configurations.txt => configurations']");
         }
@@ -78,7 +88,7 @@ public class Pipeline {
     }
 
     private static void setEnv(String testPlanName, List<String> environments) {
-        if(testPlanName == null)
+        if (testPlanName == null)
             return;
         String name = testPlanName.toLowerCase();
         for (String env : environments) {

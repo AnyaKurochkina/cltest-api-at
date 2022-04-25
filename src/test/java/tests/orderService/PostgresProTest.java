@@ -14,6 +14,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("PostgresPro")
+@Deprecated
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresPro"), @Tag("prod")})
 public class PostgresProTest extends Tests {
     static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";

@@ -84,7 +84,6 @@ public class Http {
         return this;
     }
 
-    @SneakyThrows
     public Response get(String path, Object... args) {
         this.method = "GET";
         for (Object arg : args)
@@ -93,6 +92,10 @@ public class Http {
                     .replaceAll(" ", "%20"));
         this.path = StringUtils.format(path, args);
         return request();
+    }
+
+    public Response getOrThrow(String path, Object... args) throws ConnectException {
+        return get(path, args);
     }
 
     public Response delete(String path, Object... args) {
@@ -174,21 +177,23 @@ public class Http {
 
     private Response request() {
         Response response = null;
-        for (int i = 0; i < 3; i++) {
-//            try {
+        for (int i = 0; i < 2; i++) {
+            try {
                 response = filterRequest();
-//            } catch (AssertionFailedError e) {
-//                Waiting.sleep(6000);
-//                continue;
-//            }
+            } catch (AssertionFailedError e) {
+                Waiting.sleep(6000);
+                continue;
+            }
             if (response.status() == 504 && method.equals("GET")) {
                 Waiting.sleep(2000);
                 continue;
             }
             break;
         }
-//        if (Objects.isNull(response))
-//            throw new ConnectException(String.format("Ошибка отправки http запроса %s. (Connection refused)", (host + path)));
+        if (Objects.isNull(response)) {
+            Waiting.sleep(5000);
+            response = filterRequest();
+        }
         return response;
     }
 
@@ -236,7 +241,7 @@ public class Http {
             if (body.length() > 0)
                 specification.body(body);
 
-            specification.params(getParamsUrl(new URI(host + path)));
+            specification.params(getParamsUrl(StringUtils.findByRegex("\\?(.*)", path)));
             String pathWithoutParameters = path.replaceFirst("\\?.*", "");
             switch (method) {
                 case "POST":
@@ -265,9 +270,11 @@ public class Http {
                 }
             }
         } catch (Exception e) {
+            if(e instanceof ConnectException)
+                throw e;
             if (response != null)
                 status = response.getStatusCode();
-            Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e.getMessage(), status));
+            Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e, status));
         } finally {
             if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
@@ -288,14 +295,14 @@ public class Http {
     }
 
     @SneakyThrows
-    public static Map<String, String> getParamsUrl(URI url) {
-        return URLEncodedUtils.parse(url, StandardCharsets.UTF_8).stream().collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
+    public static Map<String, String> getParamsUrl(String params) {
+        return URLEncodedUtils.parse(params, StandardCharsets.UTF_8).stream().collect(Collectors.toMap(NameValuePair::getName, p -> Optional.ofNullable(p.getValue()).orElse("")));
     }
 
-    public static class ConnectException extends AssertionError {
-        public ConnectException(String errorMessage) {
-            super(errorMessage);
-        }
-
-    }
+//    public static class ConnectException extends AssertionError {
+//        public ConnectException(String errorMessage) {
+//            super(errorMessage);
+//        }
+//
+//    }
 }

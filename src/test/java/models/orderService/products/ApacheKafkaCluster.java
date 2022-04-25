@@ -45,6 +45,7 @@ public class ApacheKafkaCluster extends IProduct {
     @ToString.Include
     String osVersion;
     public static final String KAFKA_CREATE_TOPICS = "kafka_create_topics";
+    public static final String KAFKA_CLUSTER_RETENTION_MS = "data.find{it.type=='cluster'}.data.config.topics.any{it.topic_name=='%s' && it.retention_ms=='%s'}";
 
     @Override
     @Step("Заказ продукта")
@@ -58,13 +59,13 @@ public class ApacheKafkaCluster extends IProduct {
         jsonTemplate = "/orders/apache_kafka_cluster.json";
         productName = "Apache Kafka Cluster";
         initProduct();
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(kafkaVersion == null)
+        if (kafkaVersion == null)
             kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
-        if(dataCentre == null)
+        if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
@@ -84,7 +85,7 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.label", getLabel())
                 .build();
     }
@@ -115,6 +116,25 @@ public class ApacheKafkaCluster extends IProduct {
             Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)), "Отсутствует в списке топик " + name);
         topics.addAll(kafkaTopics);
         save();
+    }
+
+    public void editTopics(String topic) {
+        JSONObject body = new JSONObject("{\n" +
+                "  \"changes\": [\n" +
+                "    {\n" +
+                "      \"operation\": \"change_cleanup_policy\",\n" +
+                "      \"parameters\": {\n" +
+                "        \"cleanup^policy\": \"delete\",\n" +
+                "        \"retention^ms\": 1800001\n" +
+                "      },\n" +
+                "      \"topic_name\": \"" + topic + "\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"
+        );
+        OrderServiceSteps.executeAction("kafka_edit_topics_release", this, body, this.projectId);
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this,
+                String.format(KAFKA_CLUSTER_RETENTION_MS, topic, "1800001")), "ACL на топик не был изменен");
     }
 
     public void deleteTopics(List<String> names) {
