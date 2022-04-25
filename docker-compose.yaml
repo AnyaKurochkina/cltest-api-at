@@ -1,0 +1,37 @@
+version: '3'
+services:
+  selenoid:
+    image: aerokube/selenoid:latest-release
+    container_name: "selenoid"
+    restart: always
+    network_mode: bridge
+    volumes:
+      - "./selenoid/config:/etc/selenoid"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./selenoid/logs:/opt/selenoid/logs"
+      - "./selenoid/video:/opt/selenoid/video/"
+    command: -limit 10 --conf /etc/selenoid/browsers.json --log-output-dir /opt/selenoid/logs
+    environment:
+      - "TZ=Europe/Moscow"
+#      - "OVERRIDE_VIDEO_OUTPUT_DIR=./selenoid/video/"
+      - "OVERRIDE_VIDEO_OUTPUT_DIR=C:\\Users\\user\\IdeaProjects\\cltest-api-at\\selenoid\\video"
+    ports:
+      - "4444:4444"
+
+  selenoid-ui:
+    image: aerokube/selenoid-ui
+    container_name: "selenoid-ui"
+    restart: always
+    network_mode: bridge
+    depends_on:
+      - selenoid
+    links:
+      - selenoid
+    ports:
+      - "80:8080"
+    command: ["--selenoid-uri", "http://selenoid:4444"]
+
+  selenoid-recorder:
+    image: selenoid/video-recorder:latest-release
+    container_name: "selenoid-recorder"
+    network_mode: bridge
