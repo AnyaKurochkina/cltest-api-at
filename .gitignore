@@ -20,3 +20,5 @@
 /cltest-api-at-junit5.iml
 **/logData.json
 **/secret.json
+/build/reports/tests/
+/build/
