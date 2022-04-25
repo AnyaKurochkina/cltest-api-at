@@ -55,7 +55,7 @@ public class Elasticsearch extends IProduct {
         if(osVersion == null)
             osVersion = getRandomOsVersion();
         if(elasticsearchVersion == null)
-            elasticsearchVersion = getRandomProductVersionByPathEnum("artemis_version.enum");
+            elasticsearchVersion = getRandomProductVersionByPathEnum("elasticsearch_version.enum");
         if(dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
