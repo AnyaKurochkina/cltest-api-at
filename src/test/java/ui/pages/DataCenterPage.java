@@ -20,6 +20,7 @@ public class DataCenterPage implements Loadable {
     private final SelenideElement checkBoxDeletionProtect = $x("//*[text()='Включить защиту от удаления']");
     private final SelenideElement acceptCheckBoxDeletionProtect = $x("//*[text()='Подтвердить']");
     private final SelenideElement actionMenuBtn = $x("//button[@id='actions-menu-button']");
+    private final SelenideElement publicIpAddress = $x("//*[text()='Публичные IP-адреса']");
     private final SelenideElement dataCenterInfoTable = $x("//tr[@class='MuiTableRow-root MuiTableRow-hover']");
     private final String dataCenterStatus = "./td[4]/div";
     private final String deletionProtectStatus = "./td[3]";
@@ -50,6 +51,11 @@ public class DataCenterPage implements Loadable {
         deleteDataCenterActionBtn.shouldBe(Condition.enabled).click();
         idForDeleteInput.shouldBe(Condition.visible).val(idForDelete.getText());
         confirmDeleteBtn.shouldBe(Condition.enabled).click();
+    }
+
+    public void reserveIpAddress(){
+        publicIpAddress.scrollIntoView(true).shouldBe(Condition.visible);
+
     }
 
     public void backToVmWareOrganization(){
