@@ -10,7 +10,10 @@ public enum Role {
     ORDER_SERVICE_ADMIN("order-service.admin"),
 
     @SerializedName("viewer")
-    VIEWER("viewer");
+    VIEWER("viewer"),
+
+    @SerializedName("t1.admin")
+    T1ADMIN("roles/admin");
 
     private final String name;
 
