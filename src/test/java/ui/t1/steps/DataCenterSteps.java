@@ -1,9 +1,9 @@
-package ui.uiSteps;
+package ui.t1.steps;
 
 import io.qameta.allure.Step;
-import ui.pages.DataCenterPage;
-import ui.pages.OrganizationPage;
-import ui.pages.VmWareDataCentreCreationPage;
+import ui.t1.pages.DataCenterPage;
+import ui.t1.pages.OrganizationPage;
+import ui.t1.pages.VmWareDataCentreCreationPage;
 
 import static core.enums.DataCentreStatus.*;
 

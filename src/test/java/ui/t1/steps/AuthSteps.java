@@ -1,7 +1,7 @@
-package ui.uiSteps;
+package ui.t1.steps;
 
 import io.qameta.allure.Step;
-import ui.pages.LoginPage;
+import ui.t1.pages.LoginPage;
 
 public class AuthSteps {
 

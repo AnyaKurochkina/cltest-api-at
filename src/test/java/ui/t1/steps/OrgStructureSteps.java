@@ -1,10 +1,8 @@
-package ui.uiSteps;
+package ui.t1.steps;
 
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
-import ui.pages.OrgStructurePage;
-
-import static core.helper.Configure.ENV;
+import ui.t1.pages.OrgStructurePage;
 
 @Log4j2
 public class OrgStructureSteps {

@@ -38,7 +38,7 @@ public class TestsExecutionListener implements TestExecutionListener {
             isRemote();
             Configuration.browserSize = "1530x870";
             Configuration.browserPosition = "2x2";
-            Configuration.timeout = 15000;
+            Configuration.timeout = 20000;
             Configuration.driverManagerEnabled = false;
         }
         //####Config for Ui###

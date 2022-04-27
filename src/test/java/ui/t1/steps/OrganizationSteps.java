@@ -1,9 +1,9 @@
-package ui.uiSteps;
+package ui.t1.steps;
 
 import io.qameta.allure.Step;
-import ui.pages.ListOfOrganizationsPage;
-import ui.pages.MainPage;
-import ui.pages.OrganizationPage;
+import ui.t1.pages.ListOfOrganizationsPage;
+import ui.t1.pages.MainPage;
+import ui.t1.pages.OrganizationPage;
 
 import java.util.Locale;
 
