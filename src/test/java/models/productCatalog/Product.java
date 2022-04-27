@@ -108,6 +108,6 @@ public class Product extends Entity {
                 .delete(productName + productId + "/")
                 .assertStatus(204);
         ProductCatalogSteps steps = new ProductCatalogSteps(productName,"productCatalog/products/createProduct.json");
-        Assertions.assertFalse(steps.isExists(productName));
+        Assertions.assertFalse(steps.isExists(name));
     }
 }

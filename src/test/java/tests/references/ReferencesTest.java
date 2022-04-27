@@ -29,6 +29,7 @@ public class ReferencesTest extends ReferencesStep {
     private static final String NAME = "create_directory_api_test";
     private static final String DESCRIPTION = "description_create_directory_api_test";
     private static final String PAGES_JSON_TEMPLATE = "references/createPages.json";
+    private static final String DIRECTORIES_JSON_TEMPLATE = "references/createDirectory.json";
     private static final String DIR_IMPORT_PATH = RESOURCE_PATH + "/json/references/import_directories.json";
     private static final String PAGES_IMPORT_PATH = RESOURCE_PATH + "/json/references/import_pages_api.json";
     private static final String PAGES_FILTER_IMPORT_PATH = RESOURCE_PATH + "/json/references/import_page_filter_api.json";
@@ -71,16 +72,6 @@ public class ReferencesTest extends ReferencesStep {
         }
     }
 
-    @DisplayName("Негативный тест на создание directory c именем содержащим недопустимые символы")
-    @Disabled
-    @Test
-    public void createDirectoryWithInvalidName() {
-        createDirectoryWithInvalidName(new JSONObject()
-                .put("name", "create_dir_test_api@")
-                .put("description", DESCRIPTION))
-                .assertStatus(500);
-    }
-
     @DisplayName("Негативный тест на создание pages c именем содержащим недопустимые символы")
     @Test
     public void createPageWithInvalidName() {
@@ -91,18 +82,7 @@ public class ReferencesTest extends ReferencesStep {
                 .assertStatus(500);
     }
 
-    @DisplayName("Получение списка Directories для приватных ролей")
-    @Test
-    public void getPrivateDirList() {
-        assertTrue(getPrivateDirectoriesList().size() > 0);
-    }
 
-    @DisplayName("Получение Directory по имени для приватных ролей")
-    @Test
-    public void getPrivateDirectoryByName() {
-        Directories getDirectory = getPrivateDirectoryByName(directories.getName());
-        assertEquals(getDirectory.getName(), directories.getName());
-    }
 
     @DisplayName("Изменение Directory по имени для приватных ролей")
     @Test
@@ -373,5 +353,18 @@ public class ReferencesTest extends ReferencesStep {
     @Test
     public void exportPageFilter() {
         exportPrivatePageFilter(pageFilter.getKey());
+    }
+
+    @DisplayName("Создание Directories со всеми допустимыми символами")
+    @Test
+    public void createDirectoriesWithAllValidCharacters() {
+        String expectedName = "A-z_2022_:test";
+        JSONObject jsonObject = JsonHelper.getJsonTemplate(DIRECTORIES_JSON_TEMPLATE)
+                .set("name", expectedName)
+                .set("description", "description")
+                .build();
+        Directories directories = createDirectory(jsonObject);
+        deleteList.add(directories.getName());
+        assertEquals(expectedName, directories.getName());
     }
 }

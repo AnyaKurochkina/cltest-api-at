@@ -83,5 +83,4 @@ public class PortalBackSteps extends Steps {
                 .jsonPath()
                 .get("[0].unique_name");
     }
-
 }

@@ -1,10 +1,12 @@
 package tests.productCatalog.productOrgInfoSystem;
 
-import httpModels.productCatalog.GetImpl;
+import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.productOrgInfoSystem.createInfoSystem.CreateInfoSystemResponse;
+import httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.GetInfoSystemListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.authorizer.InformationSystem;
 import models.productCatalog.Product;
 import models.productCatalog.ProductOrgInfoSystem;
 import org.junit.DisabledIfEnv;
@@ -15,8 +17,10 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -33,6 +37,7 @@ public class ProductOrgInfoSystemTest extends Tests {
     @DisplayName("Создание productOrgInfoSystem")
     @TmsLink("822022")
     public void createInfoSystem() {
+        String infoSysId = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
         Product product = Product.builder()
                 .name("product_for_create_info_system_test_api")
                 .title("AtTestApiProduct")
@@ -43,7 +48,9 @@ public class ProductOrgInfoSystemTest extends Tests {
         ProductOrgInfoSystem productOrgInfoSystem = ProductOrgInfoSystem.builder()
                 .organization(orgName)
                 .product(product.getProductId())
-                .build().createObject();
+                .informationSystems(Collections.singletonList(infoSysId))
+                .build()
+                .createObject();
         CreateInfoSystemResponse createdInfoSystem = steps.getProductOrgInfoSystem(product.getProductId(), orgName);
         assertEquals(createdInfoSystem.getId(), productOrgInfoSystem.getId());
     }
@@ -52,6 +59,7 @@ public class ProductOrgInfoSystemTest extends Tests {
     @DisplayName("Удаление productOrgInfoSystem")
     @TmsLink("822026")
     public void deleteInfoSystem() {
+        String infoSysId = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
         Product product = Product.builder()
                 .name("product_for_delete_info_system_test_api")
                 .title("AtTestApiProduct")
@@ -62,8 +70,18 @@ public class ProductOrgInfoSystemTest extends Tests {
         ProductOrgInfoSystem productOrgInfoSystem = ProductOrgInfoSystem.builder()
                 .organization(orgName)
                 .product(product.getProductId())
-                .build().createObject();
-        GetImpl getProduct = steps.getById(productOrgInfoSystem.getId(), CreateInfoSystemResponse.class);
-        assertEquals(getProduct.getId(), productOrgInfoSystem.getId());
+                .informationSystems(Collections.singletonList(infoSysId))
+                .build()
+                .createObject();
+        steps.deleteProductOrgInfoSystem(product.getProductId(), orgName);
+        List<ItemImpl> list = steps.getProductObjectList(GetInfoSystemListResponse.class);
+        boolean result = false;
+        for (ItemImpl item : list) {
+           if(item.getId().equals(productOrgInfoSystem.getId())) {
+               result = true;
+               break;
+           }
+        }
+        assertFalse(result);
     }
 }
