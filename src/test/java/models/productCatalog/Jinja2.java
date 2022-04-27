@@ -5,7 +5,7 @@ import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.jinja2.createJinja2.response.CreateJinjaResponse;
 import httpModels.productCatalog.jinja2.createJinja2.response.Jinja2Data;
-import httpModels.productCatalog.jinja2.getJinjaResponse.GetJinjaResponse;
+import httpModels.productCatalog.jinja2.getJinjaListResponse.GetJinjaListResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,7 +50,7 @@ public class Jinja2 extends Entity {
     protected void create() {
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         if (productCatalogSteps.isExists(name)) {
-            productCatalogSteps.deleteByName(name, GetJinjaResponse.class);
+            productCatalogSteps.deleteByName(name, GetJinjaListResponse.class);
         }
         jinjaId = new Http(Configure.ProductCatalogURL)
                 .body(toJson())

@@ -20,5 +20,7 @@ public class Pages {
     @JsonProperty("directory")
     private String directoryId;
     private List<String> tags;
+    private List<String> ctx_whitelist;
+    private List<String> ctx_blacklist;
     private Integer weight;
 }
