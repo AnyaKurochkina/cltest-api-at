@@ -1,10 +1,12 @@
 package models.subModels;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Flavor {
     @EqualsAndHashCode.Include
+    @Getter
     public String name;
     public String id;
     public Data data;

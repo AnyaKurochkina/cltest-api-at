@@ -12,10 +12,12 @@ public class NewOrderPage {
     ElementsCollection products = $$x("//button[img]");
 
     public NewOrderPage() {
-        submitBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
+        submitBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover()
+                .shouldNotBe(Condition.cssValue("cursor", "default")).click();
     }
 
     public void selectProduct(String product){
-        products.find(Condition.exactText(product)).$("img").click();
+        products.find(Condition.exactText(product)).$("img").hover()
+                .shouldNotBe(Condition.cssValue("cursor", "default")).click();
     }
 }

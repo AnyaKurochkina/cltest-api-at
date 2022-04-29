@@ -19,9 +19,24 @@ public class DropDown {
     }
 
     public void select(String value){
-        element.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover()
-                .shouldNotBe(Condition.cssValue("cursor", "default")).click();
+        element.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover();
+        if(element.$x(String.format("input[@value='%s']", value)).exists())
+            return;
+        if(element.getText().equals(value))
+            return;
+        element.shouldNotBe(Condition.cssValue("cursor", "default")).click();
         $x(String.format("//ul/li[text()='%s']", value))
+                .shouldBe(Condition.enabled)
+                .click();
+    }
+
+    public void selectByValue(String value){
+        element.shouldBe(Condition.visible).shouldBe(Condition.enabled)
+                .hover().shouldNotBe(Condition.cssValue("cursor", "default"));
+        if(element.$x(String.format("input[@value='%s']", value)).exists())
+            return;
+        element.click();
+        $x(String.format("//ul/li[@data-value='%s']", value))
                 .shouldBe(Condition.enabled)
                 .click();
     }
