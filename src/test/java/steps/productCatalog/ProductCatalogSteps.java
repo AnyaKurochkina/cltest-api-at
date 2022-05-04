@@ -43,6 +43,13 @@ public class ProductCatalogSteps {
                 .extractAs(clazz)).getItemsList();
     }
 
+    @Step("Загрузка объекта в Gitlab")
+    public Response dumpToBitbucket(String id) {
+        return new Http(ProductCatalogURL)
+                .post(productName + id + "/dump_to_bitbucket/")
+                .assertStatus(200);
+    }
+
     @Step("Получение Meta данных объекта продуктового каталога")
     public MetaImpl getMeta(Class<?> clazz) {
         return ((GetListImpl) new Http(ProductCatalogURL)
@@ -209,6 +216,7 @@ public class ProductCatalogSteps {
                 .body(object)
                 .patch(productName + id + "/");
     }
+
     //todo "Получить сообщение, сравнить с ответом"
     @Step("Частичное обновление продукта без токена")
     public void partialUpdateObjectWithOutToken(String id, JSONObject object) {
@@ -393,10 +401,17 @@ public class ProductCatalogSteps {
                 .extractAs(CreateInfoSystemResponse.class);
     }
 
-    private static String delNoDigOrLet (String s) {
+    @Step("Удаление productOrgInfo по id product и организации")
+    public void deleteProductOrgInfoSystem(String productId, String orgName) {
+         new Http(ProductCatalogURL)
+                .delete(productName + productId + "/organizations/" + orgName + "/")
+                .assertStatus(204);
+    }
+
+    private static String delNoDigOrLet(String s) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
-            if (Character .isLetterOrDigit(s.charAt(i)))
+            if (Character.isLetterOrDigit(s.charAt(i)))
                 sb.append(s.charAt(i));
         }
         return sb.toString();

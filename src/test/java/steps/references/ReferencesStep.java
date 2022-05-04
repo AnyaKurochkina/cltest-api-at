@@ -12,7 +12,6 @@ import models.references.PageFilter;
 import models.references.Pages;
 import models.subModels.Flavor;
 import org.json.JSONObject;
-import tests.Tests;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 
 import static core.helper.Configure.ReferencesURL;
 
-public class ReferencesStep extends Tests {
+public class ReferencesStep {
 
     @Step("Получение списка flavors для продукта {product}")
     public static List<Flavor> getProductFlavorsLinkedList(IProduct product) {
@@ -118,7 +117,7 @@ public class ReferencesStep extends Tests {
     }
 
     @Step("Получение списка directories для приватных ролей")
-    public List<Directories> getPrivateDirectoriesList() {
+    public static List<Directories> getPrivateDirectoriesList() {
         String jsonArray = new Http(ReferencesURL).get("/api/v1/private/directories/")
                 .assertStatus(200)
                 .toString();
@@ -128,7 +127,7 @@ public class ReferencesStep extends Tests {
     }
 
     @Step("Создание directory для приватных ролей")
-    public Directories createDirectory(JSONObject object) {
+    public static Directories createDirectory(JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
                 .post("/api/v1/private/directories/")
@@ -136,16 +135,16 @@ public class ReferencesStep extends Tests {
                 .extractAs(Directories.class);
     }
 
-    @Step("Создание directory для приватных ролей")
-    public Response createDirectoryWithInvalidName(JSONObject object) {
+    @Step("Создание directory для приватных ролей c недопустимыми символами")
+    public static Response createDirectoryWithInvalidName(JSONObject object) {
         return new Http(ReferencesURL)
                 .body(object)
                 .post("/api/v1/private/directories/")
-                .assertStatus(201);
+                .assertStatus(400);
     }
 
     @Step("Получение directory по имени для приватных ролей")
-    public Directories getPrivateDirectoryByName(String name) {
+    public static Directories getPrivateDirectoryByName(String name) {
         return new Http(ReferencesURL)
                 .get("/api/v1/private/directories/" + name + "/")
                 .assertStatus(200)
@@ -269,7 +268,7 @@ public class ReferencesStep extends Tests {
     }
 
     @Step("Удаление directory по имени для приватных ролей")
-    public void deletePrivateDirectoryByName(String name) {
+    public static void deletePrivateDirectoryByName(String name) {
         new Http(ReferencesURL)
                 .delete("/api/v1/private/directories/" + name + "/")
                 .assertStatus(204);

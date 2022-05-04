@@ -145,31 +145,6 @@ public class VisualTemplateTest extends Tests {
         steps.deleteObjectWithPublicToken(visualTemplates.getItemId()).assertStatus(403);
     }
 
-    @DisplayName("Получение списка шаблонов визуализаций по фильтрам event_provider и event_type")
-    @TmsLink("643638")
-    @Test
-    public void getVisualTemplateListByProviderAndType() {
-        String name = "get_list_by_type_and_provider_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
-                .name(name)
-                .eventProvider(Collections.singletonList("docker"))
-                .eventType(Collections.singletonList("app"))
-                .compactTemplate(compactTemplate)
-                .fullTemplate(fullTemplate)
-                .isActive(false)
-                .build()
-                .createObject();
-        String providerFilter = visualTemplates.getEventProvider().get(0);
-        String typeFilter = visualTemplates.getEventType().get(0);
-        List<ItemImpl> list = steps.getProductObjectList(GetVisualTemplateListResponse.class,
-                "?event_type=" + typeFilter + "&event_provider=" + providerFilter);
-        assertTrue(list.size() > 0);
-        for (ItemImpl impl : list) {
-            assertTrue(steps.getJsonPath(impl.getId()).getString("event_provider").contains(providerFilter));
-            assertTrue(steps.getJsonPath(impl.getId()).getString("event_type").contains(typeFilter));
-        }
-    }
-
     @DisplayName("Импорт шаблона визуализации")
     @TmsLink("643640")
     @Test
