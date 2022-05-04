@@ -1,5 +1,8 @@
 package core.helper;
 
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.intellij.lang.annotations.Language;
@@ -24,6 +27,12 @@ public final class StringUtils {
         for (Object arg : args)
             str = str.replaceFirst("\\{}", Objects.requireNonNull(arg).toString());
         return str;
+    }
+
+    public static SelenideElement $x(@Language("XPath") String xpath, Object ... args) {
+        for (Object arg : args)
+            xpath = xpath.replaceFirst("\\{}", Objects.requireNonNull(arg).toString());
+        return Selenide.$x(xpath);
     }
 
     @SneakyThrows

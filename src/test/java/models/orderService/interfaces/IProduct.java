@@ -60,6 +60,8 @@ public abstract class IProduct extends Entity {
     public static final String RESIZE = "Изменить конфигурацию";
 
     protected String jsonTemplate;
+    @Getter @Setter
+    transient String link;
 
     @Getter
     private ProductStatus status;
