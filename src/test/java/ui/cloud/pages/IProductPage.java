@@ -19,7 +19,6 @@ public abstract class IProductPage {
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
-    SelenideElement btnRestart = $x("//li[.='Перезагрузить по питанию']");
 
     public void waitPending() {
         topInfo.getFirstRowByColumn("Статус").$$x("descendant::*[@title]")
@@ -34,12 +33,12 @@ public abstract class IProductPage {
     }
 
     private SelenideElement getBtnAction(String header){
-        return $x("//ancestor::div[.='{}Действия']/descendant::button[.='Действия']", header);
+        return $x("//ancestor::div[.='{}Действия']//button[.='Действия']", header);
     }
 
     public void runActionWithoutParameters(String headerBlock, String action){
         getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        btnRestart.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = new Dialog(action);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -48,7 +47,6 @@ public abstract class IProductPage {
     @SneakyThrows
     public void runActionWithParameters(String headerBlock, Executable executable){
         getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        btnRestart.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
     }
 
