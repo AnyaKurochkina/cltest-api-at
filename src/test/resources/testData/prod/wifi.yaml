@@ -1,3 +1,0 @@
-WildFly:
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
