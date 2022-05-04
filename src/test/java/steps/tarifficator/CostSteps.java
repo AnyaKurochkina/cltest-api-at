@@ -112,7 +112,7 @@ public class CostSteps extends Steps {
             template.put("tariff_plan_id", vm.query("/attrs/tariff_plan_id"));
 
             JSONArray items = (JSONArray) vm.query("/data");
-            for(Object itemObj : items){
+            for (Object itemObj : items) {
                 JSONObject item = (JSONObject) itemObj;
                 JSONObject costItem = new JSONObject();
                 costItem.put("item_id", item.get("item_id"));

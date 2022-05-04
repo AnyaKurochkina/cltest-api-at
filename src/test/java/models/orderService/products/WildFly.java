@@ -47,7 +47,9 @@ public class WildFly extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/wildfly.json";
-        productName = "WildFly";
+        if (productName == null){
+            productName = "WildFly";
+        }
         initProduct();
         if(flavor == null)
             flavor = getMinFlavor();
