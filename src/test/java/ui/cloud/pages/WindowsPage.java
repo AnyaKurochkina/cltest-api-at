@@ -2,6 +2,7 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Assertions;
 
@@ -14,8 +15,10 @@ public class WindowsPage {
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnActions = $x("//button[.='Действия']");
+    SelenideElement btnDelete = $x("//li[.='Удалить']");
     TopInfo topInfo = new TopInfo();
-    History history = new History();
+    Condition activeCnd = Condition.and("visible and enabled", Condition.visible, Condition.enabled);
+    Condition clickableCnd = Condition.not(Condition.cssValue("cursor", "default"));
 
     public WindowsPage() {
         btnGeneralInfo.shouldBe(Condition.enabled);
@@ -28,25 +31,25 @@ public class WindowsPage {
     }
 
     public void checkLastAction() {
-        history.open();
+        btnHistory.shouldBe(Condition.enabled).click();
+        History history = new History();
         Assertions.assertEquals("В порядке", history.lastActionStatus());
     }
 
-    public void delete(){
-        btnGeneralInfo.click();
-        btnActions.click();
-
+    public void delete() {
+        btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnActions.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnDelete.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        Dialog dlgActions = new Dialog("Удаление");
+        dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
+        dlgActions.getDialog().$x("descendant::button[.='Удалить']")
+                .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
     }
 
-    private class History extends TablePage {
+    private static class History extends TablePage {
         History() {
             super("Дата запуска");
         }
-
-        void open() {
-            btnHistory.shouldBe(Condition.enabled).click();
-        }
-
         public String lastActionStatus() {
             return getFirstRowByColumn("Статус").$x("descendant::*[@title]").getAttribute("title");
         }
