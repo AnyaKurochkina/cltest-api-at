@@ -2,6 +2,7 @@ package tests.productCatalog.action;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.action.getAction.response.GetActionResponse;
@@ -392,6 +393,21 @@ public class ActionsTest extends Tests {
                 GetActionResponse.class);
         Map<String, String> extraData = getActionById.getExtraData();
         assertEquals(extraData.get(key), value);
+    }
+
+    @Test
+    @DisplayName("Загрузка action в GitLab")
+    @TmsLink("")
+    public void dumpToGitlabAction() {
+        String actionName = "dump_to_gitlab_ff_action_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .version("1.0.0")
+                .build()
+                .createObject();
+        Response response = steps.dumpToBitbucket(action.getActionId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
 }
 
