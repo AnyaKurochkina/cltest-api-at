@@ -13,6 +13,7 @@ import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.json.JSONException;
 import org.json.JSONObject;
 import ru.testit.model.request.*;
 import ru.testit.model.response.ConfigurationResponse;
@@ -320,6 +321,26 @@ public class TestITClient {
 
     public void sendCompleteTestRun() {
         Response response;
+        String testPlanId = System.getProperty("testPlanId");
+        try {
+            if (Objects.nonNull(testPlanId)) {
+                JSONObject body = new Http(properties.getUrl())
+                        .disableAttachmentLog()
+                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                        .body("")
+                        .get("/api/v2/testPlans/{}", testPlanId)
+                        .assertStatus(200)
+                        .toJson();
+                new Http(properties.getUrl())
+                        .disableAttachmentLog()
+                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                        .body(body.put("lockedById", (Object) null))
+                        .put("/api/v2/testPlans")
+                        .assertStatus(204);
+            }
+        } catch (Exception e) {
+            log.error(e.toString());
+        }
         try {
             response = new Http(properties.getUrl())
                     .disableAttachmentLog()
@@ -332,23 +353,6 @@ public class TestITClient {
             disableTestsIsBadTestRun(e);
             return;
         }
-        String testPlanId = System.getProperty("testPlanId");
-        if (Objects.nonNull(testPlanId)) {
-            JSONObject body = new Http(properties.getUrl())
-                    .disableAttachmentLog()
-                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
-                    .body("")
-                    .get("/api/v2/testPlans/{}", testPlanId)
-                    .assertStatus(200)
-                    .toJson();
-            new Http(properties.getUrl())
-                    .disableAttachmentLog()
-                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
-                    .body(body.put("lockedById", (Object) null))
-                    .put("/api/v2/testPlans")
-                    .assertStatus(204);
-        }
-
         log.info("[{}] Response :{}", response.status(), response.toString());
     }
 
