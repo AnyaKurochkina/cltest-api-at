@@ -294,7 +294,7 @@ public class TestITClient {
                     .body("")
                     .post("/api/v2/testRuns/{}/start", startLaunchResponse.getId())
                     .assertStatus(204);
-            String testPlanId = System.getProperty("testRunId");
+            String testPlanId = System.getProperty("testPlanId");
             if(Objects.nonNull(testPlanId)){
                 JSONObject body = new Http(properties.getUrl())
                         .disableAttachmentLog()
@@ -328,7 +328,7 @@ public class TestITClient {
                     .post("/api/v2/testRuns/{}/complete", startLaunchResponse.getId())
                     .assertStatus(204);
 
-            String testPlanId = System.getProperty("testRunId");
+            String testPlanId = System.getProperty("testPlanId");
             if(Objects.nonNull(testPlanId)){
                 JSONObject body = new Http(properties.getUrl())
                         .disableAttachmentLog()
