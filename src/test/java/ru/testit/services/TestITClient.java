@@ -228,7 +228,7 @@ public class TestITClient {
             log.error(e.toString());
             return;
         }
-       log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
+        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
     }
 
 //    public void finishLaunch(final TestResultsRequest request) {
@@ -295,7 +295,7 @@ public class TestITClient {
                     .post("/api/v2/testRuns/{}/start", startLaunchResponse.getId())
                     .assertStatus(204);
             String testPlanId = System.getProperty("testPlanId");
-            if(Objects.nonNull(testPlanId)){
+            if (Objects.nonNull(testPlanId)) {
                 JSONObject body = new Http(properties.getUrl())
                         .disableAttachmentLog()
                         .setSourceToken("PrivateToken " + properties.getPrivateToken())
@@ -327,29 +327,28 @@ public class TestITClient {
                     .body("")
                     .post("/api/v2/testRuns/{}/complete", startLaunchResponse.getId())
                     .assertStatus(204);
-
-            String testPlanId = System.getProperty("testPlanId");
-            if(Objects.nonNull(testPlanId)){
-                JSONObject body = new Http(properties.getUrl())
-                        .disableAttachmentLog()
-                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
-                        .body("")
-                        .get("/api/v2/testPlans/{}", testPlanId)
-                        .assertStatus(200)
-                        .toJson();
-                new Http(properties.getUrl())
-                        .disableAttachmentLog()
-                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
-                        .body(body.put("lockedById", (Object) null))
-                        .put("/api/v2/testPlans")
-                        .assertStatus(204);
-            }
-
         } catch (Throwable e) {
             log.error(e.toString());
             disableTestsIsBadTestRun(e);
             return;
         }
+        String testPlanId = System.getProperty("testPlanId");
+        if (Objects.nonNull(testPlanId)) {
+            JSONObject body = new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .body("")
+                    .get("/api/v2/testPlans/{}", testPlanId)
+                    .assertStatus(200)
+                    .toJson();
+            new Http(properties.getUrl())
+                    .disableAttachmentLog()
+                    .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                    .body(body.put("lockedById", (Object) null))
+                    .put("/api/v2/testPlans")
+                    .assertStatus(204);
+        }
+
         log.info("[{}] Response :{}", response.status(), response.toString());
     }
 
