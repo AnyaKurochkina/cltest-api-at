@@ -86,7 +86,7 @@ public class TestProperties {
     }
 
     private List<String> getConfigurationIds(String externalId) {
-        List<String> list = testProps.stream().filter(t -> t.startsWith(externalId + "=")).map(t -> t.split("=")[1]).collect(Collectors.toList());
+        List<String> list = testProps.stream().filter(t -> t.startsWith(externalId + "=")).distinct().map(t -> t.split("=")[1]).collect(Collectors.toList());
         if (list.isEmpty())
             list = Collections.singletonList(TestITClient.properties.getConfigurationId());
         return list;
