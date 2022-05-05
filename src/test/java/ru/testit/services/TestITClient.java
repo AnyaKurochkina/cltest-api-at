@@ -13,6 +13,7 @@ import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.json.JSONObject;
 import ru.testit.model.request.*;
 import ru.testit.model.response.ConfigurationResponse;
 import ru.testit.model.response.CreateTestItemResponse;
@@ -22,6 +23,7 @@ import ru.testit.properties.AppProperties;
 import ru.testit.utils.Outcome;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import static ru.testit.properties.AppProperties.TEST_IT_TOKEN;
@@ -292,6 +294,22 @@ public class TestITClient {
                     .body("")
                     .post("/api/v2/testRuns/{}/start", startLaunchResponse.getId())
                     .assertStatus(204);
+            String testPlanId = System.getProperty("testRunId");
+            if(Objects.nonNull(testPlanId)){
+                JSONObject body = new Http(properties.getUrl())
+                        .disableAttachmentLog()
+                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                        .body("")
+                        .get("/api/v2/testPlans/{}", testPlanId)
+                        .assertStatus(200)
+                        .toJson();
+                new Http(properties.getUrl())
+                        .disableAttachmentLog()
+                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                        .body(body.put("lockedById", "98675a7b-6b9f-4ce3-96f6-c0d53d656745"))
+                        .put("/api/v2/testPlans")
+                        .assertStatus(204);
+            }
         } catch (Throwable e) {
             log.error(e.toString());
             disableTestsIsBadTestRun(e);
@@ -309,6 +327,24 @@ public class TestITClient {
                     .body("")
                     .post("/api/v2/testRuns/{}/complete", startLaunchResponse.getId())
                     .assertStatus(204);
+
+            String testPlanId = System.getProperty("testRunId");
+            if(Objects.nonNull(testPlanId)){
+                JSONObject body = new Http(properties.getUrl())
+                        .disableAttachmentLog()
+                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                        .body("")
+                        .get("/api/v2/testPlans/{}", testPlanId)
+                        .assertStatus(200)
+                        .toJson();
+                new Http(properties.getUrl())
+                        .disableAttachmentLog()
+                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                        .body(body.put("lockedById", (Object) null))
+                        .put("/api/v2/testPlans")
+                        .assertStatus(204);
+            }
+
         } catch (Throwable e) {
             log.error(e.toString());
             disableTestsIsBadTestRun(e);
