@@ -1,5 +1,6 @@
 package ui.cloud.pages;
 
+import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
@@ -37,7 +38,7 @@ public abstract class IProductPage {
     }
 
     public void runActionWithoutParameters(String headerBlock, String action){
-        getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = new Dialog(action);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
@@ -45,8 +46,9 @@ public abstract class IProductPage {
     }
 
     @SneakyThrows
-    public void runActionWithParameters(String headerBlock, Executable executable){
-        getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+    public void runActionWithParameters(String headerBlock, String action, Executable executable){
+        getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
+        $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
     }
 
