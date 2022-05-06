@@ -189,3 +189,7 @@ Artemis:
       #- { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
       #- { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
       - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
+
+Moon:
+  - options:
+      - { env: "DEV", resourcePoolLabel: "ds5-genr05.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app" }
