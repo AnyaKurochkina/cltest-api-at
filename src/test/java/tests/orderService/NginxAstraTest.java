@@ -13,8 +13,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 @Epic("Продукты")
-@Feature("Nginx")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("nginx"), @Tag("prod")})
+@Feature("Nginx Astra")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("nginx_astra"), @Tag("prod")})
 public class NginxAstraTest extends Tests {
     final String productName = "Nginx Astra";
 
