@@ -57,7 +57,9 @@ public class ApacheKafkaCluster extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/apache_kafka_cluster.json";
-        productName = "Apache Kafka Cluster";
+        if (productName == null){
+            productName = "Apache Kafka Cluster";
+        }
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
