@@ -29,8 +29,8 @@ import static core.enums.KafkaRoles.CONSUMER;
 import static core.enums.KafkaRoles.PRODUCER;
 
 @Epic("Продукты")
-@Feature("ApacheKafkaAstraCluster")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafka_astra_cluster"), @Tag("prod")})
+@Feature("ApacheKafkaClusterAstra")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafkacluster_astra"), @Tag("prod")})
 @Log4j2
 public class ApacheKafkaAstraClusterTest extends Tests {
 
