@@ -188,8 +188,10 @@ public class ProductCatalogSteps {
 
     @Step("Поиск ID объекта продуктового каталога по Title")
     public String getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(String title, String parameters) {
+        //TODO: временный костыль, из-за того что русские символы кодируются
+        String productNameWithEncode = title.replaceAll("Разработка", "%D0%A0%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B0");
         return Objects.requireNonNull(new Http(ProductCatalogURL)
-                .get("{}?multisearch={}&{}", productName, title, parameters)
+                .get("{}?multisearch={}&{}", productName, productNameWithEncode, parameters)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("list.find{it.title.toLowerCase()=='" + title.toLowerCase() + "'}.id"), "ID продукта: " + title + " не найден");
