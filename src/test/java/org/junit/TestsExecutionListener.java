@@ -31,8 +31,8 @@ public class TestsExecutionListener implements TestExecutionListener {
     @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
         //###Config for Ui###
-        if (getAppProp("driver.path") != null) {
-            String DRIVER_PATH = new File(getAppProp("driver.path")).getAbsolutePath();
+        if (getAppProp("webdriver.path") != null) {
+            String DRIVER_PATH = new File(getAppProp("webdriver.path")).getAbsolutePath();
             System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
         }
         baseUrl = URL;

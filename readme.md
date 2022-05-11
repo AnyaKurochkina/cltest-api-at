@@ -13,7 +13,7 @@ env=(стенд)
 testIt=(true/false интеграция с тестИт)
 testItToken=(токен тестИт)
 #ui settings
-driver.path = seleniumDrivers/chromedriver99.0.4844.51.exe
+webdriver.path = seleniumDrivers/chromedriver99.0.4844.51.exe
 webdriver.is.remote=false
 #webdriver.remote.url=http://localhost:4444/wd/hub
 webdriver.remote.url=http://d1-cloud-sel01.service.t1-cloud.ru:4444/wd/hub
