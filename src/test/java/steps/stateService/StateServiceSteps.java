@@ -11,12 +11,11 @@ import static core.helper.Configure.StateServiceURL;
 @Log4j2
 public class StateServiceSteps extends Steps {
 
-    public static String GetErrorFromStateService(IProduct product) {
+    public static String GetErrorFromStateService(String orderId) {
         String traceback = null;
         try {
             traceback = new Http(StateServiceURL)
-                    .setProjectId(product.getProjectId())
-                    .get("/actions/?order_id={}", product.getOrderId())
+                    .get("/actions/?order_id={}", orderId)
                     .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {
             log.error(e.getMessage());

@@ -2,6 +2,7 @@ package steps.orderService;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import core.helper.http.Response;
@@ -14,6 +15,7 @@ import models.authorizer.ProjectEnvironmentPrefix;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
+import models.orderService.products.Windows;
 import models.subModels.Item;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -52,7 +54,7 @@ public class OrderServiceSteps extends Steps {
         if (!orderStatus.equals(exp_status.toLowerCase())) {
             String error = "null";
             try {
-                error = StateServiceSteps.GetErrorFromStateService(product);
+                error = StateServiceSteps.GetErrorFromStateService(product.getOrderId());
             } catch (Throwable e) {
                 e.printStackTrace();
                 log.error("Ошибка в GetErrorFromStateService " + e);
@@ -259,7 +261,7 @@ public class OrderServiceSteps extends Steps {
         if (!actionStatus.equals(exp_status.toLowerCase())) {
             String error = null;
             try {
-                error = StateServiceSteps.GetErrorFromStateService(product);
+                error = StateServiceSteps.GetErrorFromStateService(product.getOrderId());
             } catch (Throwable e) {
                 e.printStackTrace();
             }
@@ -416,5 +418,10 @@ public class OrderServiceSteps extends Steps {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void deleteProduct(IProduct product) {
+        new Http(OrderServiceURL)
+                .delete("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId());
     }
 }

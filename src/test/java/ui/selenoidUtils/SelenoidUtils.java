@@ -31,6 +31,7 @@ public class SelenoidUtils {
             capabilities.setCapability("enableVNC", true);
             capabilities.setCapability("enableVideo", false);
             capabilities.setCapability("enableLog", true);
+            capabilities.setVersion("91.0");
             capabilities.setCapability("logName", "lastSelenoid.log");
             Configuration.browserCapabilities = capabilities;
         } else {

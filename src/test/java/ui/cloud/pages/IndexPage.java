@@ -13,7 +13,7 @@ public class IndexPage {
     }
 
     public NewOrderPage clickOrderMore(){
-        orderMoreBtn.click();
+        orderMoreBtn.hover().click();
         return new NewOrderPage();
     }
 

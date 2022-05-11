@@ -22,8 +22,8 @@ public class UiTest {
     @Test
     void test() {
         new LoginPage("proj-xazpppulba").singIn();
-        open("https://ift-portal-front.apps.d0-oscp.corp.dev.vtb/vm/orders/ff5776ca-2252-4b65-832a-e7a3fc169ea6/main?context=proj-xazpppulba&type=project&org=vtb");
-        WindowsPage page = new WindowsPage();
+        open("https://ift-portal-front.apps.d0-oscp.corp.dev.vtb/container/orders/328091e3-7f99-4525-95b3-0c6b2869db6b/main?context=proj-xazpppulba&type=project&org=vtb");
+        WindowsPage page = new WindowsPage(product);
         System.out.println(1);
     }
 

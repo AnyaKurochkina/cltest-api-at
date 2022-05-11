@@ -31,16 +31,17 @@ public class TestsExecutionListener implements TestExecutionListener {
     @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
         //###Config for Ui###
-        if(getAppProp("driver.path") != null) {
+        if (getAppProp("driver.path") != null) {
             String DRIVER_PATH = new File(getAppProp("driver.path")).getAbsolutePath();
             System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
-            baseUrl = URL;
-            isRemote();
-            Configuration.browserSize = "1530x870";
-            Configuration.browserPosition = "2x2";
-            Configuration.timeout = 20000;
-            Configuration.driverManagerEnabled = false;
         }
+        baseUrl = URL;
+        isRemote();
+        Configuration.browserSize = "1530x870";
+        Configuration.browserPosition = "2x2";
+        Configuration.timeout = 20000;
+        Configuration.driverManagerEnabled = false;
+
         //####Config for Ui###
 
         String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
@@ -51,7 +52,7 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     public void loadSecretJson() {
         String secret = System.getProperty("secret");
-        if(secret == null)
+        if (secret == null)
             secret = Configure.getAppProp("secret");
         String file = Configure.getAppProp("data.folder") + "/shareFolder/" + "secret.bin";
         if (!Files.exists(Paths.get(file)) || secret == null)
@@ -61,7 +62,7 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     @SneakyThrows
     public void testPlanExecutionFinished(TestPlan testPlan) {
-        if(Configure.isIntegrationTestIt())
+        if (Configure.isIntegrationTestIt())
             RunningHandler.finishLaunch();
         ObjectPoolService.saveEntities(Configure.getAppProp("data.folder") + "/shareFolder/logData.json");
         new File(Configure.getAppProp("allure.results")).mkdir();

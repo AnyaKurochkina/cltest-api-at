@@ -1,16 +1,14 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
-import core.helper.StringUtils;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.function.Executable;
+import io.qameta.allure.Step;
+import models.orderService.interfaces.IProduct;
 import ui.cloud.tests.DropDown;
 
 public class WindowsPage extends IProductPage {
 
-    public WindowsPage() {
-        btnGeneralInfo.shouldBe(Condition.enabled);
+    public WindowsPage(IProduct product) {
+        super(product);
     }
 
     public void delete() {
@@ -20,19 +18,28 @@ public class WindowsPage extends IProductPage {
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             dlgActions.getDialog().$x("descendant::button[.='Удалить']")
                     .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            dlgActions.getDialog().shouldNotBe(Condition.visible);
         });
+        waitChangeStatus();
+        checkLastAction();
     }
 
     public void start() {
         runActionWithoutParameters("Виртуальная машина", "Включить");
+        waitChangeStatus();
+        checkLastAction();
     }
 
     public void restart() {
         runActionWithoutParameters("Виртуальная машина", "Перезагрузить по питанию");
+        waitChangeStatus();
+        checkLastAction();
     }
 
     public void stopHard() {
         runActionWithoutParameters("Виртуальная машина", "Выключить принудительно");
+        waitChangeStatus();
+        checkLastAction();
     }
 
     public void addDisk() {
@@ -42,6 +49,8 @@ public class WindowsPage extends IProductPage {
             DropDown.name("Буква").selectByValue("S");
             DropDown.name("Файловая система").selectByValue("refs");
         });
+        waitChangeStatus();
+        checkLastAction();
     }
 
 }

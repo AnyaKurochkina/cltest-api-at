@@ -1,10 +1,10 @@
 package ui.cloud.tests;
 
-import com.codeborne.selenide.WebDriverRunner;
 import models.orderService.products.Windows;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import steps.orderService.OrderServiceSteps;
 import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.ProductsPage;
 import ui.cloud.pages.WindowsOrderPage;
@@ -13,16 +13,18 @@ import ui.uiExtesions.ConfigExtension;
 
 import java.util.Objects;
 
+import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static com.codeborne.selenide.Selenide.open;
 
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Tags({@Tag("ui_windows")})
 public class UiWindowsTest{
-    static Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+    Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 
     @BeforeAll
-    static void beforeAll(){
+    void beforeAll(){
         product.init();
         new LoginPage(product.getProjectId())
                 .singIn()
@@ -41,19 +43,26 @@ public class UiWindowsTest{
                         orderPage.getLabel())
                 .hover()
                 .click();
-        WindowsPage winPage = new WindowsPage();
-        winPage.waitPending();
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.waitChangeStatus();
         winPage.checkLastAction();
-        product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
+        closeWebDriver();
     }
 
     @AfterAll
-    static void afterAll(){
-        if(Objects.isNull(product.getLink()))
-            return;
+    void afterAll(){
+        new LoginPage(product.getProjectId())
+                .singIn();
         open(product.getLink());
-        WindowsPage winPage = new WindowsPage();
-        winPage.delete();
+        OrderServiceSteps.deleteProduct(product);
+        closeWebDriver();
+    }
+
+    @BeforeEach
+    void beforeEach(){
+        new LoginPage(product.getProjectId())
+                .singIn();
+        open(product.getLink());
     }
 
     @Test
@@ -65,8 +74,7 @@ public class UiWindowsTest{
     @Order(2)
     @DisplayName("UI Windows. Перезагрузить по питанию")
     void restart() {
-        open(product.getLink());
-        WindowsPage winPage = new WindowsPage();
+        WindowsPage winPage = new WindowsPage(product);
         winPage.restart();
     }
 
@@ -74,17 +82,17 @@ public class UiWindowsTest{
     @Order(3)
     @DisplayName("UI Windows. Выключить принудительно")
     void stopHard() {
-        open(product.getLink());
-        WindowsPage winPage = new WindowsPage();
+        WindowsPage winPage = new WindowsPage(product);
         winPage.stopHard();
+        winPage.start();
     }
 
     @Test
     @Order(4)
     @DisplayName("UI Windows. Выключить принудительно")
     void start() {
-        open(product.getLink());
-        WindowsPage winPage = new WindowsPage();
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.stopHard();
         winPage.start();
     }
 
@@ -92,10 +100,8 @@ public class UiWindowsTest{
     @Order(100)
     @DisplayName("UI Windows. Удалить")
     void deleteWindows() {
-        open(product.getLink());
-        WindowsPage winPage = new WindowsPage();
+        WindowsPage winPage = new WindowsPage(product);
         winPage.delete();
-        product.setLink(null);
     }
 
 

@@ -3,7 +3,6 @@ package ui.cloud.pages;
 import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 import org.openqa.selenium.Keys;
-import ui.cloud.tests.DropDown;
 
 import static com.codeborne.selenide.Selenide.$x;
 

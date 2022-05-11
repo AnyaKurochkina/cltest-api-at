@@ -190,6 +190,12 @@ public abstract class IProduct extends Entity {
         return (T) this;
     }
 
+    public <T extends Entity> T buildFromLink(){
+        projectId = StringUtils.findByRegex("context=([^&]*)", link);
+        orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
+        return (T) this;
+    }
+
     //Изменить конфигурацию
     protected void resize(String action) {
         List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
