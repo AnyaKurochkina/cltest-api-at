@@ -12,6 +12,7 @@ import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import redis.clients.jedis.Jedis;
 import steps.orderService.OrderServiceSteps;
 
@@ -106,9 +107,10 @@ public class Redis extends IProduct {
     }
 
     public void resetPassword() {
-        String password = "yxjpjk7xvOImb1O9vZZiGUlsItkqLqtbB1VPZHzL6";
+        String password = "UEijLKcQJN2pZ0Iqvxh1EXCuZ86pPGiEpdxwLRLWL4QnIOG2KPlGrw5jkLEScQZ9";
         OrderServiceSteps.executeAction("reset_redis_password", this, new JSONObject(String.format("{redis_password: \"%s\"}", password)), this.getProjectId());
         redisPassword = password;
+        save();
     }
 
     public void restart() {

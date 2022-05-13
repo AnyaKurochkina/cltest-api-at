@@ -22,7 +22,8 @@ public class RedisTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(Redis product) {
         //noinspection EmptyTryBlock
-        try (Redis redis = product.createObjectExclusiveAccess()) {}
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+        }
     }
 
     @TmsLink("377694")
