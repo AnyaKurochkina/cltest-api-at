@@ -77,10 +77,10 @@ public class ItemVisualTemplates extends Entity {
     @Override
     @Step("Удаление шаблона визуализации")
     protected void delete() {
+        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
         new Http(ProductCatalogURL)
                 .delete(productName + itemId + "/")
                 .assertStatus(204);
-        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
         Assertions.assertEquals(0, steps.getObjectListByName(name, GetVisualTemplateListResponse.class)
                 .getItemsList().size(), "Шаблон визуализации с именем: " + name + ", не удалился");
     }

@@ -111,6 +111,12 @@ public class ListItem implements ItemImpl {
     @JsonProperty("update_dt")
     private String update_dt;
 
+    @JsonProperty("auto_open_results")
+    private Boolean autoOpenResults;
+
+    @JsonProperty("direction_title")
+    private String directionTitle;
+
     @Override
     public String getName() {
         return name;

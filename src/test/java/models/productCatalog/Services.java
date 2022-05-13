@@ -34,6 +34,7 @@ public class Services extends Entity {
     private String graphVersion;
     private String title;
     private String directionId;
+    private String directionTitle;
     private List<Object> inventoryActions;
     private String graphVersionPattern;
     private Boolean hideNodeNameOutput;
@@ -55,6 +56,7 @@ public class Services extends Entity {
     private String serviceId;
     private String jsonTemplate;
     private String currentVersion;
+    private Boolean autoOpenResults;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("services/",
             "productCatalog/services/createServices.json");
@@ -68,6 +70,14 @@ public class Services extends Entity {
             Graph graph = Graph.builder().name("graph_for_services_api_test").build().createObject();
             graphId = graph.getGraphId();
         }
+        if (directionId == null) {
+            OrgDirection orgDirection = OrgDirection.builder()
+                    .orgDirectionName("direction_for_services_api_test")
+                    .title("test_api")
+                    .build()
+                    .createObject();
+            directionId = orgDirection.getOrgDirectionId();
+        }
         return this;
     }
 
@@ -80,6 +90,8 @@ public class Services extends Entity {
                 .set("$.is_published", isPublished)
                 .set("$.title", title)
                 .set("$.current_version", currentVersion)
+                .set("$.auto_open_results", autoOpenResults)
+                .set("$.direction_id", directionId)
                 .build();
     }
 

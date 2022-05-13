@@ -25,7 +25,7 @@ public class ReferencesDirectoriesNegativeTest extends Tests {
     private static final String DIRECTORIES_JSON_TEMPLATE = "references/createDirectory.json";
 
     @DisplayName("Негативный тест на создание directory c именем содержащим недопустимые символы")
-    @TmsLink("")
+    @TmsLink("843052")
     @Test
     public void createDirectoryWithInvalidNameTest() {
         String dirName = "create_dir_test_api@";

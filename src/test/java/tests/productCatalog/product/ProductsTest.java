@@ -456,9 +456,25 @@ public class ProductsTest extends Tests {
                 }})
                 .build()
                 .createObject();
-        GetProductResponse getProductById =(GetProductResponse) steps.getById(product.getProductId(),
+        GetProductResponse getProductById = (GetProductResponse) steps.getById(product.getProductId(),
                 GetProductResponse.class);
         Map<String, String> extraData = getProductById.getExtraData();
         assertEquals(extraData.get(key), value);
+    }
+
+    @Test
+    @DisplayName("Проверка значения поля in_general_list в продуктах")
+    @TmsLink("852671")
+    public void getInGeneralListField() {
+        String productName = "in_general_list_product_test_api";
+        Product product = Product.builder()
+                .name(productName)
+                .title(productName)
+                .version("1.0.0")
+                .inGeneralList(true)
+                .build()
+                .createObject();
+        GetProductResponse getProductById = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        assertTrue(getProductById.getInGeneralList());
     }
 }

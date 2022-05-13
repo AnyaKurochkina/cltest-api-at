@@ -17,8 +17,7 @@ import tests.Tests;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -84,6 +83,44 @@ public class ProductListTest extends Tests {
         for (ItemImpl item : productList) {
             ListItem listItem = (ListItem) item;
             assertEquals("vm", listItem.getCategory());
+        }
+    }
+
+    @DisplayName("Получение списка продуктов по фильтру in_general_list=true")
+    @TmsLink("852654")
+    @Test
+    public void getProductListByInGeneralListTrue() {
+        String name = "get_products_by_in_general_list_true_test_api";
+        Product.builder()
+                .name(name)
+                .title("AtTestApiProduct")
+                .inGeneralList(true)
+                .build()
+                .createObject();
+        List<ItemImpl> productList = steps.getProductObjectList(GetProductsResponse.class, "?in_general_list=true");
+        assertTrue(steps.isContains(productList, name));
+        for (ItemImpl item : productList) {
+            ListItem listItem = (ListItem) item;
+            assertTrue(listItem.getInGeneralList());
+        }
+    }
+
+    @DisplayName("Получение списка продуктов по фильтру in_general_list=false")
+    @TmsLink("852655")
+    @Test
+    public void getProductListByInGeneralListFalse() {
+        String name = "get_products_by_in_general_list_false_test_api";
+        Product.builder()
+                .name(name)
+                .title("AtTestApiProduct")
+                .inGeneralList(false)
+                .build()
+                .createObject();
+        List<ItemImpl> productList = steps.getProductObjectList(GetProductsResponse.class, "?in_general_list=false");
+        assertTrue(steps.isContains(productList, name));
+        for (ItemImpl item : productList) {
+            ListItem listItem = (ListItem) item;
+            assertFalse(listItem.getInGeneralList());
         }
     }
 }

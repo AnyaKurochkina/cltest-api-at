@@ -106,4 +106,10 @@ public class CreateServiceResponse{
 
 	@JsonProperty("update_dt")
 	private String update_dt;
+
+	@JsonProperty("direction_title")
+	private String directionTitle;
+
+	@JsonProperty("auto_open_results")
+	private Boolean autoOpenResults;
 }
