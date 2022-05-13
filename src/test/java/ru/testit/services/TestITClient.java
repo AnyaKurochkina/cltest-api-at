@@ -121,7 +121,7 @@ public class TestITClient {
                     .get("/api/v2/configurations/{}", configurationId)
                     .assertStatus(200);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("getConfiguration()", e);
             throw e;
         }
         log.info("[{}] Response :{}", response.status(), response.toString());
@@ -149,7 +149,7 @@ public class TestITClient {
                 return listTestItems.get(0);
             }
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("getTestItem()", e);
             throw e;
         }
         log.info("[{}] Response :{}", response.status(), response.toString());
@@ -177,7 +177,7 @@ public class TestITClient {
                     .assertStatus(201);
             createTestItemResponse = response.extractAs(CreateTestItemResponse.class);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("createTestItem()", e);
             return;
         }
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
@@ -203,7 +203,7 @@ public class TestITClient {
                     .put("/api/v2/autoTests")
                     .assertStatus(204);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("updatePostItem()", e);
             return;
         }
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
@@ -226,7 +226,7 @@ public class TestITClient {
                     .post("/api/v2/autoTests/{}/workItems", autoTestId)
                     .assertStatus(204);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("linkAutoTestWithTestCase()", e);
             return;
         }
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
@@ -248,12 +248,14 @@ public class TestITClient {
             log.info("[{}] Response :{}", response.status(), response.toString());
             return response.toString();
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("sendAttachment()", e);
             throw e;
         }
     }
 
     static void disableTestsIsBadTestRun(Throwable e) {
+        if(e instanceof NullPointerException)
+            return;
         if (e.getMessage().contains("the StateName is already Stopped") || e.getMessage().contains("TestRun is stopped!")) {
             Configure.setAppProp("testIt", "false");
             System.clearProperty("testRunId");
@@ -277,7 +279,7 @@ public class TestITClient {
                     .post("/api/v2/testRuns/{}/testResults", startLaunchResponse.getId())
                     .assertStatus(200);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("sendTestResult()", e);
             disableTestsIsBadTestRun(e);
             throw e;
         }
@@ -312,7 +314,7 @@ public class TestITClient {
                         .assertStatus(204);
             }
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("sendStartTestRun()", e);
             disableTestsIsBadTestRun(e);
             return;
         }
@@ -339,7 +341,7 @@ public class TestITClient {
                         .assertStatus(204);
             }
         } catch (Exception e) {
-            log.error(e.toString());
+            log.error("sendCompleteTestRun()", e);
         }
         try {
             response = new Http(properties.getUrl())
@@ -349,7 +351,7 @@ public class TestITClient {
                     .post("/api/v2/testRuns/{}/complete", startLaunchResponse.getId())
                     .assertStatus(204);
         } catch (Throwable e) {
-            log.error("sendCompleteTestRun", e);
+            log.error("sendCompleteTestRun()", e);
             disableTestsIsBadTestRun(e);
             return;
         }

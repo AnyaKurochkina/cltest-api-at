@@ -50,7 +50,7 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         winPage.waitChangeStatus();
         winPage.checkLastAction();
-//        closeWebDriver();
+        closeWebDriver();
     }
 
     @Title("AfterAll")
@@ -58,8 +58,10 @@ public class UiWindowsTest extends Tests {
     void afterAll(){
         new LoginPage(product.getProjectId())
                 .singIn();
-        open(product.getLink());
-        OrderServiceSteps.deleteProduct(product);
+        if(Objects.nonNull(product.getLink())) {
+            open(product.getLink());
+            OrderServiceSteps.deleteProduct(product);
+        }
         closeWebDriver();
     }
 

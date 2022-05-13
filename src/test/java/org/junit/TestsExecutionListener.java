@@ -6,7 +6,9 @@ import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.utils.Encrypt;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import models.ObjectPoolService;
+import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 import ru.testit.junit5.RunningHandler;
@@ -22,7 +24,7 @@ import static core.helper.Configure.ENV;
 import static core.helper.Configure.getAppProp;
 import static ui.selenoidUtils.SelenoidUtils.isRemote;
 
-//@Log4j2
+@Log4j2
 public class TestsExecutionListener implements TestExecutionListener {
     private static final String URL = getAppProp("base.url");
 

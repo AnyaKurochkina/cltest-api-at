@@ -8,12 +8,14 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
+import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import ru.testit.annotations.CustomBeforeAll;
 import ru.testit.annotations.CustomBeforeEach;
 import ru.testit.services.TestITClient;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static core.helper.Configure.isIntegrationTestIt;
@@ -22,7 +24,7 @@ import static core.helper.Configure.isIntegrationTestIt;
 public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterAllCallback, InvocationInterceptor, TestWatcher {
     public static final RunningHandler HANDLER = new RunningHandler();
     private static final ExtensionContext.Namespace configurationSpace = ExtensionContext.Namespace.create(JUnit5EventListener.class);
-    private static final Map<String, Boolean> beforeAllClassListPass = new ConcurrentHashMap<>();
+    private static final Map<String, Throwable> beforeAllClassListPass = new ConcurrentHashMap<>();
 
     static {
         if (Configure.isIntegrationTestIt())
@@ -61,12 +63,14 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             if (Configure.isTestItCreateAutotest)
                 invocation.skip();
             else {
-                if(beforeAllCustom(invocationContext, extensionContext)) {
+                if(Objects.isNull(beforeAllCustom(invocationContext, extensionContext))) {
                     beforeEachCustom(invocationContext);
                     invocation.proceed();
                 }
-                else
+                else {
                     invocation.skip();
+                    throw beforeAllCustom(invocationContext, extensionContext);
+                }
             }
         } catch (Throwable throwable) {
             if (isIntegrationTestIt())
@@ -85,7 +89,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     }
 
     @SneakyThrows
-    public boolean beforeAllCustom(final ReflectiveInvocationContext<Method> context, final ExtensionContext extensionContext) {
+    public Throwable beforeAllCustom(final ReflectiveInvocationContext<Method> context, final ExtensionContext extensionContext) {
         if (beforeAllClassListPass.containsKey(extensionContext.getRoot().getUniqueId()))
             return beforeAllClassListPass.get(extensionContext.getRoot().getUniqueId());
 
@@ -95,13 +99,13 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
                     method.setAccessible(true);
                     method.invoke(context.getTarget().orElseThrow(Exception::new));
                 } catch (Throwable e) {
-                    beforeAllClassListPass.put(extensionContext.getRoot().getUniqueId(), false);
+                    beforeAllClassListPass.put(extensionContext.getRoot().getUniqueId(), e.getCause());
                     throw e.getCause();
                 }
-                beforeAllClassListPass.put(extensionContext.getRoot().getUniqueId(), true);
+                beforeAllClassListPass.put(extensionContext.getRoot().getUniqueId(), null);
             }
         }
-        return true;
+        return null;
     }
 
     @SneakyThrows
