@@ -1,14 +1,14 @@
 {
   "order": {
     "project_name": "proj-frybyv41jh",
-    "product_id": "b47e1302-c4e1-43a1-9ad5-8b30c112e819",
+    "product_id": "04ff13b0-57d2-42d6-a786-440aaae23337",
     "attrs": {
       "domain": "corp.dev.vtb",
       "flavor": {
         "cpus": 2,
-        "name": "c2m4",
-        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
-        "memory": 4
+        "name": "c2m8",
+        "uuid": "930a8be8-1c71-4730-b881-0633a56b7f2b",
+        "memory": 8
       },
       "platform": "OpenStack",
       "boot_disk": {
@@ -16,11 +16,12 @@
       },
       "extra_nics": [],
       "on_support": false,
-      "os_version": "8.4",
+      "os_version": "7.9",
       "data_center": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },
+      "cluster_name": "vtb-artemis-0002",
       "extra_mounts": [
         {
           "path": "/app",
@@ -29,20 +30,19 @@
         }
       ],
       "ad_integration": true,
-      "artemis_version": "2.17.0",
+      "artemis_version": "2.19.1",
+      "type_load_balancer": "ON_DEMAND",
+      "artemis_node_number": 2,
       "ad_logon_grants": [
         {
-          "role": "superuser",
+          "role": "user",
           "groups": [
-            "cloud-zorg-tmvfpnsx"
+            "cloud-zorg-xfgbboi"
           ]
         }
-      ],
-      "artemis_admin_groups": [
-        "cloud-zorg-cvprmqgrivyf"
       ]
     },
     "count": 1,
-    "label": "Apache ActiveMQ Artemis"
+    "label": "VTB Apache ActiveMQ Artemis"
   }
 }

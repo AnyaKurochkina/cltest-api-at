@@ -15,8 +15,10 @@ import models.authorizer.ProjectEnvironmentPrefix;
 import models.authorizer.GlobalUser;
 import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
+import models.subModels.Db;
 import models.subModels.Flavor;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -36,6 +38,10 @@ public class Artemis extends IProduct {
     String artemisVersion;
     String domain;
     Flavor flavor;
+    private final static String CLIENT_NAME_PATH = "data.find{it.data.config.containsKey('clients')}.data.config.clients.list_user_type_name.any{it.name=='%s'}";
+    private final static String RELATIONSHIP_PATH = "data.find{it.data.config.clients.containsKey('list_user_type_relationship')}.data.config.clients.list_user_type_relationship.find{it.name==('%s')}.relationship.any{it.name=='%s'}";
+    private final static String SERVICE_PATH = "data.find{it.data.config.containsKey('list_services_and_clients_name')}.data.config.list_services_and_clients_name.any{it.name=='%s'}";
+
 
     @Override
     public Entity init() {
@@ -44,18 +50,18 @@ public class Artemis extends IProduct {
         if (projectId == null) {
             setProjectId(project.getId());
         }
-        if(productName == null)
-            productName = "Apache ActiveMQ Artemis";
+        if (productName == null)
+            productName = "VTB Apache ActiveMQ Artemis";
         initProduct();
         if (domain == null)
             domain = OrderServiceSteps.getDomainBySegment(this, segment);
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(dataCentre == null)
+        if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
-        if(artemisVersion == null)
+        if (artemisVersion == null)
             artemisVersion = getRandomProductVersionByPathEnum("artemis_version.enum");
         return this;
     }
@@ -108,8 +114,40 @@ public class Artemis extends IProduct {
     public void resize(Flavor flavor) {
         resize("resize_vm", flavor);
     }
-    public void expandMountPoint(){
+
+    public void expandMountPoint() {
         expandMountPoint("expand_mount_point", "/app", 10);
+    }
+
+    //Проверить конфигурацию
+    public void refreshVmConfig() {
+        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+    }
+
+    public void createService(String name, String ownerCert) {
+        OrderServiceSteps.executeAction("vtb-artemis_create_service", this, new JSONObject("{\"max_size_bytes\":\"100Mb\",\"max_expiry_delay\":60000,\"min_expiry_delay\":10000,\"address_full_policy\":\"Fail\",\"name\":\"" + name + "\",\"owner_cert\":\"" + ownerCert + "\"}"), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
+    }
+
+    public void createClient(String clientType, String name, String ownerCert) {
+        OrderServiceSteps.executeAction("vtb-artemis_create_client", this, new JSONObject("{\"client_types\":\"" + clientType + "\",\"name\":\"" + name + "\",\"owner_cert\":\"" + ownerCert + "\"}"), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(CLIENT_NAME_PATH, name)));
+    }
+
+    public void createClientWithService(String clientType, String name, String ownerCert, String serviceName) {
+        OrderServiceSteps.executeAction("vtb-artemis_create_client", this, new JSONObject("{\"client_types\":\"" + clientType + "\",\"service_names\":[\"" + serviceName + "\"],\"name\":\"" + name + "\",\"owner_cert\":\"" + ownerCert + "\"}"), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(RELATIONSHIP_PATH, name, serviceName)));
+    }
+
+    public void deleteClient(String name) {
+        OrderServiceSteps.executeAction("vtb-artemis_delete_client", this, new JSONObject("{\"name\":\"" + name + "\"}"), this.getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(CLIENT_NAME_PATH, name)));
+    }
+
+
+    public void deleteService(String name) {
+        OrderServiceSteps.executeAction("vtb-artemis_delete_service", this, new JSONObject("{\"name\":\"" + name + "\"}"), this.getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
     }
 
     @Step("Удаление продукта")
