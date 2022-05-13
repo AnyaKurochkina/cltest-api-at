@@ -104,4 +104,7 @@ public class CreateProductResponse{
 
 	@JsonProperty("extra_data")
 	private Map<String, String> extra_data;
+
+	@JsonProperty("in_general_list")
+	private Boolean inGeneralList;
 }

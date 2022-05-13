@@ -47,6 +47,7 @@ public class Product extends Entity {
     private Map<String, String> info;
     private String currentVersion;
     private Map<String, String> extraData;
+    private Boolean inGeneralList;
 
     public static final String productName = "/api/v1/products/";
     @Builder.Default
@@ -77,6 +78,7 @@ public class Product extends Entity {
                 .set("$.current_version", currentVersion)
                 .set("$.extra_data", extraData)
                 .set("$.information_systems", informationSystems)
+                .set("$.in_general_list", inGeneralList)
                 .build();
     }
 

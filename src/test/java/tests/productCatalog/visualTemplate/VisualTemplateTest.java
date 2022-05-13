@@ -248,11 +248,12 @@ public class VisualTemplateTest extends Tests {
                 .eventType(Collections.singletonList("app"))
                 .compactTemplate(compactTemplate)
                 .fullTemplate(fullTemplate)
-                .isActive(false)
+                .isActive(true)
                 .build()
                 .createObject();
         GetVisualTemplateResponse visualTemplate = steps
                 .getItemVisualTemplate(visualTemplates.getEventType().get(0), visualTemplates.getEventProvider().get(0));
+        steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
         assertEquals(visualTemplate.getEventProvider(), visualTemplate.getEventProvider());
         assertEquals(visualTemplate.getEventType(), visualTemplate.getEventType());
     }

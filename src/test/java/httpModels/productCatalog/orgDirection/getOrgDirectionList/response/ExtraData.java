@@ -1,17 +1,8 @@
 package httpModels.productCatalog.orgDirection.getOrgDirectionList.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@JsonIgnoreType
 public class ExtraData{
 
-	@JsonProperty("test")
-	private Boolean test;
 }

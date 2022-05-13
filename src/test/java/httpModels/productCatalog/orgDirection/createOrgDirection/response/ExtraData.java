@@ -1,12 +1,8 @@
 package httpModels.productCatalog.orgDirection.createOrgDirection.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 
-@Builder
-@Data
-@AllArgsConstructor
+@JsonIgnoreType
 public class ExtraData{
 
 }

@@ -105,4 +105,7 @@ public class GetProductResponse implements GetImpl {
 
 	@JsonProperty("extra_data")
 	private Map<String, String> extraData;
+
+	@JsonProperty("in_general_list")
+	private Boolean inGeneralList;
 }

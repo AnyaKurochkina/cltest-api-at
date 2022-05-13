@@ -14,10 +14,7 @@ import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -397,6 +394,7 @@ public class ActionsTest extends Tests {
 
     @Test
     @DisplayName("Загрузка action в GitLab")
+    @Disabled
     @TmsLink("")
     public void dumpToGitlabAction() {
         String actionName = "dump_to_gitlab_ff_action_test_api";

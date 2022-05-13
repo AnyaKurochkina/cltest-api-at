@@ -13,6 +13,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.productCatalog.OrgDirection;
 import models.productCatalog.Services;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -26,8 +27,7 @@ import tests.Tests;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -293,7 +293,7 @@ public class ServicesTest extends Tests {
 
     @Test
     @DisplayName("Присвоение значения current_version из списка version_list в сервисах")
-    @TmsLink("")
+    @TmsLink("856539")
     public void setCurrentVersionService() {
         String serviceName = "set_current_version_service_test_api";
         Services service = Services.builder()
@@ -312,7 +312,7 @@ public class ServicesTest extends Tests {
 
     @Test
     @DisplayName("Получение сервиса версии указанной в current_version")
-    @TmsLink("")
+    @TmsLink("856540")
     public void getCurrentVersionService() {
         String serviceName = "create_current_version_service_test_api";
         Services service = Services.builder()
@@ -327,5 +327,48 @@ public class ServicesTest extends Tests {
         GetServiceResponse getService = (GetServiceResponse) steps.getById(serviceId, GetServiceResponse.class);
         assertEquals("1.0.0", getService.getCurrentVersion());
         assertEquals(serviceName, getService.getTitle());
+    }
+
+    @Test
+    @DisplayName("Получение значения поля auto_open_results в сервисах")
+    @TmsLink("856542")
+    public void getAutoOpenResultService() {
+        String serviceName = "get_auto_open_result_test_api";
+        Services service = Services.builder()
+                .serviceName(serviceName)
+                .title(serviceName)
+                .version("1.0.0")
+                .autoOpenResults(false)
+                .build()
+                .createObject();
+        String serviceId = service.getServiceId();
+        GetServiceResponse getService = (GetServiceResponse) steps.getById(serviceId, GetServiceResponse.class);
+        assertFalse(getService.getAutoOpenResults());
+        steps.partialUpdateObject(serviceId, new JSONObject().put("auto_open_results", true));
+        GetServiceResponse getUpdatedService = (GetServiceResponse) steps.getById(serviceId, GetServiceResponse.class);
+        assertTrue(getUpdatedService.getAutoOpenResults());
+    }
+
+    @Test
+    @DisplayName("Получение значения поля direction_title в сервисах")
+    @TmsLink("856543")
+    public void getDirectionTitleService() {
+        String directionTitle = "direction_title_test_api";
+        OrgDirection orgDirection = OrgDirection.builder()
+                .orgDirectionName("direction_title_test_api")
+                .title(directionTitle)
+                .build()
+                .createObject();
+        String serviceName = "get_direction_title_test_api";
+        Services service = Services.builder()
+                .serviceName(serviceName)
+                .title(serviceName)
+                .version("1.0.0")
+                .directionId(orgDirection.getOrgDirectionId())
+                .build()
+                .createObject();
+        String serviceId = service.getServiceId();
+        GetServiceResponse getService = (GetServiceResponse) steps.getById(serviceId, GetServiceResponse.class);
+        assertEquals(directionTitle, getService.getDirectionTitle());
     }
 }
