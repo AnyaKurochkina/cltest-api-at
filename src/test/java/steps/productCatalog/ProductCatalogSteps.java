@@ -311,7 +311,7 @@ public class ProductCatalogSteps {
     @Step("Получение шаблона визуализации по event_type и event_provider")
     public GetVisualTemplateResponse getItemVisualTemplate(String eventType, String eventProvider) {
         return new Http(ProductCatalogURL)
-                .get("item_visual_templates/item_visual_template/" + eventType + "/" + eventProvider + "/")
+                .get(productName + "item_visual_template/" + eventType + "/" + eventProvider + "/")
                 .assertStatus(200)
                 .extractAs(GetVisualTemplateResponse.class);
     }
@@ -405,7 +405,7 @@ public class ProductCatalogSteps {
 
     @Step("Удаление productOrgInfo по id product и организации")
     public void deleteProductOrgInfoSystem(String productId, String orgName) {
-         new Http(ProductCatalogURL)
+        new Http(ProductCatalogURL)
                 .delete(productName + productId + "/organizations/" + orgName + "/")
                 .assertStatus(204);
     }
@@ -417,6 +417,15 @@ public class ProductCatalogSteps {
                 sb.append(s.charAt(i));
         }
         return sb.toString();
+    }
+
+    public boolean isContains(List<ItemImpl> itemList, String name) {
+        for (ItemImpl item : itemList) {
+            if (item.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {

@@ -1,8 +1,7 @@
 {
   "id": "",
   "version": "1.0.3",
-  "direction_id": "5b4b6933-e0b1-41f8-aad7-07294e0ddf5c",
-  "direction": "Linux",
+  "direction_id": "",
   "current_version": "",
   "name": "create_service_test",
   "title": "create_service_test",
@@ -16,6 +15,7 @@
   "inventory_actions": [],
   "turn_off_inventory": false,
   "auto_open_form": false,
+  "auto_open_results": false,
   "start_btn_label": null,
   "check_rules": [],
   "hide_node_name_output": false,

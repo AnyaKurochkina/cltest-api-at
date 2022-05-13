@@ -1,6 +1,5 @@
 package tests.productCatalog.service;
 
-import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -12,8 +11,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
-
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -83,38 +80,27 @@ public class ServiceNegativeTest extends Tests {
     @TmsLink("643518")
     @Test
     public void createServiceWithInvalidCharacters() {
-        assertAll("Сервис создался с недопустимым именем",
-                () -> steps.createProductObject(steps
-                        .createJsonObject("NameWithUppercase")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("nameWithUppercaseInMiddle")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("имя")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("Имя")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("a&b&c")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("")).assertStatus(400),
-                () -> steps.createProductObject(steps
-                        .createJsonObject(" ")).assertStatus(400)
-        );
+        Services.builder().serviceName("NameWithUppercase").build().negativeCreateRequest(500);
+        Services.builder().serviceName("nameWithUppercaseInMiddle").build().negativeCreateRequest(500);
+        Services.builder().serviceName("имя").build().negativeCreateRequest(500);
+        Services.builder().serviceName("Имя").build().negativeCreateRequest(500);
+        Services.builder().serviceName("a&b&c").build().negativeCreateRequest(500);
+        Services.builder().serviceName("").build().negativeCreateRequest(400);
+        Services.builder().serviceName(" ").build().negativeCreateRequest(400);
     }
 
     @DisplayName("Негативный тест на создание сервиса с недопустимыми graph_id")
     @TmsLink("643522")
     @Test
     public void createServiceWithInvalidGraphId() {
-        assertAll("Создался сервис недопустимым graph_id",
-                () -> steps.createProductObject(JsonHelper.getJsonTemplate("productCatalog/services/createServices.json")
-                        .set("name", "create_service_with_not_exist_graph_id")
-                        .set("graph_id", "dgdh-4565-dfgdf")
-                        .build()).assertStatus(500),
-                () -> steps.createProductObject(JsonHelper.getJsonTemplate("productCatalog/services/createServices.json")
-                        .set("name", "create_service2_with_not_exist_graph_id")
-                        .set("graph_id", 56564)
-                        .build()).assertStatus(500)
-        );
+        Services.builder().serviceName("create_service_with_not_exist_graph_id")
+                .graphId("dgdh-4565-dfgdf")
+                .build()
+                .negativeCreateRequest(500);
+        Services.builder().serviceName("create_service_with_not_exist_graph_id")
+                .graphId("create_service2_with_not_exist_graph_id")
+                .build()
+                .negativeCreateRequest(500);
     }
 
     @DisplayName("Негативный тест на удаление сервиса без токена")
