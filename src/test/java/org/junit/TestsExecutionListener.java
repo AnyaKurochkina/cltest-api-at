@@ -2,11 +2,9 @@ package org.junit;
 
 
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.logevents.SelenideLogger;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.utils.Encrypt;
-import io.qameta.allure.selenide.AllureSelenide;
 import lombok.SneakyThrows;
 import models.ObjectPoolService;
 import org.junit.platform.launcher.TestExecutionListener;

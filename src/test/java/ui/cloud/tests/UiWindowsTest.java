@@ -4,7 +4,11 @@ import models.orderService.products.Windows;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import ru.testit.annotations.CustomBeforeAll;
+import ru.testit.annotations.CustomBeforeEach;
+import ru.testit.annotations.Title;
 import steps.orderService.OrderServiceSteps;
+import tests.Tests;
 import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.ProductsPage;
 import ui.cloud.pages.WindowsOrderPage;
@@ -20,10 +24,10 @@ import static com.codeborne.selenide.Selenide.open;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags({@Tag("ui_windows")})
-public class UiWindowsTest{
+public class UiWindowsTest extends Tests {
     Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 
-    @BeforeAll
+    @CustomBeforeAll
     void beforeAll(){
         product.init();
         new LoginPage(product.getProjectId())
@@ -46,9 +50,10 @@ public class UiWindowsTest{
         WindowsPage winPage = new WindowsPage(product);
         winPage.waitChangeStatus();
         winPage.checkLastAction();
-        closeWebDriver();
+//        closeWebDriver();
     }
 
+    @Title("AfterAll")
     @AfterAll
     void afterAll(){
         new LoginPage(product.getProjectId())
@@ -58,7 +63,7 @@ public class UiWindowsTest{
         closeWebDriver();
     }
 
-    @BeforeEach
+    @CustomBeforeEach
     void beforeEach(){
         new LoginPage(product.getProjectId())
                 .singIn();

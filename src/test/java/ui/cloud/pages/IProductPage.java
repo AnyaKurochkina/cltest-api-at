@@ -44,7 +44,7 @@ public abstract class IProductPage {
         log.debug("Итоговый статус: {}", titles);
     }
 
-    @Step("Проверка выподления послегднего действия")
+    @Step("Проверка выполнения последнего действия")
     public void checkLastAction() {
         btnHistory.shouldBe(Condition.enabled).click();
         History history = new History();

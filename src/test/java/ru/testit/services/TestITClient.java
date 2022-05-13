@@ -80,7 +80,7 @@ public class TestITClient {
                     .assertStatus(201);
             startLaunchResponse = response.extractAs(StartLaunchResponse.class);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("startLaunch()", e);
             return;
         }
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
@@ -349,7 +349,7 @@ public class TestITClient {
                     .post("/api/v2/testRuns/{}/complete", startLaunchResponse.getId())
                     .assertStatus(204);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("sendCompleteTestRun", e);
             disableTestsIsBadTestRun(e);
             return;
         }
