@@ -34,12 +34,13 @@ import static core.enums.KafkaRoles.PRODUCER;
 @Log4j2
 public class ApacheKafkaClusterTest extends Tests {
 
-    //TODO: убрать Waiting.sleep(6000);
+    final String productName = "Apache Kafka Cluster RHEL";
 
     @TmsLink("377732")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(ApacheKafkaCluster product) {
+        product.setProductName(productName);
         //noinspection EmptyTryBlock
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {}
     }
@@ -49,7 +50,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(ApacheKafkaCluster product) {
-//        Waiting.sleep(120000);
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.updateCerts();
         }
@@ -60,7 +61,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Пакетное создание Topic-ов Kafka {0}")
     void createTopic(ApacheKafkaCluster product) {
-//        Waiting.sleep(120000);
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createTopics(Stream.generate(new Generex("[a-zA-Z0-9][a-zA-Z0-9.\\-_]*")::random)
                     .limit(new Random().nextInt(20) + 1).distinct().collect(Collectors.toList()));
@@ -72,7 +73,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить параметр топиков Kafka Cluster {0}")
     void editTopic(ApacheKafkaCluster product) {
-//        Waiting.sleep(120000);
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createTopics(Collections.singletonList("PacketTopicNameForEdit"));
             kafka.editTopics("PacketTopicNameForEdit");
@@ -84,6 +85,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Пакетное удаление Topic-ов Kafka {0}")
     void deleteTopic(ApacheKafkaCluster product) {
+        product.setProductName(productName);
         Waiting.sleep(120000);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
@@ -96,7 +98,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать ACL Kafka {0}")
     void createAcl(ApacheKafkaCluster product) {
-//        Waiting.sleep(120000);
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
             kafka.createAcl("PacketTopicNameForAcl", PRODUCER);
@@ -108,6 +110,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание ACL на транзакцию Kafka {0}")
     void createAclTransaction(ApacheKafkaCluster product) {
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createAclTransaction("*");
         }
@@ -118,6 +121,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания ВМ и брокера Kafka {0}")
     void checkConnection(ApacheKafkaCluster product) {
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             String topicName = "PacketTopicNameForAcl5";
             String message = "This message from autotest";
@@ -139,6 +143,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить кластер Kafka {0}")
     void stopSoft(ApacheKafkaCluster product) {
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.stopSoft();
             kafka.start();
@@ -150,6 +155,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить кластер Kafka {0}")
     void resize(ApacheKafkaCluster product) {
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.restart();
         }
@@ -160,7 +166,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Синхронизировать конфигурацию кластера Kafka {0}")
     void syncInfo(ApacheKafkaCluster product) {
-//        Waiting.sleep(120000);
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.syncInfo();
         }
@@ -171,7 +177,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Прислать конфигурацию кластера Kafka {0}")
     void sendConfig(ApacheKafkaCluster product) {
-//        Waiting.sleep(120000);
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.sendConfig();
         }
@@ -183,6 +189,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить кластер Kafka {0}")
     void start(ApacheKafkaCluster product) {
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.stopSoft();
             kafka.start();
@@ -194,6 +201,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(ApacheKafkaCluster product) {
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.expandMountPoint();
         }
@@ -204,6 +212,7 @@ public class ApacheKafkaClusterTest extends Tests {
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
     void delete(ApacheKafkaCluster product) {
+        product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.deleteObject();
         }

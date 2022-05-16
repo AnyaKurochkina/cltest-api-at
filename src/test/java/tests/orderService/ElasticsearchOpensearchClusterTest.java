@@ -19,10 +19,13 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearch_opensearch_cluster"), @Tag("prod")})
 public class ElasticsearchOpensearchClusterTest extends Tests {
 
+    final String productName = "Elasticsearch Opensearch cluster";
+
     @TmsLink("671243")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(ElasticsearchOpensearchCluster product) {
+        product.setProductName(productName);
         //noinspection EmptyTryBlock
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {}
     }
@@ -32,6 +35,7 @@ public class ElasticsearchOpensearchClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверить конфигурацию {0}")
     void refreshVmConfig(ElasticsearchOpensearchCluster product) {
+        product.setProductName(productName);
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
             elastic.refreshVmConfig();
         }
@@ -42,6 +46,7 @@ public class ElasticsearchOpensearchClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(ElasticsearchOpensearchCluster product) {
+        product.setProductName(productName);
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
             elastic.stopHard();
             elastic.start();
@@ -54,6 +59,7 @@ public class ElasticsearchOpensearchClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(ElasticsearchOpensearchCluster product) {
+        product.setProductName(productName);
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
             elastic.stopSoft();
             elastic.start();
@@ -65,6 +71,7 @@ public class ElasticsearchOpensearchClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(ElasticsearchOpensearchCluster product) {
+        product.setProductName(productName);
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
             elastic.stopHard();
             elastic.start();
@@ -76,6 +83,7 @@ public class ElasticsearchOpensearchClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить по питанию {0}")
     void restart(ElasticsearchOpensearchCluster product) {
+        product.setProductName(productName);
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
             elastic.restart();
         }
@@ -86,6 +94,7 @@ public class ElasticsearchOpensearchClusterTest extends Tests {
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
     void delete(ElasticsearchOpensearchCluster product) {
+        product.setProductName(productName);
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
             elastic.deleteObject();
         }

@@ -36,8 +36,6 @@ public class ApacheKafkaAstraClusterTest extends Tests {
 
     final String productName = "Apache Kafka Cluster Astra";
 
-    //TODO: убрать Waiting.sleep(6000);
-
     @TmsLink("847102")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")

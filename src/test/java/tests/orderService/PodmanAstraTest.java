@@ -16,11 +16,13 @@ import tests.Tests;
 @Feature("Podman")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("podman_astra"), @Tag("prod")})
 public class PodmanAstraTest extends Tests {
+    final String productName = "Podman (Astra)";
 
     @TmsLink("820506")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Podman product) {
+        product.setProductName(productName);
         //noinspection EmptyTryBlock
         try (Podman podman = product.createObjectExclusiveAccess()) {}
     }
@@ -30,6 +32,7 @@ public class PodmanAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Podman product) {
+        product.setProductName(productName);
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.expandMountPoint();
         }
@@ -40,6 +43,7 @@ public class PodmanAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Podman product) {
+        product.setProductName(productName);
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.restart();
         }
@@ -50,6 +54,7 @@ public class PodmanAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Podman product) {
+        product.setProductName(productName);
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.stopSoft();
             podman.start();
@@ -75,6 +80,7 @@ public class PodmanAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(Podman product) {
+        product.setProductName(productName);
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.stopHard();
             podman.start();
@@ -86,6 +92,7 @@ public class PodmanAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Podman product) {
+        product.setProductName(productName);
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.stopHard();
             podman.start();
@@ -97,6 +104,7 @@ public class PodmanAstraTest extends Tests {
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
     void delete(Podman product) {
+        product.setProductName(productName);
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.deleteObject();
         }
