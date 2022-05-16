@@ -169,6 +169,6 @@ public class PostgresSQLCluster extends IProduct {
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_two_layer");
+        delete("delete_postgresql_cluster");
     }
 }
