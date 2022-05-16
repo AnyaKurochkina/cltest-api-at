@@ -16,11 +16,13 @@ import tests.Tests;
 @Feature("WildFly")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("wildfly"), @Tag("prod")})
 public class WildFlyTest extends Tests {
+    final String productName = "WildFly";
 
     @TmsLink("377474")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(WildFly product) {
+        product.setProductName(productName);
         //noinspection EmptyTryBlock
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {}
     }
@@ -30,6 +32,7 @@ public class WildFlyTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(WildFly product) {
+        product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.expandMountPoint();
         }
@@ -40,6 +43,7 @@ public class WildFlyTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(WildFly product) {
+        product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.restart();
         }
@@ -50,6 +54,7 @@ public class WildFlyTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(WildFly product) {
+        product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.stopSoft();
             wildFly.start();
@@ -61,6 +66,7 @@ public class WildFlyTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(WildFly product) {
+        product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.stopHard();
             try {
@@ -76,6 +82,7 @@ public class WildFlyTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверить конфигурацию {0}")
     void refreshVmConfig(WildFly product) {
+        product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.refreshVmConfig();
         }
@@ -86,6 +93,7 @@ public class WildFlyTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(WildFly product) {
+        product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.stopHard();
             wildFly.start();
@@ -97,6 +105,7 @@ public class WildFlyTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(WildFly product) {
+        product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.stopHard();
             wildFly.start();
@@ -108,6 +117,7 @@ public class WildFlyTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(WildFly product) {
+        product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.updateCerts();
         }
@@ -118,6 +128,7 @@ public class WildFlyTest extends Tests {
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
     void delete(WildFly product) {
+        product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.deleteObject();
         }

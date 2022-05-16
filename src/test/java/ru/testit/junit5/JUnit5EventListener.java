@@ -8,9 +8,15 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
+import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
+import ru.testit.annotations.CustomBeforeAll;
+import ru.testit.annotations.CustomBeforeEach;
 import ru.testit.services.TestITClient;
 
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static core.helper.Configure.isIntegrationTestIt;
 
@@ -18,9 +24,10 @@ import static core.helper.Configure.isIntegrationTestIt;
 public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterAllCallback, InvocationInterceptor, TestWatcher {
     public static final RunningHandler HANDLER = new RunningHandler();
     private static final ExtensionContext.Namespace configurationSpace = ExtensionContext.Namespace.create(JUnit5EventListener.class);
+    private static final Map<String, Throwable> beforeAllClassListPass = new ConcurrentHashMap<>();
 
     static {
-        if(Configure.isIntegrationTestIt())
+        if (Configure.isIntegrationTestIt())
             JUnit5EventListener.HANDLER.startLaunch();
     }
 
@@ -55,15 +62,22 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         try {
             if (Configure.isTestItCreateAutotest)
                 invocation.skip();
-            else
-                invocation.proceed();
+            else {
+                if(Objects.isNull(beforeAllCustom(invocationContext, extensionContext))) {
+                    beforeEachCustom(invocationContext);
+                    invocation.proceed();
+                }
+                else {
+                    invocation.skip();
+                    throw beforeAllCustom(invocationContext, extensionContext);
+                }
+            }
         } catch (Throwable throwable) {
             if (isIntegrationTestIt())
                 RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, /*getSubId(extensionContext)*/ TestITClient.getConfigurationId());
 //            throw new Exception(throwable.getMessage());
             throw throwable;
-        }
-        finally {
+        } finally {
             Http.removeFixedRole();
         }
     }
@@ -72,6 +86,40 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         if (!extensionContext.getRequiredTestMethod().isAnnotationPresent(Test.class))
             return StringUtils.findByRegex("#(\\d+)\\]$", extensionContext.getUniqueId());
         return null;
+    }
+
+    @SneakyThrows
+    public Throwable beforeAllCustom(final ReflectiveInvocationContext<Method> context, final ExtensionContext extensionContext) {
+        if (beforeAllClassListPass.containsKey(extensionContext.getRoot().getUniqueId()))
+            return beforeAllClassListPass.get(extensionContext.getRoot().getUniqueId());
+
+        for (Method method : context.getExecutable().getDeclaringClass().getDeclaredMethods()) {
+            if (method.isAnnotationPresent(CustomBeforeAll.class)) {
+                try {
+                    method.setAccessible(true);
+                    method.invoke(context.getTarget().orElseThrow(Exception::new));
+                } catch (Throwable e) {
+                    beforeAllClassListPass.put(extensionContext.getRoot().getUniqueId(), e.getCause());
+                    throw e.getCause();
+                }
+                beforeAllClassListPass.put(extensionContext.getRoot().getUniqueId(), null);
+            }
+        }
+        return null;
+    }
+
+    @SneakyThrows
+    public void beforeEachCustom(final ReflectiveInvocationContext<Method> context) {
+        for (Method method : context.getExecutable().getDeclaringClass().getDeclaredMethods()) {
+            if (method.isAnnotationPresent(CustomBeforeEach.class)) {
+                try {
+                    method.setAccessible(true);
+                    method.invoke(context.getTarget().orElseThrow(Exception::new));
+                } catch (Throwable e) {
+                    throw e.getCause();
+                }
+            }
+        }
     }
 
     public void interceptTestTemplateMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Throwable {
@@ -85,13 +133,11 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
                 invocation.skip();
             else
                 invocation.proceed();
-        }
-        catch (Throwable throwable) {
+        } catch (Throwable throwable) {
             if (isIntegrationTestIt() && entity != null)
                 RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, entity.getConfigurationId());
             throw throwable;
-        }
-        finally {
+        } finally {
             Http.removeFixedRole();
         }
     }
@@ -147,8 +193,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
                 RunningHandler.finishUtilMethod(methodType, throwable);
 //            throw new Exception(throwable.getMessage());
             throw throwable;
-        }
-        finally {
+        } finally {
             Http.removeFixedRole();
         }
     }

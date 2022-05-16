@@ -10,6 +10,8 @@ import org.junit.jupiter.api.*;
 import steps.keyCloak.KeyCloakSteps;
 import tests.Tests;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 @Feature("Авторизация на портале")
 @Epic("Главная страница")
@@ -25,7 +27,7 @@ public class KeyCloakTest extends Tests {
 
     @Test
     @TmsLink("111259")
-    @DisplayName("Получение токена")
+    @DisplayName("Получение токена SA")
     void getTokenServiceAccount() {
         KeyCloakSteps.getServiceAccountToken(((Project)Project.builder().isForOrders(true).build().createObject()).getId());
     }

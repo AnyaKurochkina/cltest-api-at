@@ -13,6 +13,8 @@ import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
 import ru.testit.model.request.*;
 import ru.testit.model.response.ConfigurationResponse;
 import ru.testit.model.response.CreateTestItemResponse;
@@ -22,6 +24,7 @@ import ru.testit.properties.AppProperties;
 import ru.testit.utils.Outcome;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import static ru.testit.properties.AppProperties.TEST_IT_TOKEN;
@@ -77,7 +80,7 @@ public class TestITClient {
                     .assertStatus(201);
             startLaunchResponse = response.extractAs(StartLaunchResponse.class);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("startLaunch()", e);
             return;
         }
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
@@ -118,7 +121,7 @@ public class TestITClient {
                     .get("/api/v2/configurations/{}", configurationId)
                     .assertStatus(200);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("getConfiguration()", e);
             throw e;
         }
         log.info("[{}] Response :{}", response.status(), response.toString());
@@ -146,7 +149,7 @@ public class TestITClient {
                 return listTestItems.get(0);
             }
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("getTestItem()", e);
             throw e;
         }
         log.info("[{}] Response :{}", response.status(), response.toString());
@@ -174,7 +177,7 @@ public class TestITClient {
                     .assertStatus(201);
             createTestItemResponse = response.extractAs(CreateTestItemResponse.class);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("createTestItem()", e);
             return;
         }
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
@@ -200,7 +203,7 @@ public class TestITClient {
                     .put("/api/v2/autoTests")
                     .assertStatus(204);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("updatePostItem()", e);
             return;
         }
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
@@ -223,10 +226,10 @@ public class TestITClient {
                     .post("/api/v2/autoTests/{}/workItems", autoTestId)
                     .assertStatus(204);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("linkAutoTestWithTestCase()", e);
             return;
         }
-       log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
+        log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
     }
 
 //    public void finishLaunch(final TestResultsRequest request) {
@@ -245,12 +248,14 @@ public class TestITClient {
             log.info("[{}] Response :{}", response.status(), response.toString());
             return response.toString();
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("sendAttachment()", e);
             throw e;
         }
     }
 
     static void disableTestsIsBadTestRun(Throwable e) {
+        if(e instanceof NullPointerException)
+            return;
         if (e.getMessage().contains("the StateName is already Stopped") || e.getMessage().contains("TestRun is stopped!")) {
             Configure.setAppProp("testIt", "false");
             System.clearProperty("testRunId");
@@ -274,7 +279,7 @@ public class TestITClient {
                     .post("/api/v2/testRuns/{}/testResults", startLaunchResponse.getId())
                     .assertStatus(200);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("sendTestResult()", e);
             disableTestsIsBadTestRun(e);
             throw e;
         }
@@ -292,8 +297,24 @@ public class TestITClient {
                     .body("")
                     .post("/api/v2/testRuns/{}/start", startLaunchResponse.getId())
                     .assertStatus(204);
+            String testPlanId = System.getProperty("testPlanId");
+            if (Objects.nonNull(testPlanId)) {
+                JSONObject body = new Http(properties.getUrl())
+                        .disableAttachmentLog()
+                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                        .body("")
+                        .get("/api/v2/testPlans/{}", testPlanId)
+                        .assertStatus(200)
+                        .toJson();
+                new Http(properties.getUrl())
+                        .disableAttachmentLog()
+                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                        .body(body.put("lockedById", "98675a7b-6b9f-4ce3-96f6-c0d53d656745"))
+                        .put("/api/v2/testPlans")
+                        .assertStatus(204);
+            }
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("sendStartTestRun()", e);
             disableTestsIsBadTestRun(e);
             return;
         }
@@ -302,6 +323,26 @@ public class TestITClient {
 
     public void sendCompleteTestRun() {
         Response response;
+        String testPlanId = System.getProperty("testPlanId");
+        try {
+            if (Objects.nonNull(testPlanId)) {
+                JSONObject body = new Http(properties.getUrl())
+                        .disableAttachmentLog()
+                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                        .body("")
+                        .get("/api/v2/testPlans/{}", testPlanId)
+                        .assertStatus(200)
+                        .toJson();
+                new Http(properties.getUrl())
+                        .disableAttachmentLog()
+                        .setSourceToken("PrivateToken " + properties.getPrivateToken())
+                        .body(body.put("lockedById", (Object) null))
+                        .put("/api/v2/testPlans")
+                        .assertStatus(204);
+            }
+        } catch (Exception e) {
+            log.error("sendCompleteTestRun()", e);
+        }
         try {
             response = new Http(properties.getUrl())
                     .disableAttachmentLog()
@@ -310,7 +351,7 @@ public class TestITClient {
                     .post("/api/v2/testRuns/{}/complete", startLaunchResponse.getId())
                     .assertStatus(204);
         } catch (Throwable e) {
-            log.error(e.toString());
+            log.error("sendCompleteTestRun()", e);
             disableTestsIsBadTestRun(e);
             return;
         }

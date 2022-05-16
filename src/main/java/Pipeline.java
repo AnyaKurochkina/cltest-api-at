@@ -78,7 +78,8 @@ public class Pipeline {
                 writer.println(externalId + "=" + result.query("/configuration/id"));
             }
             String command = "-DfailIfNoTests=false -Dmaven.test.skip=false" + threadCount +
-                    " -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestRunId=" +
+                    " -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestPlanId=" +
+                    argsMap.get(TEST_PLAN_ID)  + " -DtestRunId=" +
                     argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
 
             System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");

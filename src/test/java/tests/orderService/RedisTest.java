@@ -16,13 +16,16 @@ import tests.Tests;
 @Feature("Redis")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("redis"), @Tag("prod")})
 public class RedisTest extends Tests {
+    final String productName = "Redis";
 
     @TmsLink("377701")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Redis product) {
+        product.setProductName(productName);
         //noinspection EmptyTryBlock
-        try (Redis redis = product.createObjectExclusiveAccess()) {}
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+        }
     }
 
     @TmsLink("377694")
@@ -30,6 +33,7 @@ public class RedisTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(Redis product) {
+        product.setProductName(productName);
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.expandMountPoint();
         }
@@ -40,6 +44,7 @@ public class RedisTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(Redis product) {
+        product.setProductName(productName);
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.resetPassword();
         }
@@ -50,6 +55,7 @@ public class RedisTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(Redis product) {
+        product.setProductName(productName);
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.restart();
         }
@@ -60,6 +66,7 @@ public class RedisTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(Redis product) {
+        product.setProductName(productName);
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.stopSoft();
             redis.start();
@@ -71,6 +78,7 @@ public class RedisTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Redis product) {
+        product.setProductName(productName);
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.resize(redis.getMaxFlavor());
         }
@@ -81,6 +89,7 @@ public class RedisTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Включить {0}")
     void start(Redis product) {
+        product.setProductName(productName);
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.stopHard();
             redis.start();
@@ -92,6 +101,7 @@ public class RedisTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно {0}")
     void stopHard(Redis product) {
+        product.setProductName(productName);
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.stopHard();
             redis.start();
@@ -103,6 +113,7 @@ public class RedisTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания {0}")
     void checkConnect(Redis product) {
+        product.setProductName(productName);
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.checkConnect();
         }
@@ -113,6 +124,7 @@ public class RedisTest extends Tests {
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
     void delete(Redis product) {
+        product.setProductName(productName);
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.deleteObject();
         }

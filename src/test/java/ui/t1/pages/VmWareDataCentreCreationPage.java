@@ -1,17 +1,12 @@
-package ui.pages;
+package ui.t1.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import core.WebElementActions;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import ui.uiInterfaces.Loadable;
 
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.webdriver;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 public class VmWareDataCentreCreationPage implements Loadable {

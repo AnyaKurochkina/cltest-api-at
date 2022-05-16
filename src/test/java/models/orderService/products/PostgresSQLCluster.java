@@ -54,7 +54,7 @@ public class PostgresSQLCluster extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/postgressql_cluster.json";
-        if(productName == null)
+        if (productName == null)
             productName = "PostgreSQL Cluster";
         initProduct();
         if (flavor == null)
@@ -103,7 +103,7 @@ public class PostgresSQLCluster extends IProduct {
         save();
     }
 
-    public void checkConnection(String dbName, String password){
+    public void checkConnection(String dbName, String password) {
         checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)).split(",")[0]);
     }
 
@@ -169,6 +169,9 @@ public class PostgresSQLCluster extends IProduct {
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_two_layer");
+        if (productName.contains("Astra"))
+            delete("delete_two_layer");
+        else
+            delete("delete_postgresql_cluster");
     }
 }

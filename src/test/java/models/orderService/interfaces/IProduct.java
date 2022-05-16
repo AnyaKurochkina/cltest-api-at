@@ -8,7 +8,6 @@ import core.helper.http.Http;
 import core.utils.Waiting;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
 import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
-import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.*;
@@ -61,6 +60,8 @@ public abstract class IProduct extends Entity {
     public static final String RESIZE = "Изменить конфигурацию";
 
     protected String jsonTemplate;
+    @Getter @Setter
+    transient String link;
 
     @Getter
     private ProductStatus status;
@@ -80,7 +81,6 @@ public abstract class IProduct extends Entity {
     protected String env;
     @Getter
     protected String productId;
-
 
     public void setStatus(ProductStatus status) {
         this.status = status;
@@ -187,6 +187,12 @@ public abstract class IProduct extends Entity {
         projectId = StringUtils.findByRegex("context=([^&]*)", link);
         orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
         productId = ((String) OrderServiceSteps.getProductsField(this, "product_id"));
+        return (T) this;
+    }
+
+    public <T extends Entity> T buildFromLink(){
+        projectId = StringUtils.findByRegex("context=([^&]*)", link);
+        orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
         return (T) this;
     }
 

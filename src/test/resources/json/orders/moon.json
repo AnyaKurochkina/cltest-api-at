@@ -1,0 +1,18 @@
+{
+  "order": {
+    "project_name": "proj-frybyv41jh",
+    "product_id": "2abcfb38-fecc-487a-9bec-2f139ba4d6bb",
+    "attrs": {
+      "user_mark": "moon-test",
+      "data_center": "5",
+      "net_segment": "dev-srv-app",
+      "resource_pool": {
+        "id": "e3854be3-9b2e-4268-94a8-01607fc3bfb1",
+        "name": "ds5-genr05"
+      },
+      "moon_count_pods": 1
+    },
+    "count": 1,
+    "label": "Moon"
+  }
+}

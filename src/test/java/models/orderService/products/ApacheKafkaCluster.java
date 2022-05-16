@@ -47,6 +47,7 @@ public class ApacheKafkaCluster extends IProduct {
     public static final String KAFKA_CREATE_TOPICS = "kafka_create_topics";
     public static final String KAFKA_CLUSTER_RETENTION_MS = "data.find{it.type=='cluster'}.data.config.topics.any{it.topic_name=='%s' && it.retention_ms=='%s'}";
 
+    public static final String KAFKA_CLUSTER_ACL_IDEMPOTENT = "data.find{it.type=='cluster'}.data.config.idempotent_acls.any{it.client_cn=='%s'}";
     @Override
     @Step("Заказ продукта")
     protected void create() {
@@ -57,8 +58,8 @@ public class ApacheKafkaCluster extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/apache_kafka_cluster.json";
-        if (productName == null){
-            productName = "Apache Kafka Cluster";
+        if (productName == null) {
+            productName = "Apache Kafka Cluster RHEL";
         }
         initProduct();
         if (flavor == null)
@@ -150,8 +151,18 @@ public class ApacheKafkaCluster extends IProduct {
 
     public void createAcl(String topicName, KafkaRoles role) {
         OrderServiceSteps.executeAction("kafka_create_acl", this, new JSONObject("{\"acls\":[{\"client_cn\":\"APD09.26-1418-kafka-dh-client-devcorp.vtb\",\"topic_type\":\"by_name\",\"client_role\":\"" + role.getRole() + "\",\"topic_names\":[\"" + topicName + "\"]}]}"), this.projectId);
-        save();
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, role.getRole(), topicName)), "ACL на топик не создался");
+        save();
+    }
+
+    public void createIdempotentAcl(String clientCn) {
+        OrderServiceSteps.executeAction("kafka_create_idempotent_acls_release", this, new JSONObject("{\"acls\":[{\"client_cn\":\"" + clientCn + "\"}]}"), this.projectId);
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_IDEMPOTENT, clientCn)), "CN сертификата клиента не найден");
+    }
+
+    public void deleteIdempotentAcl(String clientCn) {
+        OrderServiceSteps.executeAction("kafka_delete_idempotent_acls_release", this, new JSONObject("{\"acls\":[{\"client_cn\":\"" + clientCn + "\"}]}"), this.projectId);
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_IDEMPOTENT, clientCn)), "CN сертификата клиента не найден");
     }
 
     public void createAclTransaction(String transactionRegex) {

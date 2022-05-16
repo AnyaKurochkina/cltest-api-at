@@ -4,7 +4,9 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class Configure {
@@ -38,7 +40,7 @@ public class Configure {
                 } else ENV = getAppProp("env").toLowerCase();
             } else
                 ENV = System.getProperty("env").toLowerCase();
-            log.info("SET ENVIRONMENT = " + ENV);
+            log.info("SET ENVIRONMENT = {}", ENV);
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
 
             String kongURL = getAppProp("url.kong");
@@ -70,6 +72,12 @@ public class Configure {
 
     public static String getAppProp(String propertyKey) {
         return properties.getProperty(propertyKey);
+    }
+
+    public static Map<String, String> getAppPropStartWidth(String propertyKey) {
+        return properties.stringPropertyNames().stream()
+                .filter(p -> p.startsWith(propertyKey))
+                .collect(Collectors.toMap(p -> p, Configure::getAppProp));
     }
 
     public static void setAppProp(String propertyKey, String propertyValue) {

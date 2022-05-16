@@ -129,17 +129,17 @@ public class OldWindowsTest extends Tests {
         windows.unmountDisk("T");
     }
 
-   @Order(10)
-    @TmsLink("841700")
-    @DisplayName("Расширить диск Windows OLD")
-    @Test
-    void expandDisk() {
-        if (windows.productStatusIs(STOPPED)) {
-            windows.start();
-        }
-       windows.addDisk("K");
-       windows.expandMountPoint("K");
-    }
+//   @Order(10)
+//    @TmsLink("841700")
+//    @DisplayName("Расширить диск Windows OLD")
+//    @Test
+//    void expandDisk() {
+//        if (windows.productStatusIs(STOPPED)) {
+//            windows.start();
+//        }
+//       windows.addDisk("K");
+//       windows.expandMountPoint("K");
+//    }
 
     @Order(11)
     @TmsLink("841703")

@@ -6,7 +6,9 @@ import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.utils.Encrypt;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import models.ObjectPoolService;
+import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 import ru.testit.junit5.RunningHandler;
@@ -22,36 +24,35 @@ import static core.helper.Configure.ENV;
 import static core.helper.Configure.getAppProp;
 import static ui.selenoidUtils.SelenoidUtils.isRemote;
 
-//@Log4j2
+@Log4j2
 public class TestsExecutionListener implements TestExecutionListener {
- //   private static final String DRIVER_PATH = new File(getAppProp("driver.path")).getAbsolutePath();
-    private static final String DRIVER_PATH = null;
     private static final String URL = getAppProp("base.url");
 
     @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
-        if (getAppProp("driver.path") != null) {
-            //###Config for Ui###
+        //###Config for Ui###
+        if (getAppProp("webdriver.path") != null) {
+            String DRIVER_PATH = new File(getAppProp("webdriver.path")).getAbsolutePath();
             System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
-            baseUrl = URL;
-            isRemote();
-            Configuration.browserSize = "1530x870";
-            Configuration.browserPosition = "2x2";
-            Configuration.timeout = 15000;
-            Configuration.driverManagerEnabled = false;
         }
-            //####Config for Ui###
+        baseUrl = URL;
+        isRemote();
+        Configuration.browserSize = "1530x870";
+        Configuration.browserPosition = "2x2";
+        Configuration.timeout = 20000;
+        Configuration.driverManagerEnabled = false;
 
-            String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
-            if (Files.exists(Paths.get(fileSecret)))
-                ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
-            loadSecretJson();
-        }
+        //####Config for Ui###
 
+        String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
+        if (Files.exists(Paths.get(fileSecret)))
+            ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
+        loadSecretJson();
+    }
 
     public void loadSecretJson() {
         String secret = System.getProperty("secret");
-        if(secret == null)
+        if (secret == null)
             secret = Configure.getAppProp("secret");
         String file = Configure.getAppProp("data.folder") + "/shareFolder/" + "secret.bin";
         if (!Files.exists(Paths.get(file)) || secret == null)
@@ -61,7 +62,7 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     @SneakyThrows
     public void testPlanExecutionFinished(TestPlan testPlan) {
-        if(Configure.isIntegrationTestIt())
+        if (Configure.isIntegrationTestIt())
             RunningHandler.finishLaunch();
         ObjectPoolService.saveEntities(Configure.getAppProp("data.folder") + "/shareFolder/logData.json");
         new File(Configure.getAppProp("allure.results")).mkdir();

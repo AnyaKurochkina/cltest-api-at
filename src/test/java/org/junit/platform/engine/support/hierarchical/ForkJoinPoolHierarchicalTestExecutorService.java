@@ -6,6 +6,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 
+import lombok.extern.log4j.Log4j2;
 import org.junit.MarkDelete;
 import models.ObjectPoolService;
 import core.helper.StringUtils;
@@ -39,6 +40,7 @@ import java.util.regex.Pattern;
         status = Status.EXPERIMENTAL,
         since = "1.3"
 )
+@Log4j2
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
     private final ForkJoinPool forkJoinPool;
     public static AtomicInteger parallelism = new AtomicInteger();
@@ -55,6 +57,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         this.forkJoinPool = this.createForkJoinPool(configuration);
         parallelism.set(this.forkJoinPool.getParallelism());
         LoggerFactory.getLogger(this.getClass()).config(() -> "Using ForkJoinPool with parallelism of " + parallelism.get());
+        log.info("SET PARALLELISM = {}", ForkJoinPoolHierarchicalTestExecutorService.parallelism.get());
     }
 
     private static ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
