@@ -2,7 +2,6 @@ package core.helper;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.intellij.lang.annotations.Language;
