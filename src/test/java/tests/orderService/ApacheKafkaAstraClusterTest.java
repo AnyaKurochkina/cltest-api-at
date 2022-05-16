@@ -29,7 +29,7 @@ import static core.enums.KafkaRoles.CONSUMER;
 import static core.enums.KafkaRoles.PRODUCER;
 
 @Epic("Продукты")
-@Feature("ApacheKafkaClusterAstra")
+@Feature("ApacheKafkaCluster Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafkacluster_astra"), @Tag("prod")})
 @Log4j2
 public class ApacheKafkaAstraClusterTest extends Tests {
@@ -174,6 +174,29 @@ public class ApacheKafkaAstraClusterTest extends Tests {
 //        Waiting.sleep(120000);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.syncInfo();
+        }
+    }
+
+    @TmsLink("864077")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Идемпотентные ACL. Создание {0}")
+    void createIdempotentAcl(ApacheKafkaCluster product) {
+        product.setProductName(productName);
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.createIdempotentAcl("cn001");
+        }
+    }
+
+    @TmsLink("864076")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Идемпотентные ACL. Удаление {0}")
+    void deleteIdempotentAcl(ApacheKafkaCluster product) {
+        product.setProductName(productName);
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.deleteIdempotentAcl("cn002");
+            kafka.deleteIdempotentAcl("cn002");
         }
     }
 

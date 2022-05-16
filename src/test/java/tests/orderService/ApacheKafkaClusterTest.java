@@ -172,6 +172,29 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @TmsLink("864066")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Идемпотентные ACL. Создание {0}")
+    void createIdempotentAcl(ApacheKafkaCluster product) {
+        product.setProductName(productName);
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.createIdempotentAcl("cn001");
+        }
+    }
+
+    @TmsLink("864065")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Идемпотентные ACL. Удаление {0}")
+    void deleteIdempotentAcl(ApacheKafkaCluster product) {
+        product.setProductName(productName);
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.deleteIdempotentAcl("cn002");
+            kafka.deleteIdempotentAcl("cn002");
+        }
+    }
+
     @TmsLink("659273")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
