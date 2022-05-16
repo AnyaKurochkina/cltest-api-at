@@ -29,9 +29,7 @@ public final class StringUtils {
     }
 
     public static SelenideElement $x(@Language("XPath") String xpath, Object ... args) {
-        for (Object arg : args)
-            xpath = xpath.replaceFirst("\\{}", Objects.requireNonNull(arg).toString());
-        return Selenide.$x(xpath);
+        return Selenide.$x(format(xpath, args));
     }
 
     @SneakyThrows
