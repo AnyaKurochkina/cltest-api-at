@@ -169,9 +169,9 @@ public class PostgresSQLCluster extends IProduct {
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        if (productName.contains("Astra"))
-            delete("delete_two_layer");
-        else
+//        if (productName.contains("Astra"))
+//            delete("delete_two_layer");
+//        else
             delete("delete_postgresql_cluster");
     }
 }
