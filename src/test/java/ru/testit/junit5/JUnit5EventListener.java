@@ -6,6 +6,8 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.junit.jupiter.api.extension.*;
+import org.opentest4j.TestAbortedException;
+import ru.testit.properties.TestProperties;
 import ru.testit.services.TestITClient;
 
 import java.lang.reflect.Method;
@@ -107,7 +109,14 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     }
 
     public void testDisabled(ExtensionContext context, Optional<String> reason) {
-        //TODO: доделать
+//        if (!isIntegrationTestIt())
+//            return;
+//        TestProperties.getInstance().getConfigMapsByTest(context.getRequiredTestMethod())
+//
+//        RunningHandler.startTest(context.getRequiredTestMethod(), context.getDisplayName(), TestITClient.getConfigurationId(), context.getTags());
+//        context.getStore(configurationSpace).put(context.getUniqueId(), TestITClient.getConfigurationId());
+//        String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
+//        RunningHandler.finishTest(context.getRequiredTestMethod(), new TestAbortedException(reason.orElse("Тест отключен")), configurationId);
     }
 
     public void testSuccessful(final ExtensionContext context) {

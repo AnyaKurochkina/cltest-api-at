@@ -18,6 +18,11 @@ public class JsonTemplate {
         return this;
     }
 
+    public JsonTemplate remove(@Language("JSONPath") String s, boolean is) {
+        if(is) JsonPath.parse(template).delete(s);
+        return this;
+    }
+
     public JSONObject build() {
         return template;
     }

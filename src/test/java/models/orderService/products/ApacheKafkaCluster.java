@@ -86,6 +86,10 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+
+                .remove("$.order.attrs.ad_logon_grants", isTest())
+                //Fix
+
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", getSupport())
