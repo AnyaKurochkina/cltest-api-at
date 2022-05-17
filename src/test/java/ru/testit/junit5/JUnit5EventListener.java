@@ -11,6 +11,7 @@ import ru.testit.properties.TestProperties;
 import ru.testit.services.TestITClient;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -109,14 +110,15 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
     }
 
     public void testDisabled(ExtensionContext context, Optional<String> reason) {
-//        if (!isIntegrationTestIt())
-//            return;
-//        TestProperties.getInstance().getConfigMapsByTest(context.getRequiredTestMethod())
-//
-//        RunningHandler.startTest(context.getRequiredTestMethod(), context.getDisplayName(), TestITClient.getConfigurationId(), context.getTags());
-//        context.getStore(configurationSpace).put(context.getUniqueId(), TestITClient.getConfigurationId());
-//        String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
-//        RunningHandler.finishTest(context.getRequiredTestMethod(), new TestAbortedException(reason.orElse("Тест отключен")), configurationId);
+        if (!isIntegrationTestIt())
+            return;
+        List<String> list = TestProperties.getInstance()
+                .getConfigurationIds(RunningHandler.extractExternalID(context.getRequiredTestMethod(), null));
+
+        for(String configuration : list){
+            RunningHandler.startTest(context.getRequiredTestMethod(), context.getDisplayName(), configuration, context.getTags());
+            RunningHandler.finishTest(context.getRequiredTestMethod(), new TestAbortedException(reason.orElse("Тест отключен")), configuration);
+        }
     }
 
     public void testSuccessful(final ExtensionContext context) {
