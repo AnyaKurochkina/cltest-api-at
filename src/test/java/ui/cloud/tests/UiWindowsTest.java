@@ -4,8 +4,6 @@ import models.orderService.products.Windows;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ru.testit.annotations.CustomBeforeAll;
-import ru.testit.annotations.CustomBeforeEach;
 import ru.testit.annotations.Title;
 import steps.orderService.OrderServiceSteps;
 import tests.Tests;
@@ -27,7 +25,6 @@ import static com.codeborne.selenide.Selenide.open;
 public class UiWindowsTest extends Tests {
     Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 
-    @CustomBeforeAll
     void beforeAll(){
         product.init();
         new LoginPage(product.getProjectId())
@@ -65,7 +62,6 @@ public class UiWindowsTest extends Tests {
         closeWebDriver();
     }
 
-    @CustomBeforeEach
     void beforeEach(){
         new LoginPage(product.getProjectId())
                 .singIn();

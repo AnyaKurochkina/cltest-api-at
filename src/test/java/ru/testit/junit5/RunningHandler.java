@@ -4,7 +4,6 @@ import core.exception.CreateEntityException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.Nullable;
-import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.opentest4j.TestAbortedException;
 import ru.testit.annotations.Description;
 import ru.testit.annotations.Title;
@@ -93,7 +92,7 @@ public class RunningHandler
         utilsMethodSteps.putIfAbsent(currentMethod, parentStep);
         StepsAspects.setStepNodes(parentStep);
     }
-    
+
     public static void finishUtilMethod(final MethodType currentMethod, final Throwable thrown) {
         final StepNode parentStep = utilsMethodSteps.get(currentMethod);
         parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
@@ -110,7 +109,7 @@ public class RunningHandler
     
     private static String extractTitle(final Method currentTest) {
         final Title annotation = currentTest.getAnnotation(Title.class);
-        return (annotation != null) ? annotation.value() : null;
+        return (annotation != null) ? annotation.value() : currentTest.getName();
     }
     
     public static String extractExternalID(final Method currentTest, @Nullable String subId) {

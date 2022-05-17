@@ -13,7 +13,6 @@ import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.json.JSONException;
 import org.json.JSONObject;
 import ru.testit.model.request.*;
 import ru.testit.model.response.ConfigurationResponse;

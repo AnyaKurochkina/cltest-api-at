@@ -1,21 +1,17 @@
 package ru.testit.junit5;
 
 import core.helper.Configure;
-import core.helper.StringUtils;
 import core.helper.http.Http;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
-import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
-import ru.testit.annotations.CustomBeforeAll;
-import ru.testit.annotations.CustomBeforeEach;
 import ru.testit.services.TestITClient;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static core.helper.Configure.isIntegrationTestIt;
@@ -24,7 +20,6 @@ import static core.helper.Configure.isIntegrationTestIt;
 public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterAllCallback, InvocationInterceptor, TestWatcher {
     public static final RunningHandler HANDLER = new RunningHandler();
     private static final ExtensionContext.Namespace configurationSpace = ExtensionContext.Namespace.create(JUnit5EventListener.class);
-    private static final Map<String, Throwable> beforeAllClassListPass = new ConcurrentHashMap<>();
 
     static {
         if (Configure.isIntegrationTestIt())
@@ -45,12 +40,25 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
 
     public void interceptBeforeAllMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Exception {
         this.startUtilMethod(MethodType.BEFORE_CLASS, invocationContext);
-        this.finishUtilMethod(MethodType.BEFORE_CLASS, invocation);
+        this.finishUtilMethod(MethodType.BEFORE_CLASS, invocation, extensionContext);
     }
 
     public void interceptBeforeEachMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
         this.startUtilMethod(MethodType.BEFORE_METHOD, invocationContext);
-        this.finishUtilMethod(MethodType.BEFORE_METHOD, invocation);
+        this.finishUtilMethod(MethodType.BEFORE_METHOD, invocation, extensionContext);
+    }
+
+    @SneakyThrows
+    public void trowIfBeforeFail(ExtensionContext extensionContext) {
+        ExtensionContext parent = extensionContext.getParent().orElse(null);
+        if (Objects.nonNull(parent)) {
+            if (classFail.containsKey(parent.getUniqueId())) {
+                throw classFail.get(parent.getUniqueId());
+            }
+        }
+        if (classFail.containsKey(extensionContext.getUniqueId())) {
+            throw classFail.get(extensionContext.getUniqueId());
+        }
     }
 
     @SneakyThrows
@@ -63,14 +71,8 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             if (Configure.isTestItCreateAutotest)
                 invocation.skip();
             else {
-                if(Objects.isNull(beforeAllCustom(invocationContext, extensionContext))) {
-                    beforeEachCustom(invocationContext);
-                    invocation.proceed();
-                }
-                else {
-                    invocation.skip();
-                    throw beforeAllCustom(invocationContext, extensionContext);
-                }
+                trowIfBeforeFail(extensionContext);
+                invocation.proceed();
             }
         } catch (Throwable throwable) {
             if (isIntegrationTestIt())
@@ -79,46 +81,6 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             throw throwable;
         } finally {
             Http.removeFixedRole();
-        }
-    }
-
-    private String getSubId(final ExtensionContext extensionContext) {
-        if (!extensionContext.getRequiredTestMethod().isAnnotationPresent(Test.class))
-            return StringUtils.findByRegex("#(\\d+)\\]$", extensionContext.getUniqueId());
-        return null;
-    }
-
-    @SneakyThrows
-    public Throwable beforeAllCustom(final ReflectiveInvocationContext<Method> context, final ExtensionContext extensionContext) {
-        if (beforeAllClassListPass.containsKey(extensionContext.getRoot().getUniqueId()))
-            return beforeAllClassListPass.get(extensionContext.getRoot().getUniqueId());
-
-        for (Method method : context.getExecutable().getDeclaringClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(CustomBeforeAll.class)) {
-                try {
-                    method.setAccessible(true);
-                    method.invoke(context.getTarget().orElseThrow(Exception::new));
-                } catch (Throwable e) {
-                    beforeAllClassListPass.put(extensionContext.getRoot().getUniqueId(), e.getCause());
-                    throw e.getCause();
-                }
-                beforeAllClassListPass.put(extensionContext.getRoot().getUniqueId(), null);
-            }
-        }
-        return null;
-    }
-
-    @SneakyThrows
-    public void beforeEachCustom(final ReflectiveInvocationContext<Method> context) {
-        for (Method method : context.getExecutable().getDeclaringClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(CustomBeforeEach.class)) {
-                try {
-                    method.setAccessible(true);
-                    method.invoke(context.getTarget().orElseThrow(Exception::new));
-                } catch (Throwable e) {
-                    throw e.getCause();
-                }
-            }
         }
     }
 
@@ -131,8 +93,10 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         try {
             if (Configure.isTestItCreateAutotest)
                 invocation.skip();
-            else
+            else {
+                trowIfBeforeFail(extensionContext);
                 invocation.proceed();
+            }
         } catch (Throwable throwable) {
             if (isIntegrationTestIt() && entity != null)
                 RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, entity.getConfigurationId());
@@ -140,6 +104,10 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         } finally {
             Http.removeFixedRole();
         }
+    }
+
+    public void testDisabled(ExtensionContext context, Optional<String> reason) {
+        //TODO: доделать
     }
 
     public void testSuccessful(final ExtensionContext context) {
@@ -163,14 +131,14 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId);
     }
 
-    public void interceptAfterEachMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Exception {
+    public void interceptAfterEachMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
         this.startUtilMethod(MethodType.AFTER_METHOD, invocationContext);
-        this.finishUtilMethod(MethodType.AFTER_METHOD, invocation);
+        this.finishUtilMethod(MethodType.AFTER_METHOD, invocation, extensionContext);
     }
 
-    public void interceptAfterAllMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Exception {
+    public void interceptAfterAllMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
         this.startUtilMethod(MethodType.AFTER_CLASS, invocationContext);
-        this.finishUtilMethod(MethodType.AFTER_CLASS, invocation);
+        this.finishUtilMethod(MethodType.AFTER_CLASS, invocation, extensionContext);
     }
 
     private void startUtilMethod(final MethodType methodType, final ReflectiveInvocationContext<Method> context) {
@@ -179,8 +147,10 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         RunningHandler.startUtilMethod(methodType, (Method) context.getExecutable());
     }
 
+    public static final Map<String, Throwable> classFail = new ConcurrentHashMap<>();
+
     @SneakyThrows
-    private void finishUtilMethod(final MethodType methodType, final Invocation<Void> invocation) {
+    private void finishUtilMethod(final MethodType methodType, final Invocation<Void> invocation, ExtensionContext context) {
         try {
             if (Configure.isTestItCreateAutotest)
                 invocation.skip();
@@ -191,8 +161,9 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         } catch (Throwable throwable) {
             if (isIntegrationTestIt())
                 RunningHandler.finishUtilMethod(methodType, throwable);
-//            throw new Exception(throwable.getMessage());
-            throw throwable;
+            if(methodType == MethodType.BEFORE_CLASS || methodType == MethodType.BEFORE_METHOD)
+                classFail.put(context.getUniqueId(), throwable);
+            else throw throwable;
         } finally {
             Http.removeFixedRole();
         }
