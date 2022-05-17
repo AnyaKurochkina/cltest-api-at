@@ -1,5 +1,7 @@
 package ui.cloud.tests;
 
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.Windows;
@@ -17,6 +19,8 @@ public class UiTest extends Tests {
 
     @BeforeAll
      void beforeAll() {
+        Selenide.open("https://cloud.vtb.ru/?context=proj-xipzuxr713&type=project&org=vtb");
+        Selenide.$x("/button[.='kek']").shouldHave(Condition.visible);
 //        int f = 1/0;
     }
 
