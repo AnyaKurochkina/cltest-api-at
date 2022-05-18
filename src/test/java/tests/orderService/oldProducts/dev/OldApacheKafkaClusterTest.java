@@ -222,6 +222,7 @@ public class OldApacheKafkaClusterTest extends Tests {
         }
        kafka.createTopics(Collections.singletonList("PacketTopicNameForEdit"));
        kafka.editTopics("PacketTopicNameForEdit");
+       kafka.deleteTopics(Collections.singletonList("PacketTopicNameForEdit"));
     }
 
     @Order(15)
