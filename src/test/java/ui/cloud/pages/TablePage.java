@@ -9,6 +9,7 @@ import com.codeborne.selenide.ex.ElementShould;
 import core.utils.Waiting;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
@@ -55,7 +56,7 @@ public class TablePage {
             try {
                 p1 = webElement.toWebElement().getRect();
                 p2 = $x(String.format("//table[thead/tr/th[.='%s']]", columnName)).toWebElement().getRect();
-            } catch (NoSuchElementException e) {
+            } catch (NoSuchElementException | StaleElementReferenceException e) {
                 return;
             }
             int left = Math.max(p1.x, p2.x);
