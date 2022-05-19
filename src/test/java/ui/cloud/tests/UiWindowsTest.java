@@ -47,7 +47,7 @@ public class UiWindowsTest extends Tests {
         orderPage.getGroup().select(accessGroup.getPrefixName());
         orderPage.orderClick();
         new ProductsPage()
-                .getRowByColumn("Продукт",
+                .getRowByColumn("Продукт9",
                         orderPage.getLabel())
                 .hover()
                 .click();
