@@ -208,10 +208,11 @@ public class TestITClient {
             return;
         }
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
-        if (!createTestItemRequest.getTestPlanId().isEmpty()) {
-            for (String tmsId : createTestItemRequest.getTestPlanId())
-                this.linkAutoTestWithTestCase(testId, new LinkAutoTestRequest(tmsId));
-        }
+        if (Objects.nonNull(createTestItemRequest.getTestPlanId()))
+            if (!createTestItemRequest.getTestPlanId().isEmpty()) {
+                for (String tmsId : createTestItemRequest.getTestPlanId())
+                    this.linkAutoTestWithTestCase(testId, new LinkAutoTestRequest(tmsId));
+            }
     }
 
     private void linkAutoTestWithTestCase(final String autoTestId, final LinkAutoTestRequest linkAutoTestRequest) {
@@ -256,7 +257,7 @@ public class TestITClient {
     }
 
     static void disableTestsIsBadTestRun(Throwable e) {
-        if(e instanceof NullPointerException)
+        if (e instanceof NullPointerException)
             return;
         if (e.getMessage().contains("the StateName is already Stopped") || e.getMessage().contains("TestRun is stopped!")) {
             Configure.setAppProp("testIt", "false");
