@@ -52,7 +52,7 @@ public class CreateTestItemRequestFactory {
 //        }
 //    }
 
-    public void processFinishLaunchUniqueTest(final Map<MethodType, StepNode> utilsMethodSteps, final StepNode testParentStepNode, UniqueTest test) {
+    public void processFinishLaunchUniqueTest(final Map<ExMethodType, StepNode> utilsMethodSteps, final StepNode testParentStepNode, UniqueTest test) {
         final CreateTestItemRequest createTestItemRequest = createTestItemRequests.get(test);
         try {
             createTestItemRequest.setOutcome(Outcome.getByValue(testParentStepNode.getOutcome()));
@@ -69,12 +69,12 @@ public class CreateTestItemRequestFactory {
         this.processStep(parentStep.getChildrens(), createTestItemRequest.getSteps());
     }
 
-    private void processUtilsSteps(final CreateTestItemRequest createTestItemRequest, final Map<MethodType, StepNode> utilsMethodSteps) {
-        for (final MethodType methodType : utilsMethodSteps.keySet()) {
-            if (methodType == MethodType.BEFORE_CLASS || methodType == MethodType.BEFORE_METHOD) {
-                this.processSetUpSteps(createTestItemRequest, utilsMethodSteps.get(methodType));
+    private void processUtilsSteps(final CreateTestItemRequest createTestItemRequest, final Map<ExMethodType, StepNode> utilsMethodSteps) {
+        for (final ExMethodType exMethodType : utilsMethodSteps.keySet()) {
+            if (exMethodType.getMethodType() == MethodType.BEFORE_CLASS || exMethodType.getMethodType() == MethodType.BEFORE_METHOD) {
+                this.processSetUpSteps(createTestItemRequest, utilsMethodSteps.get(exMethodType));
             } else {
-                this.processTearDownSteps(createTestItemRequest, utilsMethodSteps.get(methodType));
+                this.processTearDownSteps(createTestItemRequest, utilsMethodSteps.get(exMethodType));
             }
         }
     }
