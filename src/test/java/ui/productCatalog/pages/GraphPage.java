@@ -17,6 +17,10 @@ public class GraphPage {
     private final SelenideElement saveNextPatchVersionCheckbox = $x("//input[@name='saveAsNextVersion']");
     private final SelenideElement newVersionField = $x("//input[@name='newVersion']");
     private final SelenideElement descriptionField = $x("//textarea[@name='description']");
+    private final SelenideElement viewJSONButton = $x("//span[text()='JSON']/ancestor::button");
+    private final SelenideElement expandJSONView = $x("//button[@aria-label='fullscreen']");
+    private final SelenideElement closeJSONView = $x("//button[@aria-label='close']");
+    private final SelenideElement nodesTab = $x("//span[text()='Узлы']//ancestor::button");
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
@@ -70,4 +74,17 @@ public class GraphPage {
         return new GraphPage();
     }
 
+    public GraphPage viewJSON() {
+        viewJSONButton.click();
+        $x("//span[text()='\"id\"']").shouldBe(Condition.visible);
+        expandJSONView.click();
+        expandJSONView.click();
+        closeJSONView.click();
+        return new GraphPage();
+    }
+
+    public GraphNodesPage goToNodesTab() {
+        nodesTab.click();
+        return new GraphNodesPage();
+    }
 }

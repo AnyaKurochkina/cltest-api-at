@@ -1,21 +1,26 @@
 package ui.productCatalog.tests.graph;
 
+import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
+import models.productCatalog.Graph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.ProductCatalogSteps;
 import ui.productCatalog.pages.MainPage;
 
 public class CreateGraphTest extends GraphBaseTest {
+    private static final String name = "at_ui_create_graph_test";
 
     @Test
     @DisplayName("Просмотр списка графов, создание, поиск")
     public void createGraph() {
         new MainPage().goToGraphsPage()
                 .checkGraphsListHeaders()
-                .createGraph(TITLE, NAME, "action", DESCRIPTION, AUTHOR)
-                .findGraphByName(NAME)
+                .createGraph(TITLE, name, "action", DESCRIPTION, AUTHOR)
+                .findGraphByName(name)
                 .findGraphByName(TITLE)
-                .findGraphByName(NAME.substring(1).toUpperCase())
+                .findGraphByName(name.substring(1).toUpperCase())
                 .findGraphByTitle(TITLE.substring(1).toUpperCase());
+        new ProductCatalogSteps(Graph.productName).deleteByName(name, GetGraphsListResponse.class);
     }
 
     @Test
@@ -24,15 +29,13 @@ public class CreateGraphTest extends GraphBaseTest {
         new MainPage().goToGraphsPage()
                 .checkCreateGraphDisabled("", NAME, "creating", DESCRIPTION, AUTHOR)
                 .checkCreateGraphDisabled(TITLE, "", "creating", DESCRIPTION, AUTHOR)
-                .checkCreateGraphDisabled(TITLE, NAME, "creating", DESCRIPTION, "")
-                .createGraph(TITLE, NAME, "action", DESCRIPTION, AUTHOR);
+                .checkCreateGraphDisabled(TITLE, NAME, "creating", DESCRIPTION, "");
     }
 
     @Test
     @DisplayName("Создание графа с неуникальным кодом графа")
     public void createGraphWithNonUniqueName() {
         new MainPage().goToGraphsPage()
-                .createGraph(TITLE, NAME, "action", DESCRIPTION, AUTHOR)
                 .checkCreateGraphDisabled(TITLE, NAME, "action", DESCRIPTION, AUTHOR);
     }
 }
