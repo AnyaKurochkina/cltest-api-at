@@ -8,7 +8,6 @@ import ru.testit.junit5.MethodType;
 import ru.testit.model.request.*;
 import ru.testit.services.LinkItem;
 import ru.testit.services.TestITClient;
-import tests.Tests;
 
 import java.util.*;
 

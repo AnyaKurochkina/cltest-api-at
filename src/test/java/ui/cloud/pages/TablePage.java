@@ -52,8 +52,8 @@ public class TablePage {
                 return;
             Waiting.sleep(200);
             try {
-                p1 = webElement.shouldBe(Condition.visible, Duration.ZERO).getRect();
-                p2 = $x(String.format("//table[thead/tr/th[.='%s']]", columnName)).shouldBe(Condition.visible, Duration.ZERO).getRect();
+                p1 = webElement.toWebElement().getRect();
+                p2 = $x(String.format("//table[thead/tr/th[.='%s']]", columnName)).toWebElement().getRect();
             } catch (ElementShould e) {
                 return;
             }
