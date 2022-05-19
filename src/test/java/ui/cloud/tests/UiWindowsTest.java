@@ -14,6 +14,7 @@ import ui.cloud.pages.ProductsPage;
 import ui.cloud.pages.WindowsOrderPage;
 import ui.cloud.pages.WindowsPage;
 import ui.uiExtesions.ConfigExtension;
+import ui.uiExtesions.CustomBeforeAllAndAfterAll;
 
 import java.util.Objects;
 

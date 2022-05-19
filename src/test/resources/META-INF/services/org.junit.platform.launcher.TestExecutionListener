@@ -1,2 +1,2 @@
 org.junit.TestsExecutionListener
-ui.cloud.tests.CustomBeforeAllAndAfterAll
+ui.uiExtesions.CustomBeforeAllAndAfterAll

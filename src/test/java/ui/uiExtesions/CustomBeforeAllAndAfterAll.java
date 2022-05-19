@@ -1,4 +1,4 @@
-package ui.cloud.tests;
+package ui.uiExtesions;
 
 import core.exception.CreateEntityException;
 import lombok.EqualsAndHashCode;
@@ -145,6 +145,7 @@ public class CustomBeforeAllAndAfterAll implements Extension, InvocationIntercep
         for (Method m : extensionContext.getRequiredTestClass().getDeclaredMethods()) {
             if (m.isAnnotationPresent(BeforeAll.class)) {
                 try {
+                    m.setAccessible(true);
                     m.invoke(context.getTarget().orElseThrow(Exception::new));
                 } catch (Throwable e) {
                     throw e.getCause();
@@ -157,6 +158,7 @@ public class CustomBeforeAllAndAfterAll implements Extension, InvocationIntercep
         for (Method m : extensionContext.getRequiredTestClass().getDeclaredMethods()) {
             if (m.isAnnotationPresent(AfterAll.class)) {
                 try {
+                    m.setAccessible(true);
                     m.invoke(context.getTarget().orElseThrow(Exception::new));
                 } catch (Throwable e) {
                     throw e.getCause();

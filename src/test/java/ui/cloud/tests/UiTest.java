@@ -1,14 +1,12 @@
 package ui.cloud.tests;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
-import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import tests.Tests;
 import ui.uiExtesions.ConfigExtension;
+import ui.uiExtesions.CustomBeforeAllAndAfterAll;
 
 @Log4j2
 @ExtendWith(CustomBeforeAllAndAfterAll.class)
@@ -19,7 +17,7 @@ public class UiTest extends Tests {
 
 
     @BeforeAll
-     void beforeAll() {
+    public void beforeAll() {
 //        Selenide.open("https://cloud.vtb.ru/?context=proj-xipzuxr713&type=project&org=vtb");
 //        Selenide.$x("/button[.='kek']").shouldHave(Condition.visible);
 //        int f = 1/0;
@@ -27,10 +25,10 @@ public class UiTest extends Tests {
     }
 
     @AfterAll
-    void afterAll() {
+    public void afterAll() {
 //        Selenide.open("https://cloud.vtb.ru/?context=proj-xipzuxr713&type=project&org=vtb");
 //        Selenide.$x("/button[.='kek']").shouldHave(Condition.visible);
-//        int f = 1/0;
+        int f = 1/0;
         log.info("CustomAfterAll");
     }
 

@@ -16,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.utils.UniqueTest;
-import ui.cloud.tests.CustomBeforeAllAndAfterAll;
 
 import java.util.Collections;
 
