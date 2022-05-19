@@ -12,9 +12,7 @@ import ru.testit.services.TestITClient;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static core.helper.Configure.isIntegrationTestIt;
 
@@ -50,19 +48,6 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         this.finishUtilMethod(MethodType.BEFORE_METHOD, invocation, extensionContext);
     }
 
-//    @SneakyThrows
-//    public void trowIfBeforeFail(ExtensionContext extensionContext) {
-//        ExtensionContext parent = extensionContext.getParent().orElse(null);
-//        if (Objects.nonNull(parent)) {
-//            if (classFail.containsKey(parent.getUniqueId())) {
-//                throw classFail.get(parent.getUniqueId());
-//            }
-//        }
-//        if (classFail.containsKey(extensionContext.getUniqueId())) {
-//            throw classFail.get(extensionContext.getUniqueId());
-//        }
-//    }
-
     @SneakyThrows
     public void interceptTestMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
         if (isIntegrationTestIt()) {
@@ -73,7 +58,6 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             if (Configure.isTestItCreateAutotest)
                 invocation.skip();
             else {
-//                trowIfBeforeFail(extensionContext);
                 invocation.proceed();
             }
         } catch (Throwable throwable) {
@@ -96,7 +80,6 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             if (Configure.isTestItCreateAutotest)
                 invocation.skip();
             else {
-//                trowIfBeforeFail(extensionContext);
                 invocation.proceed();
             }
         } catch (Throwable throwable) {
@@ -157,8 +140,6 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         RunningHandler.startUtilMethod(methodType, (Method) context.getExecutable());
     }
 
-    public static final Map<String, Throwable> classFail = new ConcurrentHashMap<>();
-
     @SneakyThrows
     private void finishUtilMethod(final MethodType methodType, final Invocation<Void> invocation, ExtensionContext context) {
         try {
@@ -171,8 +152,6 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         } catch (Throwable throwable) {
             if (isIntegrationTestIt())
                 RunningHandler.finishUtilMethod(methodType, throwable);
-//            if(methodType == MethodType.BEFORE_CLASS || methodType == MethodType.BEFORE_METHOD)
-//                classFail.put(context.getUniqueId(), throwable);
            throw throwable;
         } finally {
             Http.removeFixedRole();
