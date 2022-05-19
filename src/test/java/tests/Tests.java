@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import org.junit.CustomDisplayNameGenerator;
 import org.junit.EnvironmentCondition;
 import org.junit.TmsLinkExtension;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.TestInfo;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.utils.UniqueTest;
+import ui.cloud.tests.CustomBeforeAllAndAfterAll;
 
 import java.util.Collections;
 
@@ -55,10 +57,6 @@ public class Tests {
         return UniqueTest.getStepLog() != null;
     }
 
-    //    @AfterEach
-//    public void afterScenarios(){
-//    }
-//    public void tmsLink(String id, String subId) {
-//        Allure.tms(id + "." + subId, "");
-//    }
+    @AfterEach
+    public void afterScenarios(){}
 }

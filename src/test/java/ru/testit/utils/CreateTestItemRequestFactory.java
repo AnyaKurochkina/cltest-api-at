@@ -5,6 +5,7 @@ import java.lang.reflect.*;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import ru.testit.services.*;
@@ -14,6 +15,7 @@ import ru.testit.annotations.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class CreateTestItemRequestFactory {
     private static Map<UniqueTest, CreateTestItemRequest> createTestItemRequests;
@@ -124,9 +126,14 @@ public class CreateTestItemRequestFactory {
 //        return (annotation != null) ? annotation.value() : null;
 //    }
 
-    private String extractTestPlanId(final Method method) {
+    private List<String> extractTestPlanId(final Method method) {
+        final TmsLinks tmsLinks = method.getAnnotation(TmsLinks.class);
+        if(tmsLinks != null)
+            return Arrays.stream(tmsLinks.value()).map(TmsLink::value).collect(Collectors.toList());
         final TmsLink annotation = method.getAnnotation(TmsLink.class);
-        return (annotation != null) ? annotation.value() : null;
+        if(annotation != null)
+            return Collections.singletonList(annotation.value());
+        return null;
     }
 
     private List<InnerLink> extractLinks(final Method method) {

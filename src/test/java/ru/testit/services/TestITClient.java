@@ -182,7 +182,9 @@ public class TestITClient {
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
 
         if (createTestItemResponse != null && StringUtils.isNotBlank(createTestItemResponse.getId())) {
-            this.linkAutoTestWithTestCase(createTestItemResponse.getId(), new LinkAutoTestRequest(createTestItemRequest.getTestPlanId()));
+            for (String tmsId : createTestItemRequest.getTestPlanId())
+                this.linkAutoTestWithTestCase(createTestItemResponse.getId(), new LinkAutoTestRequest(tmsId));
+
         }
     }
 
@@ -206,8 +208,9 @@ public class TestITClient {
             return;
         }
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
-        if (StringUtils.isNotBlank(createTestItemRequest.getTestPlanId())) {
-            this.linkAutoTestWithTestCase(testId, new LinkAutoTestRequest(createTestItemRequest.getTestPlanId()));
+        if (!createTestItemRequest.getTestPlanId().isEmpty()) {
+            for (String tmsId : createTestItemRequest.getTestPlanId())
+                this.linkAutoTestWithTestCase(testId, new LinkAutoTestRequest(tmsId));
         }
     }
 

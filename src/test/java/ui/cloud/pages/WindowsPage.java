@@ -36,6 +36,12 @@ public class WindowsPage extends IProductPage {
         checkLastAction();
     }
 
+    public void stopSoft() {
+        runActionWithoutParameters("Виртуальная машина", "Выключить");
+        waitChangeStatus();
+        checkLastAction();
+    }
+
     public void stopHard() {
         runActionWithoutParameters("Виртуальная машина", "Выключить принудительно");
         waitChangeStatus();

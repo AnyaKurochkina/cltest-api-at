@@ -1,10 +1,11 @@
 package ui.cloud.tests;
 
+import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.Windows;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ru.testit.annotations.Title;
 import steps.orderService.OrderServiceSteps;
 import tests.Tests;
 import ui.cloud.pages.LoginPage;
@@ -18,6 +19,8 @@ import java.util.Objects;
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static com.codeborne.selenide.Selenide.open;
 
+@ExtendWith(CustomBeforeAllAndAfterAll.class)
+
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -25,6 +28,7 @@ import static com.codeborne.selenide.Selenide.open;
 public class UiWindowsTest extends Tests {
     Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 
+    @BeforeAll
     void beforeAll(){
         product.init();
         new LoginPage(product.getProjectId())
@@ -50,18 +54,14 @@ public class UiWindowsTest extends Tests {
         closeWebDriver();
     }
 
-    @Title("AfterAll")
     @AfterAll
     void afterAll(){
-        new LoginPage(product.getProjectId())
-                .singIn();
         if(Objects.nonNull(product.getLink())) {
-            open(product.getLink());
             OrderServiceSteps.deleteProduct(product);
         }
-        closeWebDriver();
     }
 
+    @BeforeEach
     void beforeEach(){
         new LoginPage(product.getProjectId())
                 .singIn();
@@ -69,12 +69,14 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
+    @TmsLink("872651")
     @Order(1)
     @DisplayName("UI Windows. Заказ")
     void orderWindows() {}
 
     @Test
     @Order(2)
+    @TmsLink("872666")
     @DisplayName("UI Windows. Перезагрузить по питанию")
     void restart() {
         WindowsPage winPage = new WindowsPage(product);
@@ -83,7 +85,8 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(3)
-    @DisplayName("UI Windows. Выключить принудительно")
+    @TmsLinks({@TmsLink("872671"), @TmsLink("872667")})
+    @DisplayName("UI Windows. Выключить принудительно. Включить")
     void stopHard() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.stopHard();
@@ -92,15 +95,17 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(4)
-    @DisplayName("UI Windows. Выключить принудительно")
+    @TmsLink("872682")
+    @DisplayName("UI Windows. Выключить")
     void start() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.stopHard();
+        winPage.stopSoft();
         winPage.start();
     }
 
     @Test
     @Order(100)
+    @TmsLink("872683")
     @DisplayName("UI Windows. Удалить")
     void deleteWindows() {
         WindowsPage winPage = new WindowsPage(product);

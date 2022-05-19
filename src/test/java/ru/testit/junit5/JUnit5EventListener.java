@@ -13,7 +13,6 @@ import ru.testit.services.TestITClient;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,18 +50,18 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         this.finishUtilMethod(MethodType.BEFORE_METHOD, invocation, extensionContext);
     }
 
-    @SneakyThrows
-    public void trowIfBeforeFail(ExtensionContext extensionContext) {
-        ExtensionContext parent = extensionContext.getParent().orElse(null);
-        if (Objects.nonNull(parent)) {
-            if (classFail.containsKey(parent.getUniqueId())) {
-                throw classFail.get(parent.getUniqueId());
-            }
-        }
-        if (classFail.containsKey(extensionContext.getUniqueId())) {
-            throw classFail.get(extensionContext.getUniqueId());
-        }
-    }
+//    @SneakyThrows
+//    public void trowIfBeforeFail(ExtensionContext extensionContext) {
+//        ExtensionContext parent = extensionContext.getParent().orElse(null);
+//        if (Objects.nonNull(parent)) {
+//            if (classFail.containsKey(parent.getUniqueId())) {
+//                throw classFail.get(parent.getUniqueId());
+//            }
+//        }
+//        if (classFail.containsKey(extensionContext.getUniqueId())) {
+//            throw classFail.get(extensionContext.getUniqueId());
+//        }
+//    }
 
     @SneakyThrows
     public void interceptTestMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
@@ -74,7 +73,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             if (Configure.isTestItCreateAutotest)
                 invocation.skip();
             else {
-                trowIfBeforeFail(extensionContext);
+//                trowIfBeforeFail(extensionContext);
                 invocation.proceed();
             }
         } catch (Throwable throwable) {
@@ -97,7 +96,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             if (Configure.isTestItCreateAutotest)
                 invocation.skip();
             else {
-                trowIfBeforeFail(extensionContext);
+//                trowIfBeforeFail(extensionContext);
                 invocation.proceed();
             }
         } catch (Throwable throwable) {
@@ -172,9 +171,9 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         } catch (Throwable throwable) {
             if (isIntegrationTestIt())
                 RunningHandler.finishUtilMethod(methodType, throwable);
-            if(methodType == MethodType.BEFORE_CLASS || methodType == MethodType.BEFORE_METHOD)
-                classFail.put(context.getUniqueId(), throwable);
-            else throw throwable;
+//            if(methodType == MethodType.BEFORE_CLASS || methodType == MethodType.BEFORE_METHOD)
+//                classFail.put(context.getUniqueId(), throwable);
+           throw throwable;
         } finally {
             Http.removeFixedRole();
         }
