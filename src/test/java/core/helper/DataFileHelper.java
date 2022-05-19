@@ -56,4 +56,9 @@ public class DataFileHelper {
         return sb.toString().trim();
     }
 
+    @SneakyThrows
+    public static byte[] readBytes(String fileName) {
+        return Files.readAllBytes(Paths.get(fileName));
+    }
+
 }
