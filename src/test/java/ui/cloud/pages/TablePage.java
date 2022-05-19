@@ -5,6 +5,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.ElementNotFound;
 import com.codeborne.selenide.ex.ElementShould;
 import core.utils.Waiting;
 import org.openqa.selenium.NoSuchElementException;
@@ -37,6 +38,8 @@ public class TablePage {
 
     public SelenideElement getRowByColumn(String column, String value) {
         int index = headers.indexOf(column);
+        if (index < 0)
+            throw new NoSuchElementException("Колонки " + column + " не существует ");
         for (SelenideElement e : rows) {
             if (e.$$x("td").get(index).getText().equals(value))
                 return e;
