@@ -6,6 +6,7 @@ import models.orderService.products.Windows;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import ru.testit.annotations.Title;
 import steps.orderService.OrderServiceSteps;
 import tests.Tests;
 import ui.cloud.pages.LoginPage;
@@ -29,6 +30,7 @@ public class UiWindowsTest extends Tests {
     Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 
     @BeforeAll
+    @Title("Создание продукта")
     void beforeAll(){
         product.init();
         new LoginPage(product.getProjectId())
@@ -55,6 +57,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @AfterAll
+    @Title("Удаление продукта")
     void afterAll(){
         if(Objects.nonNull(product.getLink())) {
             OrderServiceSteps.deleteProduct(product);
@@ -62,6 +65,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @BeforeEach
+    @Title("Переход на страницу продукта")
     void beforeEach(){
         new LoginPage(product.getProjectId())
                 .singIn();
