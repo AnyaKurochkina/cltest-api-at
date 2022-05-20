@@ -39,7 +39,6 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
     public final static int ENV = 2;
     private final static List<IProduct> orders = getProductList();
     private int variableName;
-    public static Map<String, String> parameters = new ConcurrentHashMap<>();
 
     @SneakyThrows
     @Override
@@ -71,8 +70,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                         Class<?> c = entity.getClass();
                         if (argument.isInstance(entity)) {
                             Entity e = ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c);
-//                            e.setConfigurationId(configuration.getId());
-                            parameters.put(context.getUniqueId(), configuration.getId());
+                            e.setConfigurationId(configuration.getId());
                             list.add(Arguments.of(e));
                             break;
                         }

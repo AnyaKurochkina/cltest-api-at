@@ -4,13 +4,21 @@ import core.helper.Configure;
 import core.helper.http.Http;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import org.junit.ProductArgumentsProvider;
 import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
+import org.junit.jupiter.engine.descriptor.MethodExtensionContext;
+import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
+import org.junit.jupiter.params.ParameterizedTestInvocationContext;
 import org.opentest4j.TestAbortedException;
 import ru.testit.properties.TestProperties;
 import ru.testit.services.TestITClient;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -177,18 +185,28 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
 
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) throws Exception {
-        if (isIntegrationTestIt()) {
-            if (ProductArgumentsProvider.parameters.containsKey(extensionContext.getUniqueId())) {
-                String configurationId = ProductArgumentsProvider.parameters.get(extensionContext.getUniqueId());
-                RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), configurationId, extensionContext.getTags());
-                extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), configurationId);
-                ProductArgumentsProvider.parameters.remove(extensionContext.getUniqueId());
-            } else {
-                RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), TestITClient.getConfigurationId(), extensionContext.getTags());
-                extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), TestITClient.getConfigurationId());
-            }
-        }
 
-        System.out.println(1);
+        if (isIntegrationTestIt()) {
+            String configurationId = TestITClient.getConfigurationId();
+            if (extensionContext.getUniqueId().contains("test-template-invocation:")) {
+                TestTemplateInvocationTestDescriptor testDescriptor =
+                        (TestTemplateInvocationTestDescriptor) ((MethodExtensionContext) extensionContext).getTestDescriptor2();
+                Field field;
+                try {
+                    field = TestTemplateInvocationTestDescriptor.class.getDeclaredField("invocationContext");
+                    field.setAccessible(true);
+                    ParameterizedTestInvocationContext in = (ParameterizedTestInvocationContext) field.get(testDescriptor);
+                    Entity entity = (Entity) Arrays.stream(in.getArgument()).filter(o ->
+                            Entity.class.isAssignableFrom(o.getClass())).findFirst().orElseThrow(Exception::new);
+                    configurationId = entity.getConfigurationId();
+                } catch (Exception e) {
+                    log.error("beforeTestExecution()", e);
+                }
+            }
+            RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), configurationId, extensionContext.getTags());
+            extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), configurationId);
+
+
+        }
     }
 }
