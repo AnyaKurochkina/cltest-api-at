@@ -1,7 +1,7 @@
 package ui.productCatalog.pages;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.*;
+import ui.productCatalog.tests.BaseTest;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -18,14 +18,16 @@ public class GraphsListPage {
     private final SelenideElement serviceType = $x("//*[@data-value='service']");
     private final SelenideElement createGraphButton = $x("//*[text()='Создать']/..");
     private final SelenideElement inputSearch = $x("//input[@placeholder = 'Поиск']");
-    private final SelenideElement actionMenuButton = $x("//*[@id='actions-menu-button']");
+    private final SelenideElement actionMenuButton = $x("(//*[@id='actions-menu-button'])[1]");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private final SelenideElement graphId = $x("//p/b");
-    private final SelenideElement idField = $x("//*[@name = 'id']");
+    private final SelenideElement idInput = $x("//input[@name = 'id']");
     private final SelenideElement deleteButton = $x("//span[text() = 'Удалить']");
     private final SelenideElement clearSearchButton = $x("//*[@placeholder='Поиск']/../button");
     private final SelenideElement cancelButton = $x("//span[text()='Отмена']/..");
+    private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']/ancestor::div[1]");
+    private final SelenideElement nothingFoundMessage = $x("//td[text()='Нет данных для отображения']");
 
     public GraphsListPage() {
         graphsPageTitle.shouldBe(Condition.visible);
@@ -65,6 +67,7 @@ public class GraphsListPage {
             clearSearchButton.click();
         }
         inputSearch.setValue(graphName);
+        BaseTest.wait(1000);
         $x("//*[@value = '" + graphName + "']").shouldBe(Condition.visible);
         return new GraphsListPage();
     }
@@ -74,16 +77,28 @@ public class GraphsListPage {
             clearSearchButton.click();
         }
         inputSearch.setValue(title);
+        BaseTest.wait(1000);
         $x("//*[@value = '" + title + "']").shouldBe(Condition.visible);
         return new GraphsListPage();
     }
 
-    public void deleteGraph() {
+    public GraphsListPage checkGraphNotFound(String graphName) {
+        if (clearSearchButton.isDisplayed()) {
+            clearSearchButton.click();
+        }
+        inputSearch.setValue(graphName);
+        BaseTest.wait(1000);
+        nothingFoundMessage.shouldBe(Condition.visible);
+        return new GraphsListPage();
+    }
+
+    public GraphsListPage deleteFirstGraphInList() {
         actionMenuButton.click();
         deleteAction.click();
         String id = graphId.getText();
-        idField.setValue(id);
+        idInput.setValue(id);
         deleteButton.click();
+        return new GraphsListPage();
     }
 
     public GraphsListPage checkGraphsListHeaders() {

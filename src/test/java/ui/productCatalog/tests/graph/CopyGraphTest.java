@@ -9,10 +9,13 @@ public class CopyGraphTest extends GraphBaseTest {
     @Test
     @DisplayName("Копирование графа")
     public void copyGraph() {
+        String copyName = NAME + "-clone";
         new MainPage().goToGraphsPage()
                 .findGraphByName(NAME)
                 .copyGraph()
-                .findGraphByName(NAME + "-clone");
-        deleteGraph();
+                .findGraphByName(copyName)
+                .openGraphPage(copyName)
+                .checkGraphAttributes(copyName, TITLE, "1.0.0");
+        deleteGraph(copyName);
     }
 }

@@ -8,41 +8,44 @@ import org.junit.jupiter.api.DisplayName;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.productCatalog.tests.BaseTest;
 
+import java.util.UUID;
+
 public class GraphBaseTest extends BaseTest {
 
+    protected final String NAME = UUID.randomUUID().toString();
+    protected final String SUBGRAPH_NAME = UUID.randomUUID().toString();
     protected final static String TITLE = "AT UI Graph";
-    protected final static String NAME = "at_ui_graph";
-    protected final static String SUBGRAPH_NAME = "at_ui_subgraph";
     protected final static String SUBGRAPH_TITLE = "AT UI Subgraph";
     protected final static String DESCRIPTION = "description";
     protected final static String AUTHOR = "QA";
 
     @BeforeEach
     @DisplayName("Создание графов через API")
-    public void createGraphs() {
+    public void setUpForGraphsTest() {
+        createGraph(NAME);
+    }
+
+    @AfterEach
+    @DisplayName("Удаление графов, созданных в сетапе")
+    public void tearDownForGraphsTest() {
+        deleteGraph(NAME);
+    }
+
+    public void createGraph(String name) {
         Graph.builder()
-                .name(NAME)
+                .name(name)
                 .title(TITLE)
                 .version("1.0.0")
                 .type("creating")
-                .author(AUTHOR)
-                .build()
-                .createObject();
-
-        Graph.builder()
-                .name(SUBGRAPH_NAME)
-                .title(SUBGRAPH_TITLE)
-                .version("1.0.0")
-                .type("creating")
+                .description(DESCRIPTION)
                 .author(AUTHOR)
                 .build()
                 .createObject();
     }
 
-    @AfterEach
-    @DisplayName("Удаление графов")
-    public void deleteGraph() {
-        new ProductCatalogSteps(Graph.productName).deleteByName(NAME, GetGraphsListResponse.class);
-        new ProductCatalogSteps(Graph.productName).deleteByName(SUBGRAPH_NAME, GetGraphsListResponse.class);
+    public void deleteGraph(String name) {
+    ProductCatalogSteps steps = new ProductCatalogSteps(Graph.productName);
+    steps.getDeleteObjectResponse(steps
+            .getProductObjectIdByNameWithMultiSearch(name, GetGraphsListResponse.class)).assertStatus(200);
     }
 }

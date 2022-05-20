@@ -11,6 +11,8 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import ui.productCatalog.pages.LoginPage;
 
+import java.util.concurrent.TimeUnit;
+
 import static core.helper.Configure.getAppProp;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -43,5 +45,17 @@ abstract public class BaseTest {
     public void login() {
         LoginPage loginPage = new LoginPage();
         loginPage.login(login, password);
+    }
+
+    public static void wait(int ms)
+    {
+        try
+        {
+            TimeUnit.MILLISECONDS.sleep(ms);
+        }
+        catch(InterruptedException ex)
+        {
+            Thread.currentThread().interrupt();
+        }
     }
 }

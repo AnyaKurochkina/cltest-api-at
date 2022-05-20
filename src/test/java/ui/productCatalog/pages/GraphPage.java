@@ -12,15 +12,21 @@ public class GraphPage {
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
     private final SelenideElement saveButton = $x("//span[text()='Сохранить']/parent::button");
+    private final SelenideElement deleteButton = $x("//span[text()='Удалить']/parent::button");
+    private final SelenideElement confirmDeleteButton = $x("//form//span[text()='Удалить']/parent::button");
     private final SelenideElement dialogCancelButton = $x("//div[@role='dialog']//span[text()='Отмена']/parent::button");
     private final SelenideElement dialogSaveButton = $x("//div[@role='dialog']//span[text()='Сохранить']/parent::button");
     private final SelenideElement saveNextPatchVersionCheckbox = $x("//input[@name='saveAsNextVersion']");
     private final SelenideElement newVersionField = $x("//input[@name='newVersion']");
     private final SelenideElement descriptionField = $x("//textarea[@name='description']");
-    private final SelenideElement viewJSONButton = $x("//span[text()='JSON']/ancestor::button");
+    private final SelenideElement viewJSONButton = $x("//span[text()='JSON']/parent::button");
     private final SelenideElement expandJSONView = $x("//button[@aria-label='fullscreen']");
     private final SelenideElement closeJSONView = $x("//button[@aria-label='close']");
     private final SelenideElement nodesTab = $x("//span[text()='Узлы']//ancestor::button");
+    private final SelenideElement graphNameInput = $x("//input[@name='name']");
+    private final SelenideElement graphTitleInput = $x("//input[@name='title']");
+    private final SelenideElement graphId = $x("//p/b");
+    private final SelenideElement idInput = $x("//input[@name = 'id']");
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
@@ -86,5 +92,20 @@ public class GraphPage {
     public GraphNodesPage goToNodesTab() {
         nodesTab.click();
         return new GraphNodesPage();
+    }
+
+    public GraphPage checkGraphAttributes(String name, String title, String version) {
+        graphNameInput.shouldHave(Condition.exactValue(name));
+        graphTitleInput.shouldHave(Condition.exactValue(title));
+        checkGraphVersion(version);
+        return new GraphPage();
+    }
+
+    public GraphsListPage deleteGraph() {
+        deleteButton.click();
+        String id = graphId.getText();
+        idInput.setValue(id);
+        confirmDeleteButton.click();
+        return new GraphsListPage();
     }
 }
