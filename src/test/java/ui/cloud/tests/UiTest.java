@@ -1,18 +1,22 @@
 package ui.cloud.tests;
 
+import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import tests.Tests;
+import ui.cloud.pages.WindowsPage;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.CustomBeforeAllAndAfterAll;
+import ui.uiExtesions.PR;
 
 @Log4j2
-@ExtendWith(CustomBeforeAllAndAfterAll.class)
+//@ExtendWith(CustomBeforeAllAndAfterAll.class)
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(PR.class)
 public class UiTest extends Tests {
     static Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 
@@ -46,9 +50,9 @@ public class UiTest extends Tests {
 
     @Test
     @Tag("test")
-//    @TmsLink("867358")
-    void test() {
-
+    @TmsLink("867358")
+    void test(WindowsPage page) {
+        System.out.println(1);
 //        new LoginPage("proj-xazpppulba").singIn();
 //        open("https://prod-portal-front.cloud.vtb.ru/vm/orders/a338902e-3473-42ab-a953-024284f84d06/main?context=proj-frybyv41jh&type=project&org=vtb");
 //        WindowsPage page = new WindowsPage(product);
@@ -65,7 +69,7 @@ public class UiTest extends Tests {
 //        new LoginPage("proj-xazpppulba").singIn();
 //        open("https://ift-portal-front.apps.d0-oscp.corp.dev.vtb/container/orders/328091e3-7f99-4525-95b3-0c6b2869db6b/main?context=proj-xazpppulba&type=project&org=vtb");
 //        WindowsPage page = new WindowsPage(product);
-        log.info(2);
+//        log.info(2);
     }
 
 

@@ -4,7 +4,7 @@ import core.helper.Configure;
 import core.helper.http.Http;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
+import org.junit.ProductArgumentsProvider;
 import org.junit.jupiter.api.extension.*;
 import org.opentest4j.TestAbortedException;
 import ru.testit.properties.TestProperties;
@@ -12,14 +12,12 @@ import ru.testit.services.TestITClient;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static core.helper.Configure.isIntegrationTestIt;
 
 @Log4j2
-public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterAllCallback, InvocationInterceptor, TestWatcher {
+public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterAllCallback, InvocationInterceptor, TestWatcher, BeforeTestExecutionCallback {
     public static final RunningHandler HANDLER = new RunningHandler();
     private static final ExtensionContext.Namespace configurationSpace = ExtensionContext.Namespace.create(JUnit5EventListener.class);
 
@@ -50,22 +48,23 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         this.finishUtilMethod(MethodType.BEFORE_METHOD, invocation, extensionContext, invocationContext);
     }
 
+
     @SneakyThrows
     public void interceptTestMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
-        if (isIntegrationTestIt()) {
-            RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), TestITClient.getConfigurationId(), extensionContext.getTags());
-            extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), TestITClient.getConfigurationId());
-        }
+//        if (isIntegrationTestIt()) {
+//            RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), TestITClient.getConfigurationId(), extensionContext.getTags());
+//            extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), TestITClient.getConfigurationId());
+//        }
         try {
             if (Configure.isTestItCreateAutotest)
                 invocation.skip();
             else {
-                trowIfBeforeFail(extensionContext);
+//                trowIfBeforeFail(extensionContext);
                 invocation.proceed();
             }
         } catch (Throwable throwable) {
-            if (isIntegrationTestIt())
-                RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, /*getSubId(extensionContext)*/ TestITClient.getConfigurationId());
+//            if (isIntegrationTestIt())
+//                RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, /*getSubId(extensionContext)*/ TestITClient.getConfigurationId());
 //            throw new Exception(throwable.getMessage());
             throw throwable;
         } finally {
@@ -73,29 +72,29 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         }
     }
 
-    @SneakyThrows
-    public void trowIfBeforeFail(ExtensionContext extensionContext) {
-        if (testFail.containsKey(extensionContext.getUniqueId())) {
-            throw testFail.get(extensionContext.getUniqueId());
-        }
-    }
+//    @SneakyThrows
+//    public void trowIfBeforeFail(ExtensionContext extensionContext) {
+//        if (testFail.containsKey(extensionContext.getUniqueId())) {
+//            throw testFail.get(extensionContext.getUniqueId());
+//        }
+//    }
 
     public void interceptTestTemplateMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Throwable {
-        Entity entity = (Entity) invocationContext.getArguments().stream().filter(o -> Entity.class.isAssignableFrom(o.getClass())).findFirst().orElse(null);
-        if (isIntegrationTestIt() && entity != null) {
-            RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), entity.getConfigurationId(), extensionContext.getTags());
-            extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), entity.getConfigurationId());
-        }
+//        Entity entity = (Entity) invocationContext.getArguments().stream().filter(o -> Entity.class.isAssignableFrom(o.getClass())).findFirst().orElse(null);
+//        if (isIntegrationTestIt() && entity != null) {
+//            RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), entity.getConfigurationId(), extensionContext.getTags());
+//            extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), entity.getConfigurationId());
+//        }
         try {
             if (Configure.isTestItCreateAutotest)
                 invocation.skip();
             else {
-                trowIfBeforeFail(extensionContext);
+//                trowIfBeforeFail(extensionContext);
                 invocation.proceed();
             }
         } catch (Throwable throwable) {
-            if (isIntegrationTestIt() && entity != null)
-                RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, entity.getConfigurationId());
+//            if (isIntegrationTestIt() && entity != null)
+//                RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, entity.getConfigurationId());
             throw throwable;
         } finally {
             Http.removeFixedRole();
@@ -108,7 +107,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         List<String> list = TestProperties.getInstance()
                 .getConfigurationIds(RunningHandler.extractExternalID(context.getRequiredTestMethod(), null));
 
-        for(String configuration : list){
+        for (String configuration : list) {
             RunningHandler.startTest(context.getRequiredTestMethod(), context.getDisplayName(), configuration, context.getTags());
             RunningHandler.finishTest(context.getRequiredTestMethod(), new TestAbortedException(reason.orElse("Тест отключен")), configuration);
         }
@@ -151,12 +150,12 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         RunningHandler.startUtilMethod(methodType, (Method) context.getExecutable(), extensionContext);
     }
 
-    private static final Map<String, Throwable> testFail = new ConcurrentHashMap<>();
+//    private static final Map<String, Throwable> testFail = new ConcurrentHashMap<>();
 
     @SneakyThrows
     private void finishUtilMethod(final MethodType methodType, final Invocation<Void> invocation, ExtensionContext context, final ReflectiveInvocationContext<Method> invocationContext) {
         String testName = "";
-        if(methodType.equals(MethodType.BEFORE_METHOD) || methodType.equals(MethodType.AFTER_METHOD))
+        if (methodType.equals(MethodType.BEFORE_METHOD) || methodType.equals(MethodType.AFTER_METHOD))
             testName = context.getUniqueId();
         try {
             if (Configure.isTestItCreateAutotest)
@@ -168,12 +167,28 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         } catch (Throwable throwable) {
             if (isIntegrationTestIt())
                 RunningHandler.finishUtilMethod(new ExMethodType(methodType, invocationContext.getExecutable().toString(), testName), throwable);
-            if(methodType == MethodType.BEFORE_METHOD)
-                testFail.put(context.getUniqueId(), throwable);
+//            if(methodType == MethodType.BEFORE_METHOD)
+//                testFail.put(context.getUniqueId(), throwable);
             else throw throwable;
         } finally {
             Http.removeFixedRole();
         }
     }
 
+    @Override
+    public void beforeTestExecution(ExtensionContext extensionContext) throws Exception {
+        if (isIntegrationTestIt()) {
+            if (ProductArgumentsProvider.parameters.containsKey(extensionContext.getUniqueId())) {
+                String configurationId = ProductArgumentsProvider.parameters.get(extensionContext.getUniqueId());
+                RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), configurationId, extensionContext.getTags());
+                extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), configurationId);
+                ProductArgumentsProvider.parameters.remove(extensionContext.getUniqueId());
+            } else {
+                RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), TestITClient.getConfigurationId(), extensionContext.getTags());
+                extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), TestITClient.getConfigurationId());
+            }
+        }
+
+        System.out.println(1);
+    }
 }

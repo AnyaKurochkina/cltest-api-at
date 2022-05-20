@@ -30,10 +30,10 @@ public class Tests {
     @BeforeEach
     @SneakyThrows
     @Title("Инициализация тестового класса")
-    public void beforeScenarios(TestInfo testInfo){
-        String className = testInfo.getTestClass().orElseThrow(Exception::new).getSimpleName();
-        String methodName = testInfo.getTestMethod().orElseThrow(Exception::new).getName();
-        Allure.tms(className + "#" + methodName, "");
+    public void beforeScenarios(/*TestInfo testInfo*/){
+//        String className = testInfo.getTestClass().orElseThrow(Exception::new).getSimpleName();
+//        String methodName = testInfo.getTestMethod().orElseThrow(Exception::new).getName();
+//        Allure.tms(className + "#" + methodName, "");
         UniqueTest.clearStepLog();
     }
 

@@ -39,12 +39,13 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
     public final static int ENV = 2;
     private final static List<IProduct> orders = getProductList();
     private int variableName;
+    public static Map<String, String> parameters = new ConcurrentHashMap<>();
 
     @SneakyThrows
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
         if (variableName != ENV) {
-            return getProducts(context.getRequiredTestMethod()).stream();
+            return getProducts(context).stream();
         } else {
             List<Arguments> list = new ArrayList<>();
             orders.stream()
@@ -57,11 +58,11 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
 
 
     @SneakyThrows
-    private List<Arguments> getProducts(Method method) {
+    private List<Arguments> getProducts(ExtensionContext context) {
         List<Arguments> list = new ArrayList<>();
         if (Configure.isIntegrationTestIt()) {
-            List<Configuration> confMap = TestProperties.getInstance().getConfigMapsByTest(method);
-            Class<?> argument = Arrays.stream(method.getParameterTypes())
+            List<Configuration> confMap = TestProperties.getInstance().getConfigMapsByTest(context.getRequiredTestMethod());
+            Class<?> argument = Arrays.stream(context.getRequiredTestMethod().getParameterTypes())
                     .filter(m -> Entity.class.isAssignableFrom((Class<?>) m)).findFirst().orElseThrow(Exception::new);
 
             for (Configuration configuration : confMap) {
@@ -70,7 +71,8 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                         Class<?> c = entity.getClass();
                         if (argument.isInstance(entity)) {
                             Entity e = ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c);
-                            e.setConfigurationId(configuration.getId());
+//                            e.setConfigurationId(configuration.getId());
+                            parameters.put(context.getUniqueId(), configuration.getId());
                             list.add(Arguments.of(e));
                             break;
                         }
@@ -82,7 +84,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                 }
             }
         } else {
-            Class<?>[] params = method.getParameterTypes();
+            Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
             Class<?> clazz = null;
             for (Class<?> m : params) {
                 if (Entity.class.isAssignableFrom(m)) {
