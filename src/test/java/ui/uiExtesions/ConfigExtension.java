@@ -1,8 +1,12 @@
 package ui.uiExtesions;
 
 import com.codeborne.selenide.logevents.SelenideLogger;
+import core.helper.Configure;
+import io.qameta.allure.AllureLifecycle;
+import io.qameta.allure.Step;
 import io.qameta.allure.selenide.AllureSelenide;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -11,6 +15,8 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import ru.testit.junit5.RunningHandler;
+import ru.testit.junit5.StepsAspects;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -18,7 +24,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static io.qameta.allure.Allure.getLifecycle;
 
+@Log4j2
 public class ConfigExtension implements InvocationInterceptor, TestExecutionListener, AfterEachCallback, BeforeAllCallback {
     private static final List<String> runBeforeAll = Collections.synchronizedList(new ArrayList<>());
     private static final List<Test> allTests = Collections.synchronizedList(new ArrayList<>());
@@ -36,7 +44,7 @@ public class ConfigExtension implements InvocationInterceptor, TestExecutionList
             if (allTests.stream().noneMatch(test -> test.getClassName().equals(before.getDeclaringClass().getName()) && test.getTestName().equals(before.getName()))) {
                 before.setAccessible(true);
                 try {
-                    before.invoke(extensionContext.getRequiredTestInstance());
+                    invoke(before, extensionContext.getRequiredTestInstance(), extensionContext.getDisplayName());
                     runEachMethod(extensionContext, AfterEach.class);
                     runEachMethod(extensionContext, BeforeEach.class);
                 } catch (Throwable e) {
@@ -72,7 +80,7 @@ public class ConfigExtension implements InvocationInterceptor, TestExecutionList
                 try {
                     runEachMethod(extensionContext, AfterEach.class);
                     runEachMethod(extensionContext, BeforeEach.class);
-                    after.invoke(extensionContext.getRequiredTestInstance());
+                    invoke(after, extensionContext.getRequiredTestInstance(), extensionContext.getDisplayName());
                 } catch (Throwable e) {
                     Throwable throwable = e;
                     if (Objects.nonNull(e.getCause()))
@@ -89,15 +97,34 @@ public class ConfigExtension implements InvocationInterceptor, TestExecutionList
             throw testThrow;
     }
 
+    @Step
+    public void invoke(Method method, Object obj, String title) throws Throwable {
+        modifyStep(title);
+        method.invoke(obj);
+    }
+
+    public static void modifyStep(String name){
+        AllureLifecycle allureLifecycle = getLifecycle();
+        String id = allureLifecycle.getCurrentTestCaseOrStep().orElse(null);
+        if (Objects.nonNull(id)) {
+            allureLifecycle.updateStep(id, s -> s.setName(name));
+        }
+        if (Configure.isIntegrationTestIt()) {
+            if (StepsAspects.getCurrentStep().get() != null) {
+                StepsAspects.getCurrentStep().get().setTitle(name);
+                log.debug(name);
+            }
+        }
+    }
 
     public void runEachMethod(final ExtensionContext extensionContext, Class<? extends Annotation> clazz) throws Throwable {
-        if(clazz.equals(AfterEach.class))
+        if (clazz.equals(AfterEach.class))
             afterEach(extensionContext);
         List<Method> list = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods()).filter(method -> method.isAnnotationPresent(clazz)).collect(Collectors.toList());
         for (Method m : list) {
             try {
                 m.setAccessible(true);
-                m.invoke(extensionContext.getRequiredTestInstance());
+                invoke(m, extensionContext.getRequiredTestInstance(), RunningHandler.extractTitle(m));
             } catch (Throwable e) {
                 if (Objects.nonNull(e.getCause()))
                     throw e.getCause();

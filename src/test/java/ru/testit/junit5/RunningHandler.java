@@ -103,12 +103,12 @@ public class RunningHandler
         }
     }
     
-    private static String extractDescription(final Method currentTest) {
+    public static String extractDescription(final Method currentTest) {
         final Description annotation = currentTest.getAnnotation(Description.class);
         return (annotation != null) ? annotation.value() : null;
     }
-    
-    private static String extractTitle(final Method currentTest) {
+
+    public static String extractTitle(final Method currentTest) {
         final Title annotation = currentTest.getAnnotation(Title.class);
         return (annotation != null) ? annotation.value() : currentTest.getName();
     }
