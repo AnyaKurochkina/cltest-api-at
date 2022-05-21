@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.engine.support.descriptor.MethodSource;
@@ -44,7 +45,7 @@ public class ConfigExtension implements InvocationInterceptor, TestExecutionList
             if (allTests.stream().noneMatch(test -> test.getClassName().equals(before.getDeclaringClass().getName()) && test.getTestName().equals(before.getName()))) {
                 before.setAccessible(true);
                 try {
-                    invoke(before, extensionContext.getRequiredTestInstance(), extensionContext.getDisplayName());
+                    invoke(before, extensionContext.getRequiredTestInstance(), getDisplayName(before));
                     runEachMethod(extensionContext, AfterEach.class);
                     runEachMethod(extensionContext, BeforeEach.class);
                 } catch (Throwable e) {
@@ -80,7 +81,7 @@ public class ConfigExtension implements InvocationInterceptor, TestExecutionList
                 try {
                     runEachMethod(extensionContext, AfterEach.class);
                     runEachMethod(extensionContext, BeforeEach.class);
-                    invoke(after, extensionContext.getRequiredTestInstance(), extensionContext.getDisplayName());
+                    invoke(after, extensionContext.getRequiredTestInstance(), getDisplayName(after));
                 } catch (Throwable e) {
                     Throwable throwable = e;
                     if (Objects.nonNull(e.getCause()))
@@ -95,6 +96,13 @@ public class ConfigExtension implements InvocationInterceptor, TestExecutionList
         }
         if (Objects.nonNull(testThrow))
             throw testThrow;
+    }
+
+    private String getDisplayName(Method before) {
+        String displayName = before.getName();
+        if (before.isAnnotationPresent(DisplayName.class))
+            displayName = before.getAnnotation(DisplayName.class).value();
+        return displayName;
     }
 
     @Step
@@ -171,11 +179,9 @@ public class ConfigExtension implements InvocationInterceptor, TestExecutionList
     @EqualsAndHashCode(onlyExplicitlyIncluded = true)
     @ToString(onlyExplicitlyIncluded = true)
     private static class Test {
-        @ToString.Include
-        @EqualsAndHashCode.Include
+        @ToString.Include @EqualsAndHashCode.Include
         String className;
-        @ToString.Include
-        @EqualsAndHashCode.Include
+        @ToString.Include @EqualsAndHashCode.Include
         String testName;
         Integer order;
         @Setter
