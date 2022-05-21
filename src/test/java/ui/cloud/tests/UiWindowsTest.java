@@ -11,6 +11,8 @@ import tests.Tests;
 import ui.cloud.pages.*;
 import ui.uiExtesions.ConfigExtension;
 
+import static com.codeborne.selenide.Selenide.open;
+
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -60,6 +62,7 @@ public class UiWindowsTest extends Tests {
     @TmsLink("872666")
     @DisplayName("UI Windows. Перезагрузить по питанию")
     void restart() {
+        open(product.getLink());
         WindowsPage winPage = new WindowsPage(product);
         winPage.restart();
     }
@@ -69,6 +72,7 @@ public class UiWindowsTest extends Tests {
     @TmsLinks({@TmsLink("872671"), @TmsLink("872667")})
     @DisplayName("UI Windows. Выключить принудительно. Включить")
     void stopHard() {
+        open(product.getLink());
         WindowsPage winPage = new WindowsPage(product);
         winPage.stopHard();
         winPage.start();
@@ -79,6 +83,7 @@ public class UiWindowsTest extends Tests {
     @TmsLink("872682")
     @DisplayName("UI Windows. Выключить")
     void start() {
+        open(product.getLink());
         WindowsPage winPage = new WindowsPage(product);
         winPage.stopSoft();
         winPage.start();
@@ -89,6 +94,7 @@ public class UiWindowsTest extends Tests {
     @TmsLink("872683")
     @DisplayName("UI Windows. Удалить")
     void deleteWindows() {
+        open(product.getLink());
         WindowsPage winPage = new WindowsPage(product);
         winPage.delete();
     }
