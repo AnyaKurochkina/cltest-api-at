@@ -23,7 +23,7 @@ import static core.helper.StringUtils.$x;
 
 @Log4j2
 public abstract class IProductPage {
-    TopInfo topInfo = new TopInfo();
+    TopInfo topInfo;
     IProduct product;
     Condition activeCnd = Condition.and("visible and enabled", Condition.visible, Condition.enabled);
     Condition clickableCnd = Condition.not(Condition.cssValue("cursor", "default"));
@@ -37,6 +37,7 @@ public abstract class IProductPage {
         btnGeneralInfo.shouldBe(Condition.enabled);
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
         this.product = product.buildFromLink();
+        topInfo = new TopInfo();
     }
 
     @Step("Ожидание выполнение действия с продуктом")
