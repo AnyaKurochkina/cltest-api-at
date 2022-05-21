@@ -33,7 +33,7 @@ public class ConfigExtension implements InvocationInterceptor, TestExecutionList
 
 
     @SneakyThrows
-    public void interceptTestMethod(final InvocationInterceptor.Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
+    public void interceptTestMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
         //если бефор в классе уже запускался
         if (!runBeforeAll.contains(extensionContext.getParent().orElseThrow(Exception::new).getUniqueId())) {
             Method before = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods())

@@ -29,8 +29,8 @@ public class Tests {
 
     @BeforeEach
     @SneakyThrows
-    @Title("Инициализация тестового класса")
-    public void beforeScenarios(/*TestInfo testInfo*/){
+    @Title("Инициализация логирования")
+    public void beforeScenarios(TestInfo testInfo){
 //        String className = testInfo.getTestClass().orElseThrow(Exception::new).getSimpleName();
 //        String methodName = testInfo.getTestMethod().orElseThrow(Exception::new).getName();
 //        Allure.tms(className + "#" + methodName, "");
@@ -56,7 +56,7 @@ public class Tests {
         return UniqueTest.getStepLog() != null;
     }
 
-    @Title("Завершение теста")
-    @AfterEach
-    public void afterScenarios(){}
+//    @Title("Завершение теста")
+//    @AfterEach
+//    public void afterScenarios(){}
 }
