@@ -8,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class ExMethodType {
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     MethodType methodType;
     String methodName;
     String testName;
