@@ -15,8 +15,10 @@ import steps.stateService.StateServiceSteps;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.$x;
 
 @Log4j2
@@ -30,6 +32,8 @@ public abstract class IProductPage {
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
 
     public IProductPage(IProduct product) {
+        if (Objects.nonNull(product.getLink()))
+            open(product.getLink());
         btnGeneralInfo.shouldBe(Condition.enabled);
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
         this.product = product.buildFromLink();
@@ -51,12 +55,12 @@ public abstract class IProductPage {
         checkErrorByStatus(history.lastActionStatus());
     }
 
-    private SelenideElement getBtnAction(String header){
+    private SelenideElement getBtnAction(String header) {
         return $x("//ancestor::div[.='{}Действия']//button[.='Действия']", header);
     }
 
     @Step("Запуск действия '{action}' в блоке '{headerBlock}'")
-    public void runActionWithoutParameters(String headerBlock, String action){
+    public void runActionWithoutParameters(String headerBlock, String action) {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -69,7 +73,7 @@ public abstract class IProductPage {
 
     @SneakyThrows
     @Step("Запуск действия '{action}' в блоке '{headerBlock}' с параметрами")
-    public void runActionWithParameters(String headerBlock, String action, Executable executable){
+    public void runActionWithParameters(String headerBlock, String action, Executable executable) {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -77,8 +81,8 @@ public abstract class IProductPage {
         Waiting.sleep(3000);
     }
 
-    public void checkErrorByStatus(String status){
-        if(status.equals(ProductStatus.ERROR)){
+    public void checkErrorByStatus(String status) {
+        if (status.equals(ProductStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
                     product, status, StateServiceSteps.GetErrorFromStateService(product.getOrderId())));
         }
