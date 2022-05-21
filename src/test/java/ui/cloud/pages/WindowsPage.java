@@ -3,11 +3,15 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
 import models.orderService.interfaces.IProduct;
+import models.orderService.products.Windows;
+import models.portalBack.AccessGroup;
 import ui.cloud.tests.DropDown;
+
+import static com.codeborne.selenide.Selenide.closeWebDriver;
 
 public class WindowsPage extends IProductPage {
 
-    public WindowsPage(IProduct product) {
+    public WindowsPage(Windows product) {
         super(product);
     }
 

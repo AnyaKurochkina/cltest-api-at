@@ -6,22 +6,19 @@ import models.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import tests.Tests;
-import ui.cloud.pages.WindowsPage;
 import ui.uiExtesions.ConfigExtension;
-import ui.uiExtesions.CustomBeforeAllAndAfterAll;
-import ui.uiExtesions.PR;
 
 @Log4j2
 //@ExtendWith(CustomBeforeAllAndAfterAll.class)
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ExtendWith(PR.class)
+@ExtendWith(ConfigExtension.class)
 public class UiTest extends Tests {
     static Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 
 
-    @BeforeAll
+//    @BeforeAll
     void beforeAll() {
 //        Selenide.open("https://cloud.vtb.ru/?context=proj-xipzuxr713&type=project&org=vtb");
 //        Selenide.$x("/button[.='kek']").shouldHave(Condition.visible);
@@ -29,7 +26,7 @@ public class UiTest extends Tests {
         log.info("CustomBeforeAll");
     }
 
-    @AfterAll
+//    @AfterAll
     void afterAll() {
 //        Selenide.open("https://cloud.vtb.ru/?context=proj-xipzuxr713&type=project&org=vtb");
 //        Selenide.$x("/button[.='kek']").shouldHave(Condition.visible);
@@ -39,37 +36,47 @@ public class UiTest extends Tests {
 
     @BeforeEach
     void setUp() {
+//        int f = 1/0;
         log.info("BeforeEach");
     }
 
-//    @AfterEach
-//    void tearDown() {
-////        int f = 1/0;
-//        log.info("AfterEach");
-//    }
-
-    @Test
-    @Tag("test")
-    @TmsLink("867358")
-    void test(WindowsPage page) {
-        System.out.println(1);
-//        new LoginPage("proj-xazpppulba").singIn();
-//        open("https://prod-portal-front.cloud.vtb.ru/vm/orders/a338902e-3473-42ab-a953-024284f84d06/main?context=proj-frybyv41jh&type=project&org=vtb");
-//        WindowsPage page = new WindowsPage(product);
-
-//        throw new StaleElementReferenceException("test");
+    @AfterEach
+    void tearDown() {
 //        int f = 1/0;
-
+        log.info("AfterEach");
     }
 
     @Test
+//    @Tag("test")
+    @Order(1)
+    @TmsLink("867358")
+    void test() {
+//        int f = 1/0;
+        log.info("test1()");
+    }
+
+    @Test
+    @Order(2)
     @Tag("test")
     void test2() {
 //        int f = 1/0;
-//        new LoginPage("proj-xazpppulba").singIn();
-//        open("https://ift-portal-front.apps.d0-oscp.corp.dev.vtb/container/orders/328091e3-7f99-4525-95b3-0c6b2869db6b/main?context=proj-xazpppulba&type=project&org=vtb");
-//        WindowsPage page = new WindowsPage(product);
-//        log.info(2);
+        log.info("test2()");
+    }
+
+    @Test
+    @Order(3)
+    @Tag("test")
+    void test3() {
+//        int f = 1/0;
+        log.info("test3()");
+    }
+
+    @Test
+    @Order(4)
+//    @Tag("test")
+    void test4() {
+//        int f = 1/0;
+        log.info("test4()");
     }
 
 

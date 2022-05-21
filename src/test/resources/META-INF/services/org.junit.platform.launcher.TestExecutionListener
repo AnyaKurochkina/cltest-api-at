@@ -1,2 +1,2 @@
 org.junit.TestsExecutionListener
-ui.uiExtesions.CustomBeforeAllAndAfterAll
+ui.uiExtesions.ConfigExtension

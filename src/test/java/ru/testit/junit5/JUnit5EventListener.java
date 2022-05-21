@@ -5,9 +5,7 @@ import core.helper.http.Http;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import org.junit.ProductArgumentsProvider;
 import org.junit.jupiter.api.extension.*;
-import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodExtensionContext;
 import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.jupiter.params.ParameterizedTestInvocationContext;
@@ -17,7 +15,6 @@ import ru.testit.services.TestITClient;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -135,7 +132,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId);
     }
 
-    public void testFailed(final ExtensionContext context, final Throwable cause) {
+    public void testFailed(final ExtensionContext context, Throwable cause) {
         if (!isIntegrationTestIt())
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
@@ -177,7 +174,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
                 RunningHandler.finishUtilMethod(new ExMethodType(methodType, invocationContext.getExecutable().toString(), testName), throwable);
 //            if(methodType == MethodType.BEFORE_METHOD)
 //                testFail.put(context.getUniqueId(), throwable);
-            else throw throwable;
+            throw throwable;
         } finally {
             Http.removeFixedRole();
         }
@@ -185,7 +182,6 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
 
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) throws Exception {
-
         if (isIntegrationTestIt()) {
             String configurationId = TestITClient.getConfigurationId();
             if (extensionContext.getUniqueId().contains("test-template-invocation:")) {
@@ -205,8 +201,6 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             }
             RunningHandler.startTest(extensionContext.getRequiredTestMethod(), extensionContext.getDisplayName(), configurationId, extensionContext.getTags());
             extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), configurationId);
-
-
         }
     }
 }

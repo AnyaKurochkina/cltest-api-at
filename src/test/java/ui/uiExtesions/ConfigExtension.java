@@ -2,15 +2,131 @@ package ui.uiExtesions;
 
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import lombok.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.extension.*;
+import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestPlan;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 
-public class ConfigExtension implements AfterEachCallback, BeforeAllCallback {
+public class ConfigExtension implements InvocationInterceptor, TestExecutionListener, AfterEachCallback, BeforeAllCallback {
+    private static final List<String> runBeforeAll = Collections.synchronizedList(new ArrayList<>());
+    private static final List<Test> allTests = Collections.synchronizedList(new ArrayList<>());
+
+
+    @SneakyThrows
+    public void interceptTestMethod(final InvocationInterceptor.Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
+        //если бефор в классе уже запускался
+        if (!runBeforeAll.contains(extensionContext.getParent().orElseThrow(Exception::new).getUniqueId())) {
+            Method before = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods())
+                    .filter(method -> method.isAnnotationPresent(Order.class))
+                    .min(Comparator.comparingInt(o -> o.getAnnotation(Order.class).value()))
+                    .orElseThrow(() -> new Exception("В классе нет методов с Order"));
+            //если первый тест не будет запущен
+            if (allTests.stream().noneMatch(test -> test.getClassName().equals(before.getDeclaringClass().getName()) && test.getTestName().equals(before.getName()))) {
+                before.setAccessible(true);
+                try {
+                    before.invoke(extensionContext.getRequiredTestInstance());
+                    runEachMethod(extensionContext, AfterEach.class);
+                    runEachMethod(extensionContext, BeforeEach.class);
+                } catch (Throwable e) {
+                    invocation.skip();
+                    if (Objects.nonNull(e.getCause()))
+                        throw e.getCause();
+                    throw e;
+                } finally {
+                    runBeforeAll.add(extensionContext.getParent().orElseThrow(Exception::new).getUniqueId());
+                }
+            }
+        }
+
+        allTests.stream().filter(test -> test.getClassName().equals(extensionContext.getRequiredTestClass().getName()) &&
+                        test.getTestName().equals(extensionContext.getRequiredTestMethod().getName())).findFirst()
+                .orElseThrow(() -> new Exception("Текущий тест не найден в allTests")).setRun(true);
+
+        Throwable testThrow = null;
+        try {
+            invocation.proceed();
+        } catch (Throwable e) {
+            testThrow = e;
+        }
+
+        //если все тесты в классе были запущены
+        if (allTests.stream().filter(test -> test.getClassName().equals(extensionContext.getRequiredTestClass().getName())).allMatch(Test::isRun)) {
+            Method after = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods())
+                    .filter(method -> method.isAnnotationPresent(Order.class))
+                    .max(Comparator.comparingInt(o -> o.getAnnotation(Order.class).value()))
+                    .orElseThrow(() -> new Exception("В классе нет методов с Order"));
+            if (allTests.stream().noneMatch(test -> test.getClassName().equals(after.getDeclaringClass().getName()) && test.getTestName().equals(after.getName()))) {
+                after.setAccessible(true);
+                try {
+                    runEachMethod(extensionContext, AfterEach.class);
+                    runEachMethod(extensionContext, BeforeEach.class);
+                    after.invoke(extensionContext.getRequiredTestInstance());
+                } catch (Throwable e) {
+                    Throwable throwable = e;
+                    if (Objects.nonNull(e.getCause()))
+                        throwable = e.getCause();
+                    if (Objects.nonNull(testThrow))
+                        testThrow.addSuppressed(throwable);
+                    else
+                        testThrow = throwable;
+                    throw testThrow;
+                }
+            }
+        }
+        if (Objects.nonNull(testThrow))
+            throw testThrow;
+    }
+
+
+    public void runEachMethod(final ExtensionContext extensionContext, Class<? extends Annotation> clazz) throws Throwable {
+        if(clazz.equals(AfterEach.class))
+            afterEach(extensionContext);
+        List<Method> list = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods()).filter(method -> method.isAnnotationPresent(clazz)).collect(Collectors.toList());
+        for (Method m : list) {
+            try {
+                m.setAccessible(true);
+                m.invoke(extensionContext.getRequiredTestInstance());
+            } catch (Throwable e) {
+                if (Objects.nonNull(e.getCause()))
+                    throw e.getCause();
+                else
+                    throw e;
+            }
+        }
+    }
+
+    @Override
+    public void testPlanExecutionStarted(TestPlan testPlan) {
+        String root = ((TestIdentifier) testPlan.getRoots().toArray()[0]).getUniqueId();
+        getChildren(testPlan, root).stream().distinct().forEach(s -> {
+            if (testPlan.getTestIdentifier(s).isTest()) {
+                if (testPlan.getTestIdentifier(s).getSource().isPresent()) {
+                    MethodSource methodSource = ((MethodSource) testPlan.getTestIdentifier(s).getSource().get());
+                    allTests.add(new Test(methodSource));
+                }
+            }
+        });
+    }
+
+    public List<String> getChildren(TestPlan testPlan, String id) {
+        List<String> children = testPlan.getChildren(id).stream().map(TestIdentifier::getUniqueId).collect(Collectors.toList());
+        for (String i : testPlan.getChildren(id).stream().map(TestIdentifier::getUniqueId).collect(Collectors.toList())) {
+            children.addAll(getChildren(testPlan, i));
+        }
+        return children;
+    }
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
@@ -21,6 +137,29 @@ public class ConfigExtension implements AfterEachCallback, BeforeAllCallback {
     @Override
     public void afterEach(ExtensionContext extensionContext) {
         closeWebDriver();
+    }
+
+
+    @Getter
+    @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+    @ToString(onlyExplicitlyIncluded = true)
+    private static class Test {
+        @ToString.Include
+        @EqualsAndHashCode.Include
+        String className;
+        @ToString.Include
+        @EqualsAndHashCode.Include
+        String testName;
+        Integer order;
+        @Setter
+        boolean run;
+
+        public Test(MethodSource method) {
+            this.className = method.getJavaClass().getName();
+            this.testName = method.getMethodName();
+            if (method.getJavaMethod().isAnnotationPresent(Order.class))
+                this.order = method.getJavaMethod().getAnnotation(Order.class).value();
+        }
     }
 
 }

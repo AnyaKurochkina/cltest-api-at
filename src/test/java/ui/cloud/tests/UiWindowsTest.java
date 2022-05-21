@@ -7,21 +7,9 @@ import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import steps.orderService.OrderServiceSteps;
 import tests.Tests;
-import ui.cloud.pages.LoginPage;
-import ui.cloud.pages.ProductsPage;
-import ui.cloud.pages.WindowsOrderPage;
-import ui.cloud.pages.WindowsPage;
+import ui.cloud.pages.*;
 import ui.uiExtesions.ConfigExtension;
-import ui.uiExtesions.CustomBeforeAllAndAfterAll;
-
-import java.util.Objects;
-
-import static com.codeborne.selenide.Selenide.closeWebDriver;
-import static com.codeborne.selenide.Selenide.open;
-
-@ExtendWith(CustomBeforeAllAndAfterAll.class)
 
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -30,12 +18,23 @@ import static com.codeborne.selenide.Selenide.open;
 public class UiWindowsTest extends Tests {
     Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 
-    @BeforeAll
-    @Title("Создание продукта")
-    void beforeAll(){
+    public UiWindowsTest() {
         product.init();
+    }
+
+    @BeforeEach
+    @Title("Авторизация на портале")
+    void beforeEach(){
         new LoginPage(product.getProjectId())
-                .singIn()
+                .singIn();
+    }
+
+    @Test
+    @TmsLink("872651")
+    @Order(1)
+    @DisplayName("UI Windows. Заказ")
+    void orderWindows() {
+        new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
         WindowsOrderPage orderPage = new WindowsOrderPage();
@@ -54,30 +53,7 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         winPage.waitChangeStatus();
         winPage.checkLastAction();
-        closeWebDriver();
     }
-
-    @AfterAll
-    @Title("Удаление продукта")
-    void afterAll(){
-        if(Objects.nonNull(product.getLink())) {
-            OrderServiceSteps.deleteProduct(product);
-        }
-    }
-
-    @BeforeEach
-    @Title("Переход на страницу продукта")
-    void beforeEach(){
-        new LoginPage(product.getProjectId())
-                .singIn();
-        open(product.getLink());
-    }
-
-    @Test
-    @TmsLink("872651")
-    @Order(1)
-    @DisplayName("UI Windows. Заказ")
-    void orderWindows() {}
 
     @Test
     @Order(2)
