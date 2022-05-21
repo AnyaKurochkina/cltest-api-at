@@ -24,7 +24,7 @@ public class RunningHandler
     private static final TestITClient testITClient = new TestITClient();
     private static final CreateTestItemRequestFactory createTestItemRequestFactory = new CreateTestItemRequestFactory();
     private static final TestResultRequestFactory testResultRequestFactory = new TestResultRequestFactory();
-    private static final Map<ExMethodType, StepNode> utilsMethodSteps = Collections.synchronizedMap(new LinkedHashMap<>());
+    private static final Map<MethodType, StepNode> utilsMethodSteps = Collections.synchronizedMap(new LinkedHashMap<>());
     private static final ConcurrentHashMap<UniqueTest, StepNode> includedTests = new ConcurrentHashMap<>();
     private static final List<UniqueTest> alreadyFinished = Collections.synchronizedList(new LinkedList<>());
 
@@ -86,22 +86,19 @@ public class RunningHandler
     }
     
     public static void startUtilMethod(final MethodType currentMethod, final Method method, ExtensionContext context) {
-        String testName = "";
-        if(currentMethod.equals(MethodType.BEFORE_METHOD) || currentMethod.equals(MethodType.AFTER_METHOD))
-            testName = context.getUniqueId();
         final StepNode parentStep = new StepNode();
         parentStep.setTitle(extractTitle(method));
         parentStep.setDescription(extractDescription(method));
         parentStep.setStartedOn(new Date());
-        utilsMethodSteps.putIfAbsent(new ExMethodType(currentMethod, method.toString(), testName), parentStep);
+        utilsMethodSteps.putIfAbsent(currentMethod, parentStep);
         StepsAspects.setStepNodes(parentStep);
     }
 
-    public static void finishUtilMethod(final ExMethodType currentMethod, final Throwable thrown) {
+    public static void finishUtilMethod(final MethodType currentMethod, final Throwable thrown) {
         final StepNode parentStep = utilsMethodSteps.get(currentMethod);
         parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
         parentStep.setCompletedOn(new Date());
-        if (currentMethod.getMethodType() == MethodType.BEFORE_METHOD) {
+        if (currentMethod == MethodType.BEFORE_METHOD) {
             StepsAspects.returnStepNode();
         }
     }

@@ -168,10 +168,10 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             else
                 invocation.proceed();
             if (isIntegrationTestIt())
-                RunningHandler.finishUtilMethod(new ExMethodType(methodType, invocationContext.getExecutable().toString(), testName), null);
+                RunningHandler.finishUtilMethod(methodType, null);
         } catch (Throwable throwable) {
             if (isIntegrationTestIt())
-                RunningHandler.finishUtilMethod(new ExMethodType(methodType, invocationContext.getExecutable().toString(), testName), throwable);
+                RunningHandler.finishUtilMethod(methodType, throwable);
 //            if(methodType == MethodType.BEFORE_METHOD)
 //                testFail.put(context.getUniqueId(), throwable);
             throw throwable;

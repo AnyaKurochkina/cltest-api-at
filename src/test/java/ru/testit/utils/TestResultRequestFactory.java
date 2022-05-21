@@ -4,7 +4,6 @@ import core.helper.Configure;
 import core.helper.DataFileHelper;
 import io.qameta.allure.Allure;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import ru.testit.junit5.ExMethodType;
 import ru.testit.junit5.MethodType;
 import ru.testit.model.request.*;
 import ru.testit.services.LinkItem;
@@ -15,7 +14,7 @@ import java.util.*;
 public class TestResultRequestFactory {
     private TestResultsRequest request;
 
-    public void processFinishLaunch(final Map<ExMethodType, StepNode> utilsMethodSteps, final Map<UniqueTest, StepNode> includedTests) {
+    public void processFinishLaunch(final Map<MethodType, StepNode> utilsMethodSteps, final Map<UniqueTest, StepNode> includedTests) {
         this.request = new TestResultsRequest();
         for (final UniqueTest test : includedTests.keySet()) {
             final String externalId = test.getExternalId();
@@ -28,7 +27,7 @@ public class TestResultRequestFactory {
         }
     }
 
-    public void processFinishLaunchUniqueTest(final UniqueTest test, final Map<ExMethodType, StepNode> utilsMethodSteps, StepNode step) {
+    public void processFinishLaunchUniqueTest(final UniqueTest test, final Map<MethodType, StepNode> utilsMethodSteps, StepNode step) {
         TestResultsRequest req = new TestResultsRequest();
         final String externalId = test.getExternalId();
         final TestResultRequest currentTest = new TestResultRequest();
@@ -83,9 +82,9 @@ public class TestResultRequestFactory {
 //        TestITClient.sendTestResult(req);
     }
 
-    private void processUtilsMethodsSteps(final TestResultRequest currentTest, final Map<ExMethodType, StepNode> utilsMethodSteps) {
-        for (final ExMethodType exMethodType : utilsMethodSteps.keySet()) {
-            if (exMethodType.getMethodType() == MethodType.BEFORE_CLASS || exMethodType.getMethodType() == MethodType.BEFORE_METHOD) {
+    private void processUtilsMethodsSteps(final TestResultRequest currentTest, final Map<MethodType, StepNode> utilsMethodSteps) {
+        for (final MethodType exMethodType : utilsMethodSteps.keySet()) {
+            if (exMethodType == MethodType.BEFORE_CLASS || exMethodType == MethodType.BEFORE_METHOD) {
                 this.processSetUpSteps(currentTest, utilsMethodSteps.get(exMethodType));
             } else {
                 this.processTearDownSteps(currentTest, utilsMethodSteps.get(exMethodType));
