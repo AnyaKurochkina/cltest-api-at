@@ -242,12 +242,12 @@ public class Http {
             if (field.length() > 0) {
                 String mimeType = URLConnection.guessContentTypeFromName(fileName);
                 if(Objects.isNull(mimeType))
-                    mimeType = "text/plain";
+                    mimeType = "application/octet-stream";
                 specification.multiPart(new MultiPartSpecBuilder(bytes)
                         .fileName(fileName)
                         .controlName(field)
                         .controlName("file")
-                        .mimeType("image/png")
+                        .mimeType(mimeType)
                         .build());
 //                specification.multiPart(field, fileName, bytes);
 
