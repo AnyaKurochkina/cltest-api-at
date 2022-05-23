@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.testit.junit5.RunningHandler;
 import ru.testit.junit5.StepsAspects;
+import ru.testit.utils.UniqueTest;
 
 public class AllureLifecycle {
     private static final Logger LOGGER = LoggerFactory.getLogger(AllureLifecycle.class);
@@ -350,7 +351,7 @@ public class AllureLifecycle {
         ru.testit.model.request.Attachment attachment = new ru.testit.model.request.Attachment();
         attachment.setFileName(name + "." + fileExtension);
         attachment.setBytes(body);
-        StepsAspects.getCurrentStep().get().getAttachments().add(attachment);
+        UniqueTest.addAttachment(attachment);
     }
 
     public void addAttachment(String name, String type, String fileExtension, InputStream stream) {

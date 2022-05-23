@@ -6,6 +6,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import ru.testit.services.*;
@@ -17,6 +18,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+@Log4j2
 public class CreateTestItemRequestFactory {
     private static Map<UniqueTest, CreateTestItemRequest> createTestItemRequests;
 
@@ -57,7 +59,7 @@ public class CreateTestItemRequestFactory {
         try {
             createTestItemRequest.setOutcome(Outcome.getByValue(testParentStepNode.getOutcome()));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("processFinishLaunchUniqueTest", e);
         }
         this.processTestSteps(createTestItemRequest, testParentStepNode);
         this.processUtilsSteps(createTestItemRequest, utilsMethodSteps);

@@ -58,7 +58,6 @@ public class RunningHandler
         parentStep.setStartedOn(new Date());
         UniqueTest test = new UniqueTest(extractExternalID(currentTest, null), configurationId);
         log.info("startTest " + test);
-        test.setStep(parentStep);
         includedTests.put(test, parentStep);
         StepsAspects.setStepNodes(parentStep);
     }
@@ -86,7 +85,7 @@ public class RunningHandler
         if(Objects.nonNull(UniqueTest.getStepLog()))
             Allure.getLifecycle().addAttachment("log-test", "text/html", "log", UniqueTest.getStepLog().getBytes(StandardCharsets.UTF_8));
         UniqueTest test = new UniqueTest(extractExternalID(atomicTest, null), configurationId);
-        final StepNode parentStep = includedTests.get(new UniqueTest(extractExternalID(atomicTest, null), configurationId));
+        final StepNode parentStep = includedTests.get(test);
         createTestItemRequestFactory.processFinishLaunchUniqueTest(utilsMethodSteps, parentStep, test);
         testITClient.sendTestItemsUniqueTest(createTestItemRequestFactory.getCreateTestRequests(test));
         testResultRequestFactory.processFinishLaunchUniqueTest(test, utilsMethodSteps, parentStep);

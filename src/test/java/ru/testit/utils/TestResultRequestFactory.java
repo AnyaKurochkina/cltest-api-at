@@ -61,7 +61,7 @@ public class TestResultRequestFactory {
 
 
 //        List<Map<String, String>> attachmentList = new ArrayList<>();
-        Iterator<Attachment> iterator = getAttachmentList(test.getStep()).iterator();
+        Iterator<Attachment> iterator = UniqueTest.getAndClearAttachmentList().iterator();
         while (iterator.hasNext()) {
             Attachment attachment = iterator.next();
             attachment.setId(TestITClient.sendAttachment(attachment, testResultId));
