@@ -39,24 +39,21 @@ public class Tests {
 
     public static void putAttachLog(String text) {
         UniqueTest.writeStepLog(text);
-        String stepId = getLifecycle().getCurrentTestCase().orElse(null);
-        if (stepId == null)
-            return;
-        String source = stepId + "-attachment.txt";
-        DataFileHelper.appendToFile(Configure.getAppProp("allure.results") + source, text + "\n");
-        Attachment attachment = new Attachment().setSource(source).setName("log-test.log");
-        getLifecycle().updateTestCase(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
+//        String stepId = getLifecycle().getCurrentTestCase().orElse(null);
+//        if (stepId == null)
+//            return;
+//        String source = stepId + "-attachment.txt";
+//        DataFileHelper.appendToFile(Configure.getAppProp("allure.results") + source, text + "\n");
+//        Attachment attachment = new Attachment().setSource(source).setName("log-test.log");
+//        getLifecycle().updateTestCase(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
     }
 
-    public static String getAttachLog() {
-        return UniqueTest.getStepLog();
-    }
+//    public static String getAttachLog() {
+//        return UniqueTest.getStepLog();
+//    }
 
-    public static boolean isAttachLog() {
-        return UniqueTest.getStepLog() != null;
-    }
+//    public static boolean isAttachLog() {
+//        return UniqueTest.getStepLog() != null;
+//    }
 
-//    @Title("Завершение теста")
-//    @AfterEach
-//    public void afterScenarios(){}
 }

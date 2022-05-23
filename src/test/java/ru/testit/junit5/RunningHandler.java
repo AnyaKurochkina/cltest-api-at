@@ -1,6 +1,7 @@
 package ru.testit.junit5;
 
 import core.exception.CreateEntityException;
+import io.qameta.allure.Allure;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +14,7 @@ import ru.testit.utils.*;
 import tests.Tests;
 
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -54,9 +56,10 @@ public class RunningHandler
         parentStep.setTitle(displayName);
         parentStep.setDescription(extractDescription(currentTest));
         parentStep.setStartedOn(new Date());
-        log.info("startTest " + new UniqueTest(extractExternalID(currentTest, null), configurationId));
-        //TODO: UUID
-        includedTests.put(new UniqueTest(extractExternalID(currentTest, null), configurationId), parentStep);
+        UniqueTest test = new UniqueTest(extractExternalID(currentTest, null), configurationId);
+        log.info("startTest " + test);
+        test.setStep(parentStep);
+        includedTests.put(test, parentStep);
         StepsAspects.setStepNodes(parentStep);
     }
     
@@ -77,10 +80,15 @@ public class RunningHandler
             parentStep.setCompletedOn(new Date());
         }
         alreadyFinished.add(test);
+    }
+
+    public static void endTest(final Method atomicTest, String configurationId){
+        if(Objects.nonNull(UniqueTest.getStepLog()))
+            Allure.getLifecycle().addAttachment("log-test", "text/html", "log", UniqueTest.getStepLog().getBytes(StandardCharsets.UTF_8));
+        UniqueTest test = new UniqueTest(extractExternalID(atomicTest, null), configurationId);
+        final StepNode parentStep = includedTests.get(new UniqueTest(extractExternalID(atomicTest, null), configurationId));
         createTestItemRequestFactory.processFinishLaunchUniqueTest(utilsMethodSteps, parentStep, test);
         testITClient.sendTestItemsUniqueTest(createTestItemRequestFactory.getCreateTestRequests(test));
-        if(thrown != null)
-            Tests.putAttachLog(ExceptionUtils.getStackTrace(thrown));
         testResultRequestFactory.processFinishLaunchUniqueTest(test, utilsMethodSteps, parentStep);
         removeCurrentStep();
     }
@@ -97,6 +105,9 @@ public class RunningHandler
     public static void finishUtilMethod(final MethodType currentMethod, final Throwable thrown) {
         final StepNode parentStep = utilsMethodSteps.get(currentMethod);
         parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
+        parentStep.setFailureReason(thrown);
+        if(thrown != null)
+            Tests.putAttachLog(ExceptionUtils.getStackTrace(thrown));
         parentStep.setCompletedOn(new Date());
         if (currentMethod == MethodType.BEFORE_METHOD) {
             StepsAspects.returnStepNode();

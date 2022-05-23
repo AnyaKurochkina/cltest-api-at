@@ -47,21 +47,21 @@ public class TestResultRequestFactory {
 //            if (log.getBytes().length > 0)
 //                step.getAttachments().add(log);
 
-        String stepId = Allure.getLifecycle().getCurrentTestCaseOrStep().orElse(null);
-        if (Objects.nonNull(stepId)) {
-            final List<io.qameta.allure.model.Attachment> attachments = new ArrayList<>();
-            Allure.getLifecycle().updateTestCase(stepId, s -> attachments.addAll(s.getAttachments()));
-            for (io.qameta.allure.model.Attachment attachment : attachments) {
-                Attachment attach = new Attachment();
-                attach.setFileName(attachment.getName());
-                attach.setBytes(DataFileHelper.readBytes(Configure.getAppProp("allure.results") + attachments.get(0).getSource()));
-                step.getAttachments().add(attach);
-            }
+//        String stepId = Allure.getLifecycle().getCurrentTestCaseOrStep().orElse(null);
+//        if (Objects.nonNull(stepId)) {
+//            final List<io.qameta.allure.model.Attachment> attachments = new ArrayList<>();
+//            Allure.getLifecycle().updateTestCase(stepId, s -> attachments.addAll(s.getAttachments()));
+//            for (io.qameta.allure.model.Attachment attachment : attachments) {
+//                Attachment attach = new Attachment();
+//                attach.setFileName(attachment.getName());
+//                attach.setBytes(DataFileHelper.readBytes(Configure.getAppProp("allure.results") + attachments.get(0).getSource()));
+//                step.getAttachments().add(attach);
 //            }
-        }
+//        }
+
 
 //        List<Map<String, String>> attachmentList = new ArrayList<>();
-        Iterator<Attachment> iterator = step.getAttachments().iterator();
+        Iterator<Attachment> iterator = getAttachmentList(test.getStep()).iterator();
         while (iterator.hasNext()) {
             Attachment attachment = iterator.next();
             attachment.setId(TestITClient.sendAttachment(attachment, testResultId));
@@ -80,6 +80,12 @@ public class TestResultRequestFactory {
 //        this.processUtilsMethodsSteps(currentTest2, utilsMethodSteps);
 //        req.getTestResults().add(currentTest2);
 //        TestITClient.sendTestResult(req);
+    }
+
+    private List<Attachment> getAttachmentList(StepNode stepNode){
+        List<Attachment> list = new ArrayList<>(stepNode.getAttachments());
+        stepNode.getChildrens().forEach(c -> list.addAll(getAttachmentList(c)));
+        return list;
     }
 
     private void processUtilsMethodsSteps(final TestResultRequest currentTest, final Map<MethodType, StepNode> utilsMethodSteps) {

@@ -115,6 +115,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         for (String configuration : list) {
             RunningHandler.startTest(context.getRequiredTestMethod(), context.getDisplayName(), configuration, context.getTags());
             RunningHandler.finishTest(context.getRequiredTestMethod(), new TestAbortedException(reason.orElse("Тест отключен")), configuration);
+            RunningHandler.endTest(context.getRequiredTestMethod(), configuration);
         }
     }
 
@@ -123,6 +124,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
         RunningHandler.finishTest(context.getRequiredTestMethod(), null, configurationId);
+        RunningHandler.endTest(context.getRequiredTestMethod(), configurationId);
     }
 
     public void testAborted(final ExtensionContext context, final Throwable cause) {
@@ -130,6 +132,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
         RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId);
+        RunningHandler.endTest(context.getRequiredTestMethod(), configurationId);
     }
 
     public void testFailed(final ExtensionContext context, Throwable cause) {
@@ -137,6 +140,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
         RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId);
+        RunningHandler.endTest(context.getRequiredTestMethod(), configurationId);
     }
 
     public void interceptAfterEachMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
@@ -203,4 +207,10 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
             extensionContext.getStore(configurationSpace).put(extensionContext.getUniqueId(), configurationId);
         }
     }
+
+//    @Override
+//    public void afterEach(ExtensionContext extensionContext) throws Exception {
+//        String configurationId = (String) extensionContext.getStore(configurationSpace).get(extensionContext.getUniqueId());
+//        RunningHandler.endTest(extensionContext);
+//    }
 }

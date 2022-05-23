@@ -1,21 +1,24 @@
 package ru.testit.utils;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import ru.testit.services.LinkItem;
 
 import java.util.LinkedList;
 import java.util.StringJoiner;
 
-@AllArgsConstructor
 @EqualsAndHashCode
 @Getter
 @ToString
 public class UniqueTest {
     String externalId;
     String configurationId;
+    @Setter
+    StepNode step;
+
+    public UniqueTest(String externalId, String configurationId) {
+        this.externalId = externalId;
+        this.configurationId = configurationId;
+    }
 
     private static final InheritableThreadLocal<StringJoiner> stepLog = new InheritableThreadLocal<>();
 
