@@ -114,7 +114,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
 
         for (String configuration : list) {
             RunningHandler.startTest(context.getRequiredTestMethod(), context.getDisplayName(), configuration, context.getTags());
-            RunningHandler.finishTest(context.getRequiredTestMethod(), new TestAbortedException(reason.orElse("Тест отключен")), configuration);
+            RunningHandler.finishTest(context.getRequiredTestMethod(), new TestAbortedException(reason.orElse("Тест отключен")), configuration, context);
             RunningHandler.endTest(context.getRequiredTestMethod(), configuration);
         }
     }
@@ -123,7 +123,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         if (!isIntegrationTestIt())
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
-        RunningHandler.finishTest(context.getRequiredTestMethod(), null, configurationId);
+        RunningHandler.finishTest(context.getRequiredTestMethod(), null, configurationId, context);
         RunningHandler.endTest(context.getRequiredTestMethod(), configurationId);
     }
 
@@ -131,7 +131,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         if (!isIntegrationTestIt())
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
-        RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId);
+        RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId, context);
         RunningHandler.endTest(context.getRequiredTestMethod(), configurationId);
     }
 
@@ -139,7 +139,7 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
         if (!isIntegrationTestIt())
             return;
         String configurationId = (String) context.getStore(configurationSpace).get(context.getUniqueId());
-        RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId);
+        RunningHandler.finishTest(context.getRequiredTestMethod(), cause, configurationId, context);
         RunningHandler.endTest(context.getRequiredTestMethod(), configurationId);
     }
 

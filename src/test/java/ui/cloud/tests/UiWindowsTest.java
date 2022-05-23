@@ -40,7 +40,7 @@ public class UiWindowsTest extends Tests {
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
         WindowsOrderPage orderPage = new WindowsOrderPage();
-        orderPage.getOsVersion().select(product.getOsVersion());
+        orderPage.getOsVersion().select(product.getOsVersion()+9);
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
         orderPage.getRoleServer().selectByValue(product.getRole());
