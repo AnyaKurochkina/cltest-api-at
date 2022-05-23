@@ -11,8 +11,6 @@ import tests.Tests;
 import ui.cloud.pages.*;
 import ui.uiExtesions.ConfigExtension;
 
-import static com.codeborne.selenide.Selenide.open;
-
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -40,7 +38,7 @@ public class UiWindowsTest extends Tests {
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
         WindowsOrderPage orderPage = new WindowsOrderPage();
-        orderPage.getOsVersion().select(product.getOsVersion()+9);
+        orderPage.getOsVersion().select(product.getOsVersion());
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
         orderPage.getRoleServer().selectByValue(product.getRole());

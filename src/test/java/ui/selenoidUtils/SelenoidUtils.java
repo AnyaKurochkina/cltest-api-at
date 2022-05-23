@@ -13,7 +13,7 @@ import static core.helper.Configure.getAppPropStartWidth;
 public class SelenoidUtils {
 
     public static void isRemote() {
-        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote"))) {
+        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
             log.info("Ui Тесты стартовали на selenoid сервере: " + getAppProp("webdriver.remote.url"));
             Configuration.remote = getAppProp("webdriver.remote.url");
             Map<String, String> capabilitiesProp = getAppPropStartWidth("webdriver.capabilities.");
