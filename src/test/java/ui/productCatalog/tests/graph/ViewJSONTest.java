@@ -12,6 +12,5 @@ public class ViewJSONTest extends GraphBaseTest {
         new MainPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .viewJSON();
-        deleteGraph();
     }
 }

@@ -1,10 +1,7 @@
 package ui.productCatalog.tests.graph;
 
-import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
-import models.productCatalog.Graph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
 import ui.productCatalog.pages.MainPage;
 
 public class CreateGraphTest extends GraphBaseTest {
@@ -20,7 +17,7 @@ public class CreateGraphTest extends GraphBaseTest {
                 .findGraphByName(TITLE)
                 .findGraphByName(name.substring(1).toUpperCase())
                 .findGraphByTitle(TITLE.substring(1).toUpperCase());
-        new ProductCatalogSteps(Graph.productName).deleteByName(name, GetGraphsListResponse.class);
+        deleteGraph(name);
     }
 
     @Test
@@ -37,5 +34,12 @@ public class CreateGraphTest extends GraphBaseTest {
     public void createGraphWithNonUniqueName() {
         new MainPage().goToGraphsPage()
                 .checkCreateGraphDisabled(TITLE, NAME, "action", DESCRIPTION, AUTHOR);
+    }
+
+    @Test
+    @DisplayName("Создание графа с недопустимым кодом")
+    public void checkGraphNameValidation() {
+        new MainPage().goToGraphsPage()
+                .checkGraphNameValidation(new String[] {"Test_name", "test name", "тест", "test_name$"});
     }
 }
