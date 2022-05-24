@@ -397,15 +397,25 @@ public class ActionsTest extends Tests {
     @Disabled
     @TmsLink("")
     public void dumpToGitlabAction() {
-        String actionName = "dump_to_gitlab_ff_action_test_api";
+        String actionName = "dump_to_gitlab_test_api";
         Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
-                .version("1.0.0")
+                .version("1.0.2")
                 .build()
                 .createObject();
         Response response = steps.dumpToBitbucket(action.getActionId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+    }
+
+    @Test
+    @DisplayName("Выгрузка action из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabAction() {
+        String actionName = "action_dump_to_gitlab_test_api_1.0.2";
+        Response response = steps.loadFromBitbucket(actionName);
+      //  assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
 }
 

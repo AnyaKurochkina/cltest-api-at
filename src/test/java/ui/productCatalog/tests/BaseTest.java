@@ -25,7 +25,7 @@ abstract public class BaseTest {
         Configuration.driverManagerEnabled = true;
         Configuration.browserSize = "1366x868";
         Configuration.headless = false;
-        Configuration.timeout = 10000;
+        Configuration.timeout = 20000;
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(false));
     }
 

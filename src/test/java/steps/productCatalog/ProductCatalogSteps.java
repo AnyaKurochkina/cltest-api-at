@@ -50,6 +50,13 @@ public class ProductCatalogSteps {
                 .assertStatus(200);
     }
 
+    @Step("Выгрузка объекта из Gitlab")
+    public Response loadFromBitbucket(String name) {
+        return new Http(ProductCatalogURL)
+                .post(productName + "load_from_bitbucket/?path=" + name)
+                .assertStatus(200);
+    }
+
     @Step("Получение Meta данных объекта продуктового каталога")
     public MetaImpl getMeta(Class<?> clazz) {
         return ((GetListImpl) new Http(ProductCatalogURL)

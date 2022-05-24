@@ -1,11 +1,9 @@
 package ui.productCatalog.tests.graph;
 
-import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import models.productCatalog.Graph;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import steps.productCatalog.ProductCatalogSteps;
 import ui.productCatalog.tests.BaseTest;
 
 public class GraphBaseTest extends BaseTest {
@@ -42,7 +40,5 @@ public class GraphBaseTest extends BaseTest {
     @AfterEach
     @DisplayName("Удаление графов")
     public void deleteGraph() {
-        new ProductCatalogSteps(Graph.productName).deleteByName(NAME, GetGraphsListResponse.class);
-        new ProductCatalogSteps(Graph.productName).deleteByName(SUBGRAPH_NAME, GetGraphsListResponse.class);
     }
 }
