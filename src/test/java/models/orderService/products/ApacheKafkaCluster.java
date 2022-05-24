@@ -48,6 +48,7 @@ public class ApacheKafkaCluster extends IProduct {
     public static final String KAFKA_CLUSTER_RETENTION_MS = "data.find{it.type=='cluster'}.data.config.topics.any{it.topic_name=='%s' && it.retention_ms=='%s'}";
 
     public static final String KAFKA_CLUSTER_ACL_IDEMPOTENT = "data.find{it.type=='cluster'}.data.config.idempotent_acls.any{it.client_cn=='%s'}";
+
     @Override
     @Step("Заказ продукта")
     protected void create() {
@@ -191,6 +192,10 @@ public class ApacheKafkaCluster extends IProduct {
         OrderServiceSteps.executeAction("kafka_delete_transaction_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}]}}"), this.projectId);
         save();
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)), "ACL транзакции не удалились");
+    }
+
+    public void upgradeVersion() {
+        OrderServiceSteps.executeAction("kafka_release_upgrade_version", this, new JSONObject("{dumb: \"empty\"}"), this.projectId);
     }
 
     public void start() {

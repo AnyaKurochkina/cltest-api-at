@@ -31,6 +31,8 @@ public class UniqueTest {
     }
 
     public static List<Attachment> getAndClearAttachmentList() {
+        if (attachments.get() == null)
+            attachments.set(new ArrayList<>());
         List<Attachment> list = new ArrayList<>(attachments.get());
         attachments.remove();
         return list;
