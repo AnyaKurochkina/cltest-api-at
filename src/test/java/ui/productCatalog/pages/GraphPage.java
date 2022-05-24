@@ -2,9 +2,8 @@ package ui.productCatalog.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import ui.productCatalog.tests.TestUtils;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -43,16 +42,14 @@ public class GraphPage {
     }
 
     public GraphPage saveGraphWithPatchVersion() {
-        JavascriptExecutor js = (JavascriptExecutor) WebDriverRunner.getWebDriver();
-        js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+        TestUtils.scrollToTheBottom();
         saveButton.shouldBe(Condition.enabled).click();
         dialogSaveButton.click();
         return new GraphPage();
     }
 
     public GraphPage saveGraphWithManualVersion(String newVersion) {
-        JavascriptExecutor js = (JavascriptExecutor) WebDriverRunner.getWebDriver();
-        js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+        TestUtils.scrollToTheBottom();
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
         newVersionField.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
@@ -62,8 +59,7 @@ public class GraphPage {
     }
 
     public GraphPage trySaveGraphWithIncorrectVersion(String newVersion) {
-        JavascriptExecutor js = (JavascriptExecutor) WebDriverRunner.getWebDriver();
-        js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+        TestUtils.scrollToTheBottom();
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
         newVersionField.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));

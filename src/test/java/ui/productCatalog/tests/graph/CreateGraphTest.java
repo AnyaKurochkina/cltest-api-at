@@ -35,4 +35,11 @@ public class CreateGraphTest extends GraphBaseTest {
         new MainPage().goToGraphsPage()
                 .checkCreateGraphDisabled(TITLE, NAME, "action", DESCRIPTION, AUTHOR);
     }
+
+    @Test
+    @DisplayName("Создание графа с недопустимым кодом")
+    public void checkGraphNameValidation() {
+        new MainPage().goToGraphsPage()
+                .checkGraphNameValidation(new String[] {"Test_name", "test name", "тест", "test_name$"});
+    }
 }

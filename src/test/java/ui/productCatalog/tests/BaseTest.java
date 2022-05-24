@@ -25,7 +25,7 @@ abstract public class BaseTest {
         WebDriverManager.chromedriver().setup();
         Configuration.browser = "chrome";
         Configuration.driverManagerEnabled = true;
-        Configuration.browserSize = "1366x868";
+        Configuration.browserSize = "1366x968";
         Configuration.headless = false;
         Configuration.timeout = 10000;
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(false));
@@ -45,17 +45,5 @@ abstract public class BaseTest {
     public void login() {
         LoginPage loginPage = new LoginPage();
         loginPage.login(login, password);
-    }
-
-    public static void wait(int ms)
-    {
-        try
-        {
-            TimeUnit.MILLISECONDS.sleep(ms);
-        }
-        catch(InterruptedException ex)
-        {
-            Thread.currentThread().interrupt();
-        }
     }
 }

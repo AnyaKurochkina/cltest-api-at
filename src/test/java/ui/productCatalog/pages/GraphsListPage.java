@@ -1,13 +1,14 @@
 package ui.productCatalog.pages;
 
 import com.codeborne.selenide.*;
-import ui.productCatalog.tests.BaseTest;
+import org.openqa.selenium.Keys;
+import ui.productCatalog.tests.TestUtils;
 
 import static com.codeborne.selenide.Selenide.$x;
 
 public class GraphsListPage {
     private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы']");
-    private final SelenideElement createButton = $x("//div[@data-testid = 'graph-list-add-button']//button");
+    private final SelenideElement createNewGraphButton = $x("//div[@data-testid = 'graph-list-add-button']//button");
     private final SelenideElement inputTitleField = $x("//*[@name ='title']");
     private final SelenideElement inputNameField = $x("//*[@name ='name']");
     private final SelenideElement inputDescriptionField = $x("//input[@name='description']");
@@ -28,27 +29,20 @@ public class GraphsListPage {
     private final SelenideElement cancelButton = $x("//span[text()='Отмена']/..");
     private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']/ancestor::div[1]");
     private final SelenideElement nothingFoundMessage = $x("//td[text()='Нет данных для отображения']");
+    private final SelenideElement graphNameValidationHint = $x("//p[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
+    private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::p");
+    private final SelenideElement nameRequiredFieldHint = $x("//input[@name='name']/parent::div/following-sibling::p");
+    private final SelenideElement authorRequiredFieldHint = $x("//input[@name='author']/parent::div/following-sibling::p");
 
     public GraphsListPage() {
         graphsPageTitle.shouldBe(Condition.visible);
     }
 
     public GraphsListPage createGraph(String title, String name, String type, String description, String author) {
-        createButton.click();
+        createNewGraphButton.click();
         inputTitleField.setValue(title);
         inputNameField.setValue(name);
-        selectType.click();
-        switch (type) {
-            case "creating":
-                creatingType.click();
-                break;
-            case "action":
-                actionType.click();
-                break;
-            case "service":
-                serviceType.click();
-                break;
-        }
+        selectType(type);
         inputDescriptionField.setValue(description);
         inputAuthorField.setValue(author);
         createGraphButton.click();
@@ -67,7 +61,7 @@ public class GraphsListPage {
             clearSearchButton.click();
         }
         inputSearch.setValue(graphName);
-        BaseTest.wait(1000);
+        TestUtils.wait(1000);
         $x("//*[@value = '" + graphName + "']").shouldBe(Condition.visible);
         return new GraphsListPage();
     }
@@ -77,7 +71,7 @@ public class GraphsListPage {
             clearSearchButton.click();
         }
         inputSearch.setValue(title);
-        BaseTest.wait(1000);
+        TestUtils.wait(1000);
         $x("//*[@value = '" + title + "']").shouldBe(Condition.visible);
         return new GraphsListPage();
     }
@@ -87,7 +81,7 @@ public class GraphsListPage {
             clearSearchButton.click();
         }
         inputSearch.setValue(graphName);
-        BaseTest.wait(1000);
+        TestUtils.wait(1000);
         nothingFoundMessage.shouldBe(Condition.visible);
         return new GraphsListPage();
     }
@@ -111,23 +105,19 @@ public class GraphsListPage {
     }
 
     public GraphsListPage checkCreateGraphDisabled(String title, String name, String type, String description, String author) {
-        createButton.shouldBe(Condition.visible).click();
+        createNewGraphButton.shouldBe(Condition.visible).click();
         inputTitleField.setValue(title);
         inputNameField.setValue(name);
-        selectType.click();
-        switch (type) {
-            case "creating":
-                creatingType.click();
-                break;
-            case "action":
-                actionType.click();
-                break;
-            case "service":
-                serviceType.click();
-                break;
-        }
+        selectType(type);
         inputDescriptionField.setValue(description);
         inputAuthorField.setValue(author);
+        if (title.isEmpty()) {
+            titleRequiredFieldHint.shouldBe(Condition.visible);
+        } else if (name.isEmpty()) {
+            nameRequiredFieldHint.shouldBe(Condition.visible);
+        } else if (author.isEmpty()) {
+            authorRequiredFieldHint.shouldBe(Condition.visible);
+        }
         createGraphButton.shouldBe(Condition.disabled);
         cancelButton.click();
         return new GraphsListPage();
@@ -140,5 +130,31 @@ public class GraphsListPage {
         inputSearch.setValue(name);
         $x("//td[@value = '" + name + "']").shouldBe(Condition.visible).click();
         return new GraphPage();
+    }
+
+    public GraphsListPage checkGraphNameValidation(String[] names) {
+        createNewGraphButton.shouldBe(Condition.visible).click();
+        for (String name : names) {
+            inputNameField.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+            inputNameField.setValue(name);
+            graphNameValidationHint.shouldBe(Condition.visible);
+        }
+        cancelButton.click();
+        return new GraphsListPage();
+    }
+
+    private void selectType(String type) {
+        selectType.click();
+        switch (type) {
+            case "creating":
+                creatingType.click();
+                break;
+            case "action":
+                actionType.click();
+                break;
+            case "service":
+                serviceType.click();
+                break;
+        }
     }
 }
