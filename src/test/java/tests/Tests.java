@@ -1,5 +1,6 @@
 package tests;
 
+import com.codeborne.selenide.Condition;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import io.qameta.allure.Allure;
@@ -26,6 +27,8 @@ import static io.qameta.allure.Allure.getLifecycle;
 @ExtendWith(JUnit5EventListener.class)
 @DisplayNameGeneration(CustomDisplayNameGenerator.class)
 public class Tests {
+    public final static Condition activeCnd = Condition.and("visible and enabled", Condition.visible, Condition.enabled);
+    public final static Condition clickableCnd = Condition.not(Condition.cssValue("cursor", "default"));
 
     @BeforeEach
     @SneakyThrows

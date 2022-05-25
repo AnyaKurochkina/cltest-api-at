@@ -5,6 +5,9 @@ import models.orderService.products.Windows;
 import ui.elements.DropDown;
 import ui.elements.Dialog;
 
+import static tests.Tests.activeCnd;
+import static tests.Tests.clickableCnd;
+
 public class WindowsPage extends IProductPage {
 
     public WindowsPage(Windows product) {

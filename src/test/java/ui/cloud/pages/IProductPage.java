@@ -12,6 +12,7 @@ import models.orderService.interfaces.IProduct;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
 import steps.stateService.StateServiceSteps;
+import tests.Tests;
 import ui.elements.Dialog;
 import ui.elements.Table;
 
@@ -22,13 +23,13 @@ import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.$x;
+import static tests.Tests.activeCnd;
+import static tests.Tests.clickableCnd;
 
 @Log4j2
 public abstract class IProductPage {
     TopInfo topInfo;
     IProduct product;
-    Condition activeCnd = Condition.and("visible and enabled", Condition.visible, Condition.enabled);
-    Condition clickableCnd = Condition.not(Condition.cssValue("cursor", "default"));
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");

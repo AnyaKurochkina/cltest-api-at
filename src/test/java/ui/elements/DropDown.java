@@ -5,6 +5,8 @@ import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 
 import static core.helper.StringUtils.$x;
+import static tests.Tests.activeCnd;
+import static tests.Tests.clickableCnd;
 
 public class DropDown implements TypifiedElement{
     @Getter
@@ -19,20 +21,20 @@ public class DropDown implements TypifiedElement{
     }
 
     public void select(String value){
-        element.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover();
+        element.shouldBe(activeCnd).hover();
         if(element.$x(String.format("input[@value='%s']", value)).exists())
             return;
         if(element.getText().equals(value))
             return;
-        element.shouldNotBe(Condition.cssValue("cursor", "default")).click();
+        element.shouldBe(clickableCnd).click();
         $x("//ul/li[text()='{}']", value)
                 .shouldBe(Condition.enabled)
                 .click();
     }
 
     public void selectByValue(String value){
-        element.shouldBe(Condition.visible).shouldBe(Condition.enabled)
-                .hover().shouldNotBe(Condition.cssValue("cursor", "default"));
+        element.shouldBe(activeCnd)
+                .hover().shouldBe(clickableCnd);
         if(element.$x(String.format("input[@value='%s']", value)).exists())
             return;
         element.click();
