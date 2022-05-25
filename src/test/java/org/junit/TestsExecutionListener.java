@@ -8,9 +8,9 @@ import core.utils.Encrypt;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.ObjectPoolService;
-import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import ru.testit.junit5.RunningHandler;
 
 import java.io.File;
@@ -18,11 +18,10 @@ import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.Map;
 
 import static com.codeborne.selenide.Configuration.baseUrl;
-import static core.helper.Configure.ENV;
-import static core.helper.Configure.getAppProp;
-import static ui.selenoidUtils.SelenoidUtils.isRemote;
+import static core.helper.Configure.*;
 
 @Log4j2
 public class TestsExecutionListener implements TestExecutionListener {
@@ -58,6 +57,25 @@ public class TestsExecutionListener implements TestExecutionListener {
         if (!Files.exists(Paths.get(file)) || secret == null)
             return;
         ObjectPoolService.loadEntities(Encrypt.Aes256Decode(Base64.getDecoder().decode(DataFileHelper.read(file)), secret));
+    }
+
+    public static void isRemote() {
+        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
+            log.info("Ui Тесты стартовали на selenoid сервере: " + getAppProp("webdriver.remote.url"));
+            Configuration.remote = getAppProp("webdriver.remote.url");
+            Map<String, String> capabilitiesProp = getAppPropStartWidth("webdriver.capabilities.");
+            DesiredCapabilities capabilities = new DesiredCapabilities();
+            capabilitiesProp.forEach((k, v) -> {
+                String prop = k.replaceAll("webdriver.capabilities.", "");
+                if (v.equals("true") || v.equals("false"))
+                    capabilities.setCapability(prop, Boolean.parseBoolean(v));
+                else
+                    capabilities.setCapability(prop, v);
+            });
+            Configuration.browserCapabilities = capabilities;
+        } else {
+            log.info("Ui Тесты стартовали локально");
+        }
     }
 
     @SneakyThrows

@@ -12,6 +12,7 @@ import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -148,6 +149,7 @@ public class ElasticsearchTest extends Tests {
 
     @TmsLink("425727")
     @Tag("actions")
+    @Disabled
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Elasticsearch product) {

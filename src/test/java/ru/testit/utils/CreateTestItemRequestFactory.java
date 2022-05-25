@@ -5,6 +5,8 @@ import java.lang.reflect.*;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import ru.testit.services.*;
@@ -14,7 +16,9 @@ import ru.testit.annotations.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
+@Log4j2
 public class CreateTestItemRequestFactory {
     private static Map<UniqueTest, CreateTestItemRequest> createTestItemRequests;
 
@@ -55,7 +59,7 @@ public class CreateTestItemRequestFactory {
         try {
             createTestItemRequest.setOutcome(Outcome.getByValue(testParentStepNode.getOutcome()));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("processFinishLaunchUniqueTest", e);
         }
         this.processTestSteps(createTestItemRequest, testParentStepNode);
         this.processUtilsSteps(createTestItemRequest, utilsMethodSteps);
@@ -68,11 +72,11 @@ public class CreateTestItemRequestFactory {
     }
 
     private void processUtilsSteps(final CreateTestItemRequest createTestItemRequest, final Map<MethodType, StepNode> utilsMethodSteps) {
-        for (final MethodType methodType : utilsMethodSteps.keySet()) {
-            if (methodType == MethodType.BEFORE_CLASS || methodType == MethodType.BEFORE_METHOD) {
-                this.processSetUpSteps(createTestItemRequest, utilsMethodSteps.get(methodType));
+        for (final MethodType exMethodType : utilsMethodSteps.keySet()) {
+            if (exMethodType == MethodType.BEFORE_CLASS || exMethodType == MethodType.BEFORE_METHOD) {
+                this.processSetUpSteps(createTestItemRequest, utilsMethodSteps.get(exMethodType));
             } else {
-                this.processTearDownSteps(createTestItemRequest, utilsMethodSteps.get(methodType));
+                this.processTearDownSteps(createTestItemRequest, utilsMethodSteps.get(exMethodType));
             }
         }
     }
@@ -124,9 +128,14 @@ public class CreateTestItemRequestFactory {
 //        return (annotation != null) ? annotation.value() : null;
 //    }
 
-    private String extractTestPlanId(final Method method) {
+    private List<String> extractTestPlanId(final Method method) {
+        final TmsLinks tmsLinks = method.getAnnotation(TmsLinks.class);
+        if(tmsLinks != null)
+            return Arrays.stream(tmsLinks.value()).map(TmsLink::value).collect(Collectors.toList());
         final TmsLink annotation = method.getAnnotation(TmsLink.class);
-        return (annotation != null) ? annotation.value() : null;
+        if(annotation != null)
+            return Collections.singletonList(annotation.value());
+        return null;
     }
 
     private List<InnerLink> extractLinks(final Method method) {

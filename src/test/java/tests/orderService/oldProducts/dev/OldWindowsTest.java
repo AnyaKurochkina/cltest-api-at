@@ -69,16 +69,18 @@ public class OldWindowsTest extends Tests {
         windows.start();
     }
 
-    @Order(5)
-    @TmsLink("841708")
-    @DisplayName("Добавить диск Windows OLD")
-    @Test
-    void addDisk() {
-        if (windows.productStatusIs(STOPPED)) {
-            windows.start();
-        }
-        windows.addDisk("I");
-    }
+//    @Order(5)
+//    @TmsLink("841708")
+//    @DisplayName("Добавить диск Windows OLD")
+//    @Test
+//    void addDisk() {
+//        if (windows.productStatusIs(STOPPED)) {
+//            windows.start();
+//        }
+//        windows.addDisk("I");
+//        windows.unmountDisk("I");
+//        windows.deleteDisk("I");
+//    }
 
     @Order(6)
     @TmsLink("841709")
@@ -101,33 +103,36 @@ public class OldWindowsTest extends Tests {
         }
         windows.addDisk("L");
         windows.unmountDisk("L");
+        windows.mountDisk("L");
+        windows.unmountDisk("L");
         windows.deleteDisk("L");
     }
 
-    @Order(8)
-    @TmsLink("841711")
-    @DisplayName("Подключить диск Windows OLD")
-    @Test
-    void mountDisk() {
-        if (windows.productStatusIs(STOPPED)) {
-            windows.start();
-        }
-        windows.addDisk("S");
-        windows.unmountDisk("S");
-        windows.mountDisk("S");
-    }
+//    @Order(8)
+//    @TmsLink("841711")
+//    @DisplayName("Подключить диск Windows OLD")
+//    @Test
+//    void mountDisk() {
+//        if (windows.productStatusIs(STOPPED)) {
+//            windows.start();
+//        }
+//        windows.addDisk("S");
+//        windows.unmountDisk("S");
+//        windows.mountDisk("S");
+//    }
 
-    @Order(9)
-    @TmsLink("841712")
-    @DisplayName("Отключить диск Windows OLD")
-    @Test
-    void unmountDisk() {
-        if (windows.productStatusIs(STOPPED)) {
-            windows.start();
-        }
-        windows.addDisk("T");
-        windows.unmountDisk("T");
-    }
+//    @Order(9)
+//    @TmsLink("841712")
+//    @DisplayName("Отключить диск Windows OLD")
+//    @Test
+//    void unmountDisk() {
+//        if (windows.productStatusIs(STOPPED)) {
+//            windows.start();
+//        }
+//        windows.addDisk("T");
+//        windows.unmountDisk("T");
+//        windows.deleteDisk("T");
+//    }
 
 //   @Order(10)
 //    @TmsLink("841700")

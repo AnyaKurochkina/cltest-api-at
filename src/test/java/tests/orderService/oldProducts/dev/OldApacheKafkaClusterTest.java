@@ -7,7 +7,10 @@ import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.ApacheKafkaCluster;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 import java.util.Arrays;
@@ -212,7 +215,7 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.restart();
     }
 
-   @Order(14)
+    @Order(14)
     @TmsLink("841729")
     @DisplayName("Изменить параметр топиков Apache Kafka Cluster OLD")
     @Test
@@ -220,11 +223,23 @@ public class OldApacheKafkaClusterTest extends Tests {
         if (kafka.productStatusIs(STOPPED)) {
             kafka.start();
         }
-       kafka.createTopics(Collections.singletonList("PacketTopicNameForEdit"));
-       kafka.editTopics("PacketTopicNameForEdit");
+        kafka.createTopics(Collections.singletonList("PacketTopicNameForEdit"));
+        kafka.editTopics("PacketTopicNameForEdit");
+        kafka.deleteTopics(Collections.singletonList("PacketTopicNameForEdit"));
     }
 
     @Order(15)
+    @TmsLink("883533")
+    @Test
+    @DisplayName("Обновление инсталяции Kafka Cluster OLD")
+    void update() {
+        if (kafka.productStatusIs(STOPPED)) {
+            kafka.start();
+        }
+        kafka.upgradeVersion();
+    }
+
+    @Order(16)
     @TmsLink("841721")
     @DisplayName("Выключить Apache Kafka Cluster OLD")
     @Test
