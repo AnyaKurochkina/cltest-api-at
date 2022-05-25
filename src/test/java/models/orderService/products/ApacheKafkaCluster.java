@@ -17,11 +17,13 @@ import models.subModels.KafkaTopic;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+import steps.references.ReferencesStep;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static core.utils.Waiting.sleep;
 
@@ -74,6 +76,11 @@ public class ApacheKafkaCluster extends IProduct {
         return this;
     }
 
+    private String getIdGeoDistribution() {
+        return Objects.requireNonNull(ReferencesStep.getJsonPathList("tags__contains=" + envType().toUpperCase() + ",kafka&directory__name=geo_distribution")
+                .getString(String.format(".find{it.name == '%s'}.id", "kafka:zookeeper")), "Id geo_distribution not found");
+    }
+
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
@@ -86,6 +93,7 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.platform", platform)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
+                .set("$.order.attrs.layout", getIdGeoDistribution())
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
 
                 .remove("$.order.attrs.ad_logon_grants", isTest())
