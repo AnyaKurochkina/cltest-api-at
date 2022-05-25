@@ -78,7 +78,7 @@ public class ApacheKafkaCluster extends IProduct {
 
     private String getIdGeoDistribution() {
         return Objects.requireNonNull(ReferencesStep.getJsonPathList("tags__contains=" + envType().toUpperCase() + ",kafka&directory__name=geo_distribution")
-                .getString(String.format(".find{it.name == '%s'}.id", "kafka:zookeeper")), "Id geo_distribution not found");
+                .getString("find{it.name == 'kafka:zookeeper'}.id"), "Id geo_distribution not found");
     }
 
     @Override
