@@ -1,21 +1,21 @@
-package ui.cloud.tests;
+package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 
-import static com.codeborne.selenide.Selenide.$x;
+import static core.helper.StringUtils.$x;
 
-public class DropDown {
+public class DropDown implements TypifiedElement{
     @Getter
-    SelenideElement element;
+    protected SelenideElement element;
 
     public DropDown(SelenideElement element) {
         this.element = element;
     }
 
-    public static DropDown name(String name){
-        return new DropDown($x(String.format("//div[label[text()='%s']]/div", name)));
+    public static DropDown byLabel(String name){
+        return new DropDown($x("//div[label[text()='{}']]/div", name));
     }
 
     public void select(String value){
@@ -25,7 +25,7 @@ public class DropDown {
         if(element.getText().equals(value))
             return;
         element.shouldNotBe(Condition.cssValue("cursor", "default")).click();
-        $x(String.format("//ul/li[text()='%s']", value))
+        $x("//ul/li[text()='{}']", value)
                 .shouldBe(Condition.enabled)
                 .click();
     }
@@ -36,7 +36,7 @@ public class DropDown {
         if(element.$x(String.format("input[@value='%s']", value)).exists())
             return;
         element.click();
-        $x(String.format("//ul/li[@data-value='%s']", value))
+        $x("//ul/li[@data-value='{}']", value)
                 .shouldBe(Condition.enabled)
                 .click();
     }

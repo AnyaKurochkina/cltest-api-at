@@ -1,13 +1,9 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
-import io.qameta.allure.Step;
-import models.orderService.interfaces.IProduct;
 import models.orderService.products.Windows;
-import models.portalBack.AccessGroup;
-import ui.cloud.tests.DropDown;
-
-import static com.codeborne.selenide.Selenide.closeWebDriver;
+import ui.elements.DropDown;
+import ui.elements.Dialog;
 
 public class WindowsPage extends IProductPage {
 
@@ -56,8 +52,8 @@ public class WindowsPage extends IProductPage {
         runActionWithParameters("Дополнительные диски", "Добавить диск", () -> {
             Dialog dlg = new Dialog("Добавить диск");
             dlg.setInputValue("Дополнительный объем дискового пространства", "11");
-            DropDown.name("Буква").selectByValue("S");
-            DropDown.name("Файловая система").selectByValue("refs");
+            DropDown.byLabel("Буква").selectByValue("S");
+            DropDown.byLabel("Файловая система").selectByValue("refs");
         });
         waitChangeStatus();
         checkLastAction();

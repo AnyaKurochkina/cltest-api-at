@@ -1,41 +1,42 @@
-package ui.cloud.pages;
+package ui.elements;
 
 
 import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.ex.ElementNotFound;
-import com.codeborne.selenide.ex.ElementShould;
 import core.utils.Waiting;
+import io.qameta.allure.Step;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
-import java.time.Duration;
 import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$$x;
-import static com.codeborne.selenide.Selenide.$x;
+import static core.helper.StringUtils.$x;
 
-public class TablePage {
+public class Table implements TypifiedElement {
     final List<String> headers;
-
     ElementsCollection rows;
     ElementsCollection headersCollection;
     ElementsCollection progressBars = $$x("//div[div[@role='progressbar']]");
 
-    public TablePage(String columnName) {
-        SelenideElement table = $x(String.format("//table[thead/tr/th[.='%s']]", columnName));
+    public Table(String columnName) {
+        SelenideElement table = $x("//table[thead/tr/th[.='{}']]", columnName);
         headersCollection = table.$$x("thead/tr/th");
         rows = table.$$x("tbody/tr");
         headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));
         for (SelenideElement e : progressBars)
-            freeTable(e, columnName);
+            waitLoadTable(e, table);
         headers = headersCollection.shouldBe(CollectionCondition.sizeNotEqual(0)).texts();
     }
 
+    public static Table getTableByColumnName(String columnName) {
+        return new Table(columnName);
+    }
+
+    @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
     public SelenideElement getRowByColumn(String column, String value) {
         int index = headers.indexOf(column);
         if (index < 0)
@@ -47,7 +48,7 @@ public class TablePage {
         return null;
     }
 
-    private void freeTable(SelenideElement webElement, String columnName) {
+    private void waitLoadTable(SelenideElement webElement, SelenideElement table) {
         int width;
         int height;
         Rectangle p1;
@@ -58,7 +59,7 @@ public class TablePage {
             Waiting.sleep(200);
             try {
                 p1 = webElement.toWebElement().getRect();
-                p2 = $x(String.format("//table[thead/tr/th[.='%s']]", columnName)).toWebElement().getRect();
+                p2 = table.toWebElement().getRect();
             } catch (NoSuchElementException | StaleElementReferenceException e) {
                 return;
             }
@@ -73,10 +74,11 @@ public class TablePage {
     }
 
     public String getFirstValueByColumn(String column) {
-        return getFirstRowByColumn(column).getText();
+        return getValueByColumnInFirstRow(column).getText();
     }
 
-    public SelenideElement getFirstRowByColumn(String column) {
+    @Step("Получение значения по колонке '{column}' в первой строке'")
+    public SelenideElement getValueByColumnInFirstRow(String column) {
         int index = headers.indexOf(column);
         return rows.get(0).$$x("td").get(index);
     }

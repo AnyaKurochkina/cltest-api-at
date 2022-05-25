@@ -12,6 +12,8 @@ import models.orderService.interfaces.IProduct;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
 import steps.stateService.StateServiceSteps;
+import ui.elements.Dialog;
+import ui.elements.Table;
 
 import java.time.Duration;
 import java.util.List;
@@ -42,7 +44,7 @@ public abstract class IProductPage {
 
     @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus() {
-        List<String> titles = topInfo.getFirstRowByColumn("Статус").$$x("descendant::*[@title]")
+        List<String> titles = topInfo.getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
                         ProductStatus.isNeedWaiting(e.getAttribute("title"))), Duration.ofMillis(20000 * 1000))
                 .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
@@ -89,19 +91,19 @@ public abstract class IProductPage {
         }
     }
 
-    private static class TopInfo extends TablePage {
+    private static class TopInfo extends Table {
         public TopInfo() {
             super("Защита от удаления");
         }
     }
 
-    private static class History extends TablePage {
+    private static class History extends Table {
         History() {
             super("Дата запуска");
         }
 
         public String lastActionStatus() {
-            return getFirstRowByColumn("Статус").$x("descendant::*[@title]").getAttribute("title");
+            return getValueByColumnInFirstRow("Статус").$x("descendant::*[@title]").getAttribute("title");
         }
     }
 

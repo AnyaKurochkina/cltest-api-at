@@ -18,7 +18,13 @@ public class UiTest extends Tests {
     static Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 
 
-//    @BeforeAll
+    @Test
+    void name() {
+
+        System.out.println(1);
+    }
+
+    //    @BeforeAll
     void beforeAll() {
 //        Selenide.open("https://cloud.vtb.ru/?context=proj-xipzuxr713&type=project&org=vtb");
 //        Selenide.$x("/button[.='kek']").shouldHave(Condition.visible);
@@ -32,6 +38,7 @@ public class UiTest extends Tests {
 //        Selenide.$x("/button[.='kek']").shouldHave(Condition.visible);
 //        int f = 1/0;
         log.info("CustomAfterAll");
+
     }
 
     @BeforeEach
