@@ -74,6 +74,10 @@ public class Configure {
         return properties.getProperty(propertyKey);
     }
 
+    public static String getAppProp(String propertyKey, String defaultValue) {
+        return properties.getProperty(propertyKey, defaultValue);
+    }
+
     public static Map<String, String> getAppPropStartWidth(String propertyKey) {
         return properties.stringPropertyNames().stream()
                 .filter(p -> p.startsWith(propertyKey))

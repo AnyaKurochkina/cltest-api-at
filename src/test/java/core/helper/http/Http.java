@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.restassured.RestAssured;
+import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.SSLConfig;
 import io.restassured.specification.RequestSpecification;
@@ -20,15 +21,17 @@ import org.opentest4j.AssertionFailedError;
 import steps.keyCloak.KeyCloakSteps;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.*;
-import java.nio.charset.Charset;
+import java.net.ConnectException;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
@@ -236,8 +239,18 @@ public class Http {
                     token = "bearer " + KeyCloakSteps.getUserToken(role);
                 specification.header("Authorization", token);
             }
-            if (field.length() > 0)
-                specification.multiPart(field, fileName, bytes);
+            if (field.length() > 0) {
+                String mimeType = URLConnection.guessContentTypeFromName(fileName);
+                if(Objects.isNull(mimeType))
+                    mimeType = "application/octet-stream";
+                specification.multiPart(new MultiPartSpecBuilder(bytes)
+                        .fileName(fileName)
+                        .controlName(field)
+                        .mimeType(mimeType)
+                        .build());
+//                specification.multiPart(field, fileName, bytes);
+
+            }
             if (body.length() > 0)
                 specification.body(body);
 
@@ -270,7 +283,7 @@ public class Http {
                 }
             }
         } catch (Exception e) {
-            if(e instanceof ConnectException)
+            if (e instanceof ConnectException)
                 throw e;
             if (response != null)
                 status = response.getStatusCode();

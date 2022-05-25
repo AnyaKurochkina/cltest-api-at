@@ -34,19 +34,11 @@ public class Response {
     }
 
     public JSONObject toJson() {
-        try {
-            return new JSONObject(toString());
-        } catch (Exception e) {
-            throw new Error(e.getMessage());
-        }
+        return new JSONObject(toString());
     }
 
     public JsonPath jsonPath() {
-        try {
-            return response.jsonPath();
-        } catch (Exception e) {
-            throw new Error(e.getMessage());
-        }
+        return response.jsonPath();
     }
 
     @SneakyThrows

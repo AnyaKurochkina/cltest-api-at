@@ -1,6 +1,8 @@
 package ui.cloud.pages;
 
-public class ProductsPage extends TablePage{
+import ui.elements.Table;
+
+public class ProductsPage extends Table {
 
     public ProductsPage() {
         super("Продукт");

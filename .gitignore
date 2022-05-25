@@ -13,6 +13,8 @@
 *.log.1
 *.log.gz
 
+*.exe
+
 *.configurations.txt
 
 **/application.properties

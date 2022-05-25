@@ -161,6 +161,17 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @TmsLink("883484")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновление инсталяции Kafka {0}")
+    void update(ApacheKafkaCluster product) {
+        product.setProductName(productName);
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.upgradeVersion();
+        }
+    }
+
     @TmsLink("659265")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

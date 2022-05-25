@@ -13,7 +13,6 @@ import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.json.JSONException;
 import org.json.JSONObject;
 import ru.testit.model.request.*;
 import ru.testit.model.response.ConfigurationResponse;
@@ -183,7 +182,9 @@ public class TestITClient {
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
 
         if (createTestItemResponse != null && StringUtils.isNotBlank(createTestItemResponse.getId())) {
-            this.linkAutoTestWithTestCase(createTestItemResponse.getId(), new LinkAutoTestRequest(createTestItemRequest.getTestPlanId()));
+            for (String tmsId : createTestItemRequest.getTestPlanId())
+                this.linkAutoTestWithTestCase(createTestItemResponse.getId(), new LinkAutoTestRequest(tmsId));
+
         }
     }
 
@@ -207,9 +208,11 @@ public class TestITClient {
             return;
         }
         log.info("[{}] Response :{}\nRequest :{}", response.status(), response.toString(), body);
-        if (StringUtils.isNotBlank(createTestItemRequest.getTestPlanId())) {
-            this.linkAutoTestWithTestCase(testId, new LinkAutoTestRequest(createTestItemRequest.getTestPlanId()));
-        }
+        if (Objects.nonNull(createTestItemRequest.getTestPlanId()))
+            if (!createTestItemRequest.getTestPlanId().isEmpty()) {
+                for (String tmsId : createTestItemRequest.getTestPlanId())
+                    this.linkAutoTestWithTestCase(testId, new LinkAutoTestRequest(tmsId));
+            }
     }
 
     private void linkAutoTestWithTestCase(final String autoTestId, final LinkAutoTestRequest linkAutoTestRequest) {
@@ -254,7 +257,7 @@ public class TestITClient {
     }
 
     static void disableTestsIsBadTestRun(Throwable e) {
-        if(e instanceof NullPointerException)
+        if (e instanceof NullPointerException)
             return;
         if (e.getMessage().contains("the StateName is already Stopped") || e.getMessage().contains("TestRun is stopped!")) {
             Configure.setAppProp("testIt", "false");

@@ -3,8 +3,8 @@ package ui.t1.tests;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ui.uiExtesions.ConfigExtension;
 import ui.t1.steps.*;
+import ui.uiExtesions.ConfigExtension;
 
 import java.util.Locale;
 
