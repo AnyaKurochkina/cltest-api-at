@@ -246,7 +246,6 @@ public class Http {
                 specification.multiPart(new MultiPartSpecBuilder(bytes)
                         .fileName(fileName)
                         .controlName(field)
-                        .controlName("file")
                         .mimeType(mimeType)
                         .build());
 //                specification.multiPart(field, fileName, bytes);

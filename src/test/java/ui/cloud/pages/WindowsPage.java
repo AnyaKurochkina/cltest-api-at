@@ -2,8 +2,8 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import models.orderService.products.Windows;
-import ui.elements.DropDown;
 import ui.elements.Dialog;
+import ui.elements.DropDown;
 
 import static tests.Tests.activeCnd;
 import static tests.Tests.clickableCnd;
