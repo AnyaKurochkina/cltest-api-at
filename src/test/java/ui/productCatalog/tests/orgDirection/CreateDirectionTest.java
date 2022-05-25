@@ -1,8 +1,13 @@
 package ui.productCatalog.tests.orgDirection;
 
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.productCatalog.OrgDirection;
+import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.productCatalog.pages.MainPage;
@@ -10,6 +15,10 @@ import ui.productCatalog.tests.BaseTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Tag("product_catalog_ui")
+@Epic("Конструктор")
+@Feature("Направления")
+@DisabledIfEnv("prod")
 public class CreateDirectionTest extends BaseTest {
     public static final String DIRECTION_TITLE = "at_ui_create_direction_title";
     public static final String DIRECTION_NAME = "at_ui_create_direction_name";
@@ -19,6 +28,7 @@ public class CreateDirectionTest extends BaseTest {
 
     @Test
     @DisplayName("Создание направления")
+    @TmsLink("486332")
     public void createDirections() {
         if (steps.isExists(DIRECTION_NAME)) {
             steps.deleteByName(DIRECTION_NAME, GetOrgDirectionListResponse.class);

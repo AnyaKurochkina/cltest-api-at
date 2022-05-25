@@ -9,14 +9,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
+import tests.Tests;
 import ui.productCatalog.pages.LoginPage;
-
-import java.util.concurrent.TimeUnit;
 
 import static core.helper.Configure.getAppProp;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-abstract public class BaseTest {
+abstract public class BaseTest extends Tests {
 
     private static final String login = getAppProp("user.login");
     private static final String password = getAppProp("user.password");
