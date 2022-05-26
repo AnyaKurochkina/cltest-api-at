@@ -28,7 +28,7 @@ import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static io.qameta.allure.Allure.getLifecycle;
 
 @Log4j2
-public class ConfigExtension implements InvocationInterceptor, TestExecutionListener, AfterEachCallback, BeforeAllCallback {
+public class InterceptTestExtension implements InvocationInterceptor, TestExecutionListener, AfterEachCallback, BeforeAllCallback {
     private static final List<String> runBeforeAll = Collections.synchronizedList(new ArrayList<>());
     private static final List<Test> allTests = Collections.synchronizedList(new ArrayList<>());
 

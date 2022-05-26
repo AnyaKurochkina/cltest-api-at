@@ -14,6 +14,9 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GraphItem{
+	@JsonProperty("is_sequential")
+	private Boolean isSequential;
+
 	@JsonProperty("hold")
 	private Boolean hold;
 
