@@ -26,7 +26,8 @@
         }
       ],
       "kafka_version": "2.13-2.4.1",
-      "geo_distribution": false,
+      "layout": "",
+      "geo_distribution": true,
       "ad_integration": true,
       "ad_logon_grants": [
         {
