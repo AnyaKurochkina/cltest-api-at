@@ -7,11 +7,11 @@ import ui.t1.steps.AuthSteps;
 import ui.t1.steps.MainSteps;
 import ui.t1.steps.OrgStructureSteps;
 import ui.t1.steps.OrganizationSteps;
-import ui.uiExtesions.ConfigExtension;
+import ui.uiExtesions.InterceptTestExtension;
 
 import static com.codeborne.selenide.Selenide.open;
 
-@ExtendWith(ConfigExtension.class)
+@ExtendWith(InterceptTestExtension.class)
 public class VmWareOrganizationsTests {
 
     @DisplayName("Создание и удаление VmWare организации")
