@@ -55,4 +55,7 @@ public class CreateGraphResponse{
 
 	@JsonProperty("update_dt")
 	private String update_dt;
+
+	@JsonProperty("is_sequential")
+	private Boolean isSequential;
 }

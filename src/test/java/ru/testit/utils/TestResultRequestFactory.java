@@ -1,12 +1,14 @@
 package ru.testit.utils;
 
-import ru.testit.junit5.*;
-import org.apache.commons.lang3.exception.*;
+import core.helper.Configure;
+import core.helper.DataFileHelper;
+import io.qameta.allure.Allure;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import ru.testit.junit5.MethodType;
 import ru.testit.model.request.*;
-import ru.testit.services.*;
-import tests.Tests;
+import ru.testit.services.LinkItem;
+import ru.testit.services.TestITClient;
 
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class TestResultRequestFactory {
@@ -33,28 +35,40 @@ public class TestResultRequestFactory {
         currentTest.setConfigurationId(test.getConfigurationId());
         this.processTestSteps(currentTest, step, null);
         this.processUtilsMethodsSteps(currentTest, utilsMethodSteps);
-        if(currentTest.getMessage() != null)
+        if (currentTest.getMessage() != null)
             currentTest.setMessage(currentTest.getMessage().replaceAll("\n", "\t \n"));
         req.getTestResults().add(currentTest);
         String testResultId = TestITClient.sendTestResult(req);
 
-        if(Tests.isAttachLog()) {
-            Attachment log = new Attachment();
-            log.setFileName("test-log.log");
-            log.setBytes(Tests.getAttachLog().getBytes());
-            if (log.getBytes().length > 0)
-                step.getAttachments().add(log);
-        }
+//        if (Tests.isAttachLog()) {
+//            Attachment log = new Attachment();
+//            log.setFileName("test-log.log");
+//            log.setBytes(Tests.getAttachLog().getBytes());
+//            if (log.getBytes().length > 0)
+//                step.getAttachments().add(log);
 
-        List<Map<String, String>> attachmentList = new ArrayList<>();
-        Iterator<Attachment> iterator = step.getAttachments().iterator();
+//        String stepId = Allure.getLifecycle().getCurrentTestCaseOrStep().orElse(null);
+//        if (Objects.nonNull(stepId)) {
+//            final List<io.qameta.allure.model.Attachment> attachments = new ArrayList<>();
+//            Allure.getLifecycle().updateTestCase(stepId, s -> attachments.addAll(s.getAttachments()));
+//            for (io.qameta.allure.model.Attachment attachment : attachments) {
+//                Attachment attach = new Attachment();
+//                attach.setFileName(attachment.getName());
+//                attach.setBytes(DataFileHelper.readBytes(Configure.getAppProp("allure.results") + attachments.get(0).getSource()));
+//                step.getAttachments().add(attach);
+//            }
+//        }
+
+
+//        List<Map<String, String>> attachmentList = new ArrayList<>();
+        Iterator<Attachment> iterator = UniqueTest.getAndClearAttachmentList().iterator();
         while (iterator.hasNext()) {
             Attachment attachment = iterator.next();
             attachment.setId(TestITClient.sendAttachment(attachment, testResultId));
 
-            Map<String, String> attachmentsMap = new HashMap<>();
-            attachmentsMap.put("id", attachment.getId());
-            attachmentList.add(attachmentsMap);
+//            Map<String, String> attachmentsMap = new HashMap<>();
+//            attachmentsMap.put("id", attachment.getId());
+//            attachmentList.add(attachmentsMap);
         }
 //        currentTest.setAttachments(attachmentList);
 
@@ -68,12 +82,18 @@ public class TestResultRequestFactory {
 //        TestITClient.sendTestResult(req);
     }
 
+    private List<Attachment> getAttachmentList(StepNode stepNode){
+        List<Attachment> list = new ArrayList<>(stepNode.getAttachments());
+        stepNode.getChildrens().forEach(c -> list.addAll(getAttachmentList(c)));
+        return list;
+    }
+
     private void processUtilsMethodsSteps(final TestResultRequest currentTest, final Map<MethodType, StepNode> utilsMethodSteps) {
-        for (final MethodType methodType : utilsMethodSteps.keySet()) {
-            if (methodType == MethodType.BEFORE_CLASS || methodType == MethodType.BEFORE_METHOD) {
-                this.processSetUpSteps(currentTest, utilsMethodSteps.get(methodType));
+        for (final MethodType exMethodType : utilsMethodSteps.keySet()) {
+            if (exMethodType == MethodType.BEFORE_CLASS || exMethodType == MethodType.BEFORE_METHOD) {
+                this.processSetUpSteps(currentTest, utilsMethodSteps.get(exMethodType));
             } else {
-                this.processTearDownSteps(currentTest, utilsMethodSteps.get(methodType));
+                this.processTearDownSteps(currentTest, utilsMethodSteps.get(exMethodType));
             }
         }
     }

@@ -21,7 +21,7 @@ public class CreateTestItemRequest
     private List<InnerLink> links;
     private List<Label> labels;
     @JsonIgnore
-    private String testPlanId;
+    private List<String> testPlanId;
     @JsonIgnore
     private Outcome outcome;
     
@@ -121,11 +121,11 @@ public class CreateTestItemRequest
         this.description = description;
     }
     
-    public String getTestPlanId() {
+    public List<String> getTestPlanId() {
         return this.testPlanId;
     }
     
-    public void setTestPlanId(final String testPlanId) {
+    public void setTestPlanId(final List<String> testPlanId) {
         this.testPlanId = testPlanId;
     }
     

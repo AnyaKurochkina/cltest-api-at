@@ -26,6 +26,8 @@
         }
       ],
       "kafka_version": "2.13-2.4.1",
+      "layout": "",
+      "geo_distribution": true,
       "ad_integration": true,
       "ad_logon_grants": [
         {
@@ -35,7 +37,6 @@
           ]
         }
       ],
-      "kafka_node_number": "1:0",
       "kafka_log_retention_minutes": 30
     },
     "count": 1,

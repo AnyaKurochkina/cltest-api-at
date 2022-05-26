@@ -18,7 +18,7 @@ public class StateServiceSteps extends Steps {
                     .get("/actions/?order_id={}", orderId)
                     .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {
-            log.error(e.getMessage());
+            log.error(e.toString());
         }
         return traceback;
     }

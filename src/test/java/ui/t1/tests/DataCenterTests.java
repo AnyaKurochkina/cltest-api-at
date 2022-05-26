@@ -3,15 +3,15 @@ package ui.t1.tests;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ui.uiExtesions.ConfigExtension;
 import ui.t1.steps.*;
+import ui.uiExtesions.InterceptTestExtension;
 
 import java.util.Locale;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
-@ExtendWith(ConfigExtension.class)
+@ExtendWith(InterceptTestExtension.class)
 public class DataCenterTests {
 
     @DisplayName("Создание и удаление Дата центра")
