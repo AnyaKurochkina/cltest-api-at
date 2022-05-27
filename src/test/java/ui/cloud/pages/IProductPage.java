@@ -108,4 +108,27 @@ public abstract class IProductPage {
         }
     }
 
+    protected class VirtualMachine extends Table {
+        public static final String POWER_STATUS_DELETED = "Удалено";
+        public static final String POWER_STATUS_ON = "Включено";
+        public static final String POWER_STATUS_OFF = "Выключено";
+
+        public VirtualMachine() {
+            super("Питание");
+        }
+
+        public VirtualMachine open(){
+            btnGeneralInfo.click();
+            return this;
+        }
+
+        public String getPowerStatus(){
+            return getValueByColumnInFirstRow("Питание").$x("descendant::*[@title]").getAttribute("title");
+        }
+
+        public void checkPowerStatus(String status){
+            Assertions.assertEquals(status, new VirtualMachine().getPowerStatus(), "Статус питания не соотвествует ожидаемому");
+        }
+    }
+
 }
