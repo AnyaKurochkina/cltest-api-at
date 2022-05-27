@@ -1,17 +1,17 @@
 package ui.uiExtesions;
 
-import com.codeborne.selenide.logevents.SelenideLogger;
 import core.helper.Configure;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
-import io.qameta.allure.selenide.AllureSelenide;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -24,11 +24,10 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static io.qameta.allure.Allure.getLifecycle;
 
 @Log4j2
-public class InterceptTestExtension implements InvocationInterceptor, TestExecutionListener, AfterEachCallback, BeforeAllCallback {
+public class InterceptTestExtension implements InvocationInterceptor, TestExecutionListener {
     private static final List<String> runBeforeAll = Collections.synchronizedList(new ArrayList<>());
     private static final List<Test> allTests = Collections.synchronizedList(new ArrayList<>());
 
@@ -127,7 +126,7 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
 
     public void runEachMethod(final ExtensionContext extensionContext, Class<? extends Annotation> clazz) throws Throwable {
         if (clazz.equals(AfterEach.class))
-            afterEach(extensionContext);
+            new ConfigExtension().afterEach(extensionContext);
         List<Method> list = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods()).filter(method -> method.isAnnotationPresent(clazz)).collect(Collectors.toList());
         for (Method m : list) {
             try {
@@ -161,17 +160,6 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
             children.addAll(getChildren(testPlan, i));
         }
         return children;
-    }
-
-    @Override
-    public void beforeAll(ExtensionContext extensionContext) {
-        SelenideLogger.addListener("AllureSelenide",
-                new AllureSelenide().screenshots(true).savePageSource(true));
-    }
-
-    @Override
-    public void afterEach(ExtensionContext extensionContext) {
-        closeWebDriver();
     }
 
 
