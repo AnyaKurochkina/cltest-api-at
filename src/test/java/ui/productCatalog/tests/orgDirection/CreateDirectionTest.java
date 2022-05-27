@@ -6,6 +6,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.productCatalog.OrgDirection;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import ui.productCatalog.pages.MainPage;
 import ui.productCatalog.tests.BaseTest;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("product_catalog_ui")
@@ -79,11 +81,54 @@ public class CreateDirectionTest extends BaseTest {
                 .deleteActionMenu()
                 .inputInvalidId("invalid-id45")
                 .fillIdAndDelete()
-                .isNotExist(name));
+                .isNotExist(name), "Направление существует.");
+    }
+
+    @Test
+    @DisplayName("Удалить из формы редактирования направления")
+    public void deleteDirectionFromRedactor() {
+        String name = "at_ui_delete_direction_from_redactor";
+        String title = "at_ui_delete_direction_from_redactor_title";
+        String description = "at_ui_delete_direction_from_redactor_description";
+        if (steps.isExists(name)) {
+            steps.deleteByName(name, GetOrgDirectionListResponse.class);
+        }
+        assertFalse(new MainPage()
+                .goToOrgDirectionsPage()
+                .createDirection()
+                .fillAndSave(title, name, description)
+                .openOrgDirectionPage(name)
+                .deleteDirection()
+                .inputInvalidId("invalid-id45")
+                .fillIdAndDelete()
+                .isNotExist(name), "Направление существует.");
+    }
+
+    @Test
+    @DisplayName("Создать копию направления")
+    public void copyDirection() {
+        String name = "at_ui_copy_direction";
+        String title = "at_ui_copy_direction_title";
+        String description = "at_ui_copy_direction_description";
+        OrgDirection.builder()
+                .orgDirectionName(name)
+                .title(title)
+                .description(description)
+                .build()
+                .createObject();
+        assertTrue(new MainPage()
+                .goToOrgDirectionsPage()
+                .findDirectionByName(name)
+                .clickActionMenu(name)
+                .copyActionMenu()
+                .isFieldsCompare(name, title, description), "Поля не равны");
+        String cloneName = name + "-clone";
+        steps.deleteByName(cloneName, GetOrgDirectionListResponse.class);
     }
 
     @Test
     @DisplayName("Просмотр списка направлений и поиск")
+    @Disabled
     public void viewDirectionsListAndSearch() {
         new MainPage()
                 .goToOrgDirectionsPage()

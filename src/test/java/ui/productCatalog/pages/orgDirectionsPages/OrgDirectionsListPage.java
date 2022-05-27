@@ -13,9 +13,9 @@ public class OrgDirectionsListPage {
     private final SelenideElement nameColumn = $x("//th[text()='Код направления']");
     private final SelenideElement descriptionColumn = $x("//th[text()='Описание']");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
+    private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private final SelenideElement id = $x("//p/b");
     private final SelenideElement inputId = $x("//input[@name = 'id']");
- //   private final SelenideElement deleteButton = $x("//span[text() = 'Удалить']");
     private final SelenideElement deleteButton = $x("//button[@type ='submit']");
     private final SelenideElement noData = $x("//*[text() = 'Нет данных для отображения']");
 
@@ -55,6 +55,11 @@ public class OrgDirectionsListPage {
     public OrgDirectionsListPage deleteActionMenu() {
         deleteAction.click();
         return this;
+    }
+
+    public OrgDirectionPage copyActionMenu() {
+        copyAction.click();
+        return new OrgDirectionPage();
     }
 
     public OrgDirectionsListPage fillIdAndDelete() {
