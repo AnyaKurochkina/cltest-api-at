@@ -2,6 +2,8 @@ package ui.productCatalog.pages;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import core.enums.Role;
+import models.authorizer.GlobalUser;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.Configure.getAppProp;
@@ -25,5 +27,10 @@ public class LoginPage {
         userField.setValue(user);
         passField.setValue(password);
         loginButton.click();
+    }
+
+    public void singIn(){
+        GlobalUser user = GlobalUser.builder().role(Role.ADMIN).build().createObject();
+        login(user.getUsername(), user.getPassword());
     }
 }
