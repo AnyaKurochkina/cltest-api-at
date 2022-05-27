@@ -6,14 +6,13 @@ import models.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import tests.Tests;
-import ui.uiExtesions.InterceptTestExtension;
+import ui.uiExtesions.ConfigExtension;
 
 @Log4j2
 //@ExtendWith(CustomBeforeAllAndAfterAll.class)
-@ExtendWith(InterceptTestExtension.class)
+@ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ExtendWith(InterceptTestExtension.class)
 public class UiTest extends Tests {
     static Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 
@@ -32,7 +31,7 @@ public class UiTest extends Tests {
         log.info("CustomBeforeAll");
     }
 
-//    @AfterAll
+    //    @AfterAll
     void afterAll() {
 //        Selenide.open("https://cloud.vtb.ru/?context=proj-xipzuxr713&type=project&org=vtb");
 //        Selenide.$x("/button[.='kek']").shouldHave(Condition.visible);
