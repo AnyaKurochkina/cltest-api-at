@@ -1,5 +1,6 @@
 package ui.cloud.tests;
 
+import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.orderService.products.Windows;
@@ -16,15 +17,20 @@ import ui.uiExtesions.InterceptTestExtension;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags({@Tag("ui_windows")})
 public class UiWindowsTest extends Tests {
-    Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+    Windows product;
 
+    //TODO: пока так :)
     public UiWindowsTest() {
+        if (Configure.ENV.equals("prod"))
+            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+        else
+            product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
     }
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach(){
+    void beforeEach() {
         new LoginPage(product.getProjectId())
                 .singIn();
     }
@@ -42,6 +48,7 @@ public class UiWindowsTest extends Tests {
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
         orderPage.getRoleServer().selectByValue(product.getRole());
+        orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
         orderPage.orderClick();

@@ -1,5 +1,6 @@
 package ui.elements;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
 
@@ -8,6 +9,7 @@ public class Input implements TypifiedElement{
 
     public Input(SelenideElement input) {
         this.input = input;
+        input.shouldBe(Condition.visible);
     }
 
     public void setValue(String value){

@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 import org.openqa.selenium.Keys;
 import ui.elements.DropDown;
+import ui.elements.Input;
 
 import java.util.UUID;
 
@@ -18,15 +19,13 @@ public class WindowsOrderPage extends Product {
     DropDown roleServer = DropDown.byLabel("Роль сервера. (данное поле влияет на именование)");
     DropDown dataCentre = DropDown.byLabel("Дата-центр");
     DropDown segment = DropDown.byLabel("Сетевой сегмент");
+    DropDown configure = DropDown.byLabel("Конфигурация Core/RAM");
     SelenideElement labelInput = $x("//div[label[starts-with(. , 'Метка')]]/div/input");
 
     final String label = UUID.randomUUID().toString().substring(17);
 
     public WindowsOrderPage() {
-        labelInput.shouldBe(Condition.enabled);
-        labelInput.sendKeys(Keys.CONTROL + "A");
-        labelInput.sendKeys(Keys.BACK_SPACE);
-        labelInput.setValue(label);
+        new Input(labelInput).setValue(label);
         platform.getElement().shouldBe(Condition.enabled);
     }
 }
