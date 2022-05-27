@@ -12,7 +12,7 @@ public class CopyGraphTest extends GraphBaseTest {
         String copyName = NAME + "-clone";
         new MainPage().goToGraphsPage()
                 .findGraphByName(NAME)
-                .copyGraph()
+                .copyGraph(NAME)
                 .findGraphByName(copyName)
                 .openGraphPage(copyName)
                 .checkGraphAttributes(copyName, TITLE, "1.0.0");
