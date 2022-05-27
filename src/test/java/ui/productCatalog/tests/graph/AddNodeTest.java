@@ -1,5 +1,7 @@
 package ui.productCatalog.tests.graph;
 
+import io.qameta.allure.Step;
+import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,18 +25,28 @@ public class AddNodeTest extends GraphBaseTest {
     }
 
     @Test
-    @DisplayName("Добавление узла графа (подграф) с указанием обязательных параметров")
+    @TmsLink("489507")
+    @Step("Добавление узла графа (подграф)")
+    public void addNodeSubgraphTest() {
+        addNodeSubgraphWithRequiredParameters();
+        addNodeSubgraphWithAllParameters();
+        addNodeSubgraphWithoutRequiredParameters();
+        addNodeSubgraphWithIncorrectParameters();
+        addNodeSubgraphWithNonUniqueName();
+    }
+
+    @Step("Добавление узла графа (подграф) с указанием обязательных параметров")
     public void addNodeSubgraphWithRequiredParameters() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
         new MainPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeSubgraph(node)
-                .checkNodeAttributes(node);
+                .checkNodeAttributes(node)
+                .deleteNode(node);
     }
 
-    @Test
-    @DisplayName("Добавление узла графа (подграф) с указанием всех параметров")
+    @Step("Добавление узла графа (подграф) с указанием всех параметров")
     public void addNodeSubgraphWithAllParameters() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
         node.setOutput("{\"out_param\":\"test_value\"}");
@@ -45,6 +57,50 @@ public class AddNodeTest extends GraphBaseTest {
                 .openGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeSubgraph(node)
-                .checkNodeAttributes(node);
+                .checkNodeAttributes(node)
+                .deleteNode(node);
+    }
+
+    @Step("Добавление узла без заполнения обязательных полей")
+    public void addNodeSubgraphWithoutRequiredParameters() {
+        SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
+        node.setName("");
+        new MainPage().goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab()
+                .checkAddNodeSubgraphDisabled(node);
+        node.setName("test_node");
+        node.setDescription("");
+        new MainPage().goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab()
+                .checkAddNodeSubgraphDisabled(node);
+        node.setDescription("test_description");
+        node.setSubgraphName("");
+        new MainPage().goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab()
+                .checkAddNodeSubgraphDisabled(node);
+    }
+
+    @Step("Добавление узла графа (подграф) с указанием некорректных значений параметров")
+    public void addNodeSubgraphWithIncorrectParameters() {
+        SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
+        node.setNumber("0");
+        node.setTimeout("0");
+        new MainPage().goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab()
+                .checkAddNodeSubgraphDisabled(node);
+    }
+
+    @Step("Добавление узла графа (подграф) с неуникальным именем")
+    public void addNodeSubgraphWithNonUniqueName() {
+        SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
+        new MainPage().goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab()
+                .addNodeSubgraph(node)
+                .checkAddNodeSubgraphWithNonUniqueNameDisabled(node);
     }
 }

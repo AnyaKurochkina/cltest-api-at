@@ -1,5 +1,7 @@
 package ui.productCatalog.tests.graph;
 
+import io.qameta.allure.Step;
+import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.productCatalog.pages.MainPage;
@@ -8,7 +10,16 @@ public class CreateGraphTest extends GraphBaseTest {
     private static final String name = "at_ui_create_graph_test";
 
     @Test
-    @DisplayName("Просмотр списка графов, создание, поиск")
+    @TmsLink("486578")
+    @DisplayName("Создание графа")
+    public void createGraphTest() {
+        createGraph();
+        createGraphWithoutRequiredParameters();
+        createGraphWithNonUniqueName();
+        checkGraphNameValidation();
+    }
+
+    @Step("Просмотр списка графов, создание, поиск")
     public void createGraph() {
         new MainPage().goToGraphsPage()
                 .checkGraphsListHeaders()
@@ -20,8 +31,7 @@ public class CreateGraphTest extends GraphBaseTest {
         deleteGraph(name);
     }
 
-    @Test
-    @DisplayName("Создание графа без заполнения обязательных полей")
+    @Step("Создание графа без заполнения обязательных полей")
     public void createGraphWithoutRequiredParameters() {
         new MainPage().goToGraphsPage()
                 .checkCreateGraphDisabled("", NAME, "creating", DESCRIPTION, AUTHOR)
@@ -29,15 +39,13 @@ public class CreateGraphTest extends GraphBaseTest {
                 .checkCreateGraphDisabled(TITLE, NAME, "creating", DESCRIPTION, "");
     }
 
-    @Test
-    @DisplayName("Создание графа с неуникальным кодом графа")
+    @Step("Создание графа с неуникальным кодом графа")
     public void createGraphWithNonUniqueName() {
         new MainPage().goToGraphsPage()
                 .checkCreateGraphDisabled(TITLE, NAME, "action", DESCRIPTION, AUTHOR);
     }
 
-    @Test
-    @DisplayName("Создание графа с недопустимым кодом")
+    @Step("Создание графа с недопустимым кодом")
     public void checkGraphNameValidation() {
         new MainPage().goToGraphsPage()
                 .checkGraphNameValidation(new String[] {"Test_name", "test name", "тест", "test_name$"});

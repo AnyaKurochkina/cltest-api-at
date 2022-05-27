@@ -19,7 +19,6 @@ public class GraphsListPage {
     private final SelenideElement serviceType = $x("//*[@data-value='service']");
     private final SelenideElement createGraphButton = $x("//*[text()='Создать']/..");
     private final SelenideElement inputSearch = $x("//input[@placeholder = 'Поиск']");
-    private final SelenideElement actionMenuButton = $x("(//*[@id='actions-menu-button'])[1]");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private final SelenideElement graphId = $x("//p/b");
@@ -46,14 +45,14 @@ public class GraphsListPage {
         inputDescriptionField.setValue(description);
         inputAuthorField.setValue(author);
         createGraphButton.click();
-        return new GraphsListPage();
+        return this;
     }
 
-    public GraphsListPage copyGraph() {
-        actionMenuButton.click();
+    public GraphsListPage copyGraph(String name) {
+        openActionMenu(name);
         copyAction.click();
         cancelButton.shouldBe(Condition.enabled).click();
-        return new GraphsListPage();
+        return this;
     }
 
     public GraphsListPage findGraphByName(String graphName) {
@@ -73,7 +72,7 @@ public class GraphsListPage {
         inputSearch.setValue(title);
         TestUtils.wait(1000);
         $x("//*[@value = '" + title + "']").shouldBe(Condition.visible);
-        return new GraphsListPage();
+        return this;
     }
 
     public GraphsListPage checkGraphNotFound(String graphName) {
@@ -83,16 +82,20 @@ public class GraphsListPage {
         inputSearch.setValue(graphName);
         TestUtils.wait(1000);
         nothingFoundMessage.shouldBe(Condition.visible);
-        return new GraphsListPage();
+        return this;
     }
 
-    public GraphsListPage deleteFirstGraphInList() {
-        actionMenuButton.click();
+    public GraphsListPage deleteGraph(String name) {
+        openActionMenu(name);
         deleteAction.click();
         String id = graphId.getText();
         idInput.setValue(id);
         deleteButton.click();
-        return new GraphsListPage();
+        return this;
+    }
+
+    private void openActionMenu(String graphName) {
+        $x("//td[text() = '"+graphName+"']//parent::tr//button[@id = 'actions-menu-button']").click();
     }
 
     public GraphsListPage checkGraphsListHeaders() {
@@ -101,7 +104,7 @@ public class GraphsListPage {
         $x("//table[@class='MuiTable-root']//th[3]").shouldHave(Condition.exactText("Дата создания"));
         $x("//table[@class='MuiTable-root']//th[4]").shouldHave(Condition.exactText("Версия"));
         $x("//table[@class='MuiTable-root']//th[5]").shouldHave(Condition.exactText("Описание"));
-        return new GraphsListPage();
+        return this;
     }
 
     public GraphsListPage checkCreateGraphDisabled(String title, String name, String type, String description, String author) {
@@ -113,9 +116,11 @@ public class GraphsListPage {
         inputAuthorField.setValue(author);
         if (title.isEmpty()) {
             titleRequiredFieldHint.shouldBe(Condition.visible);
-        } else if (name.isEmpty()) {
+        }
+        if (name.isEmpty()) {
             nameRequiredFieldHint.shouldBe(Condition.visible);
-        } else if (author.isEmpty()) {
+        }
+        if (author.isEmpty()) {
             authorRequiredFieldHint.shouldBe(Condition.visible);
         }
         createGraphButton.shouldBe(Condition.disabled);
@@ -136,7 +141,7 @@ public class GraphsListPage {
         createNewGraphButton.shouldBe(Condition.visible).click();
         for (String name : names) {
             inputNameField.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
-            inputNameField.setValue(name);
+            inputNameField.setValue(name).sendKeys("a");
             graphNameValidationHint.shouldBe(Condition.visible);
         }
         cancelButton.click();

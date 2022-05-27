@@ -16,7 +16,7 @@ public class GraphPage {
     private final SelenideElement dialogCancelButton = $x("//div[@role='dialog']//span[text()='Отмена']/parent::button");
     private final SelenideElement dialogSaveButton = $x("//div[@role='dialog']//span[text()='Сохранить']/parent::button");
     private final SelenideElement saveNextPatchVersionCheckbox = $x("//input[@name='saveAsNextVersion']");
-    private final SelenideElement newVersionField = $x("//input[@name='newVersion']");
+    private final SelenideElement newVersionInput = $x("//input[@name='newVersion']");
     private final SelenideElement descriptionField = $x("//textarea[@name='description']");
     private final SelenideElement viewJSONButton = $x("//span[text()='JSON']/parent::button");
     private final SelenideElement expandJSONView = $x("//button[@aria-label='fullscreen']");
@@ -48,12 +48,21 @@ public class GraphPage {
         return new GraphPage();
     }
 
+    public GraphPage checkAndSaveNextManualVersion(String version) {
+        TestUtils.scrollToTheBottom();
+        saveButton.shouldBe(Condition.enabled).click();
+        saveNextPatchVersionCheckbox.click();
+        newVersionInput.shouldHave(Condition.exactValue(version));
+        dialogSaveButton.click();
+        return new GraphPage();
+    }
+
     public GraphPage saveGraphWithManualVersion(String newVersion) {
         TestUtils.scrollToTheBottom();
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
-        newVersionField.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
-        newVersionField.setValue(newVersion);
+        newVersionInput.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+        newVersionInput.setValue(newVersion);
         dialogSaveButton.click();
         return new GraphPage();
     }
@@ -62,8 +71,8 @@ public class GraphPage {
         TestUtils.scrollToTheBottom();
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
-        newVersionField.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
-        newVersionField.setValue(newVersion);
+        newVersionInput.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+        newVersionInput.setValue(newVersion);
         dialogSaveButton.shouldBe(Condition.disabled);
         $x("//p[text()[contains(., 'Версия должна быть выше, чем')]]").shouldBe(Condition.visible);
         dialogCancelButton.click();
