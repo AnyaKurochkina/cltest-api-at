@@ -1,4 +1,4 @@
-package ui.productCatalog.tests.graph;
+package ui.cloud.tests.productCatalog.graph;
 
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import models.productCatalog.Graph;
@@ -6,7 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import steps.productCatalog.ProductCatalogSteps;
-import ui.productCatalog.tests.BaseTest;
+import ui.cloud.tests.productCatalog.BaseTest;
 
 import java.util.UUID;
 

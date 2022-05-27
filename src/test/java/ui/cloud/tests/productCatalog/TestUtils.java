@@ -1,4 +1,4 @@
-package ui.productCatalog.tests;
+package ui.cloud.tests.productCatalog;
 
 import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.JavascriptExecutor;

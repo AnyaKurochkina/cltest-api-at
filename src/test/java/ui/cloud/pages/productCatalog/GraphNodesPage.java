@@ -1,10 +1,10 @@
-package ui.productCatalog.pages;
+package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
-import ui.productCatalog.models.SubgraphNode;
-import ui.productCatalog.tests.TestUtils;
+import ui.uiModels.SubgraphNode;
+import ui.cloud.tests.productCatalog.TestUtils;
 
 import static com.codeborne.selenide.Selenide.$x;
 
