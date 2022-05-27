@@ -1,0 +1,165 @@
+package ui.productCatalog.pages;
+
+import com.codeborne.selenide.*;
+import org.openqa.selenium.Keys;
+import ui.productCatalog.tests.TestUtils;
+
+import static com.codeborne.selenide.Selenide.$x;
+
+public class GraphsListPage {
+    private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы']");
+    private final SelenideElement createNewGraphButton = $x("//div[@data-testid = 'graph-list-add-button']//button");
+    private final SelenideElement inputTitleField = $x("//*[@name ='title']");
+    private final SelenideElement inputNameField = $x("//*[@name ='name']");
+    private final SelenideElement inputDescriptionField = $x("//input[@name='description']");
+    private final SelenideElement inputAuthorField = $x("//*[@name ='author']");
+    private final SelenideElement selectType = $x("//div[@aria-labelledby='type']");
+    private final SelenideElement actionType = $x("//*[@data-value='action']");
+    private final SelenideElement creatingType = $x("//*[@data-value='creating']");
+    private final SelenideElement serviceType = $x("//*[@data-value='service']");
+    private final SelenideElement createGraphButton = $x("//*[text()='Создать']/..");
+    private final SelenideElement inputSearch = $x("//input[@placeholder = 'Поиск']");
+    private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
+    private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
+    private final SelenideElement graphId = $x("//p/b");
+    private final SelenideElement idInput = $x("//input[@name = 'id']");
+    private final SelenideElement deleteButton = $x("//span[text() = 'Удалить']");
+    private final SelenideElement clearSearchButton = $x("//*[@placeholder='Поиск']/../button");
+    private final SelenideElement cancelButton = $x("//span[text()='Отмена']/..");
+    private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']/ancestor::div[1]");
+    private final SelenideElement nothingFoundMessage = $x("//td[text()='Нет данных для отображения']");
+    private final SelenideElement graphNameValidationHint = $x("//p[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
+    private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::p");
+    private final SelenideElement nameRequiredFieldHint = $x("//input[@name='name']/parent::div/following-sibling::p");
+    private final SelenideElement authorRequiredFieldHint = $x("//input[@name='author']/parent::div/following-sibling::p");
+
+    public GraphsListPage() {
+        graphsPageTitle.shouldBe(Condition.visible);
+    }
+
+    public GraphsListPage createGraph(String title, String name, String type, String description, String author) {
+        createNewGraphButton.click();
+        inputTitleField.setValue(title);
+        inputNameField.setValue(name);
+        selectType(type);
+        inputDescriptionField.setValue(description);
+        inputAuthorField.setValue(author);
+        createGraphButton.click();
+        return this;
+    }
+
+    public GraphsListPage copyGraph(String name) {
+        openActionMenu(name);
+        copyAction.click();
+        cancelButton.shouldBe(Condition.enabled).click();
+        return this;
+    }
+
+    public GraphsListPage findGraphByName(String graphName) {
+        if (clearSearchButton.isDisplayed()) {
+            clearSearchButton.click();
+        }
+        inputSearch.setValue(graphName);
+        TestUtils.wait(1000);
+        $x("//*[@value = '" + graphName + "']").shouldBe(Condition.visible);
+        return new GraphsListPage();
+    }
+
+    public GraphsListPage findGraphByTitle(String title) {
+        if (clearSearchButton.isDisplayed()) {
+            clearSearchButton.click();
+        }
+        inputSearch.setValue(title);
+        TestUtils.wait(1000);
+        $x("//*[@value = '" + title + "']").shouldBe(Condition.visible);
+        return this;
+    }
+
+    public GraphsListPage checkGraphNotFound(String graphName) {
+        if (clearSearchButton.isDisplayed()) {
+            clearSearchButton.click();
+        }
+        inputSearch.setValue(graphName);
+        TestUtils.wait(1000);
+        nothingFoundMessage.shouldBe(Condition.visible);
+        return this;
+    }
+
+    public GraphsListPage deleteGraph(String name) {
+        openActionMenu(name);
+        deleteAction.click();
+        String id = graphId.getText();
+        idInput.setValue(id);
+        deleteButton.click();
+        return this;
+    }
+
+    private void openActionMenu(String graphName) {
+        $x("//td[text() = '"+graphName+"']//parent::tr//button[@id = 'actions-menu-button']").click();
+    }
+
+    public GraphsListPage checkGraphsListHeaders() {
+        $x("//table[@class='MuiTable-root']//th[1]").shouldHave(Condition.exactText("Наименование"));
+        $x("//table[@class='MuiTable-root']//th[2]").shouldHave(Condition.exactText("Код графа"));
+        $x("//table[@class='MuiTable-root']//th[3]").shouldHave(Condition.exactText("Дата создания"));
+        $x("//table[@class='MuiTable-root']//th[4]").shouldHave(Condition.exactText("Версия"));
+        $x("//table[@class='MuiTable-root']//th[5]").shouldHave(Condition.exactText("Описание"));
+        return this;
+    }
+
+    public GraphsListPage checkCreateGraphDisabled(String title, String name, String type, String description, String author) {
+        createNewGraphButton.shouldBe(Condition.visible).click();
+        inputTitleField.setValue(title);
+        inputNameField.setValue(name);
+        selectType(type);
+        inputDescriptionField.setValue(description);
+        inputAuthorField.setValue(author);
+        if (title.isEmpty()) {
+            titleRequiredFieldHint.shouldBe(Condition.visible);
+        }
+        if (name.isEmpty()) {
+            nameRequiredFieldHint.shouldBe(Condition.visible);
+        }
+        if (author.isEmpty()) {
+            authorRequiredFieldHint.shouldBe(Condition.visible);
+        }
+        createGraphButton.shouldBe(Condition.disabled);
+        cancelButton.click();
+        return new GraphsListPage();
+    }
+
+    public GraphPage openGraphPage(String name) {
+        if (clearSearchButton.isDisplayed()) {
+            clearSearchButton.click();
+        }
+        inputSearch.setValue(name);
+        $x("//td[@value = '" + name + "']").shouldBe(Condition.visible).click();
+        return new GraphPage();
+    }
+
+    public GraphsListPage checkGraphNameValidation(String[] names) {
+        createNewGraphButton.shouldBe(Condition.visible).click();
+        for (String name : names) {
+            inputNameField.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+            inputNameField.setValue(name).sendKeys("a");
+            graphNameValidationHint.shouldBe(Condition.visible);
+        }
+        cancelButton.click();
+        return new GraphsListPage();
+    }
+
+    private void selectType(String type) {
+        selectType.click();
+        switch (type) {
+            case "creating":
+                creatingType.click();
+                break;
+            case "action":
+                actionType.click();
+                break;
+            case "service":
+                serviceType.click();
+                break;
+        }
+    }
+}
