@@ -1,10 +1,10 @@
-package ui.productCatalog.tests.graph;
+package ui.cloud.tests.productCatalog.graph;
 
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.productCatalog.pages.MainPage;
+import ui.cloud.pages.IndexPage;
 
 public class SaveGraphTest extends GraphBaseTest {
 
@@ -12,7 +12,7 @@ public class SaveGraphTest extends GraphBaseTest {
     @TmsLink("487709")
     @DisplayName("Сохранение графа с указанием версии вручную")
     public void saveGraphWithManualVersion() {
-        new MainPage().goToGraphsPage()
+        new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
                 .editGraph("edited description")
@@ -24,7 +24,7 @@ public class SaveGraphTest extends GraphBaseTest {
     @TmsLink("529313")
     @DisplayName("Сохранение графа с указанием некорректной версии")
     public void saveGraphWithIncorrectVersion() {
-        new MainPage().goToGraphsPage()
+        new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
                 .editGraph("edited description")
@@ -38,7 +38,7 @@ public class SaveGraphTest extends GraphBaseTest {
     @TmsLinks({@TmsLink("487621"),@TmsLink("600394")})
     @DisplayName("Проверка изменений и лимита патч-версий")
     public void checkPatchVersionLimit() {
-        new MainPage().goToGraphsPage()
+        new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
                 .saveGraphWithManualVersion("1.0.999")
@@ -59,7 +59,7 @@ public class SaveGraphTest extends GraphBaseTest {
     @TmsLink("600752")
     @DisplayName("Проверка изменений и лимита версий, указанных вручную")
     public void checkManualVersionLimit() {
-        new MainPage().goToGraphsPage()
+        new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
                 .saveGraphWithManualVersion("1.0.999")

@@ -1,8 +1,8 @@
-package ui.productCatalog.pages;
+package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.*;
 import org.openqa.selenium.Keys;
-import ui.productCatalog.tests.TestUtils;
+import ui.cloud.tests.productCatalog.TestUtils;
 
 import static com.codeborne.selenide.Selenide.$x;
 

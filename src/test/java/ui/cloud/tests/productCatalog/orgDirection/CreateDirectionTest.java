@@ -1,4 +1,4 @@
-package ui.productCatalog.tests.orgDirection;
+package ui.cloud.tests.productCatalog.orgDirection;
 
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Epic;
@@ -11,8 +11,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import ui.productCatalog.pages.MainPage;
-import ui.productCatalog.tests.BaseTest;
+import ui.cloud.pages.IndexPage;
+import ui.cloud.tests.productCatalog.BaseTest;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -35,7 +35,7 @@ public class CreateDirectionTest extends BaseTest {
         if (steps.isExists(DIRECTION_NAME)) {
             steps.deleteByName(DIRECTION_NAME, GetOrgDirectionListResponse.class);
         }
-        new MainPage()
+        new IndexPage()
                 .goToOrgDirectionsPage()
                 .createDirection()
                 .fillAndSave(DIRECTION_TITLE, DIRECTION_NAME, DIRECTION_DESCRIPTION)
@@ -56,7 +56,7 @@ public class CreateDirectionTest extends BaseTest {
                 .description(description)
                 .build()
                 .createObject();
-        assertTrue(new MainPage()
+        assertTrue(new IndexPage()
                 .goToOrgDirectionsPage()
                 .openOrgDirectionPage(name)
                 .editNameField(updName)
@@ -72,7 +72,7 @@ public class CreateDirectionTest extends BaseTest {
         if (steps.isExists(name)) {
             steps.deleteByName(name, GetOrgDirectionListResponse.class);
         }
-        assertTrue(new MainPage()
+        assertTrue(new IndexPage()
                 .goToOrgDirectionsPage()
                 .createDirection()
                 .fillAndSave(title, name, description)
@@ -93,7 +93,7 @@ public class CreateDirectionTest extends BaseTest {
         if (steps.isExists(name)) {
             steps.deleteByName(name, GetOrgDirectionListResponse.class);
         }
-        assertFalse(new MainPage()
+        assertFalse(new IndexPage()
                 .goToOrgDirectionsPage()
                 .createDirection()
                 .fillAndSave(title, name, description)
@@ -116,7 +116,7 @@ public class CreateDirectionTest extends BaseTest {
                 .description(description)
                 .build()
                 .createObject();
-        assertTrue(new MainPage()
+        assertTrue(new IndexPage()
                 .goToOrgDirectionsPage()
                 .findDirectionByName(name)
                 .clickActionMenu(name)
@@ -130,7 +130,7 @@ public class CreateDirectionTest extends BaseTest {
     @DisplayName("Просмотр списка направлений и поиск")
     @Disabled
     public void viewDirectionsListAndSearch() {
-        new MainPage()
+        new IndexPage()
                 .goToOrgDirectionsPage()
                 .createDirection()
                 .fillAndSave("", "", "")

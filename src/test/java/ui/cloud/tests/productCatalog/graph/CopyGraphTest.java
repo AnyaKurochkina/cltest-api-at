@@ -1,8 +1,8 @@
-package ui.productCatalog.tests.graph;
+package ui.cloud.tests.productCatalog.graph;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.productCatalog.pages.MainPage;
+import ui.cloud.pages.IndexPage;
 
 public class CopyGraphTest extends GraphBaseTest {
 
@@ -10,7 +10,7 @@ public class CopyGraphTest extends GraphBaseTest {
     @DisplayName("Копирование графа")
     public void copyGraph() {
         String copyName = NAME + "-clone";
-        new MainPage().goToGraphsPage()
+        new IndexPage().goToGraphsPage()
                 .findGraphByName(NAME)
                 .copyGraph(NAME)
                 .findGraphByName(copyName)

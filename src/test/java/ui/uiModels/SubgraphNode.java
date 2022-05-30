@@ -1,4 +1,4 @@
-package ui.productCatalog.models;
+package ui.uiModels;
 
 import lombok.Getter;
 import lombok.Setter;

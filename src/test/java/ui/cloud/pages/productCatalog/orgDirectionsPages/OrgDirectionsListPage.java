@@ -1,4 +1,4 @@
-package ui.productCatalog.pages.orgDirectionsPages;
+package ui.cloud.pages.productCatalog.orgDirectionsPages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;

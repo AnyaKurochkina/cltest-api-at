@@ -1,9 +1,9 @@
-package ui.productCatalog.tests.graph;
+package ui.cloud.tests.productCatalog.graph;
 
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.productCatalog.pages.MainPage;
+import ui.cloud.pages.IndexPage;
 
 public class DeleteGraphTest extends GraphBaseTest {
     private static final String name = "at_ui_delete_graph_test";
@@ -12,7 +12,7 @@ public class DeleteGraphTest extends GraphBaseTest {
     @TmsLink("540702")
     @DisplayName("Удаление графа из списка")
     public void deleteGraphFromList() {
-        new MainPage().goToGraphsPage()
+        new IndexPage().goToGraphsPage()
                 .createGraph(TITLE, name, "service", DESCRIPTION, AUTHOR)
                 .findGraphByName(name)
                 .deleteGraph(name)
@@ -22,7 +22,7 @@ public class DeleteGraphTest extends GraphBaseTest {
     @Test
     @DisplayName("Удаление графа со страницы графа")
     public void deleteGraphFromPage() {
-        new MainPage().goToGraphsPage()
+        new IndexPage().goToGraphsPage()
                 .createGraph(TITLE, name, "service", DESCRIPTION, AUTHOR)
                 .openGraphPage(name)
                 .deleteGraph()

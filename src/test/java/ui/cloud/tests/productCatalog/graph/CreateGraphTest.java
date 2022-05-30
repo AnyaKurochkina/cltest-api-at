@@ -1,10 +1,10 @@
-package ui.productCatalog.tests.graph;
+package ui.cloud.tests.productCatalog.graph;
 
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.productCatalog.pages.MainPage;
+import ui.cloud.pages.IndexPage;
 
 public class CreateGraphTest extends GraphBaseTest {
     private static final String name = "at_ui_create_graph_test";
@@ -21,7 +21,7 @@ public class CreateGraphTest extends GraphBaseTest {
 
     @Step("Просмотр списка графов, создание, поиск")
     public void createGraph() {
-        new MainPage().goToGraphsPage()
+        new IndexPage().goToGraphsPage()
                 .checkGraphsListHeaders()
                 .createGraph(TITLE, name, "action", DESCRIPTION, AUTHOR)
                 .findGraphByName(name)
@@ -33,7 +33,7 @@ public class CreateGraphTest extends GraphBaseTest {
 
     @Step("Создание графа без заполнения обязательных полей")
     public void createGraphWithoutRequiredParameters() {
-        new MainPage().goToGraphsPage()
+        new IndexPage().goToGraphsPage()
                 .checkCreateGraphDisabled("", NAME, "creating", DESCRIPTION, AUTHOR)
                 .checkCreateGraphDisabled(TITLE, "", "creating", DESCRIPTION, AUTHOR)
                 .checkCreateGraphDisabled(TITLE, NAME, "creating", DESCRIPTION, "");
@@ -41,13 +41,13 @@ public class CreateGraphTest extends GraphBaseTest {
 
     @Step("Создание графа с неуникальным кодом графа")
     public void createGraphWithNonUniqueName() {
-        new MainPage().goToGraphsPage()
+        new IndexPage().goToGraphsPage()
                 .checkCreateGraphDisabled(TITLE, NAME, "action", DESCRIPTION, AUTHOR);
     }
 
     @Step("Создание графа с недопустимым кодом")
     public void checkGraphNameValidation() {
-        new MainPage().goToGraphsPage()
+        new IndexPage().goToGraphsPage()
                 .checkGraphNameValidation(new String[] {"Test_name", "test name", "тест", "test_name$"});
     }
 }
