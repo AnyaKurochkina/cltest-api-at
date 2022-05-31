@@ -140,20 +140,8 @@ public class CreateDirectionTest extends BaseTest {
 
     @Test
     @DisplayName("Экспортировать направление")
+    @Disabled
     public void exportDirection() {
-        String name = "at_ui_export_direction_name";
-        String title = "at_ui_export_direction_title";
-        String description = "at_ui_export_direction_description";
-        OrgDirection.builder()
-                .orgDirectionName(name)
-                .title(title)
-                .description(description)
-                .build()
-                .createObject();
-        new IndexPage().goToOrgDirectionsPage()
-                .findDirectionByName(name)
-                .exportActionMenu(name);
-
     }
 
     @Test
