@@ -51,9 +51,10 @@ public class ProductCatalogSteps {
     }
 
     @Step("Выгрузка объекта из Gitlab")
-    public Response loadFromBitbucket(String name) {
+    public Response loadFromBitbucket(JSONObject body) {
         return new Http(ProductCatalogURL)
-                .post(productName + "load_from_bitbucket/?path=" + name)
+                .body(body)
+                .post(productName + "load_from_bitbucket/")
                 .assertStatus(200);
     }
 
