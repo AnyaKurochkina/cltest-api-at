@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Epic("Конструктор")
 @Feature("Направления")
 @DisabledIfEnv("prod")
-public class CreateDirectionTest extends BaseTest {
+public class OrgDirectionTest extends BaseTest {
     public static final String DIRECTION_TITLE = "at_ui_create_direction_title";
     public static final String DIRECTION_NAME = "at_ui_create_direction_name";
     public static final String DIRECTION_DESCRIPTION = "at_ui_create_direction_description";
