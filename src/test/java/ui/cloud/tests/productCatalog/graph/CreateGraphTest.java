@@ -1,11 +1,15 @@
 package ui.cloud.tests.productCatalog.graph;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 
+@Epic("Графы")
+@Feature("Создание графа")
 public class CreateGraphTest extends GraphBaseTest {
     private static final String name = "at_ui_create_graph_test";
 

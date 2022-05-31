@@ -17,6 +17,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement nodeDescription = $x("//form//input[@name = 'description']");
     private final SelenideElement subgraphInput = $x("//label[text() = 'Подграф']/..//input");
     private final SelenideElement formAddNodeButton = $x("//form//span[text() = 'Добавить']//ancestor::button");
+    private final SelenideElement formSaveNodeButton = $x("//form//span[text() = 'Сохранить']//ancestor::button");
     private final SelenideElement formCancelButton = $x("//form//span[text() = 'Отмена']//ancestor::button");
     private final SelenideElement showSubgraphsButton = $x("(//label[text() = 'Подграф']/..//*[name()='svg'])[2]");
     private final SelenideElement inputJSONField = $x("//label[text()='Input']/../..//textarea");
@@ -39,6 +40,8 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement onPrebillingToggleOn = $x("//p[text()='on_prebilling']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement runOnRollbackToggleOn = $x("//p[text()='run_on_rollback']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement holdToggleOn = $x("//p[text()='hold']/parent::div//span[contains(@class,'checked')]");
+    private final SelenideElement subgraphVersionSelect = $x("(//label[text()='Версия']/parent::div//select)[2]");
+    private final SelenideElement showSubgraphVersions = $x("(//label[text()='Версия']/parent::div//*[name()='svg'])[2]");
 
     public GraphNodesPage addNodeSubgraph(SubgraphNode node) {
         addNodeButton.click();
@@ -60,6 +63,21 @@ public class GraphNodesPage extends GraphPage {
         holdToggle.click();
         formAddNodeButton.click();
         saveGraphWithPatchVersion();
+        TestUtils.wait(1000);
+        return this;
+    }
+
+    public GraphNodesPage editNodeSubgraph(SubgraphNode node, String version, String description) {
+        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        TestUtils.scrollToTheTop();
+        editNodeButton.click();
+        nodeDescription.setValue(description);
+        showSubgraphVersions.click();
+        $x("//div[@title='1.0.0']").shouldBe(Condition.enabled).click();
+        formSaveNodeButton.click();
+        saveGraphWithPatchVersion();
+        node.setSubgraphVersion(version);
+        node.setDescription(description);
         TestUtils.wait(1000);
         return this;
     }

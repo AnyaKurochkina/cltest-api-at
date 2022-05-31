@@ -1,5 +1,7 @@
 package ui.cloud.tests.productCatalog.graph;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.AfterEach;
@@ -9,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.uiModels.SubgraphNode;
 
+@Epic("Графы")
+@Feature("Добавление узла графа")
 public class AddNodeTest extends GraphBaseTest {
 
     @BeforeEach
@@ -26,7 +30,7 @@ public class AddNodeTest extends GraphBaseTest {
 
     @Test
     @TmsLink("489507")
-    @Step("Добавление узла графа (подграф)")
+    @DisplayName("Добавление узла графа (подграф)")
     public void addNodeSubgraphTest() {
         addNodeSubgraphWithRequiredParameters();
         addNodeSubgraphWithAllParameters();

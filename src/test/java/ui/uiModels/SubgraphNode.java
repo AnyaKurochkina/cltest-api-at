@@ -5,7 +5,7 @@ import lombok.Setter;
 
 public class SubgraphNode {
     @Getter @Setter
-    String name, description, subgraphName, input, output, number, timeout, count;
+    String name, description, subgraphName, subgraphVersion, input, output, number, timeout, count;
 
     public SubgraphNode(String subgraphName) {
         this.name = "node_name";

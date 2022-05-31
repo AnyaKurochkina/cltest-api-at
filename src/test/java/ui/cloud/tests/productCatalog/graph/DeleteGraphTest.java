@@ -1,10 +1,14 @@
 package ui.cloud.tests.productCatalog.graph;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 
+@Epic("Графы")
+@Feature("Удаление графа")
 public class DeleteGraphTest extends GraphBaseTest {
     private static final String name = "at_ui_delete_graph_test";
 
