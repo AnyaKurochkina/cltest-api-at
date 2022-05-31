@@ -24,7 +24,7 @@ public class UiWindowsTest extends Tests {
     //TODO: пока так :)
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod"))
-            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+            product = Windows.builder().env("DEV").projectId("proj-evw9xv5qao").platform("OpenStack").segment("dev-srv-app").build();
         else
             product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -52,7 +52,9 @@ public class UiWindowsTest extends Tests {
         orderPage.getRoleServer().selectByValue(product.getRole());
         orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().select(accessGroup.getPrefixName());
+        orderPage.getGroup().select("cloud-zorg-group3");//accessGroup.getPrefixName()
+        CommonChecks commonChecks = new CommonChecks();
+        commonChecks.isCostDayContains("≈");
         orderPage.orderClick();
         new ProductsPage()
                 .getRowByColumn("Продукт",
