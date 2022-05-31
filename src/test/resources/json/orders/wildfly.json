@@ -36,6 +36,7 @@
 					"file_system": "xfs"
 				}
 			],
+			"java_version": "1.8.0",
 			"ad_integration": true,
 			"wildfly_version": "23.0.2.Final",
 			"ad_logon_grants": [
