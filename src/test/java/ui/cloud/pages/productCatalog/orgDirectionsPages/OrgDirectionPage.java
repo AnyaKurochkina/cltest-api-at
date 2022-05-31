@@ -2,7 +2,7 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.Keys;
+import ui.elements.Input;
 
 import java.util.Objects;
 
@@ -25,9 +25,7 @@ public class OrgDirectionPage {
     }
 
     public OrgDirectionPage editNameField(String name) {
-        String delete = Keys.chord(Keys.CONTROL, "a") + Keys.DELETE;
-        inputNameField.setValue(delete);
-        inputNameField.setValue(name);
+        new Input(inputNameField).setValue(name);
         saveButton.scrollTo().click();
         return this;
     }

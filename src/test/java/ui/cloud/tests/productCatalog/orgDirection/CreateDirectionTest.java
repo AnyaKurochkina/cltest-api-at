@@ -1,9 +1,11 @@
 package ui.cloud.tests.productCatalog.orgDirection;
 
+import core.helper.JsonHelper;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Disabled;
@@ -77,8 +79,7 @@ public class CreateDirectionTest extends BaseTest {
                 .createDirection()
                 .fillAndSave(title, name, description)
                 .findDirectionByName(name)
-                .clickActionMenu(name)
-                .deleteActionMenu()
+                .deleteActionMenu(name)
                 .inputInvalidId("invalid-id45")
                 .fillIdAndDelete()
                 .isNotExist(name), "Направление существует.");
@@ -119,11 +120,40 @@ public class CreateDirectionTest extends BaseTest {
         assertTrue(new IndexPage()
                 .goToOrgDirectionsPage()
                 .findDirectionByName(name)
-                .clickActionMenu(name)
-                .copyActionMenu()
+                .copyActionMenu(name)
                 .isFieldsCompare(name, title, description), "Поля не равны");
         String cloneName = name + "-clone";
         steps.deleteByName(cloneName, GetOrgDirectionListResponse.class);
+    }
+
+    @Test
+    @DisplayName("Импортировать направление")
+    public void importDirection() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
+        String importName = new JsonPath(data).get("OrgDirection.name");
+        new IndexPage()
+                .goToOrgDirectionsPage()
+                .uploadFile("src/test/resources/json/productCatalog/orgDirection/importOrgDirection.json")
+                .findDirectionByName(importName);
+        steps.deleteByName(importName, GetOrgDirectionListResponse.class);
+    }
+
+    @Test
+    @DisplayName("Экспортировать направление")
+    public void exportDirection() {
+        String name = "at_ui_export_direction_name";
+        String title = "at_ui_export_direction_title";
+        String description = "at_ui_export_direction_description";
+        OrgDirection.builder()
+                .orgDirectionName(name)
+                .title(title)
+                .description(description)
+                .build()
+                .createObject();
+        new IndexPage().goToOrgDirectionsPage()
+                .findDirectionByName(name)
+                .exportActionMenu(name);
+
     }
 
     @Test
