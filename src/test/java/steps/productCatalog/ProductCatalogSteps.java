@@ -47,7 +47,7 @@ public class ProductCatalogSteps {
     public Response dumpToBitbucket(String id) {
         return new Http(ProductCatalogURL)
                 .post(productName + id + "/dump_to_bitbucket/")
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Выгрузка объекта из Gitlab")

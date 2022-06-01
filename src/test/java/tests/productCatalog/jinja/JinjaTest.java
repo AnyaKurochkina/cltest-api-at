@@ -1,6 +1,7 @@
 package tests.productCatalog.jinja;
 
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.jinja2.getJinjaListResponse.GetJinjaListResponse;
@@ -8,13 +9,12 @@ import httpModels.productCatalog.jinja2.getJinjaResponse.GetJinjaResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.productCatalog.Graph;
 import models.productCatalog.Jinja2;
+import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -208,5 +208,20 @@ public class JinjaTest extends Tests {
                 .build()
                 .createObject();
         steps.deleteById(jinja2.getJinjaId());
+    }
+
+    @Test
+    @DisplayName("Загрузка Jinja в GitLab")
+    @Disabled
+    @TmsLink("")
+    public void dumpToGitlabJinja() {
+        String jinjaName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        Jinja2 jinja = Jinja2.builder()
+                .name(jinjaName)
+                .title(jinjaName)
+                .build()
+                .createObject();
+        Response response = steps.dumpToBitbucket(jinja.getJinjaId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
 }

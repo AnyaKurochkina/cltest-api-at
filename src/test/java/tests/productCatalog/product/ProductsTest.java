@@ -13,6 +13,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Product;
+import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -476,5 +477,20 @@ public class ProductsTest extends Tests {
                 .createObject();
         GetProductResponse getProductById = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
         assertTrue(getProductById.getInGeneralList());
+    }
+
+    @Test
+    @DisplayName("Загрузка Product в GitLab")
+    @Disabled
+    @TmsLink("")
+    public void dumpToGitlabProduct() {
+        String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        Product product = Product.builder()
+                .name(productName)
+                .title(productName)
+                .build()
+                .createObject();
+        Response response = steps.dumpToBitbucket(product.getProductId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
 }

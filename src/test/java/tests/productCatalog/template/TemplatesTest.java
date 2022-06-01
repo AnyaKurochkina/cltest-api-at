@@ -2,6 +2,7 @@ package tests.productCatalog.template;
 
 import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
@@ -11,12 +12,10 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Template;
+import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -198,5 +197,20 @@ public class TemplatesTest extends Tests {
                 .build()
                 .createObject();
         steps.deleteById(String.valueOf(template.getTemplateId()));
+    }
+
+    @Test
+    @DisplayName("Загрузка Template в GitLab")
+    @Disabled
+    @TmsLink("")
+    public void dumpToGitlabTemplate() {
+        String templateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        Template template = Template.builder()
+                .templateName(templateName)
+                .title(templateName)
+                .build()
+                .createObject();
+        Response response = steps.dumpToBitbucket(String.valueOf(template.getTemplateId()));
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
 }

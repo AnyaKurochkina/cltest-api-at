@@ -3,6 +3,7 @@ package tests.productCatalog.graph;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
+import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.graphs.deleteGraph.response.DeleteGraphResponse;
@@ -12,16 +13,11 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.Action;
-import models.productCatalog.Graph;
-import models.productCatalog.Product;
-import models.productCatalog.Services;
+import models.productCatalog.*;
+import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -295,5 +291,20 @@ public class GraphTest extends Tests {
                 .build()
                 .createObject();
         graph.deleteObject();
+    }
+
+    @Test
+    @DisplayName("Загрузка Graph в GitLab")
+    @Disabled
+    @TmsLink("")
+    public void dumpToGitlabGraph() {
+        String graphName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        Graph graph = Graph.builder()
+                .name(graphName)
+                .title(graphName)
+                .build()
+                .createObject();
+        Response response = steps.dumpToBitbucket(graph.getGraphId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
 }

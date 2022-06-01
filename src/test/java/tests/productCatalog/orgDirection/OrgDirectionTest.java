@@ -1,6 +1,7 @@
 package tests.productCatalog.orgDirection;
 
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
@@ -10,12 +11,10 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
+import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -194,5 +193,20 @@ public class OrgDirectionTest extends Tests {
                 .build()
                 .createObject();
         orgDirection.deleteObject();
+    }
+
+    @Test
+    @DisplayName("Загрузка OrgDirection в GitLab")
+    @Disabled
+    @TmsLink("")
+    public void dumpToGitlabOrgDirection() {
+        String orgDirection = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        OrgDirection jinja = OrgDirection.builder()
+                .orgDirectionName(orgDirection)
+                .title(orgDirection)
+                .build()
+                .createObject();
+        Response response = steps.dumpToBitbucket(jinja.getOrgDirectionId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
 }
