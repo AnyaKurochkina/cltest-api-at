@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
+import ui.elements.Input;
 import ui.elements.InputFile;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -53,7 +54,7 @@ public class OrgDirectionsListPage {
         $x("//td[@value = '" + name + "']").shouldBe(Condition.visible).click();
         return new OrgDirectionPage();
     }
-
+    @Step("Выбор действия 'удаление'")
     public OrgDirectionsListPage deleteActionMenu(String dirName) {
         $x("//td[text() = '" + dirName + "']//ancestor::tr//*[@id = 'actions-menu-button']").click();
         deleteAction.click();
@@ -67,6 +68,7 @@ public class OrgDirectionsListPage {
         return this;
     }
 
+    @Step("Выбор действия 'копирование'")
     public OrgDirectionPage copyActionMenu(String dirName) {
         $x("//td[text() = '" + dirName + "']//ancestor::tr//*[@id = 'actions-menu-button']").click();
         copyAction.click();
@@ -74,15 +76,14 @@ public class OrgDirectionsListPage {
     }
     @Step("Ввод валидного id и удаление")
     public OrgDirectionsListPage fillIdAndDelete() {
-        String dirId = id.getText();
-        inputId.setValue(dirId);
-        deleteButton.shouldBe(Condition.enabled).click();
+        new Input(inputId).setValue(id.getText());
+        deleteButton.scrollIntoView(true).shouldBe(Condition.enabled).click();
         return this;
     }
 
     @Step("Ввод невалидного id")
     public OrgDirectionsListPage inputInvalidId(String dirId) {
-        inputId.setValue(dirId);
+        new Input(inputId).setValue(dirId);
         deleteButton.shouldBe(Condition.disabled);
         inputId.clear();
         return this;
@@ -97,7 +98,7 @@ public class OrgDirectionsListPage {
 
     @Step("Проверка существования направления")
     public boolean isNotExist(String dirName) {
-        inputSearch.setValue(dirName);
+        new Input(inputSearch).setValue(dirName);
         return noData.exists();
     }
 }

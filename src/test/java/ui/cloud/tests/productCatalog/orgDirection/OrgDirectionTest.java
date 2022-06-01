@@ -47,6 +47,7 @@ public class OrgDirectionTest extends BaseTest {
 
     @Test
     @DisplayName("Редактирование поля имени в направлении")
+    @TmsLink("486544")
     public void editDirections() {
         String name = "at_ui_edit_direction_name";
         String title = "at_ui_edit_direction_title";
@@ -67,6 +68,7 @@ public class OrgDirectionTest extends BaseTest {
 
     @Test
     @DisplayName("Удалить направление из списка с помощью контекстного меню")
+    @TmsLink("486568")
     public void deleteDirectionsWithContextMenu() {
         String name = "at_ui_delete_direction_with_context_menu";
         String title = "at_ui_delete_direction_with_context_menu_title";
@@ -87,6 +89,7 @@ public class OrgDirectionTest extends BaseTest {
 
     @Test
     @DisplayName("Удалить из формы редактирования направления")
+    @TmsLink("508543")
     public void deleteDirectionFromRedactor() {
         String name = "at_ui_delete_direction_from_redactor";
         String title = "at_ui_delete_direction_from_redactor_title";
@@ -107,6 +110,7 @@ public class OrgDirectionTest extends BaseTest {
 
     @Test
     @DisplayName("Создать копию направления")
+    @TmsLink("486597")
     public void copyDirection() {
         String name = "at_ui_copy_direction";
         String title = "at_ui_copy_direction_title";
@@ -128,6 +132,7 @@ public class OrgDirectionTest extends BaseTest {
 
     @Test
     @DisplayName("Импортировать направление")
+    @TmsLink("486652")
     public void importDirection() {
         String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
         String importName = new JsonPath(data).get("OrgDirection.name");
