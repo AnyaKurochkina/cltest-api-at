@@ -2,6 +2,7 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.GraphsListPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
 
@@ -24,6 +25,7 @@ public class IndexPage {
         return new GraphsListPage();
     }
 
+    @Step("Переход на страницу Конструктор.Направления")
     public OrgDirectionsListPage goToOrgDirectionsPage() {
         directions.scrollTo();
         directions.click();
