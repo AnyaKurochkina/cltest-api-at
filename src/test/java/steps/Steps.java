@@ -47,7 +47,7 @@ public abstract class Steps {
     private static JsonPath responseList(String host, String path, int page) {
         return new Http(host)
                 .get(path + "&include=members,total_count&page={}&per_page={}", page, perPage)
-                .assertStatus(200)
+                .assertStatus(403)
                 .jsonPath();
     }
 }

@@ -26,7 +26,7 @@ public class Table implements TypifiedElement {
         SelenideElement table = $x("//table[thead/tr/th[.='{}']]", columnName);
         headersCollection = table.$$x("thead/tr/th");
         rows = table.$$x("tbody/tr");
-        headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));
+       // headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));
         for (SelenideElement e : progressBars)
             waitLoadTable(e, table);
         headers = headersCollection.shouldBe(CollectionCondition.sizeNotEqual(0)).texts();
