@@ -77,8 +77,9 @@ public abstract class IProductPage {
 
     @SneakyThrows
     @Step("Запуск действия '{action}' в блоке '{headerBlock}' с параметрами")
-    public void runActionWithParameters(String headerBlock, String action, Executable executable) {
+    public void runActionWithParameters(String headerBlock, String action, Executable executable, boolean off) throws Throwable {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
+        getBtnAction(headerBlock).scrollIntoView(off);
         getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();

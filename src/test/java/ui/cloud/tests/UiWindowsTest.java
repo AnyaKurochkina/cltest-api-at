@@ -46,63 +46,32 @@ public class UiWindowsTest extends Tests {
         new LoginPage(READY_ORDER_URL)
                 .singIn();
     }
-
-//    @Test
-//    @TmsLink("872651")
-//    @Order(1)
-//    @DisplayName("UI Windows. Заказ")
-//    void orderWindows() {
-//        new IndexPage()
-//                .clickOrderMore()
-//                .selectProduct(product.getProductName());
-//        WindowsOrderPage orderPage = new WindowsOrderPage();
-////        //Проверки полей до заказа
-////        commonChecks.getMark().clear();
-////        commonChecks.getOrderProduct().shouldBe(Condition.disabled);
-////        log.info("Проверка кнопки \"Заказать\" до заполнения полей");
-////        commonChecks.getOrderPricePerDay().getAttribute("textContent").contains("— ₽");
-////        log.info("Проверка нельзя заказать до заполнения полей");
-////
-////        commonChecks.autoChangeableFieldCheck(commonChecks.getVmNumber(), "0", "10");
-////        commonChecks.autoChangeableFieldCheck(commonChecks.getVmNumber(), "100", "30");
-////        commonChecks.autoChangeableFieldCheck(commonChecks.getVmNumber(), "N", "10");
-////        commonChecks.autoChangeableFieldCheck(commonChecks.getVmNumber(), "1", "1");
-////        log.info("Проверки поля количества VM");
-////
-////
-////        commonChecks.getMark().sendKeys(CTRL+A);
-////        commonChecks.getMark().shouldBe(Condition.matchText("Поле должно содержать от 3 до 64 символов"));
-////        log.info("Проверка кнопки \"Метка\" Поле должно содержать от 3 до 64 символов");
-////        commonChecks.getOrderProduct().shouldBe(Condition.disabled);
-//        orderPage.getOsVersion().select(product.getOsVersion());
-//        orderPage.getSegment().selectByValue(product.getSegment());
-//        orderPage.getPlatform().selectByValue(product.getPlatform());
-//        orderPage.getRoleServer().selectByValue(product.getRole());
-//        orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
-//        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-//        orderPage.getGroup().select(accessGroup.getPrefixName());
-////        //пользователь проверяет, что у элемента "Стоимость в сутки" атрибут "textContent" содержит значение "≈"
-////        commonChecks.isCostDayContains("≈");
-////        //пользователь проверяет детали заказа
-////        commonChecks.checkOrderDetails(commonChecks.getCalculationDetails(), "Windows Server");
-//        orderPage.orderClick();
-//        new ProductsPage()
-//                .getRowByColumn("Продукт",
-//                        orderPage.getLabel())
-//                .hover()
-//                .click();
-//        WindowsPage winPage = new WindowsPage(product);
-//        winPage.waitChangeStatus();
-//        winPage.checkLastAction();
-////        // Проверки после заказа продукта
-////        commonChecks.checkHeaderHistoryTable();
-////        commonChecks.checkHistoryRowDeployOk();
-////        commonChecks.checkHistoryRowDeployErr();
-////        commonChecks.getHistoryRow0().getAttribute("title").contains("Просмотр схемы выполнения");
-////        log.info("пользователь проверяет, что на странице присутствует текст \"Просмотр схемы выполнения\"");
-////        commonChecks.getGraphScheme().shouldBe(Condition.visible);
-////        log.info(" пользователь проверяет наличие элемента \"Схема выполнения\"");
-//    }
+    @Test
+    @TmsLink("872651")
+    @Order(1)
+    @DisplayName("UI Windows. Заказ")
+    void orderWindows() {
+        new IndexPage()
+                .clickOrderMore()
+                .selectProduct(product.getProductName());
+        WindowsOrderPage orderPage = new WindowsOrderPage();
+        orderPage.getOsVersion().select(product.getOsVersion());
+        orderPage.getSegment().selectByValue(product.getSegment());
+        orderPage.getPlatform().selectByValue(product.getPlatform());
+        orderPage.getRoleServer().selectByValue(product.getRole());
+        orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        orderPage.getGroup().select("cloud-zorg-group3");//accessGroup.getPrefixName()
+        orderPage.orderClick();
+        new ProductsPage()
+                .getRowByColumn("Продукт",
+                        orderPage.getLabel())
+                .hover()
+                .click();
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.waitChangeStatus();
+        winPage.checkLastAction();
+    }
 
     @Test
     @Order(2)
@@ -111,36 +80,134 @@ public class UiWindowsTest extends Tests {
     void restart() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.restart();
+        commonChecks.checkHistoryRowRestartByPowerOk();
+        commonChecks.checkHistoryRowRestartByPowerErr();
     }
+
+//    @Test
+//    @Order(4)
+//    @TmsLinks({@TmsLink("872671"), @TmsLink("872667")})
+//    @DisplayName("UI Windows. Выключить принудительно. Включить")
+//    void stopHard() {
+//        WindowsPage winPage = new WindowsPage(product);
+//        winPage.stopHard();
+//        winPage.start();
+//    }
+
 
     @Test
     @Order(3)
-    @TmsLinks({@TmsLink("872671"), @TmsLink("872667")})
-    @DisplayName("UI Windows. Выключить принудительно. Включить")
-    void stopHard() {
+    @TmsLink("872682")
+    @DisplayName("UI Windows. Выключить")
+    void stopSoft() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.stopHard();
-        winPage.start();
+        winPage.stopSoft();
+        commonChecks.checkHistoryRowTurnOffOk();
+        commonChecks.checkHistoryRowTurnOffErr();
     }
+
 
     @Test
     @Order(4)
+    @TmsLink("14510")
+    @DisplayName("UI Windows. Изменить конфигурацию")
+    void changeConfiguration() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.changeConfiguration();
+        commonChecks.checkHistoryRowChangeFlavorOk();
+        commonChecks.checkHistoryRowChangeFlavorErr();
+    }
+
+    @Test
+    @Order(5)
     @TmsLink("872682")
-    @DisplayName("UI Windows. Выключить")
+    @DisplayName("UI Windows. Включить")
     void start() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.stopSoft();
         winPage.start();
+        commonChecks.checkHistoryRowTurnOnOk();
+        commonChecks.checkHistoryRowTurnOnErr();
     }
+
+    @Test
+    @Order(6)
+    @TmsLink("233925")
+    @DisplayName("UI Windows. Добавить диск")
+    void discActAdd() throws Throwable {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.discActAdd();
+        commonChecks.checkHistoryRowDiscAddOk();
+        commonChecks.checkHistoryRowDiscAddErr();
+    }
+
+
+    @Test
+    @Order(9)
+    @TmsLink("714872")
+    @DisplayName("UI Windows. Отключить в ОС")
+    void discActOff() throws Throwable {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.discActOff();
+        commonChecks.checkHistoryRowDiscTurnOffOk();
+        commonChecks.checkHistoryRowDiscTurnOffErr();
+    }
+
+    @Test
+    @Order(10)
+    @TmsLink("714878")
+    @DisplayName("UI Windows. Подключить в ОС")
+    void discActOn() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.discActOn();
+        commonChecks.checkHistoryRowDiscTurnOnOk();
+        commonChecks.checkHistoryRowDiscTurnOnErr();
+    }
+
+    @Test
+    @Order(11)
+    @TmsLink("646056")
+    @DisplayName("UI Windows. Удалить диск")
+    void discActDelete() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.discActDelete();
+        commonChecks.checkHistoryRowDiscDeleteOk();
+        commonChecks.checkHistoryRowDiscDeleteErr();
+    }
+
+    @Test
+    @Order(12)
+    //@TmsLink("647426")
+    @DisplayName("UI Windows. Проверить конфигурацию")
+    void vmActCheckConfig() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.vmActCheckConfig();
+        commonChecks.checkHistoryRowCheckConfigOk();
+        commonChecks.checkHistoryRowCheckConfigErr();
+    }
+
+    @Test
+    @Order(13)
+    @TmsLink("14485")
+    @DisplayName("UI Windows. Выключить принудительно")
+    void stopHard() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.stopHard();
+        commonChecks.checkHistoryRowForceTurnOffOk();
+        commonChecks.checkHistoryRowForceTurnOffErr();
+    }
+
 
     @Test
     @Order(100)
     @TmsLink("872683")
     @DisplayName("UI Windows. Удалить")
-    void deleteWindows() {
+    void deleteWindows() throws Throwable {
         WindowsPage winPage = new WindowsPage(product);
         winPage.delete();
+        commonChecks.checkHistoryRowDeletedOk();
+        commonChecks.checkHistoryRowDeletedErr();
     }
+
 
 
 }
