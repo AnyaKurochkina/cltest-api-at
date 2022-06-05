@@ -25,7 +25,7 @@ public class UiWindowsTest extends Tests {
 
     Windows product;
 
-    private static final String READY_ORDER_URL = "https://ift-portal-front.apps.d0-oscp.corp.dev.vtb/vm/orders?page=0&perPage=10&f[category]=vm&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=pending&context=proj-rsbcdlmsfu&type=project&org=vtb";
+    private static final String READY_ORDER_URL = "https://ift-portal-front.apps.d0-oscp.corp.dev.vtb/vm/orders/ffacfe9f-cea6-44c5-9e60-be647d0d4859/main?context=proj-rsbcdlmsfu&type=project&org=vtb";
 
     CommonChecks commonChecks = new CommonChecks();
 
@@ -46,7 +46,8 @@ public class UiWindowsTest extends Tests {
         new LoginPage(READY_ORDER_URL)
                 .singIn();
     }
-//    @Test
+
+    //    @Test
 //    @TmsLink("872651")
 //    @Order(1)
 //    @DisplayName("UI Windows. Заказ")
@@ -72,7 +73,7 @@ public class UiWindowsTest extends Tests {
 //        winPage.waitChangeStatus();
 //        winPage.checkLastAction();
 //    }
-
+//
     @Test
     @Order(2)
     @TmsLink("872666")
@@ -83,17 +84,6 @@ public class UiWindowsTest extends Tests {
         commonChecks.checkHistoryRowRestartByPowerOk();
         commonChecks.checkHistoryRowRestartByPowerErr();
     }
-
-//    @Test
-//    @Order(4)
-//    @TmsLinks({@TmsLink("872671"), @TmsLink("872667")})
-//    @DisplayName("UI Windows. Выключить принудительно. Включить")
-//    void stopHard() {
-//        WindowsPage winPage = new WindowsPage(product);
-//        winPage.stopHard();
-//        winPage.start();
-//    }
-
 
     @Test
     @Order(3)
@@ -140,9 +130,20 @@ public class UiWindowsTest extends Tests {
         commonChecks.checkHistoryRowDiscAddErr();
     }
 
-
     @Test
     @Order(9)
+    @TmsLink("714878")
+    @DisplayName("UI Windows. Подключить в ОС")
+    void discActOn() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.discActOn();
+        commonChecks.checkHistoryRowDiscTurnOnOk();
+        commonChecks.checkHistoryRowDiscTurnOnErr();
+    }
+
+
+    @Test
+    @Order(10)
     @TmsLink("714872")
     @DisplayName("UI Windows. Отключить в ОС")
     void discActOff() throws Throwable {
@@ -152,16 +153,6 @@ public class UiWindowsTest extends Tests {
         commonChecks.checkHistoryRowDiscTurnOffErr();
     }
 
-    @Test
-    @Order(10)
-    @TmsLink("714878")
-    @DisplayName("UI Windows. Подключить в ОС")
-    void discActOn() {
-        WindowsPage winPage = new WindowsPage(product);
-        winPage.discActOn();
-        commonChecks.checkHistoryRowDiscTurnOnOk();
-        commonChecks.checkHistoryRowDiscTurnOnErr();
-    }
 
     @Test
     @Order(11)
@@ -197,17 +188,16 @@ public class UiWindowsTest extends Tests {
     }
 
 
-    @Test
-    @Order(100)
-    @TmsLink("872683")
-    @DisplayName("UI Windows. Удалить")
-    void deleteWindows() throws Throwable {
-        WindowsPage winPage = new WindowsPage(product);
-        winPage.delete();
-        commonChecks.checkHistoryRowDeletedOk();
-        commonChecks.checkHistoryRowDeletedErr();
-    }
-
+//    @Test
+//    @Order(100)
+//    @TmsLink("872683")
+//    @DisplayName("UI Windows. Удалить")
+//    void deleteWindows() throws Throwable {
+//        WindowsPage winPage = new WindowsPage(product);
+//        winPage.delete();
+//        commonChecks.checkHistoryRowDeletedOk();
+//        commonChecks.checkHistoryRowDeletedErr();
+//    }
 
 
 }

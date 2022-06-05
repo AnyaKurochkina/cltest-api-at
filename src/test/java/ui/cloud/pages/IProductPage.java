@@ -97,7 +97,7 @@ public abstract class IProductPage {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         btnAct.scrollIntoView(off);
         btnAct.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        $x("(//li[.='{}'])[last()]", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
         Waiting.sleep(3000);
     }

@@ -100,8 +100,15 @@ public class WindowsPage extends IProductPage {
         new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
+    @SneakyThrows
     public void discActDelete() {
-        runActionWithoutParameters("Виртуальная машина", "Удалить");
+        runActionWithParameters2("Диск", "Удалить диск", () -> {
+            Dialog dlg = new Dialog("Удалить диск");
+            dlg.getDialog().$x("descendant::button[.='Подтвердить']")
+                    .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            dlg.getDialog().shouldNotBe(Condition.visible);
+            Waiting.sleep(3000);
+        },true);
         waitChangeStatus();
         checkLastAction();
         new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
