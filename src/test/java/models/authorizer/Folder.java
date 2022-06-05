@@ -88,7 +88,7 @@ public class Folder extends Entity {
         name = new Http(Configure.IamURL)
                 .body(toJson())
                 .post(url)
-                .assertStatus(422)
+                .assertStatus(201)
                 .jsonPath()
                 .getString("data.name");
     }

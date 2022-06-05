@@ -25,13 +25,13 @@ public class UiWindowsTest extends Tests {
 
     Windows product;
 
-    private static final String READY_ORDER_URL = "https://prod-portal-front.cloud.vtb.ru/vm/orders/c749f2f7-e6eb-4c31-94c5-34cd5cd2f091/main?context=proj-evw9xv5qao&type=project&org=vtb";
+    private static final String READY_ORDER_URL = "https://ift-portal-front.apps.d0-oscp.corp.dev.vtb/vm/orders?page=0&perPage=10&f[category]=vm&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=pending&context=proj-rsbcdlmsfu&type=project&org=vtb";
 
     CommonChecks commonChecks = new CommonChecks();
 
     //TODO: пока так :)
     public UiWindowsTest() {
-        if (Configure.ENV.equals("prod"))
+        if (Configure.ENV.equals("ift"))
             product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
         else
             product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
@@ -46,32 +46,32 @@ public class UiWindowsTest extends Tests {
         new LoginPage(READY_ORDER_URL)
                 .singIn();
     }
-    @Test
-    @TmsLink("872651")
-    @Order(1)
-    @DisplayName("UI Windows. Заказ")
-    void orderWindows() {
-        new IndexPage()
-                .clickOrderMore()
-                .selectProduct(product.getProductName());
-        WindowsOrderPage orderPage = new WindowsOrderPage();
-        orderPage.getOsVersion().select(product.getOsVersion());
-        orderPage.getSegment().selectByValue(product.getSegment());
-        orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getRoleServer().selectByValue(product.getRole());
-        orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().select("cloud-zorg-group3");//accessGroup.getPrefixName()
-        orderPage.orderClick();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        orderPage.getLabel())
-                .hover()
-                .click();
-        WindowsPage winPage = new WindowsPage(product);
-        winPage.waitChangeStatus();
-        winPage.checkLastAction();
-    }
+//    @Test
+//    @TmsLink("872651")
+//    @Order(1)
+//    @DisplayName("UI Windows. Заказ")
+//    void orderWindows() {
+//        new IndexPage()
+//                .clickOrderMore()
+//                .selectProduct(product.getProductName());
+//        WindowsOrderPage orderPage = new WindowsOrderPage();
+//        orderPage.getOsVersion().select(product.getOsVersion());
+//        orderPage.getSegment().selectByValue(product.getSegment());
+//        orderPage.getPlatform().selectByValue(product.getPlatform());
+//        orderPage.getRoleServer().selectByValue(product.getRole());
+//        orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+//        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+//        orderPage.getGroup().select(accessGroup.getPrefixName());//"cloud-zorg-group3"
+//        orderPage.orderClick();
+//        new ProductsPage()
+//                .getRowByColumn("Продукт",
+//                        orderPage.getLabel())
+//                .hover()
+//                .click();
+//        WindowsPage winPage = new WindowsPage(product);
+//        winPage.waitChangeStatus();
+//        winPage.checkLastAction();
+//    }
 
     @Test
     @Order(2)

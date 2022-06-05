@@ -76,12 +76,8 @@ public class WindowsPage extends IProductPage {
     }
     @SneakyThrows
     public void discActOff()  {
-        runActionWithParameters("Дополнительные диски", "Отключить в ОС", () -> {
+        runActionWithParameters2("Диск", "Отключить в ОС", () -> {
             Dialog dlg = new Dialog("Отключить в ОС");
-
-//            dlg.setInputValue("Дополнительный объем дискового пространства", "11");
-//            DropDown.byLabel("Буква").selectByValue("S");
-//            DropDown.byLabel("Файловая система").selectByValue("refs");
             dlg.getDialog().$x("descendant::button[.='Подтвердить']")
                     .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             dlg.getDialog().shouldNotBe(Condition.visible);
@@ -90,9 +86,15 @@ public class WindowsPage extends IProductPage {
         waitChangeStatus();
         checkLastAction();
     }
-
+    @SneakyThrows
     public void discActOn() {
-        runActionWithoutParameters("Виртуальная машина", "Подключить в ОС");
+        runActionWithParameters2("Диск", "Подключить в ОС", () -> {
+            Dialog dlg = new Dialog("Подключить в ОС");
+            dlg.getDialog().$x("descendant::button[.='Подтвердить']")
+                    .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            dlg.getDialog().shouldNotBe(Condition.visible);
+            Waiting.sleep(3000);
+        },true);
         waitChangeStatus();
         checkLastAction();
         new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
