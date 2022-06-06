@@ -348,4 +348,14 @@ public class VisualTemplateTest extends Tests {
         Response response = steps.dumpToBitbucket(visualTemplate.getItemId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
+
+    @Test
+    @DisplayName("Выгрузка VisualTemplate из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabVisualTemplate() {
+        String path = "";
+        steps.loadFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(steps.isExists(path));
+    }
 }

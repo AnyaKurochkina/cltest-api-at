@@ -209,4 +209,14 @@ public class OrgDirectionTest extends Tests {
         Response response = steps.dumpToBitbucket(jinja.getOrgDirectionId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
+
+    @Test
+    @DisplayName("Выгрузка OrgDirection из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabOrgDirection() {
+        String path = "";
+        steps.loadFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(steps.isExists(path));
+    }
 }

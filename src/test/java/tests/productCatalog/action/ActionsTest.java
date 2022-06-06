@@ -402,7 +402,7 @@ public class ActionsTest extends Tests {
         Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
-                .version("1.0.3")
+                .version("1.0.0")
                 .build()
                 .createObject();
         Response response = steps.dumpToBitbucket(action.getActionId());
@@ -414,9 +414,9 @@ public class ActionsTest extends Tests {
     @Disabled
     @TmsLink("")
     public void loadFromGitlabAction() {
-        String actionName = "dump_to_gitlab_test_api222";
+        String actionName = "action_dump_to_gitlab_test_api222_1.0.3";
         steps.loadFromBitbucket(new JSONObject().put("path", actionName));
-      //  assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        assertTrue(steps.isExists(actionName));
     }
 }
 

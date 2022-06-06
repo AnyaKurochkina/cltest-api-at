@@ -9,7 +9,6 @@ import httpModels.productCatalog.jinja2.getJinjaResponse.GetJinjaResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Graph;
 import models.productCatalog.Jinja2;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
@@ -223,5 +222,15 @@ public class JinjaTest extends Tests {
                 .createObject();
         Response response = steps.dumpToBitbucket(jinja.getJinjaId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+    }
+
+    @Test
+    @DisplayName("Выгрузка Jinja из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabJinja() {
+        String path = "";
+        steps.loadFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(steps.isExists(path));
     }
 }

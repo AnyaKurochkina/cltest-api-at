@@ -140,6 +140,16 @@ public class ExampleTest extends Tests {
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
 
+    @Test
+    @DisplayName("Выгрузка example из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabExample() {
+        String examplePath = "";
+        steps.loadFromBitbucket(new JSONObject().put("path", examplePath));
+        assertTrue(steps.isExists(examplePath));
+    }
+
     @DisplayName("Удаление Example по Id")
     @TmsLink("822423")
     @Test

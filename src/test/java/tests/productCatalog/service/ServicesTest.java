@@ -384,4 +384,14 @@ public class ServicesTest extends Tests {
         Response response = steps.dumpToBitbucket(service.getServiceId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
+
+    @Test
+    @DisplayName("Выгрузка Service из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabService() {
+        String path = "";
+        steps.loadFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(steps.isExists(path));
+    }
 }

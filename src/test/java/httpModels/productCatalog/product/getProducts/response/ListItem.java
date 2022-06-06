@@ -47,6 +47,12 @@ public class ListItem implements ItemImpl {
     @JsonProperty("envs")
     private List<String> envs;
 
+    @JsonProperty("allowed_developers")
+    private String allowed_developers;
+
+    @JsonProperty("restricted_developers")
+    private String restricted_developers;
+
     @JsonProperty("restricted_groups")
     private List<Object> restrictedGroups;
 

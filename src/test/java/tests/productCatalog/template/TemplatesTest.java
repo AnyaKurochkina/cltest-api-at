@@ -213,4 +213,14 @@ public class TemplatesTest extends Tests {
         Response response = steps.dumpToBitbucket(String.valueOf(template.getTemplateId()));
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
+
+    @Test
+    @DisplayName("Выгрузка Template из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabTemplate() {
+        String path = "";
+        steps.loadFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(steps.isExists(path));
+    }
 }

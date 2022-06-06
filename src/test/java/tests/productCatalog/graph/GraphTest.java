@@ -307,4 +307,14 @@ public class GraphTest extends Tests {
         Response response = steps.dumpToBitbucket(graph.getGraphId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
+
+    @Test
+    @DisplayName("Выгрузка Graph из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabGraph() {
+        String path = "";
+        steps.loadFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(steps.isExists(path));
+    }
 }
