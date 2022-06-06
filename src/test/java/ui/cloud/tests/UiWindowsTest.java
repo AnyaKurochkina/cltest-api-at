@@ -92,10 +92,12 @@ public class UiWindowsTest extends Tests {
         commonChecks.checkHeaderHistoryTable();
         commonChecks.checkHistoryRowDeployOk();
         commonChecks.checkHistoryRowDeployErr();
+        commonChecks.getActionHistory().click();
         commonChecks.getHistoryRow0().getAttribute("title").contains("Просмотр схемы выполнения");
         log.info("пользователь проверяет, что на странице присутствует текст \"Просмотр схемы выполнения\"");
+        commonChecks.getHistoryRow0().click();
         commonChecks.getGraphScheme().shouldBe(Condition.visible);
-        log.info(" пользователь проверяет наличие элемента \"Схема выполнения\"");
+        log.info("пользователь проверяет наличие элемента \"Схема выполнения\"");
     }
 //
 //    @Test
