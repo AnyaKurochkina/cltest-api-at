@@ -17,7 +17,7 @@ public class LoginPage {
 
     public LoginPage(String project) {
         Organization org = Organization.builder().build().createObject();
-        open(String.format("/?context=%s&type=project&org=%s", project, org.getName()));
+        open("https://prod-portal-front.cloud.vtb.ru/vm/orders/1f94dabf-37f7-4050-9a4b-e3306264d1ff/main?context=proj-frybyv41jh&type=project&org=vtb");//(String.format("/?context=%s&type=project&org=%s", project, org.getName()));
         submitBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled);
     }
 
