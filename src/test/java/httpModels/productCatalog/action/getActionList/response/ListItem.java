@@ -131,6 +131,12 @@ public class ListItem implements ItemImpl {
     @JsonProperty("extra_data")
     private Map<String, String> extraData;
 
+    @JsonProperty("allowed_developers")
+    private String allowed_developers;
+
+    @JsonProperty("restricted_developers")
+    private String restricted_developers;
+
     @Override
     public String getName() {
         return name;
