@@ -3,23 +3,29 @@ package ui.cloud.pages.productCatalog;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
+import ui.uiModels.Node;
 import ui.uiModels.SubgraphNode;
 import ui.cloud.tests.productCatalog.TestUtils;
+import ui.uiModels.TemplateNode;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.actions;
 
 public class GraphNodesPage extends GraphPage {
 
     private final SelenideElement addNodeButton = $x("//button[@aria-label = 'add node']");
     private final SelenideElement editNodeButton = $x("//button[@aria-label = 'edit node']");
+    private final SelenideElement copyNode = $x("//li[@id='clone_node']");
     private final SelenideElement deleteNodesButton = $x("//button[@aria-label = 'delete items']");
     private final SelenideElement nodeName = $x("//form//input[@name = 'name']");
     private final SelenideElement nodeDescription = $x("//form//input[@name = 'description']");
     private final SelenideElement subgraphInput = $x("//label[text() = 'Подграф']/..//input");
+    private final SelenideElement templateInput = $x("//label[text() = 'Шаблон']/..//input");
     private final SelenideElement formAddNodeButton = $x("//form//span[text() = 'Добавить']//ancestor::button");
     private final SelenideElement formSaveNodeButton = $x("//form//span[text() = 'Сохранить']//ancestor::button");
     private final SelenideElement formCancelButton = $x("//form//span[text() = 'Отмена']//ancestor::button");
     private final SelenideElement showSubgraphsButton = $x("(//label[text() = 'Подграф']/..//*[name()='svg'])[2]");
+    private final SelenideElement showTemplatesButton = $x("(//label[text() = 'Шаблон']/..//*[name()='svg'])[2]");
     private final SelenideElement inputJSONField = $x("//label[text()='Input']/../..//textarea");
     private final SelenideElement outputJSONField = $x("//label[text()='Output']/../..//textarea");
     private final SelenideElement printedOutputJSONField = $x("//label[text()='Printed output']/../..//textarea");
@@ -43,21 +49,28 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement subgraphVersionSelect = $x("(//label[text()='Версия']/parent::div//select)[2]");
     private final SelenideElement showSubgraphVersions = $x("(//label[text()='Версия']/parent::div//*[name()='svg'])[2]");
 
-    public GraphNodesPage addNodeSubgraph(SubgraphNode node) {
+    public GraphNodesPage addNodeAndSave(Node node) {
         addNodeButton.click();
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
-        showSubgraphsButton.click();
-        subgraphInput.setValue(node.getSubgraphName());
-        $x("//div[contains(@title,'" + node.getSubgraphName() + "')]").shouldBe(Condition.enabled).click();
-        inputJSONField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
-        inputJSONField.setValue(node.getInput());
-        outputJSONField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
-        outputJSONField.setValue(node.getOutput());
-        numberInput.setValue(String.valueOf(node.getNumber()));
-        timeoutInput.setValue(String.valueOf(node.getTimeout()));
-        loggingLevelSelect.shouldBe(Condition.disabled);
-        countInput.setValue(String.valueOf(node.getCount()));
+        if (node instanceof SubgraphNode) {
+            showSubgraphsButton.click();
+            subgraphInput.setValue(((SubgraphNode) node).getSubgraphName());
+            $x("//div[contains(@title,'" + ((SubgraphNode) node).getSubgraphName() + "')]").shouldBe(Condition.enabled).click();
+            inputJSONField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
+            inputJSONField.setValue(node.getInput());
+            outputJSONField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
+            outputJSONField.setValue(node.getOutput());
+            numberInput.setValue(String.valueOf(node.getNumber()));
+            timeoutInput.setValue(String.valueOf(node.getTimeout()));
+            loggingLevelSelect.shouldBe(Condition.disabled);
+            countInput.setValue(String.valueOf(node.getCount()));
+        }
+        if (node instanceof TemplateNode) {
+            showTemplatesButton.click();
+            templateInput.setValue(((TemplateNode) node).getTemplateName());
+            $x("//div[contains(@title,'" + ((TemplateNode) node).getTemplateName() + "')]").shouldBe(Condition.enabled).click();
+        }
         onPrebillingToggle.click();
         runOnRollbackToggle.click();
         holdToggle.click();
@@ -79,6 +92,25 @@ public class GraphNodesPage extends GraphPage {
         node.setSubgraphVersion(version);
         node.setDescription(description);
         TestUtils.wait(1000);
+        return this;
+    }
+
+    public GraphNodesPage copyNodeAndSave(SubgraphNode node) {
+        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        TestUtils.scrollToTheTop();
+        actions().pause(1000)
+                .moveToElement($x("//div[@class='g6-grid-container']/following-sibling::canvas"))
+                .moveByOffset(0, 60)
+                .contextClick()
+                .perform();
+        copyNode.click();
+        formAddNodeButton.click();
+        saveGraphWithPatchVersion();
+        return this;
+    }
+
+    public GraphNodesPage checkNodeNotFound(SubgraphNode node) {
+        $x("//div[text()='"+node.getDescription()+"']/..//*[name()='svg' and @class]").shouldBe(Condition.not(Condition.visible));
         return this;
     }
 
@@ -118,7 +150,7 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
-    public GraphNodesPage checkNodeAttributes(SubgraphNode node) {
+    public GraphNodesPage checkNodeAttributes(Node node) {
         if (node.getNumber().equals("")) {
             node.setNumber("1");
         }
@@ -127,7 +159,9 @@ public class GraphNodesPage extends GraphPage {
         editNodeButton.click();
         nodeName.shouldHave(Condition.exactValue(node.getName()));
         nodeDescription.shouldHave(Condition.exactValue(node.getDescription()));
-        $x("//div[text() = '" + node.getSubgraphName() + "']").shouldBe(Condition.visible);
+        if (node instanceof SubgraphNode) {
+            $x("//div[text() = '" + ((SubgraphNode) node).getSubgraphName() + "']").shouldBe(Condition.visible);
+        }
         numberInput.shouldHave(Condition.exactValue(node.getNumber()));
         timeoutInput.shouldHave(Condition.exactValue(node.getTimeout()));
         countInput.shouldHave(Condition.exactValue(node.getCount()));
@@ -138,7 +172,7 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
-    public GraphNodesPage deleteNode(SubgraphNode node) {
+    public GraphNodesPage deleteNodeAndSave(Node node) {
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
         TestUtils.scrollToTheTop();
         deleteNodesButton.click();

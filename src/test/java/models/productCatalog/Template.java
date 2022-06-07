@@ -70,6 +70,7 @@ public class Template extends Entity {
                 .set("$.version", version)
                 .set("$.type", type)
                 .set("$.title", title)
+                .set("$.run", run)
                 .build();
     }
 

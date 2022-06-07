@@ -1,18 +1,18 @@
-package ui.cloud.tests.productCatalog.graph;
+package ui.cloud.tests.productCatalog.graph.node;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.uiModels.SubgraphNode;
 
 @Epic("Графы")
-@Feature("Редактирование узла графа")
-public class EditNodeTest extends GraphBaseTest {
+@Feature("Копирование узла графа")
+public class CopyNodeTest extends GraphBaseTest {
 
     @BeforeEach
     @DisplayName("Создание подграфа для узла графа")
@@ -22,22 +22,19 @@ public class EditNodeTest extends GraphBaseTest {
 
     @AfterEach
     @DisplayName("Удаление подграфа")
-    public void tearDownForGraphsTest() {
+    public void tearDownForGraphTests() {
         deleteGraph(NAME);
         deleteGraph(SUBGRAPH_NAME);
     }
 
     @Test
-    @TmsLink("894894")
-    @DisplayName("Редактирование узла графа (подграф)")
-    public void editNodeSubgraphTest() {
+    @DisplayName("Копирование узла графа")
+    public void copyGraphNode() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
         new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()
-                .addNodeSubgraph(node)
-                .editNodeSubgraph(node, "1.0.0", "edit")
-                .checkNodeAttributes(node)
-                .deleteNode(node);
+                .addNodeAndSave(node)
+                .copyNodeAndSave(node);
     }
 }
