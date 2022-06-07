@@ -96,6 +96,7 @@ public class GraphNodesPage extends GraphPage {
     }
 
     public GraphNodesPage copyNodeAndSave(SubgraphNode node) {
+        String cloneName = node.getName()+"_clone";
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
         TestUtils.scrollToTheTop();
         actions().pause(1000)
@@ -104,6 +105,7 @@ public class GraphNodesPage extends GraphPage {
                 .contextClick()
                 .perform();
         copyNode.click();
+        nodeName.shouldHave(Condition.exactValue(cloneName));
         formAddNodeButton.click();
         saveGraphWithPatchVersion();
         return this;
