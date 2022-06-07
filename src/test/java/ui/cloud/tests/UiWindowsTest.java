@@ -96,7 +96,10 @@ public class UiWindowsTest extends Tests {
         commonChecks.checkHeaderHistoryTable();
         commonChecks.checkHistoryRowDeployOk();
         commonChecks.checkHistoryRowDeployErr();
+        sleep(5000);
         commonChecks.getActionHistory().click();
+        commonChecks.getHistoryRow0().wait(5000);
+        commonChecks.getHistoryRow0().isDisplayed();
         commonChecks.getHistoryRow0().getAttribute("title").contains("Просмотр схемы выполнения");
         log.info("пользователь проверяет, что на странице присутствует текст \"Просмотр схемы выполнения\"");
         commonChecks.getHistoryRow0().click();
@@ -167,7 +170,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     @TmsLink("714878")
     @DisplayName("UI Windows. Подключить в ОС")
     void discActOn() {
@@ -179,7 +182,7 @@ public class UiWindowsTest extends Tests {
 
 
     @Test
-    @Order(10)
+    @Order(9)
     @TmsLink("714872")
     @DisplayName("UI Windows. Отключить в ОС")
     void discActOff() throws Throwable {
