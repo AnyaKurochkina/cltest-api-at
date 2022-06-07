@@ -98,6 +98,7 @@ public class UiWindowsTest extends Tests {
         commonChecks.getHistoryRow0().click();
         commonChecks.getGraphScheme().shouldBe(Condition.visible);
         log.info("пользователь проверяет наличие элемента \"Схема выполнения\"");
+
     }
 //
 //    @Test
