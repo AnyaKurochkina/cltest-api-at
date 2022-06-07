@@ -12,6 +12,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
+import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -397,11 +398,11 @@ public class ActionsTest extends Tests {
     @Disabled
     @TmsLink("")
     public void dumpToGitlabAction() {
-        String actionName = "dump_to_gitlab_test_api";
+        String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
         Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
-                .version("1.0.2")
+                .version("1.0.0")
                 .build()
                 .createObject();
         Response response = steps.dumpToBitbucket(action.getActionId());
@@ -413,9 +414,9 @@ public class ActionsTest extends Tests {
     @Disabled
     @TmsLink("")
     public void loadFromGitlabAction() {
-        String actionName = "action_dump_to_gitlab_test_api_1.0.2";
-        Response response = steps.loadFromBitbucket(actionName);
-      //  assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        String actionName = "action_dump_to_gitlab_test_api222_1.0.3";
+        steps.loadFromBitbucket(new JSONObject().put("path", actionName));
+        assertTrue(steps.isExists(actionName));
     }
 }
 

@@ -12,7 +12,9 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.authorizer.Project;
 import models.productCatalog.Product;
+import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -21,10 +23,7 @@ import steps.references.ReferencesStep;
 import tests.Tests;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -476,5 +475,43 @@ public class ProductsTest extends Tests {
                 .createObject();
         GetProductResponse getProductById = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
         assertTrue(getProductById.getInGeneralList());
+    }
+
+    @Test
+    @DisplayName("Загрузка Product в GitLab")
+    @Disabled
+    @TmsLink("")
+    public void dumpToGitlabProduct() {
+        String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        Product product = Product.builder()
+                .name(productName)
+                .title(productName)
+                .build()
+                .createObject();
+        Response response = steps.dumpToBitbucket(product.getProductId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+    }
+
+    @Test
+    @DisplayName("Выгрузка Product из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabProduct() {
+        String path = "";
+        steps.loadFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(steps.isExists(path));
+    }
+
+    @DisplayName("Получение продукта по контексту id проекта без ограничений со стороны организации")
+    @Test
+    public void getProductWithOutOrgWithProjectContext() {
+        Project project = Project.builder().build().createObject();
+        Product product = Product.builder()
+                .name("product_withour_org_for_context_test_api")
+                .informationSystems(Collections.emptyList())
+                .envs(Arrays.asList(Configure.ENV))
+                .build()
+                .createObject();
+        steps.getProductByContextProject(project.getId(), product.getProductId());
     }
 }

@@ -12,7 +12,6 @@ import models.orderService.interfaces.IProduct;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
 import steps.stateService.StateServiceSteps;
-import tests.Tests;
 import ui.elements.Dialog;
 import ui.elements.Table;
 
@@ -33,6 +32,7 @@ public abstract class IProductPage {
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
+    SelenideElement btnAct = $x("(//div[@id='root']//*[text()='Дополнительные диски']/ancestor::div[3]//following-sibling::div//button[@id='actions-menu-button' and not (.//text()='Действия')])[last()]");
 
     public IProductPage(IProduct product) {
         if (Objects.nonNull(product.getLink()))
@@ -41,6 +41,10 @@ public abstract class IProductPage {
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
         this.product = product.buildFromLink();
         topInfo = new TopInfo();
+    }
+
+    public IProductPage() {
+
     }
 
     @Step("Ожидание выполнение действия с продуктом")
@@ -63,6 +67,7 @@ public abstract class IProductPage {
         return $x("//ancestor::div[.='{}Действия']//button[.='Действия']", header);
     }
 
+
     @Step("Запуск действия '{action}' в блоке '{headerBlock}'")
     public void runActionWithoutParameters(String headerBlock, String action) {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
@@ -77,10 +82,22 @@ public abstract class IProductPage {
 
     @SneakyThrows
     @Step("Запуск действия '{action}' в блоке '{headerBlock}' с параметрами")
-    public void runActionWithParameters(String headerBlock, String action, Executable executable) {
+    public void runActionWithParameters(String headerBlock, String action, Executable executable, boolean off) throws Throwable {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
+        getBtnAction(headerBlock).scrollIntoView(off);
         getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        executable.execute();
+        Waiting.sleep(3000);
+    }
+
+    @SneakyThrows
+    @Step("Запуск действия '{action}' в блоке '{headerBlock}' с параметрами")
+    public void runActionWithParameters2(String headerBlock, String action, Executable executable, boolean off) throws Throwable {
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnAct.scrollIntoView(off);
+        btnAct.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        $x("(//li[.='{}'])[last()]", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
         Waiting.sleep(3000);
     }
@@ -114,7 +131,7 @@ public abstract class IProductPage {
         public static final String POWER_STATUS_OFF = "Выключено";
 
         public VirtualMachine() {
-            super("Питание");
+            super("Статус");
         }
 
         public VirtualMachine open(){

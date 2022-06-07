@@ -14,6 +14,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.ItemVisualTemplates;
+import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -331,5 +332,30 @@ public class VisualTemplateTest extends Tests {
                 .build()
                 .createObject();
         steps.deleteById(visualTemplates.getItemId());
+    }
+
+    @Test
+    @DisplayName("Загрузка VisualTemplate в GitLab")
+    @Disabled
+    @TmsLink("")
+    public void dumpToGitlabVisualTemplate() {
+        String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        ItemVisualTemplates visualTemplate = ItemVisualTemplates.builder()
+                .name(visualTemplateName)
+                .title(visualTemplateName)
+                .build()
+                .createObject();
+        Response response = steps.dumpToBitbucket(visualTemplate.getItemId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+    }
+
+    @Test
+    @DisplayName("Выгрузка VisualTemplate из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabVisualTemplate() {
+        String path = "";
+        steps.loadFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(steps.isExists(path));
     }
 }
