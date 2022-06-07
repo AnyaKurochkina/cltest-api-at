@@ -1,9 +1,11 @@
 package ui.cloud.tests.productCatalog.orgDirection;
 
+import core.helper.JsonHelper;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Disabled;
@@ -21,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Epic("Конструктор")
 @Feature("Направления")
 @DisabledIfEnv("prod")
-public class CreateDirectionTest extends BaseTest {
+public class OrgDirectionTest extends BaseTest {
     public static final String DIRECTION_TITLE = "at_ui_create_direction_title";
     public static final String DIRECTION_NAME = "at_ui_create_direction_name";
     public static final String DIRECTION_DESCRIPTION = "at_ui_create_direction_description";
@@ -45,6 +47,7 @@ public class CreateDirectionTest extends BaseTest {
 
     @Test
     @DisplayName("Редактирование поля имени в направлении")
+    @TmsLink("486544")
     public void editDirections() {
         String name = "at_ui_edit_direction_name";
         String title = "at_ui_edit_direction_title";
@@ -65,6 +68,7 @@ public class CreateDirectionTest extends BaseTest {
 
     @Test
     @DisplayName("Удалить направление из списка с помощью контекстного меню")
+    @TmsLink("486568")
     public void deleteDirectionsWithContextMenu() {
         String name = "at_ui_delete_direction_with_context_menu";
         String title = "at_ui_delete_direction_with_context_menu_title";
@@ -77,8 +81,7 @@ public class CreateDirectionTest extends BaseTest {
                 .createDirection()
                 .fillAndSave(title, name, description)
                 .findDirectionByName(name)
-                .clickActionMenu(name)
-                .deleteActionMenu()
+                .deleteActionMenu(name)
                 .inputInvalidId("invalid-id45")
                 .fillIdAndDelete()
                 .isNotExist(name), "Направление существует.");
@@ -86,6 +89,7 @@ public class CreateDirectionTest extends BaseTest {
 
     @Test
     @DisplayName("Удалить из формы редактирования направления")
+    @TmsLink("508543")
     public void deleteDirectionFromRedactor() {
         String name = "at_ui_delete_direction_from_redactor";
         String title = "at_ui_delete_direction_from_redactor_title";
@@ -106,6 +110,7 @@ public class CreateDirectionTest extends BaseTest {
 
     @Test
     @DisplayName("Создать копию направления")
+    @TmsLink("486597")
     public void copyDirection() {
         String name = "at_ui_copy_direction";
         String title = "at_ui_copy_direction_title";
@@ -119,11 +124,29 @@ public class CreateDirectionTest extends BaseTest {
         assertTrue(new IndexPage()
                 .goToOrgDirectionsPage()
                 .findDirectionByName(name)
-                .clickActionMenu(name)
-                .copyActionMenu()
+                .copyActionMenu(name)
                 .isFieldsCompare(name, title, description), "Поля не равны");
         String cloneName = name + "-clone";
         steps.deleteByName(cloneName, GetOrgDirectionListResponse.class);
+    }
+
+    @Test
+    @DisplayName("Импортировать направление")
+    @TmsLink("486652")
+    public void importDirection() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
+        String importName = new JsonPath(data).get("OrgDirection.name");
+        new IndexPage()
+                .goToOrgDirectionsPage()
+                .uploadFile("src/test/resources/json/productCatalog/orgDirection/importOrgDirection.json")
+                .findDirectionByName(importName);
+        steps.deleteByName(importName, GetOrgDirectionListResponse.class);
+    }
+
+    @Test
+    @DisplayName("Экспортировать направление")
+    @Disabled
+    public void exportDirection() {
     }
 
     @Test

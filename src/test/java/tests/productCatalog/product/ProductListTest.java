@@ -1,18 +1,21 @@
 package tests.productCatalog.product;
 
 import core.helper.Configure;
+import core.helper.http.Response;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import httpModels.productCatalog.product.getProducts.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.authorizer.Project;
 import models.productCatalog.Product;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
+import steps.resourceManager.ResourceManagerSteps;
 import tests.Tests;
 
 import java.util.List;
@@ -121,6 +124,27 @@ public class ProductListTest extends Tests {
         for (ItemImpl item : productList) {
             ListItem listItem = (ListItem) item;
             assertFalse(listItem.getInGeneralList());
+        }
+    }
+    //todo Убрать хардкод проекта логику прохождения по списку убрать.
+    @DisplayName("Получение списка по контексту id проекта \"proj-c1kaqj2ugp\"")
+    @Test
+    public void getProductListWithProjectContext() {
+        Project project = Project.builder().build().createObject();
+        Response resp = ResourceManagerSteps.getProjectById(project.getId(), "project_environment");
+        String org = resp.jsonPath().getString("data.organization");
+        String infSys = resp.jsonPath().getString("data.information_system_id");
+        String envType = resp.jsonPath().getString("data.project_environment.environment_type").toLowerCase();
+        List<ListItem> list = steps.getProductListByProjectContext(project.getId());
+        for (ListItem item : list) {
+            List<httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem> list1 = steps
+                    .getProductOrgInfoSystemById(item.getId()).getList();
+            assertTrue(steps.isOrgContains(list1, org));
+            for (httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem item1 : list1) {
+                List<String> informationSystems = item1.getInformationSystems();
+                assertTrue(informationSystems.contains(infSys) || informationSystems.isEmpty());
+            }
+            assertTrue(item.getEnvs().contains(envType));
         }
     }
 }
