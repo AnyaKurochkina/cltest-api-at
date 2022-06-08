@@ -81,7 +81,7 @@ public class UiWindowsTest extends Tests {
         //пользователь проверяет детали заказа
         commonChecks.checkOrderDetails(commonChecks.getCalculationDetails(), "Windows Server");
         //получает стоимосить на предбиллинге
-        sleep(5000);
+        commonChecks.getLoadOrderPricePerDay().shouldBe(Condition.disappear);
         String prepriceStr = commonChecks.getOrderPricePerDay().getAttribute("textContent");
         Double prepriceDbl = CommonChecks.getNumbersFromText(prepriceStr);
         orderPage.orderClick();
@@ -97,18 +97,20 @@ public class UiWindowsTest extends Tests {
         commonChecks.checkHeaderHistoryTable();
         commonChecks.checkHistoryRowDeployOk();
         commonChecks.checkHistoryRowDeployErr();
-        sleep(5000);
-        commonChecks.getActionHistory().click();
-        commonChecks.getHistoryRow0().isDisplayed();
-        commonChecks.getHistoryRow0().getAttribute("title").contains("Просмотр схемы выполнения");
+
+        //to do
+        sleep(5000);//commonChecks.getOrderPricePerDayAfterOrder().shouldBe(Condition.disappear); // пока элемент не исчезнет
+        commonChecks.getActionHistory().shouldBe(Condition.enabled).click();
+        commonChecks.getHistoryRow0().shouldHave(Condition.attributeMatching("title","Просмотр схемы выполнения"));
         log.info("пользователь проверяет, что на странице присутствует текст \"Просмотр схемы выполнения\"");
-        commonChecks.getHistoryRow0().click();
+        commonChecks.getHistoryRow0().shouldBe(Condition.enabled).click();
         commonChecks.getGraphScheme().shouldBe(Condition.visible);
         log.info("пользователь проверяет наличие элемента \"Схема выполнения\"");
-        commonChecks.getCloseModalWindowButton().click();
+        commonChecks.getCloseModalWindowButton().shouldBe(Condition.enabled).click();
         //пользователь проверяет, что стоимость продукта соответствует предбиллингу
-        commonChecks.getBtnGeneralInfo().click();
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
         commonChecks.getOrderPricePerDayAfterOrder().shouldBe(Condition.visible);
+
         String priceStr = commonChecks.getOrderPricePerDayAfterOrder().getAttribute("textContent");
         Double priceDbl = CommonChecks.getNumbersFromText(priceStr);
         Assertions.assertEquals(priceDbl,prepriceDbl);
@@ -163,7 +165,7 @@ public class UiWindowsTest extends Tests {
     @Order(6)
     @TmsLink("233925")
     @DisplayName("UI Windows. Добавить диск")
-    void discActAdd() throws Throwable {
+    void discActAdd()  {
         WindowsPage winPage = new WindowsPage(product);
         winPage.discActAdd();
         commonChecks.checkHistoryRowDiscAddOk();

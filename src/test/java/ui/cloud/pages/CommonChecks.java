@@ -24,8 +24,10 @@ public class CommonChecks {
 
     private final SelenideElement orderPricePerDay = $x("//*[@data-testid='new-order-details-price']");
     private final SelenideElement btnGeneralInfo = StringUtils.$x("//button[.='Общая информация']");
+    private final SelenideElement loadOrderPricePerDay = StringUtils.$x("//*[@data-testid='new-order-details-price']/div//*[name()='path']");
     private final SelenideElement orderPricePerDayAfterOrder = $x("//button[@title='Редактировать']/following::span[1]");
     private final SelenideElement closeModalWindowButton = $x("//div[@role='dialog']//button[contains(.,'Закрыть')]");
+    private final SelenideElement orderBtn = $x("//button[.='Заказать']");
     private final SelenideElement actionHistory = $x("//*[text()='История действий']/ancestor::button");
     private final SelenideElement actionNameColumn = $x("//table//tr/th[text()='Наименование']");
     private final SelenideElement actionInitiatorColumn = $x("//table//tr/th[text()='Инициатор']");
