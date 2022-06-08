@@ -45,6 +45,7 @@ public class UiWindowsTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
+        Configuration.browserSize="1366x768";
         new LoginPage(product.getProjectId())
                 .singIn();
     }
@@ -98,7 +99,6 @@ public class UiWindowsTest extends Tests {
         commonChecks.checkHistoryRowDeployErr();
         sleep(5000);
         commonChecks.getActionHistory().click();
-        commonChecks.getHistoryRow0().wait(5000);
         commonChecks.getHistoryRow0().isDisplayed();
         commonChecks.getHistoryRow0().getAttribute("title").contains("Просмотр схемы выполнения");
         log.info("пользователь проверяет, что на странице присутствует текст \"Просмотр схемы выполнения\"");
