@@ -195,10 +195,11 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(11)
-    @TmsLink("646056")
-    @DisplayName("UI Windows. Удалить диск")
+    @TmsLinks({@TmsLink("714872"),@TmsLink("646056")})
+    @DisplayName("UI Windows. Отключить в ОС. Удалить диск")
     void discActDelete() {
         WindowsPage winPage = new WindowsPage(product);
+        winPage.discActOff();
         winPage.discActDelete();
         commonChecks.checkHistoryRowDiscDeleteOk();
         commonChecks.checkHistoryRowDiscDeleteErr();
