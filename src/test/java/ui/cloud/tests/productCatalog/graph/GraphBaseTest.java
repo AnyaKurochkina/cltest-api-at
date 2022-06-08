@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.tests.productCatalog.BaseTest;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class GraphBaseTest extends BaseTest {
@@ -47,6 +49,9 @@ public class GraphBaseTest extends BaseTest {
     }
 
     public void createTemplate(String name) {
+        Map<String,String> value = new LinkedHashMap<>();
+        Map<String,Map<String,String>> input = new LinkedHashMap<>();
+        input.put("input_param",value);
         Template.builder()
                 .templateName(name)
                 .title(TEMPLATE_TITLE)
@@ -54,6 +59,8 @@ public class GraphBaseTest extends BaseTest {
                 .description(DESCRIPTION)
                 .type("system_nodes")
                 .run("internal")
+                .input(input)
+                .timeout(100)
                 .build()
                 .createObject();
     }

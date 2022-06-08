@@ -26,7 +26,6 @@ public class CreateGraphTest extends GraphBaseTest {
     @Step("Просмотр списка графов, создание, поиск")
     public void createGraph() {
         new IndexPage().goToGraphsPage()
-                .checkGraphsListHeaders()
                 .createGraph(TITLE, name, "action", DESCRIPTION, AUTHOR)
                 .findGraphByName(name)
                 .findGraphByName(TITLE)

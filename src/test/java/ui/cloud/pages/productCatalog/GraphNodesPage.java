@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
 import ui.uiModels.Node;
 import ui.uiModels.SubgraphNode;
@@ -37,6 +38,8 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement onPrebillingToggle = $x("//input[@name='on_prebilling']");
     private final SelenideElement runOnRollbackToggle = $x("//input[@name='run_on_rollback']");
     private final SelenideElement holdToggle = $x("//input[@name='hold']");
+    private final SelenideElement isSequentialToggle = $x("//input[@name='is_sequential']");
+    private final SelenideElement damageOrderOnErrorToggle = $x("//form//input[@name='damage_order_on_error']");
     private final SelenideElement loggingLevelSelect = $x("//div[text()='Уровень логирования']/ancestor::label/..//select");
     private final SelenideElement nameRequiredFieldHint = $x("//label[contains(text(),'Название')]/parent::div//div[text()='Поле обязательно для заполнения']");
     private final SelenideElement descriptionRequiredFieldHint = $x("//label[contains(text(),'Описание')]/parent::div//div[text()='Поле обязательно для заполнения']");
@@ -46,9 +49,12 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement onPrebillingToggleOn = $x("//p[text()='on_prebilling']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement runOnRollbackToggleOn = $x("//p[text()='run_on_rollback']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement holdToggleOn = $x("//p[text()='hold']/parent::div//span[contains(@class,'checked')]");
+    private final SelenideElement isSequentialToggleOn = $x("//p[text()='Is sequential']/parent::div//span[contains(@class,'checked')]");
+    private final SelenideElement damageOrderOnErrorToggleOn = $x("//p[text()='damage_order_on_error']/ancestor::div[2]//span[contains(@class,'checked')]");
     private final SelenideElement subgraphVersionSelect = $x("(//label[text()='Версия']/parent::div//select)[2]");
     private final SelenideElement showSubgraphVersions = $x("(//label[text()='Версия']/parent::div//*[name()='svg'])[2]");
 
+    @Step("Добавление узла графа и сохранение")
     public GraphNodesPage addNodeAndSave(Node node) {
         addNodeButton.click();
         nodeName.setValue(node.getName());
@@ -74,6 +80,8 @@ public class GraphNodesPage extends GraphPage {
         onPrebillingToggle.click();
         runOnRollbackToggle.click();
         holdToggle.click();
+        isSequentialToggle.click();
+        damageOrderOnErrorToggle.click();
         formAddNodeButton.click();
         saveGraphWithPatchVersion();
         TestUtils.wait(1000);
@@ -95,6 +103,7 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
+    @Step("Копирование узла графа и сохранение")
     public GraphNodesPage copyNodeAndSave(SubgraphNode node) {
         String cloneName = node.getName()+"_clone";
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
@@ -111,11 +120,13 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка отсутствия узла графа в списке узлов")
     public GraphNodesPage checkNodeNotFound(SubgraphNode node) {
         $x("//div[text()='"+node.getDescription()+"']/..//*[name()='svg' and @class]").shouldBe(Condition.not(Condition.visible));
         return this;
     }
 
+    @Step("Проверка недоступности добавления узла графа")
     public GraphNodesPage checkAddNodeSubgraphDisabled(SubgraphNode node) {
         addNodeButton.click();
         nodeName.setValue(node.getName());
@@ -152,6 +163,7 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка значений атрибутов узла графа")
     public GraphNodesPage checkNodeAttributes(Node node) {
         if (node.getNumber().equals("")) {
             node.setNumber("1");
@@ -170,6 +182,8 @@ public class GraphNodesPage extends GraphPage {
         onPrebillingToggleOn.shouldBe(Condition.visible);
         runOnRollbackToggleOn.shouldBe(Condition.visible);
         holdToggleOn.shouldBe(Condition.visible);
+        isSequentialToggleOn.shouldBe(Condition.visible);
+        damageOrderOnErrorToggleOn.shouldBe(Condition.visible);
         formCancelButton.click();
         return this;
     }

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
+import java.util.Map;
 
 import static core.helper.Configure.ProductCatalogURL;
 
@@ -45,7 +46,7 @@ public class Template extends Entity {
     private String logLevel;
     private List<Object> restrictedGroups;
     private Integer priority;
-    private Input input;
+    private Map<String,Map<String,String>> input;
     private Object extraData;
     private String templateName;
     private List<Object> allowedGroups;
@@ -71,6 +72,8 @@ public class Template extends Entity {
                 .set("$.type", type)
                 .set("$.title", title)
                 .set("$.run", run)
+                .set("$.input", input)
+                .set("$.timeout", timeout)
                 .build();
     }
 

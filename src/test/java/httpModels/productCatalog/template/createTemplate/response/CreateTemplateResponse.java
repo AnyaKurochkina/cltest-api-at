@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -86,7 +88,7 @@ public class CreateTemplateResponse{
 	private String lastVersion;
 
 	@JsonProperty("input")
-	private Input input;
+	private Map<String,Map<String,String>> input;
 
 	@JsonProperty("extra_data")
 	private Object extraData;
@@ -207,7 +209,7 @@ public class CreateTemplateResponse{
 		return lastVersion;
 	}
 
-	public Input getInput(){
+	public Map<String,Map<String,String>> getInput(){
 		return input;
 	}
 
