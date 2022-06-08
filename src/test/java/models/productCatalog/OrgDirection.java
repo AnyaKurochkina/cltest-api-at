@@ -28,7 +28,7 @@ public class OrgDirection extends Entity {
     private String jsonTemplate;
     private String title;
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("org_direction/",
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/org_direction/",
             "productCatalog/orgDirection/orgDirection.json");
 
     private final String productName = "/api/v1/org_direction/";
