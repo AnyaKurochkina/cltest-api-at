@@ -72,6 +72,9 @@ public class ServicesTest extends Tests {
     public void importService() {
         String data = JsonHelper.getStringFromFile("/productCatalog/services/importService.json");
         String serviceName = new JsonPath(data).get("Service.json.name");
+        if(steps.isExists(serviceName)) {
+            steps.deleteByName(serviceName, GetServiceListResponse.class);
+        }
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
         Assertions.assertTrue(steps.isExists(serviceName));
         steps.deleteByName(serviceName, GetServiceListResponse.class);
@@ -226,9 +229,13 @@ public class ServicesTest extends Tests {
     @TmsLink("643519")
     @Test
     public void createServiceWithGraphIdNull() {
+        String name = "create_service_with_graph_id_null_test_api";
+        if (steps.isExists(name)) {
+            steps.deleteByName(name, GetServiceListResponse.class);
+        }
         CreateServiceResponse createServiceResponse = steps
                 .createProductObject(JsonHelper.getJsonTemplate("productCatalog/services/createServiceWithGraphIdNull.json")
-                        .set("name", "create_service_with_graph_id_null_test_api")
+                        .set("name", name)
                         .build()).extractAs(CreateServiceResponse.class);
         Assertions.assertNull(createServiceResponse.getGraphId(), "GraphId не равен null");
         steps.deleteById(createServiceResponse.getId());

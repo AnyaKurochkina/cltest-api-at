@@ -507,7 +507,7 @@ public class ProductsTest extends Tests {
     public void getProductWithOutOrgWithProjectContext() {
         Project project = Project.builder().build().createObject();
         Product product = Product.builder()
-                .name("product_withour_org_for_context_test_api")
+                .name("product_without_org_for_context_test_api")
                 .informationSystems(Collections.emptyList())
                 .envs(Arrays.asList(Configure.ENV))
                 .build()

@@ -117,6 +117,12 @@ public class ListItem implements ItemImpl {
     @JsonProperty("direction_title")
     private String directionTitle;
 
+    @JsonProperty("allowed_developers")
+    private String allowed_developers;
+
+    @JsonProperty("restricted_developers")
+    private String restricted_developers;
+
     @Override
     public String getName() {
         return name;
