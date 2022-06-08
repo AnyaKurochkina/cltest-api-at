@@ -1,5 +1,6 @@
 package tests.productCatalog.example;
 
+import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.example.createExample.CreateExampleResponse;
 import httpModels.productCatalog.example.getExampleList.GetExampleListResponse;
@@ -7,8 +8,10 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.productCatalog.Example;
+import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -120,6 +123,31 @@ public class ExampleTest extends Tests {
         steps.partialUpdateObject(exampleId, new JSONObject().put("description", updatedDesc));
         GetImpl getUpdatedExample = steps.getById(exampleId, CreateExampleResponse.class);
         assertEquals(updatedDesc, getUpdatedExample.getDescription());
+    }
+
+    @Test
+    @DisplayName("Загрузка example в GitLab")
+    @Disabled
+    @TmsLink("")
+    public void dumpToGitlabExample() {
+        String exampleName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        Example example = Example.builder()
+                .name(exampleName)
+                .title(exampleName)
+                .build()
+                .createObject();
+        Response response = steps.dumpToBitbucket(example.getId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+    }
+
+    @Test
+    @DisplayName("Выгрузка example из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabExample() {
+        String examplePath = "";
+        steps.loadFromBitbucket(new JSONObject().put("path", examplePath));
+        assertTrue(steps.isExists(examplePath));
     }
 
     @DisplayName("Удаление Example по Id")

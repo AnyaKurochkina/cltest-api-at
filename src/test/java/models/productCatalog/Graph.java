@@ -9,6 +9,7 @@ import httpModels.productCatalog.graphs.createGraph.response.UiSchema;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.graphs.getUsedList.GetUsedListResponse;
 import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
+import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -97,13 +98,13 @@ public class Graph extends Entity {
                 String type = resp.getType();
                 switch (type) {
                     case ("Action"):
-                        ProductCatalogSteps actionSteps = new ProductCatalogSteps("actions/", ProductCatalogURL + "/api/v1/");
+                        ProductCatalogSteps actionSteps = new ProductCatalogSteps("/actions/", ProductCatalogURL + "/api/v1/");
                         if (actionSteps.isExists(resp.getName())) {
                             actionSteps.deleteById(resp.getId());
                         }
                         break;
                     case ("Product"):
-                        ProductCatalogSteps productSteps = new ProductCatalogSteps("products/", ProductCatalogURL + "/api/v1/");
+                        ProductCatalogSteps productSteps = new ProductCatalogSteps("/products/", ProductCatalogURL + "/api/v1/");
                         if (productSteps.isExists(resp.getName())) {
                             GetProductResponse getProduct = (GetProductResponse) productSteps.getById(resp.getId(), GetProductResponse.class);
                             if (getProduct.isOpen()) {
@@ -113,13 +114,17 @@ public class Graph extends Entity {
                         }
                         break;
                     case ("Service"):
-                        ProductCatalogSteps serviceSteps = new ProductCatalogSteps("services/", ProductCatalogURL + "/api/v1/");
+                        ProductCatalogSteps serviceSteps = new ProductCatalogSteps("/services/", ProductCatalogURL + "/api/v1/");
                         if (serviceSteps.isExists(resp.getName())) {
+                            GetServiceResponse getService = (GetServiceResponse) serviceSteps.getById(resp.getId(), GetServiceResponse.class);
+                            if (getService.getIsPublished()) {
+                                serviceSteps.partialUpdateObject(getService.getId(), new JSONObject().put("is_published", false));
+                            }
                             serviceSteps.deleteById(resp.getId());
                         }
                         break;
                     case ("Graph"):
-                        ProductCatalogSteps graphSteps = new ProductCatalogSteps("graphs/", ProductCatalogURL + "/api/v1/");
+                        ProductCatalogSteps graphSteps = new ProductCatalogSteps("/graphs/", ProductCatalogURL + "/api/v1/");
                         if (graphSteps.isExists(resp.getName())) {
                             deleteIfExist(resp.getName());
                           //  graphSteps.deleteById(resp.getId());

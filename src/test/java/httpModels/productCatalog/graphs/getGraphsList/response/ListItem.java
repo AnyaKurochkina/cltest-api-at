@@ -52,6 +52,9 @@ public class ListItem implements ItemImpl {
 	@JsonProperty("update_dt")
 	private String update_dt;
 
+	@JsonProperty("damage_order_on_error")
+	private Boolean damage_order_on_error;
+
 	@Override
 	public String getCreateData() {
 		return create_dt;

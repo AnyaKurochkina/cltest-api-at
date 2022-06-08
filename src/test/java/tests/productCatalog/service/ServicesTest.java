@@ -15,12 +15,10 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import models.productCatalog.Services;
+import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -74,6 +72,9 @@ public class ServicesTest extends Tests {
     public void importService() {
         String data = JsonHelper.getStringFromFile("/productCatalog/services/importService.json");
         String serviceName = new JsonPath(data).get("Service.json.name");
+        if(steps.isExists(serviceName)) {
+            steps.deleteByName(serviceName, GetServiceListResponse.class);
+        }
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
         Assertions.assertTrue(steps.isExists(serviceName));
         steps.deleteByName(serviceName, GetServiceListResponse.class);
@@ -228,9 +229,13 @@ public class ServicesTest extends Tests {
     @TmsLink("643519")
     @Test
     public void createServiceWithGraphIdNull() {
+        String name = "create_service_with_graph_id_null_test_api";
+        if (steps.isExists(name)) {
+            steps.deleteByName(name, GetServiceListResponse.class);
+        }
         CreateServiceResponse createServiceResponse = steps
                 .createProductObject(JsonHelper.getJsonTemplate("productCatalog/services/createServiceWithGraphIdNull.json")
-                        .set("name", "create_service_with_graph_id_null_test_api")
+                        .set("name", name)
                         .build()).extractAs(CreateServiceResponse.class);
         Assertions.assertNull(createServiceResponse.getGraphId(), "GraphId не равен null");
         steps.deleteById(createServiceResponse.getId());
@@ -370,5 +375,30 @@ public class ServicesTest extends Tests {
         String serviceId = service.getServiceId();
         GetServiceResponse getService = (GetServiceResponse) steps.getById(serviceId, GetServiceResponse.class);
         assertEquals(directionTitle, getService.getDirectionTitle());
+    }
+
+    @Test
+    @DisplayName("Загрузка Service в GitLab")
+    @Disabled
+    @TmsLink("")
+    public void dumpToGitlabService() {
+        String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        Services service = Services.builder()
+                .serviceName(serviceName)
+                .title(serviceName)
+                .build()
+                .createObject();
+        Response response = steps.dumpToBitbucket(service.getServiceId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+    }
+
+    @Test
+    @DisplayName("Выгрузка Service из GitLab")
+    @Disabled
+    @TmsLink("")
+    public void loadFromGitlabService() {
+        String path = "";
+        steps.loadFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(steps.isExists(path));
     }
 }

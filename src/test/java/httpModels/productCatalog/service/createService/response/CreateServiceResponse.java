@@ -112,4 +112,10 @@ public class CreateServiceResponse{
 
 	@JsonProperty("auto_open_results")
 	private Boolean autoOpenResults;
+
+	@JsonProperty("allowed_developers")
+	private String allowed_developers;
+
+	@JsonProperty("restricted_developers")
+	private String restricted_developers;
 }
