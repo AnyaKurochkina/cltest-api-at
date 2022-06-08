@@ -105,6 +105,7 @@ public class UiWindowsTest extends Tests {
         commonChecks.getHistoryRow0().click();
         commonChecks.getGraphScheme().shouldBe(Condition.visible);
         log.info("пользователь проверяет наличие элемента \"Схема выполнения\"");
+        commonChecks.getCloseModalWindowButton().click();
         //пользователь проверяет, что стоимость продукта соответствует предбиллингу
         commonChecks.getBtnGeneralInfo().click();
         commonChecks.getOrderPricePerDayAfterOrder().shouldBe(Condition.visible);

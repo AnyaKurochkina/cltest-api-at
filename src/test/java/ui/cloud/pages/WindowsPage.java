@@ -42,7 +42,7 @@ public class WindowsPage extends IProductPage {
         runActionWithoutParameters("Виртуальная машина", "Перезагрузить по питанию");
         waitChangeStatus();
         checkLastAction();
-        //new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
     public void changeConfiguration() {
