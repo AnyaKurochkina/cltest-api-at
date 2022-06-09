@@ -28,10 +28,13 @@ import static org.openqa.selenium.Keys.CONTROL;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags({@Tag("ui_windows")})
 @Log4j2
+
 public class UiWindowsTest extends Tests {
 
     Windows product;
     CommonChecks commonChecks = new CommonChecks();
+    Double prepriceOrderDbl;
+    Double priceOrderDbl;
 
     //TODO: пока так :)
     public UiWindowsTest() {
@@ -76,14 +79,16 @@ public class UiWindowsTest extends Tests {
         orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());//"cloud-zorg-group3"
+        commonChecks.getLoadOrderPricePerDay().shouldBe(Condition.visible);
+        commonChecks.getLoadOrderPricePerDay().shouldBe(Condition.disappear);
         //пользователь проверяет, что у элемента "Стоимость в сутки" атрибут "textContent" содержит значение "≈"
         commonChecks.isCostDayContains("≈");
         //пользователь проверяет детали заказа
         commonChecks.checkOrderDetails(commonChecks.getCalculationDetails(), "Windows Server");
         //получает стоимосить на предбиллинге
-        commonChecks.getLoadOrderPricePerDay().shouldBe(Condition.disappear);
+        commonChecks.getOrderBtn().shouldBe(Condition.visible);
         String prepriceStr = commonChecks.getOrderPricePerDay().getAttribute("textContent");
-        Double prepriceDbl = CommonChecks.getNumbersFromText(prepriceStr);
+        prepriceOrderDbl = CommonChecks.getNumbersFromText(prepriceStr);
         orderPage.orderClick();
         new ProductsPage()
                 .getRowByColumn("Продукт",
@@ -97,9 +102,6 @@ public class UiWindowsTest extends Tests {
         commonChecks.checkHeaderHistoryTable();
         commonChecks.checkHistoryRowDeployOk();
         commonChecks.checkHistoryRowDeployErr();
-
-        //to do
-        sleep(5000);//commonChecks.getOrderPricePerDayAfterOrder().shouldBe(Condition.disappear); // пока элемент не исчезнет
         commonChecks.getActionHistory().shouldBe(Condition.enabled).click();
         commonChecks.getHistoryRow0().shouldHave(Condition.attributeMatching("title","Просмотр схемы выполнения"));
         log.info("пользователь проверяет, что на странице присутствует текст \"Просмотр схемы выполнения\"");
@@ -110,10 +112,9 @@ public class UiWindowsTest extends Tests {
         //пользователь проверяет, что стоимость продукта соответствует предбиллингу
         commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
         commonChecks.getOrderPricePerDayAfterOrder().shouldBe(Condition.visible);
-
         String priceStr = commonChecks.getOrderPricePerDayAfterOrder().getAttribute("textContent");
-        Double priceDbl = CommonChecks.getNumbersFromText(priceStr);
-        Assertions.assertEquals(priceDbl,prepriceDbl);
+        priceOrderDbl = CommonChecks.getNumbersFromText(priceStr);
+        Assertions.assertEquals(priceOrderDbl, prepriceOrderDbl);
     }
 
     @Test

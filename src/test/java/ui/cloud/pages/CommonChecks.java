@@ -5,6 +5,8 @@ import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.core.util.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -73,10 +75,6 @@ public class CommonChecks {
     private final SelenideElement linuxOS = $x("//div[contains(text(),'ОС linux')]");
     private final SelenideElement historyRow0 = $x("//tr[@index='0']//button[@tabindex='0'][last()]");
     private final SelenideElement graphScheme = $x("//canvas");
-
-
-
-
 
 
     public void isCostDayContains(String symbol) {
@@ -324,8 +322,8 @@ public class CommonChecks {
         sElement.sendKeys(BACK_SPACE);
         log.debug("Проверка поля с входящими и ожидаемыми значениями");
     }
-    public  void checkFieldVmNumber()
-    {
+
+    public void checkFieldVmNumber() {
         autoChangeableFieldCheck(getVmNumber(), "0", "10");
         autoChangeableFieldCheck(getVmNumber(), "100", "30");
         autoChangeableFieldCheck(getVmNumber(), "N", "10");
@@ -335,12 +333,13 @@ public class CommonChecks {
 
     /**
      * пользователь проверяет детали заказа у продукта
+     *
      * @param sElement
      * @param product
      */
-    public void checkOrderDetails(SelenideElement sElement,String product) {
-      sElement.click();
-      log.info("пользователь проверяет детали заказа у продукта");
+    public void checkOrderDetails(SelenideElement sElement, String product) {
+        sElement.click();
+        log.info("пользователь проверяет детали заказа у продукта");
         switch (product) {
             case "Windows Server": {
                 processor.shouldBe(Condition.visible);
@@ -387,26 +386,49 @@ public class CommonChecks {
         }
     }
 
-    public void checkCurrentPriceEqualToPreprice(){
+    public void checkCurrentPriceEqualToPreprice() {
 
 
     }
+
     public static Double getNumbersFromText(String inputStr) throws ParseException {
         String numbersRegex = "\\d{1,5}.\\d{1,5}"; //(323,98 ₽/сут.), 323,98 ₽/сут.
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.FRANCE);
-        Number parsedNumber=0;
+        Number parsedNumber = 0;
 
         Pattern folderPattern = Pattern.compile(numbersRegex);
         Matcher folderMatcher = folderPattern.matcher(inputStr);
 
         while (folderMatcher.find()) {
-            parsedNumber = numberFormat.parse( folderMatcher.group());
+            parsedNumber = numberFormat.parse(folderMatcher.group());
         }
         Double doubleDecimalObj = new Double(String.valueOf(parsedNumber));
         System.out.println(doubleDecimalObj);
         return doubleDecimalObj;
     }
 
+    /**
+     * пользователь проверяет, что текущая стоимость продукта (больше|меньше|равна) стоимости после изменения
+     *
+     * @param currentCost
+     * @param costAfterChange
+     * @param isCompare
+     */
+    public void vmOrderTextCompareByKey(Double currentCost, Double costAfterChange, String isCompare) {
+        switch (isCompare) {
+            case "больше":
+                Assertions.assertFalse(currentCost > costAfterChange);
+                log.info("OK! Текущая стоимость продукта " + currentCost + " больше стоимости продукта, после изменения" + costAfterChange);
+                break;
+            case "меньше":
+                Assertions.assertFalse(currentCost < costAfterChange);
+                log.info("OK! Текущая стоимость продукта " + currentCost + " меньше стоимости продукта, после изменения" + costAfterChange);
+                break;
+            case "равна":
+                Assertions.assertEquals(currentCost, costAfterChange);
+                log.info("OK! Текущая стоимость продукта " + currentCost + " равна стоимости продукта, после изменения" + costAfterChange);
+                break;
+        }
 
-
+    }
 }
