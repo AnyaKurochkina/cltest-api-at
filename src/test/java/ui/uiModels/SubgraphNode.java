@@ -9,7 +9,8 @@ public class SubgraphNode extends Node {
 
     public SubgraphNode(String subgraphName) {
         this.subgraphName = subgraphName;
-        this.input = "{\"in_param\":\"test_value\"}";
-        this.output = "{}";
+        this.subgraphVersion = "Последняя";
+        this.input = "{\"input_param\":\"test_value\"}";
+        this.output = "{\"output_param\":\"test_value\"}";
     }
 }

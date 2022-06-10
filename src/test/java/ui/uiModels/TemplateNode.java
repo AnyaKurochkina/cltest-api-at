@@ -9,5 +9,7 @@ public class TemplateNode extends Node {
 
     public TemplateNode(String templateName) {
         this.templateName = templateName;
+        this.templateVersion = "Последняя";
+        this.timeout = "100";
     }
 }

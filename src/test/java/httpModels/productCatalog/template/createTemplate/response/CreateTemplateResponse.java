@@ -49,7 +49,7 @@ public class CreateTemplateResponse{
 	private double coordsX;
 
 	@JsonProperty("output")
-	private Output output;
+	private Map<String,Map<String,String>> output;
 
 	@JsonProperty("printed_output")
 	private PrintedOutput printedOutput;
@@ -157,7 +157,7 @@ public class CreateTemplateResponse{
 		return coordsX;
 	}
 
-	public Output getOutput(){
+	public Map<String,Map<String,String>> getOutput(){
 		return output;
 	}
 

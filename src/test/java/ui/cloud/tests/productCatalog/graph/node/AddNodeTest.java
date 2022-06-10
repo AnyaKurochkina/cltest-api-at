@@ -4,7 +4,10 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.uiModels.SubgraphNode;
@@ -26,6 +29,7 @@ public class AddNodeTest extends GraphBaseTest {
     public void tearDownForGraphTests() {
         deleteGraph(NAME);
         deleteGraph(SUBGRAPH_NAME);
+        deleteTemplate(TEMPLATE_NAME);
     }
 
     @Test
@@ -53,7 +57,6 @@ public class AddNodeTest extends GraphBaseTest {
     @Step("Добавление узла графа (подграф) с указанием всех параметров")
     public void addNodeSubgraphWithAllParameters() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
-        node.setOutput("{\"out_param\":\"test_value\"}");
         node.setNumber("3");
         node.setTimeout("10");
         node.setCount("2");
@@ -113,7 +116,6 @@ public class AddNodeTest extends GraphBaseTest {
     @DisplayName("Добавление узла графа (по шаблону)")
     public void addNodeByTemplateTest() {
         TemplateNode node = new TemplateNode(TEMPLATE_NAME);
-        node.setTimeout("100");
         new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()

@@ -146,7 +146,11 @@ public class GraphsListPage {
         createNewGraphButton.shouldBe(Condition.visible).click();
         for (String name : names) {
             inputNameField.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
-            inputNameField.setValue(name).sendKeys("a");
+            inputNameField.setValue(name);
+            TestUtils.wait(600);
+            if (!graphNameValidationHint.exists()) {
+                inputNameField.sendKeys("t");
+            }
             graphNameValidationHint.shouldBe(Condition.visible);
         }
         cancelButton.click();

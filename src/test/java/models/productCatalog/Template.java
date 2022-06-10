@@ -35,7 +35,7 @@ public class Template extends Entity {
     private Boolean logCanBeOverridden;
     private Integer timeout;
     private Double coordsX;
-    private Output output;
+    private Map<String,Map<String,String>> output;
     private PrintedOutput printedOutput;
     private Boolean printedOutputCanBeOverridden;
     private List<Object> restrictedPaths;
@@ -56,7 +56,7 @@ public class Template extends Entity {
     private String type;
     private String title;
 
-    private final String productName = "/api/v1/templates/";
+    public static final String productName = "/api/v1/templates/";
 
     @Override
     public Entity init() {
@@ -73,6 +73,7 @@ public class Template extends Entity {
                 .set("$.title", title)
                 .set("$.run", run)
                 .set("$.input", input)
+                .set("$.output", output)
                 .set("$.timeout", timeout)
                 .build();
     }

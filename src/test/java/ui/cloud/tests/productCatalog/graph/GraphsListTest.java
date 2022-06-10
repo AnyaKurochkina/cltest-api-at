@@ -13,12 +13,23 @@ public class GraphsListTest extends GraphBaseTest {
 
     @Test
     @TmsLink("486416")
-    @DisplayName("Сортировка списка графов")
+    @DisplayName("Проверка заголовков списка, сортировка")
     public void checkGraphsListSorting() {
         new IndexPage().goToGraphsPage()
                 .checkGraphsListHeaders()
                 .checkSortingByTitle()
                 .checkSortingByName()
                 .checkSortingByCreateDate();
+    }
+
+    @Test
+    @TmsLink("962859")
+    @DisplayName("Поиск в списке графов")
+    public void searchGraph() {
+        new IndexPage().goToGraphsPage()
+                .findGraphByName(NAME)
+                .findGraphByName(TITLE)
+                .findGraphByName(NAME.substring(1).toUpperCase())
+                .findGraphByTitle(TITLE.substring(1).toUpperCase());
     }
 }

@@ -4,9 +4,9 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
+import ui.cloud.tests.productCatalog.TestUtils;
 import ui.uiModels.Node;
 import ui.uiModels.SubgraphNode;
-import ui.cloud.tests.productCatalog.TestUtils;
 import ui.uiModels.TemplateNode;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -51,8 +51,10 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement holdToggleOn = $x("//p[text()='hold']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement isSequentialToggleOn = $x("//p[text()='Is sequential']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement damageOrderOnErrorToggleOn = $x("//p[text()='damage_order_on_error']/ancestor::div[2]//span[contains(@class,'checked')]");
-    private final SelenideElement subgraphVersionSelect = $x("(//label[text()='Версия']/parent::div//select)[2]");
+    private final SelenideElement showTemplateVersions = $x("(//label[text()='Версия']/parent::div//*[name()='svg'])[1]");
     private final SelenideElement showSubgraphVersions = $x("(//label[text()='Версия']/parent::div//*[name()='svg'])[2]");
+    private final SelenideElement templateVersion = $x("(//label[text()='Версия']/parent::div//div[@id='selectValueWrapper']/div)[1]");
+    private final SelenideElement subgraphVersion = $x("(//label[text()='Версия']/parent::div//div[@id='selectValueWrapper']/div)[2]");
 
     @Step("Добавление узла графа и сохранение")
     public GraphNodesPage addNodeAndSave(Node node) {
@@ -88,16 +90,31 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
-    public GraphNodesPage editNodeSubgraph(SubgraphNode node, String version, String description) {
+    public GraphNodesPage editSubgraphNode(SubgraphNode node, String version, String description) {
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
         TestUtils.scrollToTheTop();
         editNodeButton.click();
         nodeDescription.setValue(description);
         showSubgraphVersions.click();
-        $x("//div[@title='1.0.0']").shouldBe(Condition.enabled).click();
+        $x("//div[@title='"+version+"']").shouldBe(Condition.enabled).click();
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
         node.setSubgraphVersion(version);
+        node.setDescription(description);
+        TestUtils.wait(1000);
+        return this;
+    }
+
+    public GraphNodesPage editTemplateNode(TemplateNode node, String version, String description) {
+        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        TestUtils.scrollToTheTop();
+        editNodeButton.click();
+        nodeDescription.setValue(description);
+        showTemplateVersions.click();
+        $x("//div[@title='"+version+"']").shouldBe(Condition.enabled).click();
+        formSaveNodeButton.click();
+        saveGraphWithPatchVersion();
+        node.setTemplateVersion(version);
         node.setDescription(description);
         TestUtils.wait(1000);
         return this;
@@ -175,7 +192,14 @@ public class GraphNodesPage extends GraphPage {
         nodeDescription.shouldHave(Condition.exactValue(node.getDescription()));
         if (node instanceof SubgraphNode) {
             $x("//div[text() = '" + ((SubgraphNode) node).getSubgraphName() + "']").shouldBe(Condition.visible);
+            subgraphVersion.shouldHave(Condition.exactText(((SubgraphNode) node).getSubgraphVersion()));
         }
+        if (node instanceof TemplateNode) {
+            $x("//div[text() = '" + ((TemplateNode) node).getTemplateName() + "']").shouldBe(Condition.visible);
+            templateVersion.shouldHave(Condition.exactText(((TemplateNode) node).getTemplateVersion()));
+        }
+        $x("//label[text()='Input']/../..//span[contains(text(),'"+node.getInputKey()+"')]").shouldBe(Condition.visible);
+        $x("//label[text()='Output']/../..//span[contains(text(),'"+node.getOutputKey()+"')]").shouldBe(Condition.visible);
         numberInput.shouldHave(Condition.exactValue(node.getNumber()));
         timeoutInput.shouldHave(Condition.exactValue(node.getTimeout()));
         countInput.shouldHave(Condition.exactValue(node.getCount()));

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.uiModels.SubgraphNode;
+import ui.uiModels.TemplateNode;
 
 @Epic("Графы")
 @Feature("Редактирование узла графа")
@@ -19,6 +20,7 @@ public class EditNodeTest extends GraphBaseTest {
     @DisplayName("Создание подграфа для узла графа")
     public void setUpForGraphNodesTest() {
         createGraph(SUBGRAPH_NAME);
+        createTemplate(TEMPLATE_NAME);
     }
 
     @AfterEach
@@ -26,18 +28,33 @@ public class EditNodeTest extends GraphBaseTest {
     public void tearDownForGraphTests() {
         deleteGraph(NAME);
         deleteGraph(SUBGRAPH_NAME);
+        deleteTemplate(TEMPLATE_NAME);
     }
 
     @Test
     @TmsLink("894894")
-    @DisplayName("Редактирование узла графа (подграф)")
+    @DisplayName("Редактирование узла графа с подграфом")
     public void editNodeSubgraphTest() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
         new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
-                .editNodeSubgraph(node, "1.0.0", "edit")
+                .editSubgraphNode(node, "1.0.0", "edit")
+                .checkNodeAttributes(node)
+                .deleteNodeAndSave(node);
+    }
+
+    @Test
+    @TmsLink("490080")
+    @DisplayName("Редактирование узла графа с шаблоном")
+    public void editTemplateNodeTest() {
+        TemplateNode node = new TemplateNode(TEMPLATE_NAME);
+        new IndexPage().goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab()
+                .addNodeAndSave(node)
+                .editTemplateNode(node, "1.0.0", "edit")
                 .checkNodeAttributes(node)
                 .deleteNodeAndSave(node);
     }

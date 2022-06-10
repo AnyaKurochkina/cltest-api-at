@@ -17,10 +17,10 @@ public class CreateGraphTest extends GraphBaseTest {
     @TmsLink("486578")
     @DisplayName("Создание графа")
     public void createGraphTest() {
+        checkGraphNameValidation();
         createGraph();
         createGraphWithoutRequiredParameters();
         createGraphWithNonUniqueName();
-        checkGraphNameValidation();
     }
 
     @Step("Просмотр списка графов, создание, поиск")
