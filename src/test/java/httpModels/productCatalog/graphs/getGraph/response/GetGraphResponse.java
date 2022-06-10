@@ -88,6 +88,9 @@ public class GetGraphResponse implements GetImpl {
 	@JsonProperty("restricted_developers")
 	private String restricted_developers;
 
+	@JsonProperty("current_version")
+	private String currentVersion;
+
 	@Override
 	public String getGraphVersionCalculated() {
 		return null;

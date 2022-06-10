@@ -1,12 +1,15 @@
 package httpModels.productCatalog.graphs.createGraph.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import httpModels.productCatalog.graphs.getGraph.response.GraphItem;
+import httpModels.productCatalog.graphs.getGraph.response.PrintedOutput;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Data
@@ -14,8 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateGraphResponse{
 
-	@JsonProperty("last_version")
-	private String lastVersion;
+	@JsonProperty("current_version")
+	private String currentVersion;
 
 	@JsonProperty("version_list")
 	private List<String> versionList;
@@ -23,32 +26,56 @@ public class CreateGraphResponse{
 	@JsonProperty("author")
 	private String author;
 
-	@JsonProperty("json_schema")
-	private JsonSchema jsonSchema;
-
-	@JsonProperty("name")
-	private String name;
+	@JsonProperty("version_create_dt")
+	private String versionCreateDt;
 
 	@JsonProperty("description")
 	private String description;
 
-	@JsonProperty("static_data")
-	private StaticData staticData;
-
-	@JsonProperty("id")
-	private String id;
-
-	@JsonProperty("title")
-	private String title;
+	@JsonProperty("damage_order_on_error")
+	private Boolean damageOrderOnError;
 
 	@JsonProperty("type")
 	private String type;
 
+	@JsonProperty("title")
+	private String title;
+
 	@JsonProperty("version")
 	private String version;
 
+	@JsonProperty("last_version")
+	private String last_version;
+
+	@JsonProperty("graph")
+	private List<GraphItem> graph;
+
+	@JsonProperty("output")
+	private Map<String, String> output;
+
+	@JsonProperty("printed_output")
+	private PrintedOutput printedOutput;
+
+	@JsonProperty("json_schema")
+	private Map<String, Object> jsonSchema;
+
+	@JsonProperty("version_changed_by_user")
+	private String versionChangedByUser;
+
+	@JsonProperty("name")
+	private String name;
+
+	@JsonProperty("static_data")
+	private Map<String, Object> staticData;
+
+	@JsonProperty("id")
+	private String id;
+
 	@JsonProperty("ui_schema")
-	private UiSchema uiSchema;
+	private Map<String, Object> uiSchema;
+
+	@JsonProperty("modifications")
+	private List<Object> modifications;
 
 	@JsonProperty("create_dt")
 	private String create_dt;
@@ -64,7 +91,4 @@ public class CreateGraphResponse{
 
 	@JsonProperty("restricted_developers")
 	private String restricted_developers;
-
-	@JsonProperty("damage_order_on_error")
-	private Boolean damage_order_on_error;
 }
