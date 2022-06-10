@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.core.util.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -15,19 +16,24 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.codeborne.selenide.Selenide.$$x;
 import static com.codeborne.selenide.Selenide.$x;
 import static org.openqa.selenium.Keys.BACK_SPACE;
 import static org.openqa.selenium.Keys.CONTROL;
 import static tests.Tests.activeCnd;
+import static tests.Tests.clickableCnd;
 
 @Getter
 @Log4j2
+
 public class CommonChecks {
 
     private final SelenideElement orderPricePerDay = $x("//*[@data-testid='new-order-details-price']");
+    private final SelenideElement progressBars = $x("(//div[div[@role='progressbar']])[last()]");
     private final SelenideElement btnGeneralInfo = StringUtils.$x("//button[.='Общая информация']");
     private final SelenideElement loadOrderPricePerDay = StringUtils.$x("//*[@data-testid='new-order-details-price']/div//*[1]");//("//*[@data-testid='new-order-details-price']/div//*[name()='path']");
     private final SelenideElement orderPricePerDayAfterOrder = $x("//button[@title='Редактировать']/following::span[1]");
+    private final SelenideElement loadOrderPricePerDayAfterOrder = $x("//button[@title='Редактировать']/following::*[2]");
     private final SelenideElement closeModalWindowButton = $x("//div[@role='dialog']//button[contains(.,'Закрыть')]");
     private final SelenideElement orderBtn = $x("//button[.='Заказать']");
     private final SelenideElement actionHistory = $x("//*[text()='История действий']/ancestor::button");
@@ -430,5 +436,28 @@ public class CommonChecks {
                 break;
         }
 
+
+    }
+
+    /**
+     * Получение текущей стоимости
+     */
+    @SneakyThrows
+    public double getCurrentCost(){
+        btnGeneralInfo.shouldBe(Condition.enabled);
+        loadOrderPricePerDayAfterOrder.shouldBe(Condition.visible);
+        loadOrderPricePerDayAfterOrder.shouldBe(clickableCnd);
+        getOrderPricePerDayAfterOrder().shouldBe(activeCnd);
+        String priceStr = getOrderPricePerDayAfterOrder().getAttribute("textContent");
+        return getNumbersFromText(priceStr);
+    }
+
+    /**
+     * Получение стоимости после выполнения действий над продуктом
+     */
+    @SneakyThrows
+    public double getCostAfterChange(){
+        String priceStr = getOrderPricePerDayAfterOrder().getAttribute("textContent");
+        return getNumbersFromText(priceStr);
     }
 }

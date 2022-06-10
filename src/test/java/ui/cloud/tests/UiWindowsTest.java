@@ -121,6 +121,7 @@ public class UiWindowsTest extends Tests {
     @Order(2)
     @TmsLink("872666")
     @DisplayName("UI Windows. Перезагрузить по питанию")
+    @SneakyThrows
     void restart() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.restart();
@@ -134,7 +135,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Выключить")
     void stopSoft() {
         WindowsPage winPage = new WindowsPage(product);
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        double currentCost = commonChecks.getCurrentCost();
         winPage.stopSoft();
+        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"меньше");
         commonChecks.checkHistoryRowTurnOffOk();
         commonChecks.checkHistoryRowTurnOffErr();
     }
@@ -146,7 +150,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Изменить конфигурацию")
     void changeConfiguration() {
         WindowsPage winPage = new WindowsPage(product);
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        double currentCost = commonChecks.getCurrentCost();
         winPage.changeConfiguration();
+        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"больше");
         commonChecks.checkHistoryRowChangeFlavorOk();
         commonChecks.checkHistoryRowChangeFlavorErr();
     }
@@ -157,7 +164,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Включить")
     void start() {
         WindowsPage winPage = new WindowsPage(product);
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        double currentCost = commonChecks.getCurrentCost();
         winPage.start();
+        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"больше");
         commonChecks.checkHistoryRowTurnOnOk();
         commonChecks.checkHistoryRowTurnOnErr();
     }
@@ -166,9 +176,12 @@ public class UiWindowsTest extends Tests {
     @Order(6)
     @TmsLink("233925")
     @DisplayName("UI Windows. Добавить диск")
-    void discActAdd()  {
+    void discActAdd() {
         WindowsPage winPage = new WindowsPage(product);
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        double currentCost = commonChecks.getCurrentCost();
         winPage.discActAdd();
+        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"больше");
         commonChecks.checkHistoryRowDiscAddOk();
         commonChecks.checkHistoryRowDiscAddErr();
     }
@@ -179,7 +192,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Подключить в ОС")
     void discActOn() {
         WindowsPage winPage = new WindowsPage(product);
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        double currentCost = commonChecks.getCurrentCost();
         winPage.discActOn();
+        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"равна");
         commonChecks.checkHistoryRowDiscTurnOnOk();
         commonChecks.checkHistoryRowDiscTurnOnErr();
     }
@@ -189,9 +205,12 @@ public class UiWindowsTest extends Tests {
     @Order(9)
     @TmsLink("714872")
     @DisplayName("UI Windows. Отключить в ОС")
-    void discActOff() throws Throwable {
+    void discActOff() {
         WindowsPage winPage = new WindowsPage(product);
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        double currentCost = commonChecks.getCurrentCost();
         winPage.discActOff();
+        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"равна");
         commonChecks.checkHistoryRowDiscTurnOffOk();
         commonChecks.checkHistoryRowDiscTurnOffErr();
     }
@@ -204,7 +223,10 @@ public class UiWindowsTest extends Tests {
     void discActDelete() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.discActOff();
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        double currentCost = commonChecks.getCurrentCost();
         winPage.discActDelete();
+        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"меньше");
         commonChecks.checkHistoryRowDiscDeleteOk();
         commonChecks.checkHistoryRowDiscDeleteErr();
     }
@@ -215,7 +237,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверить конфигурацию")
     void vmActCheckConfig() {
         WindowsPage winPage = new WindowsPage(product);
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        double currentCost = commonChecks.getCurrentCost();
         winPage.vmActCheckConfig();
+        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"равна");
         commonChecks.checkHistoryRowCheckConfigOk();
         commonChecks.checkHistoryRowCheckConfigErr();
     }
@@ -226,7 +251,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Выключить принудительно")
     void stopHard() {
         WindowsPage winPage = new WindowsPage(product);
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        double currentCost = commonChecks.getCurrentCost();
         winPage.stopHard();
+        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"меньше");
         commonChecks.checkHistoryRowForceTurnOffOk();
         commonChecks.checkHistoryRowForceTurnOffErr();
     }
@@ -236,7 +264,7 @@ public class UiWindowsTest extends Tests {
     @Order(100)
     @TmsLink("872683")
     @DisplayName("UI Windows. Удалить")
-    void deleteWindows() throws Throwable {
+    void deleteWindows() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.delete();
         commonChecks.checkHistoryRowDeletedOk();

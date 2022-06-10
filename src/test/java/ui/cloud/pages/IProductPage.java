@@ -121,7 +121,7 @@ public abstract class IProductPage {
         }
 
         public String lastActionStatus() {
-            return getValueByColumnInFirstRow("Статус").$x("descendant::*[@title]").getAttribute("title");
+            return getValueByColumnInFirstRow("Питание").$x("descendant::*[@title]").getAttribute("title");
         }
     }
 
@@ -132,6 +132,9 @@ public abstract class IProductPage {
 
         public VirtualMachine() {
             super("Статус");
+        }
+        public VirtualMachine(String columnName) {
+            super(columnName);
         }
 
         public VirtualMachine open(){
@@ -144,7 +147,7 @@ public abstract class IProductPage {
         }
 
         public void checkPowerStatus(String status){
-            Assertions.assertEquals(status, new VirtualMachine().getPowerStatus(), "Статус питания не соотвествует ожидаемому");
+            Assertions.assertEquals(status, new VirtualMachine("Имя хоста").getPowerStatus(), "Статус питания не соотвествует ожидаемому");
         }
     }
 
