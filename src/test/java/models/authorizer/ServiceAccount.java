@@ -67,7 +67,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
                 "Статический ключ не создался, текущий статус: " + jsonPathStatus.get("data.status"));
     }
 
-    @Step("Удаление статического ключа досутпа hcp bucket")
+    @Step("Удаление статического ключа доступа hcp bucket")
     public void deleteStaticKey() {
         new Http(Configure.IamURL)
                 .delete("/v1/projects/{}/service_accounts/{}/access_keys/{}", projectId, id, id)
@@ -134,6 +134,26 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         new Http(Configure.IamURL)
                 .delete("/v1/projects/{}/service_accounts/{}/api_keys/{}", projectId, id, id)
                 .assertStatus(204);
+
+        int counter = 6;
+        JsonPath apiKeyResponse = null;
+        log.info("Проверка статуса статического ключа");
+        while (counter > 0) {
+            sleep(30000);
+            apiKeyResponse = new Http(Configure.IamURL)
+                    .get("/v1/projects/{}/service_accounts/{}", projectId, id)
+                    .assertStatus(200)
+                    .jsonPath();
+
+
+            if (apiKeyResponse.get("data.api_keys") == null) {
+                break;
+            }
+            counter = counter - 1;
+        }
+
+        Assertions.assertNull(apiKeyResponse.get("data.api_key"));
+
         new Http(Configure.IamURL)
                 .delete("/v1/projects/{}/service_accounts/{}", projectId, id)
                 .assertStatus(204);

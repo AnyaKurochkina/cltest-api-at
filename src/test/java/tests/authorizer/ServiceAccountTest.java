@@ -1,5 +1,6 @@
 package tests.authorizer;
 
+import models.authorizer.StaticKey;
 import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -42,8 +43,8 @@ public class ServiceAccountTest extends Tests {
     @TmsLink("534448")
     @DisplayName("Создание статического ключа досутпа hcp bucket")
     void createStaticKey() {
-        try (ServiceAccount account = ServiceAccount.builder().title("deleteServiceAccount").build().createObjectExclusiveAccess()) {
-            account.createStaticKey();
+        //noinspection EmptyTryBlock
+        try (StaticKey staticKey = StaticKey.builder().build().createObjectExclusiveAccess()) {
         }
     }
 
@@ -52,8 +53,8 @@ public class ServiceAccountTest extends Tests {
     @TmsLink("534451")
     @DisplayName("Удаление статического ключа досутпа hcp bucket")
     void deleteStaticKey() {
-        try (ServiceAccount account = ServiceAccount.builder().title("deleteServiceAccount").build().createObjectExclusiveAccess()) {
-            account.deleteStaticKey();
+       try (StaticKey staticKey = StaticKey.builder().build().createObjectExclusiveAccess()) {
+            staticKey.deleteObject();
         }
     }
 
