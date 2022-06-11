@@ -135,7 +135,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Выключить")
     void stopSoft() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
         double currentCost = commonChecks.getCurrentCost();
         winPage.stopSoft();
         commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"меньше");
@@ -150,7 +150,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Изменить конфигурацию")
     void changeConfiguration() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
         double currentCost = commonChecks.getCurrentCost();
         winPage.changeConfiguration();
         commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"больше");
@@ -164,7 +164,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Включить")
     void start() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
         double currentCost = commonChecks.getCurrentCost();
         winPage.start();
         commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"больше");
@@ -178,7 +178,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Добавить диск")
     void discActAdd() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
         double currentCost = commonChecks.getCurrentCost();
         winPage.discActAdd();
         commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"больше");
@@ -192,7 +192,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Подключить в ОС")
     void discActOn() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
         double currentCost = commonChecks.getCurrentCost();
         winPage.discActOn();
         commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"равна");
@@ -207,7 +207,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Отключить в ОС")
     void discActOff() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
         double currentCost = commonChecks.getCurrentCost();
         winPage.discActOff();
         commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"равна");
@@ -223,7 +223,7 @@ public class UiWindowsTest extends Tests {
     void discActDelete() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.discActOff();
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
         double currentCost = commonChecks.getCurrentCost();
         winPage.discActDelete();
         commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"меньше");
@@ -237,7 +237,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверить конфигурацию")
     void vmActCheckConfig() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
         double currentCost = commonChecks.getCurrentCost();
         winPage.vmActCheckConfig();
         commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"равна");
@@ -251,7 +251,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Выключить принудительно")
     void stopHard() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
         double currentCost = commonChecks.getCurrentCost();
         winPage.stopHard();
         commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"меньше");

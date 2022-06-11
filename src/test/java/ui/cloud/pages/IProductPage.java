@@ -121,7 +121,7 @@ public abstract class IProductPage {
         }
 
         public String lastActionStatus() {
-            return getValueByColumnInFirstRow("Питание").$x("descendant::*[@title]").getAttribute("title");
+            return getValueByColumnInFirstRow("Статус").$x("descendant::*[@title]").getAttribute("title");
         }
     }
 
