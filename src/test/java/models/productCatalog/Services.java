@@ -58,7 +58,7 @@ public class Services extends Entity {
     private String currentVersion;
     private Boolean autoOpenResults;
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("services/",
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/services/",
             "productCatalog/services/createServices.json");
 
     private final String productName = "/api/v1/services/";

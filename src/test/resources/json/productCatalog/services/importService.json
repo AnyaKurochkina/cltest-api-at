@@ -25,6 +25,8 @@
       "direction_title": "li_test",
       "is_published": false,
       "service_info": "",
+      "allowed_developers": "",
+      "restricted_developers": "",
       "allowed_paths": [],
       "graph_version": "",
       "allowed_groups": [],

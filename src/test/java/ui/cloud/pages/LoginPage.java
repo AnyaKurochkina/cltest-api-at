@@ -10,6 +10,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;
 
 public class LoginPage {
+
     SelenideElement usernameInput = $x("//input[@id='username']");
     SelenideElement passwordInput = $x("//input[@id='password']");
     SelenideElement submitBtn = $x("//button[@type='submit']");
@@ -18,6 +19,10 @@ public class LoginPage {
         Organization org = Organization.builder().build().createObject();
         open(String.format("/?context=%s&type=project&org=%s", project, org.getName()));
         submitBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled);
+    }
+
+    public LoginPage() {
+        open("");
     }
 
     public IndexPage singIn(String user, String password){

@@ -13,7 +13,6 @@ import ui.uiExtesions.ConfigExtension;
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ExtendWith(ConfigExtension.class)
 public class UiTest extends Tests {
     static Windows product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 
@@ -32,7 +31,7 @@ public class UiTest extends Tests {
         log.info("CustomBeforeAll");
     }
 
-//    @AfterAll
+    //    @AfterAll
     void afterAll() {
 //        Selenide.open("https://cloud.vtb.ru/?context=proj-xipzuxr713&type=project&org=vtb");
 //        Selenide.$x("/button[.='kek']").shouldHave(Condition.visible);

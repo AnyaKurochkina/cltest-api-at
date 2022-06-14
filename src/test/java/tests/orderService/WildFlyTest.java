@@ -16,7 +16,7 @@ import tests.Tests;
 @Feature("WildFly")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("wildfly"), @Tag("prod")})
 public class WildFlyTest extends Tests {
-    final String productName = "WildFly";
+    final String productName = "WildFly RHEL";
 
     @TmsLink("377474")
     @Source(ProductArgumentsProvider.PRODUCTS)

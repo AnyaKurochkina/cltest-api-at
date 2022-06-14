@@ -25,30 +25,36 @@ public class WindowsPage extends IProductPage {
         });
         waitChangeStatus();
         checkLastAction();
+        btnGeneralInfo.click();
+        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_DELETED);
     }
 
     public void start() {
         runActionWithoutParameters("Виртуальная машина", "Включить");
         waitChangeStatus();
         checkLastAction();
+        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
     public void restart() {
         runActionWithoutParameters("Виртуальная машина", "Перезагрузить по питанию");
         waitChangeStatus();
         checkLastAction();
+        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
     public void stopSoft() {
         runActionWithoutParameters("Виртуальная машина", "Выключить");
         waitChangeStatus();
         checkLastAction();
+        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_OFF);
     }
 
     public void stopHard() {
         runActionWithoutParameters("Виртуальная машина", "Выключить принудительно");
         waitChangeStatus();
         checkLastAction();
+        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_OFF);
     }
 
     public void addDisk() {
@@ -61,5 +67,4 @@ public class WindowsPage extends IProductPage {
         waitChangeStatus();
         checkLastAction();
     }
-
 }

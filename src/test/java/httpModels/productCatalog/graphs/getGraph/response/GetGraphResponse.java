@@ -79,6 +79,15 @@ public class GetGraphResponse implements GetImpl {
 	@JsonProperty("update_dt")
 	private String update_dt;
 
+	@JsonProperty("is_sequential")
+	private Boolean isSequential;
+
+	@JsonProperty("allowed_developers")
+	private String allowed_developers;
+
+	@JsonProperty("restricted_developers")
+	private String restricted_developers;
+
 	@Override
 	public String getGraphVersionCalculated() {
 		return null;

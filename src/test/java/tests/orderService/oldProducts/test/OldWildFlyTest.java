@@ -19,10 +19,10 @@ import static models.orderService.interfaces.ProductStatus.STOPPED;
 public class OldWildFlyTest extends Tests {
 
     final WildFly wildFly = WildFly.builder()
+            .productName("WildFly Astra")
             .projectId("proj-juh8ynkvtn")
-            .productId("9c777632-052c-4eb8-b176-e5e3375689e4")
-            .orderId("d73d8b8c-255e-4679-9da6-55670e610ec1")
-            .productName("Разработка WildFly Astra")
+            .productId("4a8959f3-f926-4497-a61b-46a227ebed9b")
+            .orderId("bcefc411-87e7-4f69-ad8c-53ed5ae52cc4")
             .build();
 
     @Order(1)

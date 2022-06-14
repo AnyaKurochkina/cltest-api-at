@@ -9,7 +9,10 @@ import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
+import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
+import httpModels.productCatalog.product.getProducts.response.ListItem;
 import httpModels.productCatalog.productOrgInfoSystem.createInfoSystem.CreateInfoSystemResponse;
+import httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.GetInfoSystemListResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.AllArgsConstructor;
@@ -47,6 +50,14 @@ public class ProductCatalogSteps {
     public Response dumpToBitbucket(String id) {
         return new Http(ProductCatalogURL)
                 .post(productName + id + "/dump_to_bitbucket/")
+                .assertStatus(201);
+    }
+
+    @Step("Выгрузка объекта из Gitlab")
+    public Response loadFromBitbucket(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .body(body)
+                .post(productName + "load_from_bitbucket/")
                 .assertStatus(200);
     }
 
@@ -398,7 +409,7 @@ public class ProductCatalogSteps {
     @Step("Получение productOrgInfo по id product и организации")
     public CreateInfoSystemResponse getProductOrgInfoSystem(String productId, String orgName) {
         return new Http(ProductCatalogURL)
-                .get(productName + productId + "/organizations/" + orgName + "/")
+                .get("/api/v1/product_org_info_system/" + productId + "/organizations/" + orgName + "/")
                 .assertStatus(200)
                 .extractAs(CreateInfoSystemResponse.class);
     }
@@ -408,6 +419,14 @@ public class ProductCatalogSteps {
         new Http(ProductCatalogURL)
                 .delete(productName + productId + "/organizations/" + orgName + "/")
                 .assertStatus(204);
+    }
+
+    @Step("Получение productOrgInfo по id product")
+    public GetInfoSystemListResponse getProductOrgInfoSystemById(String productId) {
+        return new Http(ProductCatalogURL)
+                .get("/api/v1/product_org_info_system/" + productId + "/organizations/")
+                .assertStatus(200)
+                .extractAs(GetInfoSystemListResponse.class);
     }
 
     private static String delNoDigOrLet(String s) {
@@ -426,6 +445,32 @@ public class ProductCatalogSteps {
             }
         }
         return false;
+    }
+
+    public List<ListItem> getProductListByProjectContext(String projectId) {
+        return new Http(ProductCatalogURL)
+                .get("/api/v1/projects/" + projectId + "/products/?is_open=true")
+                .assertStatus(200)
+                .extractAs(GetProductsResponse.class).getList();
+    }
+
+    public Response getProductByContextProject(String projectId, String productId) {
+        return new Http(ProductCatalogURL)
+                .get("/api/v1/projects/{}/products/{}/", projectId, productId)
+                .assertStatus(200);
+    }
+
+    public boolean isOrgContains(List<httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem> itemList, String orgName) {
+        if (itemList.isEmpty()) {
+            return true;
+        }
+        for (httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem item : itemList) {
+            if (item.getOrganization().equals(orgName)) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {
