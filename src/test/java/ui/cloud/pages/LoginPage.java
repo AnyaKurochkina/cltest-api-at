@@ -17,7 +17,7 @@ public class LoginPage {
 
     public LoginPage(String project) {
         Organization org = Organization.builder().build().createObject();
-        open("https://prod-portal-front.cloud.vtb.ru/vm/orders/fd8277c9-5f91-415b-aa79-d9a670703afd/main?context=proj-frybyv41jh&type=project&org=vtb");  //(String.format("/?context=%s&type=project&org=%s", project, org.getName()));//(String.format("/?context=%s&type=project&org=%s", project, org.getName()));// ("https://prod-portal-front.cloud.vtb.ru/new-order/28bed880-2714-4317-a967-d000d492bd9d?context=proj-frybyv41jh&type=project&org=vtb");//(String.format("/?context=%s&type=project&org=%s", project, org.getName()));//"https://prod-portal-front.cloud.vtb.ru/new-order/28bed880-2714-4317-a967-d000d492bd9d?context=proj-frybyv41jh&type=project&org=vtb");//
+        open(String.format("/?context=%s&type=project&org=%s", project, org.getName()));
         submitBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled);
     }
 

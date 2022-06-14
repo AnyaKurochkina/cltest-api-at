@@ -32,17 +32,19 @@ import static org.openqa.selenium.Keys.CONTROL;
 public class UiWindowsTest extends Tests {
 
     Windows product;
-    CommonChecks commonChecks = new CommonChecks();
+    IProductPage iProductPage = new IProductPage() {
+    };
     Double prepriceOrderDbl;
     Double priceOrderDbl;
 
     //TODO: пока так :)
     public UiWindowsTest() {
-        if (Configure.ENV.equals("prod"))
-            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-        else
-            product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
+        product = product.buildFromLink("https://prod-portal-front.cloud.vtb.ru/vm/orders/07d858dc-3bcf-488f-bd57-a528bb142c77/main?context=proj-frybyv41jh&type=project&org=vtb");
+//        if (Configure.ENV.equals("prod"))
+//            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+//        else
+//            product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
+//        product.init();
     }
 
     @BeforeEach
@@ -52,6 +54,7 @@ public class UiWindowsTest extends Tests {
         new LoginPage(product.getProjectId())
                 .singIn();
     }
+
     @Test
     @TmsLink("872651")
     @Order(1)
@@ -62,15 +65,15 @@ public class UiWindowsTest extends Tests {
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
         // Проверки полей до заказа
-        commonChecks.getMark().sendKeys(CONTROL + "a");
-        commonChecks.getMark().sendKeys(BACK_SPACE);
+        iProductPage.getMark().sendKeys(CONTROL + "a");
+        iProductPage.getMark().sendKeys(BACK_SPACE);
         $(byText("Поле должно содержать от 3 до 64 символов")).should(Condition.exist);
         log.info("Проверка поля метка должно содержать от 3 до 64 символов");
-        commonChecks.getOrderProduct().shouldBe(Condition.disabled);
+        iProductPage.getOrderProduct().shouldBe(Condition.disabled);
         log.info("Проверка кнопки \"Заказать\" до заполнения полей");
-        commonChecks.getOrderPricePerDay().getAttribute("textContent").contains("— ₽");
+        iProductPage.getOrderPricePerDay().getAttribute("textContent").contains("— ₽");
         log.info("Проверка атрибута \"textContent\" на содержание символа \"— ₽\"");
-        commonChecks.checkFieldVmNumber();
+        iProductPage.checkFieldVmNumber();
         WindowsOrderPage orderPage = new WindowsOrderPage();
         orderPage.getOsVersion().select(product.getOsVersion());
         orderPage.getSegment().selectByValue(product.getSegment());
@@ -78,17 +81,17 @@ public class UiWindowsTest extends Tests {
         orderPage.getRoleServer().selectByValue(product.getRole());
         orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().select(accessGroup.getPrefixName());//"cloud-zorg-group3"
-        commonChecks.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-        commonChecks.getLoadOrderPricePerDay().shouldBe(Condition.disappear);
+        orderPage.getGroup().select(accessGroup.getPrefixName());
+        iProductPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
+        iProductPage.getLoadOrderPricePerDay().shouldBe(Condition.disappear);
         //пользователь проверяет, что у элемента "Стоимость в сутки" атрибут "textContent" содержит значение "≈"
-        commonChecks.isCostDayContains("≈");
+        iProductPage.isCostDayContains("≈");
         //пользователь проверяет детали заказа
-        commonChecks.checkOrderDetails(commonChecks.getCalculationDetails(), "Windows Server");
+        iProductPage.checkOrderDetails(iProductPage.getCalculationDetails(), "Windows Server");
         //получает стоимосить на предбиллинге
-        commonChecks.getOrderBtn().shouldBe(Condition.visible);
-        String prepriceStr = commonChecks.getOrderPricePerDay().getAttribute("textContent");
-        prepriceOrderDbl = CommonChecks.getNumbersFromText(prepriceStr);
+        iProductPage.getOrderBtn().shouldBe(Condition.visible);
+        String prepriceStr = iProductPage.getOrderPricePerDay().getAttribute("textContent");
+        prepriceOrderDbl = iProductPage.getNumbersFromText(prepriceStr);
         orderPage.orderClick();
         new ProductsPage()
                 .getRowByColumn("Продукт",
@@ -99,21 +102,27 @@ public class UiWindowsTest extends Tests {
         winPage.waitChangeStatus();
         winPage.checkLastAction();
         // Проверки после заказа продукта
-        commonChecks.checkHeaderHistoryTable();
-        commonChecks.checkHistoryRowDeployOk();
-        commonChecks.checkHistoryRowDeployErr();
-        commonChecks.getActionHistory().shouldBe(Condition.enabled).click();
-        commonChecks.getHistoryRow0().shouldHave(Condition.attributeMatching("title","Просмотр схемы выполнения"));
+        iProductPage.checkHeaderHistoryTable();
+        log.info("пользователь проверяет, что на вкладке История действий таблица содержит необходимые столбцы");
+        iProductPage.checkHistoryRowDeployOk();
+        iProductPage.checkHistoryRowDeployErr();
+        iProductPage.getActionHistory().shouldBe(Condition.enabled).click();
+        iProductPage.getHistoryRow0().shouldHave(Condition.attributeMatching("title","Просмотр схемы выполнения"));
         log.info("пользователь проверяет, что на странице присутствует текст \"Просмотр схемы выполнения\"");
-        commonChecks.getHistoryRow0().shouldBe(Condition.enabled).click();
-        commonChecks.getGraphScheme().shouldBe(Condition.visible);
+        iProductPage.getHistoryRow0().shouldBe(Condition.enabled).click();
+        iProductPage.getGraphScheme().shouldBe(Condition.visible);
         log.info("пользователь проверяет наличие элемента \"Схема выполнения\"");
-        commonChecks.getCloseModalWindowButton().shouldBe(Condition.enabled).click();
-        //пользователь проверяет, что стоимость продукта соответствует предбиллингу
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
-        commonChecks.getOrderPricePerDayAfterOrder().shouldBe(Condition.visible);
-        String priceStr = commonChecks.getOrderPricePerDayAfterOrder().getAttribute("textContent");
-        priceOrderDbl = CommonChecks.getNumbersFromText(priceStr);
+        iProductPage.getCloseModalWindowButton().shouldBe(Condition.enabled).click();
+      //пользователь проверяет, что стоимость продукта соответствует предбиллингу
+      //iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        iProductPage.getLoadOrderPricePerDayAfterOrder().shouldBe(Condition.enabled);
+      //iProductPage.getLoadOrderPricePerDayAfterOrder().shouldBe(Condition.disappear);
+      //iProductPage.getOrderPricePerDayAfterOrder().shouldBe(Condition.visible);
+        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        iProductPage.getProgressBars().shouldBe(Condition.disappear);
+        iProductPage.getOrderPricePerDayAfterOrder().shouldBe(Condition.visible);
+        String priceStr = iProductPage.getOrderPricePerDayAfterOrder().getAttribute("textContent");
+        priceOrderDbl = iProductPage.getNumbersFromText(priceStr);
         Assertions.assertEquals(priceOrderDbl, prepriceOrderDbl);
     }
 
@@ -125,8 +134,8 @@ public class UiWindowsTest extends Tests {
     void restart() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.restart();
-        commonChecks.checkHistoryRowRestartByPowerOk();
-        commonChecks.checkHistoryRowRestartByPowerErr();
+        iProductPage.checkHistoryRowRestartByPowerOk();
+        iProductPage.checkHistoryRowRestartByPowerErr();
     }
 
     @Test
@@ -135,12 +144,12 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Выключить")
     void stopSoft() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        double currentCost = commonChecks.getCurrentCost();
+        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
+        double currentCost = iProductPage.getCurrentCost();
         winPage.stopSoft();
-        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"меньше");
-        commonChecks.checkHistoryRowTurnOffOk();
-        commonChecks.checkHistoryRowTurnOffErr();
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"меньше");
+        iProductPage.checkHistoryRowTurnOffOk();
+        iProductPage.checkHistoryRowTurnOffErr();
     }
 
 
@@ -150,12 +159,12 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Изменить конфигурацию")
     void changeConfiguration() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        double currentCost = commonChecks.getCurrentCost();
+        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
+        double currentCost = iProductPage.getCurrentCost();
         winPage.changeConfiguration();
-        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"больше");
-        commonChecks.checkHistoryRowChangeFlavorOk();
-        commonChecks.checkHistoryRowChangeFlavorErr();
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"больше");
+        iProductPage.checkHistoryRowChangeFlavorOk();
+        iProductPage.checkHistoryRowChangeFlavorErr();
     }
 
     @Test
@@ -164,12 +173,12 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Включить")
     void start() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        double currentCost = commonChecks.getCurrentCost();
+        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
+        double currentCost = iProductPage.getCurrentCost();
         winPage.start();
-        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"больше");
-        commonChecks.checkHistoryRowTurnOnOk();
-        commonChecks.checkHistoryRowTurnOnErr();
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"больше");
+        iProductPage.checkHistoryRowTurnOnOk();
+        iProductPage.checkHistoryRowTurnOnErr();
     }
 
     @Test
@@ -178,12 +187,12 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Добавить диск")
     void discActAdd() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        double currentCost = commonChecks.getCurrentCost();
+        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
+        double currentCost = iProductPage.getCurrentCost();
         winPage.discActAdd();
-        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"больше");
-        commonChecks.checkHistoryRowDiscAddOk();
-        commonChecks.checkHistoryRowDiscAddErr();
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"больше");
+        iProductPage.checkHistoryRowDiscAddOk();
+        iProductPage.checkHistoryRowDiscAddErr();
     }
 
     @Test
@@ -192,12 +201,12 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Подключить в ОС")
     void discActOn() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        double currentCost = commonChecks.getCurrentCost();
+        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
+        double currentCost = iProductPage.getCurrentCost();
         winPage.discActOn();
-        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"равна");
-        commonChecks.checkHistoryRowDiscTurnOnOk();
-        commonChecks.checkHistoryRowDiscTurnOnErr();
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"равна");
+        iProductPage.checkHistoryRowDiscTurnOnOk();
+        iProductPage.checkHistoryRowDiscTurnOnErr();
     }
 
 
@@ -207,12 +216,13 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Отключить в ОС")
     void discActOff() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        double currentCost = commonChecks.getCurrentCost();
+        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
+
+        double currentCost = iProductPage.getCurrentCost();
         winPage.discActOff();
-        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"равна");
-        commonChecks.checkHistoryRowDiscTurnOffOk();
-        commonChecks.checkHistoryRowDiscTurnOffErr();
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"равна");
+        iProductPage.checkHistoryRowDiscTurnOffOk();
+        iProductPage.checkHistoryRowDiscTurnOffErr();
     }
 
 
@@ -223,12 +233,12 @@ public class UiWindowsTest extends Tests {
     void discActDelete() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.discActOff();
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        double currentCost = commonChecks.getCurrentCost();
+        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
+        double currentCost = iProductPage.getCurrentCost();
         winPage.discActDelete();
-        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"меньше");
-        commonChecks.checkHistoryRowDiscDeleteOk();
-        commonChecks.checkHistoryRowDiscDeleteErr();
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"меньше");
+        iProductPage.checkHistoryRowDiscDeleteOk();
+        iProductPage.checkHistoryRowDiscDeleteErr();
     }
 
     @Test
@@ -237,12 +247,12 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверить конфигурацию")
     void vmActCheckConfig() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        double currentCost = commonChecks.getCurrentCost();
+        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
+        double currentCost = iProductPage.getCurrentCost();
         winPage.vmActCheckConfig();
-        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"равна");
-        commonChecks.checkHistoryRowCheckConfigOk();
-        commonChecks.checkHistoryRowCheckConfigErr();
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"равна");
+        iProductPage.checkHistoryRowCheckConfigOk();
+        iProductPage.checkHistoryRowCheckConfigErr();
     }
 
     @Test
@@ -251,12 +261,12 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Выключить принудительно")
     void stopHard() {
         WindowsPage winPage = new WindowsPage(product);
-        commonChecks.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        double currentCost = commonChecks.getCurrentCost();
+        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
+        double currentCost = iProductPage.getCurrentCost();
         winPage.stopHard();
-        commonChecks.vmOrderTextCompareByKey(currentCost,commonChecks.getCostAfterChange(),"меньше");
-        commonChecks.checkHistoryRowForceTurnOffOk();
-        commonChecks.checkHistoryRowForceTurnOffErr();
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"меньше");
+        iProductPage.checkHistoryRowForceTurnOffOk();
+        iProductPage.checkHistoryRowForceTurnOffErr();
     }
 
 
@@ -267,8 +277,8 @@ public class UiWindowsTest extends Tests {
     void deleteWindows() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.delete();
-        commonChecks.checkHistoryRowDeletedOk();
-        commonChecks.checkHistoryRowDeletedErr();
+        iProductPage.checkHistoryRowDeletedOk();
+        iProductPage.checkHistoryRowDeletedErr();
     }
 
 }
