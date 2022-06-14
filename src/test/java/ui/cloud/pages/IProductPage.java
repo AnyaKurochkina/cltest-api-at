@@ -33,16 +33,19 @@ import static tests.Tests.clickableCnd;
 
 @Log4j2
 @Getter
+
 public abstract class IProductPage {
     TopInfo topInfo;
     IProduct product;
+    double prePriceOrderDbl;
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
     SelenideElement btnAct = $x("(//div[@id='root']//*[text()='Дополнительные диски']/ancestor::div[3]//following-sibling::div//button[@id='actions-menu-button' and not (.//text()='Действия')])[last()]");
     private final SelenideElement orderPricePerDay = Selenide.$x("//*[@data-testid='new-order-details-price']");
+    private final SelenideElement btnProducts = Selenide.$x("//div[not(@hidden)]/a[@href='/vm/orders' and text()='Продукты']");
     private final SelenideElement progressBars = Selenide.$x("(//div[div[@role='progressbar']])[last()]");
-    private final SelenideElement loadOrderPricePerDay = StringUtils.$x("//*[@data-testid='new-order-details-price']/div//*[1]");//("//*[@data-testid='new-order-details-price']/div//*[name()='path']");
+    private final SelenideElement loadOrderPricePerDay = Selenide.$x("//*[@data-testid='new-order-details-price']/div/*");//("//*[@data-testid='new-order-details-price']/div//*[name()='path']");
     private final SelenideElement orderPricePerDayAfterOrder = Selenide.$x("//button[@title='Редактировать']/following::span[1]");
     private final SelenideElement loadOrderPricePerDayAfterOrder = Selenide.$x("//button[@title='Редактировать']/following::*[2]");
     private final SelenideElement closeModalWindowButton = Selenide.$x("//div[@role='dialog']//button[contains(.,'Закрыть')]");
@@ -162,6 +165,13 @@ public abstract class IProductPage {
         Waiting.sleep(3000);
     }
 
+    @SneakyThrows
+    @Step("Получение стоимости продукта на предбиллинге")
+    public double prePriceOrder(String prePrice) {
+        log.info("Получение стоимости продукта на предбиллинге");
+        return getNumbersFromText(prePrice);
+    }
+
     public void checkErrorByStatus(String status) {
         if (status.equals(ProductStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
@@ -193,20 +203,21 @@ public abstract class IProductPage {
         public VirtualMachine() {
             super("Статус");
         }
+
         public VirtualMachine(String columnName) {
             super(columnName);
         }
 
-        public VirtualMachine open(){
+        public VirtualMachine open() {
             btnGeneralInfo.click();
             return this;
         }
 
-        public String getPowerStatus(){
+        public String getPowerStatus() {
             return getValueByColumnInFirstRow("Питание").$x("descendant::*[@title]").getAttribute("title");
         }
 
-        public void checkPowerStatus(String status){
+        public void checkPowerStatus(String status) {
             Assertions.assertEquals(status, new VirtualMachine("Имя хоста").getPowerStatus(), "Статус питания не соотвествует ожидаемому");
         }
     }
@@ -229,15 +240,7 @@ public abstract class IProductPage {
         log.info("пользователь проверяет, что на вкладке История действий таблица содержит необходимые столбцы");
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Развертывание' со статусом 'В порядке'
-     */
-    public void checkHistoryRowDeployOk() {
-        actionHistory.click();
-        historyRowDeployOk.shouldBe(activeCnd);
-    }
-
-    /**
+     /**
      * пользователь проверяет отсутствие элемента "Строка 'Развертывание' со статусом 'Ошибка'
      */
     public void checkHistoryRowDeployErr() {
@@ -572,7 +575,7 @@ public abstract class IProductPage {
      * Получение текущей стоимости
      */
     @SneakyThrows
-    public double getCurrentCost(){
+    public double getCurrentCost() {
         btnGeneralInfo.shouldBe(Condition.enabled);
         loadOrderPricePerDayAfterOrder.shouldBe(Condition.visible);
         loadOrderPricePerDayAfterOrder.shouldBe(clickableCnd);
@@ -585,7 +588,7 @@ public abstract class IProductPage {
      * Получение стоимости после выполнения действий над продуктом
      */
     @SneakyThrows
-    public double getCostAfterChange(){
+    public double getCostAfterChange() {
 
         String priceStr = getOrderPricePerDayAfterOrder().getAttribute("textContent");
         return getNumbersFromText(priceStr);
