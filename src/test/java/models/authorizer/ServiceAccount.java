@@ -78,7 +78,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         JsonPath jsonPath = null;
         log.info("Проверка статуса статического ключа");
         while (!keyStatus.equals("[active]") && counter > 0) {
-            sleep(30000);
+            sleep(10000);
             jsonPath = new Http(Configure.IamURL)
                     .get("/v1/projects/{}/service_accounts/{}/access_keys", projectId, id)
                     .assertStatus(200)
@@ -139,7 +139,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         JsonPath apiKeyResponse = null;
         log.info("Проверка статуса статического ключа");
         while (counter > 0) {
-            sleep(30000);
+            sleep(10000);
             apiKeyResponse = new Http(Configure.IamURL)
                     .get("/v1/projects/{}/service_accounts/{}", projectId, id)
                     .assertStatus(200)
