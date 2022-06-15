@@ -77,7 +77,7 @@ public class WindowsPage extends IProductPage {
     }
     @SneakyThrows
     public void discActOff()  {
-        runActionWithParameters2("Диск", "Отключить в ОС", () -> {
+        runActionScrollWithParameters("Диск", "Отключить в ОС", () -> {
             Dialog dlg = new Dialog("Отключить в ОС");
             dlg.getDialog().$x("descendant::button[.='Подтвердить']")
                     .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -90,7 +90,7 @@ public class WindowsPage extends IProductPage {
     }
     @SneakyThrows
     public void discActOn() {
-        runActionWithParameters2("Диск", "Подключить в ОС", () -> {
+        runActionScrollWithParameters("Диск", "Подключить в ОС", () -> {
             Dialog dlg = new Dialog("Подключить в ОС");
             dlg.getDialog().$x("descendant::button[.='Подтвердить']")
                     .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -104,7 +104,7 @@ public class WindowsPage extends IProductPage {
 
     @SneakyThrows
     public void discActDelete() {
-        runActionWithParameters2("Диск", "Удалить", () -> {
+        runActionScrollWithParameters("Диск", "Удалить", () -> {
             Dialog dlg = new Dialog("Удалить");
             dlg.getDialog().$x("descendant::button[.='Подтвердить']")
                     .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
