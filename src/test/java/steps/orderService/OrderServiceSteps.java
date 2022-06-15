@@ -119,7 +119,8 @@ public class OrderServiceSteps extends Steps {
                 .setProjectId(projectId)
                 .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
-//{"order":{"attrs":{"client_types":"own","name":"dfghjkl","owner_cert":"dfghjkl"},"graph_version":"1.0.7"},"item_id":"ad08595a-c325-5434-9e5b-3d8b1bda7306"}
+
+    //{"order":{"attrs":{"client_types":"own","name":"dfghjkl","owner_cert":"dfghjkl"},"graph_version":"1.0.7"},"item_id":"ad08595a-c325-5434-9e5b-3d8b1bda7306"}
     @Step("Отправка action {action}")
     public static Response sendAction(String action, IProduct product, JSONObject jsonData) {
         Item item = getItemIdByOrderIdAndActionTitle(action, product);
@@ -283,11 +284,19 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Получение домена для проекта {project}")
     public static String getDomainByProject(String project) {
-        return new Http(OrderServiceURL)
-                .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25", project)
-                .assertStatus(200)
-                .jsonPath()
-                .get("list.collect{e -> e}.shuffled()[0].code");
+        if (Configure.ENV.equals("ift")) {
+            return new Http(OrderServiceURL)
+                    .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25", project)
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get("list.find{it.code=='corp.dev.vtb'}.code");
+        } else {
+            return new Http(OrderServiceURL)
+                    .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25", project)
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get("list.collect{e -> e}.shuffled()[0].code");
+        }
     }
 
     public static String getDataCentreBySegment(IProduct product, String netSegment) {

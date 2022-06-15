@@ -1,10 +1,10 @@
 package tests.authorizer;
 
-import org.junit.MarkDelete;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.authorizer.ServiceAccount;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;

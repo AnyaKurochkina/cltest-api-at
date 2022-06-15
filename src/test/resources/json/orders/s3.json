@@ -1,0 +1,13 @@
+{
+  "order": {
+    "project_name": "proj-frybyv41jh",
+    "product_id": "73fa9b8a-86bc-435a-89d2-00a875469136",
+    "attrs": {
+      "platform": "ceph",
+      "data_center": "5",
+      "net_segment": "dev-srv-app"
+    },
+    "count": 1,
+    "label": "S3 CEPH Tenant"
+  }
+}

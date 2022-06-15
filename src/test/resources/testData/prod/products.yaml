@@ -1,6 +1,6 @@
-HcpBucket:
+S3Ceph:
   - options:
-      - { platform: "hcp",env: "DEV", servicePlan: "Sata_Tier", segment: "dev-srv-app" }
+      - { env: "DEV", segment: "dev-srv-app" }
 
 OpenShiftProject:
   - options:
