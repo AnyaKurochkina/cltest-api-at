@@ -386,10 +386,9 @@ public class ServicesTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Service в GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("975412")
     public void dumpToGitlabService() {
-        String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Services service = Services.builder()
                 .serviceName(serviceName)
                 .title(serviceName)

@@ -14,6 +14,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.authorizer.Project;
 import models.productCatalog.Product;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -485,11 +486,9 @@ public class ProductsTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Product в GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("975400")
     public void dumpToGitlabProduct() {
- //       String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
-        String productName = "standard_for_unloading_from_git_api";
+        String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Product product = Product.builder()
                 .name(productName)
                 .title(productName)

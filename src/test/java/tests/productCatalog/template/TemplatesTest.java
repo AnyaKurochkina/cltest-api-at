@@ -202,10 +202,9 @@ public class TemplatesTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Template в GitLab")
-    @Disabled
     @TmsLink("")
     public void dumpToGitlabTemplate() {
-        String templateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        String templateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Template template = Template.builder()
                 .templateName(templateName)
                 .title(templateName)

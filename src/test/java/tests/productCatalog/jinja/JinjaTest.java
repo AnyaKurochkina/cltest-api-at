@@ -211,10 +211,9 @@ public class JinjaTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Jinja в GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("975380")
     public void dumpToGitlabJinja() {
-        String jinjaName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        String jinjaName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Jinja2 jinja = Jinja2.builder()
                 .name(jinjaName)
                 .title(jinjaName)

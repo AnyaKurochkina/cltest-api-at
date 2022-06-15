@@ -401,8 +401,7 @@ public class ActionsTest extends Tests {
 
     @Test
     @DisplayName("Загрузка action в GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("975375")
     public void dumpToGitlabAction() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Action action = Action.builder()

@@ -260,6 +260,7 @@ public class VisualTemplateTest extends Tests {
     }
 
     @DisplayName("Сортировка шаблонов визуализации по статусу")
+    //todo убрать логику
     @TmsLink("")
     @Test
     public void orderingByStatus() {
@@ -336,13 +337,17 @@ public class VisualTemplateTest extends Tests {
 
     @Test
     @DisplayName("Загрузка VisualTemplate в GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("975416")
     public void dumpToGitlabVisualTemplate() {
-        String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         ItemVisualTemplates visualTemplate = ItemVisualTemplates.builder()
                 .name(visualTemplateName)
                 .title(visualTemplateName)
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(false)
                 .build()
                 .createObject();
         Response response = steps.dumpToBitbucket(visualTemplate.getItemId());
