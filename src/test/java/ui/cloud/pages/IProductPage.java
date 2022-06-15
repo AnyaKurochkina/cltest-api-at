@@ -156,7 +156,7 @@ public abstract class IProductPage {
 
     @SneakyThrows
     @Step("Запуск действия '{action}' в блоке '{headerBlock}' с параметрами")
-    public void runActionWithParameters2(String headerBlock, String action, Executable executable, boolean off) throws Throwable {
+    public void runActionScrollWithParameters(String headerBlock, String action, Executable executable, boolean off) throws Throwable {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         btnAct.scrollIntoView(off);
         btnAct.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -167,7 +167,7 @@ public abstract class IProductPage {
 
     @SneakyThrows
     @Step("Получение стоимости продукта на предбиллинге")
-    public double prePriceOrder(String prePrice) {
+    public double convertToDblPriceOrder(String prePrice) {
         log.info("Получение стоимости продукта на предбиллинге");
         return getNumbersFromText(prePrice);
     }
@@ -476,7 +476,7 @@ public abstract class IProductPage {
      * @param product
      */
     public void checkOrderDetails(SelenideElement sElement, String product) {
-        sElement.click();
+        sElement.shouldBe(Condition.enabled).click();
         log.info("пользователь проверяет детали заказа у продукта");
         switch (product) {
             case "Windows Server": {
@@ -593,5 +593,7 @@ public abstract class IProductPage {
         String priceStr = getOrderPricePerDayAfterOrder().getAttribute("textContent");
         return getNumbersFromText(priceStr);
     }
+
+
 
 }

@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
 import static org.openqa.selenium.Keys.BACK_SPACE;
 import static org.openqa.selenium.Keys.CONTROL;
 
@@ -35,8 +36,7 @@ import static org.openqa.selenium.Keys.CONTROL;
 public class UiWindowsTest extends Tests {
 
     Windows product;
-    IProductPage iProductPage = new IProductPage() {
-    };
+    IProductPage iProductPage = new IProductPage() {};
     Double prepriceOrderDbl;
     Double priceOrderDbl;
     String labelOrder;
@@ -44,8 +44,8 @@ public class UiWindowsTest extends Tests {
     //TODO: пока так :)
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod"))
-            product = product.buildFromLink("https://prod-portal-front.cloud.vtb.ru/vm/orders/30d227af-278f-4e1e-a90d-b5bec15630c5/main?context=proj-frybyv41jh&type=project&org=vtb");
-           // product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+           product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+
         else
             product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -183,7 +183,6 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверка заголовка столбцов в Истории действий.")
     void checkHeaderHistoryTable() {
         new IndexPage().getBtnProducts().click();
-
         new ProductsPage()
                 .getRowByColumn("Продукт",
                         labelOrder)
@@ -330,9 +329,21 @@ public class UiWindowsTest extends Tests {
         iProductPage.checkHistoryRowDiscAddOk();
         iProductPage.checkHistoryRowDiscAddErr();
     }
-
     @Test
     @Order(18)
+    @TmsLink("714872")
+    @DisplayName("UI Windows. Отключить в ОС")
+    void discActOff() {
+        WindowsPage winPage = new WindowsPage(product);
+        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
+        double currentCost = iProductPage.getCurrentCost();
+        winPage.discActOff();
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"равна");
+        iProductPage.checkHistoryRowDiscTurnOffOk();
+        iProductPage.checkHistoryRowDiscTurnOffErr();
+    }
+    @Test
+    @Order(19)
     @TmsLink("714878")
     @DisplayName("UI Windows. Подключить в ОС")
     void discActOn() {
@@ -345,23 +356,6 @@ public class UiWindowsTest extends Tests {
         iProductPage.checkHistoryRowDiscTurnOnErr();
     }
 
-
-    @Test
-    @Order(19)
-    @TmsLink("714872")
-    @DisplayName("UI Windows. Отключить в ОС")
-    void discActOff() {
-        WindowsPage winPage = new WindowsPage(product);
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
-
-        double currentCost = iProductPage.getCurrentCost();
-        winPage.discActOff();
-        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"равна");
-        iProductPage.checkHistoryRowDiscTurnOffOk();
-        iProductPage.checkHistoryRowDiscTurnOffErr();
-    }
-
-
     @Test
     @Order(20)
     @TmsLinks({@TmsLink("714872"),@TmsLink("646056")})
@@ -372,7 +366,7 @@ public class UiWindowsTest extends Tests {
         iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
         double currentCost = iProductPage.getCurrentCost();
         winPage.discActDelete();
-        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"меньше");
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"равна");
         iProductPage.checkHistoryRowDiscDeleteOk();
         iProductPage.checkHistoryRowDiscDeleteErr();
     }
@@ -400,7 +394,7 @@ public class UiWindowsTest extends Tests {
         iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
         double currentCost = iProductPage.getCurrentCost();
         winPage.stopHard();
-        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"меньше");
+        iProductPage.vmOrderTextCompareByKey(currentCost,iProductPage.getCostAfterChange(),"равна");
         iProductPage.checkHistoryRowForceTurnOffOk();
         iProductPage.checkHistoryRowForceTurnOffErr();
     }
