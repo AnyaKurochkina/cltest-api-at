@@ -127,7 +127,7 @@ public class ProductListTest extends Tests {
         }
     }
     //todo Убрать хардкод проекта логику прохождения по списку убрать.
-    @DisplayName("Получение списка по контексту id проекта \"proj-c1kaqj2ugp\"")
+    @DisplayName("Получение списка по контексту id проекта")
     @Test
     public void getProductListWithProjectContext() {
         Project project = Project.builder().build().createObject();
