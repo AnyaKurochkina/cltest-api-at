@@ -114,4 +114,5 @@ public class GetProductResponse implements GetImpl {
 
 	@JsonProperty("restricted_developers")
 	private String restricted_developers;
+	private String payment;
 }

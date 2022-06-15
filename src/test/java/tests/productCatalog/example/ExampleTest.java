@@ -8,7 +8,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.productCatalog.Example;
-import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Disabled;
@@ -130,7 +129,8 @@ public class ExampleTest extends Tests {
     @Disabled
     @TmsLink("")
     public void dumpToGitlabExample() {
-        String exampleName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+     //   String exampleName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        String exampleName = "standard_for_unloading_from_git";
         Example example = Example.builder()
                 .name(exampleName)
                 .title(exampleName)
@@ -145,9 +145,13 @@ public class ExampleTest extends Tests {
     @Disabled
     @TmsLink("")
     public void loadFromGitlabExample() {
-        String examplePath = "";
+        String exampleName = "standard_for_unloading_from_git";
+        if( steps.isExists(exampleName)){
+            steps.deleteByName(exampleName, GetExampleListResponse.class);
+        }
+        String examplePath = "example_" + exampleName;
         steps.loadFromBitbucket(new JSONObject().put("path", examplePath));
-        assertTrue(steps.isExists(examplePath));
+        assertTrue(steps.isExists(exampleName));
     }
 
     @DisplayName("Удаление Example по Id")

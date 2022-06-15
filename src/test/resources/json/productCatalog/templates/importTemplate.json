@@ -1,53 +1,44 @@
 {
   "model_name": "Template",
   "Template": {
-    "id": 186,
-    "create_dt": "2021-12-16T09:18:44.285559",
-    "user": {
-      "id": null,
-      "is_staff": false,
-      "username": "",
-      "is_active": false,
-      "is_superuser": false
+    "run": "run",
+    "input": {
+      "input": "test"
     },
-    "json": {
-      "id": 287,
-      "run": "run",
-      "icon": "",
-      "name": "template_import_test_api",
-      "title": "title_import_test_api",
-      "color": "",
-      "type": "check_vm",
-      "input": {},
-      "output": {},
-      "timeout": 1,
-      "coords_x": 0.0,
-      "coords_y": 0.0,
-      "priority": 0,
-      "rollback": "",
-      "log_level": "",
-      "extra_data": null,
-      "description": "",
-      "allowed_paths": [],
-      "allowed_groups": [],
-      "printed_output": {},
-      "additional_input": false,
-      "restricted_paths": [],
-      "additional_output": false,
-      "restricted_groups": [],
-      "log_can_be_overridden": false,
-      "priority_can_be_overridden": false,
-      "printed_output_can_be_overridden": false
+    "output": {
+      "output": "test"
     },
-    "hash": "f2a32f4fc8d3f47c603f44c6b2f3cb02",
+    "timeout": 1,
+    "priority": 0,
+    "rollback": "Rollback",
+    "log_level": "",
+    "printed_output": {},
+    "additional_input": false,
+    "additional_output": false,
+    "log_can_be_overridden": false,
+    "priority_can_be_overridden": false,
+    "printed_output_can_be_overridden": false,
+    "id": 713,
+    "current_version": "",
+    "coords_x": 0.0,
+    "coords_y": 0.0,
+    "extra_data": null,
+    "color": "",
+    "icon": "",
+    "name": "template_import_test_api",
+    "title": "template_import_test_api",
+    "description": "template_import_test_api",
+    "type": "rpc",
+    "allowed_groups": [],
+    "restricted_groups": [],
     "version_arr": [
       1,
       0,
       0
-    ],
-    "template": 287
+    ]
   },
   "rel_foreign_models": {},
-  "dump_version": 4.0,
-  "dump_date": "2021-12-16 11:17:13"
+  "dump_version": 5.0,
+  "dump_date": "2022-06-15 11:07:10",
+  "is_pinned_versions": false
 }

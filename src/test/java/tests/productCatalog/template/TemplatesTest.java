@@ -110,7 +110,7 @@ public class TemplatesTest extends Tests {
     @Test
     public void importTemplate() {
         String data = JsonHelper.getStringFromFile("/productCatalog/templates/importTemplate.json");
-        String templateName = new JsonPath(data).get("Template.json.name");
+        String templateName = new JsonPath(data).get("Template.name");
         String versionArr = new JsonPath(data).get("Template.version_arr").toString();
         Assertions.assertEquals("[1, 0, 0]", versionArr);
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplate.json");
@@ -126,18 +126,19 @@ public class TemplatesTest extends Tests {
         Template templateTest = Template.builder()
                 .templateName("template_version_test_api")
                 .version("1.0.999")
+                .priority(0)
                 .build().createObject();
-        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("name", "template_version_test_api2"));
+        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("priority", 1));
         String currentVersion = steps.getById(String.valueOf(templateTest.getTemplateId()), GetTemplateResponse.class).getVersion();
         assertEquals("1.1.0", currentVersion);
-        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("name", "template_version_test_api3")
+        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("priority", 2)
                 .put("version", "1.999.999"));
-        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("name", "template_version_test_api4"));
+        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("priority", 3));
         currentVersion = steps.getById(String.valueOf(templateTest.getTemplateId()), GetTemplateResponse.class).getVersion();
         assertEquals("2.0.0", currentVersion);
-        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("name", "template_version_test_api5")
+        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("priority", 4)
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("name", "template_version_test_api6"))
+        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("priority", 5))
                 .assertStatus(500);
     }
 

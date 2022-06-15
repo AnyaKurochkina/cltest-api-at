@@ -121,4 +121,6 @@ public class GetServiceResponse implements GetImpl {
 
 	@JsonProperty("restricted_developers")
 	private String restricted_developers;
+
+	private String direction_name;
 }

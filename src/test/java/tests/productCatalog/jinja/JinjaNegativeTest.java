@@ -15,6 +15,7 @@ import tests.Tests;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Tag("product_catalog")
+@Tag("Jinja")
 @Epic("Продуктовый каталог")
 @Feature("Jinja2")
 @DisabledIfEnv("prod")

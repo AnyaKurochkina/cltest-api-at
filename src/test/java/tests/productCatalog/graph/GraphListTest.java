@@ -3,8 +3,6 @@ package tests.productCatalog.graph;
 import core.helper.Configure;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
-import httpModels.productCatalog.graphs.getGraphsLightList.GetGraphsLightListResponse;
-import httpModels.productCatalog.graphs.getGraphsLightList.ListItemLight;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.graphs.getGraphsList.response.ListItem;
 import io.qameta.allure.Epic;
@@ -21,7 +19,8 @@ import tests.Tests;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -67,27 +66,6 @@ public class GraphListTest extends Tests {
         if (!(str == null)) {
             assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
                     "Значение поля next несоответсвует ожидаемому");
-        }
-    }
-
-    @DisplayName("Получение облегченного списка графов")
-    @TmsLink("821972")
-    @Test
-    public void getGraphLightList() {
-        String graphName = "create_graph_example_for_get_light_list";
-        String graphTitle = "graph_title";
-        Graph.builder()
-                .name(graphName)
-                .title(graphTitle)
-                .build()
-                .createObject();
-        List<ItemImpl> list = steps.getProductObjectList(GetGraphsLightListResponse.class, "light_list/");
-        for (ItemImpl item : list) {
-            ListItemLight listItem = (ListItemLight) item;
-            assertNotNull(listItem.getId());
-            assertNotNull(listItem.getName());
-            assertNotNull(listItem.getTitle());
-            assertNotNull(listItem.getDescription());
         }
     }
 

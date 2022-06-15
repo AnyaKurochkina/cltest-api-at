@@ -115,6 +115,7 @@ public class ListItem implements ItemImpl {
 
     @JsonProperty("in_general_list")
     private Boolean inGeneralList;
+    private String payment;
 
     @Override
     public String getName() {

@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("product_catalog")
+@Tag("org_direction")
 @Epic("Продуктовый каталог")
 @Feature("Направления")
 @DisabledIfEnv("prod")

@@ -71,8 +71,8 @@ public class ServicesTest extends Tests {
     @Test
     public void importService() {
         String data = JsonHelper.getStringFromFile("/productCatalog/services/importService.json");
-        String serviceName = new JsonPath(data).get("Service.json.name");
-        if(steps.isExists(serviceName)) {
+        String serviceName = new JsonPath(data).get("Service.name");
+        if (steps.isExists(serviceName)) {
             steps.deleteByName(serviceName, GetServiceListResponse.class);
         }
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
@@ -245,18 +245,23 @@ public class ServicesTest extends Tests {
     @TmsLink("643521")
     @Test
     public void updateServiceAndGetVersion() {
-        Services services = Services.builder().serviceName("service_version_test_api").version("1.0.999").build().createObject();
-        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("name", "service_version_test_api2"));
+        Services services = Services.builder().
+                serviceName("service_version_test_api")
+                .version("1.0.999")
+                .serviceInfo("test service info")
+                .build()
+                .createObject();
+        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("service_info", "service_version_test_api2"));
         String currentVersion = steps.getById(services.getServiceId(), GetServiceResponse.class).getVersion();
         assertEquals("1.1.0", currentVersion);
-        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("name", "service_version_test_api3")
+        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("service_info", "service_version_test_api3")
                 .put("version", "1.999.999"));
-        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("name", "service_version_test_api4"));
+        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("service_info", "service_version_test_api4"));
         currentVersion = steps.getById(services.getServiceId(), GetServiceResponse.class).getVersion();
         assertEquals("2.0.0", currentVersion);
-        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("name", "service_version_test_api5")
+        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("service_info", "service_version_test_api5")
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("name", "service_version_test_api6"))
+        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("service_info", "service_version_test_api6"))
                 .assertStatus(500);
     }
 
@@ -305,10 +310,11 @@ public class ServicesTest extends Tests {
                 .serviceName(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
+                .serviceInfo("test")
                 .build()
                 .createObject();
         String serviceId = service.getServiceId();
-        steps.partialUpdateObject(serviceId, new JSONObject().put("title", "update_title"));
+        steps.partialUpdateObject(serviceId, new JSONObject().put("service_info", "update_service_info"));
         steps.partialUpdateObject(serviceId, new JSONObject().put("current_version", "1.0.1"));
         GetServiceResponse getService = (GetServiceResponse) steps.getById(serviceId, GetServiceResponse.class);
         assertEquals("1.0.1", getService.getCurrentVersion());
@@ -324,14 +330,15 @@ public class ServicesTest extends Tests {
                 .serviceName(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
+                .serviceInfo("test")
                 .build()
                 .createObject();
         String serviceId = service.getServiceId();
-        steps.partialUpdateObject(serviceId, new JSONObject().put("title", "update_title"));
+        steps.partialUpdateObject(serviceId, new JSONObject().put("service_info", "update_service_info"));
         steps.partialUpdateObject(serviceId, new JSONObject().put("current_version", "1.0.0"));
         GetServiceResponse getService = (GetServiceResponse) steps.getById(serviceId, GetServiceResponse.class);
         assertEquals("1.0.0", getService.getCurrentVersion());
-        assertEquals(serviceName, getService.getTitle());
+        assertEquals(service.getServiceInfo(), getService.getServiceInfo());
     }
 
     @Test

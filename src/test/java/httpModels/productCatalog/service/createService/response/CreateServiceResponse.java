@@ -118,4 +118,5 @@ public class CreateServiceResponse{
 
 	@JsonProperty("restricted_developers")
 	private String restricted_developers;
+	private String direction_name;
 }

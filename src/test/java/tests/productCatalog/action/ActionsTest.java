@@ -12,7 +12,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -100,7 +100,10 @@ public class ActionsTest extends Tests {
     @Test
     public void importAction() {
         String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
-        String actionName = new JsonPath(data).get("Action.json.name");
+        String actionName = new JsonPath(data).get("Action.name");
+        if(steps.isExists(actionName)) {
+            steps.deleteByName(actionName, GetActionsListResponse.class);
+        }
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
         assertTrue(steps.isExists(actionName), "Действие не существует");
         steps.deleteByName(actionName, GetActionsListResponse.class);
@@ -151,11 +154,11 @@ public class ActionsTest extends Tests {
         String cloneName = action.getActionName() + "-clone";
         steps.copyById(action.getActionId());
         String cloneId = steps.getProductObjectIdByNameWithMultiSearch(cloneName, GetActionsListResponse.class);
-        steps.partialUpdateObject(cloneId, new JSONObject().put("description", "descr_api"));
-        GetImpl importedAction = steps.getByIdAndVersion(cloneId, "1.0.1", GetActionResponse.class);
+        steps.partialUpdateObject(cloneId, new JSONObject().put("priority", 1));
+        GetActionResponse importedAction =(GetActionResponse) steps.getByIdAndVersion(cloneId, "1.0.1", GetActionResponse.class);
         assertAll(
                 () -> assertEquals("1.0.1", importedAction.getVersion()),
-                () -> assertEquals("descr_api", importedAction.getDescription())
+                () -> assertEquals(1, importedAction.getPriority())
         );
         assertTrue(steps.isExists(cloneName));
         steps.deleteByName(cloneName, GetActionsListResponse.class);
@@ -258,19 +261,20 @@ public class ActionsTest extends Tests {
         Action actionTest = Action.builder()
                 .actionName("action_version_test_api")
                 .version("1.0.999")
+                .priority(0)
                 .build()
                 .createObject();
-        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api2"));
+        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("priority", 1));
         String currentVersion = steps.getById(actionTest.getActionId(), GetActionResponse.class).getVersion();
         Assertions.assertEquals("1.1.0", currentVersion);
-        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api3")
+        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("priority", 2)
                 .put("version", "1.999.999"));
-        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api4"));
+        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("priority", 3));
         currentVersion = steps.getById(actionTest.getActionId(), GetActionResponse.class).getVersion();
         Assertions.assertEquals("2.0.0", currentVersion);
-        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api5")
+        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("priority", 4)
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("name", "action_version_test_api6"))
+        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("priority", 5))
                 .assertStatus(500);
     }
 
@@ -342,10 +346,11 @@ public class ActionsTest extends Tests {
                 .actionName(actionName)
                 .title(actionName)
                 .version("1.0.0")
+                .priority(0)
                 .build()
                 .createObject();
         String actionId = action.getActionId();
-        steps.partialUpdateObject(actionId, new JSONObject().put("title", "update_title"));
+        steps.partialUpdateObject(actionId, new JSONObject().put("priority", 1));
         steps.partialUpdateObject(actionId, new JSONObject().put("current_version", "1.0.1"));
         GetActionResponse getAction = (GetActionResponse) steps.getById(actionId, GetActionResponse.class);
         assertEquals("1.0.1", getAction.getCurrentVersion());
@@ -361,14 +366,15 @@ public class ActionsTest extends Tests {
                 .actionName(actionName)
                 .title(actionName)
                 .version("1.0.0")
+                .priority(0)
                 .build()
                 .createObject();
         String actionId = action.getActionId();
-        steps.partialUpdateObject(actionId, new JSONObject().put("title", "update_title"));
+        steps.partialUpdateObject(actionId, new JSONObject().put("priority", 2));
         steps.partialUpdateObject(actionId, new JSONObject().put("current_version", "1.0.0"));
         GetActionResponse getAction = (GetActionResponse) steps.getById(actionId, GetActionResponse.class);
         assertEquals("1.0.0", getAction.getCurrentVersion());
-        assertEquals(actionName, getAction.getTitle());
+        assertEquals(action.getPriority(), getAction.getPriority());
     }
 
     @Test
@@ -387,7 +393,7 @@ public class ActionsTest extends Tests {
                 }})
                 .build()
                 .createObject();
-        GetActionResponse getActionById =(GetActionResponse) steps.getById(action.getActionId(),
+        GetActionResponse getActionById = (GetActionResponse) steps.getById(action.getActionId(),
                 GetActionResponse.class);
         Map<String, String> extraData = getActionById.getExtraData();
         assertEquals(extraData.get(key), value);
@@ -398,7 +404,7 @@ public class ActionsTest extends Tests {
     @Disabled
     @TmsLink("")
     public void dumpToGitlabAction() {
-        String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
@@ -414,9 +420,22 @@ public class ActionsTest extends Tests {
     @Disabled
     @TmsLink("")
     public void loadFromGitlabAction() {
-        String actionName = "action_dump_to_gitlab_test_api222_1.0.3";
-        steps.loadFromBitbucket(new JSONObject().put("path", actionName));
+        String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
+        JSONObject jsonObject = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .version("1.0.0")
+                .build()
+                .init().toJson();
+        GetActionResponse action = steps.createProductObject(jsonObject).extractAs(GetActionResponse.class);
+        Response response = steps.dumpToBitbucket(action.getId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        steps.deleteByName(actionName, GetActionsListResponse.class);
+        String path = "action_" + actionName;
+        steps.loadFromBitbucket(new JSONObject().put("path", path));
         assertTrue(steps.isExists(actionName));
+        steps.deleteByName(actionName, GetActionsListResponse.class);
+        assertFalse(steps.isExists(actionName));
     }
 }
 
