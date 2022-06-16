@@ -36,19 +36,23 @@ import static org.openqa.selenium.Keys.CONTROL;
 public class UiWindowsTest extends Tests {
 
     Windows product;
-    IProductPage iProductPage = new IProductPage() {};
-    Double prepriceOrderDbl;
+    IProductPage iProductPage = new IProductPage() {
+    };
+    Double prePriceOrderDbl;
     Double priceOrderDbl;
-    String labelOrder;
-    Double currentCost;
+    //  String labelOrder = "a-9707-05f0c2f751fc";
+    double costAfterChange;
+    double currentCost;
 
     //TODO: пока так :)
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod"))
-            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+            // product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/8a37e2a0-1b2c-449e-9f7c-9dfe037a5f03/main?context=proj-frybyv41jh&type=project&org=vtb").build();
         else
             product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
+
     }
 
     @BeforeEach
@@ -164,9 +168,8 @@ public class UiWindowsTest extends Tests {
         iProductPage.getOrderBtn().shouldBe(Condition.visible);
         iProductPage.getLoadOrderPricePerDay().shouldBe(Condition.enabled);
         iProductPage.getLoadOrderPricePerDay().shouldBe(Condition.disappear);
-        prepriceOrderDbl = iProductPage.convertToDblPriceOrder(iProductPage.getOrderPricePerDay().getAttribute("textContent"));
+        prePriceOrderDbl = iProductPage.convertToDblPriceOrder(iProductPage.getOrderPricePerDay().getAttribute("textContent"));
         orderPage.orderClick();
-        labelOrder = orderPage.getLabel();
         new ProductsPage()
                 .getRowByColumn("Продукт",
                         orderPage.getLabel())
@@ -182,14 +185,9 @@ public class UiWindowsTest extends Tests {
     @Order(8)
     @DisplayName("UI Windows. Проверка заголовка столбцов в Истории действий.")
     void checkHeaderHistoryTable() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
-        iProductPage.checkHeaderHistoryTable();
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        winPage.checkHeaderHistoryTable();
     }
 
     @Test
@@ -197,14 +195,9 @@ public class UiWindowsTest extends Tests {
     @Order(9)
     @DisplayName("UI Windows. Проверка на наличие элемента Строка 'Развертывание' со статусом 'В порядке'.")
     void isHistoryRowDeployOk() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.getActionHistory().shouldBe(Condition.enabled).click();
-        iProductPage.getHistoryRowDeployOk().shouldBe(activeCnd);
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.getActionHistory().shouldBe(Condition.enabled).click();
+        winPage.getHistoryRowDeployOk().shouldBe(activeCnd);
     }
 
     @Test
@@ -212,14 +205,9 @@ public class UiWindowsTest extends Tests {
     @Order(10)
     @DisplayName("UI Windows. Проверка на наличие элемента Строка 'Развертывание' со статусом 'Ошибка'.")
     void checkHistoryRowDeployErr() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.getActionHistory().shouldBe(Condition.enabled).click();
-        iProductPage.getHistoryRowDeployErr().shouldNotBe(Condition.visible);
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.getActionHistory().shouldBe(Condition.enabled).click();
+        winPage.getHistoryRowDeployErr().shouldNotBe(Condition.visible);
     }
 
     @Test
@@ -227,17 +215,12 @@ public class UiWindowsTest extends Tests {
     @Order(11)
     @DisplayName("UI Windows. Проверка наличия элемента \"Схема выполнения\".")
     void checkHistoryGraphScheme() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.getActionHistory().shouldBe(Condition.enabled).click();
-        iProductPage.getHistoryRow0().shouldHave(Condition.attributeMatching("title", "Просмотр схемы выполнения"));
-        iProductPage.getHistoryRow0().shouldBe(Condition.enabled).click();
-        iProductPage.getGraphScheme().shouldBe(Condition.visible);
-        iProductPage.getCloseModalWindowButton().shouldBe(Condition.enabled).click();
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.getActionHistory().shouldBe(Condition.enabled).click();
+        winPage.getHistoryRow0().shouldHave(Condition.attributeMatching("title", "Просмотр схемы выполнения"));
+        winPage.getHistoryRow0().shouldBe(Condition.enabled).click();
+        winPage.getGraphScheme().shouldBe(Condition.visible);
+        winPage.getCloseModalWindowButton().shouldBe(Condition.enabled).click();
     }
 
     @Test
@@ -245,19 +228,12 @@ public class UiWindowsTest extends Tests {
     @Order(12)
     @DisplayName("UI Windows. Проверка стоимости продукта соответствию предбиллингу")
     void checkPrePriceOrder() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
-        iProductPage.getLoadOrderPricePerDayAfterOrder().shouldBe(Condition.enabled);
-        //  iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
-        iProductPage.getProgressBars().shouldBe(Condition.disappear);
-        iProductPage.getOrderPricePerDayAfterOrder().shouldBe(Condition.visible);
-        priceOrderDbl = iProductPage.convertToDblPriceOrder(iProductPage.getOrderPricePerDayAfterOrder().getAttribute("textContent"));
-        Assertions.assertEquals(priceOrderDbl, prepriceOrderDbl);
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.getLoadOrderPricePerDayAfterOrder().shouldBe(Condition.enabled);
+        winPage.getProgressBars().shouldBe(Condition.disappear);
+        winPage.getOrderPricePerDayAfterOrder().shouldBe(Condition.visible);
+        priceOrderDbl = winPage.convertToDblPriceOrder(winPage.getOrderPricePerDayAfterOrder().getAttribute("textContent"));
+        Assertions.assertEquals(priceOrderDbl, prePriceOrderDbl);
     }
 
 
@@ -268,11 +244,10 @@ public class UiWindowsTest extends Tests {
     @SneakyThrows
     void restart() {
         WindowsPage winPage = new WindowsPage(product);
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        currentCost = iProductPage.getCurrentCost();
+        currentCost=winPage.getCurrentCostReloadPage(product);
         winPage.restart();
-        iProductPage.checkHistoryRowRestartByPowerOk();
-        iProductPage.checkHistoryRowRestartByPowerErr();
+        winPage.checkHistoryRowRestartByPowerOk();
+        winPage.checkHistoryRowRestartByPowerErr();
     }
 
     @Test
@@ -281,14 +256,12 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверка стоимости после действия Перезагрузить по питанию")
     @SneakyThrows
     void checkCostAfterRestart() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.vmOrderTextCompareByKey(currentCost, iProductPage.getCostAfterChange(), "равна");
+        WindowsPage winPage = new WindowsPage(product);
+        costAfterChange =winPage.getCostAfterChangeReloadPage(product);
+        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
     }
+
+
 
     @Test
     @Order(15)
@@ -296,11 +269,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Выключить")
     void stopSoft() {
         WindowsPage winPage = new WindowsPage(product);
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        currentCost = iProductPage.getCurrentCost();
+        currentCost=winPage.getCurrentCostReloadPage(product);
         winPage.stopSoft();
-        iProductPage.checkHistoryRowTurnOffOk();
-        iProductPage.checkHistoryRowTurnOffErr();
+        winPage.checkHistoryRowTurnOffOk();
+        winPage.checkHistoryRowTurnOffErr();
     }
 
     @Test
@@ -308,13 +280,9 @@ public class UiWindowsTest extends Tests {
     @TmsLink("976738")
     @DisplayName("UI Windows. Проверка стоимости после действия Выключить")
     void checkCostAfterStopSoft() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.vmOrderTextCompareByKey(currentCost, iProductPage.getCostAfterChange(), "меньше");
+        WindowsPage winPage = new WindowsPage(product);
+        costAfterChange =winPage.getCostAfterChangeReloadPage(product);
+        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "больше");
     }
 
     @Test
@@ -323,11 +291,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Изменить конфигурацию")
     void changeConfiguration() {
         WindowsPage winPage = new WindowsPage(product);
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        currentCost = iProductPage.getCurrentCost();
+        currentCost=winPage.getCurrentCostReloadPage(product);
         winPage.changeConfiguration();
-        iProductPage.checkHistoryRowChangeFlavorOk();
-        iProductPage.checkHistoryRowChangeFlavorErr();
+        winPage.checkHistoryRowChangeFlavorOk();
+        winPage.checkHistoryRowChangeFlavorErr();
     }
 
     @Test
@@ -335,13 +302,9 @@ public class UiWindowsTest extends Tests {
     @TmsLink("976742")
     @DisplayName("UI Windows. Проверка стоимости после действия Изменить конфигурацию")
     void checkCostAfterChangeConfiguration() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.vmOrderTextCompareByKey(currentCost, iProductPage.getCostAfterChange(), "больше");
+        WindowsPage winPage = new WindowsPage(product);
+        costAfterChange =winPage.getCostAfterChangeReloadPage(product);
+        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "больше");
     }
 
     @Test
@@ -350,11 +313,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Включить")
     void start() {
         WindowsPage winPage = new WindowsPage(product);
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        currentCost = iProductPage.getCurrentCost();
+        currentCost=winPage.getCurrentCostReloadPage(product);
         winPage.start();
-        iProductPage.checkHistoryRowTurnOnOk();
-        iProductPage.checkHistoryRowTurnOnErr();
+        winPage.checkHistoryRowTurnOnOk();
+        winPage.checkHistoryRowTurnOnErr();
     }
 
     @Test
@@ -362,13 +324,9 @@ public class UiWindowsTest extends Tests {
     @TmsLink("976743")
     @DisplayName("UI Windows. Проверка стоимости после действия Включить")
     void checkStartAfterStart() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.vmOrderTextCompareByKey(currentCost, iProductPage.getCostAfterChange(), "больше");
+        WindowsPage winPage = new WindowsPage(product);
+        costAfterChange =winPage.getCostAfterChangeReloadPage(product);
+        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "больше");
     }
 
     @Test
@@ -377,11 +335,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Добавить диск")
     void discActAdd() {
         WindowsPage winPage = new WindowsPage(product);
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        currentCost = iProductPage.getCurrentCost();
+        currentCost=winPage.getCurrentCostReloadPage(product);
         winPage.discActAdd();
-        iProductPage.checkHistoryRowDiscAddOk();
-        iProductPage.checkHistoryRowDiscAddErr();
+        winPage.checkHistoryRowDiscAddOk();
+        winPage.checkHistoryRowDiscAddErr();
     }
 
     @Test
@@ -389,13 +346,9 @@ public class UiWindowsTest extends Tests {
     @TmsLink("976746")
     @DisplayName("UI Windows. Проверка стоимости после действия Добавить диск")
     void checkCostAfterDiscActAdd() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.vmOrderTextCompareByKey(currentCost, iProductPage.getCostAfterChange(), "больше");
+        WindowsPage winPage = new WindowsPage(product);
+        costAfterChange =winPage.getCostAfterChangeReloadPage(product);
+        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "больше");
     }
 
     @Test
@@ -404,11 +357,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Отключить в ОС")
     void discActOff() {
         WindowsPage winPage = new WindowsPage(product);
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        currentCost = iProductPage.getCurrentCost();
+        currentCost=winPage.getCurrentCostReloadPage(product);
         winPage.discActOff();
-        iProductPage.checkHistoryRowDiscTurnOffOk();
-        iProductPage.checkHistoryRowDiscTurnOffErr();
+        winPage.checkHistoryRowDiscTurnOffOk();
+        winPage.checkHistoryRowDiscTurnOffErr();
     }
 
     @Test
@@ -416,13 +368,9 @@ public class UiWindowsTest extends Tests {
     @TmsLink("976747")
     @DisplayName("UI Windows. Проверка стоимости после действия Отключить в ОС")
     void checkCostAfterTurnOffOs() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.vmOrderTextCompareByKey(currentCost, iProductPage.getCostAfterChange(), "равна");
+        WindowsPage winPage = new WindowsPage(product);
+        costAfterChange =winPage.getCostAfterChangeReloadPage(product);
+        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
     }
 
     @Test
@@ -431,11 +379,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Подключить в ОС")
     void discActOn() {
         WindowsPage winPage = new WindowsPage(product);
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        currentCost = iProductPage.getCurrentCost();
+        currentCost=winPage.getCurrentCostReloadPage(product);
         winPage.discActOn();
-        iProductPage.checkHistoryRowDiscTurnOnOk();
-        iProductPage.checkHistoryRowDiscTurnOnErr();
+        winPage.checkHistoryRowDiscTurnOnOk();
+        winPage.checkHistoryRowDiscTurnOnErr();
     }
 
     @Test
@@ -443,13 +390,9 @@ public class UiWindowsTest extends Tests {
     @TmsLink("976749")
     @DisplayName("UI Windows. Проверка стоимости после действия Подключить в ОС")
     void checkCostAfterConnectOS() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.vmOrderTextCompareByKey(currentCost, iProductPage.getCostAfterChange(), "равна");
+        WindowsPage winPage = new WindowsPage(product);
+        costAfterChange =winPage.getCostAfterChangeReloadPage(product);
+        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
     }
 
     @Test
@@ -458,25 +401,20 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Отключить в ОС. Удалить диск")
     void discActDelete() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.discActOff();
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        currentCost = iProductPage.getCurrentCost();
+        currentCost=winPage.getCurrentCostReloadPage(product);
         winPage.discActDelete();
-        iProductPage.checkHistoryRowDiscDeleteOk();
-        iProductPage.checkHistoryRowDiscDeleteErr();
+        winPage.checkHistoryRowDiscDeleteOk();
+        winPage.checkHistoryRowDiscDeleteErr();
     }
+
     @Test
     @Order(28)
     @TmsLink("976752")
     @DisplayName("UI Windows. Проверка стоимости после действия Удалить диск")
     void checkCostAfterDdiscActDelete() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.vmOrderTextCompareByKey(currentCost, iProductPage.getCostAfterChange(), "равна");
+        WindowsPage winPage = new WindowsPage(product);
+        costAfterChange =winPage.getCostAfterChangeReloadPage(product);
+        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
     }
 
     @Test
@@ -485,11 +423,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверить конфигурацию")
     void vmActCheckConfig() {
         WindowsPage winPage = new WindowsPage(product);
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        currentCost = iProductPage.getCurrentCost();
+        currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.vmActCheckConfig();
-        iProductPage.checkHistoryRowCheckConfigOk();
-        iProductPage.checkHistoryRowCheckConfigErr();
+        winPage.checkHistoryRowCheckConfigOk();
+        winPage.checkHistoryRowCheckConfigErr();
     }
 
     @Test
@@ -497,13 +434,9 @@ public class UiWindowsTest extends Tests {
     @TmsLink("976756")
     @DisplayName("UI Windows. Проверка стоимости после действия Проверить конфигурацию")
     void checkCostAfterVmActCheckConfig() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.vmOrderTextCompareByKey(currentCost, iProductPage.getCostAfterChange(), "равна");
+        WindowsPage winPage = new WindowsPage(product);
+        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
+        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
     }
 
     @Test
@@ -512,11 +445,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Выключить принудительно")
     void stopHard() {
         WindowsPage winPage = new WindowsPage(product);
-        iProductPage.getBtnGeneralInfo().shouldBe(Condition.enabled);
-        currentCost = iProductPage.getCurrentCost();
+        currentCost=winPage.getCurrentCostReloadPage(product);
         winPage.stopHard();
-        iProductPage.checkHistoryRowForceTurnOffOk();
-        iProductPage.checkHistoryRowForceTurnOffErr();
+        winPage.checkHistoryRowForceTurnOffOk();
+        winPage.checkHistoryRowForceTurnOffErr();
     }
 
     @Test
@@ -524,13 +456,9 @@ public class UiWindowsTest extends Tests {
     @TmsLink("976760")
     @DisplayName("UI Windows. Проверка стоимости после действия Выключить принудительно")
     void checkCostAfterStopHard() {
-        new IndexPage().getBtnProducts().click();
-        new ProductsPage()
-                .getRowByColumn("Продукт",
-                        labelOrder)
-                .hover()
-                .click();
-        iProductPage.vmOrderTextCompareByKey(currentCost, iProductPage.getCostAfterChange(), "равна");
+        WindowsPage winPage = new WindowsPage(product);
+        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
+        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "больше");
     }
 
     @Test
@@ -540,8 +468,8 @@ public class UiWindowsTest extends Tests {
     void deleteWindows() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.delete();
-        iProductPage.checkHistoryRowDeletedOk();
-        iProductPage.checkHistoryRowDeletedErr();
+        winPage.checkHistoryRowDeletedOk();
+        winPage.checkHistoryRowDeletedErr();
     }
 
 }

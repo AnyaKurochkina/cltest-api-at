@@ -1,7 +1,6 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.*;
-import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
@@ -9,6 +8,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.function.Executable;
 import steps.stateService.StateServiceSteps;
 import ui.elements.Dialog;
@@ -33,11 +33,15 @@ import static tests.Tests.clickableCnd;
 
 @Log4j2
 @Getter
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class IProductPage {
     TopInfo topInfo;
     IProduct product;
     double prePriceOrderDbl;
+    double priceOrderDbl;
+
+
+
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
@@ -240,7 +244,7 @@ public abstract class IProductPage {
         log.info("пользователь проверяет, что на вкладке История действий таблица содержит необходимые столбцы");
     }
 
-     /**
+    /**
      * пользователь проверяет отсутствие элемента "Строка 'Развертывание' со статусом 'Ошибка'
      */
     public void checkHistoryRowDeployErr() {
@@ -555,7 +559,7 @@ public abstract class IProductPage {
     public void vmOrderTextCompareByKey(Double currentCost, Double costAfterChange, String isCompare) {
         switch (isCompare) {
             case "больше":
-                Assertions.assertFalse(currentCost > costAfterChange);
+                Assertions.assertTrue(currentCost > costAfterChange);
                 log.info("OK! Текущая стоимость продукта " + currentCost + " больше стоимости продукта, после изменения" + costAfterChange);
                 break;
             case "меньше":
@@ -567,15 +571,13 @@ public abstract class IProductPage {
                 log.info("OK! Текущая стоимость продукта " + currentCost + " равна стоимости продукта, после изменения" + costAfterChange);
                 break;
         }
-
-
     }
 
     /**
      * Получение текущей стоимости
      */
     @SneakyThrows
-    public double getCurrentCost() {
+    public double getCurrentCostOrder() {
         btnGeneralInfo.shouldBe(Condition.enabled);
         loadOrderPricePerDayAfterOrder.shouldBe(Condition.visible);
         loadOrderPricePerDayAfterOrder.shouldBe(clickableCnd);
@@ -584,16 +586,39 @@ public abstract class IProductPage {
         return getNumbersFromText(priceStr);
     }
 
+    @SneakyThrows
+    public double getCurrentCostReloadPage(models.orderService.products.Windows product) {
+        double currentCost;
+        do {
+            new WindowsPage(product);
+            currentCost = getCurrentCostOrder();
+        } while (currentCost <= 0.0);
+
+        return currentCost;
+    }
+
+
     /**
      * Получение стоимости после выполнения действий над продуктом
      */
     @SneakyThrows
-    public double getCostAfterChange() {
-
+    public double getCostAfterChangeOrder() {
+        btnGeneralInfo.shouldBe(Condition.enabled);
+        loadOrderPricePerDayAfterOrder.shouldBe(Condition.visible);
+        loadOrderPricePerDayAfterOrder.shouldBe(clickableCnd);
+        getOrderPricePerDayAfterOrder().shouldBe(activeCnd);
         String priceStr = getOrderPricePerDayAfterOrder().getAttribute("textContent");
         return getNumbersFromText(priceStr);
     }
 
-
+    @SneakyThrows
+    public double getCostAfterChangeReloadPage(models.orderService.products.Windows product) {
+        double costAfterChange;
+        do {
+            new WindowsPage(product);
+            costAfterChange = getCostAfterChangeOrder();
+        } while (costAfterChange <= 0.0);
+        return costAfterChange;
+    }
 
 }
