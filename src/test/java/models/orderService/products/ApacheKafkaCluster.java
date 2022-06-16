@@ -54,8 +54,8 @@ public class ApacheKafkaCluster extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = OrderServiceSteps.getDomainBySegment(this, segment);
-        createProduct();
+//        domain = OrderServiceSteps.getDomainBySegment(this, segment);
+//        createProduct();
     }
 
     @Override
