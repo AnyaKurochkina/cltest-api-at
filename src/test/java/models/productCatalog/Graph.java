@@ -41,6 +41,7 @@ public class Graph extends Entity {
     private String jsonTemplate;
     private String createDt;
     private String updateDt;
+    private Boolean damageOrderOnError;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json");
@@ -64,6 +65,7 @@ public class Graph extends Entity {
                 .set("$.version", version)
                 .set("$.create_dt", createDt)
                 .set("$.update_dt", updateDt)
+                .set("$.damage_order_on_error", damageOrderOnError)
                 .build();
     }
 

@@ -96,11 +96,11 @@ public class ServiceNegativeTest extends Tests {
         Services.builder().serviceName("create_service_with_not_exist_graph_id")
                 .graphId("dgdh-4565-dfgdf")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Services.builder().serviceName("create_service_with_not_exist_graph_id")
                 .graphId("create_service2_with_not_exist_graph_id")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
     }
 
     @DisplayName("Негативный тест на удаление сервиса без токена")

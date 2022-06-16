@@ -113,4 +113,6 @@ public class CreateProductResponse{
 
 	@JsonProperty("restricted_developers")
 	private String restricted_developers;
+
+	private String payment;
 }

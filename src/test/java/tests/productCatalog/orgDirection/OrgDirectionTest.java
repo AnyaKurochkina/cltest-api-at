@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("product_catalog")
+@Tag("org_direction")
 @Epic("Продуктовый каталог")
 @Feature("Направления")
 @DisabledIfEnv("prod")
@@ -197,10 +198,9 @@ public class OrgDirectionTest extends Tests {
 
     @Test
     @DisplayName("Загрузка OrgDirection в GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("975382")
     public void dumpToGitlabOrgDirection() {
-        String orgDirection = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        String orgDirection = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         OrgDirection jinja = OrgDirection.builder()
                 .orgDirectionName(orgDirection)
                 .title(orgDirection)

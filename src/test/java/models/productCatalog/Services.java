@@ -35,6 +35,7 @@ public class Services extends Entity {
     private String title;
     private String directionId;
     private String directionTitle;
+    private String directionName;
     private List<Object> inventoryActions;
     private String graphVersionPattern;
     private Boolean hideNodeNameOutput;
@@ -92,6 +93,8 @@ public class Services extends Entity {
                 .set("$.current_version", currentVersion)
                 .set("$.auto_open_results", autoOpenResults)
                 .set("$.direction_id", directionId)
+                .set("$.direction_name", directionName)
+                .set("$.service_info", serviceInfo)
                 .build();
     }
 

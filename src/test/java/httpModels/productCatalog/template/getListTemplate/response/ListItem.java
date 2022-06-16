@@ -118,6 +118,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("update_dt")
     private String update_dt;
 
+    @JsonProperty("current_version")
+    private String currentVersion;
+
     @Override
     public String getName() {
         return name;

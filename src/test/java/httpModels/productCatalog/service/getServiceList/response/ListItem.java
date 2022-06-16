@@ -122,6 +122,7 @@ public class ListItem implements ItemImpl {
 
     @JsonProperty("restricted_developers")
     private String restricted_developers;
+    private String direction_name;
 
     @Override
     public String getName() {

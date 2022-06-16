@@ -10,7 +10,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.productCatalog.Jinja2;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -211,10 +211,9 @@ public class JinjaTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Jinja в GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("975380")
     public void dumpToGitlabJinja() {
-        String jinjaName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        String jinjaName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Jinja2 jinja = Jinja2.builder()
                 .name(jinjaName)
                 .title(jinjaName)
@@ -229,8 +228,13 @@ public class JinjaTest extends Tests {
     @Disabled
     @TmsLink("")
     public void loadFromGitlabJinja() {
-        String path = "";
+        String name = "standard_for_unloading_from_git";
+        if (steps.isExists(name)) {
+            steps.deleteByName(name, GetJinjaListResponse.class);
+        }
+        String path = "jinja2template_" + name;
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(path));
+        assertTrue(steps.isExists(name));
+        steps.deleteByName(name, GetJinjaListResponse.class);
     }
 }
