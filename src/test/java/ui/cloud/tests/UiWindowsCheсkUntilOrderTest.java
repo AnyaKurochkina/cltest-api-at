@@ -40,7 +40,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     public UiWindowsCheckUntilOrderTest() {
         if (Configure.ENV.equals("prod"))
             product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/8a37e2a0-1b2c-449e-9f7c-9dfe037a5f03/main?context=proj-frybyv41jh&type=project&org=vtb").build();
+            //product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders?page=0&perPage=10&f[category]=vm&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=pending&context=proj-evw9xv5qao&type=project&org=vtb").build();
         else
             product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -60,6 +60,9 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @Order(1)
     @DisplayName("UI Windows. Проверка поля Количество VM до заказа продукта")
     void checkFieldVmNumber() {
+        new IndexPage()
+                .clickOrderMore()
+                .selectProduct(product.getProductName());
         WindowsPage winPage = new WindowsPage(product);
         winPage.checkFieldVmNumber();
     }

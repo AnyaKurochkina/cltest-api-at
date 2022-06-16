@@ -147,7 +147,6 @@ public class UiWindowsTest extends Tests {
     @Order(7)
     @DisplayName("UI Windows. Заказ")
     void orderWindows() {
-        WindowsPage winPage = new WindowsPage(product);
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -160,6 +159,7 @@ public class UiWindowsTest extends Tests {
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
         //получает стоимосить на предбиллинге
+        WindowsPage winPage = new WindowsPage(product);
         winPage.getOrderBtn().shouldBe(Condition.visible);
         winPage.getLoadOrderPricePerDay().shouldBe(Condition.enabled);
         winPage.getLoadOrderPricePerDay().shouldBe(Condition.disappear);
