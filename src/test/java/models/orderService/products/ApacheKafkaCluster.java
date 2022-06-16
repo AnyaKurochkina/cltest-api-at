@@ -207,7 +207,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void start() {
-        start("start_kafka");
+        start("start_two_layer");
     }
 
     @SneakyThrows
@@ -227,7 +227,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void restart() {
-        restart("restart_kafka");
+        restart("reset_two_layer");
     }
 
     public void syncInfo() {
@@ -240,7 +240,7 @@ public class ApacheKafkaCluster extends IProduct {
 
 
     public void stopSoft() {
-        stopSoft("stop_kafka");
+        stopSoft("stop_two_layer");
     }
 
     @Override
