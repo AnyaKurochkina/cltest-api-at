@@ -60,7 +60,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("975914")
     @Order(1)
     @DisplayName("UI Windows. Проверка поля Количество VM до заказа продукта")
     void checkFieldVmNumber() {
@@ -71,7 +71,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("976622")
     @Order(2)
     @DisplayName("UI Windows. Проверка поля Метка до заказа продукта")
     void checkFieldMark() {
@@ -85,7 +85,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("976626")
     @Order(3)
     @DisplayName("UI Windows. Проверка кнопки Заказать на неактивность, до заполнения полей")
     void checkBtnOrderDisabled() {
@@ -96,7 +96,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("976629")
     @Order(4)
     @DisplayName("UI Windows. Проверка атрибута \"textContent\" на содержание символа \"— ₽\"")
     void checkFieldAtrTextContentSymbol() {
@@ -107,7 +107,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("976722")
     @Order(5)
     @DisplayName("UI Windows. Проверка у элемента \"Стоимость в сутки\" атрибут \"textContent\" содержит значение \"≈\"")
     void checkElementAtrTextContentSymbol() {
@@ -126,7 +126,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("976724")
     @Order(6)
     @DisplayName("UI Windows. Проверка Детали заказа.")
     void checkDetailsOrder() {
@@ -178,7 +178,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("976726")
     @Order(8)
     @DisplayName("UI Windows. Проверка заголовка столбцов в Истории действий.")
     void checkHeaderHistoryTable() {
@@ -193,7 +193,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("976729")
     @Order(9)
     @DisplayName("UI Windows. Проверка на наличие элемента Строка 'Развертывание' со статусом 'В порядке'.")
     void isHistoryRowDeployOk() {
@@ -208,7 +208,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("976730")
     @Order(10)
     @DisplayName("UI Windows. Проверка на наличие элемента Строка 'Развертывание' со статусом 'Ошибка'.")
     void checkHistoryRowDeployErr() {
@@ -223,7 +223,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("976731")
     @Order(11)
     @DisplayName("UI Windows. Проверка наличия элемента \"Схема выполнения\".")
     void checkHistoryGraphScheme() {
@@ -241,7 +241,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("976732")
     @Order(12)
     @DisplayName("UI Windows. Проверка стоимости продукта соответствию предбиллингу")
     void checkPrePriceOrder() {
@@ -277,7 +277,7 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(14)
-    @TmsLink("")
+    @TmsLink("976734")
     @DisplayName("UI Windows. Проверка стоимости после действия Перезагрузить по питанию")
     @SneakyThrows
     void checkCostAfterRestart() {
@@ -305,7 +305,7 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(16)
-    @TmsLink("")
+    @TmsLink("976738")
     @DisplayName("UI Windows. Проверка стоимости после действия Выключить")
     void checkCostAfterStopSoft() {
         new IndexPage().getBtnProducts().click();
@@ -332,7 +332,7 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(18)
-    @TmsLink("")
+    @TmsLink("976742")
     @DisplayName("UI Windows. Проверка стоимости после действия Изменить конфигурацию")
     void checkCostAfterChangeConfiguration() {
         new IndexPage().getBtnProducts().click();
@@ -359,7 +359,7 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(20)
-    @TmsLink("")
+    @TmsLink("976743")
     @DisplayName("UI Windows. Проверка стоимости после действия Включить")
     void checkStartAfterStart() {
         new IndexPage().getBtnProducts().click();
@@ -386,7 +386,7 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(22)
-    @TmsLink("")
+    @TmsLink("976746")
     @DisplayName("UI Windows. Проверка стоимости после действия Добавить диск")
     void checkCostAfterDiscActAdd() {
         new IndexPage().getBtnProducts().click();
@@ -413,7 +413,7 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(24)
-    @TmsLink("")
+    @TmsLink("976747")
     @DisplayName("UI Windows. Проверка стоимости после действия Отключить в ОС")
     void checkCostAfterTurnOffOs() {
         new IndexPage().getBtnProducts().click();
@@ -440,7 +440,7 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(26)
-    @TmsLink("")
+    @TmsLink("976749")
     @DisplayName("UI Windows. Проверка стоимости после действия Подключить в ОС")
     void checkCostAfterConnectOS() {
         new IndexPage().getBtnProducts().click();
@@ -467,7 +467,7 @@ public class UiWindowsTest extends Tests {
     }
     @Test
     @Order(28)
-    @TmsLink("")
+    @TmsLink("976752")
     @DisplayName("UI Windows. Проверка стоимости после действия Удалить диск")
     void checkCostAfterDdiscActDelete() {
         new IndexPage().getBtnProducts().click();
@@ -494,8 +494,8 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(30)
-    @TmsLink("")
-    @DisplayName("UI Windows.  Проверка стоимости после действия Проверить конфигурацию")
+    @TmsLink("976756")
+    @DisplayName("UI Windows. Проверка стоимости после действия Проверить конфигурацию")
     void checkCostAfterVmActCheckConfig() {
         new IndexPage().getBtnProducts().click();
         new ProductsPage()
@@ -521,7 +521,7 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(32)
-    @TmsLink("")
+    @TmsLink("976760")
     @DisplayName("UI Windows. Проверка стоимости после действия Выключить принудительно")
     void checkCostAfterStopHard() {
         new IndexPage().getBtnProducts().click();
