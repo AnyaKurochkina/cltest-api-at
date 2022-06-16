@@ -47,7 +47,7 @@ public class FoldersTest extends Tests {
     @Test
     @Order(4)
     @TmsLink("720840")
-    @DisplayName("Создание Папки")
+    @DisplayName("Изменение Папки")
     void editFolder() {
         try (Folder folder = Folder.builder().kind(Folder.DEFAULT).build().createObjectExclusiveAccess()) {
             folder.setTitle("newTitle");

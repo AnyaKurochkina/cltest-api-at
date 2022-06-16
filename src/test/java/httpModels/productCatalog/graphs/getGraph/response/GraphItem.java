@@ -57,7 +57,7 @@ public class GraphItem{
 	private String templateVersionPattern;
 
 	@JsonProperty("printed_output")
-	private PrintedOutput printedOutput;
+	private Object/*<PrintedOutput>*/ printedOutput;
 
 	@JsonProperty("coords_y")
 	private Integer coordsY;

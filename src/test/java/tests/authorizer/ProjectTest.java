@@ -26,7 +26,7 @@ public class ProjectTest extends Tests {
     @Order(2)
     @Test
     @TmsLink("720818")
-    @DisplayName("Роедактирование проекта")
+    @DisplayName("Редактирование проекта")
     void editProject() {
         try(Project project = Project.builder().isForOrders(false).build().createObjectExclusiveAccess()) {
             project.setProjectName("newProjectName");

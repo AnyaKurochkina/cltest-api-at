@@ -22,6 +22,7 @@ public class TariffClass {
 	private String calculationEntityFieldName;
 	private String name;
 	private String id;
+	private String unit;
 	private List<String> itemStates;
 	private CalculateAttrs calculateAttrs;
 
