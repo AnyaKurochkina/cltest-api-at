@@ -5,8 +5,6 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.Windows;
 import models.portalBack.AccessGroup;
@@ -22,7 +20,6 @@ import java.util.Objects;
 
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
 import static org.openqa.selenium.Keys.BACK_SPACE;
 import static org.openqa.selenium.Keys.CONTROL;
 
@@ -35,7 +32,7 @@ import static org.openqa.selenium.Keys.CONTROL;
 
 class UiWindowsCheckUntilOrderTest extends Tests {
     Windows product;
-
+    IProductPage iProductPage = new IProductPage() { };
     //TODO: пока так :)
     public UiWindowsCheckUntilOrderTest() {
         if (Configure.ENV.equals("prod"))
@@ -63,8 +60,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
-        WindowsPage winPage = new WindowsPage(product);
-        winPage.checkFieldVmNumber();
+        iProductPage.checkFieldVmNumber();
     }
 
     @Test
@@ -72,9 +68,11 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @Order(2)
     @DisplayName("UI Windows. Проверка поля Метка до заказа продукта")
     void checkFieldMark() {
-        WindowsPage winPage = new WindowsPage(product);
-        winPage.getMark().sendKeys(CONTROL + "a");
-        winPage.getMark().sendKeys(BACK_SPACE);
+        new IndexPage()
+                .clickOrderMore()
+                .selectProduct(product.getProductName());
+        iProductPage.getMark().sendKeys(CONTROL + "a");
+        iProductPage.getMark().sendKeys(BACK_SPACE);
         $(byText("Поле должно содержать от 3 до 64 символов")).should(Condition.exist);
         log.info("Проверка поля метка должно содержать от 3 до 64 символов");
     }
@@ -84,8 +82,10 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @Order(3)
     @DisplayName("UI Windows. Проверка кнопки Заказать на неактивность, до заполнения полей")
     void checkBtnOrderDisabled() {
-        WindowsPage winPage = new WindowsPage(product);
-        winPage.getOrderProduct().shouldBe(Condition.disabled);
+        new IndexPage()
+                .clickOrderMore()
+                .selectProduct(product.getProductName());
+        iProductPage.getOrderProduct().shouldBe(Condition.disabled);
     }
 
     @Test
@@ -93,11 +93,10 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @Order(4)
     @DisplayName("UI Windows. Проверка атрибута \"textContent\" на содержание символа \"— ₽\"")
     void checkFieldAtrTextContentSymbol() {
-        WindowsPage winPage = new WindowsPage(product);
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
-        Objects.requireNonNull(winPage.getOrderPricePerDay().getAttribute("textContent")).contains("— ₽");
+        Objects.requireNonNull(iProductPage.getOrderPricePerDay().getAttribute("textContent")).contains("— ₽");
     }
 
     @Test
@@ -105,7 +104,6 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @Order(5)
     @DisplayName("UI Windows. Проверка у элемента \"Стоимость в сутки\" атрибут \"textContent\" содержит значение \"≈\"")
     void checkElementAtrTextContentSymbol() {
-        WindowsPage winPage = new WindowsPage(product);
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -117,7 +115,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
-        winPage.isCostDayContains("≈");
+        iProductPage.isCostDayContains("≈");
     }
 
     @Test
@@ -125,7 +123,6 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @Order(6)
     @DisplayName("UI Windows. Проверка Детали заказа.")
     void checkDetailsOrder() {
-        WindowsPage winPage = new WindowsPage(product);
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -137,6 +134,6 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
-        winPage.checkOrderDetails(winPage.getCalculationDetails(), product.getProductName());
+        iProductPage.checkOrderDetails(iProductPage.getCalculationDetails(), product.getProductName());
     }
 }

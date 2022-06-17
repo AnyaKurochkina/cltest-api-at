@@ -50,7 +50,7 @@ public abstract class IProductPage {
     private final SelenideElement btnProducts = Selenide.$x("//div[not(@hidden)]/a[@href='/vm/orders' and text()='Продукты']");
     private final SelenideElement progressBars = Selenide.$x("(//div[div[@role='progressbar']])[last()]");
     private final SelenideElement loadOrderPricePerDay = Selenide.$x("//*[@data-testid='new-order-details-price']/div/*");//("//*[@data-testid='new-order-details-price']/div//*[name()='path']");
-    private final SelenideElement orderPricePerDayAfterOrder = Selenide.$x("//button[@title='Редактировать']/following::span[1]");
+    private final SelenideElement orderPricePerDayAfterOrder = Selenide.$x("//button[@title='Редактировать']/following::p[1]");
     private final SelenideElement loadOrderPricePerDayAfterOrder = Selenide.$x("//button[@title='Редактировать']/following::*[2]");
     private final SelenideElement closeModalWindowButton = Selenide.$x("//div[@role='dialog']//button[contains(.,'Закрыть')]");
     private final SelenideElement orderBtn = Selenide.$x("//button[.='Заказать']");

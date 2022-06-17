@@ -15,6 +15,8 @@ public class WindowsPage extends IProductPage {
     public WindowsPage(Windows product) {
         super(product);
     }
+    public WindowsPage() {
+    };
     @SneakyThrows
     public void delete()  {
         runActionWithParameters("Виртуальная машина", "Удалить", () ->
