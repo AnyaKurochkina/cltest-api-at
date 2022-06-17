@@ -14,6 +14,6 @@ abstract public class BaseTest extends Tests {
 
     @BeforeEach
     public void init() {
-        new LoginPage().singIn();
+        new LoginPage().signIn();
     }
 }
