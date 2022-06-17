@@ -354,10 +354,10 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath();
         if (status.equals(ProductStatus.STARTED)) {
             log.info("Статус продукта ВКЛЮЧЕН");
-            return jsonPath.getString("power_status.status").equals("on");
+            return jsonPath.getString("power_status.find{it.containsKey('status')}.status").equals("on");
         } else {
             log.info("Статус продукта ВЫКЛЮЧЕН");
-            return jsonPath.getString("power_status.status").equals("off");
+            return jsonPath.getString("power_status.find{it.containsKey('status')}.status").equals("off");
         }
     }
 
