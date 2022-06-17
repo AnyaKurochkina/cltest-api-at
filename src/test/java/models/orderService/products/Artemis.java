@@ -51,7 +51,7 @@ public class Artemis extends IProduct {
             setProjectId(project.getId());
         }
         if (productName == null)
-            productName = "VTB Apache ActiveMQ Artemis";
+            productName = "VTB Apache ActiveMQ Artemis RHEL";
         initProduct();
         if (domain == null)
             domain = OrderServiceSteps.getDomainBySegment(this, segment);
