@@ -126,7 +126,7 @@ public class ApacheKafkaCluster extends IProduct {
     public void createTopics(List<String> names) {
         List<KafkaTopic> kafkaTopics = new ArrayList<>();
         for (String name : names)
-            kafkaTopics.add(new KafkaTopic("delete", 1, 1, 1, 1800000, name));
+            kafkaTopics.add(new KafkaTopic("delete", 1, 1800000, name));
         OrderServiceSteps.executeAction(KAFKA_CREATE_TOPICS, this, new JSONObject("{\"topics\": " + JsonHelper.toJson(kafkaTopics) + "}"), this.projectId);
         for (String name : names)
             Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)), "Отсутствует в списке топик " + name);
@@ -207,7 +207,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void start() {
-        start("start_kafka");
+        start("start_two_layer");
     }
 
     @SneakyThrows
@@ -227,7 +227,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void restart() {
-        restart("restart_kafka");
+        restart("reset_two_layer");
     }
 
     public void syncInfo() {
@@ -240,7 +240,7 @@ public class ApacheKafkaCluster extends IProduct {
 
 
     public void stopSoft() {
-        stopSoft("stop_kafka");
+        stopSoft("stop_two_layer");
     }
 
     @Override

@@ -7,6 +7,8 @@ import core.enums.ObjectStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
+import models.orderService.products.ApacheKafkaCluster;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.util.Iterator;
@@ -18,6 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
+@Log4j2
 public class ObjectPoolEntity {
     private String entity;
     @Setter @Getter
@@ -53,6 +56,8 @@ public class ObjectPoolEntity {
         removeEmptyNode(jsonNodeThis);
         removeEmptyNode(jsonNodeThat);
         removeNode(jsonNodeThis, jsonNodeThat);
+        if(o instanceof ApacheKafkaCluster)
+            log.warn("jsonNodeThis '{}',  jsonNodeThat '{}' : {}", jsonNodeThis, jsonNodeThat, Objects.equals(jsonNodeThis, jsonNodeThat));
         return Objects.equals(jsonNodeThis, jsonNodeThat);
     }
 
