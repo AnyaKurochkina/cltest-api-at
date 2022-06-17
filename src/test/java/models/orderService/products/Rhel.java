@@ -110,7 +110,7 @@ public class Rhel extends IProduct {
         resize("resize_vm", flavor);
     }
     public void expandMountPoint(){
-        expandMountPoint("expand_mount_point", "/app", 10);
+        expandMountPoint("expand_mount_point_new", "/app", 10);
     }
 
     @Step("Удаление продукта")

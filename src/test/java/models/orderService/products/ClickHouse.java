@@ -151,7 +151,7 @@ public class ClickHouse extends IProduct {
     }
 
     public void expandMountPoint() {
-        expandMountPoint("expand_mount_point", "/app/clickhouse", 10);
+        expandMountPoint("expand_mount_point_new", "/app/clickhouse", 10);
     }
 
     //Перезагрузить по питанию
