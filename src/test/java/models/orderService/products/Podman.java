@@ -38,7 +38,8 @@ public class Podman extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/podman.json";
-        productName = "Podman";
+        if(productName == null)
+            productName = "Podman";
         initProduct();
         if(flavor == null)
             flavor = getMinFlavor();
