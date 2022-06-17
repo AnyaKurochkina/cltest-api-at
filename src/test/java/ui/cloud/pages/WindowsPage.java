@@ -11,12 +11,13 @@ import static tests.Tests.activeCnd;
 import static tests.Tests.clickableCnd;
 
 public class WindowsPage extends IProductPage {
-
+    String vmHeader ="Имя хоста";
     public WindowsPage(Windows product) {
         super(product);
     }
     public WindowsPage() {
     };
+
     @SneakyThrows
     public void delete()  {
         runActionWithParameters("Виртуальная машина", "Удалить", () ->
@@ -30,29 +31,30 @@ public class WindowsPage extends IProductPage {
         waitChangeStatus();
         checkLastAction();
         btnGeneralInfo.click();
-        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_DELETED);
+        new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_DELETED);
     }
 
     public void start() {
         runActionWithoutParameters("Виртуальная машина", "Включить");
         waitChangeStatus();
         checkLastAction();
-        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
     public void restart() {
         runActionWithoutParameters("Виртуальная машина", "Перезагрузить по питанию");
         waitChangeStatus();
         checkLastAction();
-        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
     public void changeConfiguration() {
         runActionWithoutParameters("Виртуальная машина", "Изменить конфигурацию");
         waitChangeStatus();
         checkLastAction();
-        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_OFF);
+        new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_OFF);
     }
+
     @SneakyThrows
     public void discActAdd()  {
         runActionWithParameters("Дополнительные диски", "Добавить диск", () -> {
@@ -64,18 +66,19 @@ public class WindowsPage extends IProductPage {
                     .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
-
+            btnGeneralInfo.scrollIntoView(true);
         },true);
+
         waitChangeStatus();
-        checkLastAction();
-        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        //checkLastAction();
+        new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
     public void discActExpand() {
         runActionWithoutParameters("Виртуальная машина", "Расширить диск");
         waitChangeStatus();
         checkLastAction();
-        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
     @SneakyThrows
     public void discActOff()  {
@@ -88,7 +91,7 @@ public class WindowsPage extends IProductPage {
         },true);
         waitChangeStatus();
         checkLastAction();
-        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
     @SneakyThrows
     public void discActOn() {
@@ -101,7 +104,7 @@ public class WindowsPage extends IProductPage {
         },true);
         waitChangeStatus();
         checkLastAction();
-       new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+       new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
     @SneakyThrows
@@ -115,35 +118,35 @@ public class WindowsPage extends IProductPage {
         },true);
         waitChangeStatus();
         checkLastAction();
-        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
     public void vmActCheckConfig() {
         runActionWithoutParameters("Виртуальная машина", "Проверить конфигурацию");
         waitChangeStatus();
         checkLastAction();
-       new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+       new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
     public void stopSoft() {
         runActionWithoutParameters("Виртуальная машина", "Выключить");
         waitChangeStatus();
         checkLastAction();
-        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_OFF);
+        new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_OFF);
     }
 
     public void stopHard() {
         runActionWithoutParameters("Виртуальная машина", "Выключить принудительно");
         waitChangeStatus();
         checkLastAction();
-        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_OFF);
+        new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_OFF);
     }
 
     public void turnOnDeleteProtection() {
         runActionWithoutParameters("Виртуальная машина", "Защита от удаления");
         waitChangeStatus();
         checkLastAction();
-        new VirtualMachine().open().checkPowerStatus(VirtualMachine.POWER_STATUS_OFF);
+        new VirtualMachine(vmHeader).open().checkPowerStatus(VirtualMachine.POWER_STATUS_OFF);
     }
     @SneakyThrows
     public void addDisk() {

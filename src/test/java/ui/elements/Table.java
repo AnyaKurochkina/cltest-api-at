@@ -20,7 +20,7 @@ public class Table implements TypifiedElement {
     final List<String> headers;
     ElementsCollection rows;
     ElementsCollection headersCollection;
-    ElementsCollection progressBars = $$x("(//div[div[@role='progressbar']])[last()]");////div[div[@role='progressbar']]
+    ElementsCollection progressBars = $$x("div[div[@role='progressbar']]"); //(//div[div[@role='progressbar']])[last()]
 
     public Table(String columnName) {
         SelenideElement table = $x("//table[thead/tr/th[.='{}']]", columnName);

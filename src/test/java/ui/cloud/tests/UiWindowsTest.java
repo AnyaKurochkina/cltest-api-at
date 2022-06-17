@@ -26,9 +26,9 @@ import ui.uiExtesions.InterceptTestExtension;
 public class UiWindowsTest extends Tests {
 
     Windows product;
-    IProductPage iProductPage = new IProductPage() { };
+    IProductPage iProductPage = new IProductPage() {
+    };
     double prePriceOrderDbl;
-    double priceOrderDbl;
     double costAfterChange;
     double currentCost;
 
@@ -36,11 +36,10 @@ public class UiWindowsTest extends Tests {
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod"))
             product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-           // product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/67d262f2-ec3d-4037-bd92-005fb0765e52/main?context=proj-frybyv41jh&type=project&org=vtb").build();
+           // product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/072d0644-e1a7-4b5f-b992-cecf67a79854/main?context=proj-frybyv41jh&type=project&org=vtb").build();
         else
             product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
-
     }
 
     @BeforeEach
@@ -139,7 +138,6 @@ public class UiWindowsTest extends Tests {
         Assertions.assertEquals(currentCost, prePriceOrderDbl);
     }
 
-
     @Test
     @Order(7)
     @TmsLink("872666")
@@ -163,7 +161,6 @@ public class UiWindowsTest extends Tests {
         costAfterChange = winPage.getCostAfterChangeReloadPage(product);
         winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
     }
-
 
     @Test
     @Order(9)
@@ -228,7 +225,7 @@ public class UiWindowsTest extends Tests {
     void checkStartAfterStart() {
         WindowsPage winPage = new WindowsPage(product);
         costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(costAfterChange,currentCost,"больше");
+        winPage.vmOrderTextCompareByKey(costAfterChange, currentCost, "больше");
     }
 
     @Test
@@ -237,6 +234,8 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Добавить диск")
     void discActAdd() {
         WindowsPage winPage = new WindowsPage(product);
+//        winPage.getProgressBars().shouldBe(Condition.enabled);
+//        winPage.getProgressBars().shouldBe(Condition.disappear);
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.discActAdd();
         winPage.checkHistoryRowDiscAddOk();
@@ -250,7 +249,7 @@ public class UiWindowsTest extends Tests {
     void checkCostAfterDiscActAdd() {
         WindowsPage winPage = new WindowsPage(product);
         costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(costAfterChange,currentCost,"больше");
+        winPage.vmOrderTextCompareByKey(costAfterChange, currentCost, "больше");
     }
 
     @Test

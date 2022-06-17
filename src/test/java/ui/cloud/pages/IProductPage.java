@@ -130,7 +130,7 @@ public abstract class IProductPage {
         checkErrorByStatus(history.lastActionStatus());
     }
 
-    private SelenideElement getBtnAction(String header) {
+    public SelenideElement getBtnAction(String header) {
         return $x("//ancestor::div[.='{}Действия']//button[.='Действия']", header);
     }
 
@@ -203,10 +203,6 @@ public abstract class IProductPage {
         public static final String POWER_STATUS_DELETED = "Удалено";
         public static final String POWER_STATUS_ON = "Включено";
         public static final String POWER_STATUS_OFF = "Выключено";
-
-        public VirtualMachine() {
-            super("Статус");
-        }
 
         public VirtualMachine(String columnName) {
             super(columnName);
