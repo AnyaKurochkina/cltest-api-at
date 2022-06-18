@@ -36,7 +36,8 @@ public class UiWindowsTest extends Tests {
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod"))
             product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-           // product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/072d0644-e1a7-4b5f-b992-cecf67a79854/main?context=proj-frybyv41jh&type=project&org=vtb").build();
+           // product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/40ec188e-c4ad-4341-8562-ec34eb4aecfb/main?context=proj-frybyv41jh&type=project&org=vtb").build();
+          //  product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/f4bedbef-7de9-45e4-ad1d-41068a3de333/main?context=proj-frybyv41jh&type=project&org=vtb").build();
         else
             product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -45,7 +46,7 @@ public class UiWindowsTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        Configuration.browserSize = "1366x768";
+        //Configuration.browserSize = "1366x768";
         new LoginPage(product.getProjectId())
                 .singIn();
     }
@@ -234,8 +235,6 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Добавить диск")
     void discActAdd() {
         WindowsPage winPage = new WindowsPage(product);
-//        winPage.getProgressBars().shouldBe(Condition.enabled);
-//        winPage.getProgressBars().shouldBe(Condition.disappear);
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.discActAdd();
         winPage.checkHistoryRowDiscAddOk();

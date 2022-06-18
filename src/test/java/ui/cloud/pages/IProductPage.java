@@ -524,11 +524,6 @@ public abstract class IProductPage {
         }
     }
 
-    public void checkCurrentPriceEqualToPreprice() {
-
-
-    }
-
     public static Double getNumbersFromText(String inputStr) throws ParseException {
         String numbersRegex = "\\d{1,5}.\\d{1,5}"; //(323,98 ₽/сут.), 323,98 ₽/сут.
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.FRANCE);
