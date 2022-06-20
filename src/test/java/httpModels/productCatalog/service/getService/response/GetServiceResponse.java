@@ -117,10 +117,10 @@ public class GetServiceResponse implements GetImpl {
 	private String directionTitle;
 
 	@JsonProperty("allowed_developers")
-	private String allowed_developers;
+	private List<String> allowed_developers;
 
 	@JsonProperty("restricted_developers")
-	private String restricted_developers;
+	private List<String> restricted_developers;
 
 	private String direction_name;
 }

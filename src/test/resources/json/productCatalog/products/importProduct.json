@@ -21,8 +21,8 @@
     "in_general_list": true,
     "allowed_groups": [],
     "restricted_groups": [],
-    "allowed_developers": "",
-    "restricted_developers": "",
+    "allowed_developers": [],
+    "restricted_developers": [],
     "version_arr": [
       1,
       0,
@@ -83,9 +83,9 @@
           }
         ],
         "printed_output": {},
-        "allowed_developers": "",
+        "allowed_developers": [],
         "damage_order_on_error": false,
-        "restricted_developers": "",
+        "restricted_developers": [],
         "current_version": "",
         "version_arr": [
           1,

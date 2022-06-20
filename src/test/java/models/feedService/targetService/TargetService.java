@@ -15,6 +15,7 @@ import static core.helper.Configure.FeedServiceURL;
 @EqualsAndHashCode(exclude = {"jsonTemplate", "feedService"})
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"jsonTemplate", "feedService"})
 public class TargetService extends Entity {
     private Integer id;
     private String title;
@@ -22,7 +23,7 @@ public class TargetService extends Entity {
     @Getter(AccessLevel.NONE)
     private String jsonTemplate;
     @Getter(AccessLevel.NONE)
-    private final String feedService = "/api/v1/events-feed/target-services/";
+    private String feedService;
 
     @Builder
     public TargetService(String title, String internalName) {
@@ -33,6 +34,7 @@ public class TargetService extends Entity {
     @Override
     public Entity init() {
         jsonTemplate = "feedService/createTargetService.json";
+        feedService = "/api/v1/events-feed/target-services/";
         return this;
     }
 

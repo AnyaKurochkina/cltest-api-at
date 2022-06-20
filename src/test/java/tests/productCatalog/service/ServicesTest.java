@@ -149,15 +149,16 @@ public class ServicesTest extends Tests {
     @TmsLink("738684")
     @Test
     public void deleteIsPublishedService() {
-        Services serviceIsPublished = Services.builder().serviceName("create_service_is_published_test_api")
+        String errorText = "Deletion not allowed (is_published=True)";
+        Services serviceIsPublished = Services.builder()
+                .serviceName("create_service_is_published_test_api")
                 .isPublished(true)
                 .build()
                 .createObject();
         String serviceId = serviceIsPublished.getServiceId();
-        Response deleteResponse = steps.getDeleteObjectResponse(serviceId)
-                .assertStatus(200);
+        Response deleteResponse = steps.getDeleteObjectResponse(serviceId).assertStatus(403);
         steps.partialUpdateObject(serviceId, new JSONObject().put("is_published", false));
-        assertEquals(deleteResponse.jsonPath().get("error"), "Deletion not allowed (is_published=True)");
+        assertEquals(errorText, deleteResponse.jsonPath().get("error"));
     }
 
     @DisplayName("Проверка независимого от версии поля is_published в сервисах")
@@ -267,6 +268,7 @@ public class ServicesTest extends Tests {
 
     @DisplayName("Сортировка сервисов по статусу")
     @TmsLink("811054")
+    //todo логику вынести
     @Test
     public void orderingByStatus() {
         List<ItemImpl> list = steps.orderingByStatus(GetServiceListResponse.class).getItemsList();

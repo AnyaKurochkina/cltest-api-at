@@ -62,6 +62,7 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("742485")
     @Test
     public void deleteIsActiveTemplate() {
+        String errorText = "Deletion not allowed (is_active=True)";
         String name = "delete_with_active_true_item_visual_template_test_api";
         ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
                 .name(name)
@@ -73,9 +74,9 @@ public class VisualTemplateTest extends Tests {
                 .build()
                 .createObject();
         Response deleteResponse = steps.getDeleteObjectResponse(visualTemplates.getItemId())
-                .assertStatus(200);
+                .assertStatus(403);
         steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
-        assertEquals(deleteResponse.jsonPath().get("error"), "Deletion not allowed (is_active=True)");
+        assertEquals(errorText, deleteResponse.jsonPath().get("error"));
     }
 
     @DisplayName("Проверка существования шаблона визуализации по имени")

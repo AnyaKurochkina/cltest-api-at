@@ -1,5 +1,6 @@
 package tests.feedService;
 
+import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -35,6 +36,18 @@ public class EventTypeTest extends Tests {
         assertEquals(eventType, createdEventType);
     }
 
+    @DisplayName("Создание типа событий под ролью Наблюдатель")
+    @TmsLink("")
+    @Test
+    public void createEventTypeByViewerTest() {
+        EventType eventType = EventType.builder()
+                .title("create_event_type_title_test_api")
+                .internalName("create_event_type_internalName_test_api")
+                .build();
+        JSONObject body = eventType.init().toJson();
+        createEventTypeByIdViewer(body);
+    }
+
     @DisplayName("Получение типа событий по id")
     @TmsLink("953933")
     @Test
@@ -45,6 +58,19 @@ public class EventTypeTest extends Tests {
                 .build()
                 .createObject();
         EventType createdEventType = getEventTypeById(eventType.getId());
+        assertEquals(eventType, createdEventType);
+    }
+
+    @DisplayName("Получение типа событий по id под ролью Наблюдатель")
+    @TmsLink("")
+    @Test
+    public void getEventTypeByViewerTest() {
+        EventType eventType = EventType.builder()
+                .title("get_event_type_title_test_api")
+                .internalName("get_event_type_internalName_test_api")
+                .build()
+                .createObject();
+        EventType createdEventType = getEventTypeByIdViewer(eventType.getId());
         assertEquals(eventType, createdEventType);
     }
 
@@ -107,5 +133,27 @@ public class EventTypeTest extends Tests {
         deleteEventType(eventType.getId());
         List<EventType> list = getEventTypeList().getList();
         assertFalse(list.contains(eventType));
+    }
+
+    @DisplayName("Удаление типа событий Сервис")
+    @TmsLink("977567")
+    @Test
+    public void deleteServiceEventTypeTest() {
+        EventType eventType = getEventTypeByName("Сервис");
+        Response response = deleteForbiddenForDeleteEventType(eventType.getId());
+        assertEquals("У вас недостаточно прав для выполнения данного действия.", response.jsonPath().get("detail"));
+        List<EventType> list = getEventTypeList().getList();
+        assertTrue(list.contains(eventType));
+    }
+
+    @DisplayName("Удаление типа событий Информация")
+    @TmsLink("977568")
+    @Test
+    public void deleteInfoEventTypeTest() {
+        EventType eventType = getEventTypeByName("Информация");
+        Response response = deleteForbiddenForDeleteEventType(eventType.getId());
+        assertEquals("У вас недостаточно прав для выполнения данного действия.", response.jsonPath().get("detail"));
+        List<EventType> list = getEventTypeList().getList();
+        assertTrue(list.contains(eventType));
     }
 }

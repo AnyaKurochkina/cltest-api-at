@@ -46,8 +46,8 @@
     "icon": null,
     "allowed_groups": [],
     "restricted_groups": [],
-    "allowed_developers": "",
-    "restricted_developers": "",
+    "allowed_developers": [],
+    "restricted_developers": [],
     "version_arr": [
       1,
       0,

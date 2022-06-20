@@ -91,6 +91,9 @@ public class GetProductResponse implements GetImpl {
 	@JsonProperty("category")
 	private String category;
 
+	@JsonProperty("category_v2")
+	private String categoryV2;
+
 	@JsonProperty("last_version")
 	private String lastVersion;
 
@@ -110,9 +113,9 @@ public class GetProductResponse implements GetImpl {
 	private Boolean inGeneralList;
 
 	@JsonProperty("allowed_developers")
-	private String allowed_developers;
+	private List<String> allowed_developers;
 
 	@JsonProperty("restricted_developers")
-	private String restricted_developers;
+	private List<String> restricted_developers;
 	private String payment;
 }
