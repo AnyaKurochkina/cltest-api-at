@@ -41,7 +41,7 @@ public class OrderServiceSteps extends Steps {
 
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
-            Waiting.sleep(30000);
+            Waiting.sleep(20000);
             Response res = new Http(OrderServiceURL)
                     .setProjectId(product.getProjectId())
                     .get("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
@@ -250,7 +250,7 @@ public class OrderServiceSteps extends Steps {
         int counter = 22;
         log.info("Проверка статуса выполнения действия");
         while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.equals("")) && counter > 0) {
-            Waiting.sleep(30000);
+            Waiting.sleep(20000);
             actionStatus = new Http(OrderServiceURL)
                     .setProjectId(product.getProjectId())
                     .get("/v1/projects/{}/orders/{}/actions/history/{}", product.getProjectId(), product.getOrderId(), action_id)
