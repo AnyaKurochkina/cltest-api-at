@@ -4,14 +4,12 @@
   "content": "string",
   "externalLink": "",
   "show": true,
-  "startDate": "2022-06-07T12:16:09.119Z",
-  "endDate": "2022-06-07T12:16:09.119Z",
+  "startDate": "2022-06-16T09:19:27.843Z",
+  "endDate": "2022-06-16T09:19:27.843Z",
   "eventType": 0,
-  "eventTypeInfo": {
-    "title": "string",
-    "internalName": "string"
-  },
   "targetService": [
     0
+  ],
+  "tag": [
   ]
 }

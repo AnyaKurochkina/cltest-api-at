@@ -23,7 +23,7 @@ public class EventType extends Entity {
     @Getter(AccessLevel.NONE)
     private String jsonTemplate;
     @Getter(AccessLevel.NONE)
-    private final String feedService = "/api/v1/events-feed/event-types/";
+    private String feedService;
 
     @Builder
     public EventType(String title, String internalName) {
@@ -33,6 +33,7 @@ public class EventType extends Entity {
 
     @Override
     public Entity init() {
+        feedService = "/api/v1/events-feed/event-types/";
         jsonTemplate = "feedService/createEventType.json";
         return this;
     }

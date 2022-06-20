@@ -83,10 +83,10 @@ public class GetGraphResponse implements GetImpl {
 	private Boolean isSequential;
 
 	@JsonProperty("allowed_developers")
-	private String allowed_developers;
+	private List<String> allowed_developers;
 
 	@JsonProperty("restricted_developers")
-	private String restricted_developers;
+	private List<String> restricted_developers;
 
 	@JsonProperty("current_version")
 	private String currentVersion;

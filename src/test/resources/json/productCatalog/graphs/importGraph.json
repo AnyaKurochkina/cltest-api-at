@@ -14,8 +14,8 @@
     "title": "import_graph_api_test",
     "description": "import_graph_api_test",
     "type": "action",
-    "allowed_developers": "",
-    "restricted_developers": "",
+    "allowed_developers": [],
+    "restricted_developers": [],
     "version_arr": [
       1,
       0,

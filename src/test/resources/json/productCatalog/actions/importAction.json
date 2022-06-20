@@ -1,1 +1,78 @@
-{"model_name": "Action", "Action": {"graph_id": "2455fa1c-977a-49b6-9e8a-3f5a65b06b1d", "multiple": false, "priority": 0, "extra_data": {}, "graph_version": "1.0.0", "data_config_key": null, "data_config_path": null, "item_restriction": null, "config_restriction": "", "data_config_fields": [], "skip_on_prebilling": false, "location_restriction": "", "graph_version_pattern": "", "auto_removing_if_failed": false, "available_without_money": false, "current_version": "", "name": "import_action_test_api", "title": "import_action_test_api", "description": "", "type": "", "event_type": [], "event_provider": [], "icon": "", "allowed_groups": [], "restricted_groups": [], "allowed_paths": [], "restricted_paths": [], "allowed_developers": "", "restricted_developers": "", "required_order_statuses": [], "required_item_statuses": [], "version_arr": [1, 0, 0]}, "rel_foreign_models": {"graph": {"model_name": "Graph", "Graph": {"id": "2455fa1c-977a-49b6-9e8a-3f5a65b06b1d", "name": "graph_for_product_api_test", "type": "action", "title": "AtTestGraph", "author": "Morozov Ilya", "output": {}, "create_dt": "2022-06-10T14:11:06.171813+03:00", "ui_schema": {}, "update_dt": "2022-06-10T14:11:06.171853+03:00", "description": "for at tests", "json_schema": {}, "static_data": {}, "modifications": [], "printed_output": {}, "current_version": "", "allowed_developers": "", "damage_order_on_error": false, "restricted_developers": "", "version_arr": [1, 0, 0]}, "rel_foreign_models": {}, "rel_revers_models": {"nodes": []}}}, "dump_version": 5.0, "dump_date": "2022-06-14 13:31:26", "is_pinned_versions": true}
+{
+  "model_name": "Action",
+  "Action": {
+    "graph_id": "2455fa1c-977a-49b6-9e8a-3f5a65b06b1d",
+    "multiple": false,
+    "priority": 0,
+    "extra_data": {},
+    "graph_version": "1.0.0",
+    "data_config_key": null,
+    "data_config_path": null,
+    "item_restriction": null,
+    "config_restriction": "",
+    "data_config_fields": [],
+    "skip_on_prebilling": false,
+    "location_restriction": "",
+    "graph_version_pattern": "",
+    "auto_removing_if_failed": false,
+    "available_without_money": false,
+    "current_version": "",
+    "name": "import_action_test_api",
+    "title": "import_action_test_api",
+    "description": "",
+    "type": "",
+    "event_type": [],
+    "event_provider": [],
+    "icon": "",
+    "allowed_groups": [],
+    "restricted_groups": [],
+    "allowed_paths": [],
+    "restricted_paths": [],
+    "allowed_developers": [],
+    "restricted_developers": [],
+    "required_order_statuses": [],
+    "required_item_statuses": [],
+    "version_arr": [
+      1,
+      0,
+      0
+    ]
+  },
+  "rel_foreign_models": {
+    "graph": {
+      "model_name": "Graph",
+      "Graph": {
+        "id": "2455fa1c-977a-49b6-9e8a-3f5a65b06b1d",
+        "name": "graph_for_product_api_test",
+        "type": "action",
+        "title": "AtTestGraph",
+        "author": "Morozov Ilya",
+        "output": {},
+        "create_dt": "2022-06-10T14:11:06.171813+03:00",
+        "ui_schema": {},
+        "update_dt": "2022-06-10T14:11:06.171853+03:00",
+        "description": "for at tests",
+        "json_schema": {},
+        "static_data": {},
+        "modifications": [],
+        "printed_output": {},
+        "current_version": "",
+        "allowed_developers": "",
+        "damage_order_on_error": false,
+        "restricted_developers": "",
+        "version_arr": [
+          1,
+          0,
+          0
+        ]
+      },
+      "rel_foreign_models": {},
+      "rel_revers_models": {
+        "nodes": []
+      }
+    }
+  },
+  "dump_version": 5.0,
+  "dump_date": "2022-06-14 13:31:26",
+  "is_pinned_versions": true
+}
