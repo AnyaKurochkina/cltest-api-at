@@ -34,7 +34,7 @@ public class UiWindowsTest extends Tests {
     @Title("Авторизация на портале")
     void beforeEach() {
         new LoginPage(product.getProjectId())
-                .singIn();
+                .signIn();
     }
 
     @Test

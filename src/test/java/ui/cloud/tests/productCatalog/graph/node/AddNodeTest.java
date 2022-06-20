@@ -1,5 +1,7 @@
-package ui.cloud.tests.productCatalog.graph;
+package ui.cloud.tests.productCatalog.graph.node;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.AfterEach;
@@ -7,26 +9,32 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.uiModels.SubgraphNode;
+import ui.uiModels.TemplateNode;
 
+@Epic("Графы")
+@Feature("Добавление узла графа")
 public class AddNodeTest extends GraphBaseTest {
 
     @BeforeEach
-    @DisplayName("Создание подграфа для узла графа")
-    public void setUpForGraphNodesTest() {
+    @DisplayName("Создание подграфа и шаблона для узлов графа")
+    public void setUpForGraphNodeTests() {
         createGraph(SUBGRAPH_NAME);
+        createTemplate(TEMPLATE_NAME);
     }
 
     @AfterEach
     @DisplayName("Удаление подграфа")
-    public void tearDownForGraphsTest() {
+    public void tearDownForGraphTests() {
         deleteGraph(NAME);
         deleteGraph(SUBGRAPH_NAME);
+        deleteTemplate(TEMPLATE_NAME);
     }
 
     @Test
     @TmsLink("489507")
-    @Step("Добавление узла графа (подграф)")
+    @DisplayName("Добавление узла графа (подграф)")
     public void addNodeSubgraphTest() {
         addNodeSubgraphWithRequiredParameters();
         addNodeSubgraphWithAllParameters();
@@ -41,24 +49,23 @@ public class AddNodeTest extends GraphBaseTest {
         new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()
-                .addNodeSubgraph(node)
+                .addNodeAndSave(node)
                 .checkNodeAttributes(node)
-                .deleteNode(node);
+                .deleteNodeAndSave(node);
     }
 
     @Step("Добавление узла графа (подграф) с указанием всех параметров")
     public void addNodeSubgraphWithAllParameters() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
-        node.setOutput("{\"out_param\":\"test_value\"}");
         node.setNumber("3");
         node.setTimeout("10");
         node.setCount("2");
         new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()
-                .addNodeSubgraph(node)
+                .addNodeAndSave(node)
                 .checkNodeAttributes(node)
-                .deleteNode(node);
+                .deleteNodeAndSave(node);
     }
 
     @Step("Добавление узла без заполнения обязательных полей")
@@ -100,7 +107,20 @@ public class AddNodeTest extends GraphBaseTest {
         new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()
-                .addNodeSubgraph(node)
+                .addNodeAndSave(node)
                 .checkAddNodeSubgraphWithNonUniqueNameDisabled(node);
+    }
+
+    @Test
+    @TmsLink("883206")
+    @DisplayName("Добавление узла графа (по шаблону)")
+    public void addNodeByTemplateTest() {
+        TemplateNode node = new TemplateNode(TEMPLATE_NAME);
+        new IndexPage().goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab()
+                .addNodeAndSave(node)
+                .checkNodeAttributes(node)
+                .deleteNodeAndSave(node);
     }
 }
