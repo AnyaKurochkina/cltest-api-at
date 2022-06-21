@@ -41,8 +41,6 @@ public abstract class IProductPage {
     double priceOrderDbl;
 
 
-
-
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
     SelenideElement btnAct = $x("(//div[@id='root']//*[text()='Дополнительные диски']/ancestor::div[3]//following-sibling::div//button[@id='actions-menu-button' and not (.//text()='Действия')])[last()]");
@@ -222,12 +220,11 @@ public abstract class IProductPage {
         }
     }
 
-
+    @Step("Проверка на содержание элемента в атрибуте textContent")
     public void isCostDayContains(String symbol) {
         Objects.requireNonNull(orderPricePerDay.getAttribute("textContent"));
     }
-
-    //пользователь проверяет, что на вкладке История действий таблица содержит необходимые столбцы
+    @Step("Проверка на содержание неоюходимых столбцов на вкладке История действий")
     public void checkHeaderHistoryTable() {
         actionHistory.click();
         actionNameColumn.shouldBe(activeCnd);
@@ -237,219 +234,166 @@ public abstract class IProductPage {
         actionDurationColumn.shouldBe(activeCnd);
         actionStatusColumn.shouldBe(activeCnd);
         actionViewColumn.shouldBe(activeCnd);
-        log.info("пользователь проверяет, что на вкладке История действий таблица содержит необходимые столбцы");
+        log.info("пользователь проверяет, что на вкладке 'История действий' таблица содержит необходимые столбцы");
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Развертывание' со статусом 'Ошибка'
-     */
+    @Step("Проверка отсутствия элемента Строка 'Развертывание' со статусом 'Ошибка'")
     public void checkHistoryRowDeployErr() {
         actionHistory.click();
         historyRowDeployErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Перезагрузить по питанию' со статусом 'В порядке'
-     */
+    @Step("Проверка наличия элемента Строка 'Перезагрузить по питанию' со статусом 'В порядке'")
     public void checkHistoryRowRestartByPowerOk() {
         actionHistory.click();
         historyRowRestartByPowerOk.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Перезагрузить по питанию' со статусом 'Ошибка'
-     */
+
+    @Step("Проверка отсутствия элемента Строка 'Перезагрузить по питанию' со статусом 'Ошибка'")
     public void checkHistoryRowRestartByPowerErr() {
         actionHistory.click();
         historyRowRestartByPowerErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Выключить' со статусом 'В порядке'"
-     */
+    @Step("Проверка наличия элемента Строка 'Выключить' со статусом 'В порядке'")
     public void checkHistoryRowTurnOffOk() {
         actionHistory.click();
         historyRowTurnOffOk.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Выключить' со статусом 'Ошибка'"
-     */
+    @Step("Проверка отсутствия элемента \"Строка 'Выключить' со статусом 'Ошибка'")
     public void checkHistoryRowTurnOffErr() {
         actionHistory.click();
         historyRowTurnOffErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Изменить конфигурацию' со статусом 'В порядке'
-     */
+    @Step("Проверка наличия элемента \"Строка 'Изменить конфигурацию' со статусом 'В порядке'")
     public void checkHistoryRowChangeFlavorOk() {
         actionHistory.click();
         historyRowChangeFlavorOk.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Изменить конфигурацию' со статусом 'Ошибка'
-     */
+    @Step("Проверка отсутствия элемента Строка 'Изменить конфигурацию' со статусом 'Ошибка'")
     public void checkHistoryRowChangeFlavorErr() {
         actionHistory.click();
         historyRowChangeFlavorErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Включить' со статусом 'В порядке'
-     */
+    @Step("Проверка наличия элемента Строка 'Включить' со статусом 'В порядке'")
     public void checkHistoryRowTurnOnOk() {
         actionHistory.click();
         historyRowTurnOnOk.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Включить' со статусом 'Ошибка'
-     */
+    @Step("Проверка отсутствия элемента Строка 'Включить' со статусом 'Ошибка'")
     public void checkHistoryRowTurnOnErr() {
         actionHistory.click();
         historyRowTurnOnErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Добавить диск' со статусом 'В порядке'"
-     */
+    @Step("Проверка наличия элемента Строка 'Добавить диск' со статусом 'В порядке'")
     public void checkHistoryRowDiscAddOk() {
         actionHistory.click();
         historyRowDiscAddOk.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Добавить диск' со статусом 'Ошибка'"
-     */
+    @Step("Проверка отсутствия элемента \"Строка 'Добавить диск' со статусом 'Ошибка'")
     public void checkHistoryRowDiscAddErr() {
         actionHistory.click();
         historyRowDiscAddErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Расширить диск' со статусом 'В порядке'"
-     */
+    @Step("Проверка наличия элемента \"Строка 'Расширить диск' со статусом 'В порядке'")
     public void checkHistoryRowMountExpandOkDisc() {
         actionHistory.click();
         historyRowMountExpandOkDisc.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Расширить диск' со статусом 'Ошибка'"
-     */
+    @Step("Проверка элемента \"Строка 'Расширить диск' со статусом 'Ошибка'")
     public void checkHistoryRowMountExpandErrDisc() {
         actionHistory.click();
         historyRowMountExpandErrDisc.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Отключить в ОС' со статусом 'В порядке'"
-     */
+    @Step("Проверка наличия элемента \"Строка 'Отключить в ОС' со статусом 'В порядке'")
     public void checkHistoryRowDiscTurnOffOk() {
         actionHistory.click();
         historyRowDiscTurnOffOk.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Отключить в ОС' со статусом 'Ошибка'"
-     */
+    @Step("Проверка отсутствия элемента Строка 'Отключить в ОС' со статусом 'Ошибка'")
     public void checkHistoryRowDiscTurnOffErr() {
         actionHistory.click();
         historyRowDiscTurnOffErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Подключить в ОС' со статусом 'В порядке'"
-     */
+    @Step("Проверка наличия элемента Строка 'Подключить в ОС' со статусом 'В порядке'")
     public void checkHistoryRowDiscTurnOnOk() {
         actionHistory.click();
         historyRowDiscTurnOnOk.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Подключить в ОС' со статусом 'Ошибка'"
-     */
+    @Step("Проверка отсутствия элемента Строка 'Подключить в ОС' со статусом 'Ошибка'")
     public void checkHistoryRowDiscTurnOnErr() {
         actionHistory.click();
         historyRowDiscTurnOnErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Удалить диск' со статусом 'В порядке'"
-     */
+    @Step("Проверка наличия элемента Строка 'Удалить диск' со статусом 'В порядке'")
     public void checkHistoryRowDiscDeleteOk() {
         actionHistory.click();
         historyRowDiscDeleteOk.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Удалить диск' со статусом 'Ошибка'"
-     */
+    @Step("Проверка отсутствия элемента Строка 'Удалить диск' со статусом 'Ошибка'")
     public void checkHistoryRowDiscDeleteErr() {
         actionHistory.click();
         historyRowDiscDeleteErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Проверить конфигурацию' со статусом 'В порядке'"
-     */
+    @Step("Проверка наличия элемента \"Строка 'Проверить конфигурацию' со статусом 'В порядке'")
     public void checkHistoryRowCheckConfigOk() {
         actionHistory.click();
         historyRowCheckConfigOk.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Проверить конфигурацию' со статусом 'Ошибка'"
-     */
+    @Step("Проверка отсутствия элемента \"Строка 'Проверить конфигурацию' со статусом 'Ошибка'")
     public void checkHistoryRowCheckConfigErr() {
         actionHistory.click();
         historyRowCheckConfigErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Выключить принудительно' со статусом 'В порядке'"
-     */
+    @Step("Проверка наличия элемента \"Строка 'Выключить принудительно' со статусом 'В порядке'")
     public void checkHistoryRowForceTurnOffOk() {
         actionHistory.click();
         historyRowForceTurnOffOk.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Выключить принудительно' со статусом 'Ошибка'"
-     */
+    @Step("Проверка отсутствия элемента \"Строка 'Выключить принудительно' со статусом 'Ошибка'")
     public void checkHistoryRowForceTurnOffErr() {
         actionHistory.click();
         historyRowForceTurnOffErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * пользователь проверяет наличие элемента "Строка 'Удалить' со статусом 'В порядке'"
-     */
+    @Step("Проверка наличия элемента \"Строка 'Удалить' со статусом 'В порядке'")
     public void checkHistoryRowDeletedOk() {
         actionHistory.click();
         historyRowDeletedOk.shouldBe(activeCnd);
     }
 
-    /**
-     * пользователь проверяет отсутствие элемента "Строка 'Удалить' со статусом 'Ошибка'"
-     */
+    @Step("Проверка отсутствия элемента \"Строка 'Удалить' со статусом 'Ошибка'")
     public void checkHistoryRowDeletedErr() {
         actionHistory.click();
         historyRowDeletedErr.shouldNotBe(Condition.visible);
     }
 
-    /**
-     * проверка поля "Заказать" на форме заказа продукта до заполнения полей
-     */
+    @Step("Проверка  поля \"Заказать\" на форме заказа продукта до заполнения полей")
     public void checkFieldUntilOrder() {
         orderProduct.shouldBe(Condition.disabled);
     }
 
-    /**
-     * Проверка поля с входящими и ожидаемыми значениями
-     */
+    @Step("Проверка поля с входящими и ожидаемыми значениями")
     public void autoChangeableFieldCheck(SelenideElement sElement, String input, String value) {
         sElement.click();
         sElement.sendKeys(CONTROL + "a");
@@ -461,20 +405,14 @@ public abstract class IProductPage {
         log.debug("Проверка поля с входящими и ожидаемыми значениями");
     }
 
+    @Step("Проверка поля количество VM")
     public void checkFieldVmNumber() {
         autoChangeableFieldCheck(getVmNumber(), "0", "10");
         autoChangeableFieldCheck(getVmNumber(), "100", "30");
         autoChangeableFieldCheck(getVmNumber(), "N", "10");
-        log.info("Проверка поля количество VM");
     }
 
-
-    /**
-     * пользователь проверяет детали заказа у продукта
-     *
-     * @param sElement
-     * @param product
-     */
+    @Step("Проверка деталей у заказа продукта'")
     public void checkOrderDetails(SelenideElement sElement, String product) {
         sElement.shouldBe(Condition.enabled).click();
         log.info("пользователь проверяет детали заказа у продукта");
@@ -524,6 +462,7 @@ public abstract class IProductPage {
         }
     }
 
+    @Step("Получение стоимости из строки с помощью регулярного выражения")
     public static Double getNumbersFromText(String inputStr) throws ParseException {
         String numbersRegex = "\\d{1,5}.\\d{1,5}"; //(323,98 ₽/сут.), 323,98 ₽/сут.
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.FRANCE);
@@ -540,13 +479,7 @@ public abstract class IProductPage {
         return doubleDecimalObj;
     }
 
-    /**
-     * пользователь проверяет, что текущая стоимость продукта (больше|меньше|равна) стоимости после изменения
-     *
-     * @param currentCost
-     * @param costAfterChange
-     * @param isCompare
-     */
+    @Step("Проверка стоимостb продукта (больше|меньше|равна) стоимости после изменения")
     public void vmOrderTextCompareByKey(Double currentCost, Double costAfterChange, String isCompare) {
         switch (isCompare) {
             case "больше":
@@ -564,36 +497,21 @@ public abstract class IProductPage {
         }
     }
 
-    /**
-     * Получение текущей стоимости
-     */
-    @SneakyThrows
-    public double getCurrentCostOrder() {
-        btnGeneralInfo.shouldBe(Condition.enabled);
-        loadOrderPricePerDayAfterOrder.shouldBe(Condition.visible);
-        loadOrderPricePerDayAfterOrder.shouldBe(clickableCnd);
-        getOrderPricePerDayAfterOrder().shouldBe(activeCnd);
-        String priceStr = getOrderPricePerDayAfterOrder().getAttribute("textContent");
-        return getNumbersFromText(priceStr);
-    }
-
+    @Step("Проверка стоимости после выполнения действий над продуктом")
     @SneakyThrows
     public double getCurrentCostReloadPage(models.orderService.products.Windows product) {
         double currentCost;
         do {
             new WindowsPage(product);
-            currentCost = getCurrentCostOrder();
+            currentCost = getCostConvertToDouble();
         } while (currentCost <= 0.0);
 
         return currentCost;
     }
 
-
-    /**
-     * Получение стоимости после выполнения действий над продуктом
-     */
+    @Step("Преобразование стоимости string to double по")
     @SneakyThrows
-    public double getCostAfterChangeOrder() {
+    public double getCostConvertToDouble() {
         btnGeneralInfo.shouldBe(Condition.enabled);
         loadOrderPricePerDayAfterOrder.shouldBe(Condition.visible);
         loadOrderPricePerDayAfterOrder.shouldBe(clickableCnd);
@@ -602,12 +520,13 @@ public abstract class IProductPage {
         return getNumbersFromText(priceStr);
     }
 
+    @Step("Проверка стоимости после выполнения действий над продуктом")
     @SneakyThrows
     public double getCostAfterChangeReloadPage(models.orderService.products.Windows product) {
         double costAfterChange;
         do {
             new WindowsPage(product);
-            costAfterChange = getCostAfterChangeOrder();
+            costAfterChange = getCostConvertToDouble();
         } while (costAfterChange <= 0.0);
         return costAfterChange;
     }
