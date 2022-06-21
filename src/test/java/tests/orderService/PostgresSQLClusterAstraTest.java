@@ -14,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 @Epic("Продукты")
-@Feature("PostgresSQL Cluster")
+@Feature("PostgresSQL Cluster Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresSqlClusterAstra"), @Tag("prod")})
 public class PostgresSQLClusterAstraTest extends Tests {
     static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";

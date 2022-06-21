@@ -14,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 @Epic("Продукты")
-@Feature("Elasticsearch Opensearch Cluster")
+@Feature("Elasticsearch Opensearch Cluster Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearchOpenSearchClusterAstra"), @Tag("prod")})
 public class ElasticsearchOpensearchClusterAstraTest extends Tests {
     final String productName = "Elasticsearch Opensearch cluster (Astra)";

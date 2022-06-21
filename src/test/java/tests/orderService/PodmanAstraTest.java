@@ -14,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 @Epic("Продукты")
-@Feature("Podman")
+@Feature("Podman Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("podman_astra"), @Tag("prod")})
 public class PodmanAstraTest extends Tests {
     final String productName = "Podman (Astra)";
