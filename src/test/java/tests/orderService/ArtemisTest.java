@@ -28,6 +28,7 @@ public class ArtemisTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Artemis product) {
+        product.setProductName(productName);
         //noinspection EmptyTryBlock
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
         }
