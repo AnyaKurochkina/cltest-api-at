@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.sleep;
 import static core.helper.StringUtils.$x;
 import static org.openqa.selenium.Keys.BACK_SPACE;
 import static org.openqa.selenium.Keys.CONTROL;
@@ -262,13 +263,13 @@ public abstract class IProductPage {
         historyRowTurnOffOk.shouldBe(activeCnd);
     }
 
-    @Step("Проверка отсутствия элемента \"Строка 'Выключить' со статусом 'Ошибка'")
+    @Step("Проверка отсутствия элемента Строка 'Выключить' со статусом 'Ошибка'")
     public void checkHistoryRowTurnOffErr() {
         actionHistory.click();
         historyRowTurnOffErr.shouldNotBe(Condition.visible);
     }
 
-    @Step("Проверка наличия элемента \"Строка 'Изменить конфигурацию' со статусом 'В порядке'")
+    @Step("Проверка наличия элемента Строка 'Изменить конфигурацию' со статусом 'В порядке'")
     public void checkHistoryRowChangeFlavorOk() {
         actionHistory.click();
         historyRowChangeFlavorOk.shouldBe(activeCnd);
@@ -298,25 +299,25 @@ public abstract class IProductPage {
         historyRowDiscAddOk.shouldBe(activeCnd);
     }
 
-    @Step("Проверка отсутствия элемента \"Строка 'Добавить диск' со статусом 'Ошибка'")
+    @Step("Проверка отсутствия элемента Строка 'Добавить диск' со статусом 'Ошибка'")
     public void checkHistoryRowDiscAddErr() {
         actionHistory.click();
         historyRowDiscAddErr.shouldNotBe(Condition.visible);
     }
 
-    @Step("Проверка наличия элемента \"Строка 'Расширить диск' со статусом 'В порядке'")
+    @Step("Проверка наличия элемента Строка 'Расширить диск' со статусом 'В порядке'")
     public void checkHistoryRowMountExpandOkDisc() {
         actionHistory.click();
         historyRowMountExpandOkDisc.shouldBe(activeCnd);
     }
 
-    @Step("Проверка элемента \"Строка 'Расширить диск' со статусом 'Ошибка'")
+    @Step("Проверка элемента Строка 'Расширить диск' со статусом 'Ошибка'")
     public void checkHistoryRowMountExpandErrDisc() {
         actionHistory.click();
         historyRowMountExpandErrDisc.shouldNotBe(Condition.visible);
     }
 
-    @Step("Проверка наличия элемента \"Строка 'Отключить в ОС' со статусом 'В порядке'")
+    @Step("Проверка наличия элемента Строка 'Отключить в ОС' со статусом 'В порядке'")
     public void checkHistoryRowDiscTurnOffOk() {
         actionHistory.click();
         historyRowDiscTurnOffOk.shouldBe(activeCnd);
@@ -352,43 +353,43 @@ public abstract class IProductPage {
         historyRowDiscDeleteErr.shouldNotBe(Condition.visible);
     }
 
-    @Step("Проверка наличия элемента \"Строка 'Проверить конфигурацию' со статусом 'В порядке'")
+    @Step("Проверка наличия элемента Строка 'Проверить конфигурацию' со статусом 'В порядке'")
     public void checkHistoryRowCheckConfigOk() {
         actionHistory.click();
         historyRowCheckConfigOk.shouldBe(activeCnd);
     }
 
-    @Step("Проверка отсутствия элемента \"Строка 'Проверить конфигурацию' со статусом 'Ошибка'")
+    @Step("Проверка отсутствия элемента Строка 'Проверить конфигурацию' со статусом 'Ошибка'")
     public void checkHistoryRowCheckConfigErr() {
         actionHistory.click();
         historyRowCheckConfigErr.shouldNotBe(Condition.visible);
     }
 
-    @Step("Проверка наличия элемента \"Строка 'Выключить принудительно' со статусом 'В порядке'")
+    @Step("Проверка наличия элемента Строка 'Выключить принудительно' со статусом 'В порядке'")
     public void checkHistoryRowForceTurnOffOk() {
         actionHistory.click();
         historyRowForceTurnOffOk.shouldBe(activeCnd);
     }
 
-    @Step("Проверка отсутствия элемента \"Строка 'Выключить принудительно' со статусом 'Ошибка'")
+    @Step("Проверка отсутствия элемента Строка 'Выключить принудительно' со статусом 'Ошибка'")
     public void checkHistoryRowForceTurnOffErr() {
         actionHistory.click();
         historyRowForceTurnOffErr.shouldNotBe(Condition.visible);
     }
 
-    @Step("Проверка наличия элемента \"Строка 'Удалить' со статусом 'В порядке'")
+    @Step("Проверка наличия элемента Строка 'Удалить' со статусом 'В порядке'")
     public void checkHistoryRowDeletedOk() {
         actionHistory.click();
         historyRowDeletedOk.shouldBe(activeCnd);
     }
 
-    @Step("Проверка отсутствия элемента \"Строка 'Удалить' со статусом 'Ошибка'")
+    @Step("Проверка отсутствия элемента Строка 'Удалить' со статусом 'Ошибка'")
     public void checkHistoryRowDeletedErr() {
         actionHistory.click();
         historyRowDeletedErr.shouldNotBe(Condition.visible);
     }
 
-    @Step("Проверка  поля \"Заказать\" на форме заказа продукта до заполнения полей")
+    @Step("Проверка  поля 'Заказать' на форме заказа продукта до заполнения полей")
     public void checkFieldUntilOrder() {
         orderProduct.shouldBe(Condition.disabled);
     }
@@ -516,6 +517,7 @@ public abstract class IProductPage {
         loadOrderPricePerDayAfterOrder.shouldBe(Condition.visible);
         loadOrderPricePerDayAfterOrder.shouldBe(clickableCnd);
         getOrderPricePerDayAfterOrder().shouldBe(activeCnd);
+
         String priceStr = getOrderPricePerDayAfterOrder().getAttribute("textContent");
         return getNumbersFromText(priceStr);
     }
@@ -524,11 +526,13 @@ public abstract class IProductPage {
     @SneakyThrows
     public double getCostAfterChangeReloadPage(models.orderService.products.Windows product) {
         double costAfterChange;
+        int j=5;
         do {
             new WindowsPage(product);
             costAfterChange = getCostConvertToDouble();
-        } while (costAfterChange <= 0.0);
+            sleep(2000);
+            j--;
+        } while (costAfterChange <= 0.0 & j>0);
         return costAfterChange;
     }
-
 }
