@@ -1,9 +1,7 @@
 package tests.orderService;
 
-import io.qameta.allure.TmsLink;
+import io.qameta.allure.*;
 import org.junit.MarkDelete;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.orderService.products.ElasticsearchOpensearchCluster;
 import org.junit.MarkDelete;
@@ -18,7 +16,6 @@ import tests.Tests;
 @Feature("Elasticsearch Opensearch Cluster")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearch_opensearch_cluster"), @Tag("prod")})
 public class ElasticsearchOpensearchClusterTest extends Tests {
-
     final String productName = "Elasticsearch Opensearch cluster";
 
     @TmsLink("671243")
@@ -41,19 +38,6 @@ public class ElasticsearchOpensearchClusterTest extends Tests {
         }
     }
 
-    @TmsLink("671250")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(ElasticsearchOpensearchCluster product) {
-        product.setProductName(productName);
-        try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
-            elastic.stopHard();
-            elastic.start();
-
-        }
-    }
-
     @TmsLink("671252")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -66,10 +50,10 @@ public class ElasticsearchOpensearchClusterTest extends Tests {
         }
     }
 
-    @TmsLink("671253")
+    @TmsLinks({@TmsLink("671253"),@TmsLink("671250")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(ElasticsearchOpensearchCluster product) {
         product.setProductName(productName);
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {

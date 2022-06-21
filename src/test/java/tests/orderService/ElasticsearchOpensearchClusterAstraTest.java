@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.ElasticsearchOpensearchCluster;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -38,19 +39,6 @@ public class ElasticsearchOpensearchClusterAstraTest extends Tests {
         }
     }
 
-    @TmsLink("796248")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(ElasticsearchOpensearchCluster product) {
-        product.setProductName(productName);
-        try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
-            elastic.stopHard();
-            elastic.start();
-
-        }
-    }
-
     @TmsLink("796249")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -63,10 +51,10 @@ public class ElasticsearchOpensearchClusterAstraTest extends Tests {
         }
     }
 
-    @TmsLink("796244")
+    @TmsLinks({@TmsLink("796244"),@TmsLink("796248")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(ElasticsearchOpensearchCluster product) {
         product.setProductName(productName);
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {

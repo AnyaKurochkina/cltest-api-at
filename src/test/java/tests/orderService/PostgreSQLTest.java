@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.PostgreSQL;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -147,21 +148,10 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("377666")
+    @TmsLinks({@TmsLink("377665"),@TmsLink("377666")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.stopHard();
-            postgreSQL.start();
-        }
-    }
-
-    @TmsLink("377665")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.stopHard();

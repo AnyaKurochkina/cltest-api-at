@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.Podman;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -75,22 +76,10 @@ public class PodmanAstraTest extends Tests {
 //        }
 //    }
 
-    @TmsLink("820503")
+    @TmsLinks({@TmsLink("820505"),@TmsLink("820503")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(Podman product) {
-        product.setProductName(productName);
-        try (Podman podman = product.createObjectExclusiveAccess()) {
-            podman.stopHard();
-            podman.start();
-        }
-    }
-
-    @TmsLink("820505")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(Podman product) {
         product.setProductName(productName);
         try (Podman podman = product.createObjectExclusiveAccess()) {

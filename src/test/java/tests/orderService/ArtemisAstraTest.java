@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.Artemis;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -28,22 +29,11 @@ public class ArtemisAstraTest extends Tests {
         }
     }
 
-    @TmsLink("982647")
+    @TmsLinks({@TmsLink("982647"),@TmsLink("982652")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать сервис {0}")
+    @ParameterizedTest(name = "Создать/удалить сервис {0}")
     void createService(Artemis product) {
-        product.setProductName(productName);
-        try (Artemis artemis = product.createObjectExclusiveAccess()) {
-            artemis.createService("randomserv1", "randomcert1");
-        }
-    }
-
-    @TmsLink("982652")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить сервис {0}")
-    void deleteService(Artemis product) {
         product.setProductName(productName);
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.createService("randomserv2", "randomcert2");
@@ -148,22 +138,10 @@ public class ArtemisAstraTest extends Tests {
         }
     }
 
-    @TmsLink("982656")
+    @TmsLinks({@TmsLink("982654"),@TmsLink("982656")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(Artemis product) {
-        product.setProductName(productName);
-        try (Artemis artemis = product.createObjectExclusiveAccess()) {
-            artemis.stopHard();
-            artemis.start();
-        }
-    }
-
-    @TmsLink("982654")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Включить/Выключить принудительно {0}")
     void stopHard(Artemis product) {
         product.setProductName(productName);
         try (Artemis artemis = product.createObjectExclusiveAccess()) {

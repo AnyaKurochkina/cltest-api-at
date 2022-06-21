@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.Redis;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -83,22 +84,10 @@ public class RedisAstraTest extends Tests {
         }
     }
 
-    @TmsLink("795821")
+    @TmsLinks({@TmsLink("795818"),@TmsLink("795821")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(Redis product) {
-        product.setProductName(productName);
-        try (Redis redis = product.createObjectExclusiveAccess()) {
-            redis.stopHard();
-            redis.start();
-        }
-    }
-
-    @TmsLink("795818")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(Redis product) {
         product.setProductName(productName);
         try (Redis redis = product.createObjectExclusiveAccess()) {

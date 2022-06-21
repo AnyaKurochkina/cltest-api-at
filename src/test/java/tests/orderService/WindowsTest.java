@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.Windows;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -127,21 +128,10 @@ public class WindowsTest extends Tests {
         }
     }
 
-    @TmsLink("377719")
+    @TmsLinks({@TmsLink("377718"),@TmsLink("377719")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(Windows product) {
-        try (Windows windows = product.createObjectExclusiveAccess()) {
-            windows.stopHard();
-            windows.start();
-        }
-    }
-
-    @TmsLink("377718")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.stopHard();
