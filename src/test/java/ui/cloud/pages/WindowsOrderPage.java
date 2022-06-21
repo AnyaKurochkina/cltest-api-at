@@ -13,6 +13,7 @@ import static com.codeborne.selenide.Selenide.$x;
 
 @Getter
 public class WindowsOrderPage extends Product {
+
     DropDown platform = DropDown.byLabel("Платформа");
     DropDown osVersion = DropDown.byLabel("Версия ОС");
     DropDown group = DropDown.byLabel("Группы");

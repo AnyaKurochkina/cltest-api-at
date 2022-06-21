@@ -1,6 +1,6 @@
 package ui.cloud.pages;
 
-class ProductStatus {
+public class ProductStatus {
     final static String CREATING = "Разворачивается";
     final static String PENDING = "Изменение";
     final static String SUCCESS = "В порядке";
