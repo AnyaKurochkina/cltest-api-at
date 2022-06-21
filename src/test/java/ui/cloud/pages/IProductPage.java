@@ -34,7 +34,7 @@ import static tests.Tests.clickableCnd;
 
 @Log4j2
 @Getter
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 public abstract class IProductPage {
     TopInfo topInfo;
     IProduct product;
