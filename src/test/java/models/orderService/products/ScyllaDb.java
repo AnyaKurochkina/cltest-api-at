@@ -150,7 +150,7 @@ public class ScyllaDb extends IProduct {
     }
 
     public void expandMountPoint() {
-        expandMountPoint("expand_mount_point", "/app/scylla/data", 10);
+        expandMountPoint("expand_mount_point_new", "/app/scylla/data", 10);
     }
 
     public void restart() {

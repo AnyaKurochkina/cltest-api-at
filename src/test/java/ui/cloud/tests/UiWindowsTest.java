@@ -48,7 +48,7 @@ public class UiWindowsTest extends Tests {
     void beforeEach() {
         //Configuration.browserSize = "1366x768";
         new LoginPage(product.getProjectId())
-                .singIn();
+                .signIn();
     }
 
     @Test

@@ -270,6 +270,7 @@ public abstract class IProduct extends Entity {
     }
 
     protected void createProduct() {
+        Waiting.sleep((int) ((Math.random() * 20000) + 10000));
         log.info("Отправка запроса на создание заказа " + productName);
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId)

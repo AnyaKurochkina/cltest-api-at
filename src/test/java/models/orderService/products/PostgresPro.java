@@ -97,7 +97,7 @@ public class PostgresPro extends IProduct {
 
     //Расширить
     public void expandMountPoint() {
-        expandMountPoint("expand_mount_point", "/pg_data", 10);
+        expandMountPoint("expand_mount_point_new", "/pg_data", 10);
     }
 
     public void createDb(String dbName, String dbAdminPass) {
