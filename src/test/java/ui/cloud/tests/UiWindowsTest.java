@@ -36,8 +36,7 @@ public class UiWindowsTest extends Tests {
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod"))
             product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-           // product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/40ec188e-c4ad-4341-8562-ec34eb4aecfb/main?context=proj-frybyv41jh&type=project&org=vtb").build();
-          //  product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/f4bedbef-7de9-45e4-ad1d-41068a3de333/main?context=proj-frybyv41jh&type=project&org=vtb").build();
+          //product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/aeba67d7-43fd-4027-8756-1e7c06c9d5b3/main?context=proj-frybyv41jh&type=project&org=vtb").build();
         else
             product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -79,6 +78,7 @@ public class UiWindowsTest extends Tests {
                 .hover()
                 .click();
         WindowsPage winPages = new WindowsPage(product);
+
         winPages.waitChangeStatus();
         winPages.checkLastAction();
     }
@@ -204,7 +204,7 @@ public class UiWindowsTest extends Tests {
     void checkCostAfterChangeConfiguration() {
         WindowsPage winPage = new WindowsPage(product);
         costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(costAfterChange, currentCost, "равна");
+        winPage.vmOrderTextCompareByKey(costAfterChange, currentCost, ",больше");
     }
 
     @Test
