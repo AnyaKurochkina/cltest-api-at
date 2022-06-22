@@ -480,7 +480,7 @@ public abstract class IProductPage {
         return doubleDecimalObj;
     }
 
-    @Step("Проверка стоимостb продукта (больше|меньше|равна) стоимости после изменения")
+    @Step("Проверка стоимости продукта (больше|меньше|равна) стоимости после изменения")
     public void vmOrderTextCompareByKey(Double currentCost, Double costAfterChange, String isCompare) {
         switch (isCompare) {
             case "больше":
