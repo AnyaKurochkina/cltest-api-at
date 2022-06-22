@@ -4,6 +4,7 @@ import com.mifmif.common.regex.Generex;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.RabbitMQCluster;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -85,17 +86,6 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
-    @TmsLink("377643")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.stopHard();
-            rabbit.start();
-        }
-    }
-
     @TmsLink("377646")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -106,21 +96,10 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
-    @TmsLink("707972")
+    @TmsLinks({@TmsLink("707975"),@TmsLink("707972")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание vhosts {0}")
-    void addVhost(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.addVhost(Stream.generate(new Generex("[a-zA-Z0-9]{2,16}")::random)
-                    .limit(new Random().nextInt(14) + 1).distinct().collect(Collectors.toList()));
-        }
-    }
-
-    @TmsLink("707975")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удаление vhosts {0}")
+    @ParameterizedTest(name = "Создание/Удаление vhosts {0}")
     void deleteVhostAccessVhost(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             List<String> vhosts = Stream.generate(new Generex("[a-zA-Z0-9]{2,16}")::random)
@@ -130,35 +109,23 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
-    @TmsLink("707976")
+    @TmsLinks({@TmsLink("707976"),@TmsLink("707978")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавление прав на vhost {0}")
+    @ParameterizedTest(name = "Добавление/Удаление прав на vhost {0}")
     void addVhostAccess(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             rabbit.rabbitmqCreateUser("vhostUser");
             rabbit.addVhost(Collections.singletonList("vhostAccess"));
             rabbit.addVhostAccess("vhostUser", Arrays.asList("READ", "WRITE", "CONFIGURE"), "vhostAccess");
+            rabbit.deleteVhostAccess("vhostUser", "vhostAccess");
         }
     }
 
-    @TmsLink("707978")
+    @TmsLinks({@TmsLink("377642"),@TmsLink("377643")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удаление прав на vhost {0}")
-    void deleteVhostAccess(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.rabbitmqCreateUser("vhostUserDelete");
-            rabbit.addVhost(Collections.singletonList("accessDelete"));
-            rabbit.addVhostAccess("vhostUserDelete", Arrays.asList("READ", "WRITE", "CONFIGURE"), "accessDelete");
-            rabbit.deleteVhostAccess("vhostUserDelete", "accessDelete");
-        }
-    }
-
-    @TmsLink("377642")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(RabbitMQCluster product) {
         try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
             rabbit.stopHard();

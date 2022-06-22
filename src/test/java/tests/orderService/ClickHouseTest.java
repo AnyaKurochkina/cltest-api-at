@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.ClickHouse;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -86,21 +87,10 @@ public class ClickHouseTest extends Tests {
         }
     }
 
-    @TmsLink("377797")
+    @TmsLinks({@TmsLink("377796"),@TmsLink("377797")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(ClickHouse product) {
-        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
-            clickHouse.stopHard();
-            clickHouse.start();
-        }
-    }
-
-    @TmsLink("377796")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.stopHard();

@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.Nginx;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -78,22 +79,11 @@ public class NginxTest extends Tests {
         }
     }
 
-    @TmsLink("377458")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(Nginx product) {
-        product.setProductName(productName);
-        try (Nginx nginx = product.createObjectExclusiveAccess()) {
-            nginx.stopHard();
-            nginx.start();
-        }
-    }
-
     @TmsLink("377457")
+    @TmsLinks({@TmsLink("377457"),@TmsLink("377458")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(Nginx product) {
         product.setProductName(productName);
         try (Nginx nginx = product.createObjectExclusiveAccess()) {

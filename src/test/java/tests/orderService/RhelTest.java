@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.Rhel;
 import models.portalBack.AccessGroup;
 import org.junit.MarkDelete;
@@ -86,21 +87,10 @@ public class RhelTest extends Tests {
         }
     }
 
-    @TmsLink("377709")
+    @TmsLinks({@TmsLink("377708"),@TmsLink("377709")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(Rhel product) {
-        try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            rhel.stopHard();
-            rhel.start();
-        }
-    }
-
-    @TmsLink("377708")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(Rhel product) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.stopHard();

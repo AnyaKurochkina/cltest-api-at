@@ -6,6 +6,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.ApacheKafkaCluster;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -56,15 +57,17 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
-    @TmsLink("377729")
+    @TmsLinks({@TmsLink("377729"),@TmsLink("377736")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Пакетное создание Topic-ов Kafka {0}")
+    @ParameterizedTest(name = "Пакетное создание/удаление Topic-ов Kafka {0}")
     void createTopic(ApacheKafkaCluster product) {
         product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.createTopics(Stream.generate(new Generex("[a-zA-Z0-9][a-zA-Z0-9.\\-_]*")::random)
-                    .limit(new Random().nextInt(20) + 1).distinct().collect(Collectors.toList()));
+            List<String> topics = Stream.generate(new Generex("[a-zA-Z0-9][a-zA-Z0-9.\\-_]*")::random)
+                    .limit(new Random().nextInt(20) + 1).distinct().collect(Collectors.toList());
+            kafka.createTopics(topics);
+            kafka.deleteTopics(topics);
         }
     }
 
@@ -77,19 +80,6 @@ public class ApacheKafkaClusterTest extends Tests {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createTopics(Collections.singletonList("PacketTopicNameForEdit"));
             kafka.editTopics("PacketTopicNameForEdit");
-        }
-    }
-
-    @TmsLink("377736")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Пакетное удаление Topic-ов Kafka {0}")
-    void deleteTopic(ApacheKafkaCluster product) {
-        product.setProductName(productName);
-        Waiting.sleep(120000);
-        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.createTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
-            kafka.deleteTopics(Arrays.asList("PacketTopicName01", "PacketTopicName03"));
         }
     }
 
@@ -138,18 +128,6 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
-    @TmsLink("377731")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить кластер Kafka {0}")
-    void stopSoft(ApacheKafkaCluster product) {
-        product.setProductName(productName);
-        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.stopSoft();
-            kafka.start();
-        }
-    }
-
     @TmsLink("377728")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -183,26 +161,15 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
-    @TmsLink("864066")
+    @TmsLinks({@TmsLink("864065"),@TmsLink("864066")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Идемпотентные ACL. Создание {0}")
+    @ParameterizedTest(name = "Идемпотентные ACL. Создание/удаление {0}")
     void createIdempotentAcl(ApacheKafkaCluster product) {
         product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createIdempotentAcl("cn001");
-        }
-    }
-
-    @TmsLink("864065")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Идемпотентные ACL. Удаление {0}")
-    void deleteIdempotentAcl(ApacheKafkaCluster product) {
-        product.setProductName(productName);
-        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.deleteIdempotentAcl("cn002");
-            kafka.deleteIdempotentAcl("cn002");
+            kafka.deleteIdempotentAcl("cn001");
         }
     }
 
@@ -217,11 +184,10 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
-
-    @TmsLink("377730")
+    @TmsLinks({@TmsLink("377730"),@TmsLink("377731")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить кластер Kafka {0}")
+    @ParameterizedTest(name = "Включить/выключить кластер Kafka {0}")
     void start(ApacheKafkaCluster product) {
         product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {

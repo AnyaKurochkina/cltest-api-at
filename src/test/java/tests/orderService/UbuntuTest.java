@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.Ubuntu;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -81,21 +82,10 @@ public class UbuntuTest extends Tests {
         }
     }
 
-    @TmsLink("391694")
+    @TmsLinks({@TmsLink("391693"),@TmsLink("391694")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(Ubuntu product) {
-        try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
-            ubuntu.stopHard();
-            ubuntu.start();
-        }
-    }
-
-    @TmsLink("391693")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.stopHard();
