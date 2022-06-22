@@ -360,9 +360,4 @@ public class TestITClient {
         }
         log.info("[{}] Response :{}", response.status(), response.toString());
     }
-
-    @AddLink
-    public static void addLink(final LinkItem linkItem) {
-    }
-
 }

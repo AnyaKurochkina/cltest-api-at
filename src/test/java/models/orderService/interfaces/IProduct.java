@@ -3,6 +3,7 @@ package models.orderService.interfaces;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
+import core.helper.Configure;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.utils.Waiting;
@@ -15,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.ObjectPoolService;
+import models.authorizer.Organization;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
 import models.productCatalog.Graph;
@@ -23,6 +25,9 @@ import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.TestAbortedException;
+import ru.testit.annotations.LinkType;
+import ru.testit.junit5.StepsAspects;
+import ru.testit.services.LinkItem;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.productCatalog.ProductCatalogSteps;
@@ -279,6 +284,12 @@ public abstract class IProduct extends Entity {
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
+        if (StepsAspects.getCurrentStep().get() != null) {
+            Organization org = Organization.builder().build().createObject();
+            StepsAspects.getCurrentStep().get().addLinkItem(
+                    new LinkItem("Product URL", String.format("%svm/orders/%s/main?context=%s&type=project&org=%s",
+                            Configure.getAppProp("base.url"), orderId, projectId, org), "", LinkType.RELATED));
+        }
         OrderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
         compareCostOrderAndPrice();

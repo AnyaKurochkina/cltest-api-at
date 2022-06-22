@@ -94,6 +94,10 @@ public class StepNode
     public List<LinkItem> getLinkItems() {
         return this.linkItems;
     }
+
+    public void addLinkItem(LinkItem item) {
+        this.linkItems.add(item);
+    }
     
     public void setLinkItems(final List<LinkItem> linkItems) {
         this.linkItems = linkItems;

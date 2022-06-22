@@ -3,7 +3,9 @@ package steps.stateService;
 import core.helper.http.Http;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.interfaces.IProduct;
+import ru.testit.annotations.LinkType;
+import ru.testit.junit5.StepsAspects;
+import ru.testit.services.LinkItem;
 import steps.Steps;
 
 import static core.helper.Configure.StateServiceURL;
@@ -19,6 +21,10 @@ public class StateServiceSteps extends Steps {
                     .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {
             log.error(e.toString());
+        }
+        if (StepsAspects.getCurrentStep().get() != null) {
+            StepsAspects.getCurrentStep().get().addLinkItem(
+                    new LinkItem("State service log", String.format("%s/actions/?order_id=%s", StateServiceURL, orderId), "", LinkType.REPOSITORY));
         }
         return traceback;
     }
