@@ -101,6 +101,30 @@ public class WildFlyTest extends Tests {
         }
     }
 
+    @TmsLinks({@TmsLink("989498"),@TmsLink("989495")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавление/Удаление пользователя WildFly {0}")
+    void user(WildFly product) {
+        product.setProductName(productName);
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.addUser("user1", "Deployer");
+            wildFly.deleteUser("user1", "Deployer");
+        }
+    }
+
+    @TmsLinks({@TmsLink("989496"),@TmsLink("989497")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавление/Удаление группы WildFly {0}")
+    void group(WildFly product) {
+        product.setProductName(productName);
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.addGroup("group1", "Monitor");
+            wildFly.deleteGroup("group1", "Monitor");
+        }
+    }
+
     @TmsLink("377477")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

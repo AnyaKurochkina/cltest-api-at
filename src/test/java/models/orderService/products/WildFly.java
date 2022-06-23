@@ -4,11 +4,10 @@ import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.portalBack.AccessGroup;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
+import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +15,6 @@ import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -47,17 +45,17 @@ public class WildFly extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/wildfly.json";
-        if (productName == null){
+        if (productName == null) {
             productName = "WildFly RHEL";
         }
         initProduct();
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(wildFlyVersion == null)
+        if (wildFlyVersion == null)
             wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
-        if(dataCentre == null)
+        if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
@@ -99,6 +97,30 @@ public class WildFly extends IProduct {
     //Проверить конфигурацию
     public void refreshVmConfig() {
         OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+    }
+
+    //Добавление пользователя WildFly
+    public void addUser(String username, String role) {
+        OrderServiceSteps.executeAction("new_wildfly_user", this,
+                new JSONObject().put("user_name", username).put("user_role", role), this.getProjectId());
+    }
+
+    //Удаление пользователя WildFly
+    public void deleteUser(String username, String role) {
+        OrderServiceSteps.executeAction("wildfly_del_user", this,
+                new JSONObject().put("wildfly_deployer", username).put("user_role", role), this.getProjectId());
+    }
+
+    //Добавление группы WildFly
+    public void addGroup(String name, String role) {
+        OrderServiceSteps.executeAction("wildfly_add_group", this,
+                new JSONObject().put("new_wildfly_user", new JSONObject().put("group_name", name).put("user_role", role)), this.getProjectId());
+    }
+
+    //Удаление группы WildFly
+    public void deleteGroup(String name, String role) {
+        OrderServiceSteps.executeAction("wildfly_del_group", this,
+                new JSONObject().put("wildfly_deployer", name).put("user_role", role), this.getProjectId());
     }
 
     public void expandMountPoint() {

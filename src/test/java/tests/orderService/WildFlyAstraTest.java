@@ -15,7 +15,7 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("WildFly (Astra)")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("wildflyAstra"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("wildfly_astra"), @Tag("prod")})
 public class WildFlyAstraTest extends Tests {
     final String productName = "WildFly Astra";
 
@@ -109,6 +109,30 @@ public class WildFlyAstraTest extends Tests {
         product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.updateCerts();
+        }
+    }
+
+    @TmsLinks({@TmsLink("989482"),@TmsLink("989486")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавление/Удаление пользователя WildFly {0}")
+    void user(WildFly product) {
+        product.setProductName(productName);
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.addUser("user1", "Deployer");
+            wildFly.deleteUser("user1", "Deployer");
+        }
+    }
+
+    @TmsLinks({@TmsLink("989487"),@TmsLink("989491")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавление/Удаление группы WildFly {0}")
+    void group(WildFly product) {
+        product.setProductName(productName);
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.addGroup("group1", "Monitor");
+            wildFly.deleteGroup("group1", "Monitor");
         }
     }
 
