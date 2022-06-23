@@ -57,7 +57,7 @@ public class RunningHandler {
         parentStep.setDescription(extractDescription(currentTest));
         parentStep.setStartedOn(new Date());
         UniqueTest test = new UniqueTest(extractExternalID(currentTest, null), configurationId);
-        log.info("startTest " + test);
+        log.info(" *** startTest " + test);
         includedTests.put(test, parentStep);
         StepsAspects.setStepNodes(parentStep);
     }
@@ -75,6 +75,8 @@ public class RunningHandler {
             return;
         }
         final StepNode parentStep = includedTests.get(new UniqueTest(extractExternalID(atomicTest, null), configurationId));
+        log.info(" *** finishTest by " + extractExternalID(atomicTest, null) + "#" + configurationId +
+                " find " + includedTests.get(test));
         if (parentStep != null) {
             parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
             if (thrown instanceof CreateEntityException)

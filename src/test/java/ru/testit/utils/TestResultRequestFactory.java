@@ -148,7 +148,8 @@ public class TestResultRequestFactory {
             innerResult.setParameters(stepNode.getParameters());
         innerResult.setStartedOn(startedOn);
         innerResult.setCompletedOn(completedOn);
-        innerResult.setDuration((int) (completedOn.getTime() - startedOn.getTime()));
+        innerResult.setDuration((int) (completedOn.getTime()
+                - startedOn.getTime()));
         innerResult.setOutcome(stepNode.getOutcome());
         return innerResult;
     }
