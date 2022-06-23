@@ -18,7 +18,6 @@ import tests.Tests;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -137,5 +136,15 @@ public class ActionsListTest extends Tests {
         assertAll(
                 () -> assertNotNull(actionIdWithMultiSearch, String.format("Действие с именем: %s не найден", actionName)),
                 () -> assertEquals(action.getActionId(), actionIdWithMultiSearch, "Id действия не совпадают"));
+    }
+
+    @DisplayName("Получение списка действий с флагом for_items=true")
+    @TmsLink("982796")
+    @Test
+    public void getActionListForItems() {
+        List<ItemImpl> productObjectList = steps.getProductObjectList(GetActionsListResponse.class, "?for_items=true");
+        ItemImpl item = productObjectList.get(0);
+        ListItem getActionResponse = (ListItem) item;
+        assertNotNull(getActionResponse.getPriority());
     }
 }

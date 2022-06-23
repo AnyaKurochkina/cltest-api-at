@@ -13,8 +13,11 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.*;
-import org.apache.commons.lang.RandomStringUtils;
+import models.productCatalog.Action;
+import models.productCatalog.Graph;
+import models.productCatalog.Product;
+import models.productCatalog.Services;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -27,6 +30,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("product_catalog")
+@Tag("Graphs")
 @Epic("Продуктовый каталог")
 @Feature("Графы")
 @DisabledIfEnv("prod")
@@ -65,7 +69,7 @@ public class GraphTest extends Tests {
     @Test
     public void importGraph() {
         String data = JsonHelper.getStringFromFile("/productCatalog/graphs/importGraph.json");
-        String graphName = new JsonPath(data).get("Graph.json.name");
+        String graphName = new JsonPath(data).get("Graph.name");
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json");
         Assertions.assertTrue(steps.isExists(graphName));
         steps.getDeleteObjectResponse(steps
@@ -155,16 +159,16 @@ public class GraphTest extends Tests {
         Graph graph = Graph.builder()
                 .name("partial_update_graph_test_api")
                 .version("1.0.0")
+                .damageOrderOnError(false)
                 .build()
                 .createObject();
-        String expectedDescription = "UpdateDescription";
         String oldGraphVersion = graph.getVersion();
         steps.partialUpdateObject(graph.getGraphId(), new JSONObject()
-                .put("description", expectedDescription)).assertStatus(200);
-        GetImpl getGraphResponse = steps.getById(graph.getGraphId(), GetGraphResponse.class);
-        String actualDescription = getGraphResponse.getDescription();
+                .put("damage_order_on_error", true)).assertStatus(200);
+        GetGraphResponse getGraphResponse =(GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
+        Boolean damageOrderOnError = getGraphResponse.getDamageOrderOnError();
         String newGraphVersion = getGraphResponse.getVersion();
-        Assertions.assertEquals(expectedDescription, actualDescription);
+        Assertions.assertEquals(true, damageOrderOnError);
         Assertions.assertNotEquals(oldGraphVersion, newGraphVersion);
     }
 
@@ -178,17 +182,17 @@ public class GraphTest extends Tests {
                 .version("1.0.999")
                 .build()
                 .createObject();
-        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("name", "graph_version_test_api2"));
+        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true));
         String currentVersion = steps.getById(graphTest.getGraphId(), GetGraphResponse.class).getVersion();
         assertEquals("1.1.0", currentVersion);
-        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("name", "graph_version_test_api3")
+        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", false)
                 .put("version", "1.999.999"));
-        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("name", "graph_version_test_api4"));
+        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true));
         currentVersion = steps.getById(graphTest.getGraphId(), GetGraphResponse.class).getVersion();
         assertEquals("2.0.0", currentVersion);
-        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("name", "graph_version_test_api5")
+        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", false)
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("name", "graph_version_test_api6"))
+        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true))
                 .assertStatus(500);
     }
 
@@ -295,10 +299,9 @@ public class GraphTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Graph в GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("821972")
     public void dumpToGitlabGraph() {
-        String graphName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        String graphName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Graph graph = Graph.builder()
                 .name(graphName)
                 .title(graphName)
@@ -313,8 +316,13 @@ public class GraphTest extends Tests {
     @Disabled
     @TmsLink("")
     public void loadFromGitlabGraph() {
-        String path = "";
+        String name = "standard_for_unloading_from_git_api";
+        if (steps.isExists(name)) {
+            steps.deleteByName(name, GetGraphsListResponse.class);
+        }
+        String path = "graph" + name;
         steps.loadFromBitbucket(new JSONObject().put("path", path));
         assertTrue(steps.isExists(path));
+        steps.deleteByName(name, GetGraphsListResponse.class);
     }
 }

@@ -132,10 +132,10 @@ public class ListItem implements ItemImpl {
     private Map<String, String> extraData;
 
     @JsonProperty("allowed_developers")
-    private String allowed_developers;
+    private List<String> allowed_developers;
 
     @JsonProperty("restricted_developers")
-    private String restricted_developers;
+    private List<String> restricted_developers;
 
     @Override
     public String getName() {

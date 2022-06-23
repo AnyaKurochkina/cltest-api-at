@@ -1,5 +1,6 @@
 package tests.productCatalog.action;
 
+import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -12,8 +13,7 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -118,7 +118,7 @@ public class ActionsNegativeTest extends Tests {
     @TmsLink("642514")
     @Test
     public void doubleVersionTest() {
-        steps.createProductObject(Action.builder()
+        Response response = steps.createProductObject(Action.builder()
                         .actionName("negative_object")
                         .build()
                         .init()
@@ -127,7 +127,9 @@ public class ActionsNegativeTest extends Tests {
                         .set("$.graph_version", "1.0.0")
                         .set("$.graph_version_pattern", "1.")
                         .build())
-                .assertStatus(500);
+                .assertStatus(400);
+        assertEquals(response.jsonPath().getList("non_field_errors").get(0),
+                "You can't use both 'version' and 'version pattern' at same time in the ActionVersionSerializer");
     }
 
     @DisplayName("Негативный тест на обновление действия до той же версии/текущей")

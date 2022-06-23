@@ -48,10 +48,10 @@ public class ListItem implements ItemImpl {
     private List<String> envs;
 
     @JsonProperty("allowed_developers")
-    private String allowed_developers;
+    private List<String> allowed_developers;
 
     @JsonProperty("restricted_developers")
-    private String restricted_developers;
+    private List<String> restricted_developers;
 
     @JsonProperty("restricted_groups")
     private List<Object> restrictedGroups;
@@ -92,6 +92,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("category")
     private String category;
 
+    @JsonProperty("category_v2")
+    private String categoryV2;
+
     @JsonProperty("graph_version_calculated")
     private String graphVersionCalculated;
 
@@ -115,6 +118,7 @@ public class ListItem implements ItemImpl {
 
     @JsonProperty("in_general_list")
     private Boolean inGeneralList;
+    private String payment;
 
     @Override
     public String getName() {

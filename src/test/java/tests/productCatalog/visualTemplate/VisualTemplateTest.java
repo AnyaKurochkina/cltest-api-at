@@ -62,6 +62,7 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("742485")
     @Test
     public void deleteIsActiveTemplate() {
+        String errorText = "Deletion not allowed (is_active=True)";
         String name = "delete_with_active_true_item_visual_template_test_api";
         ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
                 .name(name)
@@ -73,9 +74,9 @@ public class VisualTemplateTest extends Tests {
                 .build()
                 .createObject();
         Response deleteResponse = steps.getDeleteObjectResponse(visualTemplates.getItemId())
-                .assertStatus(200);
+                .assertStatus(403);
         steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
-        assertEquals(deleteResponse.jsonPath().get("error"), "Deletion not allowed (is_active=True)");
+        assertEquals(errorText, deleteResponse.jsonPath().get("error"));
     }
 
     @DisplayName("Проверка существования шаблона визуализации по имени")
@@ -260,6 +261,7 @@ public class VisualTemplateTest extends Tests {
     }
 
     @DisplayName("Сортировка шаблонов визуализации по статусу")
+    //todo убрать логику
     @TmsLink("")
     @Test
     public void orderingByStatus() {
@@ -336,13 +338,17 @@ public class VisualTemplateTest extends Tests {
 
     @Test
     @DisplayName("Загрузка VisualTemplate в GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("975416")
     public void dumpToGitlabVisualTemplate() {
-        String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         ItemVisualTemplates visualTemplate = ItemVisualTemplates.builder()
                 .name(visualTemplateName)
                 .title(visualTemplateName)
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(false)
                 .build()
                 .createObject();
         Response response = steps.dumpToBitbucket(visualTemplate.getItemId());

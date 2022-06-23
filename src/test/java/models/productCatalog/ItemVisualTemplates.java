@@ -63,7 +63,9 @@ public class ItemVisualTemplates extends Entity {
     protected void create() {
         ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
         if (steps.isExists(name)) {
-            steps.deleteByName(name, GetVisualTemplateListResponse.class);
+            String objectId = steps.getProductObjectIdByNameWithMultiSearch(name, GetVisualTemplateListResponse.class);
+            steps.partialUpdateObject(objectId, new JSONObject().put("is_active", false));
+            steps.deleteById(objectId);
         }
         itemId = new Http(ProductCatalogURL)
                 .body(toJson())

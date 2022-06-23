@@ -117,6 +117,9 @@ public class GetTemplateResponse implements GetImpl {
 	@JsonProperty("update_dt")
 	private String update_dt;
 
+	@JsonProperty("current_version")
+	private String currentVersion;
+
 	@Override
 	public String getName() {
 		return name;

@@ -14,7 +14,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.authorizer.Project;
 import models.productCatalog.Product;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -145,15 +145,15 @@ public class ProductsTest extends Tests {
     @TmsLink("737656")
     @Test
     public void deleteProductWithIsOpenTrue() {
+        String errorText = "Deletion not allowed (is_open=True)";
         Product productIsOpenTrue = Product.builder().name("create_product_is_open_test_api")
                 .isOpen(true)
                 .build()
                 .createObject();
         String productId = productIsOpenTrue.getProductId();
-        Response deleteResponse = steps.getDeleteObjectResponse(productId)
-                .assertStatus(200);
+        Response deleteResponse = steps.getDeleteObjectResponse(productId).assertStatus(403);
         steps.partialUpdateObject(productId, new JSONObject().put("is_open", false));
-        assertEquals(deleteResponse.jsonPath().get("error"), "Deletion not allowed (is_open=True)");
+        assertEquals(errorText, deleteResponse.jsonPath().get("error"));
     }
 
     @DisplayName("Проверка доступа для методов с публичным ключом в продуктах")
@@ -185,7 +185,7 @@ public class ProductsTest extends Tests {
     @Test
     public void importProduct() {
         String data = JsonHelper.getStringFromFile("/productCatalog/products/importProduct.json");
-        String name = new JsonPath(data).get("Product.json.name");
+        String name = new JsonPath(data).get("Product.name");
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProduct.json");
         assertTrue(steps.isExists(name));
         steps.deleteByName(name, GetProductsResponse.class);
@@ -282,21 +282,26 @@ public class ProductsTest extends Tests {
     @TmsLink("643426")
     @Test
     public void updateProductAndGetVersion() {
-        Product productTest = Product.builder().name("product_version_test_api").version("1.0.999").build().createObject();
+        Product productTest = Product.builder()
+                .name("product_version_test_api")
+                .version("1.0.999")
+                .maxCount(1)
+                .build()
+                .createObject();
         steps.partialUpdateObject(productTest.getProductId(), new JSONObject()
-                .put("name", "product_version_test_api2"));
+                .put("max_count", 2));
         String currentVersion = steps.getById(productTest.getProductId(), GetProductResponse.class).getVersion();
         assertEquals("1.1.0", currentVersion);
         steps.partialUpdateObject(productTest.getProductId(), new JSONObject()
-                .put("name", "product_version_test_api3")
+                .put("max_count", 3)
                 .put("version", "1.999.999"));
         steps.partialUpdateObject(productTest.getProductId(), new JSONObject()
-                .put("name", "product_version_test_api4"));
+                .put("max_count", 4));
         currentVersion = steps.getById(productTest.getProductId(), GetProductResponse.class).getVersion();
         assertEquals("2.0.0", currentVersion);
-        steps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api5")
+        steps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("max_count", 5)
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("name", "product_version_test_api6"))
+        steps.partialUpdateObject(productTest.getProductId(), new JSONObject().put("max_count", 6))
                 .assertStatus(500);
     }
 
@@ -410,10 +415,11 @@ public class ProductsTest extends Tests {
                 .name(productName)
                 .title(productName)
                 .version("1.0.0")
+                .maxCount(1)
                 .build()
                 .createObject();
         String productId = product.getProductId();
-        steps.partialUpdateObject(productId, new JSONObject().put("title", "update_title"));
+        steps.partialUpdateObject(productId, new JSONObject().put("max_count", 2));
         steps.partialUpdateObject(productId, new JSONObject().put("current_version", "1.0.1"));
         GetProductResponse getProduct = (GetProductResponse) steps.getById(productId, GetProductResponse.class);
         assertEquals("1.0.1", getProduct.getCurrentVersion());
@@ -429,14 +435,15 @@ public class ProductsTest extends Tests {
                 .name(productName)
                 .title(productName)
                 .version("1.0.0")
+                .maxCount(1)
                 .build()
                 .createObject();
         String productId = product.getProductId();
-        steps.partialUpdateObject(productId, new JSONObject().put("title", "update_title"));
+        steps.partialUpdateObject(productId, new JSONObject().put("max_count", 2));
         steps.partialUpdateObject(productId, new JSONObject().put("current_version", "1.0.0"));
         GetProductResponse getProduct = (GetProductResponse) steps.getById(productId, GetProductResponse.class);
         assertEquals("1.0.0", getProduct.getCurrentVersion());
-        assertEquals(productName, getProduct.getTitle());
+        assertEquals(product.getMaxCount(), 1);
     }
 
     @Test
@@ -479,10 +486,9 @@ public class ProductsTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Product в GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("975400")
     public void dumpToGitlabProduct() {
-        String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_api";
+        String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Product product = Product.builder()
                 .name(productName)
                 .title(productName)
@@ -497,21 +503,86 @@ public class ProductsTest extends Tests {
     @Disabled
     @TmsLink("")
     public void loadFromGitlabProduct() {
-        String path = "";
+        String path = "product_standard_for_unloading_from_git_api";
         steps.loadFromBitbucket(new JSONObject().put("path", path));
         assertTrue(steps.isExists(path));
     }
 
     @DisplayName("Получение продукта по контексту id проекта без ограничений со стороны организации")
+    @TmsLink("978268")
     @Test
     public void getProductWithOutOrgWithProjectContext() {
         Project project = Project.builder().build().createObject();
         Product product = Product.builder()
                 .name("product_without_org_for_context_test_api")
                 .informationSystems(Collections.emptyList())
-                .envs(Arrays.asList(Configure.ENV))
+                .envs(Collections.singletonList(Configure.ENV))
                 .build()
                 .createObject();
         steps.getProductByContextProject(project.getId(), product.getProductId());
+    }
+
+    @Test
+    @DisplayName("Получение значения поля category_v2 по умолчанию")
+    @TmsLink("978267")
+    public void getDefaultValueCategoryV2() {
+        String productName = "get_default_value_category_v2_product_test_api";
+        Product product = Product.builder()
+                .name(productName)
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList(Configure.ENV))
+                .version("1.0.0")
+                .info(info)
+                .build()
+                .createObject();
+        GetProductResponse createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        assertEquals("compute", createdProduct.getCategoryV2());
+    }
+
+    @Test
+    @DisplayName("Получение значения поля category_v2")
+    @TmsLink("978299")
+    public void getValueCategoryV2() {
+        String productName = "get_value_category_v2_product_test_api";
+        String categoryV2 = "web";
+        Product product = Product.builder()
+                .name(productName)
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList(Configure.ENV))
+                .version("1.0.0")
+                .category("postgre")
+                .info(info)
+                .build()
+                .createObject();
+        steps.partialUpdateObject(product.getProductId(), new JSONObject().put("category_v2", categoryV2));
+        GetProductResponse createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        assertEquals(categoryV2, createdProduct.getCategoryV2());
+        assertEquals(product.getVersion(), createdProduct.getVersion());
+    }
+
+    @Test
+    @DisplayName("Получение значения поля payment в продуктах")
+    @TmsLink("979091")
+    public void getPaymentProduct() {
+        String productName = "get_payment_product_test_api";
+        String paymentValue = "paid";
+        Product product = Product.builder()
+                .name(productName)
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList(Configure.ENV))
+                .version("1.0.0")
+                .payment(paymentValue)
+                .info(info)
+                .build()
+                .createObject();
+        String id = product.getProductId();
+        GetProductResponse createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        assertEquals(paymentValue, createdProduct.getPayment());
+        steps.partialUpdateObject(id, new JSONObject().put("payment", "free"));
+        createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        assertEquals("free", createdProduct.getPayment());
+        steps.partialUpdateObject(id, new JSONObject().put("payment", "partly_paid"));
+        createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        assertEquals("partly_paid", createdProduct.getPayment());
     }
 }

@@ -1,0 +1,803 @@
+{
+  "model_name": "ForbiddenAction",
+  "ForbiddenAction": {
+    "id": 46,
+    "name": "import_forbidden_action_test_api",
+    "title": "import_forbidden_action_test_api",
+    "description": "descr",
+    "event_type": [
+      "vm"
+    ],
+    "event_provider": [
+      "openstack"
+    ],
+    "direction": "parent_to_child",
+    "is_all_levels": true,
+    "config_restriction": null,
+    "item_restriction": "",
+    "action_id": "e5085e9a-05bf-4e86-a4e7-a1da5d3e113e"
+  },
+  "rel_foreign_models": {
+    "action": {
+      "model_name": "Action",
+      "Action": {
+        "id": "8146e73f-f636-4432-83b9-6bd7fa1b536d",
+        "icon": "",
+        "name": "qa_test-jul",
+        "type": "",
+        "title": "qa_test-jul",
+        "graph_id": "fa35e212-b413-436b-87c8-cfade5833477",
+        "multiple": false,
+        "priority": 0,
+        "event_type": [
+          "vm"
+        ],
+        "extra_data": {},
+        "description": "qa_test_expand",
+        "allowed_paths": [],
+        "graph_version": "",
+        "event_provider": [
+          "vsphere",
+          "openstack",
+          "nutanix"
+        ],
+        "data_config_key": null,
+        "data_config_path": null,
+        "item_restriction": null,
+        "restricted_paths": [],
+        "allowed_developers": "",
+        "config_restriction": "",
+        "data_config_fields": [],
+        "skip_on_prebilling": false,
+        "location_restriction": "",
+        "graph_version_pattern": "",
+        "restricted_developers": "",
+        "required_item_statuses": [
+          "on"
+        ],
+        "auto_removing_if_failed": false,
+        "available_without_money": false,
+        "required_order_statuses": [
+          "success"
+        ],
+        "current_version": "",
+        "allowed_groups": [],
+        "restricted_groups": [],
+        "version_arr": [
+          1,
+          0,
+          2
+        ]
+      },
+      "rel_foreign_models": {
+        "graph": {
+          "model_name": "Graph",
+          "Graph": {
+            "id": "fa35e212-b413-436b-87c8-cfade5833477",
+            "name": "expand_mount_point",
+            "type": "creating",
+            "title": "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0434\u0438\u0441\u043a",
+            "author": "VK",
+            "output": {},
+            "ui_schema": {
+              "mount": {
+                "ui:readonly": true
+              },
+              "ui:order": [
+                "mount",
+                "size"
+              ]
+            },
+            "description": "\u0423\u0432\u0435\u043b\u0438\u0447\u0438\u0442\u044c \u0440\u0430\u0437\u043c\u0435\u0440 \u0437\u0430\u0434\u0430\u043d\u043d\u043e\u0439 \u0442\u043e\u0447\u043a\u0438 \u043c\u043e\u043d\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f",
+            "json_schema": {
+              "type": "object",
+              "required": [
+                "mount",
+                "size"
+              ],
+              "properties": {
+                "size": {
+                  "type": "integer",
+                  "title": "\u0414\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439 \u043e\u0431\u044a\u0435\u043c \u0434\u0438\u0441\u043a\u043e\u0432\u043e\u0433\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u0430, \u0413\u0431",
+                  "default": 10,
+                  "maximum": 2048,
+                  "minimum": 10
+                },
+                "mount": {
+                  "type": "string",
+                  "title": "\u0422\u043e\u0447\u043a\u0430 \u043c\u043e\u043d\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f",
+                  "pattern": "(^/[a-zA-Z0-9_\\/-]+$)",
+                  "maxLength": 255,
+                  "minLength": 1
+                }
+              },
+              "description": "\u0423\u0432\u0435\u043b\u0438\u0447\u0438\u0442\u044c \u0440\u0430\u0437\u043c\u0435\u0440 \u0437\u0430\u0434\u0430\u043d\u043d\u043e\u0439 \u0442\u043e\u0447\u043a\u0438 \u043c\u043e\u043d\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f"
+            },
+            "static_data": {
+              "credentials": {
+                "linux": "VTB.Cloud-DEV",
+                "windows": "VTB.Cloud-DEV windows local"
+              },
+              "volume_type": null,
+              "job_template": "expand_mount_point",
+              "resolved_item": true,
+              "add_disk_template": "{% do config.extra_disks.append(disk) %}{% set result = {'net_segment': config.default_nic.net_segment,'inventory': {'all': {'hosts': {config.hostname + '.' + config.domain: {'ansible_host': config.default_v4_address, 'mount': data.mount, 'entity': {'config': config}}}}}} %}{% if config.image.os.type == 'linux' %}{% do result.update({'credential': credentials.linux}) %}{% else %}{% do result.update({'credential': credentials.windows}) %}{% endif %}{{ result | tojson(indent=4) }}"
+            },
+            "modifications": [],
+            "printed_output": {},
+            "allowed_developers": "",
+            "damage_order_on_error": false,
+            "restricted_developers": "",
+            "current_version": "",
+            "version_arr": [
+              1,
+              0,
+              43
+            ]
+          },
+          "rel_foreign_models": {},
+          "rel_revers_models": {
+            "nodes": [
+              {
+                "model_name": "Node",
+                "Node": {
+                  "hold": false,
+                  "icon": "",
+                  "name": "add_disk",
+                  "color": "",
+                  "count": null,
+                  "input": {
+                    "size": "data['size']",
+                    "tenant": "resolved_item['data']['config']['tenant']",
+                    "item_id": "item_id",
+                    "resource_pool": "resolved_item['data']['config']['resource_pool']"
+                  },
+                  "number": 10,
+                  "output": {
+                    "disk": "disk"
+                  },
+                  "depends": [],
+                  "timeout": 900,
+                  "coords_x": 140.0,
+                  "coords_y": 68.0,
+                  "for_each": "",
+                  "priority": null,
+                  "condition": "resolved_item['data']['config']['resource_pool']['platform'].lower() != 'openstack'",
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0430\u0435\u043c \u0434\u0438\u0441\u043a \u043a \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u043e\u0439 \u043c\u0430\u0448\u0438\u043d\u0435",
+                  "subgraph_id": null,
+                  "template_id": "68",
+                  "is_sequential": false,
+                  "on_prebilling": false,
+                  "printed_output": {},
+                  "run_on_rollback": false,
+                  "subgraph_version": "",
+                  "template_version": "",
+                  "not_damage_on_error": false,
+                  "damage_order_on_error": false,
+                  "subgraph_version_pattern": "",
+                  "template_version_pattern": ""
+                },
+                "rel_foreign_models": {
+                  "template": {
+                    "model_name": "Template",
+                    "Template": {
+                      "id": 68,
+                      "run": "platform:cmd",
+                      "icon": "",
+                      "name": "add_disk_to_vm",
+                      "type": "virtualization_platform",
+                      "color": "",
+                      "input": {
+                        "size": {},
+                        "tenant": {},
+                        "item_id": {},
+                        "resource_pool": {}
+                      },
+                      "title": "add_disk_to_vm",
+                      "output": {
+                        "disk": {}
+                      },
+                      "timeout": 900,
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "priority": 0,
+                      "rollback": "platform:cmd",
+                      "log_level": null,
+                      "extra_data": null,
+                      "description": "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0434\u0438\u0441\u043a \u0412\u041c",
+                      "allowed_groups": [],
+                      "printed_output": {},
+                      "additional_input": false,
+                      "additional_output": false,
+                      "restricted_groups": [],
+                      "log_can_be_overridden": false,
+                      "priority_can_be_overridden": false,
+                      "printed_output_can_be_overridden": false,
+                      "current_version": "",
+                      "version_arr": [
+                        1,
+                        0,
+                        0
+                      ]
+                    },
+                    "rel_foreign_models": {}
+                  }
+                }
+              },
+              {
+                "model_name": "Node",
+                "Node": {
+                  "hold": false,
+                  "icon": "",
+                  "name": "add_disk_openstack",
+                  "color": "",
+                  "count": null,
+                  "input": {
+                    "size": "data['size']",
+                    "tenant": "resolved_item['data']['config']['tenant']",
+                    "item_id": "item_id",
+                    "volume_type": "volume_type",
+                    "resource_pool": "resolved_item['data']['config']['resource_pool']",
+                    "environment_type": "environment_type"
+                  },
+                  "number": 15,
+                  "output": {
+                    "disk": "disk"
+                  },
+                  "depends": [],
+                  "timeout": 900,
+                  "coords_x": 520.0,
+                  "coords_y": 68.0,
+                  "for_each": "",
+                  "priority": null,
+                  "condition": "resolved_item['data']['config']['resource_pool']['platform'].lower() == 'openstack'",
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0430\u0435\u043c \u0434\u0438\u0441\u043a \u043a \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u043e\u0439 \u043c\u0430\u0448\u0438\u043d\u0435 \u0432 OpenStack",
+                  "subgraph_id": "f44ef660-5445-4033-98a1-1a19882a9cdf",
+                  "template_id": null,
+                  "is_sequential": false,
+                  "on_prebilling": false,
+                  "printed_output": {},
+                  "run_on_rollback": false,
+                  "subgraph_version": "",
+                  "template_version": "",
+                  "not_damage_on_error": false,
+                  "damage_order_on_error": false,
+                  "subgraph_version_pattern": "",
+                  "template_version_pattern": ""
+                },
+                "rel_foreign_models": {
+                  "subgraph": {
+                    "model_name": "Graph",
+                    "Graph": {
+                      "id": "f44ef660-5445-4033-98a1-1a19882a9cdf",
+                      "name": "add_disk_to_vm_openstack",
+                      "type": "creating",
+                      "title": "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0434\u0438\u0441\u043a \u043a OpenStack",
+                      "author": "Vladislav Steshenko",
+                      "output": {},
+                      "ui_schema": {},
+                      "description": "",
+                      "json_schema": {},
+                      "static_data": {
+                        "volume_type": null
+                      },
+                      "modifications": [],
+                      "printed_output": {},
+                      "allowed_developers": "",
+                      "damage_order_on_error": false,
+                      "restricted_developers": "",
+                      "current_version": "",
+                      "version_arr": [
+                        1,
+                        0,
+                        17
+                      ]
+                    },
+                    "rel_foreign_models": {},
+                    "rel_revers_models": {
+                      "nodes": [
+                        {
+                          "model_name": "Node",
+                          "Node": {
+                            "hold": false,
+                            "icon": "",
+                            "name": "create_volume",
+                            "color": "",
+                            "count": null,
+                            "input": {
+                              "disk": "{'size': size}",
+                              "tenant": "tenant",
+                              "item_id": "item_id",
+                              "volume_type": "volume_type",
+                              "resource_pool": "resource_pool"
+                            },
+                            "number": 10,
+                            "output": {
+                              "size": "size",
+                              "uuid": "uuid"
+                            },
+                            "depends": [],
+                            "timeout": 450,
+                            "coords_x": 140.0,
+                            "coords_y": 68.0,
+                            "for_each": "",
+                            "priority": null,
+                            "condition": "",
+                            "log_level": null,
+                            "extra_data": null,
+                            "description": "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0434\u0438\u0441\u043a\u0430 \u0432 OpenStack",
+                            "subgraph_id": null,
+                            "template_id": "79",
+                            "is_sequential": false,
+                            "on_prebilling": false,
+                            "printed_output": {},
+                            "run_on_rollback": false,
+                            "subgraph_version": "",
+                            "template_version": "",
+                            "not_damage_on_error": false,
+                            "damage_order_on_error": false,
+                            "subgraph_version_pattern": "",
+                            "template_version_pattern": ""
+                          },
+                          "rel_foreign_models": {
+                            "template": {
+                              "model_name": "Template",
+                              "Template": {
+                                "id": 79,
+                                "run": "platform:cmd",
+                                "icon": "",
+                                "name": "create_volume",
+                                "type": "virtualization_platform",
+                                "color": "",
+                                "input": {
+                                  "disk": {},
+                                  "tenant": {},
+                                  "volume_type": {},
+                                  "resource_pool": {}
+                                },
+                                "title": "create_volume",
+                                "output": {
+                                  "size": {},
+                                  "uuid": {}
+                                },
+                                "timeout": 300,
+                                "coords_x": 0.0,
+                                "coords_y": 0.0,
+                                "priority": 0,
+                                "rollback": "platform:cmd",
+                                "log_level": null,
+                                "extra_data": null,
+                                "description": "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0434\u0438\u0441\u043a\u0430 \u0432 OpenStack",
+                                "allowed_groups": [],
+                                "printed_output": {},
+                                "additional_input": true,
+                                "additional_output": false,
+                                "restricted_groups": [],
+                                "log_can_be_overridden": false,
+                                "priority_can_be_overridden": false,
+                                "printed_output_can_be_overridden": false,
+                                "current_version": "",
+                                "version_arr": [
+                                  1,
+                                  0,
+                                  2
+                                ]
+                              },
+                              "rel_foreign_models": {}
+                            }
+                          }
+                        },
+                        {
+                          "model_name": "Node",
+                          "Node": {
+                            "hold": false,
+                            "icon": "",
+                            "name": "attach_disk_to_vm",
+                            "color": "",
+                            "count": null,
+                            "input": {
+                              "tenant": "tenant",
+                              "disk_id": "uuid",
+                              "item_id": "item_id",
+                              "resource_pool": "resource_pool"
+                            },
+                            "number": 11,
+                            "output": {
+                              "disk": "disk"
+                            },
+                            "depends": [
+                              "create_volume"
+                            ],
+                            "timeout": 450,
+                            "coords_x": 140.0,
+                            "coords_y": 254.0,
+                            "for_each": "",
+                            "priority": null,
+                            "condition": "",
+                            "log_level": null,
+                            "extra_data": null,
+                            "description": "",
+                            "subgraph_id": null,
+                            "template_id": "80",
+                            "is_sequential": false,
+                            "on_prebilling": false,
+                            "printed_output": {},
+                            "run_on_rollback": false,
+                            "subgraph_version": "",
+                            "template_version": "",
+                            "not_damage_on_error": false,
+                            "damage_order_on_error": false,
+                            "subgraph_version_pattern": "",
+                            "template_version_pattern": ""
+                          },
+                          "rel_foreign_models": {
+                            "template": {
+                              "model_name": "Template",
+                              "Template": {
+                                "id": 80,
+                                "run": "platform:cmd",
+                                "icon": "",
+                                "name": "attach_disk_to_vm",
+                                "type": "virtualization_platform",
+                                "color": "",
+                                "input": {
+                                  "tenant": {},
+                                  "disk_id": {},
+                                  "item_id": {},
+                                  "resource_pool": {}
+                                },
+                                "title": "attach_disk_to_vm",
+                                "output": {
+                                  "disk": {}
+                                },
+                                "timeout": 200,
+                                "coords_x": 0.0,
+                                "coords_y": 0.0,
+                                "priority": 0,
+                                "rollback": "platform:cmd",
+                                "log_level": null,
+                                "extra_data": null,
+                                "description": "",
+                                "allowed_groups": [],
+                                "printed_output": {},
+                                "additional_input": false,
+                                "additional_output": false,
+                                "restricted_groups": [],
+                                "log_can_be_overridden": false,
+                                "priority_can_be_overridden": false,
+                                "printed_output_can_be_overridden": false,
+                                "current_version": "",
+                                "version_arr": [
+                                  1,
+                                  0,
+                                  0
+                                ]
+                              },
+                              "rel_foreign_models": {}
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "model_name": "Node",
+                "Node": {
+                  "hold": false,
+                  "icon": "",
+                  "name": "make_variables",
+                  "color": "",
+                  "count": null,
+                  "input": {
+                    "data": "data",
+                    "disk": "disk",
+                    "config": "resolved_item['data']['config']",
+                    "template": "add_disk_template",
+                    "from_json": "True",
+                    "credentials": "credentials"
+                  },
+                  "number": 20,
+                  "output": {
+                    "formatted": "result"
+                  },
+                  "depends": [
+                    "add_disk",
+                    "add_disk_openstack"
+                  ],
+                  "timeout": 10,
+                  "coords_x": 330.0,
+                  "coords_y": 254.0,
+                  "for_each": "",
+                  "priority": null,
+                  "condition": "",
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "\u0420\u0430\u0441\u0441\u0442\u0430\u0432\u043b\u044f\u0435\u043c \u0443\u0442\u043e\u0447\u0435\u043a \u0432 \u0440\u044f\u0434",
+                  "subgraph_id": null,
+                  "template_id": "40",
+                  "is_sequential": false,
+                  "on_prebilling": false,
+                  "printed_output": {},
+                  "run_on_rollback": false,
+                  "subgraph_version": "",
+                  "template_version": "",
+                  "not_damage_on_error": false,
+                  "damage_order_on_error": false,
+                  "subgraph_version_pattern": "",
+                  "template_version_pattern": ""
+                },
+                "rel_foreign_models": {
+                  "template": {
+                    "model_name": "Template",
+                    "Template": {
+                      "id": 40,
+                      "run": "internal",
+                      "icon": "",
+                      "name": "jinja2_format",
+                      "type": "system_nodes",
+                      "color": "",
+                      "input": {
+                        "domain": {},
+                        "mounts": {},
+                        "feature": {},
+                        "machine": {},
+                        "hostname": {},
+                        "os_users": {},
+                        "template": {
+                          "required": true
+                        },
+                        "from_json": {},
+                        "prime_user": {},
+                        "default_nic": {},
+                        "kafka_version": {},
+                        "postgresql_db": {},
+                        "redis_version": {},
+                        "ad_integration": {},
+                        "os_local_users": {},
+                        "redis_password": {},
+                        "ad_logon_grants": {},
+                        "postgresql_user": {},
+                        "postgresql_version": {},
+                        "prime_user_init_passwd": {}
+                      },
+                      "title": "jinja2_format",
+                      "output": {
+                        "formatted": {}
+                      },
+                      "timeout": 10,
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "priority": 0,
+                      "rollback": null,
+                      "log_level": "full",
+                      "extra_data": null,
+                      "description": "\u0444\u043e\u0440\u043c\u0430\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0434\u0430\u043d\u043d\u044b\u0445 \u0441 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435\u043c jinja2 \u0448\u0430\u0431\u043b\u043e\u043d\u0430",
+                      "allowed_groups": [],
+                      "printed_output": [
+                        {
+                          "type": "text",
+                          "data_path": "data",
+                          "node_state": "completed"
+                        },
+                        {
+                          "type": "text",
+                          "data_path": "data.formatted",
+                          "node_state": "completed"
+                        }
+                      ],
+                      "additional_input": true,
+                      "additional_output": false,
+                      "restricted_groups": [],
+                      "log_can_be_overridden": true,
+                      "priority_can_be_overridden": false,
+                      "printed_output_can_be_overridden": true,
+                      "current_version": "",
+                      "version_arr": [
+                        1,
+                        0,
+                        2
+                      ]
+                    },
+                    "rel_foreign_models": {}
+                  }
+                }
+              },
+              {
+                "model_name": "Node",
+                "Node": {
+                  "hold": false,
+                  "icon": "",
+                  "name": "configure_mount_point",
+                  "color": "",
+                  "count": null,
+                  "input": {
+                    "mount": "data['mount']",
+                    "inventory": "result['inventory']",
+                    "credentials": "[result['credential']]",
+                    "net_segment": "result['net_segment']",
+                    "job_template": "job_template",
+                    "environment_type": "environment_type"
+                  },
+                  "number": 30,
+                  "output": {
+                    "config": "new_config"
+                  },
+                  "depends": [
+                    "make_variables"
+                  ],
+                  "timeout": 900,
+                  "coords_x": 330.0,
+                  "coords_y": 440.0,
+                  "for_each": "",
+                  "priority": null,
+                  "condition": "",
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "\u0420\u0430\u0441\u0448\u0438\u0440\u044f\u0435\u043c \u0442\u043e\u0447\u043a\u0443 \u043c\u043e\u043d\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f",
+                  "subgraph_id": null,
+                  "template_id": "43",
+                  "is_sequential": false,
+                  "on_prebilling": false,
+                  "printed_output": {},
+                  "run_on_rollback": false,
+                  "subgraph_version": "",
+                  "template_version": "",
+                  "not_damage_on_error": false,
+                  "damage_order_on_error": false,
+                  "subgraph_version_pattern": "",
+                  "template_version_pattern": ""
+                },
+                "rel_foreign_models": {
+                  "template": {
+                    "model_name": "Template",
+                    "Template": {
+                      "id": 43,
+                      "run": "awx:cmd",
+                      "icon": "",
+                      "name": "ansible_awx",
+                      "type": "rpc",
+                      "color": "",
+                      "input": {
+                        "inventory": {},
+                        "credential": {},
+                        "extra_vars": {},
+                        "net_segment": {},
+                        "job_template": {}
+                      },
+                      "title": "ansible_awx",
+                      "output": {
+                        "config": {},
+                        "item_id": {}
+                      },
+                      "timeout": 900,
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "priority": 0,
+                      "rollback": null,
+                      "log_level": null,
+                      "extra_data": null,
+                      "description": "\u0437\u0430\u043f\u0443\u0441\u043a job_template \u0432 Ansible AWX",
+                      "allowed_groups": [],
+                      "printed_output": {},
+                      "additional_input": true,
+                      "additional_output": true,
+                      "restricted_groups": [],
+                      "log_can_be_overridden": false,
+                      "priority_can_be_overridden": false,
+                      "printed_output_can_be_overridden": true,
+                      "current_version": "",
+                      "version_arr": [
+                        1,
+                        0,
+                        1
+                      ]
+                    },
+                    "rel_foreign_models": {}
+                  }
+                }
+              },
+              {
+                "model_name": "Node",
+                "Node": {
+                  "hold": false,
+                  "icon": "",
+                  "name": "update_vm_config",
+                  "color": "",
+                  "count": null,
+                  "input": {
+                    "data": "{'resource_pool': resolved_item['data']['config']['resource_pool'],'tenant': resolved_item['data']['config']['tenant'],'domain': resolved_item['data']['config']['domain'],'ad_integration': resolved_item['data']['config']['ad_integration'],'image': resolved_item['data']['config']['image'],'default_nic': resolved_item['data']['config']['default_nic'],'extra_nics': resolved_item['data']['config']['extra_nics'],'os_version': resolved_item['data']['config']['image']['os']['version'],'environment_type': resolved_item['data']['config']['environment_type'],'environment': resolved_item['data']['config']['environment'], 'flavor': resolved_item['data']['config']['flavor'], 'boot_disk': resolved_item['data']['config']['boot_disk'], 'extra_disks': [{'size': data['size']}, *resolved_item['data']['config']['extra_disks']], 'on_support': resolved_item['data']['config']['on_support'], **new_config}",
+                    "type": "enums.EventType.VM.value",
+                    "item_id": "item_id",
+                    "subtype": "enums.EventSubType.CONFIG.value"
+                  },
+                  "number": 40,
+                  "output": {},
+                  "depends": [
+                    "configure_mount_point"
+                  ],
+                  "timeout": 30,
+                  "coords_x": 330.0,
+                  "coords_y": 626.0,
+                  "for_each": "",
+                  "priority": null,
+                  "condition": "",
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "\u041e\u0431\u043d\u043e\u0432\u043b\u044f\u0435\u043c \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044e \u0432 \u0441\u0435\u0440\u0432\u0438\u0441\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u044f",
+                  "subgraph_id": null,
+                  "template_id": "45",
+                  "is_sequential": false,
+                  "on_prebilling": false,
+                  "printed_output": {},
+                  "run_on_rollback": false,
+                  "subgraph_version": "",
+                  "template_version": "",
+                  "not_damage_on_error": false,
+                  "damage_order_on_error": false,
+                  "subgraph_version_pattern": "",
+                  "template_version_pattern": ""
+                },
+                "rel_foreign_models": {
+                  "template": {
+                    "model_name": "Template",
+                    "Template": {
+                      "id": 45,
+                      "run": "internal",
+                      "icon": "",
+                      "name": "add_event",
+                      "type": "system_nodes",
+                      "color": "",
+                      "input": {
+                        "data": {},
+                        "type": {},
+                        "status": {},
+                        "item_id": {},
+                        "subtype": {}
+                      },
+                      "title": "add_event",
+                      "output": {
+                        "data": {}
+                      },
+                      "timeout": 30,
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "priority": 0,
+                      "rollback": null,
+                      "log_level": null,
+                      "extra_data": null,
+                      "description": "\u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u0435 Event \u0432 \u0441\u0435\u0440\u0432\u0438\u0441 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0439",
+                      "allowed_groups": [],
+                      "printed_output": {},
+                      "additional_input": true,
+                      "additional_output": true,
+                      "restricted_groups": [],
+                      "log_can_be_overridden": false,
+                      "priority_can_be_overridden": false,
+                      "printed_output_can_be_overridden": false,
+                      "current_version": "",
+                      "version_arr": [
+                        1,
+                        0,
+                        1
+                      ]
+                    },
+                    "rel_foreign_models": {}
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "dump_version": 5.0,
+  "dump_date": "2022-06-16 16:48:52",
+  "is_pinned_versions": false
+}
