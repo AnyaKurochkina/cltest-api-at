@@ -9,6 +9,7 @@ import models.feedService.eventType.EventType;
 import models.feedService.tag.FeedTag;
 import models.feedService.targetService.TargetService;
 import org.json.JSONObject;
+import steps.feedService.FeedServiceSteps;
 
 import java.util.List;
 
@@ -94,6 +95,10 @@ public class Event extends Entity {
 
     @Override
     protected void create() {
+        Event event = FeedServiceSteps.getEventName(title);
+        if (event != null) {
+            FeedServiceSteps.deleteEvent(event.getId());
+        }
         id = new Http(FeedServiceURL)
                 .body(toJson())
                 .post(feedService)
