@@ -68,6 +68,15 @@ public class ActionsNegativeTest extends Tests {
     @TmsLink("642523")
     @Test
     public void createActionWithInvalidCharacters() {
+        Action.builder().build().negativeCreateRequest(500);
+        Action.builder().build().negativeCreateRequest(500);
+        Action.builder().build().negativeCreateRequest(500);
+        Action.builder().build().negativeCreateRequest(500);
+        Action.builder().build().negativeCreateRequest(500);
+        Action.builder().build().negativeCreateRequest(500);
+        Action.builder().build().negativeCreateRequest(500);
+        Action.builder().build().negativeCreateRequest(500);
+        Action.builder().build().negativeCreateRequest(500);
         assertAll("Действие создалось с недопустимым именем",
                 () -> steps.createProductObject(steps
                         .createJsonObject("NameWithUppercase")).assertStatus(500),
