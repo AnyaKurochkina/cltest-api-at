@@ -68,22 +68,34 @@ public class ActionsNegativeTest extends Tests {
     @TmsLink("642523")
     @Test
     public void createActionWithInvalidCharacters() {
-        assertAll("Действие создалось с недопустимым именем",
-                () -> steps.createProductObject(steps
-                        .createJsonObject("NameWithUppercase")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("nameWithUppercaseInMiddle")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("имя")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("Имя")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("a&b&c")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("")).assertStatus(400),
-                () -> steps.createProductObject(steps
-                        .createJsonObject(" ")).assertStatus(400)
-        );
+        Action.builder()
+                .actionName("NameWithUppercase")
+                .build()
+                .negativeCreateRequest(500);
+        Action.builder()
+                .actionName("nameWithUppercaseInMiddle")
+                .build()
+                .negativeCreateRequest(500);
+        Action.builder()
+                .actionName("имя")
+                .build()
+                .negativeCreateRequest(500);
+        Action.builder()
+                .actionName("Имя")
+                .build()
+                .negativeCreateRequest(500);
+        Action.builder()
+                .actionName("a&b&c")
+                .build()
+                .negativeCreateRequest(500);
+        Action.builder()
+                .actionName("")
+                .build()
+                .negativeCreateRequest(400);
+        Action.builder()
+                .actionName(" ")
+                .build()
+                .negativeCreateRequest(400);
     }
 
     @DisplayName("Негативный тест на создание действия с существующим именем")
