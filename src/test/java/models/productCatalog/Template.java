@@ -6,7 +6,7 @@ import httpModels.productCatalog.template.createTemplate.response.CreateTemplate
 import httpModels.productCatalog.template.createTemplate.response.Input;
 import httpModels.productCatalog.template.createTemplate.response.Output;
 import httpModels.productCatalog.template.createTemplate.response.PrintedOutput;
-import httpModels.productCatalog.template.getTemplate.response.GetTemplateResponse;
+import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
-import java.util.Map;
 
 import static core.helper.Configure.ProductCatalogURL;
 
@@ -35,7 +34,7 @@ public class Template extends Entity {
     private Boolean logCanBeOverridden;
     private Integer timeout;
     private Double coordsX;
-    private Map<String,Map<String,String>> output;
+    private Output output;
     private PrintedOutput printedOutput;
     private Boolean printedOutputCanBeOverridden;
     private List<Object> restrictedPaths;
@@ -46,7 +45,7 @@ public class Template extends Entity {
     private String logLevel;
     private List<Object> restrictedGroups;
     private Integer priority;
-    private Map<String,Map<String,String>> input;
+    private Input input;
     private Object extraData;
     private String templateName;
     private List<Object> allowedGroups;
@@ -56,7 +55,7 @@ public class Template extends Entity {
     private String type;
     private String title;
 
-    public static final String productName = "/api/v1/templates/";
+    private final String productName = "/api/v1/templates/";
 
     @Override
     public Entity init() {
@@ -71,10 +70,7 @@ public class Template extends Entity {
                 .set("$.version", version)
                 .set("$.type", type)
                 .set("$.title", title)
-                .set("$.run", run)
-                .set("$.input", input)
-                .set("$.output", output)
-                .set("$.timeout", timeout)
+                .set("$.priority", priority)
                 .build();
     }
 
@@ -82,7 +78,7 @@ public class Template extends Entity {
     protected void create() {
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         if (productCatalogSteps.isExists(templateName)) {
-            productCatalogSteps.deleteByName(templateName, GetTemplateResponse.class);
+            productCatalogSteps.deleteByName(templateName, GetTemplateListResponse.class);
         }
         CreateTemplateResponse createTemplateResponse = new Http(ProductCatalogURL)
                 .body(toJson())

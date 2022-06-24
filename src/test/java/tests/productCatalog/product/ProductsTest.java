@@ -516,7 +516,7 @@ public class ProductsTest extends Tests {
         Product product = Product.builder()
                 .name("product_without_org_for_context_test_api")
                 .informationSystems(Collections.emptyList())
-                .envs(Collections.singletonList(Configure.ENV))
+                .envs(Collections.singletonList(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()))
                 .build()
                 .createObject();
         steps.getProductByContextProject(project.getId(), product.getProductId());
