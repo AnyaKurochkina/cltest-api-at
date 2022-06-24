@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import tests.Tests;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.feedService.FeedServiceSteps.*;
@@ -70,11 +71,16 @@ public class TargetServiceTest extends Tests {
                 .internalName("update_target_service_internalName_test_api")
                 .build()
                 .createObject();
+        String title = "updated_target_service_title_test_api";
         TargetService expectedTargetService = TargetService.builder()
-                .title("updated_target_service_title_test_api")
+                .title(title)
                 .internalName("updated_target_service_internalName_test_api")
                 .build();
         JSONObject body = expectedTargetService.init().toJson();
+        if (isTargetServiceExist(title)) {
+            Integer id = Objects.requireNonNull(getTargetServiceByName(title)).getId();
+            deleteTargetService(id);
+        }
         TargetService actualTargetService = updateTargetService(targetService.getId(), body);
         assertEquals(expectedTargetService.getTitle(), actualTargetService.getTitle());
         assertEquals(expectedTargetService.getInternalName(), actualTargetService.getInternalName());

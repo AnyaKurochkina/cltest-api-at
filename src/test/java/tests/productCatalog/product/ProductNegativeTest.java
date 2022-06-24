@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Tag("product_catalog")
@@ -116,16 +115,13 @@ public class ProductNegativeTest extends Tests {
     @TmsLink("643423")
     @Test
     public void createProductWithInvalidCharacters() {
-        assertAll("Продукт создался с недопустимым именем",
-                () -> steps.createProductObject(steps.createJsonObject("NameWithUppercase")).assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("nameWithUppercaseInMiddle"))
-                        .assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("имя")).assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("Имя")).assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("a&b&c")).assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("")).assertStatus(400),
-                () -> steps.createProductObject(steps.createJsonObject(" ")).assertStatus(400)
-        );
+        Product.builder().name("NameWithUppercase").build().negativeCreateRequest(500);
+        Product.builder().name("nameWithUppercaseInMiddle").build().negativeCreateRequest(500);
+        Product.builder().name("имя").build().negativeCreateRequest(500);
+        Product.builder().name("Имя").build().negativeCreateRequest(500);
+        Product.builder().name("a&b&c").build().negativeCreateRequest(500);
+        Product.builder().name("").build().negativeCreateRequest(400);
+        Product.builder().name(" ").build().negativeCreateRequest(400);
     }
 
     @DisplayName("Негативный тест на удаление продукта без токена")

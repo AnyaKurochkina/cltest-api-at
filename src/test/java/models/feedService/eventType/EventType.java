@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
+import steps.feedService.FeedServiceSteps;
 
 import static core.helper.Configure.FeedServiceURL;
 
@@ -49,6 +50,10 @@ public class EventType extends Entity {
     @Override
     @Step("Создание EventType")
     protected void create() {
+        EventType eventTypeByName = FeedServiceSteps.getEventTypeByName(title);
+        if (eventTypeByName != null) {
+            FeedServiceSteps.deleteEventType(eventTypeByName.getId());
+        }
         id = new Http(FeedServiceURL)
                 .body(toJson())
                 .post(feedService)

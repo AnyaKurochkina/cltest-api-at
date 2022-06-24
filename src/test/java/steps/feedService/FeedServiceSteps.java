@@ -224,4 +224,70 @@ public class FeedServiceSteps {
         }
         return null;
     }
+
+    @Step("Получение TargetService по имени")
+    public static TargetService getTargetServiceByName(String title) {
+        List<TargetService> eventTypeList = getTargetServiceList().getList();
+        for(TargetService targetService : eventTypeList) {
+            if (targetService.getTitle().equals(title)) {
+                return targetService;
+            }
+        }
+        return null;
+    }
+
+    @Step("Получение Tag по имени")
+    public static FeedTag getFeedTagByName(String title) {
+        List<FeedTag> feedTagList = getTagList().getList();
+        for(FeedTag feedTag : feedTagList) {
+            if (feedTag.getTitle().equals(title)) {
+                return feedTag;
+            }
+        }
+        return null;
+    }
+
+    @Step("Получение Event по имени")
+    public static Event getEventName(String title) {
+        List<Event> eventList = getEventList().getList();
+        for(Event event : eventList) {
+            if (event.getTitle().equals(title)) {
+                return event;
+            }
+        }
+        return null;
+    }
+
+    @Step("Проверка существования Tag по имени")
+    public static boolean isTagExist(String title) {
+        List<FeedTag> feedTagList = getTagList().getList();
+        for(FeedTag feedTag : feedTagList) {
+            if (feedTag.getTitle().equals(title)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Step("Проверка существования EventType по имени")
+    public static boolean isEventTypeExist(String title) {
+        List<EventType> eventTypeList = getEventTypeList().getList();
+        for(EventType eventType : eventTypeList) {
+            if (eventType.getTitle().equals(title)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Step("Проверка существования TargetService по имени")
+    public static boolean isTargetServiceExist(String title) {
+        List<TargetService> TargetServiceList = getTargetServiceList().getList();
+        for(TargetService targetService : TargetServiceList) {
+            if (targetService.getTitle().equals(title)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
