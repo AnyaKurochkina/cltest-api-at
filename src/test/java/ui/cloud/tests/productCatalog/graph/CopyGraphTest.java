@@ -1,13 +1,9 @@
 package ui.cloud.tests.productCatalog.graph;
 
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 
-@Epic("Графы")
-@Feature("Копирование графа")
 public class CopyGraphTest extends GraphBaseTest {
 
     @Test

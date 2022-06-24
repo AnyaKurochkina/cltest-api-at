@@ -44,8 +44,8 @@ public class GraphBaseTest extends BaseTest {
     }
 
     public void deleteGraph(String name) {
-        ProductCatalogSteps steps = new ProductCatalogSteps(Graph.productName);
-        steps.getDeleteObjectResponse(steps
-                .getProductObjectIdByNameWithMultiSearch(name, GetGraphsListResponse.class)).assertStatus(200);
+    ProductCatalogSteps steps = new ProductCatalogSteps(Graph.productName);
+    steps.getDeleteObjectResponse(steps
+            .getProductObjectIdByNameWithMultiSearch(name, GetGraphsListResponse.class)).assertStatus(200);
     }
 }
