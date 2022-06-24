@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Map;
-
 @Builder
 @Data
 @AllArgsConstructor
@@ -49,7 +47,7 @@ public class CreateTemplateResponse{
 	private double coordsX;
 
 	@JsonProperty("output")
-	private Map<String,Map<String,String>> output;
+	private Output output;
 
 	@JsonProperty("printed_output")
 	private PrintedOutput printedOutput;
@@ -88,7 +86,7 @@ public class CreateTemplateResponse{
 	private String lastVersion;
 
 	@JsonProperty("input")
-	private Map<String,Map<String,String>> input;
+	private Input input;
 
 	@JsonProperty("extra_data")
 	private Object extraData;
@@ -117,115 +115,6 @@ public class CreateTemplateResponse{
 	@JsonProperty("title")
 	private String title;
 
-	public boolean isAdditionalInput(){
-		return additionalInput;
-	}
-
-	public String getColor(){
-		return color;
-	}
-
-	public List<String> getVersionList(){
-		return versionList;
-	}
-
-	public String getIcon(){
-		return icon;
-	}
-
-	public String getDescription(){
-		return description;
-	}
-
-	public String getRun(){
-		return run;
-	}
-
-	public boolean isPriorityCanBeOverridden(){
-		return priorityCanBeOverridden;
-	}
-
-	public boolean isLogCanBeOverridden(){
-		return logCanBeOverridden;
-	}
-
-	public int getTimeout(){
-		return timeout;
-	}
-
-	public double getCoordsX(){
-		return coordsX;
-	}
-
-	public Map<String,Map<String,String>> getOutput(){
-		return output;
-	}
-
-	public PrintedOutput getPrintedOutput(){
-		return printedOutput;
-	}
-
-	public boolean isPrintedOutputCanBeOverridden(){
-		return printedOutputCanBeOverridden;
-	}
-
-	public List<Object> getRestrictedPaths(){
-		return restrictedPaths;
-	}
-
-	public int getId(){
-		return id;
-	}
-
-	public double getCoordsY(){
-		return coordsY;
-	}
-
-	public String getRollback(){
-		return rollback;
-	}
-
-	public List<Object> getAllowedPaths(){
-		return allowedPaths;
-	}
-
-	public String getLogLevel(){
-		return logLevel;
-	}
-
-	public List<Object> getRestrictedGroups(){
-		return restrictedGroups;
-	}
-
-	public int getPriority(){
-		return priority;
-	}
-
-	public String getVersion(){
-		return version;
-	}
-
-	public String getLastVersion(){
-		return lastVersion;
-	}
-
-	public Map<String,Map<String,String>> getInput(){
-		return input;
-	}
-
-	public Object getExtraData(){
-		return extraData;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public List<Object> getAllowedGroups(){
-		return allowedGroups;
-	}
-
-	public boolean isAdditionalOutput(){
-		return additionalOutput;
-	}
+	@JsonProperty("current_version")
+	private String currentVersion;
 }
