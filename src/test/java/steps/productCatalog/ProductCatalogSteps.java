@@ -185,7 +185,7 @@ public class ProductCatalogSteps {
     public String getProductObjectIdByNameWithMultiSearch(String name, Class<?> clazz) {
         String objectId = null;
         List<ItemImpl> list = ((GetListImpl) new Http(ProductCatalogURL)
-                .get(productName + "?include=total_count&page=1&per_page=10&multisearch=" + name)
+                .get(productName + "?include=total_count&page=1&per_page=50&multisearch=" + name)
                 .assertStatus(200).extractAs(clazz)).getItemsList();
         for (ItemImpl item : list) {
             if (item.getName().equals(name)) {

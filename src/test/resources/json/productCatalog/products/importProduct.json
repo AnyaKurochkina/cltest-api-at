@@ -2,10 +2,10 @@
   "model_name": "Product",
   "Product": {
     "author": "Airat Muzafarov",
-    "graph_id": "df70370f-8b93-4993-8bc1-6dbf270fecf8",
+    "graph_id": "8549ea26-5dc7-4857-86be-4588bd4f31dc",
     "max_count": 1,
     "extra_data": {},
-    "graph_version": "1.0.144",
+    "graph_version": "1.0.0",
     "graph_version_pattern": "",
     "current_version": "",
     "name": "import_product_test_api",
@@ -16,6 +16,7 @@
     "number": 1,
     "envs": [],
     "category": "bm",
+    "category_v2": "compute",
     "payment": "paid",
     "info": {},
     "in_general_list": true,
@@ -33,148 +34,34 @@
     "graph": {
       "model_name": "Graph",
       "Graph": {
-        "id": "df70370f-8b93-4993-8bc1-6dbf270fecf8",
-        "name": "test_modifiers",
-        "type": "creating",
-        "title": "test_modifiers",
-        "author": "qa",
+        "author": "Airat Muzafarov",
         "output": {},
         "ui_schema": {},
-        "description": "test",
         "json_schema": {},
-        "static_data": {
-          "tenant": {},
-          "extra_nics": [],
-          "extra_disks": [],
-          "extra_mounts": [],
-          "os_local_users": [],
-          "ad_logon_grants": []
-        },
-        "modifications": [
-          {
-            "id": 6807,
-            "data": [
-              "test"
-            ],
-            "envs": [
-              "dev"
-            ],
-            "name": "required_empty_list",
-            "path": "required_1",
-            "order": 3,
-            "graph_id": "df70370f-8b93-4993-8bc1-6dbf270fecf8",
-            "root_path": "json_schema",
-            "update_type": "update"
-          },
-          {
-            "id": 6808,
-            "data": {
-              "test": ""
-            },
-            "envs": [
-              "dev"
-            ],
-            "name": "required_no_empty_list",
-            "path": "required_2",
-            "order": 7,
-            "graph_id": "df70370f-8b93-4993-8bc1-6dbf270fecf8",
-            "root_path": "json_schema",
-            "update_type": "update"
-          }
-        ],
+        "static_data": {},
+        "modifications": [],
         "printed_output": {},
-        "allowed_developers": [],
         "damage_order_on_error": false,
-        "restricted_developers": [],
         "current_version": "",
+        "name": "graph",
+        "title": "graph",
+        "description": "",
+        "type": "creating",
+        "allowed_developers": [],
+        "restricted_developers": [],
         "version_arr": [
           1,
           0,
-          144
+          0
         ]
       },
       "rel_foreign_models": {},
       "rel_revers_models": {
-        "nodes": [
-          {
-            "model_name": "Node",
-            "Node": {
-              "hold": false,
-              "icon": "",
-              "name": "rrr",
-              "color": "",
-              "count": null,
-              "input": {},
-              "number": 1,
-              "output": {},
-              "depends": [],
-              "timeout": 1,
-              "coords_x": 0.0,
-              "coords_y": 0.0,
-              "for_each": null,
-              "priority": null,
-              "condition": "",
-              "log_level": "",
-              "extra_data": null,
-              "description": "rrr",
-              "subgraph_id": null,
-              "template_id": "670",
-              "is_sequential": false,
-              "on_prebilling": false,
-              "printed_output": {},
-              "run_on_rollback": false,
-              "subgraph_version": "",
-              "template_version": "2.0.1",
-              "not_damage_on_error": false,
-              "damage_order_on_error": true,
-              "subgraph_version_pattern": "",
-              "template_version_pattern": ""
-            },
-            "rel_foreign_models": {
-              "template": {
-                "model_name": "Template",
-                "Template": {
-                  "id": 670,
-                  "run": "run",
-                  "icon": "",
-                  "name": "template_version_test_api6",
-                  "type": "check_vm",
-                  "color": "",
-                  "input": {},
-                  "title": "title_test_api",
-                  "output": {},
-                  "timeout": 1,
-                  "coords_x": 0.0,
-                  "coords_y": 0.0,
-                  "priority": 0,
-                  "rollback": "Rollback",
-                  "log_level": "",
-                  "extra_data": null,
-                  "description": "",
-                  "allowed_groups": [],
-                  "printed_output": {},
-                  "additional_input": false,
-                  "additional_output": false,
-                  "restricted_groups": [],
-                  "log_can_be_overridden": false,
-                  "priority_can_be_overridden": false,
-                  "printed_output_can_be_overridden": false,
-                  "current_version": "",
-                  "version_arr": [
-                    2,
-                    0,
-                    1
-                  ]
-                },
-                "rel_foreign_models": {}
-              }
-            }
-          }
-        ]
+        "nodes": []
       }
     }
   },
   "dump_version": 5.0,
-  "dump_date": "2022-06-15 11:07:10",
+  "dump_date": "2022-06-22 10:30:31",
   "is_pinned_versions": true
 }
