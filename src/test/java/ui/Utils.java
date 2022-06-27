@@ -10,4 +10,14 @@ public class Utils {
     public static byte[] AttachScreen() {
         return ((TakesScreenshot) WebDriverRunner.getWebDriver()).getScreenshotAs(OutputType.BYTES);
     }
+
+    @Attachment(type = "text/html", fileExtension = ".html")
+    public static String AttachPage() {
+        return WebDriverRunner.getWebDriver().getPageSource();
+    }
+
+    public static void attachFiles() {
+        AttachScreen();
+        AttachPage();
+    }
 }

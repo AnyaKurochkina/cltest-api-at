@@ -6,6 +6,7 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Rectangle;
@@ -34,7 +35,7 @@ public class Table implements TypifiedElement {
         try {
             headers = headersCollection.shouldBe(CollectionCondition.sizeNotEqual(0)).texts();
         } catch (StaleElementReferenceException e) {
-            Utils.AttachScreen();
+            Utils.attachFiles();
             throw new StaleElementReferenceException(String.format("Таблица с колонкой '%s' не найдена", columnName), e);
         }
     }
@@ -47,7 +48,7 @@ public class Table implements TypifiedElement {
     public SelenideElement getRowByColumn(String column, String value) {
         int index = headers.indexOf(column);
         if (index < 0) {
-            Utils.AttachScreen();
+            Utils.attachFiles();
             throw new NoSuchElementException("Колонки " + column + " не существует ");
         }
         for (SelenideElement e : rows) {
@@ -90,21 +91,21 @@ public class Table implements TypifiedElement {
     public SelenideElement getValueByColumnInFirstRow(String column) {
         int index = headers.indexOf(column);
         if(index < 0){
-            Utils.AttachScreen();
-            Assertions.fail(String.format("Колонка %s не найдена", column));
+            Utils.attachFiles();
+            Assertions.fail(String.format("Колонка %s не найдена. Колонки: %s", column, StringUtils.join(headers, ",")));
         }
         SelenideElement row;
         try {
             row = rows.get(0);
         } catch (ArrayIndexOutOfBoundsException e) {
-            Utils.AttachScreen();
+            Utils.attachFiles();
             throw new Error("В таблице не найдены строки");
         }
         SelenideElement element;
         try {
             element = row.$$x("td").get(index);
         } catch (ArrayIndexOutOfBoundsException e) {
-            Utils.AttachScreen();
+            Utils.attachFiles();
             throw new Error(String.format("Нет колонки с индексом %d. Всего колонок %d", index, row.$$x("td").size()), e);
         }
         return element;
