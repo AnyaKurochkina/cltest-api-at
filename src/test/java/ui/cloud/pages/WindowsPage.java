@@ -110,7 +110,7 @@ public class WindowsPage extends IProductPage {
 
     @SneakyThrows
     public void discActDelete() {
-        runActionScrollWithParameters("Диск", "Удалить", () -> {
+        runActionScrollWithParameters("Диск", "Удалить диск", () -> {
             Dialog dlg = new Dialog("Удалить");
             dlg.getDialog().$x("descendant::button[.='Подтвердить']")
                     .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
