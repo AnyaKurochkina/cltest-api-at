@@ -39,7 +39,8 @@ public class DropDown implements TypifiedElement{
             return;
         element.click();
         $x("//ul/li[@data-value='{}']", value)
-                .shouldBe(Condition.enabled)
+                .shouldBe(activeCnd)
+                .hover().shouldBe(clickableCnd)
                 .click();
     }
 }

@@ -89,7 +89,10 @@ public class Table implements TypifiedElement {
     @Step("Получение значения по колонке '{column}' в первой строке'")
     public SelenideElement getValueByColumnInFirstRow(String column) {
         int index = headers.indexOf(column);
-        Assertions.assertTrue(index >= 0, String.format("Колонка %s не найдена", column));
+        if(index < 0){
+            Utils.AttachScreen();
+            Assertions.fail(String.format("Колонка %s не найдена", column));
+        }
         SelenideElement row;
         try {
             row = rows.get(0);
