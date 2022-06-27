@@ -21,7 +21,7 @@ public class PostgresSQLClusterTest extends Tests {
     static final String productName = "PostgreSQL Cluster";
 
     @TmsLink("461798")
-    @Source(ProductArgumentsProvider.PRODUCTS)
+    @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Создать {0}")
     void create(PostgresSQLCluster product) {
         product.setProductName(productName);

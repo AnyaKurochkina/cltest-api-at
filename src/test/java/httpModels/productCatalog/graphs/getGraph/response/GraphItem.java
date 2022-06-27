@@ -103,4 +103,10 @@ public class GraphItem{
 
 	@JsonProperty("run_on_rollback")
 	private Boolean runOnRollback;
+
+	@JsonProperty("template_version_calculated")
+	private Object templateVersionCalculated;
+
+	@JsonProperty("subgraph_version_calculated")
+	private Object subgraphVersionCalculated;
 }

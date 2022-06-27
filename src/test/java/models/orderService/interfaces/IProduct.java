@@ -34,6 +34,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
 
+import javax.annotation.Nullable;
 import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -203,7 +204,7 @@ public abstract class IProduct extends Entity {
 
     //Изменить конфигурацию
     protected void resize(String action) {
-        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
+        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
         Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
         OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"), this.getProjectId());
@@ -225,6 +226,14 @@ public abstract class IProduct extends Entity {
     }
 
     @SneakyThrows
+    public String getFilter() {
+        GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
+        return JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
+                .getString("'ui:options'.filter");
+    }
+
+    @SneakyThrows
     protected boolean getSupport() {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
@@ -241,13 +250,13 @@ public abstract class IProduct extends Entity {
     }
 
     public Flavor getMaxFlavor() {
-        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
+        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
         Assertions.assertFalse(list.size() < 2, "Действие недоступно, либо кол-во flavor's < 2");
         return list.get(list.size() - 1);
     }
 
     public Flavor getMinFlavor() {
-        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
+        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
         return list.get(0);
     }
 
