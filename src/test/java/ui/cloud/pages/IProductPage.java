@@ -479,20 +479,17 @@ public abstract class IProductPage {
         return doubleDecimalObj;
     }
 
-    @Step("Проверка стоимости продукта (больше|меньше|равна) стоимости после изменения")
+    @Step("Проверка стоимости продукта {isCompare} стоимости после изменения")
     public void vmOrderTextCompareByKey(Double currentCost, Double costAfterChange, String isCompare) {
         switch (isCompare) {
             case "больше":
-                Assertions.assertTrue(currentCost > costAfterChange);
-                log.info("OK! Текущая стоимость продукта " + currentCost + " больше стоимости продукта, после изменения" + costAfterChange);
+                Assertions.assertTrue(currentCost > costAfterChange, "Текущая стоимость продукта " + currentCost + " больше стоимости продукта, после изменения" + costAfterChange);
                 break;
             case "меньше":
-                Assertions.assertTrue(currentCost < costAfterChange);
-                log.info("OK! Текущая стоимость продукта " + currentCost + " меньше стоимости продукта, после изменения" + costAfterChange);
+                Assertions.assertTrue(currentCost < costAfterChange, "Текущая стоимость продукта " + currentCost + " меньше стоимости продукта, после изменения" + costAfterChange);
                 break;
             case "равна":
-                Assertions.assertEquals(currentCost, costAfterChange);
-                log.info("OK! Текущая стоимость продукта " + currentCost + " равна стоимости продукта, после изменения" + costAfterChange);
+                Assertions.assertEquals(currentCost, costAfterChange, "Текущая стоимость продукта " + currentCost + " равна стоимости продукта, после изменения" + costAfterChange);
                 break;
         }
     }

@@ -3,6 +3,7 @@ package ui.elements;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -10,6 +11,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
+import ui.Utils;
 
 import java.util.List;
 
@@ -29,7 +31,12 @@ public class Table implements TypifiedElement {
         headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));
         for (SelenideElement e : progressBars)
             waitLoadTable(e, table);
-        headers = headersCollection.shouldBe(CollectionCondition.sizeNotEqual(0)).texts();
+        try {
+            headers = headersCollection.shouldBe(CollectionCondition.sizeNotEqual(0)).texts();
+        } catch (StaleElementReferenceException e) {
+            Utils.AttachScreen();
+            throw new StaleElementReferenceException(String.format("Таблица с колонкой '%s' не найдена", columnName), e);
+        }
     }
 
     public static Table getTableByColumnName(String columnName) {
@@ -80,7 +87,14 @@ public class Table implements TypifiedElement {
     @Step("Получение значения по колонке '{column}' в первой строке'")
     public SelenideElement getValueByColumnInFirstRow(String column) {
         int index = headers.indexOf(column);
-        return rows.get(0).$$x("td").get(index);
+        SelenideElement element = null;
+        try {
+            element = rows.get(0).$$x("td").get(index);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Utils.AttachScreen();
+            throw new Error(String.format("Нет колонки с индексом %d. Всего колонок %d", index, rows.get(0).$$x("td").size()), e);
+        }
+        return element;
     }
 
 }
