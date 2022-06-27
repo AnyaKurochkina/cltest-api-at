@@ -8,7 +8,6 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.function.Executable;
 import steps.stateService.StateServiceSteps;
 import ui.elements.Dialog;
