@@ -12,6 +12,7 @@ import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class Folder extends Entity {
             }
         }
         if (title == null) {
-            title = new Generex("FOLDER \\w{1,20}").random();
+            title = "API " + new Timestamp(System.currentTimeMillis());
         }
         if (informationSystemIds == null) {
             InformationSystem informationSystem = InformationSystem.builder().build().createObject();
