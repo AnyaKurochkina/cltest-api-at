@@ -35,7 +35,6 @@ import static tests.Tests.clickableCnd;
 @Getter
 
 public abstract class IProductPage {
-    TopInfo topInfo;
     IProduct product;
     double prePriceOrderDbl;
     double priceOrderDbl;
@@ -105,7 +104,6 @@ public abstract class IProductPage {
         btnGeneralInfo.shouldBe(Condition.enabled);
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
         this.product = product.buildFromLink();
-        topInfo = new TopInfo();
     }
 
     public IProductPage() {
@@ -114,7 +112,7 @@ public abstract class IProductPage {
 
     @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus() {
-        List<String> titles = topInfo.getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
+        List<String> titles = TopInfo.get().getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
                         ProductStatus.isNeedWaiting(e.getAttribute("title"))), Duration.ofMillis(20000 * 1000))
                 .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
@@ -181,29 +179,26 @@ public abstract class IProductPage {
         }
     }
 
-    private static class TopInfo extends Table {
-        public TopInfo() {
-            super("Защита от удаления");
+    private static class TopInfo {
+        public static Table get() {
+            return Table.getTableByColumnName("Защита от удаления");
         }
     }
 
-    private static class History extends Table {
-        History() {
-            super("Дата запуска");
-        }
-
+    private static class History {
         public String lastActionStatus() {
-            return getValueByColumnInFirstRow("Статус").$x("descendant::*[@title]").getAttribute("title");
+            return Table.getTableByColumnName("Дата запуска").getValueByColumnInFirstRow("Статус").$x("descendant::*[@title]").getAttribute("title");
         }
     }
 
-    protected class VirtualMachine extends Table {
+    protected class VirtualMachine {
         public static final String POWER_STATUS_DELETED = "Удалено";
         public static final String POWER_STATUS_ON = "Включено";
         public static final String POWER_STATUS_OFF = "Выключено";
+        private final String columnName;
 
         public VirtualMachine(String columnName) {
-            super(columnName);
+            this.columnName = columnName;
         }
 
         public VirtualMachine open() {
@@ -212,11 +207,11 @@ public abstract class IProductPage {
         }
 
         public String getPowerStatus() {
-            return getValueByColumnInFirstRow("Питание").$x("descendant::*[@title]").getAttribute("title");
+            return Table.getTableByColumnName(columnName).getValueByColumnInFirstRow("Питание").$x("descendant::*[@title]").getAttribute("title");
         }
 
         public void checkPowerStatus(String status) {
-            Assertions.assertEquals(status, new VirtualMachine("Имя хоста").getPowerStatus(), "Статус питания не соотвествует ожидаемому");
+            Assertions.assertEquals(status, getPowerStatus(), "Статус питания не соотвествует ожидаемому");
         }
     }
 

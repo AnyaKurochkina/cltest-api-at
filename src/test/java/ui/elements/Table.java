@@ -25,7 +25,7 @@ public class Table implements TypifiedElement {
     ElementsCollection headersCollection;
     ElementsCollection progressBars = $$x("div[div[@role='progressbar']]"); //(//div[div[@role='progressbar']])[last()]
 
-    public Table(String columnName) {
+    private Table(String columnName) {
         SelenideElement table = $x("//table[thead/tr/th[.='{}']]", columnName);
         headersCollection = table.$$x("thead/tr/th");
         rows = table.$$x("tbody/tr");
