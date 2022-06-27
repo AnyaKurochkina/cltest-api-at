@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import tests.Tests;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.feedService.FeedServiceSteps.*;
@@ -75,10 +76,15 @@ public class FeedTagTest extends Tests {
                 .parent(null)
                 .build()
                 .createObject();
+        String title = "updated_tag_title_test_api";
         FeedTag expectedTag = FeedTag.builder()
-                .title("updated_tag_title_test_api")
+                .title(title)
                 .key("updated_tag_key_test_api")
                 .build();
+        if (isTagExist(title)) {
+            Integer id = Objects.requireNonNull(getFeedTagByName(title)).getId();
+            deleteTag(id);
+        }
         JSONObject body = expectedTag.init().toJson();
         FeedTag actualTag = updateTag(feedTag.getId(), body);
         assertEquals(expectedTag.getTitle(), actualTag.getTitle());
@@ -97,6 +103,10 @@ public class FeedTagTest extends Tests {
                 .createObject();
         String expectedTitle = "partial_update";
         JSONObject body = new JSONObject().put("title", expectedTitle);
+        if (isTagExist(expectedTitle)) {
+            Integer id = Objects.requireNonNull(getFeedTagByName(expectedTitle)).getId();
+            deleteTag(id);
+        }
         FeedTag actualFeedTag = partialUpdateTag(feedTag.getId(), body);
         assertEquals(expectedTitle, actualFeedTag.getTitle());
     }

@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
+import steps.feedService.FeedServiceSteps;
 
 import static core.helper.Configure.FeedServiceURL;
 
@@ -52,6 +53,10 @@ public class FeedTag extends Entity {
 	@Override
 	@Step("Создание Tag")
 	protected void create() {
+		FeedTag feedByName = FeedServiceSteps.getFeedTagByName(title);
+		if (feedByName != null) {
+			FeedServiceSteps.deleteTag(feedByName.getId());
+		}
 		id = new Http(FeedServiceURL)
 				.body(toJson())
 				.post(feedService)
