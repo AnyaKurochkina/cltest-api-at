@@ -96,6 +96,12 @@ public abstract class IProduct extends Entity {
     @Override
     protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
         T entity = ObjectPoolService.create(this, exclusiveAccess, isPublic);
+        if (StepsAspects.getCurrentStep().get() != null) {
+            Organization org = Organization.builder().build().createObject();
+            StepsAspects.getCurrentStep().get().addLinkItem(
+                    new LinkItem("Product URL", String.format("%svm/orders/%s/main?context=%s&type=project&org=%s",
+                            Configure.getAppProp("base.url"), ((IProduct) entity).getOrderId(), ((IProduct) entity).getProjectId(), org), "", LinkType.RELATED));
+        }
         ((IProduct) entity).checkPreconditionStatusProduct();
         return entity;
     }
@@ -293,12 +299,6 @@ public abstract class IProduct extends Entity {
                 .assertStatus(201)
                 .jsonPath();
         orderId = jsonPath.get("[0].id");
-        if (StepsAspects.getCurrentStep().get() != null) {
-            Organization org = Organization.builder().build().createObject();
-            StepsAspects.getCurrentStep().get().addLinkItem(
-                    new LinkItem("Product URL", String.format("%svm/orders/%s/main?context=%s&type=project&org=%s",
-                            Configure.getAppProp("base.url"), orderId, projectId, org), "", LinkType.RELATED));
-        }
         OrderServiceSteps.checkOrderStatus("success", this);
         setStatus(ProductStatus.CREATED);
         compareCostOrderAndPrice();
