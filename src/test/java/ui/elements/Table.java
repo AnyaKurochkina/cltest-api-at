@@ -3,10 +3,10 @@ package ui.elements;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -46,8 +46,10 @@ public class Table implements TypifiedElement {
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
     public SelenideElement getRowByColumn(String column, String value) {
         int index = headers.indexOf(column);
-        if (index < 0)
+        if (index < 0) {
+            Utils.AttachScreen();
             throw new NoSuchElementException("Колонки " + column + " не существует ");
+        }
         for (SelenideElement e : rows) {
             if (e.$$x("td").get(index).getText().equals(value))
                 return e;
@@ -87,12 +89,20 @@ public class Table implements TypifiedElement {
     @Step("Получение значения по колонке '{column}' в первой строке'")
     public SelenideElement getValueByColumnInFirstRow(String column) {
         int index = headers.indexOf(column);
-        SelenideElement element = null;
+        Assertions.assertTrue(index >= 0, String.format("Колонка %s не найдена", column));
+        SelenideElement row;
         try {
-            element = rows.get(0).$$x("td").get(index);
+            row = rows.get(0);
         } catch (ArrayIndexOutOfBoundsException e) {
             Utils.AttachScreen();
-            throw new Error(String.format("Нет колонки с индексом %d. Всего колонок %d", index, rows.get(0).$$x("td").size()), e);
+            throw new Error("В таблице не найдены строки");
+        }
+        SelenideElement element;
+        try {
+            element = row.$$x("td").get(index);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Utils.AttachScreen();
+            throw new Error(String.format("Нет колонки с индексом %d. Всего колонок %d", index, row.$$x("td").size()), e);
         }
         return element;
     }
