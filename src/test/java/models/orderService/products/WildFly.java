@@ -102,7 +102,8 @@ public class WildFly extends IProduct {
     //Добавление пользователя WildFly
     public void addUser(String username, String role) {
         OrderServiceSteps.executeAction("wildfly_add_user", this,
-                new JSONObject().put("user_name", username).put("user_role", role), this.getProjectId());
+                new JSONObject().put("new_wildfly_user", new JSONObject().put("user_name", username).put("user_role", role))
+                , this.getProjectId());
     }
 
     //Удаление пользователя WildFly
