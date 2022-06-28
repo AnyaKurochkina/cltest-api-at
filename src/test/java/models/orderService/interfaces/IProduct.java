@@ -149,12 +149,16 @@ public abstract class IProduct extends Entity {
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.CREATED, this.getProjectId());
     }
 
-    @SneakyThrows
     private void checkPreconditionStatusProduct() {
 //        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
         if (!ProductStatus.CREATED.equals(getStatus()) && !ProductStatus.DELETED.equals(getStatus())) {
             close();
             throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), ProductStatus.CREATED));
+        }
+        String status = OrderServiceSteps.getStatus(this);
+        if (status.equals("changing") || status.equals("pending")) {
+            close();
+            throw new CreateEntityException(String.format("Статус продукта %s не соответствует исходному", status));
         }
     }
 

@@ -65,6 +65,15 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
+    public static String getStatus(IProduct product){
+        return new Http(OrderServiceURL)
+                .setProjectId(product.getProjectId())
+                .get("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
+                .assertStatus(200)
+                .jsonPath()
+                .getString("status");
+    }
+
     /**
      * Метод получает ID всех продуктов со статусом/статусами
      *
