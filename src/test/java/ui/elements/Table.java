@@ -14,7 +14,6 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import ui.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$$x;
@@ -34,7 +33,7 @@ public class Table implements TypifiedElement {
         for (SelenideElement e : progressBars)
             waitLoadTable(e, table);
         try {
-            headers = new ArrayList<>(headersCollection.shouldBe(CollectionCondition.sizeNotEqual(0)).texts());
+            headers = headersCollection.shouldBe(CollectionCondition.sizeNotEqual(0)).texts();
         } catch (StaleElementReferenceException e) {
             Utils.attachFiles();
             throw new StaleElementReferenceException(String.format("Таблица с колонкой '%s' не найдена", columnName), e);

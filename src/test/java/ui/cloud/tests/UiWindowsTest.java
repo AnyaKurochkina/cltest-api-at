@@ -1,19 +1,18 @@
 package ui.cloud.tests;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Configuration;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.Windows;
-import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import tests.Tests;
-import ui.cloud.pages.*;
+import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.WindowsPage;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
 
@@ -311,7 +310,7 @@ public class UiWindowsTest extends Tests {
     @Order(22)
     @TmsLink("976752")
     @DisplayName("UI Windows. Проверка стоимости после действия Удалить диск")
-    void checkCostAfterDdiscActDelete() {
+    void checkCostAfterDiscActDelete() {
         WindowsPage winPage = new WindowsPage(product);
         costAfterChange = winPage.getCostAfterChangeReloadPage(product);
         winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
