@@ -20,23 +20,31 @@ import static com.codeborne.selenide.Selenide.$$x;
 import static core.helper.StringUtils.$x;
 
 public class Table implements TypifiedElement {
-    final List<String> headers;
+    List<String> headers;
+    SelenideElement table;
     ElementsCollection rows;
     ElementsCollection headersCollection;
     ElementsCollection progressBars = $$x("div[div[@role='progressbar']]"); //(//div[div[@role='progressbar']])[last()]
 
     private Table(String columnName) {
-        SelenideElement table = $x("//table[thead/tr/th[.='{}']]", columnName);
+        table = $x("//table[thead/tr/th[.='{}']]", columnName);
         headersCollection = table.$$x("thead/tr/th");
         rows = table.$$x("tbody/tr");
         headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));
         for (SelenideElement e : progressBars)
             waitLoadTable(e, table);
-        try {
-            headers = headersCollection.shouldBe(CollectionCondition.sizeNotEqual(0)).texts();
-        } catch (StaleElementReferenceException e) {
-            Utils.attachFiles();
-            throw new StaleElementReferenceException(String.format("Таблица с колонкой '%s' не найдена", columnName), e);
+        updateHeaders();
+    }
+
+    private void updateHeaders(){
+        headers.clear();
+        headersCollection = table.$$x("thead/tr/th");
+        for (SelenideElement element : headersCollection){
+            try {
+                headers.add(element.getText());
+            } catch (StaleElementReferenceException e) {
+                updateHeaders();
+            }
         }
     }
 
