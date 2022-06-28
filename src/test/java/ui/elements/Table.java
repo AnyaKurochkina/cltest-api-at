@@ -14,13 +14,14 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import ui.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$$x;
 import static core.helper.StringUtils.$x;
 
 public class Table implements TypifiedElement {
-    List<String> headers;
+    List<String> headers = new ArrayList<>();
     SelenideElement table;
     ElementsCollection rows;
     ElementsCollection headersCollection;
