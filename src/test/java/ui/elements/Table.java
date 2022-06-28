@@ -2,6 +2,7 @@ package ui.elements;
 
 
 import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
@@ -14,14 +15,13 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import ui.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$$x;
 import static core.helper.StringUtils.$x;
 
 public class Table implements TypifiedElement {
-    List<String> headers = new ArrayList<>();
+    List<String> headers;
     SelenideElement table;
     ElementsCollection rows;
     ElementsCollection headersCollection;
@@ -32,21 +32,11 @@ public class Table implements TypifiedElement {
         headersCollection = table.$$x("thead/tr/th");
         rows = table.$$x("tbody/tr");
         headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));
-        for (SelenideElement e : progressBars)
-            waitLoadTable(e, table);
-        updateHeaders();
-    }
-
-    private void updateHeaders(){
-        headers.clear();
-        headersCollection = table.$$x("thead/tr/th");
-        for (SelenideElement element : headersCollection){
-            try {
-                headers.add(element.getText());
-            } catch (StaleElementReferenceException e) {
-                updateHeaders();
-            }
-        }
+//        for (SelenideElement e : progressBars)
+//            waitLoadTable(e, table);
+        $x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]").shouldNot(Condition.exist);
+//        updateHeaders();
+        headers = headersCollection.shouldBe(CollectionCondition.allMatch("", WebElement::isDisplayed)).texts();
     }
 
     public static Table getTableByColumnName(String columnName) {

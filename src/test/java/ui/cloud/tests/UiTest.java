@@ -1,11 +1,13 @@
 package ui.cloud.tests;
 
+import com.codeborne.selenide.Selenide;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import tests.Tests;
+import ui.elements.Table;
 import ui.uiExtesions.ConfigExtension;
 
 @Log4j2
@@ -19,8 +21,8 @@ public class UiTest extends Tests {
 
     @Test
     void name() {
-
-        System.out.println(1);
+        Selenide.open("https://cloud.vtb.ru/vm/orders/cdf5702c-e512-488a-9d07-d9832d123dd6/history?context=proj-frybyv41jh&type=project&org=vtb");
+        Table.getTableByColumnName("Дата запуска");
     }
 
     //    @BeforeAll
