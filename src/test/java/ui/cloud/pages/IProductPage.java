@@ -39,7 +39,6 @@ public abstract class IProductPage {
     double prePriceOrderDbl;
     double priceOrderDbl;
 
-
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
     SelenideElement btnAct = $x("(//div[@id='root']//*[text()='Дополнительные диски']/ancestor::div[3]//following-sibling::div//button[@id='actions-menu-button' and not (.//text()='Действия')])[last()]");
@@ -112,7 +111,7 @@ public abstract class IProductPage {
 
     @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus() {
-        List<String> titles = TopInfo.get().getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
+        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
                         ProductStatus.isNeedWaiting(e.getAttribute("title"))), Duration.ofMillis(20000 * 1000))
                 .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
@@ -122,8 +121,7 @@ public abstract class IProductPage {
     @Step("Проверка выполнения последнего действия")
     public void checkLastAction() {
         btnHistory.shouldBe(Condition.enabled).click();
-        History history = new History();
-        checkErrorByStatus(history.lastActionStatus());
+        checkErrorByStatus(new History().lastActionStatus());
     }
 
     public SelenideElement getBtnAction(String header) {
@@ -145,22 +143,10 @@ public abstract class IProductPage {
 
     @SneakyThrows
     @Step("Запуск действия '{action}' в блоке '{headerBlock}' с параметрами")
-    public void runActionWithParameters(String headerBlock, String action, Executable executable, boolean off) throws Throwable {
+    public void runActionWithParameters(String headerBlock, String action, Executable executable) {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-        getBtnAction(headerBlock).scrollIntoView(off);
-        getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        getBtnAction(headerBlock).shouldBe(activeCnd).scrollTo().hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        executable.execute();
-        Waiting.sleep(3000);
-    }
-
-    @SneakyThrows
-    @Step("Запуск действия '{action}' в блоке '{headerBlock}' с параметрами")
-    public void runActionScrollWithParameters(String headerBlock, String action, Executable executable, boolean off) throws Throwable {
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
-        btnAct.scrollIntoView(off);
-        btnAct.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        $x("(//li[.='{}'])[last()]", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
         Waiting.sleep(3000);
     }
@@ -179,26 +165,30 @@ public abstract class IProductPage {
         }
     }
 
-    private static class TopInfo {
-        public static Table get() {
-            return Table.getTableByColumnName("Защита от удаления");
+    private static class TopInfo extends Table {
+        public TopInfo() {
+            super("Защита от удаления");
         }
     }
 
-    private static class History {
+    private static class History extends Table {
+        public History() {
+            super("Дата запуска");
+        }
+
         public String lastActionStatus() {
-            return Table.getTableByColumnName("Дата запуска").getValueByColumnInFirstRow("Статус").$x("descendant::*[@title]").getAttribute("title");
+            return getValueByColumnInFirstRow("Статус").$x("descendant::*[@title]").getAttribute("title");
         }
     }
 
-    protected class VirtualMachine {
+    protected abstract class VirtualMachine extends Table {
         public static final String POWER_STATUS_DELETED = "Удалено";
         public static final String POWER_STATUS_ON = "Включено";
         public static final String POWER_STATUS_OFF = "Выключено";
-        private final String columnName;
+        abstract String getPowerStatus();
 
         public VirtualMachine(String columnName) {
-            this.columnName = columnName;
+            super(columnName);
         }
 
         public VirtualMachine open() {
@@ -206,8 +196,8 @@ public abstract class IProductPage {
             return this;
         }
 
-        public String getPowerStatus() {
-            return Table.getTableByColumnName(columnName).getValueByColumnInFirstRow("Питание").$x("descendant::*[@title]").getAttribute("title");
+        public String getPowerStatus(String header) {
+            return getValueByColumnInFirstRow(header).$x("descendant::*[@title]").getAttribute("title");
         }
 
         public void checkPowerStatus(String status) {
@@ -457,8 +447,9 @@ public abstract class IProductPage {
         }
     }
 
+    @SneakyThrows
     @Step("Получение стоимости из строки с помощью регулярного выражения")
-    public static Double getNumbersFromText(String inputStr) throws ParseException {
+    public static Double getNumbersFromText(String inputStr) {
         String numbersRegex = "\\d{1,5}.\\d{1,5}"; //(323,98 ₽/сут.), 323,98 ₽/сут.
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.FRANCE);
         Number parsedNumber = 0;

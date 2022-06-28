@@ -21,8 +21,9 @@ public class UiTest extends Tests {
 
     @Test
     void name() {
-        Selenide.open("https://cloud.vtb.ru/vm/orders/cdf5702c-e512-488a-9d07-d9832d123dd6/history?context=proj-frybyv41jh&type=project&org=vtb");
-        Table.getTableByColumnName("Дата запуска");
+        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/cdf5702c-e512-488a-9d07-d9832d123dd6/history?context=proj-frybyv41jh&type=project&org=vtb");
+//        Table.getTableByColumnName("Дата запуска");
+        System.out.println(1);
     }
 
     //    @BeforeAll

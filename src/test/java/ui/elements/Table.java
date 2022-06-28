@@ -27,7 +27,7 @@ public class Table implements TypifiedElement {
     ElementsCollection headersCollection;
     ElementsCollection progressBars = $$x("div[div[@role='progressbar']]"); //(//div[div[@role='progressbar']])[last()]
 
-    private Table(String columnName) {
+    public Table(String columnName) {
         table = $x("//table[thead/tr/th[.='{}']]", columnName);
         headersCollection = table.$$x("thead/tr/th");
         rows = table.$$x("tbody/tr");
@@ -35,13 +35,12 @@ public class Table implements TypifiedElement {
 //        for (SelenideElement e : progressBars)
 //            waitLoadTable(e, table);
         $x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]").shouldNot(Condition.exist);
-//        updateHeaders();
         headers = headersCollection.shouldBe(CollectionCondition.allMatch("", WebElement::isDisplayed)).texts();
     }
 
-    public static Table getTableByColumnName(String columnName) {
-        return new Table(columnName);
-    }
+//    public static Table getTableByColumnName(String columnName) {
+//        return new Table(columnName);
+//    }
 
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
     public SelenideElement getRowByColumn(String column, String value) {
