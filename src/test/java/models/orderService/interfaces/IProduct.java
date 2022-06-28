@@ -66,7 +66,8 @@ public abstract class IProduct extends Entity {
     public static final String RESIZE = "Изменить конфигурацию";
 
     protected String jsonTemplate;
-    @Getter @Setter
+    @Getter
+    @Setter
     transient String link;
 
     @Getter
@@ -96,14 +97,18 @@ public abstract class IProduct extends Entity {
     @Override
     protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
         T entity = ObjectPoolService.create(this, exclusiveAccess, isPublic);
+        ((IProduct) entity).addLinkProduct();
+        ((IProduct) entity).checkPreconditionStatusProduct();
+        return entity;
+    }
+
+    public void addLinkProduct() {
         if (StepsAspects.getCurrentStep().get() != null) {
             Organization org = Organization.builder().build().createObject();
             StepsAspects.getCurrentStep().get().addLinkItem(
                     new LinkItem("Product URL", String.format("%svm/orders/%s/main?context=%s&type=project&org=%s",
-                            Configure.getAppProp("base.url"), ((IProduct) entity).getOrderId(), ((IProduct) entity).getProjectId(), org), "", LinkType.RELATED));
+                            Configure.getAppProp("base.url"), getOrderId(), getProjectId(), org), "", LinkType.RELATED));
         }
-        ((IProduct) entity).checkPreconditionStatusProduct();
-        return entity;
     }
 
     @SneakyThrows
@@ -199,14 +204,14 @@ public abstract class IProduct extends Entity {
     }
 
     //example: https://cloud.vtb.ru/vm/orders/ecb3567b-afa6-43a4-8a49-6e0ef5b1a952/topics?context=proj-7ll0yy5zsc&type=project&org=vtb
-    public <T extends Entity> T buildFromLink(String link){
+    public <T extends Entity> T buildFromLink(String link) {
         projectId = StringUtils.findByRegex("context=([^&]*)", link);
         orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
         productId = ((String) OrderServiceSteps.getProductsField(this, "product_id"));
         return (T) this;
     }
 
-    public <T extends Entity> T buildFromLink(){
+    public <T extends Entity> T buildFromLink() {
         projectId = StringUtils.findByRegex("context=([^&]*)", link);
         orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
         return (T) this;
@@ -313,7 +318,7 @@ public abstract class IProduct extends Entity {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(productId, GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         List<String> parameters = (List<String>) graphResponse.getUiSchema().get("ui:order");
-        if(graphResponse.getJsonSchema().containsKey("dependencies"))
+        if (graphResponse.getJsonSchema().containsKey("dependencies"))
             parameters.addAll(((Map<String, Object>) graphResponse.getJsonSchema().get("dependencies")).keySet());
         Iterator<String> iterator = jsonObject.getJSONObject("order").getJSONObject("attrs").keys();
         while (iterator.hasNext()) {
