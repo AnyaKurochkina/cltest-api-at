@@ -48,7 +48,7 @@ public class Http {
     private Role role = Role.ADMIN;
     String contentType = "application/json";
     private boolean isUsedToken = true;
-    private static final Semaphore SEMAPHORE = new Semaphore(1, true);
+    private static final Semaphore SEMAPHORE = new Semaphore(2, true);
     private String fileName;
     private byte[] bytes;
     private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
@@ -217,7 +217,7 @@ public class Http {
         io.restassured.response.Response response = null;
         try {
 
-            if (path.endsWith("/cost") || path.contains("order-service"))
+//            if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.acquire();
 
             RequestSpecBuilder build = new RequestSpecBuilder();
@@ -289,7 +289,7 @@ public class Http {
                 status = response.getStatusCode();
             Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e, status));
         } finally {
-            if (path.endsWith("/cost") || path.contains("order-service"))
+//            if (path.endsWith("/cost") || path.contains("order-service"))
                 SEMAPHORE.release();
         }
         if (isLogged)
