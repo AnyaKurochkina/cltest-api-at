@@ -37,7 +37,7 @@ public class OrderServiceSteps extends Steps {
 
     public static void checkOrderStatus(String exp_status, IProduct product) {
         String orderStatus = "";
-        int counter = 60;
+        int counter = 80;
 
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
