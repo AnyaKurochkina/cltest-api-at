@@ -218,6 +218,7 @@ public class Http {
         try {
 
 //            if (path.endsWith("/cost") || path.contains("order-service"))
+            if (!(host + path).endsWith("/openid-connect/token"))
                 SEMAPHORE.acquire();
 
             RequestSpecBuilder build = new RequestSpecBuilder();
@@ -241,7 +242,7 @@ public class Http {
             }
             if (field.length() > 0) {
                 String mimeType = URLConnection.guessContentTypeFromName(fileName);
-                if(Objects.isNull(mimeType))
+                if (Objects.isNull(mimeType))
                     mimeType = "application/octet-stream";
                 specification.multiPart(new MultiPartSpecBuilder(bytes)
                         .fileName(fileName)
@@ -282,7 +283,7 @@ public class Http {
                         log.debug(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
                 }
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             if (e instanceof ConnectException)
                 throw e;
             if (response != null)
@@ -290,6 +291,7 @@ public class Http {
             Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e, status));
         } finally {
 //            if (path.endsWith("/cost") || path.contains("order-service"))
+            if (!(host + path).endsWith("/openid-connect/token"))
                 SEMAPHORE.release();
         }
         if (isLogged)
