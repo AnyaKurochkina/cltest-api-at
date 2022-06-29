@@ -103,11 +103,13 @@ public abstract class IProduct extends Entity {
     }
 
     public void addLinkProduct() {
-        if (StepsAspects.getCurrentStep().get() != null) {
-            Organization org = Organization.builder().build().createObject();
-            StepsAspects.getCurrentStep().get().addLinkItem(
-                    new LinkItem("Product URL", String.format("%svm/orders/%s/main?context=%s&type=project&org=%s",
-                            Configure.getAppProp("base.url"), getOrderId(), getProjectId(), org), "", LinkType.RELATED));
+        if(Objects.nonNull(getOrderId())) {
+            if (StepsAspects.getCurrentStep().get() != null) {
+                Organization org = Organization.builder().build().createObject();
+                StepsAspects.getCurrentStep().get().addLinkItem(
+                        new LinkItem("Product URL", String.format("%svm/orders/%s/main?context=%s&type=project&org=%s",
+                                Configure.getAppProp("base.url"), getOrderId(), getProjectId(), org.getName()), "", LinkType.RELATED));
+            }
         }
     }
 
