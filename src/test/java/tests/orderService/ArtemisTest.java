@@ -22,7 +22,7 @@ import tests.Tests;
 @Feature("Artemis")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("artemis"), @Tag("prod")})
 public class ArtemisTest extends Tests {
-    final static String productName = "VTB Apache ActiveMQ Artemis";
+    final static String productName = "VTB Apache ActiveMQ Artemis RHEL";
 
     @TmsLink("854210")
     @Source(ProductArgumentsProvider.PRODUCTS)
