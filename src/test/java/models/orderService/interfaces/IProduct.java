@@ -291,7 +291,7 @@ public abstract class IProduct extends Entity {
             setProjectId(project.getId());
         }
         if (label == null) {
-            label = "API-" + UUID.randomUUID();
+            label = "AT-API-" + UUID.randomUUID();
         }
         if (productId == null) {
             productId = new ProductCatalogSteps(Product.productName).
