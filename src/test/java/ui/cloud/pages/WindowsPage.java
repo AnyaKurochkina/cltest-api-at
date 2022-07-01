@@ -30,21 +30,24 @@ public class WindowsPage extends IProductPage {
     }
 
     public void start() {
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
         runActionWithoutParameters("Виртуальная машина", "Включить");
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void restart() {
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters("Виртуальная машина", "Перезагрузить по питанию");
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void changeConfiguration() {
-        runActionWithoutParameters("Виртуальная машина", "Изменить конфигурацию");
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+        runActionWithoutParameters("Виртуальная машина", "Изменить конфигурацию");
     }
     
     public void discActAdd()  {
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("Дополнительные диски", "Добавить диск", () -> {
             Dialog dlg = new Dialog("Добавить диск");
             dlg.setInputValue("Дополнительный объем дискового пространства", "11");
@@ -55,15 +58,15 @@ public class WindowsPage extends IProductPage {
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
         });
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void discActExpand() {
-        runActionWithoutParameters("Виртуальная машина", "Расширить диск");
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters("Виртуальная машина", "Расширить диск");
     }
 
     public void discActOff()  {
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("Диск", "Отключить в ОС", () -> {
             Dialog dlg = new Dialog("Отключить в ОС");
             dlg.getDialog().$x("descendant::button[.='Подтвердить']")
@@ -71,10 +74,10 @@ public class WindowsPage extends IProductPage {
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
         });
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void discActOn() {
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("Диск", "Подключить в ОС", () -> {
             Dialog dlg = new Dialog("Подключить в ОС");
             dlg.getDialog().$x("descendant::button[.='Подтвердить']")
@@ -82,10 +85,10 @@ public class WindowsPage extends IProductPage {
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
         });
-       new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
     
     public void discActDelete() {
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("Диск", "Удалить диск", () -> {
             Dialog dlg = new Dialog("Удалить");
             dlg.getDialog().$x("descendant::button[.='Подтвердить']")
@@ -93,30 +96,29 @@ public class WindowsPage extends IProductPage {
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
         });
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void vmActCheckConfig() {
-        runActionWithoutParameters("Виртуальная машина", "Проверить конфигурацию");
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters("Виртуальная машина", "Проверить конфигурацию");
     }
 
     public void stopSoft() {
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters("Виртуальная машина", "Выключить");
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void stopHard() {
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters("Виртуальная машина", "Выключить принудительно");
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void turnOnDeleteProtection() {
         runActionWithoutParameters("Виртуальная машина", "Защита от удаления");
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void addDisk() {
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("Дополнительные диски", "Добавить диск", () -> {
             Dialog dlg = new Dialog("Добавить диск");
             dlg.setInputValue("Дополнительный объем дискового пространства", "11");
