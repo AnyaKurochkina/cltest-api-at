@@ -1,8 +1,8 @@
 package ui.cloud.pages;
 
+import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
-import lombok.SneakyThrows;
 import models.orderService.products.Windows;
 import ui.elements.Dialog;
 import ui.elements.DropDown;
@@ -25,7 +25,7 @@ public class WindowsPage extends IProductPage {
                     .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             dlgActions.getDialog().shouldNotBe(Condition.visible);
         });
-        btnGeneralInfo.click();
+        btnGeneralInfo.click(ClickOptions.usingJavaScript());
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_DELETED);
     }
 

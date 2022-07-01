@@ -126,7 +126,7 @@ public abstract class IProductPage {
 
     @Step("Запуск действия '{action}' в блоке '{headerBlock}'")
     public void runActionWithoutParameters(String headerBlock, String action) {
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
         getBtnAction(headerBlock).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = new Dialog(action);
@@ -141,7 +141,7 @@ public abstract class IProductPage {
     @SneakyThrows
     @Step("Запуск действия '{action}' в блоке '{headerBlock}' с параметрами")
     public void runActionWithParameters(String headerBlock, String action, Executable executable) {
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
         getBtnAction(headerBlock).shouldBe(activeCnd).scrollTo().hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
@@ -194,7 +194,7 @@ public abstract class IProductPage {
         }
 
         public VirtualMachine open() {
-            btnGeneralInfo.shouldBe(activeCnd).scrollTo().hover().shouldBe(clickableCnd).click();
+            btnGeneralInfo.shouldBe(activeCnd).scrollTo().hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
             return this;
         }
 
@@ -226,7 +226,7 @@ public abstract class IProductPage {
 
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action){
-        btnHistory.shouldBe(Condition.enabled).click();
+        btnHistory.shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
         History history = new History();
         checkErrorByStatus(history.lastActionStatus());
         Assertions.assertEquals(history.lastActionName(), action, "Название последнего действия не соответствует ожидаемому");
