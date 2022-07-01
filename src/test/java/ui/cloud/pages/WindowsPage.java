@@ -26,22 +26,22 @@ public class WindowsPage extends IProductPage {
             dlgActions.getDialog().shouldNotBe(Condition.visible);
         });
         btnGeneralInfo.click(ClickOptions.usingJavaScript());
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_DELETED);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void start() {
         runActionWithoutParameters("Виртуальная машина", "Включить");
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void restart() {
         runActionWithoutParameters("Виртуальная машина", "Перезагрузить по питанию");
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void changeConfiguration() {
         runActionWithoutParameters("Виртуальная машина", "Изменить конфигурацию");
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
     
     public void discActAdd()  {
@@ -55,12 +55,12 @@ public class WindowsPage extends IProductPage {
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
         });
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void discActExpand() {
         runActionWithoutParameters("Виртуальная машина", "Расширить диск");
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void discActOff()  {
@@ -71,7 +71,7 @@ public class WindowsPage extends IProductPage {
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
         });
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void discActOn() {
@@ -82,7 +82,7 @@ public class WindowsPage extends IProductPage {
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
         });
-       new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+       new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
     
     public void discActDelete() {
@@ -93,27 +93,27 @@ public class WindowsPage extends IProductPage {
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
         });
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void vmActCheckConfig() {
         runActionWithoutParameters("Виртуальная машина", "Проверить конфигурацию");
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopSoft() {
         runActionWithoutParameters("Виртуальная машина", "Выключить");
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void stopHard() {
         runActionWithoutParameters("Виртуальная машина", "Выключить принудительно");
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void turnOnDeleteProtection() {
         runActionWithoutParameters("Виртуальная машина", "Защита от удаления");
-        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void addDisk() {
@@ -129,6 +129,7 @@ public class WindowsPage extends IProductPage {
         public VirtualMachineTable() {
             super("Имя хоста");
         }
+        
         @Override
         public String getPowerStatus(){
             return getPowerStatus("Питание");

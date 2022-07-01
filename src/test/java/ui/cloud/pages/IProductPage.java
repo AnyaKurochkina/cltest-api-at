@@ -189,13 +189,13 @@ public abstract class IProductPage {
         public static final String POWER_STATUS_OFF = "Выключено";
         abstract String getPowerStatus();
 
-        public VirtualMachine(String columnName) {
-            super(columnName);
+        @Override
+        protected void open(){
+            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
         }
 
-        public VirtualMachine open() {
-            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
-            return this;
+        public VirtualMachine(String columnName) {
+            super(columnName);
         }
 
         public String getPowerStatus(String header) {

@@ -27,7 +27,10 @@ public class Table implements TypifiedElement {
     ElementsCollection headersCollection;
     ElementsCollection progressBars = $$x("div[div[@role='progressbar']]"); //(//div[div[@role='progressbar']])[last()]
 
+    protected void open(){}
+
     public Table(String columnName) {
+        open();
         table = $x("//table[thead/tr/th[.='{}']]", columnName);
         headersCollection = table.$$x("thead/tr/th");
         rows = table.$$x("tbody/tr");
