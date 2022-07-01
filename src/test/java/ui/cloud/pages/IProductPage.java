@@ -114,7 +114,7 @@ public abstract class IProductPage {
     public void waitChangeStatus() {
         List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
-                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), Duration.ofMillis(20000 * 1000))
+                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), Duration.ofMillis(20 * 60000))
                 .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
         log.debug("Итоговый статус: {}", titles);
     }
