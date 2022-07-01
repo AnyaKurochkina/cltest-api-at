@@ -25,30 +25,22 @@ public class WindowsPage extends IProductPage {
                     .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             dlgActions.getDialog().shouldNotBe(Condition.visible);
         });
-        waitChangeStatus();
-        checkLastAction();
         btnGeneralInfo.click();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void start() {
         runActionWithoutParameters("Виртуальная машина", "Включить");
-        waitChangeStatus();
-        checkLastAction();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void restart() {
         runActionWithoutParameters("Виртуальная машина", "Перезагрузить по питанию");
-        waitChangeStatus();
-        checkLastAction();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void changeConfiguration() {
         runActionWithoutParameters("Виртуальная машина", "Изменить конфигурацию");
-        waitChangeStatus();
-        checkLastAction();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
     
@@ -64,15 +56,11 @@ public class WindowsPage extends IProductPage {
             Waiting.sleep(3000);
             btnGeneralInfo.scrollIntoView(true);
         });
-        waitChangeStatus();
-        checkLastAction();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void discActExpand() {
         runActionWithoutParameters("Виртуальная машина", "Расширить диск");
-        waitChangeStatus();
-        checkLastAction();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
@@ -84,8 +72,6 @@ public class WindowsPage extends IProductPage {
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
         });
-        waitChangeStatus();
-        checkLastAction();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
@@ -97,8 +83,6 @@ public class WindowsPage extends IProductPage {
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
         });
-        waitChangeStatus();
-        checkLastAction();
        new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
     
@@ -110,36 +94,26 @@ public class WindowsPage extends IProductPage {
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
         });
-        waitChangeStatus();
-        checkLastAction();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void vmActCheckConfig() {
         runActionWithoutParameters("Виртуальная машина", "Проверить конфигурацию");
-        waitChangeStatus();
-        checkLastAction();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopSoft() {
         runActionWithoutParameters("Виртуальная машина", "Выключить");
-        waitChangeStatus();
-        checkLastAction();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void stopHard() {
         runActionWithoutParameters("Виртуальная машина", "Выключить принудительно");
-        waitChangeStatus();
-        checkLastAction();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void turnOnDeleteProtection() {
         runActionWithoutParameters("Виртуальная машина", "Защита от удаления");
-        waitChangeStatus();
-        checkLastAction();
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
@@ -150,8 +124,6 @@ public class WindowsPage extends IProductPage {
             DropDown.byLabel("Буква").selectByValue("S");
             DropDown.byLabel("Файловая система").selectByValue("refs");
         });
-        waitChangeStatus();
-        checkLastAction();
     }
     
     public class VirtualMachineTable extends VirtualMachine{

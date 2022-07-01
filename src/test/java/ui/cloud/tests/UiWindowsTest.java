@@ -35,7 +35,7 @@ public class UiWindowsTest extends Tests {
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod"))
 //            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-          product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/cdf5702c-e512-488a-9d07-d9832d123dd6/main?context=proj-frybyv41jh&type=project&org=vtb").build();
+          product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
 //        product.init();
@@ -146,8 +146,6 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.restart();
-        winPage.checkHistoryRowRestartByPowerOk();
-        winPage.checkHistoryRowRestartByPowerErr();
     }
 
     @Test
@@ -169,8 +167,6 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.stopSoft();
-        winPage.checkHistoryRowTurnOffOk();
-        winPage.checkHistoryRowTurnOffErr();
     }
 
     @Test
@@ -191,8 +187,6 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.changeConfiguration();
-        winPage.checkHistoryRowChangeFlavorOk();
-        winPage.checkHistoryRowChangeFlavorErr();
     }
 
     @Test
@@ -213,8 +207,6 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.start();
-        winPage.checkHistoryRowTurnOnOk();
-        winPage.checkHistoryRowTurnOnErr();
     }
 
     @Test
@@ -235,8 +227,6 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.discActAdd();
-        winPage.checkHistoryRowDiscAddOk();
-        winPage.checkHistoryRowDiscAddErr();
     }
 
     @Test
@@ -257,8 +247,6 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.discActOff();
-        winPage.checkHistoryRowDiscTurnOffOk();
-        winPage.checkHistoryRowDiscTurnOffErr();
     }
 
     @Test
@@ -279,8 +267,6 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.discActOn();
-        winPage.checkHistoryRowDiscTurnOnOk();
-        winPage.checkHistoryRowDiscTurnOnErr();
     }
 
     @Test
@@ -302,8 +288,6 @@ public class UiWindowsTest extends Tests {
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.discActOff();
         winPage.discActDelete();
-        winPage.checkHistoryRowDiscDeleteOk();
-        winPage.checkHistoryRowDiscDeleteErr();
     }
 
     @Test
@@ -324,8 +308,6 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.vmActCheckConfig();
-        winPage.checkHistoryRowCheckConfigOk();
-        winPage.checkHistoryRowCheckConfigErr();
     }
 
     @Test
@@ -346,8 +328,6 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         currentCost = winPage.getCurrentCostReloadPage(product);
         winPage.stopHard();
-        winPage.checkHistoryRowForceTurnOffOk();
-        winPage.checkHistoryRowForceTurnOffErr();
     }
 
     @Test
@@ -367,8 +347,6 @@ public class UiWindowsTest extends Tests {
     void deleteWindows() {
 //        WindowsPage winPage = new WindowsPage(product);
 //        winPage.delete();
-//        winPage.checkHistoryRowDeletedOk();
-//        winPage.checkHistoryRowDeletedErr();
     }
 
 }
