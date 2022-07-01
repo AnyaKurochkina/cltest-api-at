@@ -194,7 +194,7 @@ public abstract class IProductPage {
         }
 
         public VirtualMachine open() {
-            btnGeneralInfo.shouldBe(activeCnd).scrollTo().hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
+            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
             return this;
         }
 

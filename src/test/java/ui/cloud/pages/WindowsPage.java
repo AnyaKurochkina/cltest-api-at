@@ -54,7 +54,6 @@ public class WindowsPage extends IProductPage {
                     .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             dlg.getDialog().shouldNotBe(Condition.visible);
             Waiting.sleep(3000);
-            btnGeneralInfo.scrollIntoView(true);
         });
         new VirtualMachineTable().open().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }

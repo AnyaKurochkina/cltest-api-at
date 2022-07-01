@@ -1,5 +1,6 @@
 package ui.cloud.tests;
 
+import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Condition;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
@@ -87,7 +88,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверка заголовка столбцов в Истории действий.")
     void checkHeaderHistoryTable() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        winPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
         winPage.checkHeaderHistoryTable();
     }
 
