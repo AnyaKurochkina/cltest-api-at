@@ -2,45 +2,35 @@ package ui.uiExtesions;
 
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestWatcher;
-import ru.testit.junit5.RunningHandler;
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.extension.*;
 import ui.Utils;
 
-import java.util.Optional;
+import java.lang.reflect.Method;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
-import static core.helper.Configure.isIntegrationTestIt;
 
-public class ConfigExtension implements /*AfterEachCallback,*/ BeforeAllCallback, TestWatcher {
+public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, TestWatcher {
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
         SelenideLogger.addListener("AllureSelenide",
                 new AllureSelenide().screenshots(true).savePageSource(true));
     }
 
-//    @Override
-//    public void afterEach(ExtensionContext extensionContext) {
-//        closeWebDriver();
-//    }
-
-    public void testFailed(final ExtensionContext context, Throwable e) {
-        if (e.getMessage().contains("Screenshot: file:/"))
-            return;
-        Utils.attachFiles();
-    }
-
-    public void testDisabled(ExtensionContext context, Optional<String> reason) {
+    @Override
+    public void afterEach(ExtensionContext extensionContext) {
         closeWebDriver();
     }
 
-    public void testSuccessful(ExtensionContext context) {
-        closeWebDriver();
+    @SneakyThrows
+    public void interceptTestMethod(final InvocationInterceptor.Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
+        try {
+            invocation.proceed();
+        } catch (Throwable e) {
+            if (!e.getMessage().contains("Screenshot: file:/"))
+                Utils.attachFiles();
+            throw e;
+        }
     }
 
-    public void testAborted(ExtensionContext context, Throwable cause) {
-        closeWebDriver();
-    }
 }
