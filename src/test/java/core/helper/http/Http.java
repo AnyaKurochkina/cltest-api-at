@@ -180,7 +180,7 @@ public class Http {
 
     private Response request() {
         Response response = null;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             try {
                 response = filterRequest();
             } catch (AssertionFailedError e) {
@@ -188,7 +188,11 @@ public class Http {
                 continue;
             }
             if (response.status() == 504 && method.equals("GET")) {
-                Waiting.sleep(2000);
+                Waiting.sleep(5000);
+                continue;
+            }
+            if (response.status() == 502 && method.equals("GET")) {
+                Waiting.sleep(5000);
                 continue;
             }
             break;
