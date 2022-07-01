@@ -9,24 +9,38 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import ru.testit.junit5.RunningHandler;
 import ui.Utils;
 
+import java.util.Optional;
+
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static core.helper.Configure.isIntegrationTestIt;
 
-public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, TestWatcher {
+public class ConfigExtension implements /*AfterEachCallback,*/ BeforeAllCallback, TestWatcher {
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
         SelenideLogger.addListener("AllureSelenide",
                 new AllureSelenide().screenshots(true).savePageSource(true));
     }
 
-    @Override
-    public void afterEach(ExtensionContext extensionContext) {
-        closeWebDriver();
-    }
+//    @Override
+//    public void afterEach(ExtensionContext extensionContext) {
+//        closeWebDriver();
+//    }
 
     public void testFailed(final ExtensionContext context, Throwable e) {
         if (e.getMessage().contains("Screenshot: file:/"))
             return;
         Utils.attachFiles();
+    }
+
+    public void testDisabled(ExtensionContext context, Optional<String> reason) {
+        closeWebDriver();
+    }
+
+    public void testSuccessful(ExtensionContext context) {
+        closeWebDriver();
+    }
+
+    public void testAborted(ExtensionContext context, Throwable cause) {
+        closeWebDriver();
     }
 }
