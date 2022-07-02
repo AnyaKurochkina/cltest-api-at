@@ -1,6 +1,7 @@
 package ui;
 
 import com.codeborne.selenide.WebDriverRunner;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Attachment;
 import io.qameta.allure.selenide.LogType;
 import org.openqa.selenium.OutputType;
@@ -21,13 +22,14 @@ public class Utils {
         return WebDriverRunner.getWebDriver().getPageSource();
     }
 
-    @Attachment(type = "text/html", fileExtension = ".log")
-    public static String AttachRequests() {
+    public static void AttachRequests() {
         LogEntries logEntries = WebDriverRunner.getWebDriver().manage().logs().get(String.valueOf(LogType.BROWSER));
         StringJoiner str = new StringJoiner("\n");
         for (LogEntry entry : logEntries)
             str.add(String.format("[%s] %s: %s", entry.getLevel(), entry.getTimestamp(), entry.getMessage()));
-        return str.length() == 0 ? null : str.toString();
+        if(str.length() > 0){
+            Allure.addAttachment("BadRequests", "text/html", str.toString(), ".log");
+        }
     }
 
     public static void attachFiles() {
