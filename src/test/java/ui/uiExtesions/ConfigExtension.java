@@ -32,7 +32,7 @@ public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, Te
         try {
             invocation.proceed();
         } catch (Throwable e) {
-
+            Utils.AttachRequests();
             if (!e.getMessage().contains("Screenshot: file:/"))
                 Utils.attachFiles();
             throw e;
