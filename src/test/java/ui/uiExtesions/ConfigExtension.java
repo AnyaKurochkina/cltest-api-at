@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 
-public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, TestWatcher {
+public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, InvocationInterceptor {
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
         SelenideLogger.addListener("AllureSelenide",
