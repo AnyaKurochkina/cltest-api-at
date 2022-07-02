@@ -25,9 +25,9 @@ public class Utils {
     public static String AttachRequests() {
         LogEntries logEntries = WebDriverRunner.getWebDriver().manage().logs().get(String.valueOf(LogType.BROWSER));
         StringJoiner str = new StringJoiner("\n");
-        for(LogEntry entry : logEntries)
+        for (LogEntry entry : logEntries)
             str.add(String.format("[%s] %s: %s", entry.getLevel(), entry.getTimestamp(), entry.getMessage()));
-        return str.toString();
+        return str.length() == 0 ? null : str.toString();
     }
 
     public static void attachFiles() {
