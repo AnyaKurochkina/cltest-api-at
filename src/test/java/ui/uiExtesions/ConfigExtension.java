@@ -1,6 +1,8 @@
 package ui.uiExtesions;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.logging.LoggingPreferences;
@@ -14,8 +16,8 @@ import static com.codeborne.selenide.Selenide.closeWebDriver;
 public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, InvocationInterceptor {
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
-//        SelenideLogger.addListener("AllureSelenide",
-//                new AllureSelenide().screenshots(true).savePageSource(true));
+        SelenideLogger.addListener("AllureSelenide",
+                new AllureSelenide().screenshots(true).savePageSource(true));
         LoggingPreferences logs = new LoggingPreferences();
         Configuration.browserCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
     }
