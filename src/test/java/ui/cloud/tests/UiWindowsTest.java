@@ -12,6 +12,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import tests.Tests;
+import ui.cloud.pages.IProductPage;
 import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.WindowsPage;
 import ui.uiExtesions.ConfigExtension;
@@ -89,33 +90,13 @@ public class UiWindowsTest extends Tests {
     void checkHeaderHistoryTable() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
-        winPage.checkHeaderHistoryTable();
-    }
-
-    @Test
-    @TmsLink("976729")
-    @Order(3)
-    @DisplayName("UI Windows. Проверка на наличие элемента Строка 'Развертывание' со статусом 'В порядке'.")
-    void isHistoryRowDeployOk() {
-        WindowsPage winPage = new WindowsPage(product);
-        winPage.getActionHistory().shouldBe(Condition.enabled).click();
-        winPage.getHistoryRowDeployOk().shouldBe(activeCnd);
-    }
-
-    @Test
-    @TmsLink("976730")
-    @Order(4)
-    @DisplayName("UI Windows. Проверка на наличие элемента Строка 'Развертывание' со статусом 'Ошибка'.")
-    void checkHistoryRowDeployErr() {
-        WindowsPage winPage = new WindowsPage(product);
-        winPage.getActionHistory().shouldBe(Condition.enabled).click();
-        winPage.getHistoryRowDeployErr().shouldNotBe(Condition.visible);
+        winPage.checkHeadersHistory();
     }
 
     @Test
     @TmsLink("976731")
     @Order(5)
-    @DisplayName("UI Windows. Проверка наличия элемента \"Схема выполнения\".")
+    @DisplayName("UI Windows. Проверка элемента \"Схема выполнения\".")
     void checkHistoryGraphScheme() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.getActionHistory().shouldBe(Condition.enabled).click();

@@ -17,6 +17,7 @@ import ui.elements.Table;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -164,16 +165,28 @@ public abstract class IProductPage {
         }
     }
 
+    @Step("Проверка на содержание неоюходимых столбцов на вкладке История действий")
+    public void checkHeadersHistory() {
+        Assertions.assertEquals(Arrays.asList("Наименование", "Инициатор", "Дата создания", "Дата запуска", "Продолжительность, сек",
+                "Статус", "Просмотр"), new History().getHeaders());
+    }
+
     private static class TopInfo extends Table {
         public TopInfo() {
             super("Защита от удаления");
         }
     }
 
-    private static class History extends Table {
+    public class History extends Table {
         public History() {
             super("Дата запуска");
         }
+
+        @Override
+        protected void open() {
+            btnHistory.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
+        }
+
         public String lastActionName() {
             return getValueByColumnInFirstRow("Наименование").getText();
         }
@@ -187,10 +200,11 @@ public abstract class IProductPage {
         public static final String POWER_STATUS_DELETED = "Удалено";
         public static final String POWER_STATUS_ON = "Включено";
         public static final String POWER_STATUS_OFF = "Выключено";
+
         abstract String getPowerStatus();
 
         @Override
-        protected void open(){
+        protected void open() {
             btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
         }
 
@@ -211,21 +225,9 @@ public abstract class IProductPage {
     public void isCostDayContains(String symbol) {
         Objects.requireNonNull(orderPricePerDay.getAttribute("textContent"));
     }
-    @Step("Проверка на содержание неоюходимых столбцов на вкладке История действий")
-    public void checkHeaderHistoryTable() {
-        actionHistory.click();
-        actionNameColumn.shouldBe(activeCnd);
-        actionInitiatorColumn.shouldBe(activeCnd);
-        actionCreationDateColumn.shouldBe(activeCnd);
-        actionStartDateColumn.shouldBe(activeCnd);
-        actionDurationColumn.shouldBe(activeCnd);
-        actionStatusColumn.shouldBe(activeCnd);
-        actionViewColumn.shouldBe(activeCnd);
-        log.info("пользователь проверяет, что на вкладке 'История действий' таблица содержит необходимые столбцы");
-    }
 
     @Step("Проверка выполнения действия {action}")
-    public void checkLastAction(String action){
+    public void checkLastAction(String action) {
         btnHistory.shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
         History history = new History();
         checkErrorByStatus(history.lastActionStatus());
@@ -367,13 +369,13 @@ public abstract class IProductPage {
     //TODO: Убрать ненужные SneakyThrows как здесь
     public double getCostAfterChangeReloadPage(models.orderService.products.Windows product) {
         double costAfterChange;
-        int j=5;
+        int j = 5;
         do {
             new WindowsPage(product);
             costAfterChange = getCostConvertToDouble();
             sleep(2000);
             j--;
-        } while (costAfterChange <= 0.0 & j>0);
+        } while (costAfterChange <= 0.0 & j > 0);
         return costAfterChange;
     }
 }

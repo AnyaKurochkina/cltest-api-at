@@ -5,15 +5,12 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.Rectangle;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
-import ui.Utils;
 
 import java.util.List;
 
@@ -21,6 +18,7 @@ import static com.codeborne.selenide.Selenide.$$x;
 import static core.helper.StringUtils.$x;
 
 public class Table implements TypifiedElement {
+    @Getter
     List<String> headers;
     SelenideElement table;
     ElementsCollection rows;
