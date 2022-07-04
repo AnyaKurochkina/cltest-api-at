@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class Table implements TypifiedElement {
             if (e.$$x("td").get(index).getText().equals(value))
                 return e;
         }
-        return null;
+        throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
     }
 
 //    private void waitLoadTable(SelenideElement webElement, SelenideElement table) {

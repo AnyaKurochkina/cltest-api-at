@@ -10,6 +10,7 @@ import org.openqa.selenium.remote.CapabilityType;
 import ui.Utils;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 
@@ -33,8 +34,9 @@ public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, In
             invocation.proceed();
         } catch (Throwable e) {
             Utils.attachRequests();
-            if (!e.getMessage().contains("Screenshot: file:/"))
-                Utils.attachFiles();
+            if (Objects.nonNull(e.getMessage()))
+                if (!e.getMessage().contains("Screenshot: file:/"))
+                    Utils.attachFiles();
             throw e;
         }
     }

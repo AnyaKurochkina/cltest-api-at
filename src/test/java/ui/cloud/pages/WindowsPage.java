@@ -1,29 +1,23 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.ClickOptions;
-import com.codeborne.selenide.Condition;
-import core.utils.Waiting;
+import com.codeborne.selenide.SelenideElement;
 import models.orderService.products.Windows;
 import ui.elements.Dialog;
 import ui.elements.DropDown;
-
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import ui.elements.Table;
 
 public class WindowsPage extends IProductPage {
 
     public WindowsPage(Windows product) {
         super(product);
     }
-    
-    public void delete()  {
-        runActionWithParameters("Виртуальная машина", "Удалить", () ->
+
+    public void delete() {
+        runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
         {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-            dlgActions.getDialog().$x("descendant::button[.='Удалить']")
-                    .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            dlgActions.getDialog().shouldNotBe(Condition.visible);
         });
         btnGeneralInfo.click(ClickOptions.usingJavaScript());
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_DELETED);
@@ -43,21 +37,8 @@ public class WindowsPage extends IProductPage {
 
     public void changeConfiguration() {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
-        runActionWithoutParameters("Виртуальная машина", "Изменить конфигурацию");
-    }
-    
-    public void discActAdd()  {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters("Дополнительные диски", "Добавить диск", () -> {
-            Dialog dlg = new Dialog("Добавить диск");
-            dlg.setInputValue("Дополнительный объем дискового пространства", "11");
-            DropDown.byLabel("Буква").selectByValue("S");
-            DropDown.byLabel("Файловая система").selectByValue("refs");
-            dlg.getDialog().$x("descendant::button[.='Подтвердить']")
-                    .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            dlg.getDialog().shouldNotBe(Condition.visible);
-            Waiting.sleep(3000);
-        });
+        runActionWithParameters("Виртуальная машина", "Изменить конфигурацию", "Подтвердить", () ->
+                DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(product.getMaxFlavor())));
     }
 
     public void discActExpand() {
@@ -65,40 +46,22 @@ public class WindowsPage extends IProductPage {
         runActionWithoutParameters("Виртуальная машина", "Расширить диск");
     }
 
-    public void discActOff()  {
+    public void disableDisk(String name) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters("Диск", "Отключить в ОС", () -> {
-            Dialog dlg = new Dialog("Отключить в ОС");
-            dlg.getDialog().$x("descendant::button[.='Подтвердить']")
-                    .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            dlg.getDialog().shouldNotBe(Condition.visible);
-            Waiting.sleep(3000);
-        });
+        runActionWithoutParameters(getDiskMenuElement(name), "Отключить в ОС");
     }
 
-    public void discActOn() {
+    public void enableDisk(String name) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters("Диск", "Подключить в ОС", () -> {
-            Dialog dlg = new Dialog("Подключить в ОС");
-            dlg.getDialog().$x("descendant::button[.='Подтвердить']")
-                    .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            dlg.getDialog().shouldNotBe(Condition.visible);
-            Waiting.sleep(3000);
-        });
-    }
-    
-    public void discActDelete() {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters("Диск", "Удалить диск", () -> {
-            Dialog dlg = new Dialog("Удалить");
-            dlg.getDialog().$x("descendant::button[.='Подтвердить']")
-                    .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            dlg.getDialog().shouldNotBe(Condition.visible);
-            Waiting.sleep(3000);
-        });
+        runActionWithoutParameters(getDiskMenuElement(name), "Подключить в ОС");
     }
 
-    public void vmActCheckConfig() {
+    public void deleteDisk(String name) {
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(getDiskMenuElement(name), "Удалить диск");
+    }
+
+    public void checkConfiguration() {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters("Виртуальная машина", "Проверить конфигурацию");
     }
@@ -117,23 +80,27 @@ public class WindowsPage extends IProductPage {
         runActionWithoutParameters("Виртуальная машина", "Защита от удаления");
     }
 
-    public void addDisk() {
+    public void addDisk(String name) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters("Дополнительные диски", "Добавить диск", () -> {
+        runActionWithParameters("Дополнительные диски", "Добавить диск", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Добавить диск");
             dlg.setInputValue("Дополнительный объем дискового пространства", "11");
-            DropDown.byLabel("Буква").selectByValue("S");
+            DropDown.byLabel("Буква").selectByValue(name);
             DropDown.byLabel("Файловая система").selectByValue("refs");
         });
     }
-    
-    public class VirtualMachineTable extends VirtualMachine{
+
+    private SelenideElement getDiskMenuElement(String name) {
+        return new Table("Статус подключения").getRowByColumn("Путь", name).$x("descendant::button");
+    }
+
+    public class VirtualMachineTable extends VirtualMachine {
         public VirtualMachineTable() {
             super("Имя хоста");
         }
-        
+
         @Override
-        public String getPowerStatus(){
+        public String getPowerStatus() {
             return getPowerStatus("Питание");
         }
     }

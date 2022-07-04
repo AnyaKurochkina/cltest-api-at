@@ -12,7 +12,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import tests.Tests;
-import ui.cloud.pages.IProductPage;
+import ui.cloud.pages.CompareType;
 import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.WindowsPage;
 import ui.uiExtesions.ConfigExtension;
@@ -27,7 +27,7 @@ import ui.uiExtesions.InterceptTestExtension;
 public class UiWindowsTest extends Tests {
 
     Windows product;
-//    IProductPage iProductPage = new IProductPage() {
+    //    IProductPage iProductPage = new IProductPage() {
 //    };
     double prePriceOrderDbl;
     double costAfterChange;
@@ -37,7 +37,7 @@ public class UiWindowsTest extends Tests {
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod"))
 //            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-          product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
 //        product.init();
@@ -96,7 +96,7 @@ public class UiWindowsTest extends Tests {
     @Test
     @TmsLink("976731")
     @Order(5)
-    @DisplayName("UI Windows. Проверка элемента \"Схема выполнения\".")
+    @DisplayName("UI Windows. Проверка элемента 'Схема выполнения'")
     void checkHistoryGraphScheme() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.getActionHistory().shouldBe(Condition.enabled).click();
@@ -112,10 +112,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверка стоимости продукта соответствию предбиллингу")
     void checkPrePriceOrder() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.getLoadOrderPricePerDayAfterOrder().shouldBe(Condition.enabled);
+        winPage.getCurrentPriceOrder().shouldBe(Condition.enabled);
         winPage.getProgressBars().shouldBe(Condition.disappear);
         winPage.getOrderPricePerDayAfterOrder().shouldBe(Condition.visible);
-        currentCost = winPage.getCurrentCostReloadPage(product);
+        currentCost = winPage.getCostOrder();
         Assertions.assertEquals(currentCost, prePriceOrderDbl);
     }
 
@@ -126,19 +126,7 @@ public class UiWindowsTest extends Tests {
     @SneakyThrows
     void restart() {
         WindowsPage winPage = new WindowsPage(product);
-        currentCost = winPage.getCurrentCostReloadPage(product);
-        winPage.restart();
-    }
-
-    @Test
-    @Order(8)
-    @TmsLink("976734")
-    @DisplayName("UI Windows. Проверка стоимости после действия Перезагрузить по питанию")
-    @SneakyThrows
-    void checkCostAfterRestart() {
-        WindowsPage winPage = new WindowsPage(product);
-        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
+        winPage.runActionWithCheckCost(CompareType.EQUALS, winPage::restart);
     }
 
     @Test
@@ -147,18 +135,8 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Выключить")
     void stopSoft() {
         WindowsPage winPage = new WindowsPage(product);
-        currentCost = winPage.getCurrentCostReloadPage(product);
-        winPage.stopSoft();
-    }
-
-    @Test
-    @Order(10)
-    @TmsLink("976738")
-    @DisplayName("UI Windows. Проверка стоимости после действия Выключить")
-    void checkCostAfterStopSoft() {
-        WindowsPage winPage = new WindowsPage(product);
-        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "больше");
+        winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopSoft);
+        winPage.runActionWithCheckCost(CompareType.MORE, winPage::start);
     }
 
     @Test
@@ -167,38 +145,12 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Изменить конфигурацию")
     void changeConfiguration() {
         WindowsPage winPage = new WindowsPage(product);
-        currentCost = winPage.getCurrentCostReloadPage(product);
-        winPage.changeConfiguration();
-    }
-
-    @Test
-    @Order(12)
-    @TmsLink("976742")
-    @DisplayName("UI Windows. Проверка стоимости после действия Изменить конфигурацию")
-    void checkCostAfterChangeConfiguration() {
-        WindowsPage winPage = new WindowsPage(product);
-        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(costAfterChange, currentCost, ",больше");
-    }
-
-    @Test
-    @Order(13)
-    @TmsLink("872682")
-    @DisplayName("UI Windows. Включить")
-    void start() {
-        WindowsPage winPage = new WindowsPage(product);
-        currentCost = winPage.getCurrentCostReloadPage(product);
-        winPage.start();
-    }
-
-    @Test
-    @Order(14)
-    @TmsLink("976743")
-    @DisplayName("UI Windows. Проверка стоимости после действия Включить")
-    void checkStartAfterStart() {
-        WindowsPage winPage = new WindowsPage(product);
-        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(costAfterChange, currentCost, "больше");
+//        winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopHard);
+        try {
+            winPage.runActionWithCheckCost(CompareType.MORE, winPage::changeConfiguration);
+        } finally {
+            winPage.runActionWithCheckCost(CompareType.LESS, winPage::start);
+        }
     }
 
     @Test
@@ -207,18 +159,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Добавить диск")
     void discActAdd() {
         WindowsPage winPage = new WindowsPage(product);
-        currentCost = winPage.getCurrentCostReloadPage(product);
-        winPage.discActAdd();
-    }
-
-    @Test
-    @Order(16)
-    @TmsLink("976746")
-    @DisplayName("UI Windows. Проверка стоимости после действия Добавить диск")
-    void checkCostAfterDiscActAdd() {
-        WindowsPage winPage = new WindowsPage(product);
-        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(costAfterChange, currentCost, "больше");
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("T"));
     }
 
     @Test
@@ -227,18 +168,8 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Отключить в ОС")
     void discActOff() {
         WindowsPage winPage = new WindowsPage(product);
-        currentCost = winPage.getCurrentCostReloadPage(product);
-        winPage.discActOff();
-    }
-
-    @Test
-    @Order(18)
-    @TmsLink("976747")
-    @DisplayName("UI Windows. Проверка стоимости после действия Отключить в ОС")
-    void checkCostAfterTurnOffOs() {
-        WindowsPage winPage = new WindowsPage(product);
-        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("S"));
+        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.disableDisk("S"));
     }
 
     @Test
@@ -247,40 +178,23 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Подключить в ОС")
     void discActOn() {
         WindowsPage winPage = new WindowsPage(product);
-        currentCost = winPage.getCurrentCostReloadPage(product);
-        winPage.discActOn();
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("R"));
+        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.disableDisk("R"));
+        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.enableDisk("R"));
     }
 
-    @Test
-    @Order(20)
-    @TmsLink("976749")
-    @DisplayName("UI Windows. Проверка стоимости после действия Подключить в ОС")
-    void checkCostAfterConnectOS() {
-        WindowsPage winPage = new WindowsPage(product);
-        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
-    }
 
     @Test
     @Order(21)
-    @TmsLinks({@TmsLink("714872"), @TmsLink("646056")})
-    @DisplayName("UI Windows. Отключить в ОС. Удалить диск")
+    @TmsLink("646056")
+    @DisplayName("UI Windows. Удалить диск")
     void discActDelete() {
         WindowsPage winPage = new WindowsPage(product);
-        currentCost = winPage.getCurrentCostReloadPage(product);
-        winPage.discActOff();
-        winPage.discActDelete();
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("P"));
+        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.disableDisk("P"));
+        winPage.runActionWithCheckCost(CompareType.LESS, () -> winPage.deleteDisk("P"));
     }
 
-    @Test
-    @Order(22)
-    @TmsLink("976752")
-    @DisplayName("UI Windows. Проверка стоимости после действия Удалить диск")
-    void checkCostAfterDiscActDelete() {
-        WindowsPage winPage = new WindowsPage(product);
-        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
-    }
 
     @Test
     @Order(23)
@@ -288,38 +202,17 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверить конфигурацию")
     void vmActCheckConfig() {
         WindowsPage winPage = new WindowsPage(product);
-        currentCost = winPage.getCurrentCostReloadPage(product);
-        winPage.vmActCheckConfig();
-    }
-
-    @Test
-    @Order(24)
-    @TmsLink("976756")
-    @DisplayName("UI Windows. Проверка стоимости после действия Проверить конфигурацию")
-    void checkCostAfterVmActCheckConfig() {
-        WindowsPage winPage = new WindowsPage(product);
-        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "равна");
+        winPage.runActionWithCheckCost(CompareType.EQUALS, winPage::checkConfiguration);
     }
 
     @Test
     @Order(25)
-    @TmsLink("14485")
-    @DisplayName("UI Windows. Выключить принудительно")
+    @TmsLinks({@TmsLink("14485"), @TmsLink("872682")})
+    @DisplayName("UI Windows. Выключить принудительно / Включить")
     void stopHard() {
         WindowsPage winPage = new WindowsPage(product);
-        currentCost = winPage.getCurrentCostReloadPage(product);
-        winPage.stopHard();
-    }
-
-    @Test
-    @Order(26)
-    @TmsLink("976760")
-    @DisplayName("UI Windows. Проверка стоимости после действия Выключить принудительно")
-    void checkCostAfterStopHard() {
-        WindowsPage winPage = new WindowsPage(product);
-        costAfterChange = winPage.getCostAfterChangeReloadPage(product);
-        winPage.vmOrderTextCompareByKey(currentCost, costAfterChange, "больше");
+        winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopHard);
+        winPage.runActionWithCheckCost(CompareType.MORE, winPage::start);
     }
 
     @Test
