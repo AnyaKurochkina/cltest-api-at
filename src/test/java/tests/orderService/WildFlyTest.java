@@ -120,8 +120,8 @@ public class WildFlyTest extends Tests {
     void group(WildFly product) {
         product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.addGroup("group1", "Monitor");
-            wildFly.deleteGroup("group1", "Monitor");
+            wildFly.addGroup("group1", "Deployer");
+            wildFly.deleteGroup("group1", "Deployer");
         }
     }
 

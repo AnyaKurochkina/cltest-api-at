@@ -33,12 +33,13 @@ public class TestsExecutionListener implements TestExecutionListener {
         if (getAppProp("webdriver.path") != null) {
             String DRIVER_PATH = new File(getAppProp("webdriver.path")).getAbsolutePath();
             System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
+            System.setProperty("chromeoptions.args", "--disable-notifications --enable-automation");
         }
         baseUrl = URL;
         isRemote();
         Configuration.browserSize = "1530x870";
         Configuration.browserPosition = "2x2";
-        Configuration.timeout = 20000;
+        Configuration.timeout = 40000;
         Configuration.driverManagerEnabled = false;
 
         //####Config for Ui###

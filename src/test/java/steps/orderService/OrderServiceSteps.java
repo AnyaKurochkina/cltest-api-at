@@ -37,7 +37,7 @@ public class OrderServiceSteps extends Steps {
 
     public static void checkOrderStatus(String exp_status, IProduct product) {
         String orderStatus = "";
-        int counter = 60;
+        int counter = 80;
 
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
@@ -63,6 +63,15 @@ public class OrderServiceSteps extends Steps {
                 error = "Продукт не развернулся по таймауту";
             Assertions.fail(String.format("Ошибка заказа продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product, orderStatus, error));
         }
+    }
+
+    public static String getStatus(IProduct product){
+        return new Http(OrderServiceURL)
+                .setProjectId(product.getProjectId())
+                .get("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
+                .assertStatus(200)
+                .jsonPath()
+                .getString("status");
     }
 
     /**
@@ -247,7 +256,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Ожидание успешного выполнения action")
     public static void checkActionStatusMethod(String exp_status, IProduct product, String action_id) {
         String actionStatus = "";
-        int counter = 22;
+        int counter = 30;
         log.info("Проверка статуса выполнения действия");
         while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.equals("")) && counter > 0) {
             Waiting.sleep(20000);

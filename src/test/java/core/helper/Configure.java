@@ -31,11 +31,9 @@ public class Configure {
         try {
             RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
-
             properties.setProperty("testIt", "false");
-
-            loadProperties(RESOURCE_PATH + "/config/application.properties");
             loadProperties(RESOURCE_PATH + "/config/kafka.config.properties");
+            loadProperties(RESOURCE_PATH + "/config/application.properties");
             if (System.getProperty("env") == null) {
                 if (getAppProp("env") == null) {
                     throw new Exception("Не задан параметр env");
@@ -44,6 +42,7 @@ public class Configure {
                 ENV = System.getProperty("env").toLowerCase();
             log.info("SET ENVIRONMENT = {}", ENV);
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
+            loadProperties(RESOURCE_PATH + "/config/application.properties");
 
             String kongURL = getAppProp("url.kong");
             IamURL = kongURL + "iam/api";

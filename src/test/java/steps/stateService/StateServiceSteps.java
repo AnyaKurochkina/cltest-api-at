@@ -1,5 +1,6 @@
 package steps.stateService;
 
+import core.helper.Configure;
 import core.helper.http.Http;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
@@ -24,7 +25,7 @@ public class StateServiceSteps extends Steps {
         }
         if (StepsAspects.getCurrentStep().get() != null) {
             StepsAspects.getCurrentStep().get().addLinkItem(
-                    new LinkItem("State service log", String.format("%s/actions/?order_id=%s", StateServiceURL, orderId), "", LinkType.REPOSITORY));
+                    new LinkItem("State service log", String.format("%s/actions/?order_id=%s", Configure.getAppProp("url.stateService"), orderId), "", LinkType.REPOSITORY));
         }
         return traceback;
     }

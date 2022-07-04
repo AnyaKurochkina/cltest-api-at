@@ -30,13 +30,21 @@ public class AccessGroupTest extends Tests {
     @Test
     @Order(1)
     @TmsLink("377438")
-    @DisplayName("Создание Группы доступа")
+    @DisplayName("Создание Группы доступа compute")
     void createAccessGroup() {
         AccessGroup.builder().name(name).build().createObject();
     }
 
     @Test
     @Order(2)
+    @TmsLink("996161")
+    @DisplayName("Создание Группы доступа vlt")
+    void createAccessGroupVlt() {
+        AccessGroup.builder().codePurpose("vlt").build().createObject();
+    }
+
+    @Test
+    @Order(3)
     @TmsLink("648626")
     @DisplayName("Редактирование группы доступа")
     void editServiceAccount() {
@@ -47,7 +55,7 @@ public class AccessGroupTest extends Tests {
 
     @DisabledIfEnv("dev")
     @Test
-    @Order(3)
+    @Order(4)
     @TmsLink("377442")
     @DisplayName("Добавление пользователя в группу доступа для среды TEST")
     void addUserAccessGroupTest() {
@@ -61,7 +69,7 @@ public class AccessGroupTest extends Tests {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     @TmsLink("377440")
     @DisplayName("Добавление пользователя в группу доступа для среды DEV")
     void addUserAccessGroupDev() {
@@ -72,7 +80,7 @@ public class AccessGroupTest extends Tests {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     @TmsLink("377441")
     @DisplayName("Удаление пользователя из группы доступа")
     void deleteUserAccessGroup() {
@@ -84,7 +92,7 @@ public class AccessGroupTest extends Tests {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     @TmsLink("377439")
     @MarkDelete
     @DisplayName("Удаление Группы доступа")

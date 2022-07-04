@@ -7,6 +7,7 @@ import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.references.Directories;
 import models.references.PageFilter;
@@ -28,11 +29,33 @@ public class ReferencesStep extends Steps {
     private static final String DIRECTORIES_JSON_TEMPLATE = "references/createDirectory.json";
     private static final String PAGES_JSON_TEMPLATE = "references/createPages.json";
 
+    @Deprecated
     @Step("Получение списка flavors для продукта {product}")
     public static List<Flavor> getProductFlavorsLinkedList(IProduct product) {
         String jsonArray = new Http(ReferencesURL)
                 .setProjectId(Objects.requireNonNull(product.getProjectId()))
                 .get("/api/v1/pages/?directory__name=flavors&tags={}", product.getProductId())
+                .assertStatus(200)
+                .toString();
+
+        Type type = new TypeToken<List<Flavor>>() {
+        }.getType();
+        List<Flavor> list = new Gson().fromJson(jsonArray, type);
+
+        return list.stream().sorted(Comparator.comparing(Flavor::getCpus).thenComparing(Flavor::getMemory)).collect(Collectors.toList());
+    }
+
+    @Step("Получение списка flavors для продукта {product}")
+    public static List<Flavor> getProductFlavorsLinkedListByFilter(IProduct product) {
+        String filter = product.getFilter();
+        if(Objects.isNull(filter))
+            return getProductFlavorsLinkedList(product);
+        Project project = Project.builder().id(product.getProjectId()).build().createObject();
+        String jsonArray = new Http(ReferencesURL)
+                .setProjectId(Objects.requireNonNull(product.getProjectId()))
+                .get("/api/v1/pages/?page_filter_chain=flavor:{}:{}:{}", filter,
+                        project.getProjectEnvironmentPrefix().getEnvType().toLowerCase(),
+                        project.getProjectEnvironmentPrefix().getEnv().toLowerCase())
                 .assertStatus(200)
                 .toString();
 

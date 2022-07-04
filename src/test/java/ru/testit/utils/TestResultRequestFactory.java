@@ -36,7 +36,10 @@ public class TestResultRequestFactory {
         this.processTestSteps(currentTest, step, null);
         this.processUtilsMethodsSteps(currentTest, utilsMethodSteps);
         if (currentTest.getMessage() != null)
-            currentTest.setMessage(currentTest.getMessage().replaceAll("\n", "\t \n"));
+            currentTest.setMessage(currentTest.getMessage()
+                    .replaceAll("\n", "\t \n")
+                    .replaceAll(".at.org\\.junit\\.jupiter\\.engine\\.execution\\.InvocationInterceptorChain\\$ValidatingInvocation\\.proceed\\(InvocationInterceptorChain\\.java:[^*]+", "")
+            );
         req.getTestResults().add(currentTest);
         String testResultId = TestITClient.sendTestResult(req);
 
