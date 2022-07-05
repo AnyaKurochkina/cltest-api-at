@@ -53,10 +53,10 @@ public abstract class IProductPage {
 
     @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus() {
-        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").hover().$$x("descendant::*[@title]")
+        new TopInfo().getValueByColumnInFirstRow("Статус").hover().$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
-                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), Duration.ofMinutes(30))
-                .shouldBe(CollectionCondition.sizeNotEqual(0))
+                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), Duration.ofMinutes(30));
+        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").hover().$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.anyMatch("visible", WebElement::isDisplayed))
                 .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
         log.debug("Итоговый статус: {}", titles);
@@ -176,13 +176,13 @@ public abstract class IProductPage {
         double currentCost = getCostOrder();
         executable.execute();
         Selenide.refresh();
-        if(type == CompareType.MORE)
+        if (type == CompareType.MORE)
             Assertions.assertTrue(preBillingCostAction > currentCost, String.format("%f <= %f", preBillingCostAction, currentCost));
-        else if(type == CompareType.LESS)
+        else if (type == CompareType.LESS)
             Assertions.assertTrue(preBillingCostAction < currentCost, String.format("%f >= %f", preBillingCostAction, currentCost));
-        else if(type == CompareType.EQUALS)
+        else if (type == CompareType.EQUALS)
             Assertions.assertEquals(preBillingCostAction, currentCost, 0.01d);
-        else if(type == CompareType.ZERO) {
+        else if (type == CompareType.ZERO) {
             Assertions.assertEquals(0.0d, preBillingCostAction, 0.001d);
             Assertions.assertEquals(0.0d, currentCost, 0.001d);
         }
