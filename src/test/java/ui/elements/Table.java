@@ -30,13 +30,13 @@ public class Table implements TypifiedElement {
 
     public Table(String columnName) {
         open();
-        table = $x("//table[thead/tr/th[.='{}']]", columnName);
+//        for (SelenideElement e : progressBars)
+//            waitLoadTable(e, table);
+        table = $x("//table[thead/tr/th[.='{}']]", columnName).shouldBe(Condition.visible);
+        $x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]").shouldNot(Condition.exist);
         headersCollection = table.$$x("thead/tr/th");
         rows = table.$$x("tbody/tr");
         headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));
-//        for (SelenideElement e : progressBars)
-//            waitLoadTable(e, table);
-        $x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]").shouldNot(Condition.exist);
         headers = headersCollection.shouldBe(CollectionCondition.allMatch("", WebElement::isDisplayed)).texts();
     }
 
@@ -103,7 +103,7 @@ public class Table implements TypifiedElement {
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new Error(String.format("Нет колонки с индексом %d. Всего колонок %d", index, row.$$x("td").size()), e);
         }
-        return element;
+        return element.shouldBe(Condition.visible);
     }
 
 }

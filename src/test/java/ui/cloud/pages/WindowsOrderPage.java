@@ -23,7 +23,7 @@ public class WindowsOrderPage extends Product {
     DropDown configure = DropDown.byLabel("Конфигурация Core/RAM");
     SelenideElement labelInput = $x("//div[label[starts-with(. , 'Метка')]]/div/input");
 
-    final String label = UUID.randomUUID().toString().substring(17);
+    final String label = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public WindowsOrderPage() {
         new Input(labelInput).setValue(label);

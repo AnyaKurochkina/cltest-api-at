@@ -5,7 +5,7 @@ public class ProductStatus {
     final static String PENDING = "Изменение";
     final static String SUCCESS = "В порядке";
     final static String DELETING = "Удаляется";
-    final static String ERROR = "Ошибка";
+    final public static String ERROR = "Ошибка";
 
     String status;
 

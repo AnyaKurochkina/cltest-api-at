@@ -1,6 +1,5 @@
 package ui.cloud.pages;
 
-import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.SelenideElement;
 import models.orderService.products.Windows;
 import ui.elements.Dialog;
@@ -19,7 +18,6 @@ public class WindowsPage extends IProductPage {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        btnGeneralInfo.click(ClickOptions.usingJavaScript());
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
@@ -41,10 +39,10 @@ public class WindowsPage extends IProductPage {
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(product.getMaxFlavor())));
     }
 
-    public void discActExpand() {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters("Виртуальная машина", "Расширить диск");
-    }
+//    public void discActExpand() {
+//        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+//        runActionWithoutParameters("Виртуальная машина", "Расширить диск");
+//    }
 
     public void disableDisk(String name) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
@@ -77,7 +75,7 @@ public class WindowsPage extends IProductPage {
     }
 
     public void turnOnDeleteProtection() {
-        runActionWithoutParameters("Виртуальная машина", "Защита от удаления");
+//        runActionWithoutParameters("Виртуальная машина", "Защита от удаления");
     }
 
     public void addDisk(String name) {

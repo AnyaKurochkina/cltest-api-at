@@ -1,6 +1,7 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.*;
+import core.exception.CreateEntityException;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -14,15 +15,13 @@ import steps.stateService.StateServiceSteps;
 import ui.elements.Dialog;
 import ui.elements.Table;
 
-import java.text.NumberFormat;
 import java.time.Duration;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.Selenide.sleep;
 import static core.helper.StringUtils.$x;
 import static org.openqa.selenium.Keys.BACK_SPACE;
 import static org.openqa.selenium.Keys.CONTROL;
@@ -31,7 +30,6 @@ import static tests.Tests.clickableCnd;
 
 @Log4j2
 @Getter
-
 public abstract class IProductPage {
     IProduct product;
     double prePriceOrderDbl;
@@ -45,13 +43,13 @@ public abstract class IProductPage {
     private final SelenideElement orderPricePerDay = Selenide.$x("//*[@data-testid='new-order-details-price']");
     private final SelenideElement btnProducts = Selenide.$x("//div[not(@hidden)]/a[@href='/vm/orders' and text()='Продукты']");
     private final SelenideElement progressBars = Selenide.$x("(//div[div[@role='progressbar']])[last()]");
-    private final SelenideElement loadOrderPricePerDay = Selenide.$x("//*[@data-testid='new-order-details-price']/div/*");//("//*[@data-testid='new-order-details-price']/div//*[name()='path']");
     private final SelenideElement orderPricePerDayAfterOrder = Selenide.$x("//button[@title='Редактировать']/following::p[1]");
 
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     private final SelenideElement preBillingPriceAction = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[2]");
-
     private final SelenideElement closeModalWindowButton = Selenide.$x("//div[@role='dialog']//button[contains(.,'Закрыть')]");
+    private final SelenideElement graphScheme = Selenide.$x("//canvas");
+
     private final SelenideElement orderBtn = Selenide.$x("//button[.='Заказать']");
     private final SelenideElement actionHistory = Selenide.$x("//*[text()='История действий']/ancestor::button");
     private final SelenideElement actionNameColumn = Selenide.$x("//table//tr/th[text()='Наименование']");
@@ -97,10 +95,11 @@ public abstract class IProductPage {
     private final SelenideElement windowsOS = Selenide.$x("//div[contains(text(),' ОС Windows для среды DEV OpenStack')]");
     private final SelenideElement linuxOS = Selenide.$x("//div[contains(text(),'ОС linux')]");
     private final SelenideElement historyRow0 = Selenide.$x("//tr[@index='0']//button[@tabindex='0'][last()]");
-    private final SelenideElement graphScheme = Selenide.$x("//canvas");
 
 
     public IProductPage(IProduct product) {
+        if (Objects.nonNull(product.getError()))
+            throw new CreateEntityException(String.format("Продукт необходимый для выполнения теста был создан с ошибкой:\n%s", product.getError()));
         if (Objects.nonNull(product.getLink()))
             open(product.getLink());
         btnGeneralInfo.shouldBe(Condition.enabled);
@@ -108,11 +107,8 @@ public abstract class IProductPage {
         this.product = product.buildFromLink();
     }
 
-    public IProductPage() {
+    public IProductPage() {}
 
-    }
-    //ancestor::div[.='Виртуальная машинаДействия']//button[contains(.,'...']
-    //ancestor::td[.='Диск']//button[@id='actions-menu-button']
     @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus() {
         List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
@@ -132,7 +128,7 @@ public abstract class IProductPage {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         getBtnAction(headerBlock).shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).scrollTo().hover().shouldBe(clickableCnd).click();
-        preBillingCostAction = getPreBillingCostAction();
+        preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         Dialog dlgActions = new Dialog(action);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -148,7 +144,7 @@ public abstract class IProductPage {
         button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = new Dialog(action);
-        preBillingCostAction = getPreBillingCostAction();
+        preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         dlgActions.getDialog().shouldNotBe(Condition.visible);
@@ -158,17 +154,16 @@ public abstract class IProductPage {
     }
 
     @SneakyThrows
-    @Step("Запуск действия '{action}' из таблицы с колонкой '{uniqueColumn} и значением {value}'")
-    protected void runActionWithParameters(String uniqueColumn, String value, String action, String textButton, Executable executable) {
+    @Step("Запуск действия '{action}' с параметрами")
+    protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable) {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-        Table table = new Table(uniqueColumn);
-        table.getRowByColumn(uniqueColumn, value).$x("//button").shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
+        button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
-        preBillingCostAction = getPreBillingCostAction();
-        SelenideElement button = $x("//div[@role='dialog']//button[.='{}']", textButton);
-        button.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        button.shouldNotBe(Condition.visible);
+        preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+        SelenideElement runButton = $x("//div[@role='dialog']//button[.='{}']", textButton);
+        runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        runButton.shouldNotBe(Condition.visible);
         Waiting.sleep(3000);
         waitChangeStatus();
         checkLastAction(action);
@@ -181,20 +176,13 @@ public abstract class IProductPage {
         getBtnAction(headerBlock).shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
-        preBillingCostAction = getPreBillingCostAction();
+        preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         SelenideElement button = $x("//div[@role='dialog']//button[.='{}']", textButton);
         button.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         button.shouldNotBe(Condition.visible);
         Waiting.sleep(3000);
         waitChangeStatus();
         checkLastAction(action);
-    }
-
-    @SneakyThrows
-    @Step("Получение стоимости продукта на предбиллинге")
-    public double convertToDblPriceOrder(String prePrice) {
-        log.info("Получение стоимости продукта на предбиллинге");
-        return getNumbersFromText(prePrice);
     }
 
     public void checkErrorByStatus(String status) {
@@ -238,6 +226,8 @@ public abstract class IProductPage {
     @SneakyThrows
     @Step("Запуска действия с проверкой стоимости")
     public void runActionWithCheckCost(CompareType type, Executable executable) {
+        Selenide.refresh();
+        waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
         Selenide.refresh();
@@ -292,9 +282,8 @@ public abstract class IProductPage {
         Assertions.assertEquals(history.lastActionName(), action, "Название последнего действия не соответствует ожидаемому");
     }
 
-    @Step("Проверка  поля 'Заказать' на форме заказа продукта до заполнения полей")
-    public void checkFieldUntilOrder() {
-        orderProduct.shouldBe(Condition.disabled);
+    public History getHistoryTable() {
+        return new History();
     }
 
     @Step("Проверка поля с входящими и ожидаемыми значениями")
@@ -366,65 +355,22 @@ public abstract class IProductPage {
         }
     }
 
-    @SneakyThrows
-    @Step("Получение стоимости из строки {inputStr}")
-    public static Double getNumbersFromText(String inputStr) {
-        String numbersRegex = "\\d{1,5}.\\d{1,5}"; //(323,98 ₽/сут.), 323,98 ₽/сут.
-        NumberFormat numberFormat = NumberFormat.getInstance(Locale.FRANCE);
-        Number parsedNumber = 0;
-
-        Pattern folderPattern = Pattern.compile(numbersRegex);
-        Matcher folderMatcher = folderPattern.matcher(inputStr);
-
-        while (folderMatcher.find()) {
-            parsedNumber = numberFormat.parse(folderMatcher.group());
-        }
-        Double doubleDecimalObj = new Double(String.valueOf(parsedNumber));
-        log.debug(doubleDecimalObj);
-        return doubleDecimalObj;
-    }
-
-    @Step("Проверка стоимости продукта {isCompare} стоимости после изменения")
-    public void vmOrderTextCompareByKey(Double currentCost, Double costAfterChange, String isCompare) {
-        switch (isCompare) {
-            case "больше":
-                Assertions.assertTrue(currentCost > costAfterChange, "Текущая стоимость продукта " + currentCost + " больше стоимости продукта, после изменения" + costAfterChange);
-                break;
-            case "меньше":
-                Assertions.assertTrue(currentCost < costAfterChange, "Текущая стоимость продукта " + currentCost + " меньше стоимости продукта, после изменения" + costAfterChange);
-                break;
-            case "равна":
-                Assertions.assertEquals(currentCost, costAfterChange, "Текущая стоимость продукта " + currentCost + " равна стоимости продукта, после изменения" + costAfterChange);
-                break;
-        }
-    }
-
     @Step("Получение стоимости заказа")
     public double getCostOrder() {
         currentPriceOrder.shouldBe(Condition.visible, Duration.ofMinutes(3));
-        return Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?\\d{1,5},\\d{2})", currentPriceOrder.getText()))
+        double cost = Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?\\d{1,5},\\d{2})", currentPriceOrder.getText()))
                 .replace(',', '.'));
+        log.debug("Стоимость заказа {}", cost);
+        return cost;
     }
 
-    @Step("Получение стоимости предбиллинга действия")
-    public double getPreBillingCostAction() {
-        preBillingPriceAction.shouldBe(Condition.visible);
-        return Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?\\d{1,5},\\d{2})", preBillingPriceAction.getText()))
+    @Step("Получение стоимости предбиллинга")
+    public static double getPreBillingCostAction(SelenideElement element) {
+        element.shouldBe(Condition.visible);
+        double cost = Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?\\d{1,5},\\d{2})", element.getText()))
                 .replace(',', '.'));
+        log.debug("Стоимость предбиллинга {}", cost);
+        return cost;
     }
 
-    @Step("Проверка стоимости после выполнения действий над продуктом")
-    @SneakyThrows
-    //TODO: Убрать ненужные SneakyThrows как здесь
-    public double getCostAfterChangeReloadPage(models.orderService.products.Windows product) {
-        double costAfterChange;
-        int j = 5;
-        do {
-            new WindowsPage(product);
-            costAfterChange = getCostOrder();
-            sleep(2000);
-            j--;
-        } while (costAfterChange <= 0.0 & j > 0);
-        return costAfterChange;
-    }
 }
