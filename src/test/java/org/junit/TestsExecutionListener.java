@@ -33,7 +33,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         if (getAppProp("webdriver.path") != null) {
             String DRIVER_PATH = new File(getAppProp("webdriver.path")).getAbsolutePath();
             System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
-            System.setProperty("chromeoptions.args", "--disable-notifications --disable-web-security");
+            System.setProperty("chromeoptions.args", "--disable-notifications --disable-web-security --allow-external-pages --disable-gpu --no-sandbox --disable-browser-side-navigation");
         }
         baseUrl = URL;
         isRemote();
