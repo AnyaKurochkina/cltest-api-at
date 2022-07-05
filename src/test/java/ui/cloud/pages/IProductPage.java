@@ -54,7 +54,7 @@ public abstract class IProductPage {
         List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
                         ProductStatus.isNeedWaiting(e.getAttribute("title"))), Duration.ofMinutes(30))
-                .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
+                .filterBy(Condition.exist).stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
         log.debug("Итоговый статус: {}", titles);
     }
 
