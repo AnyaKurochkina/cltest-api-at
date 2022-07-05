@@ -47,12 +47,13 @@ public abstract class IProductPage {
             open(product.getLink());
         btnGeneralInfo.shouldBe(Condition.enabled);
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
+        product.addLinkProduct();
         this.product = product.buildFromLink();
     }
 
     @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus() {
-        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
+        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").hover().$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
                         ProductStatus.isNeedWaiting(e.getAttribute("title"))), Duration.ofMinutes(30))
                 .shouldBe(CollectionCondition.sizeNotEqual(0))
@@ -169,6 +170,7 @@ public abstract class IProductPage {
     @SneakyThrows
     @Step("Запуска действия с проверкой стоимости")
     public void runActionWithCheckCost(CompareType type, Executable executable) {
+        Waiting.sleep(3000);
         Selenide.refresh();
         waitChangeStatus();
         double currentCost = getCostOrder();
