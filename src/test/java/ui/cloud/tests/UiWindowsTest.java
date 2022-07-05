@@ -17,6 +17,8 @@ import ui.cloud.pages.*;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
 
+import java.time.Duration;
+
 @ExtendWith(InterceptTestExtension.class)
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -70,13 +72,13 @@ public class UiWindowsTest extends Tests {
                             orderPage.getLabelValue())
                     .hover()
                     .click();
+            WindowsPage winPages = new WindowsPage(product);
+            winPages.waitChangeStatus(Duration.ofMinutes(25));
+            winPages.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
         }
-        WindowsPage winPages = new WindowsPage(product);
-        winPages.waitChangeStatus();
-        winPages.checkLastAction("Развертывание");
     }
 
     @Test

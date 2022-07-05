@@ -51,11 +51,15 @@ public abstract class IProductPage {
         this.product = product.buildFromLink();
     }
 
-    @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus() {
+        waitChangeStatus(Duration.ofMinutes(8));
+    }
+
+    @Step("Ожидание выполнение действия с продуктом")
+    public void waitChangeStatus(Duration duration) {
         new TopInfo().getValueByColumnInFirstRow("Статус").hover().$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
-                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), Duration.ofMinutes(30));
+                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), duration);
         List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").hover().$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.anyMatch("visible", WebElement::isDisplayed))
                 .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
