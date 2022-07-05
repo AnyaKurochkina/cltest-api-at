@@ -198,7 +198,7 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(13)
-    @TmsLinks({@TmsLink("14485"), @TmsLink("957013")})
+    @TmsLinks({@TmsLink("14485"), @TmsLink("247978")})
     @DisplayName("UI Windows. Выключить принудительно / Включить")
     void stopHard() {
         WindowsPage winPage = new WindowsPage(product);
