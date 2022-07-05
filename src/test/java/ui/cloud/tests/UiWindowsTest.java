@@ -67,7 +67,7 @@ public class UiWindowsTest extends Tests {
             orderPage.orderClick();
             new ProductsPage()
                     .getRowByColumn("Продукт",
-                            orderPage.getLabel())
+                            orderPage.getLabelValue())
                     .hover()
                     .click();
         } catch (Throwable e) {
@@ -198,7 +198,7 @@ public class UiWindowsTest extends Tests {
 
     @Test
     @Order(13)
-    @TmsLinks({@TmsLink("14485"), @TmsLink("872682")})
+    @TmsLinks({@TmsLink("14485"), @TmsLink("957013")})
     @DisplayName("UI Windows. Выключить принудительно / Включить")
     void stopHard() {
         WindowsPage winPage = new WindowsPage(product);

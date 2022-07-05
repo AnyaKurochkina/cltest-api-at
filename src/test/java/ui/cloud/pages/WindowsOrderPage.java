@@ -1,15 +1,11 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
-import org.openqa.selenium.Keys;
 import ui.elements.DropDown;
 import ui.elements.Input;
 
 import java.util.UUID;
-
-import static com.codeborne.selenide.Selenide.$x;
 
 @Getter
 public class WindowsOrderPage extends Product {
@@ -21,12 +17,23 @@ public class WindowsOrderPage extends Product {
     DropDown dataCentre = DropDown.byLabel("Дата-центр");
     DropDown segment = DropDown.byLabel("Сетевой сегмент");
     DropDown configure = DropDown.byLabel("Конфигурация Core/RAM");
-    SelenideElement labelInput = $x("//div[label[starts-with(. , 'Метка')]]/div/input");
+    Input countVm = Input.byLabel("Количество");
+    Input label = Input.byLabel("Метка");
 
-    final String label = "AT-UI-" + UUID.randomUUID().toString().substring(24);
+    String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public WindowsOrderPage() {
-        new Input(labelInput).setValue(label);
+        label.setValue(labelValue);
         platform.getElement().shouldBe(Condition.enabled);
+    }
+
+    public void checkOrderDetails(){
+        if(getCalculationDetails().exists())
+        {
+            getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
+        }
+        getProcessor().shouldBe(Condition.visible);
+        getHardDrive().shouldBe(Condition.visible);
+        getWindowsOS().shouldBe(Condition.visible);
     }
 }

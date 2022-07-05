@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.$x;
-import static org.openqa.selenium.Keys.BACK_SPACE;
-import static org.openqa.selenium.Keys.CONTROL;
 import static tests.Tests.activeCnd;
 import static tests.Tests.clickableCnd;
 
@@ -32,70 +30,14 @@ import static tests.Tests.clickableCnd;
 @Getter
 public abstract class IProductPage {
     IProduct product;
-    double prePriceOrderDbl;
-    double priceOrderDbl;
-
     double preBillingCostAction;
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
-    SelenideElement btnAct = $x("(//div[@id='root']//*[text()='Дополнительные диски']/ancestor::div[3]//following-sibling::div//button[@id='actions-menu-button' and not (.//text()='Действия')])[last()]");
-    private final SelenideElement orderPricePerDay = Selenide.$x("//*[@data-testid='new-order-details-price']");
-    private final SelenideElement btnProducts = Selenide.$x("//div[not(@hidden)]/a[@href='/vm/orders' and text()='Продукты']");
-    private final SelenideElement progressBars = Selenide.$x("(//div[div[@role='progressbar']])[last()]");
-    private final SelenideElement orderPricePerDayAfterOrder = Selenide.$x("//button[@title='Редактировать']/following::p[1]");
-
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     private final SelenideElement preBillingPriceAction = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[2]");
     private final SelenideElement closeModalWindowButton = Selenide.$x("//div[@role='dialog']//button[contains(.,'Закрыть')]");
     private final SelenideElement graphScheme = Selenide.$x("//canvas");
-
-    private final SelenideElement orderBtn = Selenide.$x("//button[.='Заказать']");
-    private final SelenideElement actionHistory = Selenide.$x("//*[text()='История действий']/ancestor::button");
-    private final SelenideElement actionNameColumn = Selenide.$x("//table//tr/th[text()='Наименование']");
-    private final SelenideElement actionInitiatorColumn = Selenide.$x("//table//tr/th[text()='Инициатор']");
-    private final SelenideElement actionCreationDateColumn = Selenide.$x("//table//tr/th[text()='Дата создания']");
-    private final SelenideElement actionStartDateColumn = Selenide.$x("//table//tr/th[text()='Дата запуска']");
-    private final SelenideElement actionDurationColumn = Selenide.$x("//table//tr/th[text()='Продолжительность, сек']");
-    private final SelenideElement actionStatusColumn = Selenide.$x("//table//tr/th[text()='Статус']");
-    private final SelenideElement actionViewColumn = Selenide.$x("//table//tr/th[text()='Просмотр']");
-    private final SelenideElement historyRowDeployOk = Selenide.$x("(//td[text()='Развертывание']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowDeployErr = Selenide.$x("(//td[text()='Развертывание']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowRestartByPowerOk = Selenide.$x("(//td[text()='Перезагрузить по питанию']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowRestartByPowerErr = Selenide.$x("(//td[text()='Перезагрузить по питанию']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowTurnOffOk = Selenide.$x("(//td[text()='Выключить']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowTurnOffErr = Selenide.$x("(//td[text()='Выключить']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowChangeFlavorOk = Selenide.$x("(//td[text()='Изменить конфигурацию']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowChangeFlavorErr = Selenide.$x("(//td[text()='Изменить конфигурацию']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowTurnOnOk = Selenide.$x("(//td[text()='Включить']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowTurnOnErr = Selenide.$x("(//td[text()='Включить']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowDiscAddOk = Selenide.$x("(//td[text()='Добавить диск']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowDiscAddErr = Selenide.$x("(//td[text()='Добавить диск']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowMountExpandOkDisc = Selenide.$x("(//td[text()='Расширить диск']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowMountExpandErrDisc = Selenide.$x("(//td[text()='Расширить диск']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowDiscTurnOffOk = Selenide.$x("(//td[text()='Отключить в ОС']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowDiscTurnOffErr = Selenide.$x("(//td[text()='Отключить в ОС']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowDiscTurnOnOk = Selenide.$x("(//td[text()='Подключить в ОС']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowDiscTurnOnErr = Selenide.$x("(//td[text()='Подключить в ОС']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowDiscDeleteOk = Selenide.$x("(//td[text()='Удалить']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowDiscDeleteErr = Selenide.$x("(//td[text()='Удалить']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowCheckConfigOk = Selenide.$x("(//td[text()='Проверить конфигурацию']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowCheckConfigErr = Selenide.$x("(//td[text()='Проверить конфигурацию']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowForceTurnOffOk = Selenide.$x("(//td[text()='Выключить принудительно']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowForceTurnOffErr = Selenide.$x("(//td[text()='Выключить принудительно']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement historyRowDeletedOk = Selenide.$x("(//td[text()='Удалить']/following-sibling::*//*[@title='В порядке'])[1]");
-    private final SelenideElement historyRowDeletedErr = Selenide.$x("(//td[text()='Удалить']/following-sibling::*//*[@title='Ошибка'])[1]");
-    private final SelenideElement orderProduct = Selenide.$x("//*[text()='Заказать']/ancestor::button");
-    private final SelenideElement vmNumber = Selenide.$x("//*[contains(.,'Количество')]/following-sibling::*/input");
-    private final SelenideElement mark = Selenide.$x("(//*[text()='Метка']//following::input)[1]");
-    private final SelenideElement calculationDetails = Selenide.$x("//*[text()='детализация расчета']/*");
-    private final SelenideElement opMemory = Selenide.$x("//div[contains(text(),'Оперативная память')]");
-    private final SelenideElement hardDrive = Selenide.$x("//div[contains(text(),'Жесткий диск')]");
-    private final SelenideElement processor = Selenide.$x("//div[contains(text(),'Процессор')]");
-    private final SelenideElement windowsOS = Selenide.$x("//div[contains(text(),' ОС Windows для среды DEV OpenStack')]");
-    private final SelenideElement linuxOS = Selenide.$x("//div[contains(text(),'ОС linux')]");
-    private final SelenideElement historyRow0 = Selenide.$x("//tr[@index='0']//button[@tabindex='0'][last()]");
-
 
     public IProductPage(IProduct product) {
         if (Objects.nonNull(product.getError()))
@@ -106,8 +48,6 @@ public abstract class IProductPage {
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
         this.product = product.buildFromLink();
     }
-
-    public IProductPage() {}
 
     @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus() {
@@ -269,11 +209,6 @@ public abstract class IProductPage {
         }
     }
 
-    @Step("Проверка на содержание элемента в атрибуте textContent")
-    public void isCostDayContains(String symbol) {
-        Objects.requireNonNull(orderPricePerDay.getAttribute("textContent"));
-    }
-
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
         btnHistory.shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
@@ -284,75 +219,6 @@ public abstract class IProductPage {
 
     public History getHistoryTable() {
         return new History();
-    }
-
-    @Step("Проверка поля с входящими и ожидаемыми значениями")
-    public void autoChangeableFieldCheck(SelenideElement sElement, String input, String value) {
-        sElement.click();
-        sElement.sendKeys(CONTROL + "a");
-        sElement.sendKeys(BACK_SPACE);
-        sElement.setValue(input);
-        Objects.requireNonNull(sElement.getAttribute("valueAsNumber")).contains(value); //TODO: Неиспользуемый contains. зачем?
-        sElement.sendKeys(CONTROL + "a");
-        sElement.sendKeys(BACK_SPACE);
-        log.debug("Проверка поля с входящими и ожидаемыми значениями");
-    }
-
-    @Step("Проверка поля количество VM")
-    public void checkFieldVmNumber() {
-        autoChangeableFieldCheck(getVmNumber(), "0", "10");
-        autoChangeableFieldCheck(getVmNumber(), "100", "30");
-        autoChangeableFieldCheck(getVmNumber(), "N", "10");
-    }
-
-    @Step("Проверка деталей у заказа продукта'")
-    public void checkOrderDetails(SelenideElement sElement, String product) {
-        sElement.shouldBe(Condition.enabled).click();
-        log.info("пользователь проверяет детали заказа у продукта");
-        switch (product) {
-            case "Windows Server": {
-                processor.shouldBe(Condition.visible);
-                hardDrive.shouldBe(Condition.visible);
-                break;
-            }
-            case "Elasticsearch Opensearch cluster (Astra)":
-            case "Elasticsearch Opensearch cluster":
-            case "Elasticsearch X-pack cluster": {
-                linuxOS.shouldBe(Condition.visible);
-                opMemory.shouldBe(Condition.visible);
-                processor.shouldBe(Condition.visible);
-                hardDrive.shouldBe(Condition.visible);
-                break;
-            }
-            case "Apache Kafka Cluster RHEL":
-            case "Apache Kafka Cluster Astra":
-            case "VTB Apache ActiveMQ Artemis":
-            case "VTB Apache ActiveMQ Artemis Astra":
-            case "Astra Linux":
-            case "ClickHouse":
-            case "Nginx":
-            case "Nginx Astra":
-            case "Podman":
-            case "Podman (Astra)":
-            case "PostgreSQL":
-            case "PostgreSQL Cluster Astra Linux":
-            case "PostgresPro":
-            case "RHEL":
-            case "Redis":
-            case "WildFly":
-            case "ScyllaDB":
-            case "Ubuntu Linux":
-                //  case "RabbitMQ Cluster Astra":
-            case "RabbitMQ Cluster": {
-                linuxOS.shouldBe(Condition.visible);
-                opMemory.shouldBe(Condition.visible);
-                hardDrive.shouldBe(Condition.visible);
-                break;
-            }
-            default: {
-                break;
-            }
-        }
     }
 
     @Step("Получение стоимости заказа")
