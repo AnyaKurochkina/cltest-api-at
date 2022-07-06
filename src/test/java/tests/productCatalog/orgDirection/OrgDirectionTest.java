@@ -14,7 +14,10 @@ import models.productCatalog.OrgDirection;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -22,8 +25,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static core.helper.Configure.RESOURCE_PATH;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("product_catalog")
 @Tag("org_direction")
@@ -212,11 +214,22 @@ public class OrgDirectionTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка OrgDirection из GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("1028957")
     public void loadFromGitlabOrgDirection() {
-        String path = "";
+        String orgDirectionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
+        JSONObject jsonObject = OrgDirection.builder()
+                .orgDirectionName(orgDirectionName)
+                .title(orgDirectionName)
+                .build()
+                .init().toJson();
+        GetOrgDirectionResponse jinja = steps.createProductObject(jsonObject).extractAs(GetOrgDirectionResponse.class);
+        Response response = steps.dumpToBitbucket(jinja.getId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        steps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
+        String path = "orgdirection_" + orgDirectionName;
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(path));
+        assertTrue(steps.isExists(orgDirectionName));
+        steps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
+        assertFalse(steps.isExists(orgDirectionName));
     }
 }
