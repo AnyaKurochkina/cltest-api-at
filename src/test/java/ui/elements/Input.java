@@ -4,17 +4,28 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
 
+import static core.helper.StringUtils.$x;
+
 public class Input implements TypifiedElement{
     SelenideElement input;
 
     public Input(SelenideElement input) {
         this.input = input;
-        input.shouldBe(Condition.visible);
+    }
+
+    public static Input byLabel(String label) {
+        return new Input($x("//label[starts-with(.,'{}')]/following-sibling::*/input", label));
     }
 
     public void setValue(String value){
+        input.shouldBe(Condition.visible).shouldBe(Condition.enabled);
         input.sendKeys(Keys.CONTROL + "A");
         input.sendKeys(Keys.BACK_SPACE);
         input.setValue(value);
+    }
+
+    public String getValue(){
+        input.shouldBe(Condition.visible);
+        return input.getValue();
     }
 }
