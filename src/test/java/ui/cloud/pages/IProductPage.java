@@ -61,7 +61,7 @@ public abstract class IProductPage {
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
                         ProductStatus.isNeedWaiting(e.getAttribute("title"))), duration);
         List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").hover().$$x("descendant::*[@title]")
-                .shouldBe(CollectionCondition.anyMatch("visible", WebElement::isDisplayed))
+                .shouldBe(CollectionCondition.sizeNotEqual(0))
                 .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
         log.debug("Итоговый статус: {}", titles);
     }
