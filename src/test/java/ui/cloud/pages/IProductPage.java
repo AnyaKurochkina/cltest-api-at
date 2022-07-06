@@ -57,7 +57,7 @@ public abstract class IProductPage {
 
     @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus(Duration duration) {
-        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").scrollTo().$$x("descendant::*[@title]")
+        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").scrollIntoView(true).$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
                         ProductStatus.isNeedWaiting(e.getAttribute("title"))), duration)
                 .shouldBe(CollectionCondition.sizeNotEqual(0))

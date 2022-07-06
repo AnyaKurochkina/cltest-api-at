@@ -122,15 +122,6 @@ public class UiWindowsTest extends Tests {
         winPage.runActionWithCheckCost(CompareType.EQUALS, winPage::restart);
     }
 
-    @Test
-    @Order(6)
-    @TmsLink("872682")
-    @DisplayName("UI Windows. Выключить")
-    void stopSoft() {
-        WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopSoft);
-        winPage.runActionWithCheckCost(CompareType.MORE, winPage::start);
-    }
 
     @Test
     @Order(7)
@@ -205,6 +196,16 @@ public class UiWindowsTest extends Tests {
     void stopHard() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopHard);
+        winPage.runActionWithCheckCost(CompareType.MORE, winPage::start);
+    }
+
+    @Test
+    @Order(14)
+    @TmsLink("872682")
+    @DisplayName("UI Windows. Выключить")
+    void stopSoft() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopSoft);
         winPage.runActionWithCheckCost(CompareType.MORE, winPage::start);
     }
 
