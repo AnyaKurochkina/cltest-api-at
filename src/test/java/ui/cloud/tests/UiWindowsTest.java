@@ -120,7 +120,7 @@ public class UiWindowsTest extends Tests {
         {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).waitCloseWindow(false).build());
+        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).waitCloseWindow(false).waitChangeStatus(false).build());
         $x("//div[text()='Заказ защищен от удаления']").shouldBe(Condition.visible);
         winPage.switchProtectOrder("Нет");
     }

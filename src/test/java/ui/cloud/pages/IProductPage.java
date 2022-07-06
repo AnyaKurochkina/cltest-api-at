@@ -94,10 +94,11 @@ public abstract class IProductPage {
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        dlgActions.getDialog().shouldNotBe(Condition.visible);
         if (params.isWaitCloseWindow())
-            Waiting.sleep(3000);
-        waitChangeStatus();
+            dlgActions.getDialog().shouldNotBe(Condition.visible);
+        Waiting.sleep(3000);
+        if (params.isWaitChangeStatus())
+            waitChangeStatus();
         if (params.isCheckLastAction())
             checkLastAction(action);
     }
@@ -113,10 +114,11 @@ public abstract class IProductPage {
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         SelenideElement runButton = $x("//div[@role='dialog']//button[.='{}']", textButton);
         runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        runButton.shouldNotBe(Condition.visible);
         if (params.isWaitCloseWindow())
-            Waiting.sleep(3000);
-        waitChangeStatus();
+            runButton.shouldNotBe(Condition.visible);
+        Waiting.sleep(3000);
+        if (params.isWaitChangeStatus())
+            waitChangeStatus();
         if (params.isCheckLastAction())
             checkLastAction(action);
     }
