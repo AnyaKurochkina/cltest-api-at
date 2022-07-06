@@ -206,7 +206,6 @@ public class UiWindowsTest extends Tests {
     void stopSoft() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopSoft);
-        winPage.runActionWithCheckCost(CompareType.MORE, winPage::start);
     }
 
     @Test
