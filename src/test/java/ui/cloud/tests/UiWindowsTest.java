@@ -116,10 +116,11 @@ public class UiWindowsTest extends Tests {
     void checkProtectOrder() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.switchProtectOrder("Да");
-        winPage.getBtnAction("Виртуальная машина").shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
-        Dialog dlgActions = new Dialog("Удаление");
-        dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-        $x("//div[@role='dialog']//button[.='{}']", "Удалить").shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
+        {
+            Dialog dlgActions = new Dialog("Удаление");
+            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
+        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).waitCloseWindow(false).build());
         $x("//div[text()='Заказ защищен от удаления']").shouldBe(Condition.visible);
         winPage.switchProtectOrder("Нет");
     }
