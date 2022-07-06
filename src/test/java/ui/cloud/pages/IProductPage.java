@@ -33,6 +33,7 @@ import static tests.Tests.clickableCnd;
 public abstract class IProductPage {
     IProduct product;
     double preBillingCostAction;
+    boolean checkCostOrder;
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
@@ -89,7 +90,10 @@ public abstract class IProductPage {
         button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = new Dialog(action);
-        preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+        if (checkCostOrder) {
+            checkCostOrder = false;
+            preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+        }
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         dlgActions.getDialog().shouldNotBe(Condition.visible);
@@ -105,7 +109,10 @@ public abstract class IProductPage {
         button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
-        preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+        if (checkCostOrder) {
+            checkCostOrder = false;
+            preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+        }
         SelenideElement runButton = $x("//div[@role='dialog']//button[.='{}']", textButton);
         runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runButton.shouldNotBe(Condition.visible);
@@ -167,6 +174,7 @@ public abstract class IProductPage {
         Selenide.refresh();
         waitChangeStatus();
         double currentCost = getCostOrder();
+        checkCostOrder = true;
         executable.execute();
         Selenide.refresh();
         if (type == CompareType.MORE)
