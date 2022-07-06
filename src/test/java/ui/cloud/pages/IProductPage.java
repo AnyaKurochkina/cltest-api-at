@@ -57,10 +57,9 @@ public abstract class IProductPage {
 
     @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus(Duration duration) {
-        new TopInfo().getValueByColumnInFirstRow("Статус").hover().$$x("descendant::*[@title]")
+        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").scrollTo().$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
-                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), duration);
-        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").hover().$$x("descendant::*[@title]")
+                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), duration)
                 .shouldBe(CollectionCondition.sizeNotEqual(0))
                 .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
         log.debug("Итоговый статус: {}", titles);
