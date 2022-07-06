@@ -18,7 +18,10 @@ import models.productCatalog.Services;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -402,11 +405,23 @@ public class ServicesTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Service из GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("1029279")
     public void loadFromGitlabService() {
-        String path = "";
+        String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
+        JSONObject jsonObject = Services.builder()
+                .serviceName(serviceName)
+                .title(serviceName)
+                .version("1.0.0")
+                .build()
+                .init().toJson();
+        GetServiceResponse service = steps.createProductObject(jsonObject).extractAs(GetServiceResponse.class);
+        Response response = steps.dumpToBitbucket(service.getId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        steps.deleteByName(serviceName, GetServiceListResponse.class);
+        String path = "service_" + serviceName + "_" + service.getVersion();
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(path));
+        assertTrue(steps.isExists(serviceName));
+        steps.deleteByName(serviceName, GetServiceListResponse.class);
+        assertFalse(steps.isExists(serviceName));
     }
 }

@@ -45,7 +45,7 @@ public class GraphItem{
 	private Integer timeout;
 
 	@JsonProperty("output")
-	private Map<String, String> output;
+	private Map<String, Object> output;
 
 	@JsonProperty("coords_x")
 	private Integer coordsX;
@@ -109,4 +109,7 @@ public class GraphItem{
 
 	@JsonProperty("subgraph_version_calculated")
 	private Object subgraphVersionCalculated;
+
+	@JsonProperty("lock_order_on_error")
+	private Boolean lockOrderOnError;
 }

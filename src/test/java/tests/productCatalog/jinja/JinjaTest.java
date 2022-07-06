@@ -13,7 +13,10 @@ import models.productCatalog.Jinja2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -225,16 +228,22 @@ public class JinjaTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Jinja из GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("1028947")
     public void loadFromGitlabJinja() {
-        String name = "standard_for_unloading_from_git";
-        if (steps.isExists(name)) {
-            steps.deleteByName(name, GetJinjaListResponse.class);
-        }
-        String path = "jinja2template_" + name;
+        String jinjaName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
+        JSONObject jsonObject = Jinja2.builder()
+                .name(jinjaName)
+                .title(jinjaName)
+                .build()
+                .init().toJson();
+        GetJinjaResponse jinja = steps.createProductObject(jsonObject).extractAs(GetJinjaResponse.class);
+        Response response = steps.dumpToBitbucket(jinja.getId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        steps.deleteByName(jinjaName, GetJinjaListResponse.class);
+        String path = "jinja2template_" + jinjaName;
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(name));
-        steps.deleteByName(name, GetJinjaListResponse.class);
+        assertTrue(steps.isExists(jinjaName));
+        steps.deleteByName(jinjaName, GetJinjaListResponse.class);
+        assertFalse(steps.isExists(jinjaName));
     }
 }

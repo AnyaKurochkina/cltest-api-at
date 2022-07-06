@@ -64,6 +64,9 @@ public class ListItem implements ItemImpl {
 	@JsonProperty("current_version")
 	private String currentVersion;
 
+	@JsonProperty("lock_order_on_error")
+	private Boolean lockOrderOnError;
+
 	@Override
 	public String getCreateData() {
 		return create_dt;
