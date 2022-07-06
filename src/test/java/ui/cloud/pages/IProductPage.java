@@ -61,8 +61,7 @@ public abstract class IProductPage {
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
                         ProductStatus.isNeedWaiting(e.getAttribute("title"))), duration)
                 .shouldBe(CollectionCondition.sizeNotEqual(0))
-                .filter(Condition.exist)
-                .shouldBe(CollectionCondition.sizeNotEqual(0))
+                .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                 .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
         log.debug("Итоговый статус: {}", titles);
     }
