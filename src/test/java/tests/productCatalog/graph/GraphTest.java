@@ -20,11 +20,15 @@ import models.productCatalog.Services;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,6 +91,25 @@ public class GraphTest extends Tests {
                 .createObject();
         GetImpl getImpl = steps.getById(graph.getGraphId(), GetGraphResponse.class);
         Assertions.assertEquals(graph.getName(), getImpl.getName());
+    }
+
+    @DisplayName("Получение значения поля lock_order_on_error и проверка версии при изменении")
+    @TmsLink("1022491")
+    @Test
+    public void getLockOrderOnErrorAndUpdate() {
+        Graph graph = Graph.builder()
+                .name("get_lock_order_on_error")
+                .lockOrderOnError(false)
+                .build()
+                .createObject();
+        String id = graph.getGraphId();
+        GetGraphResponse getGraph = (GetGraphResponse) steps.getById(id, GetGraphResponse.class);
+        assertFalse(getGraph.getLockOrderOnError());
+        steps.partialUpdateObject(id, new JSONObject().put("lock_order_on_error", true));
+        GetGraphResponse getUpdatedGraph = (GetGraphResponse) steps.getById(id, GetGraphResponse.class);
+        assertTrue(getUpdatedGraph.getLockOrderOnError());
+        String newVersion = getUpdatedGraph.getVersion();
+        assertEquals("1.0.1", newVersion);
     }
 
     @DisplayName("Проверка сортировки по дате создания в графах")
@@ -165,7 +188,7 @@ public class GraphTest extends Tests {
         String oldGraphVersion = graph.getVersion();
         steps.partialUpdateObject(graph.getGraphId(), new JSONObject()
                 .put("damage_order_on_error", true)).assertStatus(200);
-        GetGraphResponse getGraphResponse =(GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
+        GetGraphResponse getGraphResponse = (GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
         Boolean damageOrderOnError = getGraphResponse.getDamageOrderOnError();
         String newGraphVersion = getGraphResponse.getVersion();
         Assertions.assertEquals(true, damageOrderOnError);
@@ -313,16 +336,51 @@ public class GraphTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Graph из GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("1028898")
     public void loadFromGitlabGraph() {
-        String name = "standard_for_unloading_from_git_api";
-        if (steps.isExists(name)) {
-            steps.deleteByName(name, GetGraphsListResponse.class);
-        }
-        String path = "graph" + name;
+        String graphName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
+        JSONObject jsonObject = Graph.builder()
+                .name(graphName)
+                .title(graphName)
+                .version("1.0.0")
+                .build()
+                .init().toJson();
+        GetGraphResponse graph = steps.createProductObject(jsonObject).extractAs(GetGraphResponse.class);
+        Response response = steps.dumpToBitbucket(graph.getId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        steps.deleteByName(graphName, GetGraphsListResponse.class);
+        String path = "graph_" + graphName + "_" + graph.getVersion();
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(path));
-        steps.deleteByName(name, GetGraphsListResponse.class);
+        assertTrue(steps.isExists(graphName));
+        steps.deleteByName(graphName, GetGraphsListResponse.class);
+        assertFalse(steps.isExists(graphName));
+    }
+
+    @DisplayName("Передача и получение значений allowed_developers")
+    @TmsLink("1027311")
+    @Test
+    public void getAllowedDevelopers() {
+        List<String> allowedDevelopersList = Arrays.asList("allowed_developer1", "allowed_developer2");
+        Graph graph = Graph.builder()
+                .name("graph_get_allowed_developers_test_api")
+                .allowedDevelopers(allowedDevelopersList)
+                .build()
+                .createObject();
+        GetGraphResponse createdGraph = (GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
+        assertEquals(allowedDevelopersList, createdGraph.getAllowedDevelopers());
+    }
+
+    @DisplayName("Передача и получение значений restricted_developers")
+    @TmsLink("1027313")
+    @Test
+    public void getRestrictedDevelopers() {
+        List<String> restrictedDevelopersList = Arrays.asList("restricted_developer1", "restricted_developer2");
+        Graph graph = Graph.builder()
+                .name("graph_get_restricted_developers_test_api")
+                .restrictedDevelopers(restrictedDevelopersList)
+                .build()
+                .createObject();
+        GetGraphResponse createdGraph = (GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
+        assertEquals(restrictedDevelopersList, createdGraph.getRestrictedDevelopers());
     }
 }

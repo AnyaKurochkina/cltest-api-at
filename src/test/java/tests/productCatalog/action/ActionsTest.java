@@ -416,8 +416,7 @@ public class ActionsTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка action из GitLab")
-    @Disabled
-    @TmsLink("")
+    @TmsLink("1028840")
     public void loadFromGitlabAction() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
         JSONObject jsonObject = Action.builder()
@@ -430,7 +429,7 @@ public class ActionsTest extends Tests {
         Response response = steps.dumpToBitbucket(action.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         steps.deleteByName(actionName, GetActionsListResponse.class);
-        String path = "action_" + actionName;
+        String path = "action_" + actionName + "_" + action.getVersion();
         steps.loadFromBitbucket(new JSONObject().put("path", path));
         assertTrue(steps.isExists(actionName));
         steps.deleteByName(actionName, GetActionsListResponse.class);

@@ -87,8 +87,11 @@ public class CreateGraphResponse{
 	private Boolean isSequential;
 
 	@JsonProperty("allowed_developers")
-	private List<String> allowed_developers;
+	private List<String> allowedDevelopers;
 
 	@JsonProperty("restricted_developers")
-	private List<String> restricted_developers;
+	private List<String> restrictedDevelopers;
+
+	@JsonProperty("lock_order_on_error")
+	private Boolean lockOrderOnError;
 }

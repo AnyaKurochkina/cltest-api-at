@@ -42,6 +42,9 @@ public class Graph extends Entity {
     private String createDt;
     private String updateDt;
     private Boolean damageOrderOnError;
+    private Boolean lockOrderOnError;
+    private List<String> allowedDevelopers;
+    private List<String> restrictedDevelopers;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json");
@@ -66,6 +69,9 @@ public class Graph extends Entity {
                 .set("$.create_dt", createDt)
                 .set("$.update_dt", updateDt)
                 .set("$.damage_order_on_error", damageOrderOnError)
+                .set("$.lock_order_on_error", lockOrderOnError)
+                .set("$.allowed_developers", allowedDevelopers)
+                .set("$.restricted_developers", restrictedDevelopers)
                 .build();
     }
 
@@ -87,7 +93,7 @@ public class Graph extends Entity {
     protected void delete() {
         new Http(ProductCatalogURL)
                 .delete(productName + graphId + "/")
-                .assertStatus(200);
+                .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         Assertions.assertFalse(productCatalogSteps.isExists(name));
     }

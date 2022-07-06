@@ -5,5 +5,11 @@
   "description": "for at tests",
   "graph": [],
   "type": "action",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "allowed_developers": [
+
+  ],
+  "restricted_developers": [
+
+  ]
 }
