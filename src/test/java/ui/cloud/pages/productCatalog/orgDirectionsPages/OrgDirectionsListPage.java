@@ -18,7 +18,7 @@ public class OrgDirectionsListPage {
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private final SelenideElement exportAction = $x("//li[text() = 'Экспортировать']");
-    private final SelenideElement id = $x("//p/b");
+    private final SelenideElement id = $x("//form//p//b");
     private final SelenideElement inputId = $x("//input[@name = 'id']");
     private final SelenideElement deleteButton = $x("//button[@type ='submit']");
     private final SelenideElement noData = $x("//*[text() = 'Нет данных для отображения']");

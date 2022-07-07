@@ -24,8 +24,9 @@ public class GraphPage {
     private final SelenideElement nodesTab = $x("//span[text()='Узлы']//ancestor::button");
     private final SelenideElement graphNameInput = $x("//input[@name='name']");
     private final SelenideElement graphTitleInput = $x("//input[@name='title']");
-    private final SelenideElement graphId = $x("//p/b");
+    private final SelenideElement graphId = $x("//form//p//b");
     private final SelenideElement idInput = $x("//input[@name = 'id']");
+    private final SelenideElement authorInput = $x("//input[@name = 'author']");
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
@@ -38,6 +39,8 @@ public class GraphPage {
 
     public GraphPage editGraph(String description) {
         descriptionField.setValue(description);
+        //TODO временно для ПК 2.0 чтобы изменилась версия
+        authorInput.setValue(description);
         return new GraphPage();
     }
 
