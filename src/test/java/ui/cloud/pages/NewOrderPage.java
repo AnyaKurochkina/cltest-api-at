@@ -10,12 +10,12 @@ import static tests.Tests.activeCnd;
 import static tests.Tests.clickableCnd;
 
 public class NewOrderPage {
-    SelenideElement submitBtn = $x("//button[contains(., 'Посмотреть еще')]");
+//    SelenideElement submitBtn = $x("//button[contains(., 'Посмотреть еще')]");
     ElementsCollection products = $$x("//button[img]");
 
     public NewOrderPage() {
-        submitBtn.shouldBe(activeCnd).hover()
-                .shouldBe(clickableCnd).click();
+//        submitBtn.shouldBe(activeCnd).hover()
+//                .shouldBe(clickableCnd).click();
     }
 
     public void selectProduct(String product){
