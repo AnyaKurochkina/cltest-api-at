@@ -2,6 +2,7 @@ package ui.cloud.tests;
 
 import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -122,6 +123,7 @@ public class UiWindowsTest extends Tests {
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).waitCloseWindow(false).waitChangeStatus(false).build());
         $x("//div[text()='Заказ защищен от удаления']").shouldBe(Condition.visible);
+        Selenide.refresh();
         winPage.switchProtectOrder("Нет");
     }
 
