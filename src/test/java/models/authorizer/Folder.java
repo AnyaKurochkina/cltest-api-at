@@ -1,6 +1,5 @@
 package models.authorizer;
 
-import com.mifmif.common.regex.Generex;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;

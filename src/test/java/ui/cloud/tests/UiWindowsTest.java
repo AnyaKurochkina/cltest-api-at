@@ -116,7 +116,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверка 'Защита от удаления'")
     void checkProtectOrder() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.switchProtectOrder("Да");
+        winPage.switchProtectOrder("Защита от удаления выключена");
         winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
         {
             Dialog dlgActions = new Dialog("Удаление");
@@ -124,7 +124,7 @@ public class UiWindowsTest extends Tests {
         }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).waitCloseWindow(false).waitChangeStatus(false).build());
         $x("//div[text()='Заказ защищен от удаления']").shouldBe(Condition.visible);
         Selenide.refresh();
-        winPage.switchProtectOrder("Нет");
+        winPage.switchProtectOrder("Защита от удаления включена");
     }
 
     @Test
