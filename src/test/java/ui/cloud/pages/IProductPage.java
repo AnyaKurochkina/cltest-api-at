@@ -71,7 +71,7 @@ public abstract class IProductPage {
     public void switchProtectOrder(String expectValue) {
         runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить", () -> {
             Input.byLabel("Включить защиту от удаления").click();
-        });
+        }, ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
         new TopInfo().getValueByColumnInFirstRow("Защита от удаления").shouldBe(Condition.exactText(expectValue));
     }
 
