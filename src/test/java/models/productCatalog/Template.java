@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
+import java.util.Map;
 
 import static core.helper.Configure.ProductCatalogURL;
 
@@ -34,7 +35,7 @@ public class Template extends Entity {
     private Boolean logCanBeOverridden;
     private Integer timeout;
     private Double coordsX;
-    private Output output;
+    private Map<String,Map<String,String>> output;
     private PrintedOutput printedOutput;
     private Boolean printedOutputCanBeOverridden;
     private List<Object> restrictedPaths;
@@ -45,7 +46,7 @@ public class Template extends Entity {
     private String logLevel;
     private List<Object> restrictedGroups;
     private Integer priority;
-    private Input input;
+    private Map<String,Map<String,String>> input;
     private Object extraData;
     private String templateName;
     private List<Object> allowedGroups;
@@ -55,7 +56,7 @@ public class Template extends Entity {
     private String type;
     private String title;
 
-    private final String productName = "/api/v1/templates/";
+    public static final String productName = "/api/v1/templates/";
 
     @Override
     public Entity init() {
@@ -70,7 +71,10 @@ public class Template extends Entity {
                 .set("$.version", version)
                 .set("$.type", type)
                 .set("$.title", title)
-                .set("$.priority", priority)
+                .set("$.run", run)
+                .set("$.input", input)
+                .set("$.output", output)
+                .set("$.timeout", timeout)
                 .build();
     }
 

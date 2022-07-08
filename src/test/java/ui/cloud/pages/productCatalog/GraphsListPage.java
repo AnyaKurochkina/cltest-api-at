@@ -1,6 +1,8 @@
 package ui.cloud.pages.productCatalog;
 
-import com.codeborne.selenide.*;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
 import ui.cloud.tests.productCatalog.TestUtils;
 
@@ -21,12 +23,11 @@ public class GraphsListPage {
     private final SelenideElement inputSearch = $x("//input[@placeholder = 'Поиск']");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
-    private final SelenideElement graphId = $x("//p/b");
+    private final SelenideElement graphId = $x("//form//p//b");
     private final SelenideElement idInput = $x("//input[@name = 'id']");
     private final SelenideElement deleteButton = $x("//span[text() = 'Удалить']");
     private final SelenideElement clearSearchButton = $x("//*[@placeholder='Поиск']/../button");
     private final SelenideElement cancelButton = $x("//span[text()='Отмена']/..");
-    private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']/ancestor::div[1]");
     private final SelenideElement nothingFoundMessage = $x("//td[text()='Нет данных для отображения']");
     private final SelenideElement graphNameValidationHint = $x("//p[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::p");
@@ -98,6 +99,7 @@ public class GraphsListPage {
         $x("//td[text() = '"+graphName+"']//parent::tr//button[@id = 'actions-menu-button']").click();
     }
 
+    @Step("Проверка заголовков списка графов")
     public GraphsListPage checkGraphsListHeaders() {
         $x("//table[@class='MuiTable-root']//th[1]").shouldHave(Condition.exactText("Наименование"));
         $x("//table[@class='MuiTable-root']//th[2]").shouldHave(Condition.exactText("Код графа"));
@@ -107,6 +109,7 @@ public class GraphsListPage {
         return this;
     }
 
+    @Step("Проверка недоступности создания графа")
     public GraphsListPage checkCreateGraphDisabled(String title, String name, String type, String description, String author) {
         createNewGraphButton.shouldBe(Condition.visible).click();
         inputTitleField.setValue(title);
@@ -128,6 +131,7 @@ public class GraphsListPage {
         return new GraphsListPage();
     }
 
+    @Step("Открытие страницы графа")
     public GraphPage openGraphPage(String name) {
         if (clearSearchButton.isDisplayed()) {
             clearSearchButton.click();
@@ -137,11 +141,16 @@ public class GraphsListPage {
         return new GraphPage();
     }
 
+    @Step("Проверка указания некорректных значений в коде графа")
     public GraphsListPage checkGraphNameValidation(String[] names) {
         createNewGraphButton.shouldBe(Condition.visible).click();
         for (String name : names) {
             inputNameField.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
-            inputNameField.setValue(name).sendKeys("a");
+            inputNameField.setValue(name);
+            TestUtils.wait(600);
+            if (!graphNameValidationHint.exists()) {
+                inputNameField.sendKeys("t");
+            }
             graphNameValidationHint.shouldBe(Condition.visible);
         }
         cancelButton.click();
@@ -161,5 +170,23 @@ public class GraphsListPage {
                 serviceType.click();
                 break;
         }
+    }
+
+    @Step("Проверка сортировки по наименованию")
+    public GraphsListPage checkSortingByTitle() {
+        BaseSteps.checkSortingByStringField("Наименование", 1);
+        return this;
+    }
+
+    @Step("Проверка сортировки по коду графа")
+    public GraphsListPage checkSortingByName() {
+        BaseSteps.checkSortingByStringField("Код графа", 2);
+        return this;
+    }
+
+    @Step("Проверка сортировки по дате создания")
+    public GraphsListPage checkSortingByCreateDate() {
+        BaseSteps.checkSortingByDateField("Дата создания", 3);
+        return this;
     }
 }
