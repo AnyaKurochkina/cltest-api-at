@@ -54,7 +54,7 @@ public class Configure {
             OrderServiceURL = kongURL + "order-service/api";
             StateServiceURL = kongURL + "state-service";
             ReferencesURL = kongURL + "references";
-            ResourceManagerURL = kongURL + "resource-manager";
+            ResourceManagerURL = kongURL + "resource-manager/api";
             FeedServiceURL = kongURL + "feed-service";
         } catch (Exception e) {
             e.printStackTrace();
