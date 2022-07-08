@@ -25,7 +25,6 @@
     "title": "service_import_test_api",
     "description": "",
     "is_published": false,
-    "icon": null,
     "allowed_groups": [],
     "restricted_groups": [],
     "allowed_developers": [],
@@ -35,22 +34,23 @@
       0,
       0
     ],
-    "direction_id": "c02574e7-5906-419d-bebe-1f3dd9ea7ce8"
+    "direction_id": "944bb110-102b-400f-ab20-6dc2c9106973",
+    "icon_store_id": null
   },
   "rel_foreign_models": {
     "direction": {
       "model_name": "OrgDirection",
       "OrgDirection": {
-        "name": "dir_for_import",
-        "title": "dir_for_import",
-        "description": "",
-        "icon": "",
-        "extra_data": {}
+        "name": "d_i_r_e_c_t_i_o_n",
+        "title": "QA Test Direction",
+        "description": "qa-test-direction",
+        "extra_data": {},
+        "icon_store_id": null
       },
       "rel_foreign_models": {}
     }
   },
   "dump_version": 5.0,
-  "dump_date": "2022-06-22 10:30:31",
+  "dump_date": "2022-07-07 13:26:21",
   "is_pinned_versions": true
 }

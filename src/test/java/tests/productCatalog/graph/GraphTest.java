@@ -77,7 +77,7 @@ public class GraphTest extends Tests {
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json");
         Assertions.assertTrue(steps.isExists(graphName));
         steps.getDeleteObjectResponse(steps
-                .getProductObjectIdByNameWithMultiSearch(graphName, GetGraphsListResponse.class)).assertStatus(200);
+                .getProductObjectIdByNameWithMultiSearch(graphName, GetGraphsListResponse.class)).assertStatus(204);
         Assertions.assertFalse(steps.isExists(graphName));
     }
 
@@ -171,7 +171,7 @@ public class GraphTest extends Tests {
         Assertions.assertTrue(steps.isExists(cloneName));
         steps.getDeleteObjectResponse(
                         steps.getProductObjectIdByNameWithMultiSearch(cloneName, GetGraphsListResponse.class))
-                .assertStatus(200);
+                .assertStatus(204);
         Assertions.assertFalse(steps.isExists(cloneName));
     }
 
@@ -269,7 +269,7 @@ public class GraphTest extends Tests {
         JsonPath jsonPath = steps.getJsonPath(id);
         assertFalse(jsonPath.getString("graph[0].template_id").contains("'"));
         steps.getDeleteObjectResponse(steps
-                .getProductObjectIdByNameWithMultiSearch("api_test", GetGraphsListResponse.class)).assertStatus(200);
+                .getProductObjectIdByNameWithMultiSearch("api_test", GetGraphsListResponse.class)).assertStatus(204);
     }
 
     @DisplayName("Попытка удаления графа используемого в продукте, действии и сервисе")
