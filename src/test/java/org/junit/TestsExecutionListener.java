@@ -53,7 +53,6 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-browser-side-navigation");
         options.addArguments("--start-maximized");
-        Configuration.browserCapabilities = new DesiredCapabilities();
         Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
         //####Config for Ui###
