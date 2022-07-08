@@ -30,7 +30,7 @@ public class FeedServiceSteps {
                 .setRole(Role.VIEWER)
                 .body(jsonObject)
                 .post(EVENT_TYPE)
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(EventType.class);
     }
 

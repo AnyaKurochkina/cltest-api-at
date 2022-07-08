@@ -20,6 +20,7 @@ import models.productCatalog.Services;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -322,6 +323,7 @@ public class GraphTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Graph в GitLab")
+    @EnabledIfEnv("ift")
     @TmsLink("821972")
     public void dumpToGitlabGraph() {
         String graphName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -336,6 +338,7 @@ public class GraphTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Graph из GitLab")
+    @EnabledIfEnv("ift")
     @TmsLink("1028898")
     public void loadFromGitlabGraph() {
         String graphName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

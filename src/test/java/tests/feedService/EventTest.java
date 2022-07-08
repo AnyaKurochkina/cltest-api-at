@@ -94,7 +94,7 @@ public class EventTest extends Tests {
     @Test
     public void getEventListTest() {
         Event event = Event.builder()
-                .title("get_by_id_event_title_test_api")
+                .title("get_list_by_id_event_title_test_api")
                 .eventType(eventType.getId())
                 .content("content test")
                 .description("description test")
