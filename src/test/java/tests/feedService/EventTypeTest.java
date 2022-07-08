@@ -10,6 +10,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import steps.feedService.FeedServiceSteps;
 import tests.Tests;
 
 import java.util.List;
@@ -41,8 +42,13 @@ public class EventTypeTest extends Tests {
     @TmsLink("")
     @Test
     public void createEventTypeByViewerTest() {
+        String title = "create_event_type_title_viewer_test_api";
+        EventType eventTypeByName = FeedServiceSteps.getEventTypeByName(title);
+        if (eventTypeByName != null) {
+            FeedServiceSteps.deleteEventType(eventTypeByName.getId());
+        }
         EventType eventType = EventType.builder()
-                .title("create_event_type_title_viewer_test_api")
+                .title(title)
                 .internalName("create_event_type_internalName_viewer_test_api")
                 .build();
         JSONObject body = eventType.init().toJson();

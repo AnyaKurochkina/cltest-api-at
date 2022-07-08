@@ -17,6 +17,7 @@ import models.productCatalog.Product;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
@@ -489,6 +490,7 @@ public class ProductsTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Product в GitLab")
+    @EnabledIfEnv("ift")
     @TmsLink("975400")
     public void dumpToGitlabProduct() {
         String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -504,6 +506,7 @@ public class ProductsTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Product из GitLab")
+    @EnabledIfEnv("ift")
     @TmsLink("1028975")
     public void loadFromGitlabProduct() {
         String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

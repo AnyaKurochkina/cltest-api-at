@@ -17,6 +17,7 @@ import models.productCatalog.ItemVisualTemplates;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
@@ -338,6 +339,7 @@ public class VisualTemplateTest extends Tests {
 
     @Test
     @DisplayName("Загрузка VisualTemplate в GitLab")
+    @EnabledIfEnv("ift")
     @TmsLink("975416")
     public void dumpToGitlabVisualTemplate() {
         String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -357,6 +359,7 @@ public class VisualTemplateTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка VisualTemplate из GitLab")
+    @EnabledIfEnv("ift")
     @TmsLink("1029469")
     public void loadFromGitlabVisualTemplate() {
         String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
