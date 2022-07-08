@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import models.ObjectPoolService;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import ru.testit.junit5.RunningHandler;
 
@@ -33,8 +34,21 @@ public class TestsExecutionListener implements TestExecutionListener {
         if (getAppProp("webdriver.path") != null) {
             String DRIVER_PATH = new File(getAppProp("webdriver.path")).getAbsolutePath();
             System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
-            System.setProperty("chromeoptions.args","\"--disable-notifications\",\"--disable-web-security\",\" --allow-external-pages\",\"--disable-gpu\",\"--no-sandbox\",\"--disable-browser-side-navigation\"");
+            System.setProperty("chromeoptions.args","\"--disable-notifications\",\"--disable-web-security\",\"--allow-external-pages\",\"--disable-gpu\",\"--no-sandbox\",\"--disable-browser-side-navigation\"");
         }
+
+        Configuration.browser = "chrome";
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-notifications");
+        options.addArguments("--disable-web-security");
+        options.addArguments("--allow-external-pages");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-browser-side-navigation");
+        options.addArguments("--start-maximized");
+        Configuration.browserCapabilities = new DesiredCapabilities();
+        Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
+
         baseUrl = URL;
         isRemote();
         Configuration.browserSize = "1530x870";
