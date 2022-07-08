@@ -24,9 +24,12 @@ public class Table implements TypifiedElement {
     SelenideElement table;
     ElementsCollection rows;
     ElementsCollection headersCollection;
-    ElementsCollection progressBars = $$x("div[div[@role='progressbar']]"); //(//div[div[@role='progressbar']])[last()]
+    //    ElementsCollection progressBars = $$x("div[div[@role='progressbar']]"); //(//div[div[@role='progressbar']])[last()]
+    @Getter
+    ElementsCollection progressBars = $$x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]");
 
-    protected void open(){}
+    protected void open() {
+    }
 
     public Table(String columnName) {
         open();
@@ -89,7 +92,7 @@ public class Table implements TypifiedElement {
     @Step("Получение значения по колонке '{column}' в первой строке'")
     public SelenideElement getValueByColumnInFirstRow(String column) {
         int index = headers.indexOf(column);
-        if(index < 0)
+        if (index < 0)
             Assertions.fail(String.format("Колонка %s не найдена. Колонки: %s", column, StringUtils.join(headers, ",")));
         SelenideElement row;
         try {
