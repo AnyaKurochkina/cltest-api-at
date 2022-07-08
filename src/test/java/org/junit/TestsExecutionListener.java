@@ -37,7 +37,14 @@ public class TestsExecutionListener implements TestExecutionListener {
             System.setProperty("chromeoptions.args","\"--disable-notifications\",\"--disable-web-security\",\"--allow-external-pages\",\"--disable-gpu\",\"--no-sandbox\",\"--disable-browser-side-navigation\"");
         }
 
+        baseUrl = URL;
+        isRemote();
+        Configuration.browserSize = "1530x870";
+        Configuration.browserPosition = "2x2";
+        Configuration.timeout = 40000;
+        Configuration.driverManagerEnabled = false;
         Configuration.browser = "chrome";
+
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-web-security");
@@ -48,13 +55,6 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--start-maximized");
         Configuration.browserCapabilities = new DesiredCapabilities();
         Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
-
-        baseUrl = URL;
-        isRemote();
-        Configuration.browserSize = "1530x870";
-        Configuration.browserPosition = "2x2";
-        Configuration.timeout = 40000;
-        Configuration.driverManagerEnabled = false;
 
         //####Config for Ui###
 
