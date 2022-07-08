@@ -74,10 +74,6 @@ public class WindowsPage extends IProductPage {
         runActionWithoutParameters("Виртуальная машина", "Выключить принудительно");
     }
 
-    public void turnOnDeleteProtection() {
-//        runActionWithoutParameters("Виртуальная машина", "Защита от удаления");
-    }
-
     public void addDisk(String name) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("Дополнительные диски", "Добавить диск", "Подтвердить", () -> {

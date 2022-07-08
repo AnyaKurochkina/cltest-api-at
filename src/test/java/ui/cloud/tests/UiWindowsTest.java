@@ -2,6 +2,7 @@ package ui.cloud.tests;
 
 import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -12,12 +13,16 @@ import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
+import steps.orderService.OrderServiceSteps;
 import tests.Tests;
 import ui.cloud.pages.*;
+import ui.elements.Dialog;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
 
 import java.time.Duration;
+
+import static core.helper.StringUtils.$x;
 
 @ExtendWith(InterceptTestExtension.class)
 @ExtendWith(ConfigExtension.class)
@@ -27,7 +32,6 @@ import java.time.Duration;
 @Log4j2
 public class UiWindowsTest extends Tests {
     Windows product;
-    double preBillingProductPrice;
 
     //TODO: пока так :)
     public UiWindowsTest() {
@@ -52,6 +56,7 @@ public class UiWindowsTest extends Tests {
     @Order(1)
     @DisplayName("UI Windows. Заказ")
     void orderWindows() {
+        double preBillingProductPrice;
         try {
             new IndexPage()
                     .clickOrderMore()
@@ -79,6 +84,8 @@ public class UiWindowsTest extends Tests {
             product.setError(e.toString());
             throw e;
         }
+        WindowsPage winPage = new WindowsPage(product);
+        Assertions.assertEquals(preBillingProductPrice, winPage.getCostOrder(), 0.01);
     }
 
     @Test
@@ -104,12 +111,20 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @TmsLink("976732")
+    @TmsLink("2023")
     @Order(4)
-    @DisplayName("UI Windows. Проверка стоимости продукта соответствию предбиллингу")
-    void checkPrePriceOrder() {
+    @DisplayName("UI Windows. Проверка 'Защита от удаления'")
+    void checkProtectOrder() {
         WindowsPage winPage = new WindowsPage(product);
-        Assertions.assertEquals(preBillingProductPrice, winPage.getCostOrder(), 0.01);
+        winPage.switchProtectOrder("Да");
+        winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
+        {
+            Dialog dlgActions = new Dialog("Удаление");
+            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
+        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).waitCloseWindow(false).waitChangeStatus(false).build());
+        $x("//div[text()='Заказ защищен от удаления']").shouldBe(Condition.visible);
+        Selenide.refresh();
+        winPage.switchProtectOrder("Нет");
     }
 
     @Test

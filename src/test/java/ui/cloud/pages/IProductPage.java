@@ -13,7 +13,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.WebElement;
 import steps.stateService.StateServiceSteps;
+import ui.cloud.tests.ActionParameters;
 import ui.elements.Dialog;
+import ui.elements.Input;
 import ui.elements.Table;
 
 import java.time.Duration;
@@ -66,71 +68,83 @@ public abstract class IProductPage {
         log.debug("Итоговый статус: {}", titles);
     }
 
+    public void switchProtectOrder(String expectValue) {
+        runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить", () -> {
+            Input.byLabel("Включить защиту от удаления").click();
+        }, ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
+        new TopInfo().getValueByColumnInFirstRow("Защита от удаления").shouldBe(Condition.exactText(expectValue));
+    }
+
     public SelenideElement getBtnAction(String header) {
         return $x("//ancestor::*[.='{}']/parent::*//button[@id='actions-menu-button']", header);
     }
 
-
-    @Step("Запуск действия '{action}' в блоке '{headerBlock}'")
-    protected void runActionWithoutParameters(String headerBlock, String action) {
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
-        getBtnAction(headerBlock).shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
-        $x("//li[.='{}']", action).shouldBe(activeCnd).scrollTo().hover().shouldBe(clickableCnd).click();
-        preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
-        Dialog dlgActions = new Dialog(action);
-        dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
-                .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        dlgActions.getDialog().shouldNotBe(Condition.visible);
-        Waiting.sleep(3000);
-        waitChangeStatus();
-        checkLastAction(action);
+    @Step("Получение label")
+    public String getLabel() {
+        return $x("//span[starts-with(text(),'AT-UI-')]").shouldBe(Condition.visible).getText();
     }
 
     @Step("Запуск действия '{action}'")
-    protected void runActionWithoutParameters(SelenideElement button, String action) {
+    protected void runActionWithoutParameters(SelenideElement button, String action, ActionParameters params) {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = new Dialog(action);
-        preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+        if (params.isCheckPreBilling())
+            preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        dlgActions.getDialog().shouldNotBe(Condition.visible);
+        if (params.isWaitCloseWindow())
+            dlgActions.getDialog().shouldNotBe(Condition.visible);
         Waiting.sleep(3000);
-        waitChangeStatus();
-        checkLastAction(action);
+        if (params.isWaitChangeStatus())
+            waitChangeStatus();
+        if (params.isCheckLastAction())
+            checkLastAction(action);
     }
 
     @SneakyThrows
     @Step("Запуск действия '{action}' с параметрами")
-    protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable) {
+    protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
-        preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+        if (params.isCheckPreBilling())
+            preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         SelenideElement runButton = $x("//div[@role='dialog']//button[.='{}']", textButton);
         runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        runButton.shouldNotBe(Condition.visible);
+        if (params.isWaitCloseWindow())
+            runButton.shouldNotBe(Condition.visible);
         Waiting.sleep(3000);
-        waitChangeStatus();
-        checkLastAction(action);
+        if (params.isWaitChangeStatus())
+            waitChangeStatus();
+        if (params.isCheckLastAction())
+            checkLastAction(action);
     }
 
-    @SneakyThrows
-    @Step("Запуск действия '{action}' в блоке '{headerBlock}' с параметрами")
-    protected void runActionWithParameters(String headerBlock, String action, String textButton, Executable executable) {
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
-        getBtnAction(headerBlock).shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
-        $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        executable.execute();
-        preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
-        SelenideElement button = $x("//div[@role='dialog']//button[.='{}']", textButton);
-        button.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        button.shouldNotBe(Condition.visible);
-        Waiting.sleep(3000);
-        waitChangeStatus();
-        checkLastAction(action);
+    protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable) {
+        runActionWithParameters(button, action, textButton, executable, ActionParameters.builder().build());
+    }
+
+    protected void runActionWithoutParameters(SelenideElement button, String action) {
+        runActionWithoutParameters(button, action, ActionParameters.builder().build());
+    }
+
+    protected void runActionWithoutParameters(String headerBlock, String action, ActionParameters params) {
+        runActionWithoutParameters(getBtnAction(headerBlock), action, params);
+    }
+
+    protected void runActionWithoutParameters(String headerBlock, String action) {
+        runActionWithoutParameters(getBtnAction(headerBlock), action, ActionParameters.builder().build());
+    }
+
+    public void runActionWithParameters(String headerBlock, String action, String textButton, Executable executable, ActionParameters params) {
+        runActionWithParameters(getBtnAction(headerBlock), action, textButton, executable, params);
+    }
+
+    public void runActionWithParameters(String headerBlock, String action, String textButton, Executable executable) {
+        runActionWithParameters(getBtnAction(headerBlock), action, textButton, executable, ActionParameters.builder().build());
     }
 
     public void checkErrorByStatus(String status) {

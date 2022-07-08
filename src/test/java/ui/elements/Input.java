@@ -14,7 +14,11 @@ public class Input implements TypifiedElement{
     }
 
     public static Input byLabel(String label) {
-        return new Input($x("//label[starts-with(.,'{}')]/following-sibling::*/input", label));
+        return new Input($x("//label[starts-with(.,'{}')]/parent::*//input", label));
+    }
+
+    public void click(){
+        input.click();
     }
 
     public void setValue(String value){
