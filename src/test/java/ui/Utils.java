@@ -23,7 +23,7 @@ public class Utils {
     }
 
     public static void attachRequests() {
-        LogEntries logEntries = WebDriverRunner.getWebDriver().manage().logs().get(String.valueOf(LogType.BROWSER));
+        LogEntries logEntries = WebDriverRunner.getWebDriver().manage().logs().get(String.valueOf(LogType.PERFORMANCE));
         StringJoiner str = new StringJoiner("\n");
         for (LogEntry entry : logEntries)
             str.add(String.format("[%s] %s: %s", entry.getLevel(), entry.getTimestamp(), entry.getMessage()));
