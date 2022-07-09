@@ -22,7 +22,7 @@ public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, In
         SelenideLogger.addListener("AllureSelenide",
                 new AllureSelenide().screenshots(true).savePageSource(true));
         LoggingPreferences logs = new LoggingPreferences();
-        logs.enable(LogType.BROWSER, Level.ALL);
+        logs.enable(LogType.PERFORMANCE, Level.ALL);
         Configuration.browserCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
     }
 
