@@ -13,7 +13,6 @@ import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import steps.orderService.OrderServiceSteps;
 import tests.Tests;
 import ui.cloud.pages.*;
 import ui.elements.Dialog;
@@ -73,7 +72,7 @@ public class UiWindowsTest extends Tests {
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
             new ProductsPage()
-                    .getRowByColumn("Продукт",
+                    .getRowElementByColumnValue("Продукт",
                             orderPage.getLabelValue())
                     .hover()
                     .click();
@@ -158,7 +157,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Добавить диск")
     void discActAdd() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("T"));
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("T", "11"));
     }
 
     @Test
@@ -167,7 +166,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Отключить в ОС")
     void discActOff() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("S"));
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("S", "11"));
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.disableDisk("S"));
     }
 
@@ -177,7 +176,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Подключить в ОС")
     void discActOn() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("R"));
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("R", "11"));
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.disableDisk("R"));
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.enableDisk("R"));
     }
@@ -189,7 +188,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Удалить диск")
     void discActDelete() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("P"));
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("P", "11"));
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.disableDisk("P"));
         winPage.runActionWithCheckCost(CompareType.LESS, () -> winPage.deleteDisk("P"));
     }

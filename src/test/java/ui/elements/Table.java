@@ -1,11 +1,9 @@
 package ui.elements;
 
 
-import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.*;
 import io.qameta.allure.Step;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -48,16 +46,45 @@ public class Table implements TypifiedElement {
 //    }
 
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
-    public SelenideElement getRowByColumn(String column, String value) {
-        int index = headers.indexOf(column);
-        if (index < 0) {
-            throw new NoSuchElementException("Колонки " + column + " не существует ");
-        }
+    public SelenideElement getRowElementByColumnValue(String column, String value) {
         for (SelenideElement e : rows) {
-            if (e.$$x("td").get(index).getText().equals(value))
+            if (e.$$x("td").get(getIndexHeader(column)).getText().equals(value))
                 return e;
         }
         throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
+    }
+
+    @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
+    public Row getRowByColumnValue(String column, String value) {
+        for (int i = 0; i < rows.size(); i++) {
+            if (rows.get(i).$$x("td").get(getIndexHeader(column)).getText().equals(value))
+                return new Row(i);
+        }
+        throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
+    }
+
+    @Step("Проверка существования в колонке '{column}' значения '{value}'")
+    public boolean isColumnValueExist(String column, String value) {
+        for (SelenideElement e : rows) {
+            if (e.$$x("td").get(getIndexHeader(column)).getText().equals(value))
+                return true;
+        }
+        return false;
+    }
+
+    public int getIndexHeader(String column){
+        int index = headers.indexOf(column);
+        Assertions.assertNotEquals(-1, index, String.format("Колонка %s не найдена. Колонки: %s", column, StringUtils.join(headers, ",")));
+        return index;
+    }
+
+    @AllArgsConstructor
+    public class Row{
+        int row;
+
+        public String getValueByColumn(String column){
+            return getValueByColumnInRow(row, column).getText();
+        }
     }
 
 //    private void waitLoadTable(SelenideElement webElement, SelenideElement table) {
@@ -89,24 +116,25 @@ public class Table implements TypifiedElement {
         return getValueByColumnInFirstRow(column).getText();
     }
 
-    @Step("Получение значения по колонке '{column}' в первой строке'")
-    public SelenideElement getValueByColumnInFirstRow(String column) {
-        int index = headers.indexOf(column);
-        if (index < 0)
-            Assertions.fail(String.format("Колонка %s не найдена. Колонки: %s", column, StringUtils.join(headers, ",")));
+    @Step("Получение значения по колонке '{column}' в строке {rowIndex}")
+    public SelenideElement getValueByColumnInRow(int rowIndex, String column) {
         SelenideElement row;
         try {
-            row = rows.get(0);
+            row = rows.get(rowIndex);
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new Error("В таблице не найдены строки");
+            throw new NotFoundException("В таблице не найдены строки");
         }
         SelenideElement element;
         try {
-            element = row.$$x("td").get(index);
+            element = row.$$x("td").get(getIndexHeader(column));
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new Error(String.format("Нет колонки с индексом %d. Всего колонок %d", index, row.$$x("td").size()), e);
+            throw new NotFoundException(String.format("Нет колонки с индексом %d. Всего колонок %d", getIndexHeader(column), row.$$x("td").size()), e);
         }
         return element.shouldBe(Condition.visible);
+    }
+
+    public SelenideElement getValueByColumnInFirstRow(String column) {
+        return getValueByColumnInRow(0, column);
     }
 
 }
