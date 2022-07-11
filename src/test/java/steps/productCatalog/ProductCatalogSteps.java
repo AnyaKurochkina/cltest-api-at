@@ -459,6 +459,20 @@ public class ProductCatalogSteps {
                 .get("/api/v1/projects/{}/products/{}/", projectId, productId)
                 .assertStatus(200);
     }
+    @Step("Получение списка доступных категорий по id проекта")
+    public List<String> getAvailableCategoriesByContextProject(String projectId) {
+        return new Http(ProductCatalogURL)
+                .get("/api/v1/projects/{}/products/categories/", projectId)
+                .assertStatus(200)
+                .jsonPath().getList("");
+    }
+    @Step("Получение доступных категорий")
+    public List<String> getAvailableCategories() {
+        return new Http(ProductCatalogURL)
+                .get("/api/v1/products/categories/")
+                .assertStatus(200)
+                .jsonPath().getList("");
+    }
 
     public boolean isOrgContains(List<httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem> itemList, String orgName) {
         if (itemList.isEmpty()) {
