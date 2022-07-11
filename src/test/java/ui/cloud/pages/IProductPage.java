@@ -102,6 +102,7 @@ public abstract class IProductPage {
             waitChangeStatus();
         if (params.isCheckLastAction())
             checkLastAction(action);
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
     }
 
     @SneakyThrows
@@ -122,6 +123,7 @@ public abstract class IProductPage {
             waitChangeStatus();
         if (params.isCheckLastAction())
             checkLastAction(action);
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
     }
 
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable) {

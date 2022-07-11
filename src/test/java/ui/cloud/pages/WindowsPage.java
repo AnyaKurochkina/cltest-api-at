@@ -53,7 +53,6 @@ public class WindowsPage extends IProductPage {
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
@@ -112,7 +111,6 @@ public class WindowsPage extends IProductPage {
             DropDown.byLabel("Буква").selectByValue(name);
             DropDown.byLabel("Файловая система").selectByValue("refs");
         });
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
         Table diskTable = new Table(HEADER_CONNECT_STATUS);
         Assertions.assertTrue(diskTable.isColumnValueExist(HEADER_PATH, name), "Диск не существует");
         Assertions.assertAll("Проверка полей диска",
