@@ -9,11 +9,13 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.WebElement;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.tests.ActionParameters;
+import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.Input;
 import ui.elements.Table;
@@ -95,9 +97,8 @@ public abstract class IProductPage {
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (params.isWaitCloseWindow())
-            dlgActions.getDialog().shouldNotBe(Condition.visible);
-        Waiting.sleep(3000);
+        if (params.isCheckAlert())
+            new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
@@ -116,9 +117,8 @@ public abstract class IProductPage {
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         SelenideElement runButton = $x("//div[@role='dialog']//button[.='{}']", textButton);
         runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (params.isWaitCloseWindow())
-            runButton.shouldNotBe(Condition.visible);
-        Waiting.sleep(3000);
+        if (params.isCheckAlert())
+            new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
@@ -264,5 +264,4 @@ public abstract class IProductPage {
         log.debug("Стоимость предбиллинга {}", cost);
         return cost;
     }
-
 }

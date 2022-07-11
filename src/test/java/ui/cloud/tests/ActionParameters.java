@@ -11,7 +11,7 @@ public class ActionParameters {
     @Builder.Default
     boolean checkLastAction = true;
     @Builder.Default
-    boolean waitCloseWindow = true;
+    boolean checkAlert = true;
     @Builder.Default
     boolean waitChangeStatus = true;
 }

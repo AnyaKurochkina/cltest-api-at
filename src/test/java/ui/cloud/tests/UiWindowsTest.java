@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import tests.Tests;
 import ui.cloud.pages.*;
+import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
@@ -119,8 +120,8 @@ public class UiWindowsTest extends Tests {
         {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).waitCloseWindow(false).waitChangeStatus(false).build());
-        $x("//div[text()='Заказ защищен от удаления']").shouldBe(Condition.visible);
+        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
+        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления");
         Selenide.refresh();
         winPage.switchProtectOrder("Защита от удаления включена");
     }
