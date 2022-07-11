@@ -12,6 +12,7 @@ import models.orderService.interfaces.IProduct;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
+import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.tests.ActionParameters;
@@ -184,7 +185,14 @@ public abstract class IProductPage {
         }
 
         public String lastActionStatus() {
-            return getValueByColumnInFirstRow("Статус").$x("descendant::*[@title]").getAttribute("title");
+            return getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
+                    .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
+                    .stream()
+                    .map(e -> e.getAttribute("title"))
+                    .filter(Objects::nonNull)
+                    .filter(ProductStatus::isStatus)
+                    .findFirst()
+                    .orElseThrow(NotFoundException::new);
         }
     }
 
@@ -237,7 +245,7 @@ public abstract class IProductPage {
 
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
-        btnHistory.shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
+        btnHistory.shouldBe(Condition.enabled).click();
         History history = new History();
         checkErrorByStatus(history.lastActionStatus());
         Assertions.assertEquals(history.lastActionName(), action, "Название последнего действия не соответствует ожидаемому");

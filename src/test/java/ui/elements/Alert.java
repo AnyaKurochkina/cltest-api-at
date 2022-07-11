@@ -24,7 +24,7 @@ public class Alert implements TypifiedElement {
     @Step("Проверка alert на вхождение текста {text}")
     public Alert checkText(String text) {
         String message = element.getText();
-        Assertions.assertTrue(message.contains(text), String.format("Alert с сообщением '%s' не содержит текст '%s'", message, text));
+        Assertions.assertTrue(message.toLowerCase().contains(text.toLowerCase()), String.format("Alert с сообщением '%s' не содержит текст '%s'", message, text));
         return this;
     }
 
