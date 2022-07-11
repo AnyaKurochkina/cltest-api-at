@@ -30,7 +30,8 @@ public class Alert implements TypifiedElement {
 
     @Step("Проверка alert на цвет {color}")
     public Alert checkColor(Color color) {
-        Assertions.assertEquals(color.toString(), element.getCssValue("background-color"), "Произошла ошибка: " + element.getText());
+        Assertions.assertEquals(color.toString(), org.openqa.selenium.support.Color.fromString(element.getCssValue("background-color")).asHex(),
+                "Произошла ошибка: " + element.getText());
         return this;
     }
 
