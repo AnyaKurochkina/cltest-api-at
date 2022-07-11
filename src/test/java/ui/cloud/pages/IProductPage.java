@@ -217,7 +217,7 @@ public abstract class IProductPage {
 
         @Override
         protected void open() {
-            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
+            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         }
 
         public VirtualMachine(String columnName) {
