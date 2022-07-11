@@ -6,6 +6,7 @@ import models.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import ui.elements.Dialog;
 import ui.elements.DropDown;
+import ui.elements.Input;
 import ui.elements.Table;
 
 import static core.helper.StringUtils.$x;
@@ -13,6 +14,7 @@ import static core.helper.StringUtils.$x;
 public class WindowsPage extends IProductPage {
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
     private static final String HEADER_PATH = "Путь";
+    private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
@@ -51,10 +53,14 @@ public class WindowsPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
 
-//    public void discActExpand() {
-//        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-//        runActionWithoutParameters("Виртуальная машина", "Расширить диск");
-//    }
+    public void expandDisk(String name, String size) {
+        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(getDiskMenuElement(name), "Расширить диск", "Подтвердить", () -> {
+            Input.byLabel("Итоговый объем дискового пространства, Гб").setValue(size);
+        });
+        Assertions.assertEquals(size, new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_DISK_SIZE),
+                "Неверный размер диска");
+    }
 
     public void disableDisk(String name) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
@@ -104,7 +110,7 @@ public class WindowsPage extends IProductPage {
         Table diskTable = new Table(HEADER_CONNECT_STATUS);
         Assertions.assertTrue(diskTable.isColumnValueExist(HEADER_PATH, name), "Диск не существует");
         Assertions.assertAll("Проверка полей диска",
-                ()-> Assertions.assertEquals(size, diskTable.getRowByColumnValue(HEADER_PATH, name).getValueByColumn("Размер, ГБ")
+                ()-> Assertions.assertEquals(size, diskTable.getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_DISK_SIZE)
                         , "Неверный размер диска"),
                 ()-> Assertions.assertEquals("Подключен", diskTable.getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_CONNECT_STATUS),
                         HEADER_CONNECT_STATUS)

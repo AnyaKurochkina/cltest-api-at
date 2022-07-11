@@ -6,7 +6,6 @@ import com.codeborne.selenide.Selenide;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.Windows;
 import models.portalBack.AccessGroup;
@@ -130,12 +129,21 @@ public class UiWindowsTest extends Tests {
     @Order(5)
     @TmsLink("872666")
     @DisplayName("UI Windows. Перезагрузить по питанию")
-    @SneakyThrows
     void restart() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.EQUALS, winPage::restart);
     }
 
+    @Test
+    @Order(6)
+    @TmsLink("233926")
+    @DisplayName("UI Windows. Расширить диск")
+    void expandDisk() {
+        Assumptions.assumeTrue("OpenStack".equals(product.getPlatform()), "Тест отключен для платформы OpenStack");
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("N", "15"));
+        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.expandDisk("N", "20"));
+    }
 
     @Test
     @Order(7)
@@ -181,7 +189,6 @@ public class UiWindowsTest extends Tests {
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.enableDisk("R"));
     }
 
-
     @Test
     @Order(11)
     @TmsLink("646056")
@@ -192,7 +199,6 @@ public class UiWindowsTest extends Tests {
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.disableDisk("P"));
         winPage.runActionWithCheckCost(CompareType.LESS, () -> winPage.deleteDisk("P"));
     }
-
 
     @Test
     @Order(12)
