@@ -153,7 +153,7 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopHard);
         try {
-            winPage.runActionWithCheckCost(CompareType.MORE, winPage::changeConfiguration);
+            winPage.runActionWithCheckCost(CompareType.EQUALS, winPage::changeConfiguration);
         } finally {
             winPage.runActionWithCheckCost(CompareType.MORE, winPage::start);
         }
