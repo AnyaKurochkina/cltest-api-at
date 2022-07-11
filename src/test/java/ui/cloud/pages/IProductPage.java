@@ -100,6 +100,7 @@ public abstract class IProductPage {
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
+        Waiting.sleep(3000);
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
@@ -120,6 +121,7 @@ public abstract class IProductPage {
         runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
+        Waiting.sleep(3000);
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
