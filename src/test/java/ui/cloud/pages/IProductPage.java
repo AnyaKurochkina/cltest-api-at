@@ -205,6 +205,7 @@ public abstract class IProductPage {
         executable.execute();
         Waiting.sleep(3000);
         Selenide.refresh();
+        Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if (type == CompareType.MORE)
             Assertions.assertTrue(preBillingCostAction > currentCost, String.format("%f <= %f", preBillingCostAction, currentCost));
         else if (type == CompareType.LESS)
@@ -215,7 +216,6 @@ public abstract class IProductPage {
             Assertions.assertEquals(0.0d, preBillingCostAction, 0.001d);
             Assertions.assertEquals(0.0d, currentCost, 0.001d);
         }
-        Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
     }
 
     protected abstract class VirtualMachine extends Table {
