@@ -73,7 +73,7 @@ public abstract class IProductPage {
         runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить", () -> {
             Input.byLabel("Включить защиту от удаления").click();
         }, ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
-        new TopInfo().getValueByColumnInFirstRow("Защита от удаления").shouldBe(Condition.attribute("title", expectValue));
+        new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$("*").shouldBe(Condition.attribute("title", expectValue));
     }
 
     public SelenideElement getBtnAction(String header) {

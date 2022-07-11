@@ -12,7 +12,10 @@ import ui.elements.Table;
 import static core.helper.StringUtils.$x;
 
 public class WindowsPage extends IProductPage {
+    private static final String BLOCK_VM = "Виртуальная машина";
+
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
+
     private static final String HEADER_PATH = "Путь";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
@@ -24,7 +27,7 @@ public class WindowsPage extends IProductPage {
     }
 
     public void delete() {
-        runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
+        runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
         {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
@@ -34,20 +37,20 @@ public class WindowsPage extends IProductPage {
 
     public void start() {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
-        runActionWithoutParameters("Виртуальная машина", "Включить");
+        runActionWithoutParameters(BLOCK_VM, "Включить");
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void restart() {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters("Виртуальная машина", "Перезагрузить по питанию");
+        runActionWithoutParameters(BLOCK_VM, "Перезагрузить по питанию");
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void changeConfiguration() {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
         Flavor maxFlavor = product.getMaxFlavor();
-        runActionWithParameters("Виртуальная машина", "Изменить конфигурацию", "Подтвердить", () ->
+        runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
@@ -84,18 +87,18 @@ public class WindowsPage extends IProductPage {
 
     public void checkConfiguration() {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters("Виртуальная машина", "Проверить конфигурацию");
+        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
     }
 
     public void stopSoft() {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters("Виртуальная машина", "Выключить");
+        runActionWithoutParameters(BLOCK_VM, "Выключить");
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void stopHard() {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters("Виртуальная машина", "Выключить принудительно");
+        runActionWithoutParameters(BLOCK_VM, "Выключить принудительно");
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
