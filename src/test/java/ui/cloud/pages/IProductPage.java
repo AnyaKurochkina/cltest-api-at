@@ -189,11 +189,11 @@ public abstract class IProductPage {
     @SneakyThrows
     @Step("Запуска действия с проверкой стоимости")
     public void runActionWithCheckCost(CompareType type, Executable executable) {
-        Waiting.sleep(3000);
         Selenide.refresh();
         waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
+        Waiting.sleep(3000);
         Selenide.refresh();
         if (type == CompareType.MORE)
             Assertions.assertTrue(preBillingCostAction > currentCost, String.format("%f <= %f", preBillingCostAction, currentCost));
