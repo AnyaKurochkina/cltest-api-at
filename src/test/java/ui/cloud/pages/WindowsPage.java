@@ -53,6 +53,7 @@ public class WindowsPage extends IProductPage {
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
@@ -62,6 +63,7 @@ public class WindowsPage extends IProductPage {
         runActionWithParameters(getDiskMenuElement(name), "Расширить диск", "Подтвердить", () -> {
             Input.byLabel("Итоговый объем дискового пространства, Гб").setValue(size);
         });
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
         Assertions.assertEquals(size, new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
     }
@@ -69,6 +71,7 @@ public class WindowsPage extends IProductPage {
     public void disableDisk(String name) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getDiskMenuElement(name), "Отключить в ОС");
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
         Assertions.assertEquals("Отключен", new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name)
                 .getValueByColumn(HEADER_CONNECT_STATUS));
     }
@@ -76,6 +79,7 @@ public class WindowsPage extends IProductPage {
     public void enableDisk(String name) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getDiskMenuElement(name), "Подключить в ОС");
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
         Assertions.assertEquals("Подключен", new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name)
                 .getValueByColumn(HEADER_CONNECT_STATUS));
     }
@@ -83,6 +87,7 @@ public class WindowsPage extends IProductPage {
     public void deleteDisk(String name) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getDiskMenuElement(name), "Удалить диск");
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
         Assertions.assertFalse(new Table(HEADER_CONNECT_STATUS).isColumnValueExist(HEADER_PATH, name), "Диск существует");
     }
 
@@ -111,6 +116,7 @@ public class WindowsPage extends IProductPage {
             DropDown.byLabel("Буква").selectByValue(name);
             DropDown.byLabel("Файловая система").selectByValue("refs");
         });
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
         Table diskTable = new Table(HEADER_CONNECT_STATUS);
         Assertions.assertTrue(diskTable.isColumnValueExist(HEADER_PATH, name), "Диск не существует");
         Assertions.assertAll("Проверка полей диска",
