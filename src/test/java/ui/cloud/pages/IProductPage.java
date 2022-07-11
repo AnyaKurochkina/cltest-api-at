@@ -100,7 +100,6 @@ public abstract class IProductPage {
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
-        Waiting.sleep(3000);
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
@@ -121,7 +120,6 @@ public abstract class IProductPage {
         runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
-        Waiting.sleep(3000);
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
@@ -204,8 +202,8 @@ public abstract class IProductPage {
         waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
-        Waiting.sleep(5000);
         Selenide.refresh();
+        currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
         Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if (type == CompareType.MORE)
             Assertions.assertTrue(preBillingCostAction > currentCost, String.format("%f <= %f", preBillingCostAction, currentCost));
