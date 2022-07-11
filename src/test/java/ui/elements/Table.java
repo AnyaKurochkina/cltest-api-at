@@ -74,12 +74,12 @@ public class Table implements TypifiedElement {
 
     /**
      * Возвращает индекс заголовка таблицы
-     * @return int от 0
+     * @return int
      */
     public int getIndexHeader(String column){
         int index = headers.indexOf(column);
         Assertions.assertNotEquals(-1, index, String.format("Колонка %s не найдена. Колонки: %s", column, StringUtils.join(headers, ",")));
-        return index - 1;
+        return index;
     }
 
     @AllArgsConstructor
