@@ -34,6 +34,10 @@ public class Account extends Entity {
         }
         if(parentId == null){
             parentId = AccountSteps.getAccountIdByContext(folder.getParentId());
+            if(parentId == null) {
+                Account account = Account.builder().folder(Folder.getParent(folder)).build().createObject();
+                parentId = account.getAccountId();
+            }
         }
         if(organization == null){
             organization = ((Organization) Organization.builder().build().createObject()).getName();
