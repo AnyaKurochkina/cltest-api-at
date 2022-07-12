@@ -112,4 +112,7 @@ public class GraphItem{
 
 	@JsonProperty("lock_order_on_error")
 	private Boolean lockOrderOnError;
+
+	@JsonProperty("icon_store_id")
+	private Object iconStoreId;
 }
