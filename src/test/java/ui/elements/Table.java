@@ -34,7 +34,10 @@ public class Table implements TypifiedElement {
 //        for (SelenideElement e : progressBars)
 //            waitLoadTable(e, table);
         table = $x("//table[thead/tr/th[.='{}']]", columnName).shouldBe(Condition.visible);
+
         $x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]").shouldNot(Condition.exist);
+        $x("//table[contains(.,'Идет обработка данных')]").shouldNot(Condition.exist);
+
         headersCollection = table.$$x("thead/tr/th");
         rows = table.$$x("tbody/tr");
         headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));

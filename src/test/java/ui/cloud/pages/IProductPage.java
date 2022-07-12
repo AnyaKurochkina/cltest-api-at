@@ -72,6 +72,7 @@ public abstract class IProductPage {
         log.debug("Итоговый статус: {}", titles);
     }
 
+    @Step("Переключение 'Защита от удаления' в состояние '{expectValue}'")
     public void switchProtectOrder(String expectValue) {
         runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить", () -> {
             Input.byLabel("Включить защиту от удаления").click();
@@ -108,7 +109,7 @@ public abstract class IProductPage {
     }
 
     @SneakyThrows
-    @Step("Запуск действия '{action}' с параметрами")
+    @Step("Запуск действия '{action}' с параметрами и последующим нажатием на кнопку {textButton}")
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
@@ -150,6 +151,7 @@ public abstract class IProductPage {
         runActionWithParameters(getBtnAction(headerBlock), action, textButton, executable, ActionParameters.builder().build());
     }
 
+    @Step("Проверка статуса заказа")
     public void checkErrorByStatus(String status) {
         if (status.equals(ProductStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
@@ -176,7 +178,7 @@ public abstract class IProductPage {
 
         @Override
         protected void open() {
-            btnHistory.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
+            btnHistory.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         }
 
         public String lastActionName() {
