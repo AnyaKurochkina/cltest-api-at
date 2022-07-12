@@ -1,6 +1,5 @@
 package models.authorizer;
 
-import com.mifmif.common.regex.Generex;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -72,7 +71,7 @@ public class Folder extends Entity {
     }
 
     public void edit(){
-        String titleNew = new Http(Configure.IamURL)
+        String titleNew = new Http(Configure.ResourceManagerURL)
                 .body(toJson())
                 .patch("/v1/folders/{}", name)
                 .assertStatus(200)
@@ -86,7 +85,7 @@ public class Folder extends Entity {
     @Step("Создание папки")
     protected void create() {
         String url = kind.equals(BUSINESS_BLOCK) ? "/v1/organizations/vtb/folders" : String.format("/v1/folders/%s/folders", parentId);
-        name = new Http(Configure.IamURL)
+        name = new Http(Configure.ResourceManagerURL)
                 .body(toJson())
                 .post(url)
                 .assertStatus(201)
@@ -97,7 +96,7 @@ public class Folder extends Entity {
     @Override
     @Step("Удаление папки")
     protected void delete() {
-        new Http(Configure.IamURL)
+        new Http(Configure.ResourceManagerURL)
                 .delete("/v1/folders/" + name)
                 .assertStatus(204);
     }

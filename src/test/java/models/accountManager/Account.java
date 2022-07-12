@@ -12,6 +12,8 @@ import models.authorizer.Organization;
 import org.json.JSONObject;
 import steps.accountManager.AccountSteps;
 
+import java.util.Objects;
+
 @Builder
 @Getter
 public class Account extends Entity {
@@ -41,7 +43,7 @@ public class Account extends Entity {
 
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("/accountManager/accountTemplate.json")
-                .set("$.parent_id", parentId)
+                .set("$.parent_id", Objects.requireNonNull(parentId))
                 .set("$.name", String.format("%s (%s)", folder.getTitle(), folderId))
                 .set("$.folder_uid", folderId)
                 .build();

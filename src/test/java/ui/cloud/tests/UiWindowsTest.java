@@ -6,16 +6,15 @@ import com.codeborne.selenide.Selenide;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.Windows;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import steps.orderService.OrderServiceSteps;
 import tests.Tests;
 import ui.cloud.pages.*;
+import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
@@ -73,7 +72,7 @@ public class UiWindowsTest extends Tests {
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
             new ProductsPage()
-                    .getRowByColumn("Продукт",
+                    .getRowElementByColumnValue("Продукт",
                             orderPage.getLabelValue())
                     .hover()
                     .click();
@@ -116,27 +115,36 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверка 'Защита от удаления'")
     void checkProtectOrder() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.switchProtectOrder("Да");
+        winPage.switchProtectOrder("Защита от удаления включена");
         winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
         {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).waitCloseWindow(false).waitChangeStatus(false).build());
-        $x("//div[text()='Заказ защищен от удаления']").shouldBe(Condition.visible);
+        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
+        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления");
         Selenide.refresh();
-        winPage.switchProtectOrder("Нет");
+        winPage.switchProtectOrder("Защита от удаления выключена");
     }
 
     @Test
     @Order(5)
     @TmsLink("872666")
     @DisplayName("UI Windows. Перезагрузить по питанию")
-    @SneakyThrows
     void restart() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.EQUALS, winPage::restart);
     }
 
+    @Test
+    @Order(6)
+    @TmsLink("233926")
+    @DisplayName("UI Windows. Расширить диск")
+    void expandDisk() {
+        Assumptions.assumeTrue("OpenStack".equals(product.getPlatform()), "Тест отключен для платформы OpenStack");
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("N", "15"));
+        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.expandDisk("N", "20"));
+    }
 
     @Test
     @Order(7)
@@ -158,7 +166,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Добавить диск")
     void discActAdd() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("T"));
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("T", "11"));
     }
 
     @Test
@@ -167,7 +175,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Отключить в ОС")
     void discActOff() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("S"));
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("S", "11"));
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.disableDisk("S"));
     }
 
@@ -177,11 +185,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Подключить в ОС")
     void discActOn() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("R"));
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("R", "11"));
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.disableDisk("R"));
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.enableDisk("R"));
     }
-
 
     @Test
     @Order(11)
@@ -189,11 +196,10 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Удалить диск")
     void discActDelete() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("P"));
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("P", "11"));
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.disableDisk("P"));
         winPage.runActionWithCheckCost(CompareType.LESS, () -> winPage.deleteDisk("P"));
     }
-
 
     @Test
     @Order(12)

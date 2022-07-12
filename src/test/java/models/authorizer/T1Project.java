@@ -39,7 +39,7 @@ public class T1Project extends Entity {
     @Override
     @Step("Создание проекта")
     protected void create() {
-        id = new Http(Configure.IamURL)
+        id = new Http(Configure.ResourceManagerURL)
                 .body(toJson())
                 .setRole(Role.T1ADMIN)
                 .post(String.format("v1/organizations/org1/projects"))

@@ -9,11 +9,14 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
+import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.tests.ActionParameters;
+import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.Input;
 import ui.elements.Table;
@@ -59,20 +62,22 @@ public abstract class IProductPage {
 
     @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus(Duration duration) {
-        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").scrollIntoView(true).$$x("descendant::*[@title]")
+        new TopInfo().getValueByColumnInFirstRow("Статус").scrollIntoView(true).$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
-                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), duration)
+                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), duration);
+        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").scrollIntoView(true).$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.sizeNotEqual(0))
                 .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                 .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
         log.debug("Итоговый статус: {}", titles);
     }
 
+    @Step("Переключение 'Защита от удаления' в состояние '{expectValue}'")
     public void switchProtectOrder(String expectValue) {
         runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить", () -> {
             Input.byLabel("Включить защиту от удаления").click();
         }, ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
-        new TopInfo().getValueByColumnInFirstRow("Защита от удаления").shouldBe(Condition.exactText(expectValue));
+        new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$("*").shouldBe(Condition.attribute("title", expectValue));
     }
 
     public SelenideElement getBtnAction(String header) {
@@ -94,17 +99,18 @@ public abstract class IProductPage {
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (params.isWaitCloseWindow())
-            dlgActions.getDialog().shouldNotBe(Condition.visible);
-        Waiting.sleep(3000);
+        if (params.isCheckAlert())
+            new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
+        Waiting.sleep(2000);
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
             checkLastAction(action);
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
     }
 
     @SneakyThrows
-    @Step("Запуск действия '{action}' с параметрами")
+    @Step("Запуск действия '{action}' с параметрами и последующим нажатием на кнопку {textButton}")
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
@@ -114,9 +120,9 @@ public abstract class IProductPage {
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         SelenideElement runButton = $x("//div[@role='dialog']//button[.='{}']", textButton);
         runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (params.isWaitCloseWindow())
-            runButton.shouldNotBe(Condition.visible);
-        Waiting.sleep(3000);
+        if (params.isCheckAlert())
+            new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
+        Waiting.sleep(2000);
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
@@ -147,6 +153,7 @@ public abstract class IProductPage {
         runActionWithParameters(getBtnAction(headerBlock), action, textButton, executable, ActionParameters.builder().build());
     }
 
+    @Step("Проверка статуса заказа")
     public void checkErrorByStatus(String status) {
         if (status.equals(ProductStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
@@ -173,7 +180,7 @@ public abstract class IProductPage {
 
         @Override
         protected void open() {
-            btnHistory.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
+            btnHistory.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         }
 
         public String lastActionName() {
@@ -181,19 +188,27 @@ public abstract class IProductPage {
         }
 
         public String lastActionStatus() {
-            return getValueByColumnInFirstRow("Статус").$x("descendant::*[@title]").getAttribute("title");
+            return getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
+                    .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
+                    .stream()
+                    .map(e -> e.getAttribute("title"))
+                    .filter(Objects::nonNull)
+                    .filter(ProductStatus::isStatus)
+                    .findFirst()
+                    .orElseThrow(NotFoundException::new);
         }
     }
 
     @SneakyThrows
     @Step("Запуска действия с проверкой стоимости")
     public void runActionWithCheckCost(CompareType type, Executable executable) {
-        Waiting.sleep(3000);
         Selenide.refresh();
         waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
         Selenide.refresh();
+        currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
+        Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if (type == CompareType.MORE)
             Assertions.assertTrue(preBillingCostAction > currentCost, String.format("%f <= %f", preBillingCostAction, currentCost));
         else if (type == CompareType.LESS)
@@ -204,7 +219,6 @@ public abstract class IProductPage {
             Assertions.assertEquals(0.0d, preBillingCostAction, 0.001d);
             Assertions.assertEquals(0.0d, currentCost, 0.001d);
         }
-        Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
     }
 
     protected abstract class VirtualMachine extends Table {
@@ -216,7 +230,7 @@ public abstract class IProductPage {
 
         @Override
         protected void open() {
-            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click(ClickOptions.usingJavaScript());
+            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         }
 
         public VirtualMachine(String columnName) {
@@ -234,7 +248,7 @@ public abstract class IProductPage {
 
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
-        btnHistory.shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
+        btnHistory.shouldBe(Condition.enabled).click();
         History history = new History();
         checkErrorByStatus(history.lastActionStatus());
         Assertions.assertEquals(history.lastActionName(), action, "Название последнего действия не соответствует ожидаемому");
@@ -261,5 +275,4 @@ public abstract class IProductPage {
         log.debug("Стоимость предбиллинга {}", cost);
         return cost;
     }
-
 }

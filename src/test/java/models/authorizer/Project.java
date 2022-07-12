@@ -68,7 +68,7 @@ public class Project extends Entity {
     }
 
     public void edit() {
-        String projectNameNew = new Http(Configure.IamURL)
+        String projectNameNew = new Http(Configure.ResourceManagerURL)
                 .body("{\"project\":{\"title\":\"" + projectName + "\"}}")
                 .patch(String.format("/v1/projects/%s", id))
                 .assertStatus(200)
@@ -81,7 +81,7 @@ public class Project extends Entity {
     @Override
     @Step("Создание проекта")
     protected void create() {
-        id = new Http(Configure.IamURL)
+        id = new Http(Configure.ResourceManagerURL)
                 .body(toJson())
                 .post(String.format("/v1/folders/%s/projects", folderName))
                 .assertStatus(201)
@@ -92,7 +92,7 @@ public class Project extends Entity {
     @Override
     @Step("Удаление проекта")
     protected void delete() {
-        new Http(Configure.IamURL)
+        new Http(Configure.ResourceManagerURL)
                 .delete("/v1/projects/" + id)
                 .assertStatus(204);
     }
