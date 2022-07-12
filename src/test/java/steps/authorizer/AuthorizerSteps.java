@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static core.helper.Configure.IamURL;
-import static core.helper.Configure.PortalBackURL;
+import static core.helper.Configure.*;
 
 @Log4j2
 public class AuthorizerSteps extends Steps {
@@ -58,7 +57,7 @@ public class AuthorizerSteps extends Steps {
         } else {
             throw new Error("Invalid target: " + target + "\nYour target must start with \"fold\" or \"proj\"");
         }
-        return Objects.requireNonNull(new Http(IamURL)
+        return Objects.requireNonNull(new Http(ResourceManagerURL)
                 .get(url)
                 .assertStatus(200)
                 .jsonPath()
