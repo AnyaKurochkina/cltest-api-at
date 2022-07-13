@@ -5,6 +5,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebElement;
 import ui.elements.Table;
@@ -31,7 +32,7 @@ public class EntitiesUtils {
     }
 
     @Step("Проверка схемы выполнения графа")
-    public void checkGraphScheme() {
+    public void checkGraphScheme(JsonPath response) {
         graphScheme.shouldBe(Condition.visible);
         //
         closeModalWindowButton.shouldBe(Condition.enabled).click();

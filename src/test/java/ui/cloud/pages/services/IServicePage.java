@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.EntitiesUtils;
 import ui.cloud.pages.ProductStatus;
+import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Table;
 
@@ -13,6 +14,7 @@ import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
 import static tests.Tests.activeCnd;
+import static tests.Tests.clickableCnd;
 
 @Getter
 public class IServicePage {
@@ -24,16 +26,30 @@ public class IServicePage {
 
     public void run() {
         btnRun.shouldBe(activeCnd).click();
-        new Alert().checkText("Успешно создано действие " + serviceName).checkColor(Alert.Color.GREEN);
+        new Alert().checkText("Успешно создано действие " + serviceName).checkColor(Alert.Color.GREEN).close();
         EntitiesUtils.waitChangeStatus(new Runs(), Duration.ofSeconds(30));
         Assertions.assertEquals(ProductStatus.SUCCESS, new Runs().getStatus());
+    }
+
+    public SelenideElement getMenuLastRunsElement() {
+        return new Table("Дата запуска").getRowByIndex(0).$x("descendant::button[@id='actions-menu-button']");
+    }
+
+    public void runAction(SelenideElement button, String action) {
+        button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
+        $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+    }
+
+    public void checkGraph() {
+        runAction(getMenuLastRunsElement(), "Скопировать Action ID");
+        new Alert().checkText("Action ID скопирован").checkColor(Alert.Color.GREEN).close();
         new Runs().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new EntitiesUtils().checkGraphScheme();
+        new EntitiesUtils().checkGraphScheme(null);
     }
 
     private class Runs extends Table {
         @Override
-        protected void open(){
+        protected void open() {
             btnRuns.shouldBe(Condition.enabled).click();
         }
 
@@ -41,14 +57,14 @@ public class IServicePage {
             super("Дата запуска");
         }
 
-        public String getStatus(){
+        public String getStatus() {
             return getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[@title]").getAttribute("title");
         }
     }
 
     private class TopInfo extends Table {
         @Override
-        protected void open(){
+        protected void open() {
             btnParams.shouldBe(Condition.enabled).click();
         }
 

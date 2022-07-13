@@ -104,7 +104,7 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         winPage.getBtnHistory().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         winPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new EntitiesUtils().checkGraphScheme();
+        new EntitiesUtils().checkGraphScheme(null);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class UiWindowsTest extends Tests {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
-        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления");
+        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
         Selenide.refresh();
         winPage.switchProtectOrder("Защита от удаления выключена");
     }

@@ -66,6 +66,11 @@ public class Table implements TypifiedElement {
         return false;
     }
 
+    public SelenideElement getRowByIndex(int index) {
+        Assertions.assertTrue(rows.size() > index, "Индекс больше кол-ва строк");
+        return rows.get(0);
+    }
+
     /**
      * Возвращает индекс заголовка таблицы
      * @return int
@@ -91,12 +96,7 @@ public class Table implements TypifiedElement {
 
     @Step("Получение значения по колонке '{column}' в строке #{rowIndex}")
     public SelenideElement getValueByColumnInRow(int rowIndex, String column) {
-        SelenideElement row;
-        try {
-            row = rows.get(rowIndex);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new NotFoundException("В таблице не найдены строки");
-        }
+        SelenideElement row = getRowByIndex(rowIndex);
         SelenideElement element;
         try {
             element = row.$$x("td").get(getIndexHeader(column));

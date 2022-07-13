@@ -1,17 +1,22 @@
 package ui.cloud.tests.services;
 
+import com.codeborne.selenide.Condition;
 import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
+import models.authorizer.ProjectEnvironmentPrefix;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import tests.Tests;
+import ui.cloud.pages.EntitiesUtils;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.services.IServicePage;
 import ui.cloud.pages.services.SmokeTestPage;
+import ui.elements.Alert;
 import ui.uiExtesions.ConfigExtension;
 
 @ExtendWith(ConfigExtension.class)
@@ -27,9 +32,9 @@ public class ServicesTest extends Tests {
     //TODO: пока так :)
     public ServicesTest() {
         if (Configure.ENV.equals("prod"))
-            project = Project.builder().id("proj-ghz4hv6a2g").build();
+            project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix("DEV")).isForOrders(true).build().createObject();
         else
-            project = Project.builder().id("proj-5f6ws2rr75").build();
+            project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix("DSO")).isForOrders(true).build().createObject();
     }
 
     @BeforeEach
@@ -45,6 +50,7 @@ public class ServicesTest extends Tests {
         SmokeTestPage smokeTestPage = new SmokeTestPage();
         new IndexPage().goToServicesListPage().selectProduct(smokeTestPage.getServiceName());
         smokeTestPage.run();
+        smokeTestPage.checkGraph();
     }
 
 }
