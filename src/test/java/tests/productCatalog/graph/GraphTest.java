@@ -386,4 +386,12 @@ public class GraphTest extends Tests {
         GetGraphResponse createdGraph = (GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
         assertEquals(restrictedDevelopersList, createdGraph.getRestrictedDevelopers());
     }
+
+    @DisplayName("Негативный тест на получение списка графа по несуществующему ID")
+    @TmsLink("1044118")
+    @Test
+    public void getGraphsByNotExistId() {
+        Response response = steps.getResponseGraphListById("not-exist-id");
+        assertEquals("Введите правильный UUID.", response.jsonPath().getList("id").get(0));
+    }
 }
