@@ -1,4 +1,4 @@
-package ui.cloud.tests;
+package ui.cloud.tests.orders;
 
 
 import com.codeborne.selenide.Condition;

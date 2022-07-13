@@ -26,6 +26,7 @@ public class Configure {
     public static String ReferencesURL;
     public static String ResourceManagerURL;
     public static String FeedServiceURL;
+    public static String Day2ServiceURL;
 
     static {
         try {
@@ -56,6 +57,7 @@ public class Configure {
             ReferencesURL = kongURL + "references";
             ResourceManagerURL = kongURL + "resource-manager/api";
             FeedServiceURL = kongURL + "feed-service";
+            Day2ServiceURL = kongURL + "day2-core";
         } catch (Exception e) {
             e.printStackTrace();
         }

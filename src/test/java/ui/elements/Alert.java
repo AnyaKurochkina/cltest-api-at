@@ -12,7 +12,7 @@ public class Alert implements TypifiedElement {
     SelenideElement element = $x("//div[@role='alert']");
 
     public Alert() {
-        element.shouldBe(Condition.visible);
+        element.shouldBe(Condition.visible).shouldBe(Condition.matchText(".{1,}"));
     }
 
     @Step("Закрыть alert")

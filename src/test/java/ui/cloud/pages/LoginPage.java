@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
 import models.authorizer.GlobalUser;
 import models.authorizer.Organization;
+import ui.elements.Alert;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;
@@ -29,6 +30,7 @@ public class LoginPage {
         usernameInput.shouldBe(Condition.visible).val(user);
         passwordInput.shouldBe(Condition.visible).val(password);
         passwordInput.submit();
+        new Alert().close();
         return new IndexPage();
     }
 

@@ -22,7 +22,7 @@ public class UiTest extends Tests {
     @Test
     void name() {
 //        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
-        Selenide.open("https://ift-portal-front.apps.d0-oscp.corp.dev.vtb/compute/orders/074cd998-1573-430c-aea5-26bc6b64d7e2/main?context=proj-ac47kuljvz&type=project&org=vtb");
+        Selenide.open("https://ift-portal-front.apps.d0-oscp.corp.dev.vtb/compute/orders/910b162c-79bb-42dd-97fe-560fa0fc3149/history?context=proj-xazpppulba&type=project&org=vtb");
 //        Table.getTableByColumnName("Дата запуска");
         System.out.println(1);
     }
