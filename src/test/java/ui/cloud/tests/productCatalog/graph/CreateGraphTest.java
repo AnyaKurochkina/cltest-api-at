@@ -23,14 +23,11 @@ public class CreateGraphTest extends GraphBaseTest {
         createGraphWithNonUniqueName();
     }
 
-    @Step("Просмотр списка графов, создание, поиск")
+    @Step("Создание графа")
     public void createGraph() {
         new IndexPage().goToGraphsPage()
                 .createGraph(TITLE, name, "action", DESCRIPTION, AUTHOR)
-                .findGraphByName(name)
-                .findGraphByName(TITLE)
-                .findGraphByName(name.substring(1).toUpperCase())
-                .findGraphByTitle(TITLE.substring(1).toUpperCase());
+                .findGraphByName(name);
         deleteGraph(name);
     }
 
