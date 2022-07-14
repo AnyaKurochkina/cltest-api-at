@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Modification {
     String name;
-    LinkedHashMap<String, Object> data;m
+    LinkedHashMap<String, Object> data;
     List<Env> envs;
     Integer order;
     String path;
