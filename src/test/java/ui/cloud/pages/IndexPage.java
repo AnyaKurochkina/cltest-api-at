@@ -6,7 +6,7 @@ import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import lombok.Getter;
-import ui.cloud.pages.productCatalog.GraphsListPage;
+import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
 import ui.cloud.pages.services.ServicesListPage;
 

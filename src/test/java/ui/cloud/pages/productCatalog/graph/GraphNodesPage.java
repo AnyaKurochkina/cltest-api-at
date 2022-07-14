@@ -1,4 +1,4 @@
-package ui.cloud.pages.productCatalog;
+package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
@@ -57,6 +57,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement subgraphVersion = $x("(//label[text()='Версия']/parent::div//div[@id='selectValueWrapper']/div)[2]");
     private final SelenideElement additionalTab = $x("//button[text()='Дополнительное']");
     private final SelenideElement paramsTab = $x("//button[text()='Параметры']");
+    private final SelenideElement staticData = $x("//label[text()='Static data']/parent::div//textarea");
 
     @Step("Добавление узла графа и сохранение")
     public GraphNodesPage addNodeAndSave(Node node) {
@@ -96,9 +97,11 @@ public class GraphNodesPage extends GraphPage {
     }
 
     public GraphNodesPage editSubgraphNode(SubgraphNode node, String version, String description) {
+        TestUtils.scrollToTheBottom();
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
         TestUtils.scrollToTheTop();
         editNodeButton.click();
+        nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
         showSubgraphVersions.click();
         $x("//div[@title='"+version+"']").shouldBe(Condition.enabled).click();
@@ -111,9 +114,11 @@ public class GraphNodesPage extends GraphPage {
     }
 
     public GraphNodesPage editTemplateNode(TemplateNode node, String version, String description) {
+        TestUtils.scrollToTheBottom();
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
         TestUtils.scrollToTheTop();
         editNodeButton.click();
+        nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
         showTemplateVersions.click();
         $x("//div[@title='"+version+"']").shouldBe(Condition.enabled).click();
@@ -191,6 +196,7 @@ public class GraphNodesPage extends GraphPage {
         if (node.getNumber().equals("")) {
             node.setNumber("1");
         }
+        TestUtils.scrollToTheBottom();
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
         TestUtils.scrollToTheTop();
         editNodeButton.click();
@@ -225,6 +231,13 @@ public class GraphNodesPage extends GraphPage {
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
         TestUtils.scrollToTheTop();
         deleteNodesButton.click();
+        saveGraphWithPatchVersion();
+        return this;
+    }
+
+    public GraphNodesPage setStaticData(String value) {
+        staticData.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
+        staticData.setValue(value);
         saveGraphWithPatchVersion();
         return this;
     }
