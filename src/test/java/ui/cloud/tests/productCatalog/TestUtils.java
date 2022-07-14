@@ -28,4 +28,9 @@ public class TestUtils {
         JavascriptExecutor js = (JavascriptExecutor) WebDriverRunner.getWebDriver();
         js.executeScript("window.scrollTo(0, -document.body.scrollHeight)");
     }
+
+    public static void scroll(int pixels) {
+        JavascriptExecutor js = (JavascriptExecutor) WebDriverRunner.getWebDriver();
+        js.executeScript("window.scrollTo(0, "+pixels+")");
+    }
 }

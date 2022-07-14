@@ -1,10 +1,10 @@
 package ui.cloud.pages;
 
 public class ProductStatus {
-    final static String CREATING = "Разворачивается";
-    final static String PENDING = "Изменение";
-    final static String SUCCESS = "В порядке";
-    final static String DELETING = "Удаляется";
+    final public static String CREATING = "Разворачивается";
+    final public static String PENDING = "Изменение";
+    final public static String SUCCESS = "В порядке";
+    final public static String DELETING = "Удаляется";
     final public static String ERROR = "Ошибка";
     String status;
 

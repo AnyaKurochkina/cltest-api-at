@@ -1,4 +1,4 @@
-package ui.cloud.pages.productCatalog;
+package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
@@ -22,11 +22,14 @@ public class GraphPage {
     private final SelenideElement expandJSONView = $x("//button[@aria-label='fullscreen']");
     private final SelenideElement closeJSONView = $x("//button[@aria-label='close']");
     private final SelenideElement nodesTab = $x("//span[text()='Узлы']//ancestor::button");
+    private final SelenideElement modifiersTab = $x("//span[text()='Модификаторы']//ancestor::button");
+    private final SelenideElement orderParamsTab = $x("//span[text()='Параметры заказа']//ancestor::button");
     private final SelenideElement graphNameInput = $x("//input[@name='name']");
     private final SelenideElement graphTitleInput = $x("//input[@name='title']");
     private final SelenideElement graphId = $x("//form//p//b");
     private final SelenideElement idInput = $x("//input[@name = 'id']");
     private final SelenideElement authorInput = $x("//input[@name = 'author']");
+    private final SelenideElement saveGraphSuccessNotification = $x("//div[text()='Граф успешно сохранен']");
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
@@ -45,33 +48,32 @@ public class GraphPage {
     }
 
     public GraphPage saveGraphWithPatchVersion() {
-        TestUtils.scrollToTheBottom();
         saveButton.shouldBe(Condition.enabled).click();
         dialogSaveButton.click();
+        saveGraphSuccessNotification.shouldBe(Condition.visible);
         return new GraphPage();
     }
 
     public GraphPage checkAndSaveNextManualVersion(String version) {
-        TestUtils.scrollToTheBottom();
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
         newVersionInput.shouldHave(Condition.exactValue(version));
         dialogSaveButton.click();
+        saveGraphSuccessNotification.shouldBe(Condition.visible);
         return new GraphPage();
     }
 
     public GraphPage saveGraphWithManualVersion(String newVersion) {
-        TestUtils.scrollToTheBottom();
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
         newVersionInput.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
         newVersionInput.setValue(newVersion);
         dialogSaveButton.click();
+        saveGraphSuccessNotification.shouldBe(Condition.visible);
         return new GraphPage();
     }
 
     public GraphPage trySaveGraphWithIncorrectVersion(String newVersion) {
-        TestUtils.scrollToTheBottom();
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
         newVersionInput.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
@@ -100,6 +102,18 @@ public class GraphPage {
     public GraphNodesPage goToNodesTab() {
         nodesTab.click();
         return new GraphNodesPage();
+    }
+
+    public GraphModifiersPage goToModifiersTab() {
+        TestUtils.scrollToTheTop();
+        modifiersTab.click();
+        return new GraphModifiersPage();
+    }
+
+    public GraphOrderParamsPage goToOrderParamsTab() {
+        TestUtils.scrollToTheTop();
+        orderParamsTab.click();
+        return new GraphOrderParamsPage();
     }
 
     public GraphPage checkGraphAttributes(String name, String title, String version) {

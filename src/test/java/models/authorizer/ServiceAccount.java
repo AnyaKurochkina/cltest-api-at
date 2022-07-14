@@ -57,7 +57,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
                 .assertStatus(201)
                 .jsonPath();
 
-        sleep(3000);
+        sleep(10000);
         JsonPath jsonPathStatus = new Http(Configure.IamURL)
                 .get("/v1/projects/{}/service_accounts/{}/access_keys", projectId, id)
                 .assertStatus(200)

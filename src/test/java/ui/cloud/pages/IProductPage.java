@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.interfaces.IProduct;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.NotFoundException;
@@ -23,9 +22,7 @@ import ui.elements.Table;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.$x;
@@ -42,8 +39,6 @@ public abstract class IProductPage {
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     private final SelenideElement preBillingPriceAction = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[2]");
-    private final SelenideElement closeModalWindowButton = Selenide.$x("//div[@role='dialog']//button[contains(.,'Закрыть')]");
-    private final SelenideElement graphScheme = Selenide.$x("//canvas");
 
     public IProductPage(IProduct product) {
         if (Objects.nonNull(product.getError()))
@@ -57,26 +52,17 @@ public abstract class IProductPage {
     }
 
     public void waitChangeStatus() {
-        waitChangeStatus(Duration.ofMinutes(8));
+        EntitiesUtils.waitChangeStatus(new TopInfo(), Duration.ofMinutes(8));
     }
 
-    @Step("Ожидание выполнение действия с продуктом")
     public void waitChangeStatus(Duration duration) {
-        new TopInfo().getValueByColumnInFirstRow("Статус").scrollIntoView(true).$$x("descendant::*[@title]")
-                .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
-                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), duration);
-        List<String> titles = new TopInfo().getValueByColumnInFirstRow("Статус").scrollIntoView(true).$$x("descendant::*[@title]")
-                .shouldBe(CollectionCondition.sizeNotEqual(0))
-                .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
-                .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
-        log.debug("Итоговый статус: {}", titles);
+        EntitiesUtils.waitChangeStatus(new TopInfo(), duration);
     }
 
     @Step("Переключение 'Защита от удаления' в состояние '{expectValue}'")
     public void switchProtectOrder(String expectValue) {
-        runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить", () -> {
-            Input.byLabel("Включить защиту от удаления").click();
-        }, ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
+        runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить",
+                () -> Input.byLabel("Включить защиту от удаления").click(), ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
         new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$("*").shouldBe(Condition.attribute("title", expectValue));
     }
 

@@ -4,6 +4,7 @@ import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
+import io.restassured.path.json.JsonPath;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -70,7 +71,7 @@ public class Folder extends Entity {
                 .build();
     }
 
-    public void edit(){
+    public void edit() {
         String titleNew = new Http(Configure.ResourceManagerURL)
                 .body(toJson())
                 .patch("/v1/folders/{}", name)
@@ -79,6 +80,21 @@ public class Folder extends Entity {
                 .getString("data.title");
         Assertions.assertEquals(title, titleNew, "Title папки не изменился");
         setTitle(titleNew);
+    }
+
+    public static Folder getParent(Folder folder) {
+        String parentId = new Http(Configure.ResourceManagerURL)
+                .get("/v1/folders/{}", folder.getName())
+                .assertStatus(200)
+                .jsonPath()
+                .getString("data.parent");
+        JsonPath path = new Http(Configure.ResourceManagerURL)
+                .get("/v1/folders/{}", parentId)
+                .assertStatus(200)
+                .jsonPath();
+        return Folder.builder().title(path.getString("data.title"))
+                .parentId((path.getString("data.parent") == null) ? path.getString("data.organization") : path.getString("data.parent"))
+                .name(path.getString("data.name")).build();
     }
 
     @Override

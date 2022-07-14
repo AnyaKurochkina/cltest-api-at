@@ -1,9 +1,10 @@
-package ui.cloud.pages.productCatalog;
+package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
+import ui.cloud.pages.productCatalog.BaseSteps;
 import ui.cloud.tests.productCatalog.TestUtils;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -154,7 +155,7 @@ public class GraphsListPage {
             graphNameValidationHint.shouldBe(Condition.visible);
         }
         cancelButton.click();
-        return new GraphsListPage();
+        return this;
     }
 
     private void selectType(String type) {

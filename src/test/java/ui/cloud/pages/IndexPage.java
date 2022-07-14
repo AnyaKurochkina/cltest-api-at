@@ -3,23 +3,28 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import lombok.Getter;
-import ui.cloud.pages.productCatalog.GraphsListPage;
+import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
+import ui.cloud.pages.services.ServicesListPage;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static tests.Tests.activeCnd;
+import static tests.Tests.clickableCnd;
+
 @Getter
 public class IndexPage {
     private final SelenideElement orderMoreBtn = $x("//button[contains(., 'Заказать еще')]");
     private final SelenideElement btnProducts = Selenide.$x("//div[not(@hidden)]/a[@href='/vm/orders' and text()='Продукты']");
     private final SelenideElement graphs = $x("//*[@href='/meccano/graphs']");
     private final SelenideElement directions = $x("//*[@href='/meccano/org_direction']");
+    final SelenideElement linkServicesList = StringUtils.$x("//a[.='Список сервисов']");
 
-    public NewOrderPage clickOrderMore(){
-        orderMoreBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled);
-        orderMoreBtn.hover().click();
-        return new NewOrderPage();
+    public ProductsPage clickOrderMore(){
+        orderMoreBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover().click();
+        return new ProductsPage();
     }
 
    public GraphsListPage goToGraphsPage() {
@@ -32,6 +37,12 @@ public class IndexPage {
         directions.scrollTo();
         directions.click();
         return new OrgDirectionsListPage();
+    }
+
+    @Step("Переход на страницу 'Список сервисов'")
+    public ServicesListPage goToServicesListPage(){
+        linkServicesList.shouldBe(activeCnd).shouldBe(clickableCnd).hover().click();
+        return new ServicesListPage();
     }
 
 }

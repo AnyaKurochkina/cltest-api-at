@@ -1,4 +1,4 @@
-package ui.cloud.tests;
+package ui.cloud.tests.orders;
 
 import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Condition;
@@ -14,14 +14,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import tests.Tests;
 import ui.cloud.pages.*;
+import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
 
 import java.time.Duration;
-
-import static core.helper.StringUtils.$x;
 
 @ExtendWith(InterceptTestExtension.class)
 @ExtendWith(ConfigExtension.class)
@@ -71,7 +70,7 @@ public class UiWindowsTest extends Tests {
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
-            new ProductsPage()
+            new OrdersPage()
                     .getRowElementByColumnValue("Продукт",
                             orderPage.getLabelValue())
                     .hover()
@@ -105,8 +104,7 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         winPage.getBtnHistory().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         winPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        winPage.getGraphScheme().shouldBe(Condition.visible);
-        winPage.getCloseModalWindowButton().shouldBe(Condition.enabled).click();
+        new EntitiesUtils().checkGraphScheme(null);
     }
 
     @Test
@@ -121,7 +119,7 @@ public class UiWindowsTest extends Tests {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
-        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления");
+        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
         Selenide.refresh();
         winPage.switchProtectOrder("Защита от удаления выключена");
     }
