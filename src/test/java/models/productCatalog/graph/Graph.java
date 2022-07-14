@@ -63,6 +63,11 @@ public class Graph extends Entity {
     @Override
     @SneakyThrows
     public JSONObject toJson() {
+        JSONArray mod = null;
+        if (modifications != null) {
+            mod = new JSONArray(JsonHelper.getCustomObjectMapper().writeValueAsString(modifications));
+        }
+
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", name)
                 .set("$.title", title)
@@ -76,8 +81,7 @@ public class Graph extends Entity {
                 .set("$.lock_order_on_error", lockOrderOnError)
                 .set("$.allowed_developers", allowedDevelopers)
                 .set("$.restricted_developers", restrictedDevelopers)
-                .set("$.modifications",  new JSONArray(JsonHelper.getCustomObjectMapper()
-                        .writeValueAsString(modifications)))
+                .setIfNullRemove("$.modifications", mod)
                 .build();
     }
 
@@ -141,7 +145,7 @@ public class Graph extends Entity {
                         ProductCatalogSteps graphSteps = new ProductCatalogSteps("/graphs/", ProductCatalogURL + "/api/v1/");
                         if (graphSteps.isExists(resp.getName())) {
                             deleteIfExist(resp.getName());
-                          //  graphSteps.deleteById(resp.getId());
+                            //  graphSteps.deleteById(resp.getId());
                         }
                         break;
                 }
