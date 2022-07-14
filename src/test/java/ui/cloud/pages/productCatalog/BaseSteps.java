@@ -12,6 +12,15 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class BaseSteps {
 
+    private static final SelenideElement id = $x("//form//p//b");
+    private static final SelenideElement idInput = $x("//input[@name = 'id']");
+    private static final SelenideElement confirmDeleteButton = $x("//form//span[text()='Удалить']/parent::button");
+
+    public static void confirmDelete() {
+        idInput.setValue(id.getText());
+        confirmDeleteButton.click();
+    }
+
     public static void checkSortingByStringField(String header, int columnNumber) {
         SelenideElement columnHeader = $x("//div[text()='"+header+"']/parent::div");
         SelenideElement arrowIcon = $x("//div[text()='"+header+"']/following-sibling::*[name()='svg']");
