@@ -15,6 +15,7 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -32,7 +33,7 @@ public class ObjectPoolEntity {
     private Throwable error;
     @Getter
     public final Class<? extends Entity> clazz;
-    private final Lock lock = new ReentrantLock();
+    private final Semaphore lock = new Semaphore(1);
 
     public ObjectPoolEntity(Entity entity) {
         this.clazz = entity.getClass();
@@ -101,13 +102,14 @@ public class ObjectPoolEntity {
         this.entity = ObjectPoolService.toJson(entity);
     }
 
+    @SneakyThrows
     public void lock() {
-        lock.lock();
+        lock.acquire();
     }
 
     public void release() {
         try {
-            lock.unlock();
+            lock.release();
         } catch (IllegalMonitorStateException e) {
             e.printStackTrace();
         }

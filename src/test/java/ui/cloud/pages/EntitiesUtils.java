@@ -34,7 +34,7 @@ public class EntitiesUtils {
     @Step("Проверка схемы выполнения графа")
     public void checkGraphScheme(JsonPath response) {
         graphScheme.shouldBe(Condition.visible);
-        //
         closeModalWindowButton.shouldBe(Condition.enabled).click();
+//        response.getString("graph_actions.")
     }
 }

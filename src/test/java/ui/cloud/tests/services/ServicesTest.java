@@ -50,7 +50,7 @@ public class ServicesTest extends Tests {
         SmokeTestPage smokeTestPage = new SmokeTestPage();
         new IndexPage().goToServicesListPage().selectProduct(smokeTestPage.getServiceName());
         smokeTestPage.run();
-        smokeTestPage.checkGraph();
+        smokeTestPage.checkGraph(project.getId());
     }
 
 }
