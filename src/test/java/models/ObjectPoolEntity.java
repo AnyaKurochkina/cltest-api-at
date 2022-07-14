@@ -33,7 +33,7 @@ public class ObjectPoolEntity {
     private Throwable error;
     @Getter
     public final Class<? extends Entity> clazz;
-    private final Semaphore lock = new Semaphore(1);
+    private final Semaphore lock = new Semaphore(1, true);
 
     public ObjectPoolEntity(Entity entity) {
         this.clazz = entity.getClass();
@@ -110,7 +110,7 @@ public class ObjectPoolEntity {
     public void release() {
         try {
             lock.release();
-        } catch (IllegalMonitorStateException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
