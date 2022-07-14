@@ -8,14 +8,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.products.ApacheKafkaCluster;
 import models.orderService.products.Rhel;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -33,7 +31,7 @@ public class ObjectPoolEntity {
     private Throwable error;
     @Getter
     public final Class<? extends Entity> clazz;
-    private final Semaphore lock = new Semaphore(1, true);
+    private final Lock lock = new ReentrantLock();
 
     public ObjectPoolEntity(Entity entity) {
         this.clazz = entity.getClass();
@@ -102,15 +100,14 @@ public class ObjectPoolEntity {
         this.entity = ObjectPoolService.toJson(entity);
     }
 
-    @SneakyThrows
     public void lock() {
-        lock.acquire();
+        lock.lock();
     }
 
     public void release() {
         try {
-            lock.release();
-        } catch (Throwable e) {
+            lock.unlock();
+        } catch (IllegalMonitorStateException e) {
             e.printStackTrace();
         }
     }

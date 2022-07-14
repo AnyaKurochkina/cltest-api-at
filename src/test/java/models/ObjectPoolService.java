@@ -72,8 +72,6 @@ public class ObjectPoolService {
                 if (!deleteClassesName.contains(e.getClass().getName()))
                     deleteClassesName.add(0, e.getClass().getName());
             } catch (Throwable throwable) {
-                if (e instanceof IProduct)
-                    ((IProduct) e).addLinkProduct();
                 if (throwable instanceof CalculateException) {
                     objectPoolEntity.setStatus(ObjectStatus.CREATED);
                 } else {
@@ -81,6 +79,8 @@ public class ObjectPoolService {
                     objectPoolEntity.setError(throwable);
                 }
                 objectPoolEntity.release();
+                if (e instanceof IProduct)
+                    ((IProduct) e).addLinkProduct();
                 throw throwable;
             }
             objectPoolEntity.setStatus(ObjectStatus.CREATED);
