@@ -2,7 +2,7 @@ package ui.cloud.tests.productCatalog.graph;
 
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
-import models.productCatalog.Graph;
+import models.productCatalog.graph.Graph;
 import models.productCatalog.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;

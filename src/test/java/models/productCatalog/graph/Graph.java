@@ -1,4 +1,4 @@
-package models.productCatalog;
+package models.productCatalog.graph;
 
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -13,8 +13,10 @@ import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
@@ -45,6 +47,7 @@ public class Graph extends Entity {
     private Boolean lockOrderOnError;
     private List<String> allowedDevelopers;
     private List<String> restrictedDevelopers;
+    private List<Modification> modifications;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json");
@@ -58,6 +61,7 @@ public class Graph extends Entity {
     }
 
     @Override
+    @SneakyThrows
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", name)
@@ -72,6 +76,8 @@ public class Graph extends Entity {
                 .set("$.lock_order_on_error", lockOrderOnError)
                 .set("$.allowed_developers", allowedDevelopers)
                 .set("$.restricted_developers", restrictedDevelopers)
+                .set("$.modifications",  new JSONArray(JsonHelper.getCustomObjectMapper()
+                        .writeValueAsString(modifications)))
                 .build();
     }
 

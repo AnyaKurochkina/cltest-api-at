@@ -9,7 +9,7 @@ import httpModels.productCatalog.graphs.getGraphsList.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Graph;
+import models.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;

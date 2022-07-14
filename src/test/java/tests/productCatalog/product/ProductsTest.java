@@ -13,6 +13,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.authorizer.Project;
+import models.productCatalog.Categories;
 import models.productCatalog.Product;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
@@ -552,6 +553,7 @@ public class ProductsTest extends Tests {
                 .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .info(info)
+                .categoryV2(Categories.DEFAULT_VALUE)
                 .build()
                 .createObject();
         GetProductResponse createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
@@ -570,6 +572,7 @@ public class ProductsTest extends Tests {
                 .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .category("postgre")
+                .categoryV2(Categories.APPLICATION_INTEGRATION)
                 .info(info)
                 .build()
                 .createObject();

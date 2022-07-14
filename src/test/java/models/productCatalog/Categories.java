@@ -14,7 +14,8 @@ public enum Categories {
     NETWORK("network"),
     OBJECT_STORAGE("object_storage"),
     SECRET_MANAGER("secret_manager"),
-    WEB("web");
+    WEB("web"),
+    DEFAULT_VALUE(null);
     private final String value;
 
     Categories(final String value) {
@@ -23,6 +24,7 @@ public enum Categories {
 
     public String getValue() {
         return value;
+
     }
 
     public static List<String> getCategoriesList() {

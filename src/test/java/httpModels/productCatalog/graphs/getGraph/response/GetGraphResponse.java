@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import models.productCatalog.graph.Modification;
 
 import java.util.List;
 import java.util.Map;
@@ -71,7 +72,7 @@ public class GetGraphResponse implements GetImpl {
 	private Map<String, Object> uiSchema;
 
 	@JsonProperty("modifications")
-	private List<Object> modifications;
+	private List<Modification> modifications;
 
 	@JsonProperty("create_dt")
 	private String create_dt;

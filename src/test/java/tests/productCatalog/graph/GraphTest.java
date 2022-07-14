@@ -14,7 +14,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
-import models.productCatalog.Graph;
+import models.productCatalog.graph.*;
 import models.productCatalog.Product;
 import models.productCatalog.Services;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -30,6 +30,8 @@ import tests.Tests;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -387,11 +389,27 @@ public class GraphTest extends Tests {
         assertEquals(restrictedDevelopersList, createdGraph.getRestrictedDevelopers());
     }
 
-    @DisplayName("Негативный тест на получение списка графа по несуществующему ID")
-    @TmsLink("1044118")
+    @DisplayName("Создание графа с модификацией и способом изменения delete")
+    @TmsLink("")
     @Test
-    public void getGraphsByNotExistId() {
-        Response response = steps.getResponseGraphListById("not-exist-id");
-        assertEquals("Введите правильный UUID.", response.jsonPath().getList("id").get(0));
+    public void createGraphWithUpdateTypeDelete() {
+        Modification mod = Modification.builder()
+                .name("mod1")
+                .data(new LinkedHashMap<String, Object>() {{
+                    put("test", "test");
+                }})
+                .envs(Arrays.asList(Env.TEST, Env.DEV))
+                .order(1)
+                .path("")
+                .updateType(UpdateType.DELETE)
+                .rootPath(RootPath.UI_SCHEMA)
+                .build();
+        Graph graph = Graph.builder()
+                .name("create_graph_with_update_type_delete")
+                .modifications(Collections.singletonList(mod))
+                .build()
+                .createObject();
+        GetGraphResponse actualGraph = (GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
+        assertEquals(UpdateType.DELETE, actualGraph.getModifications().get(0).getUpdateType());
     }
 }
