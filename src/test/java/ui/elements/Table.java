@@ -68,7 +68,7 @@ public class Table implements TypifiedElement {
 
     public SelenideElement getRowByIndex(int index) {
         Assertions.assertTrue(rows.size() > index, "Индекс больше кол-ва строк");
-        return rows.get(0);
+        return rows.get(index);
     }
 
     /**
