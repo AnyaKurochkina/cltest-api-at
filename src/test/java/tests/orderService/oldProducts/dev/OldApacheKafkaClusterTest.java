@@ -38,16 +38,16 @@ public class OldApacheKafkaClusterTest extends Tests {
             .productName("Apache Kafka Cluster")
             .build();
 
-    @Order(1)
-    @TmsLink("841715")
-    @DisplayName("Расширить Apache Kafka Cluster OLD")
-    @Test
-    void expandMountPoint() {
-        if (kafka.productStatusIs(STOPPED)) {
-            kafka.start();
-        }
-        kafka.expandMountPoint();
-    }
+//    @Order(1)
+//    @TmsLink("841715")
+//    @DisplayName("Расширить Apache Kafka Cluster OLD")
+//    @Test
+//    void expandMountPoint() {
+//        if (kafka.productStatusIs(STOPPED)) {
+//            kafka.start();
+//        }
+//        kafka.expandMountPoint();
+//    }
 
     @Order(2)
     @TmsLink("841723")
