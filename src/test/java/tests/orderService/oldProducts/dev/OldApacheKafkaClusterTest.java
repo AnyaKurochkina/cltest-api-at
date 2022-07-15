@@ -32,9 +32,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class OldApacheKafkaClusterTest extends Tests {
 
     final ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
-            .projectId("proj-67nljbzjtt")
-            .productId("d46dd919-defc-4ec6-a55b-2017b3981258")
-            .orderId("62758afa-911e-4ee8-abd2-a59892e3426f")
+            .projectId("proj-1oob0zjo5h")
+            .productId("0c36e61d-687c-4a23-914d-7421779301e4")
+            .orderId("86f938ae-babe-4b83-a2ef-3aa242e95b5a")
             .productName("Apache Kafka Cluster")
             .build();
 

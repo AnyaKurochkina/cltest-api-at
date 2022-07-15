@@ -20,9 +20,9 @@ public class OldWildFlyTest extends Tests {
 
     final WildFly wildFly = WildFly.builder()
             .productName("WildFly Astra")
-            .projectId("proj-juh8ynkvtn")
+            .projectId("proj-bhbyhmik3a")
             .productId("4a8959f3-f926-4497-a61b-46a227ebed9b")
-            .orderId("bcefc411-87e7-4f69-ad8c-53ed5ae52cc4")
+            .orderId("e2664055-0045-45c8-bd52-3eead07cdce4")
             .build();
 
     @Order(1)
