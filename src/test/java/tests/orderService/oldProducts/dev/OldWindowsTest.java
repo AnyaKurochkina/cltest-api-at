@@ -20,7 +20,7 @@ public class OldWindowsTest extends Tests {
     final Windows windows = Windows.builder()
             .projectId("proj-rddf0uwi0q")
             .productId("28bed880-2714-4317-a967-d000d492bd9d")
-            .orderId("27064aea-5382-44ba-b097-a56735de5cb5")
+            .orderId("87e70133-31fa-4c41-a320-2151dcd6a820")
             .productName("Windows")
             .build();
 
