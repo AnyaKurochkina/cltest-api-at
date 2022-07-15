@@ -77,7 +77,7 @@ public abstract class IProductPage {
 
     @Step("Запуск действия '{action}'")
     protected void runActionWithoutParameters(SelenideElement button, String action, ActionParameters params) {
-        btnGeneralInfo.hover().shouldBe(Condition.enabled).click();
+        btnGeneralInfo.scrollIntoView("{block: 'center'}").shouldBe(Condition.enabled).click();
         button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = new Dialog(action);
@@ -98,7 +98,7 @@ public abstract class IProductPage {
     @SneakyThrows
     @Step("Запуск действия '{action}' с параметрами и последующим нажатием на кнопку {textButton}")
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
-        btnGeneralInfo.hover().shouldBe(Condition.enabled).click();
+        btnGeneralInfo.scrollIntoView("{block: 'center'}").shouldBe(Condition.enabled).click();
         button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
