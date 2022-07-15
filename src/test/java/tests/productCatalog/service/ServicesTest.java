@@ -18,7 +18,6 @@ import models.productCatalog.Services;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -392,7 +391,7 @@ public class ServicesTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Service в GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("975412")
     public void dumpToGitlabService() {
         String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -407,7 +406,7 @@ public class ServicesTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Service из GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("1029279")
     public void loadFromGitlabService() {
         String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

@@ -11,7 +11,6 @@ import models.productCatalog.Example;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -127,7 +126,7 @@ public class ExampleTest extends Tests {
 
     @Test
     @DisplayName("Загрузка example в GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("975378")
     public void dumpToGitlabExample() {
         String exampleName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -142,7 +141,7 @@ public class ExampleTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка example из GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("1028842")
     public void loadFromGitlabExample() {
         String exampleName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

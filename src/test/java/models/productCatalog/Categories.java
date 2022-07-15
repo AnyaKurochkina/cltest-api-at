@@ -1,6 +1,7 @@
 package models.productCatalog;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,6 +31,7 @@ public enum Categories {
     public static List<String> getCategoriesList() {
         return Stream.of(Categories.values())
                 .map(Categories::getValue)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

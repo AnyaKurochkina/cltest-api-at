@@ -69,6 +69,10 @@ public class Product extends Entity {
 
     @Override
     public JSONObject toJson() {
+        String categor = null;
+        if (categoryV2 != null) {
+            categor = categoryV2.getValue();
+        }
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", name)
                 .set("$.title", title)
@@ -83,7 +87,7 @@ public class Product extends Entity {
                 .set("$.information_systems", informationSystems)
                 .set("$.in_general_list", inGeneralList)
                 .set("$.payment", payment)
-                .setIfNullRemove("$.category_v2", categoryV2.getValue())
+                .setIfNullRemove("$.category_v2", categor)
                 .build();
     }
 
