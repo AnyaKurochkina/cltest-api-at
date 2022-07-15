@@ -141,7 +141,7 @@ public class UiWindowsTest extends Tests {
         Assumptions.assumeTrue("OpenStack".equals(product.getPlatform()), "Тест отключен для платформы OpenStack");
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("N", "15"));
-        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.expandDisk("N", "20"));
+        winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.expandDisk("N", "20"));
     }
 
     @Test

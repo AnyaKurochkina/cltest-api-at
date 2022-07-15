@@ -42,7 +42,7 @@ public class Table implements TypifiedElement {
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
     public SelenideElement getRowElementByColumnValue(String column, String value) {
         for (SelenideElement e : rows) {
-            if (e.$$x("td").get(getIndexHeader(column)).getText().equals(value))
+            if (e.$$x("td").get(getIndexHeader(column)).hover().getText().equals(value))
                 return e;
         }
         throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
@@ -51,7 +51,7 @@ public class Table implements TypifiedElement {
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
     public Row getRowByColumnValue(String column, String value) {
         for (int i = 0; i < rows.size(); i++) {
-            if (rows.get(i).$$x("td").get(getIndexHeader(column)).getText().equals(value))
+            if (rows.get(i).$$x("td").get(getIndexHeader(column)).hover().getText().equals(value))
                 return new Row(i);
         }
         throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
@@ -60,7 +60,7 @@ public class Table implements TypifiedElement {
     @Step("Проверка существования в колонке '{column}' значения '{value}'")
     public boolean isColumnValueExist(String column, String value) {
         for (SelenideElement e : rows) {
-            if (e.$$x("td").get(getIndexHeader(column)).getText().equals(value))
+            if (e.$$x("td").get(getIndexHeader(column)).hover().getText().equals(value))
                 return true;
         }
         return false;
@@ -86,12 +86,12 @@ public class Table implements TypifiedElement {
         int row;
 
         public String getValueByColumn(String column){
-            return getValueByColumnInRow(row, column).getText();
+            return getValueByColumnInRow(row, column).hover().getText();
         }
     }
 
     public String getFirstValueByColumn(String column) {
-        return getValueByColumnInFirstRow(column).getText();
+        return getValueByColumnInFirstRow(column).hover().getText();
     }
 
     @Step("Получение значения по колонке '{column}' в строке #{rowIndex}")
