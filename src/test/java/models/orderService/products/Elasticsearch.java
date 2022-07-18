@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
 
+@Deprecated
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2

@@ -26,9 +26,10 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 @Epic("Продукты")
 @Feature("ElasticSearch")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearch"), @Tag("prod")})
+//@Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearch"), @Tag("prod")})
 public class ElasticsearchTest extends Tests {
 
     @TmsLink("396147")
