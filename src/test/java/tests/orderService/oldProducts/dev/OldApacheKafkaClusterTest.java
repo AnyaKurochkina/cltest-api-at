@@ -31,18 +31,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 @Log4j2
 public class OldApacheKafkaClusterTest extends Tests {
 
-//    final ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
-//            .projectId("proj-1oob0zjo5h")
-//            .productId("0c36e61d-687c-4a23-914d-7421779301e4")
-//            .orderId("3c2fd8aa-b0dd-4aff-9d2e-332a22f681e8")
-//            .productName("Apache Kafka Cluster")
-//            .build();
-
     final ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
-            .projectId("proj-ln4zg69jek")
+            .projectId("proj-1oob0zjo5h")
             .productId("0c36e61d-687c-4a23-914d-7421779301e4")
-            .orderId("f3ff7ee8-de0e-45ce-8e66-0f874e9de5cb")
-            .productName("Apache Kafka Cluster Astra")
+            .orderId("3c2fd8aa-b0dd-4aff-9d2e-332a22f681e8")
+            .productName("Apache Kafka Cluster")
             .build();
 
 //    @Order(1)
