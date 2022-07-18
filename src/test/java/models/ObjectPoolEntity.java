@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.products.ApacheKafkaCluster;
 import models.orderService.products.Rhel;
 import org.junit.jupiter.api.parallel.ResourceLock;
 

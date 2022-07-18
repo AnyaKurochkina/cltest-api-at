@@ -18,10 +18,9 @@ import static models.orderService.interfaces.ProductStatus.STARTED;
 public class OldWindowsTest extends Tests {
 
     final Windows windows = Windows.builder()
-            .projectId("proj-67nljbzjtt")
+            .projectId("proj-rddf0uwi0q")
             .productId("28bed880-2714-4317-a967-d000d492bd9d")
-            .orderId("b20f0551-0e90-40ec-8450-517ed9d1f937")
-//            .orderId("9125747a-7197-42f0-9b32-aa5ccb4cefd4")
+            .orderId("87e70133-31fa-4c41-a320-2151dcd6a820")
             .productName("Windows")
             .build();
 

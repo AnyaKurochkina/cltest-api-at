@@ -1,9 +1,14 @@
 package ui.cloud.pages.services;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
+import core.helper.StringUtils;
+import core.utils.Waiting;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
+import steps.day2.Day2Steps;
 import ui.cloud.pages.EntitiesUtils;
 import ui.cloud.pages.ProductStatus;
 import ui.cloud.tests.ActionParameters;
@@ -40,11 +45,11 @@ public class IServicePage {
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
     }
 
-    public void checkGraph() {
-        runAction(getMenuLastRunsElement(), "Скопировать Action ID");
-        new Alert().checkText("Action ID скопирован").checkColor(Alert.Color.GREEN).close();
+    public void checkGraph(String projectId) {
         new Runs().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new EntitiesUtils().checkGraphScheme(null);
+        Waiting.sleep(1000);
+        String operationCardId = StringUtils.findByRegex("/([\\w]{8}-[\\w]{4}-[\\w]{4}-[\\w]{4}-[\\w]{12})/", WebDriverRunner.getWebDriver().getCurrentUrl());
+        new EntitiesUtils().checkGraphScheme(Day2Steps.getOperationsGraph(Day2Steps.getOperations(operationCardId, projectId), projectId));
     }
 
     private class Runs extends Table {
