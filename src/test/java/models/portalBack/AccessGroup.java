@@ -25,6 +25,7 @@ public class AccessGroup extends Entity {
     String description;
     List<String> users;
     String domain;
+    String codePurpose;
 
     @Step("Добавление пользователя в группу доступа")
     public void addUser(String user){
@@ -42,6 +43,8 @@ public class AccessGroup extends Entity {
     public Entity init() {
         if (name == null)
             name = new Generex("[a-z]{5,15}").random();
+        if (codePurpose == null)
+            codePurpose = "compute";
         if (projectName == null)
             projectName = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
         if (description == null)
@@ -59,6 +62,7 @@ public class AccessGroup extends Entity {
                 .set("$.access_group.description", description)
                 .set("$.access_group.project_name", projectName)
                 .set("$.access_group.domain", domain)
+                .set("$.access_group.code_purpose", codePurpose)
                 .build();
     }
 

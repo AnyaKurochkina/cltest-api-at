@@ -1,10 +1,10 @@
 package models.authorizer;
 
-import com.mifmif.common.regex.Generex;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
+import io.restassured.path.json.JsonPath;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +12,7 @@ import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class Folder extends Entity {
             }
         }
         if (title == null) {
-            title = new Generex("FOLDER \\w{1,20}").random();
+            title = "API " + new Timestamp(System.currentTimeMillis());
         }
         if (informationSystemIds == null) {
             InformationSystem informationSystem = InformationSystem.builder().build().createObject();
@@ -70,8 +71,8 @@ public class Folder extends Entity {
                 .build();
     }
 
-    public void edit(){
-        String titleNew = new Http(Configure.IamURL)
+    public void edit() {
+        String titleNew = new Http(Configure.ResourceManagerURL)
                 .body(toJson())
                 .patch("/v1/folders/{}", name)
                 .assertStatus(200)
@@ -81,11 +82,26 @@ public class Folder extends Entity {
         setTitle(titleNew);
     }
 
+    public static Folder getParent(Folder folder) {
+        String parentId = new Http(Configure.ResourceManagerURL)
+                .get("/v1/folders/{}", folder.getName())
+                .assertStatus(200)
+                .jsonPath()
+                .getString("data.parent");
+        JsonPath path = new Http(Configure.ResourceManagerURL)
+                .get("/v1/folders/{}", parentId)
+                .assertStatus(200)
+                .jsonPath();
+        return Folder.builder().title(path.getString("data.title"))
+                .parentId((path.getString("data.parent") == null) ? path.getString("data.organization") : path.getString("data.parent"))
+                .name(path.getString("data.name")).build();
+    }
+
     @Override
     @Step("Создание папки")
     protected void create() {
         String url = kind.equals(BUSINESS_BLOCK) ? "/v1/organizations/vtb/folders" : String.format("/v1/folders/%s/folders", parentId);
-        name = new Http(Configure.IamURL)
+        name = new Http(Configure.ResourceManagerURL)
                 .body(toJson())
                 .post(url)
                 .assertStatus(201)
@@ -96,7 +112,7 @@ public class Folder extends Entity {
     @Override
     @Step("Удаление папки")
     protected void delete() {
-        new Http(Configure.IamURL)
+        new Http(Configure.ResourceManagerURL)
                 .delete("/v1/folders/" + name)
                 .assertStatus(204);
     }

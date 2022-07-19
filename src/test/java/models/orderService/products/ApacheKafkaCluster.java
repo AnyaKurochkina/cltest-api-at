@@ -126,7 +126,7 @@ public class ApacheKafkaCluster extends IProduct {
     public void createTopics(List<String> names) {
         List<KafkaTopic> kafkaTopics = new ArrayList<>();
         for (String name : names)
-            kafkaTopics.add(new KafkaTopic("delete", 1, 1, 1, 1800000, name));
+            kafkaTopics.add(new KafkaTopic("delete", 1, 1800000, name));
         OrderServiceSteps.executeAction(KAFKA_CREATE_TOPICS, this, new JSONObject("{\"topics\": " + JsonHelper.toJson(kafkaTopics) + "}"), this.projectId);
         for (String name : names)
             Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_TOPIC, name)), "Отсутствует в списке топик " + name);
@@ -162,8 +162,12 @@ public class ApacheKafkaCluster extends IProduct {
         save();
     }
 
+    public void changeName(String name) {
+        OrderServiceSteps.executeAction("kafka_edit_cluster_name", this, new JSONObject().append("new_name", name), this.projectId);
+    }
+
     public void createAcl(String topicName, KafkaRoles role) {
-        OrderServiceSteps.executeAction("kafka_create_acl", this, new JSONObject("{\"acls\":[{\"client_cn\":\"APD09.26-1418-kafka-dh-client-devcorp.vtb\",\"topic_type\":\"by_name\",\"client_role\":\"" + role.getRole() + "\",\"topic_names\":[\"" + topicName + "\"]}]}"), this.projectId);
+        OrderServiceSteps.executeAction("kafka_create_acl", this, new JSONObject("{\"acls\":[{\"client_cn\":\"APD09.26-1418-kafka-dl-client-cert\",\"topic_type\":\"by_name\",\"client_role\":\"" + role.getRole() + "\",\"topic_names\":[\"" + topicName + "\"]}]}"), this.projectId);
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, role.getRole(), topicName)), "ACL на топик не создался");
         save();
     }
@@ -188,7 +192,7 @@ public class ApacheKafkaCluster extends IProduct {
      * @param topicName имя Acl, Если в aclName передать "*" то удалятся все Acl
      */
     public void deleteAcl(String topicName, KafkaRoles role) {
-        OrderServiceSteps.executeAction("kafka_delete_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"APD09.26-1418-kafka-dh-client-devcorp.vtb\",\"topic_type\":\"by_name\",\"client_role\":\"" + role.getRole() + "\",\"topic_names\":[\"" + topicName + "\"]}]}}"), this.projectId);
+        OrderServiceSteps.executeAction("kafka_delete_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"APD09.26-1418-kafka-dl-client-cert\",\"topic_type\":\"by_name\",\"client_role\":\"" + role.getRole() + "\",\"topic_names\":[\"" + topicName + "\"]}]}}"), this.projectId);
         save();
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, role.getRole(), topicName)), "ACL на топик не удалился");
     }
@@ -219,11 +223,11 @@ public class ApacheKafkaCluster extends IProduct {
         super.updateCerts("kafka_update_certs");
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration"));
 //        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
-//        Assertions.assertNotEquals(0, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
+        Assertions.assertNotEquals(0, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
 
     public void expandMountPoint() {
-        expandMountPoint("expand_mount_point", "/app", 10);
+        expandMountPoint("expand_mount_point_new", "/app", 10);
     }
 
     public void restart() {

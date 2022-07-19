@@ -3,6 +3,7 @@ package tests.productCatalog.graph;
 import core.helper.Configure;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
+import httpModels.productCatalog.graphs.getGraph.response.GraphItem;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.graphs.getGraphsList.response.ListItem;
 import io.qameta.allure.Epic;
@@ -19,8 +20,7 @@ import tests.Tests;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -88,5 +88,21 @@ public class GraphListTest extends Tests {
         List<String> versionList = getGraphResponse.getVersionList();
         List<String> actualVersionList = steps.getVersionJsonPath(graphId).getList("");
         assertEquals(versionList, actualVersionList);
+    }
+
+    @DisplayName("Проверка присутствия поля icon для всех нод")
+    @TmsLink("1027309")
+    @Test
+    public void getIcon() {
+        List<ItemImpl> productObjectList = steps.getProductObjectList(GetGraphsListResponse.class);
+        for (ItemImpl item : productObjectList) {
+            GetGraphResponse graph = (GetGraphResponse) steps.getById(item.getId(), GetGraphResponse.class);
+            if (!graph.getGraph().isEmpty()) {
+                List<GraphItem> graphItemList = graph.getGraph();
+                for (GraphItem graphItem : graphItemList) {
+                    assertNotNull(graphItem.getIcon());
+                }
+            }
+        }
     }
 }

@@ -58,6 +58,8 @@ public class ObjectPoolService {
 
         if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
             objectPoolEntity.release();
+            if (e instanceof IProduct)
+                ((IProduct) e).addLinkProduct();
             throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой:\n%s",
                     objectPoolEntity.getClazz().getSimpleName(), objectPoolEntity.getError()));
         }
@@ -77,6 +79,8 @@ public class ObjectPoolService {
                     objectPoolEntity.setError(throwable);
                 }
                 objectPoolEntity.release();
+                if (e instanceof IProduct)
+                    ((IProduct) e).addLinkProduct();
                 throw throwable;
             }
             objectPoolEntity.setStatus(ObjectStatus.CREATED);

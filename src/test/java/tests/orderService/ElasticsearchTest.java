@@ -5,6 +5,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import io.restassured.path.json.JsonPath;
 import models.orderService.products.Elasticsearch;
 import org.json.JSONObject;
@@ -25,9 +26,10 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 @Epic("Продукты")
 @Feature("ElasticSearch")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearch"), @Tag("prod")})
+//@Tags({@Tag("regress"), @Tag("orders"), @Tag("elasticsearch"), @Tag("prod")})
 public class ElasticsearchTest extends Tests {
 
     @TmsLink("396147")
@@ -113,18 +115,6 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
-    @TmsLink("425735")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(Elasticsearch product) {
-        try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
-            elastic.stopHard();
-            elastic.start();
-
-        }
-    }
-
     @TmsLink("425725")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -136,10 +126,10 @@ public class ElasticsearchTest extends Tests {
         }
     }
 
-    @TmsLink("425726")
+    @TmsLinks({@TmsLink("425726"),@TmsLink("425735")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(Elasticsearch product) {
         try (Elasticsearch elastic = product.createObjectExclusiveAccess()) {
             elastic.stopHard();

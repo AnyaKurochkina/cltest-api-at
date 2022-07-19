@@ -21,7 +21,11 @@
         "uuid": "1498c9c9-5f20-4c1e-8d53-683bb8c2c205",
         "memory": 8
       },
-      "nodes_count": "1,2",
+      "nodes_count": {
+        "coordinator": 0.0,
+        "data": 2.0,
+        "master": 1.0
+      },
       "cluster_name": "elastic1",
       "flavor_master": {
         "cpus": 2,

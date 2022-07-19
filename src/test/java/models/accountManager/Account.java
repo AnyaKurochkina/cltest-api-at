@@ -12,6 +12,8 @@ import models.authorizer.Organization;
 import org.json.JSONObject;
 import steps.accountManager.AccountSteps;
 
+import java.util.Objects;
+
 @Builder
 @Getter
 public class Account extends Entity {
@@ -32,6 +34,10 @@ public class Account extends Entity {
         }
         if(parentId == null){
             parentId = AccountSteps.getAccountIdByContext(folder.getParentId());
+            if(parentId == null) {
+                Account account = Account.builder().folder(Folder.getParent(folder)).build().createObject();
+                parentId = account.getAccountId();
+            }
         }
         if(organization == null){
             organization = ((Organization) Organization.builder().build().createObject()).getName();
@@ -41,7 +47,7 @@ public class Account extends Entity {
 
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("/accountManager/accountTemplate.json")
-                .set("$.parent_id", parentId)
+                .set("$.parent_id", Objects.requireNonNull(parentId))
                 .set("$.name", String.format("%s (%s)", folder.getTitle(), folderId))
                 .set("$.folder_uid", folderId)
                 .build();

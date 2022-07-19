@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.WildFly;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -88,11 +89,11 @@ public class WildFlyTest extends Tests {
         }
     }
 
-    @TmsLink("377472")
+    @TmsLinks({@TmsLink("377471"),@TmsLink("377472")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(WildFly product) {
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
+    void stopHard(WildFly product) {
         product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.stopHard();
@@ -100,15 +101,27 @@ public class WildFlyTest extends Tests {
         }
     }
 
-    @TmsLink("377471")
+    @TmsLinks({@TmsLink("989498"),@TmsLink("989495")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
-    void stopHard(WildFly product) {
+    @ParameterizedTest(name = "Добавление/Удаление пользователя WildFly {0}")
+    void user(WildFly product) {
         product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.stopHard();
-            wildFly.start();
+            wildFly.addUser("user1", "Deployer");
+            wildFly.deleteUser("user1", "Deployer");
+        }
+    }
+
+    @TmsLinks({@TmsLink("989496"),@TmsLink("989497")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавление/Удаление группы WildFly {0}")
+    void group(WildFly product) {
+        product.setProductName(productName);
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.addGroup("group1", "Deployer");
+            wildFly.deleteGroup("group1", "Deployer");
         }
     }
 

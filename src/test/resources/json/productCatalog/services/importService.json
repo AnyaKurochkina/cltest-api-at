@@ -1,22 +1,9 @@
 {
   "model_name": "Service",
   "Service": {
-    "graph_id": "7fb51ffb-27ce-4e36-801d-482363a858cb",
+    "graph_id": null,
     "extra_data": {},
-    "check_rules": [
-      {
-        "name": "only_one_item",
-        "checked": false
-      },
-      {
-        "name": "only_one_is",
-        "checked": false
-      },
-      {
-        "name": "only_one_env",
-        "checked": false
-      }
-    ],
+    "check_rules": [],
     "data_source": {
       "inventory_tags": {
         "tags": [],
@@ -25,25 +12,19 @@
       }
     },
     "service_info": "",
-    "graph_version": "1.0.3",
+    "graph_version": "",
     "auto_open_form": false,
-    "start_btn_label": "start",
+    "start_btn_label": "",
     "auto_open_results": false,
-    "inventory_actions": [
-      {
-        "name": "history",
-        "checked": false
-      }
-    ],
+    "inventory_actions": [],
     "turn_off_inventory": false,
     "graph_version_pattern": "",
     "hide_node_name_output": false,
     "current_version": "",
     "name": "service_import_test_api",
     "title": "service_import_test_api",
-    "description": "service_import_test_api",
+    "description": "",
     "is_published": false,
-    "icon": null,
     "allowed_groups": [],
     "restricted_groups": [],
     "allowed_developers": [],
@@ -51,9 +32,10 @@
     "version_arr": [
       1,
       0,
-      1
+      0
     ],
-    "direction_id": "944bb110-102b-400f-ab20-6dc2c9106973"
+    "direction_id": "944bb110-102b-400f-ab20-6dc2c9106973",
+    "icon_store_id": null
   },
   "rel_foreign_models": {
     "direction": {
@@ -62,138 +44,13 @@
         "name": "d_i_r_e_c_t_i_o_n",
         "title": "QA Test Direction",
         "description": "qa-test-direction",
-        "icon": "",
-        "extra_data": {}
+        "extra_data": {},
+        "icon_store_id": null
       },
       "rel_foreign_models": {}
-    },
-    "graph": {
-      "model_name": "Graph",
-      "Graph": {
-        "id": "7fb51ffb-27ce-4e36-801d-482363a858cb",
-        "name": "test_db_oracle",
-        "type": "service",
-        "title": "test_db_oracle",
-        "author": "Sergey Beliankov",
-        "output": {},
-        "ui_schema": {},
-        "description": "test_db_oracle",
-        "json_schema": {},
-        "static_data": {
-          "statement": "begin SYS.ADM_USER.reset_pass('test01', 'test01'); end;",
-          "parameters": {},
-          "data_source": "AUTOTEST",
-          "net_segment": "dev-srv-app"
-        },
-        "modifications": [],
-        "printed_output": {},
-        "allowed_developers": "",
-        "damage_order_on_error": false,
-        "restricted_developers": "",
-        "current_version": "",
-        "version_arr": [
-          1,
-          0,
-          3
-        ]
-      },
-      "rel_foreign_models": {},
-      "rel_revers_models": {
-        "nodes": [
-          {
-            "model_name": "Node",
-            "Node": {
-              "hold": false,
-              "icon": "",
-              "name": "exec_db_request",
-              "color": "",
-              "count": null,
-              "input": {
-                "statement": "statement",
-                "parameters": "parameters",
-                "data_source": "data_source",
-                "net_segment": "net_segment"
-              },
-              "number": 1,
-              "output": {
-                "result": "result1",
-                "row_count": "row_count1"
-              },
-              "depends": [],
-              "timeout": 30,
-              "coords_x": 0.0,
-              "coords_y": 0.0,
-              "for_each": "",
-              "priority": null,
-              "condition": "",
-              "log_level": null,
-              "extra_data": null,
-              "description": "",
-              "subgraph_id": null,
-              "template_id": "75",
-              "is_sequential": false,
-              "on_prebilling": false,
-              "printed_output": {},
-              "run_on_rollback": false,
-              "subgraph_version": "",
-              "template_version": "1.0.0",
-              "not_damage_on_error": false,
-              "damage_order_on_error": false,
-              "subgraph_version_pattern": "",
-              "template_version_pattern": ""
-            },
-            "rel_foreign_models": {
-              "template": {
-                "model_name": "Template",
-                "Template": {
-                  "id": 75,
-                  "run": "rpc_db_manager:cmd",
-                  "icon": "",
-                  "name": "db_request",
-                  "type": "rpc",
-                  "color": "",
-                  "input": {
-                    "statement": {},
-                    "parameters": {},
-                    "data_source": {}
-                  },
-                  "title": "db_request",
-                  "output": {
-                    "result": {},
-                    "row_count": {}
-                  },
-                  "timeout": 60,
-                  "coords_x": 0.0,
-                  "coords_y": 0.0,
-                  "priority": 0,
-                  "rollback": null,
-                  "log_level": null,
-                  "extra_data": null,
-                  "description": "\u043d\u043e\u0434\u0430 \u0434\u043b\u044f \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f SQL-\u0437\u0430\u043f\u0440\u043e\u0441\u043e\u0432",
-                  "allowed_groups": [],
-                  "printed_output": {},
-                  "additional_input": false,
-                  "additional_output": false,
-                  "restricted_groups": [],
-                  "log_can_be_overridden": false,
-                  "priority_can_be_overridden": false,
-                  "printed_output_can_be_overridden": false,
-                  "current_version": "",
-                  "version_arr": [
-                    1,
-                    0,
-                    0
-                  ]
-                },
-                "rel_foreign_models": {}
-              }
-            }
-          }
-        ]
-      }
     }
   },
   "dump_version": 5.0,
-  "dump_date": "2022-06-15 11:07:10",
+  "dump_date": "2022-07-07 13:26:21",
   "is_pinned_versions": true
 }

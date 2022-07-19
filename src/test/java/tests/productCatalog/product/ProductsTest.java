@@ -17,13 +17,17 @@ import models.productCatalog.Product;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import tests.Tests;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -486,12 +490,14 @@ public class ProductsTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Product в GitLab")
+    @EnabledIfEnv("ift")
     @TmsLink("975400")
     public void dumpToGitlabProduct() {
         String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Product product = Product.builder()
                 .name(productName)
                 .title(productName)
+                .version("1.0.2")
                 .build()
                 .createObject();
         Response response = steps.dumpToBitbucket(product.getProductId());
@@ -500,12 +506,25 @@ public class ProductsTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Product из GitLab")
-    @Disabled
-    @TmsLink("")
+    @EnabledIfEnv("ift")
+    @TmsLink("1028975")
     public void loadFromGitlabProduct() {
-        String path = "product_standard_for_unloading_from_git_api";
+        String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
+        JSONObject jsonObject = Product.builder()
+                .name(productName)
+                .title(productName)
+                .version("1.0.0")
+                .build()
+                .init().toJson();
+        GetProductResponse product = steps.createProductObject(jsonObject).extractAs(GetProductResponse.class);
+        Response response = steps.dumpToBitbucket(product.getId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        steps.deleteByName(productName, GetProductsResponse.class);
+        String path = "product_" + productName + "_" + product.getVersion();
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(path));
+        assertTrue(steps.isExists(productName));
+        steps.deleteByName(productName, GetProductsResponse.class);
+        assertFalse(steps.isExists(productName));
     }
 
     @DisplayName("Получение продукта по контексту id проекта без ограничений со стороны организации")
@@ -516,7 +535,7 @@ public class ProductsTest extends Tests {
         Product product = Product.builder()
                 .name("product_without_org_for_context_test_api")
                 .informationSystems(Collections.emptyList())
-                .envs(Collections.singletonList(Configure.ENV))
+                .envs(Collections.singletonList(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()))
                 .build()
                 .createObject();
         steps.getProductByContextProject(project.getId(), product.getProductId());

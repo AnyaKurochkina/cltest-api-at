@@ -17,6 +17,7 @@ import models.productCatalog.ItemVisualTemplates;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
@@ -338,6 +339,7 @@ public class VisualTemplateTest extends Tests {
 
     @Test
     @DisplayName("Загрузка VisualTemplate в GitLab")
+    @EnabledIfEnv("ift")
     @TmsLink("975416")
     public void dumpToGitlabVisualTemplate() {
         String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -357,11 +359,27 @@ public class VisualTemplateTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка VisualTemplate из GitLab")
-    @Disabled
-    @TmsLink("")
+    @EnabledIfEnv("ift")
+    @TmsLink("1029469")
     public void loadFromGitlabVisualTemplate() {
-        String path = "";
+        String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
+        JSONObject jsonObject = ItemVisualTemplates.builder()
+                .name(visualTemplateName)
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(false)
+                .build()
+                .init().toJson();
+        GetVisualTemplateResponse visualTemplate = steps.createProductObject(jsonObject).extractAs(GetVisualTemplateResponse.class);
+        Response response = steps.dumpToBitbucket(visualTemplate.getId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        steps.deleteByName(visualTemplateName, GetVisualTemplateListResponse.class);
+        String path = "itemvisualisationtemplate_" + visualTemplateName;
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(path));
+        assertTrue(steps.isExists(visualTemplateName));
+        steps.deleteByName(visualTemplateName, GetVisualTemplateListResponse.class);
+        assertFalse(steps.isExists(visualTemplateName));
     }
 }

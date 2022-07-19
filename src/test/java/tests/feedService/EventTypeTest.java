@@ -10,9 +10,11 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import steps.feedService.FeedServiceSteps;
 import tests.Tests;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.feedService.FeedServiceSteps.*;
@@ -40,9 +42,14 @@ public class EventTypeTest extends Tests {
     @TmsLink("")
     @Test
     public void createEventTypeByViewerTest() {
+        String title = "create_event_type_title_viewer_test_api";
+        EventType eventTypeByName = FeedServiceSteps.getEventTypeByName(title);
+        if (eventTypeByName != null) {
+            FeedServiceSteps.deleteEventType(eventTypeByName.getId());
+        }
         EventType eventType = EventType.builder()
-                .title("create_event_type_title_test_api")
-                .internalName("create_event_type_internalName_test_api")
+                .title(title)
+                .internalName("create_event_type_internalName_viewer_test_api")
                 .build();
         JSONObject body = eventType.init().toJson();
         createEventTypeByIdViewer(body);
@@ -96,11 +103,16 @@ public class EventTypeTest extends Tests {
                 .internalName("update_create_event_type_internalName_test_api")
                 .build()
                 .createObject();
+        String title = "updated_event_type_title_test_api";
         EventType expectedEventType = EventType.builder()
-                .title("updated_event_type_title_test_api")
+                .title(title)
                 .internalName("updated_event_type_internalName_test_api")
                 .build();
         JSONObject body = expectedEventType.init().toJson();
+        if (isEventTypeExist(title)) {
+            Integer id = Objects.requireNonNull(getEventTypeByName(title)).getId();
+            deleteEventType(id);
+        }
         EventType actualEventType = updateEventType(eventType.getId(), body);
         assertEquals(expectedEventType.getTitle(), actualEventType.getTitle());
         assertEquals(expectedEventType.getInternalName(), actualEventType.getInternalName());

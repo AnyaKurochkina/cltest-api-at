@@ -1,3 +1,4 @@
 package ui.elements;
 
-public interface TypifiedElement{}
+public interface TypifiedElement {
+}

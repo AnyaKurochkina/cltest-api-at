@@ -5,10 +5,6 @@
 
 package org.apache.logging.log4j.core.config;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.core.Appender;
@@ -18,19 +14,10 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.async.AsyncLoggerConfig;
 import org.apache.logging.log4j.core.async.AsyncLoggerContext;
 import org.apache.logging.log4j.core.async.AsyncLoggerContextSelector;
-import org.apache.logging.log4j.core.config.plugins.Plugin;
-import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
-import org.apache.logging.log4j.core.config.plugins.PluginConfiguration;
-import org.apache.logging.log4j.core.config.plugins.PluginElement;
-import org.apache.logging.log4j.core.config.plugins.PluginFactory;
+import org.apache.logging.log4j.core.config.plugins.*;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.apache.logging.log4j.core.filter.AbstractFilterable;
-import org.apache.logging.log4j.core.impl.DefaultLogEventFactory;
-import org.apache.logging.log4j.core.impl.LocationAware;
-import org.apache.logging.log4j.core.impl.LocationAwareLogEventFactory;
-import org.apache.logging.log4j.core.impl.Log4jLogEvent;
-import org.apache.logging.log4j.core.impl.LogEventFactory;
-import org.apache.logging.log4j.core.impl.ReusableLogEventFactory;
+import org.apache.logging.log4j.core.impl.*;
 import org.apache.logging.log4j.core.util.Booleans;
 import org.apache.logging.log4j.core.util.Constants;
 import org.apache.logging.log4j.core.util.Loader;
@@ -39,8 +26,11 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.apache.logging.log4j.util.PropertiesUtil;
 import org.apache.logging.log4j.util.StackLocatorUtil;
 import org.apache.logging.log4j.util.Strings;
-import ru.testit.utils.UniqueTest;
 import tests.Tests;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Plugin(
         name = "logger",
@@ -280,6 +270,8 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
 
         LogEvent logEvent = this.logEventFactory instanceof LocationAwareLogEventFactory ? ((LocationAwareLogEventFactory) this.logEventFactory).createEvent(loggerName, marker, fqcn, location, level, data, (List) props, t) : this.logEventFactory.createEvent(loggerName, marker, fqcn, level, data, (List) props, t);
         if (logEvent.getMessage().getFormattedMessage().equals("toStringProductStepFunc"))
+            return;
+        if (logEvent.getMessage().getFormattedMessage().startsWith("RESOURCE_LOG") && System.getProperty("CI") == null)
             return;
         try {
             this.log(logEvent, LoggerConfig.LoggerConfigPredicate.ALL);

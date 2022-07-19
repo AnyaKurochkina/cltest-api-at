@@ -103,7 +103,7 @@ public class Redis extends IProduct {
 
     //Расширить
     public void expandMountPoint() {
-        expandMountPoint("expand_mount_point", "/app/redis/data", 10);
+        expandMountPoint("expand_mount_point_new", "/app/redis/data", 10);
     }
 
     public void resetPassword() {

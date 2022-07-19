@@ -7,24 +7,31 @@ import core.enums.ObjectStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
+import models.orderService.products.Rhel;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
+@Log4j2
 public class ObjectPoolEntity {
     private String entity;
-    @Setter @Getter
+    @Setter
+    @Getter
     private boolean isPublic = true;
-    @Setter @Getter
+    @Setter
+    @Getter
     private ObjectStatus status = ObjectStatus.NOT_CREATED;
-    @Setter @Getter
+    @Setter
+    @Getter
     private Throwable error;
     @Getter
     public final Class<? extends Entity> clazz;
@@ -53,6 +60,8 @@ public class ObjectPoolEntity {
         removeEmptyNode(jsonNodeThis);
         removeEmptyNode(jsonNodeThat);
         removeNode(jsonNodeThis, jsonNodeThat);
+        if (o instanceof Rhel)
+            log.warn("jsonNodeThis '{}',  jsonNodeThat '{}' : {}", jsonNodeThis, jsonNodeThat, Objects.equals(jsonNodeThis, jsonNodeThat));
         return Objects.equals(jsonNodeThis, jsonNodeThat);
     }
 
@@ -96,13 +105,16 @@ public class ObjectPoolEntity {
     }
 
     public void lock() {
+        writeLog("lock() " + entity);
         lock.lock();
     }
 
     public void release() {
         try {
+            writeLog("unlock() " + entity);
             lock.unlock();
         } catch (IllegalMonitorStateException e) {
+            writeLog("error" + e);
             e.printStackTrace();
         }
     }
@@ -110,5 +122,16 @@ public class ObjectPoolEntity {
     @Override
     public String toString() {
         return entity;
+    }
+
+    private static void writeLog(String text) {
+        StringJoiner stack = new StringJoiner("\n\t");
+        for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
+            String e = s.toString();
+            stack.add(e);
+            if(e.startsWith("tests."))
+                break;
+        }
+        log.info("RESOURCE_LOG {} \n {}\n", text, stack);
     }
 }

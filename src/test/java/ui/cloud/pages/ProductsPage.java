@@ -1,10 +1,16 @@
 package ui.cloud.pages;
 
-import ui.elements.Table;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 
-public class ProductsPage extends Table {
+import static com.codeborne.selenide.Selenide.$$x;
+import static tests.Tests.clickableCnd;
 
-    public ProductsPage() {
-        super("Продукт");
+public class ProductsPage {
+    ElementsCollection products = $$x("//button[img]");
+
+    public void selectProduct(String product){
+        products.find(Condition.exactText(product)).$("img").hover()
+                .shouldBe(clickableCnd).click();
     }
 }

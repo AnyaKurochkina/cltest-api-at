@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.PostgresSQLCluster;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -13,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 @Epic("Продукты")
-@Feature("PostgresSQL Cluster")
+@Feature("PostgresSQL Cluster Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresSqlClusterAstra"), @Tag("prod")})
 public class PostgresSQLClusterAstraTest extends Tests {
     static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
@@ -151,22 +152,10 @@ public class PostgresSQLClusterAstraTest extends Tests {
         }
     }
 
-    @TmsLink("810037")
+    @TmsLinks({@TmsLink("810036"),@TmsLink("810037")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(PostgresSQLCluster product) {
-        product.setProductName(productName);
-        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.stopHard();
-            postgres.start();
-        }
-    }
-
-    @TmsLink("810036")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(PostgresSQLCluster product) {
         product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {

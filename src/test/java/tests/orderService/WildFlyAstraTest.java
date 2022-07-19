@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.WildFly;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -14,9 +15,9 @@ import tests.Tests;
 
 @Epic("Продукты")
 @Feature("WildFly (Astra)")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("wildflyAstra"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("wildfly_astra"), @Tag("prod")})
 public class WildFlyAstraTest extends Tests {
-    final String productName = "Разработка WildFly Astra";
+    final String productName = "WildFly Astra";
 
     @TmsLink("833650")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -88,22 +89,10 @@ public class WildFlyAstraTest extends Tests {
         }
     }
 
-    @TmsLink("833653")
+    @TmsLinks({@TmsLink("833646"),@TmsLink("833653")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(WildFly product) {
-        product.setProductName(productName);
-        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.stopHard();
-            wildFly.start();
-        }
-    }
-
-    @TmsLink("833646")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(WildFly product) {
         product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
@@ -120,6 +109,30 @@ public class WildFlyAstraTest extends Tests {
         product.setProductName(productName);
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.updateCerts();
+        }
+    }
+
+    @TmsLinks({@TmsLink("989482"),@TmsLink("989486")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавление/Удаление пользователя WildFly {0}")
+    void user(WildFly product) {
+        product.setProductName(productName);
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.addUser("user1", "Deployer");
+            wildFly.deleteUser("user1", "Deployer");
+        }
+    }
+
+    @TmsLinks({@TmsLink("989487"),@TmsLink("989491")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавление/Удаление группы WildFly {0}")
+    void group(WildFly product) {
+        product.setProductName(productName);
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.addGroup("group1", "Deployer");
+            wildFly.deleteGroup("group1", "Deployer");
         }
     }
 

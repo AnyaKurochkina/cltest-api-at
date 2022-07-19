@@ -8,6 +8,7 @@ import models.Entity;
 import org.json.JSONObject;
 
 import static core.helper.Configure.IamURL;
+import static core.helper.Configure.ResourceManagerURL;
 
 @Builder
 @Getter
@@ -30,7 +31,7 @@ public class Organization extends Entity {
     @Override
     @Step("Получение организации")
     protected void create() {
-        name = new Http(IamURL)
+        name = new Http(ResourceManagerURL)
                 .get("/v1/organizations?page=1&per_page=25")
                 .assertStatus(200)
                 .jsonPath()

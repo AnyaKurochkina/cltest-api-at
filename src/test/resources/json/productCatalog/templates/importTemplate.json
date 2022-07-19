@@ -2,15 +2,11 @@
   "model_name": "Template",
   "Template": {
     "run": "run",
-    "input": {
-      "input": "test"
-    },
-    "output": {
-      "output": "test"
-    },
+    "input": {},
+    "output": {},
     "timeout": 1,
     "priority": 0,
-    "rollback": "Rollback",
+    "rollback": "",
     "log_level": "",
     "printed_output": {},
     "additional_input": false,
@@ -18,27 +14,27 @@
     "log_can_be_overridden": false,
     "priority_can_be_overridden": false,
     "printed_output_can_be_overridden": false,
-    "id": 713,
+    "id": 891,
     "current_version": "",
     "coords_x": 0.0,
     "coords_y": 0.0,
     "extra_data": null,
     "color": "",
-    "icon": "",
-    "name": "template_import_test_api",
-    "title": "template_import_test_api",
-    "description": "template_import_test_api",
-    "type": "rpc",
+    "name": "import_template_test_api",
+    "title": "import_template_test_api",
+    "description": "",
+    "type": "s3",
     "allowed_groups": [],
     "restricted_groups": [],
     "version_arr": [
       1,
       0,
       0
-    ]
+    ],
+    "icon_store_id": null
   },
   "rel_foreign_models": {},
   "dump_version": 5.0,
-  "dump_date": "2022-06-15 11:07:10",
+  "dump_date": "2022-07-07 13:26:21",
   "is_pinned_versions": false
 }

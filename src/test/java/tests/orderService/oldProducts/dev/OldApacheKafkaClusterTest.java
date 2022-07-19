@@ -32,22 +32,22 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class OldApacheKafkaClusterTest extends Tests {
 
     final ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
-            .projectId("proj-67nljbzjtt")
-            .productId("d46dd919-defc-4ec6-a55b-2017b3981258")
-            .orderId("62758afa-911e-4ee8-abd2-a59892e3426f")
+            .projectId("proj-1oob0zjo5h")
+            .productId("0c36e61d-687c-4a23-914d-7421779301e4")
+            .orderId("3c2fd8aa-b0dd-4aff-9d2e-332a22f681e8")
             .productName("Apache Kafka Cluster")
             .build();
 
-    @Order(1)
-    @TmsLink("841715")
-    @DisplayName("Расширить Apache Kafka Cluster OLD")
-    @Test
-    void expandMountPoint() {
-        if (kafka.productStatusIs(STOPPED)) {
-            kafka.start();
-        }
-        kafka.expandMountPoint();
-    }
+//    @Order(1)
+//    @TmsLink("841715")
+//    @DisplayName("Расширить Apache Kafka Cluster OLD")
+//    @Test
+//    void expandMountPoint() {
+//        if (kafka.productStatusIs(STOPPED)) {
+//            kafka.start();
+//        }
+//        kafka.expandMountPoint();
+//    }
 
     @Order(2)
     @TmsLink("841723")

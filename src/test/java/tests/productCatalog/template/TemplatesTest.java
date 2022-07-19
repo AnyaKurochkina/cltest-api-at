@@ -15,15 +15,18 @@ import models.productCatalog.Template;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.EnabledIfEnv;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны")
@@ -202,7 +205,8 @@ public class TemplatesTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Template в GitLab")
-    @TmsLink("")
+    @EnabledIfEnv("ift")
+    @TmsLink("975415")
     public void dumpToGitlabTemplate() {
         String templateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Template template = Template.builder()
@@ -216,11 +220,24 @@ public class TemplatesTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Template из GitLab")
-    @Disabled
-    @TmsLink("")
+    @EnabledIfEnv("ift")
+    @TmsLink("1029293")
     public void loadFromGitlabTemplate() {
-        String path = "";
+        String templateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
+        JSONObject jsonObject = Template.builder()
+                .templateName(templateName)
+                .title(templateName)
+                .version("1.0.0")
+                .build()
+                .init().toJson();
+        GetTemplateResponse template = steps.createProductObject(jsonObject).extractAs(GetTemplateResponse.class);
+        Response response = steps.dumpToBitbucket(template.getId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        steps.deleteByName(templateName, GetTemplateListResponse.class);
+        String path = "template_" + templateName + "_" + template.getVersion();
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(path));
+        assertTrue(steps.isExists(templateName));
+        steps.deleteByName(templateName, GetTemplateListResponse.class);
+        assertFalse(steps.isExists(templateName));
     }
 }

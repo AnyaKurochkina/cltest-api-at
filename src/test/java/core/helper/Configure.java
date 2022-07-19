@@ -26,16 +26,15 @@ public class Configure {
     public static String ReferencesURL;
     public static String ResourceManagerURL;
     public static String FeedServiceURL;
+    public static String Day2ServiceURL;
 
     static {
         try {
             RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
-
             properties.setProperty("testIt", "false");
-
-            loadProperties(RESOURCE_PATH + "/config/application.properties");
             loadProperties(RESOURCE_PATH + "/config/kafka.config.properties");
+            loadProperties(RESOURCE_PATH + "/config/application.properties");
             if (System.getProperty("env") == null) {
                 if (getAppProp("env") == null) {
                     throw new Exception("Не задан параметр env");
@@ -44,6 +43,7 @@ public class Configure {
                 ENV = System.getProperty("env").toLowerCase();
             log.info("SET ENVIRONMENT = {}", ENV);
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
+            loadProperties(RESOURCE_PATH + "/config/application.properties");
 
             String kongURL = getAppProp("url.kong");
             IamURL = kongURL + "iam/api";
@@ -55,8 +55,9 @@ public class Configure {
             OrderServiceURL = kongURL + "order-service/api";
             StateServiceURL = kongURL + "state-service";
             ReferencesURL = kongURL + "references";
-            ResourceManagerURL = kongURL + "resource-manager";
+            ResourceManagerURL = kongURL + "resource-manager/api";
             FeedServiceURL = kongURL + "feed-service";
+            Day2ServiceURL = kongURL + "day2-core";
         } catch (Exception e) {
             e.printStackTrace();
         }

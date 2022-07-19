@@ -527,72 +527,46 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
                     throw var5;
                 }
+                finally {
+                    Field field = null;
+                    try {
+                        field = testTask.getClass().getDeclaredField("testDescriptor");
+                        field.setAccessible(true);
+                        AbstractTestDescriptor testDescriptor = (AbstractTestDescriptor) field.get(testTask);
+
+                        if (testDescriptor instanceof MethodBasedTestDescriptor) {
+                            mapTests.remove(testDescriptor.getUniqueId().toString());
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (mapTests.isEmpty() && !del.get()) {
+                        del.set(true);
+                        ObjectPoolService.deleteAllResources();
+                        invokeAllRef(invokeDeleteTest());
+                    }
+
+                    if (!mapTests.isEmpty()){
+                        Set<Class<?>> currentClassListArgument = new HashSet<>();
+                        for(JupiterTestDescriptor descriptor : mapTests.values()){
+                            if(!(descriptor instanceof MethodBasedTestDescriptor))
+                                continue;
+                            MethodBasedTestDescriptor methodBasedTestDescriptor = ((MethodBasedTestDescriptor) descriptor);
+                            MarkDelete deleted = methodBasedTestDescriptor.getTestMethod().getAnnotation(MarkDelete.class);
+                            if (deleted != null)
+                                continue;
+                            currentClassListArgument.addAll(Arrays.asList(((MethodBasedTestDescriptor) descriptor).getTestMethod().getParameterTypes()));
+                        }
+                        ObjectPoolService.removeProducts(currentClassListArgument);
+                    }
+                }
 
                 if (lock != null) {
                     lock.close();
                 }
 
-
-                Field field = null;
-                try {
-                    field = testTask.getClass().getDeclaredField("testDescriptor");
-                    field.setAccessible(true);
-                    AbstractTestDescriptor testDescriptor = (AbstractTestDescriptor) field.get(testTask);
-
-                    if (testDescriptor instanceof MethodBasedTestDescriptor) {
-                        mapTests.remove(testDescriptor.getUniqueId().toString());
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                if (mapTests.isEmpty() && !del.get()) {
-                    del.set(true);
-                    ObjectPoolService.deleteAllResources();
-                    invokeAllRef(invokeDeleteTest());
-                }
-
-                if (!mapTests.isEmpty()){
-                    Set<Class<?>> currentClassListArgument = new HashSet<>();
-                    for(JupiterTestDescriptor descriptor : mapTests.values()){
-                        if(!(descriptor instanceof MethodBasedTestDescriptor))
-                            continue;
-                        MethodBasedTestDescriptor methodBasedTestDescriptor = ((MethodBasedTestDescriptor) descriptor);
-                        MarkDelete deleted = methodBasedTestDescriptor.getTestMethod().getAnnotation(MarkDelete.class);
-                        if (deleted != null)
-                            continue;
-                        currentClassListArgument.addAll(Arrays.asList(((MethodBasedTestDescriptor) descriptor).getTestMethod().getParameterTypes()));
-                    }
-                    ObjectPoolService.removeProducts(currentClassListArgument);
-                }
-
-
-
-//                Integer order = null;
-//                AbstractTestDescriptor testDescriptor = null;
-//                try {
-//                    Field field = testTask.getClass().getDeclaredField("testDescriptor");
-//                    field.setAccessible(true);
-//                    testDescriptor = (AbstractTestDescriptor) field.get(testTask);
-//                    if (testDescriptor instanceof ClassTestDescriptor) {
-////                        Class<?> clz = ((ClassTestDescriptor) testDescriptor).getTestClass();
-////                        Order o = clz.getAnnotation(Order.class);
-//                        String className = ((ClassTestDescriptor) testDescriptor).getTestClass().getName();
-//                        String o = prop.getProperty(className);
-//                        if (o != null) {
-//                            order = Integer.parseInt(o);
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-
-//                if (order != null) {
-//                    CountDownLatch c = tests.get(order);
-//                    if (c != null)
-//                        c.countDown();
-//                }
 
             } catch (InterruptedException var6) {
                 ExceptionUtils.throwAsUncheckedException(var6);

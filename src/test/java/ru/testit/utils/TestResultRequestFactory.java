@@ -10,6 +10,9 @@ import ru.testit.services.LinkItem;
 import ru.testit.services.TestITClient;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 public class TestResultRequestFactory {
     private TestResultsRequest request;
@@ -36,7 +39,10 @@ public class TestResultRequestFactory {
         this.processTestSteps(currentTest, step, null);
         this.processUtilsMethodsSteps(currentTest, utilsMethodSteps);
         if (currentTest.getMessage() != null)
-            currentTest.setMessage(currentTest.getMessage().replaceAll("\n", "\t \n"));
+            currentTest.setMessage(currentTest.getMessage()
+                    .replaceAll("\n", "\t \n")
+                    .replaceAll(".at.org\\.junit\\.jupiter\\.engine\\.execution\\.InvocationInterceptorChain\\$ValidatingInvocation\\.proceed\\(InvocationInterceptorChain\\.java:[^*]+", "")
+            );
         req.getTestResults().add(currentTest);
         String testResultId = TestITClient.sendTestResult(req);
 
@@ -109,9 +115,9 @@ public class TestResultRequestFactory {
         final Throwable failureReason = parentStep.getFailureReason();
         if (failureReason != null) {
             testResult.setMessage(failureReason.getMessage());
-            testResult.setTraces(ExceptionUtils.getStackTrace(failureReason));
+            testResult.setTraces(escapeHtml(ExceptionUtils.getStackTrace(failureReason)));
         }
-        testResult.getLinks().addAll(this.makeInnerLinks(parentStep.getLinkItems()));
+        testResult.getLinks().addAll(this.makeInnerLinks(parentStep.getLinkItems()).stream().distinct().collect(Collectors.toList()));
         final InnerResult innerResult;
         innerResult = this.makeInnerResult(parentStep);
         this.processStep(testResult, parentStep.getChildrens(), innerResult.getStepResults());
@@ -148,7 +154,8 @@ public class TestResultRequestFactory {
             innerResult.setParameters(stepNode.getParameters());
         innerResult.setStartedOn(startedOn);
         innerResult.setCompletedOn(completedOn);
-        innerResult.setDuration((int) (completedOn.getTime() - startedOn.getTime()));
+        innerResult.setDuration((int) (completedOn.getTime()
+                - startedOn.getTime()));
         innerResult.setOutcome(stepNode.getOutcome());
         return innerResult;
     }
@@ -169,7 +176,7 @@ public class TestResultRequestFactory {
     private void processStep(final TestResultRequest testResult, final List<StepNode> childrens, final List<InnerResult> steps) {
         List<Map<String, String>> attachmentList = new ArrayList<>();
         for (final StepNode children : childrens) {
-            testResult.getLinks().addAll(this.makeInnerLinks(children.getLinkItems()));
+            testResult.getLinks().addAll(this.makeInnerLinks(children.getLinkItems()).stream().distinct().collect(Collectors.toList()));
             final InnerResult stepResult = this.makeInnerResult(children);
             steps.add(stepResult);
             if (!children.getChildrens().isEmpty()) {

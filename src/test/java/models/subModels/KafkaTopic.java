@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class KafkaTopic {
     String cleanupPolicy;
-    int minInsyncReplicas;
+//    int minInsyncReplicas;
     int partitionsNumber;
-    int replicationFactor;
-    int retentionMs;
+//    int replicationFactor;
+    long retentionMs;
     String topicName;
 }

@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.Astra;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -72,21 +73,10 @@ public class AstraTest extends Tests {
         }
     }
 
-    @TmsLink("391701")
+    @TmsLinks({@TmsLink("391700"),@TmsLink("391701")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(Astra product) {
-        try (Astra astra = product.createObjectExclusiveAccess()) {
-            astra.stopHard();
-            astra.start();
-        }
-    }
-
-    @TmsLink("391700")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.stopHard();

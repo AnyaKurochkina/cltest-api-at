@@ -3,6 +3,7 @@ package tests.orderService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.ScyllaDb;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -162,21 +163,10 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
-    @TmsLink("622624")
+    @TmsLinks({@TmsLink("622625"),@TmsLink("622624")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить {0}")
-    void start(ScyllaDb product) {
-        try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
-            scyllaDb.stopHard();
-            scyllaDb.start();
-        }
-    }
-
-    @TmsLink("622625")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно {0}")
+    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(ScyllaDb product) {
         try (ScyllaDb scyllaDb = product.createObjectExclusiveAccess()) {
             scyllaDb.stopHard();

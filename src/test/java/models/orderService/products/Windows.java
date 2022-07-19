@@ -107,10 +107,10 @@ public class Windows extends IProduct {
 
     //Расширить диск
     public void expandMountPoint(String disk) {
-        int sizeBefore = (Integer) OrderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
-        OrderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 1}"), this.getProjectId());
+//        int sizeBefore = (Integer) OrderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
+        OrderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 12}"), this.getProjectId());
         int sizeAfter = (Integer) OrderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
-        Assertions.assertEquals(sizeBefore, sizeAfter - 1, "sizeBefore >= sizeAfter");
+        Assertions.assertEquals(sizeAfter, 12);
     }
 
     public void unmountDisk(String disk) {

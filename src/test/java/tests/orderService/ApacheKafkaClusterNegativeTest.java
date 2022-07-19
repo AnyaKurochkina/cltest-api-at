@@ -33,21 +33,13 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             assertAll("Проверка ошибки при передачи неверных параметров топика",
                     () -> checkIncorrectTopic(kafka,
-                            new KafkaTopic("delete", 1, 1, 1, 1209600001, "TopicName")),
+                            new KafkaTopic("delete", 1, 5184000001L, "TopicName")),
                     () -> checkIncorrectTopic(kafka,
-                            new KafkaTopic("delete", 1, 1, 1, 1800000, "*TopicName")),
+                            new KafkaTopic("delete", 1, 1800000, "*TopicName")),
                     () -> checkIncorrectTopic(kafka,
-                            new KafkaTopic("delete", 1, 1, 1, 1800000, "-TopicName")),
+                            new KafkaTopic("delete",  51,  1800000, "_TopicName")),
                     () -> checkIncorrectTopic(kafka,
-                            new KafkaTopic("delete", 1, 1, 1, 1800000, "_TopicName")),
-                    () -> checkIncorrectTopic(kafka,
-                            new KafkaTopic("delete", 1, 11, 1, 1800000, "TopicName")),
-                    () -> checkIncorrectTopic(kafka,
-                            new KafkaTopic("delete", 7, 1, 1, 1800000, "TopicName")),
-                    () -> checkIncorrectTopic(kafka,
-                            new KafkaTopic("delete", 1, 1, 7, 1800000, "TopicName")),
-                    () -> checkIncorrectTopic(kafka,
-                            new KafkaTopic("create", 1, 1, 7, 1800000, "TopicName")));
+                            new KafkaTopic("create",  1,  1800000, "TopicName")));
         }
     }
 
@@ -59,7 +51,7 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             String topicName = "CreateKafkaTopicIfExist";
             kafka.createTopics(Collections.singletonList(topicName));
-            checkIncorrectTopic(kafka, new KafkaTopic("delete", 1, 1, 1, 1800000, topicName));
+            checkIncorrectTopic(kafka, new KafkaTopic("delete", 1, 1800000, topicName));
         }
     }
 

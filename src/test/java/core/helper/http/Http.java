@@ -48,7 +48,7 @@ public class Http {
     private Role role = Role.ADMIN;
     String contentType = "application/json";
     private boolean isUsedToken = true;
-    private static final Semaphore SEMAPHORE = new Semaphore(1, true);
+    private static final Semaphore SEMAPHORE = new Semaphore(2, true);
     private String fileName;
     private byte[] bytes;
     private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";
@@ -180,7 +180,7 @@ public class Http {
 
     private Response request() {
         Response response = null;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             try {
                 response = filterRequest();
             } catch (AssertionFailedError e) {
@@ -188,7 +188,11 @@ public class Http {
                 continue;
             }
             if (response.status() == 504 && method.equals("GET")) {
-                Waiting.sleep(2000);
+                Waiting.sleep(5000);
+                continue;
+            }
+            if (response.status() == 502 && method.equals("GET")) {
+                Waiting.sleep(5000);
                 continue;
             }
             break;
@@ -217,7 +221,8 @@ public class Http {
         io.restassured.response.Response response = null;
         try {
 
-            if (path.endsWith("/cost") || path.contains("order-service"))
+//            if (path.endsWith("/cost") || path.contains("order-service"))
+            if (!(host + path).endsWith("/openid-connect/token"))
                 SEMAPHORE.acquire();
 
             RequestSpecBuilder build = new RequestSpecBuilder();
@@ -241,7 +246,7 @@ public class Http {
             }
             if (field.length() > 0) {
                 String mimeType = URLConnection.guessContentTypeFromName(fileName);
-                if(Objects.isNull(mimeType))
+                if (Objects.isNull(mimeType))
                     mimeType = "application/octet-stream";
                 specification.multiPart(new MultiPartSpecBuilder(bytes)
                         .fileName(fileName)
@@ -282,14 +287,15 @@ public class Http {
                         log.debug(String.format("REQUEST: %s\n", stringPrettyFormat(body)));
                 }
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             if (e instanceof ConnectException)
                 throw e;
             if (response != null)
                 status = response.getStatusCode();
             Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e, status));
         } finally {
-            if (path.endsWith("/cost") || path.contains("order-service"))
+//            if (path.endsWith("/cost") || path.contains("order-service"))
+            if (!(host + path).endsWith("/openid-connect/token"))
                 SEMAPHORE.release();
         }
         if (isLogged)

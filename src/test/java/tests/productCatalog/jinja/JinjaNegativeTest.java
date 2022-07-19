@@ -3,6 +3,7 @@ package tests.productCatalog.jinja;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.productCatalog.Action;
 import models.productCatalog.Jinja2;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -11,8 +12,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
-
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Tag("product_catalog")
 @Tag("Jinja")
@@ -77,22 +76,34 @@ public class JinjaNegativeTest extends Tests {
     @TmsLink("660126")
     @Test
     public void createJinjaWithInvalidCharacters() {
-        assertAll("Jinja создался с недопустимым именем",
-                () -> steps.createProductObject(steps
-                        .createJsonObject("NameWithUppercase")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("nameWithUppercaseInMiddle")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("имя")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("Имя")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("a&b&c")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("")).assertStatus(400),
-                () -> steps.createProductObject(steps
-                        .createJsonObject(" ")).assertStatus(400)
-        );
+        Action.builder()
+                .actionName("NameWithUppercase")
+                .build()
+                .negativeCreateRequest(500);
+        Action.builder()
+                .actionName("nameWithUppercaseInMiddle")
+                .build()
+                .negativeCreateRequest(500);
+        Action.builder()
+                .actionName("имя")
+                .build()
+                .negativeCreateRequest(500);
+        Action.builder()
+                .actionName("Имя")
+                .build()
+                .negativeCreateRequest(500);
+        Action.builder()
+                .actionName("a&b&c")
+                .build()
+                .negativeCreateRequest(500);
+        Action.builder()
+                .actionName("")
+                .build()
+                .negativeCreateRequest(400);
+        Action.builder()
+                .actionName(" ")
+                .build()
+                .negativeCreateRequest(400);
     }
 
     @DisplayName("Негативный тест на удаление jinja без токена")

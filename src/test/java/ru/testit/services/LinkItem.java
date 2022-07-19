@@ -1,9 +1,12 @@
 package ru.testit.services;
 
+import lombok.EqualsAndHashCode;
 import ru.testit.annotations.*;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class LinkItem
 {
+    @EqualsAndHashCode.Include
     private String title;
     private String url;
     private String description;

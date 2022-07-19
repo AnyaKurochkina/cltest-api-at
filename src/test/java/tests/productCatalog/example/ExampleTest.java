@@ -11,7 +11,7 @@ import models.productCatalog.Example;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Disabled;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -127,6 +127,7 @@ public class ExampleTest extends Tests {
 
     @Test
     @DisplayName("Загрузка example в GitLab")
+    @EnabledIfEnv("ift")
     @TmsLink("975378")
     public void dumpToGitlabExample() {
         String exampleName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -141,16 +142,24 @@ public class ExampleTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка example из GitLab")
-    @Disabled
-    @TmsLink("")
+    @EnabledIfEnv("ift")
+    @TmsLink("1028842")
     public void loadFromGitlabExample() {
-        String exampleName = "standard_for_unloading_from_git";
-        if( steps.isExists(exampleName)){
-            steps.deleteByName(exampleName, GetExampleListResponse.class);
-        }
-        String examplePath = "example_" + exampleName;
-        steps.loadFromBitbucket(new JSONObject().put("path", examplePath));
+        String exampleName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
+        JSONObject jsonObject = Example.builder()
+                .name(exampleName)
+                .title(exampleName)
+                .build()
+                .init().toJson();
+        CreateExampleResponse example = steps.createProductObject(jsonObject).extractAs(CreateExampleResponse.class);
+        Response response = steps.dumpToBitbucket(example.getId());
+        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        steps.deleteByName(exampleName, GetExampleListResponse.class);
+        String path = "example_" + exampleName;
+        steps.loadFromBitbucket(new JSONObject().put("path", path));
         assertTrue(steps.isExists(exampleName));
+        steps.deleteByName(exampleName, GetExampleListResponse.class);
+        assertFalse(steps.isExists(exampleName));
     }
 
     @DisplayName("Удаление Example по Id")

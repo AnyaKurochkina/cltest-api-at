@@ -3,6 +3,7 @@ package models.orderService.interfaces;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
+import core.helper.Configure;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.utils.Waiting;
@@ -15,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.ObjectPoolService;
+import models.authorizer.Organization;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
 import models.productCatalog.Graph;
@@ -23,12 +25,16 @@ import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.TestAbortedException;
+import ru.testit.annotations.LinkType;
+import ru.testit.junit5.StepsAspects;
+import ru.testit.services.LinkItem;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
 
+import javax.annotation.Nullable;
 import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -60,8 +66,10 @@ public abstract class IProduct extends Entity {
     public static final String RESIZE = "Изменить конфигурацию";
 
     protected String jsonTemplate;
-    @Getter @Setter
-    transient String link;
+
+    @Getter
+    @Setter
+    transient String link, error;
 
     @Getter
     private ProductStatus status;
@@ -90,8 +98,20 @@ public abstract class IProduct extends Entity {
     @Override
     protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
         T entity = ObjectPoolService.create(this, exclusiveAccess, isPublic);
+        ((IProduct) entity).addLinkProduct();
         ((IProduct) entity).checkPreconditionStatusProduct();
         return entity;
+    }
+
+    public void addLinkProduct() {
+        if(Objects.nonNull(getOrderId())) {
+            if (StepsAspects.getCurrentStep().get() != null) {
+                Organization org = Organization.builder().build().createObject();
+                StepsAspects.getCurrentStep().get().addLinkItem(
+                        new LinkItem("Product URL", String.format("%svm/orders/%s/main?context=%s&type=project&org=%s",
+                                Configure.getAppProp("base.url"), getOrderId(), getProjectId(), org.getName()), "", LinkType.RELATED));
+            }
+        }
     }
 
     @SneakyThrows
@@ -137,12 +157,16 @@ public abstract class IProduct extends Entity {
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.CREATED, this.getProjectId());
     }
 
-    @SneakyThrows
     private void checkPreconditionStatusProduct() {
 //        Assume.assumeTrue(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), status), getStatus().equals(status));
         if (!ProductStatus.CREATED.equals(getStatus()) && !ProductStatus.DELETED.equals(getStatus())) {
             close();
             throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), ProductStatus.CREATED));
+        }
+        String status = OrderServiceSteps.getStatus(this);
+        if (status.equals("changing") || status.equals("pending")) {
+            close();
+            throw new CreateEntityException(String.format("Статус продукта %s не соответствует исходному", status));
         }
     }
 
@@ -183,14 +207,14 @@ public abstract class IProduct extends Entity {
     }
 
     //example: https://cloud.vtb.ru/vm/orders/ecb3567b-afa6-43a4-8a49-6e0ef5b1a952/topics?context=proj-7ll0yy5zsc&type=project&org=vtb
-    public <T extends Entity> T buildFromLink(String link){
+    public <T extends Entity> T buildFromLink(String link) {
         projectId = StringUtils.findByRegex("context=([^&]*)", link);
         orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
         productId = ((String) OrderServiceSteps.getProductsField(this, "product_id"));
         return (T) this;
     }
 
-    public <T extends Entity> T buildFromLink(){
+    public <T extends Entity> T buildFromLink() {
         projectId = StringUtils.findByRegex("context=([^&]*)", link);
         orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
         return (T) this;
@@ -198,7 +222,7 @@ public abstract class IProduct extends Entity {
 
     //Изменить конфигурацию
     protected void resize(String action) {
-        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
+        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
         Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
         OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"), this.getProjectId());
@@ -220,6 +244,14 @@ public abstract class IProduct extends Entity {
     }
 
     @SneakyThrows
+    public String getFilter() {
+        GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
+        GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
+        return JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
+                .getString("'ui:options'.filter");
+    }
+
+    @SneakyThrows
     protected boolean getSupport() {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(getProductId(), GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
@@ -236,13 +268,13 @@ public abstract class IProduct extends Entity {
     }
 
     public Flavor getMaxFlavor() {
-        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
+        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
         Assertions.assertFalse(list.size() < 2, "Действие недоступно, либо кол-во flavor's < 2");
         return list.get(list.size() - 1);
     }
 
     public Flavor getMinFlavor() {
-        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedList(this);
+        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
         return list.get(0);
     }
 
@@ -260,7 +292,7 @@ public abstract class IProduct extends Entity {
             setProjectId(project.getId());
         }
         if (label == null) {
-            label = UUID.randomUUID().toString();
+            label = "AT-API-" + UUID.randomUUID();
         }
         if (productId == null) {
             productId = new ProductCatalogSteps(Product.productName).
@@ -270,6 +302,7 @@ public abstract class IProduct extends Entity {
     }
 
     protected void createProduct() {
+//        Waiting.sleep((int) ((Math.random() * 20000) + 10000));
         log.info("Отправка запроса на создание заказа " + productName);
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId)
@@ -288,7 +321,7 @@ public abstract class IProduct extends Entity {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(productId, GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         List<String> parameters = (List<String>) graphResponse.getUiSchema().get("ui:order");
-        if(graphResponse.getJsonSchema().containsKey("dependencies"))
+        if (graphResponse.getJsonSchema().containsKey("dependencies"))
             parameters.addAll(((Map<String, Object>) graphResponse.getJsonSchema().get("dependencies")).keySet());
         Iterator<String> iterator = jsonObject.getJSONObject("order").getJSONObject("attrs").keys();
         while (iterator.hasNext()) {
