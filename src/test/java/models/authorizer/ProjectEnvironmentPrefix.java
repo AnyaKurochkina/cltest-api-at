@@ -18,13 +18,13 @@ public class ProjectEnvironmentPrefix  {
     String description;
 
     public ProjectEnvironmentPrefix(String env){
-//        String informationSystemId = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
-//        ProjectEnvironmentPrefix prefix = PortalBackSteps.getProjectEnvironmentPrefixByEnv(env, informationSystemId);
-//        this.envType = prefix.getEnvType();
-//        this.risName = prefix.getRisName();
-//        this.id = prefix.getId();
-//        this.projectEnvironmentId = prefix.getProjectEnvironmentId();
-//        this.description = prefix.getDescription();
         this.env = env;
     }
+
+    public static ProjectEnvironmentPrefix byType(String type){
+        ProjectEnvironmentPrefix prefix = new ProjectEnvironmentPrefix();
+        prefix.setEnvType(type.toUpperCase());
+        return prefix;
+    }
+
 }
