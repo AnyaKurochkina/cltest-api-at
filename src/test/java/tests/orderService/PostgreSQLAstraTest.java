@@ -14,13 +14,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
 @Epic("Продукты")
-@Feature("PostgreSQL")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql"), @Tag("prod")})
-public class PostgreSQLTest extends Tests {
+@Feature("PostgreSQL Astra")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql_astra"), @Tag("prod")})
+public class PostgreSQLAstraTest extends Tests {
     static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
-    static final String productName = "PostgreSQL";
+    static final String productName = "PostgreSQL (Astra Linux)";
 
-    @TmsLink("377668")
+    @TmsLink("1057046")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(PostgreSQL product) {
@@ -29,7 +29,7 @@ public class PostgreSQLTest extends Tests {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {}
     }
 
-    @TmsLink("377661")
+    @TmsLink("1057048")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -40,7 +40,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("377677")
+    @TmsLink("1057043")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить БД {0}")
@@ -51,7 +51,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("15778")
+    @TmsLink("1057047")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка подключения к БД {0}")
@@ -65,7 +65,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("377678")
+    @TmsLink("1057037")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить пользователя {0}")
@@ -77,7 +77,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("377663")
+    @TmsLink("1057042")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
@@ -90,7 +90,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("461766")
+    @TmsLink("1057039")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
@@ -102,7 +102,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("377683")
+    @TmsLink("1057044")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить пользователя {0}")
@@ -115,7 +115,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("377664")
+    @TmsLink("1057050")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
@@ -126,7 +126,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("392130")
+    @TmsLink("1057052")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить БД {0}")
@@ -138,7 +138,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("377667")
+    @TmsLink("1057038")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
@@ -150,7 +150,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("377669")
+    @TmsLink("1057041")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
@@ -161,7 +161,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLinks({@TmsLink("377665"),@TmsLink("377666")})
+    @TmsLinks({@TmsLink("1057045"),@TmsLink("1057053")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
@@ -173,7 +173,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("705397")
+    @TmsLink("1057049")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить default_transaction_isolation {0}")
@@ -184,7 +184,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("705398")
+    @TmsLink("1057040")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить max_connections {0}")
@@ -195,7 +195,7 @@ public class PostgreSQLTest extends Tests {
         }
     }
 
-    @TmsLink("377662")
+    @TmsLink("1057051")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
