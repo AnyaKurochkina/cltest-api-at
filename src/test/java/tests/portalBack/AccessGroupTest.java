@@ -73,8 +73,11 @@ public class AccessGroupTest extends Tests {
     @TmsLink("377440")
     @DisplayName("Добавление пользователя в группу доступа для среды DEV")
     void addUserAccessGroupDev() {
+        String informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
+        ProjectEnvironmentPrefix projectEnvironment = PortalBackSteps.getProjectEnvironmentPrefix("DEV", informationSystem);
         Project project = Project.builder()
-                .projectEnvironmentPrefix(new ProjectEnvironmentPrefix("DEV")).build().createObject();
+                .projectEnvironmentPrefix(projectEnvironment)
+                .build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").projectName(project.getId()).build().createObject();
         AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(project, "VTB4043473"));
     }

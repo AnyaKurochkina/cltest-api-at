@@ -77,7 +77,7 @@ public class Pipeline {
                 externalIds.add(externalId);
                 writer.println(externalId + "=" + result.query("/configuration/id"));
             }
-            String command = "-DfailIfNoTests=false -Dmaven.test.skip=false" + threadCount +
+            String command = "-DCI -DfailIfNoTests=false -Dmaven.test.skip=false" + threadCount +
                     " -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestPlanId=" +
                     argsMap.get(TEST_PLAN_ID)  + " -DtestRunId=" +
                     argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);

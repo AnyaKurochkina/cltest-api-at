@@ -271,6 +271,8 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
         LogEvent logEvent = this.logEventFactory instanceof LocationAwareLogEventFactory ? ((LocationAwareLogEventFactory) this.logEventFactory).createEvent(loggerName, marker, fqcn, location, level, data, (List) props, t) : this.logEventFactory.createEvent(loggerName, marker, fqcn, level, data, (List) props, t);
         if (logEvent.getMessage().getFormattedMessage().equals("toStringProductStepFunc"))
             return;
+        if (logEvent.getMessage().getFormattedMessage().startsWith("RESOURCE_LOG") && System.getProperty("CI") == null)
+            return;
         try {
             this.log(logEvent, LoggerConfig.LoggerConfigPredicate.ALL);
 

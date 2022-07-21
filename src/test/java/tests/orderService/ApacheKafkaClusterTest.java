@@ -207,6 +207,18 @@ public class ApacheKafkaClusterTest extends Tests {
         }
     }
 
+    @Tag("qaz")
+    @TmsLink("1055553")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Изменить имя кластера {0}")
+    void changeName(ApacheKafkaCluster product) {
+        product.setProductName(productName);
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.changeName("new_name");
+        }
+    }
+
     @TmsLink("377726")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
