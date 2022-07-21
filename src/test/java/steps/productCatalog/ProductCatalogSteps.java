@@ -8,6 +8,7 @@ import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
+import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import httpModels.productCatalog.product.getProducts.response.ListItem;
@@ -279,6 +280,38 @@ public class ProductCatalogSteps {
                 .assertStatus(200).jsonPath();
     }
 
+    @Step("Получение списка графов по Id")
+    public List<httpModels.productCatalog.graphs.getGraphsList.response.ListItem> getGraphListById(String id) {
+        return new Http(ProductCatalogURL)
+                .get(productName + "?id=" + id)
+                .assertStatus(200)
+                .extractAs(GetGraphsListResponse.class).getList();
+    }
+
+    @Step("Получение списка графов по Id")
+    public Response getResponseGraphListById(String id) {
+        return new Http(ProductCatalogURL)
+                .get(productName + "?id=" + id)
+                .assertStatus(400);
+    }
+
+    @Step("Получение списка графов по нескольким Id")
+    public List<httpModels.productCatalog.graphs.getGraphsList.response.ListItem> getGraphListByIds(String... id) {
+        String ids = String.join(",", id);
+        return new Http(ProductCatalogURL)
+                .get(productName + "?id__in=" + ids)
+                .assertStatus(200)
+                .extractAs(GetGraphsListResponse.class).getList();
+    }
+
+    @Step("Получение списка графов по фильтру Id содержит")
+    public List<httpModels.productCatalog.graphs.getGraphsList.response.ListItem> getGraphListByContainsId(String value) {
+        return new Http(ProductCatalogURL)
+                .get(productName + "?id__contains=" + value)
+                .assertStatus(200)
+                .extractAs(GetGraphsListResponse.class).getList();
+    }
+
     @Step("Получение объекта продуктового каталога по имени")
     public GetListImpl getObjectListByName(String name, Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
@@ -458,6 +491,22 @@ public class ProductCatalogSteps {
         return new Http(ProductCatalogURL)
                 .get("/api/v1/projects/{}/products/{}/", projectId, productId)
                 .assertStatus(200);
+    }
+
+    @Step("Получение списка доступных категорий по id проекта")
+    public List<String> getAvailableCategoriesByContextProject(String projectId) {
+        return new Http(ProductCatalogURL)
+                .get("/api/v1/projects/{}/products/categories/", projectId)
+                .assertStatus(200)
+                .jsonPath().getList("");
+    }
+
+    @Step("Получение доступных категорий")
+    public List<String> getAvailableCategories() {
+        return new Http(ProductCatalogURL)
+                .get("/api/v1/products/categories/")
+                .assertStatus(200)
+                .jsonPath().getList("");
     }
 
     public boolean isOrgContains(List<httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem> itemList, String orgName) {

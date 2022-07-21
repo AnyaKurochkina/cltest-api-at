@@ -14,13 +14,12 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
-import models.productCatalog.Graph;
 import models.productCatalog.Product;
 import models.productCatalog.Services;
+import models.productCatalog.graph.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -30,6 +29,8 @@ import tests.Tests;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -323,7 +324,7 @@ public class GraphTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Graph в GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("821972")
     public void dumpToGitlabGraph() {
         String graphName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -338,7 +339,7 @@ public class GraphTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Graph из GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("1028898")
     public void loadFromGitlabGraph() {
         String graphName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
@@ -385,5 +386,58 @@ public class GraphTest extends Tests {
                 .createObject();
         GetGraphResponse createdGraph = (GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
         assertEquals(restrictedDevelopersList, createdGraph.getRestrictedDevelopers());
+    }
+
+    @DisplayName("Создание графа с модификацией и способом изменения delete")
+    @TmsLink("1050995")
+    @Test
+    public void createGraphWithUpdateTypeDelete() {
+        Modification mod = Modification.builder()
+                .name("mod1")
+                .data(new LinkedHashMap<String, Object>() {{
+                    put("test", "test");
+                }})
+                .envs(Arrays.asList(Env.TEST, Env.DEV))
+                .order(1)
+                .path("")
+                .updateType(UpdateType.DELETE)
+                .rootPath(RootPath.UI_SCHEMA)
+                .build();
+        Graph graph = Graph.builder()
+                .name("create_graph_with_update_type_delete")
+                .modifications(Collections.singletonList(mod))
+                .build()
+                .createObject();
+        GetGraphResponse actualGraph = (GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
+        assertEquals(UpdateType.DELETE, actualGraph.getModifications().get(0).getUpdateType());
+    }
+
+    @DisplayName("Копирование графа с модификацией")
+    @TmsLink("1050996")
+    @Test
+    public void copyGraphWithModification() {
+        String modName = "mod1";
+        Modification mod = Modification.builder()
+                .name(modName)
+                .data(new LinkedHashMap<String, Object>() {{
+                    put("test", "test");
+                }})
+                .envs(Arrays.asList(Env.TEST, Env.DEV))
+                .order(1)
+                .path("")
+                .updateType(UpdateType.DELETE)
+                .rootPath(RootPath.UI_SCHEMA)
+                .build();
+        String name = "copy_graph_with_modification";
+        Graph graph = Graph.builder()
+                .name("copy_graph_with_modification")
+                .modifications(Collections.singletonList(mod))
+                .build()
+                .createObject();
+        steps.copyById(graph.getGraphId());
+        String copyGraphId = steps.getProductObjectIdByNameWithMultiSearch(name + "-clone", GetGraphsListResponse.class);
+        GetGraphResponse copyGraph = (GetGraphResponse) steps.getById(copyGraphId, GetGraphResponse.class);
+        assertEquals(modName, copyGraph.getModifications().get(0).getName());
+        steps.deleteById(copyGraphId);
     }
 }

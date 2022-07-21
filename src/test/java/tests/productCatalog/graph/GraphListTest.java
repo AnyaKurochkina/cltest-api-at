@@ -9,7 +9,7 @@ import httpModels.productCatalog.graphs.getGraphsList.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Graph;
+import models.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -104,5 +104,56 @@ public class GraphListTest extends Tests {
                 }
             }
         }
+    }
+
+    @DisplayName("Получение списка графа по фильтру ID")
+    @TmsLink("1044120")
+    @Test
+    public void getGraphsById() {
+        String graphName = "get_graph_list_by_id_filter_test_api";
+        String graphTitle = "get_graph_list_by_id_filter_test_api";
+        Graph graph = Graph.builder()
+                .name(graphName)
+                .title(graphTitle)
+                .build()
+                .createObject();
+        List<ListItem> graphList = steps.getGraphListById(graph.getGraphId());
+        assertEquals(1, graphList.size());
+        ListItem listItem = graphList.get(0);
+        assertEquals(graphName, listItem.getName());
+    }
+
+    @DisplayName("Получение списка графа по фильтру несколько ID")
+    @TmsLink("1044122")
+    @Test
+    public void getGraphsByIds() {
+        Graph firstGraph = Graph.builder()
+                .name("first_graph_list_by_ids_filter_test_api")
+                .title("first_graph_list_by_ids_filter_test_api")
+                .build()
+                .createObject();
+        Graph secondGraph = Graph.builder()
+                .name("second_graph_list_by_ids_filter_test_api")
+                .title("second_graph_list_by_ids_filter_test_api")
+                .build()
+                .createObject();
+        List<ListItem> graphList = steps.getGraphListByIds(firstGraph.getGraphId(), secondGraph.getGraphId());
+        assertEquals(2, graphList.size());
+    }
+
+    @DisplayName("Получение списка графа по фильтру id__contains")
+    @TmsLink("")
+    @Test
+    public void getGraphsByContainsIds() {
+        Graph graph = Graph.builder()
+                .name("graph_list_by_id_contains_filter_test_api")
+                .title("graph_list_by_id_contains_filter_test_api")
+                .build()
+                .createObject();
+        List<ListItem> graphList = steps.getGraphListByContainsId(graph.getGraphId());
+        assertEquals(1, graphList.size());
+        ListItem listItem = graphList.get(0);
+        assertEquals(graph.getGraphId(), listItem.getId());
+
     }
 }

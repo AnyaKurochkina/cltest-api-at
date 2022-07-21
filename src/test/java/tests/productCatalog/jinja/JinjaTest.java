@@ -13,7 +13,6 @@ import models.productCatalog.Jinja2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -215,7 +214,7 @@ public class JinjaTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Jinja в GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("975380")
     public void dumpToGitlabJinja() {
         String jinjaName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -230,7 +229,7 @@ public class JinjaTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Jinja из GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("1028947")
     public void loadFromGitlabJinja() {
         String jinjaName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

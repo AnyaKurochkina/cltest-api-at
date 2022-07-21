@@ -17,8 +17,10 @@ import models.productCatalog.ItemVisualTemplates;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -302,7 +304,6 @@ public class VisualTemplateTest extends Tests {
         assertEquals(Arrays.asList("value", "value2"), visualTemplates.getFullTemplate().getValue());
     }
 
-    @Order(99)
     @DisplayName("Проверка на наличие ключей в CompactTemplate")
     @TmsLink("742495")
     @Test
@@ -339,7 +340,7 @@ public class VisualTemplateTest extends Tests {
 
     @Test
     @DisplayName("Загрузка VisualTemplate в GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("975416")
     public void dumpToGitlabVisualTemplate() {
         String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -359,7 +360,7 @@ public class VisualTemplateTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка VisualTemplate из GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("1029469")
     public void loadFromGitlabVisualTemplate() {
         String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

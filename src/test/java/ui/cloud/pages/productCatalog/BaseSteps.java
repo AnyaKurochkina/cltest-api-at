@@ -22,30 +22,30 @@ public class BaseSteps {
     }
 
     public static void checkSortingByStringField(String header, int columnNumber) {
-        SelenideElement columnHeader = $x("//div[text()='"+header+"']/parent::div");
-        SelenideElement arrowIcon = $x("//div[text()='"+header+"']/following-sibling::*[name()='svg']");
+        SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
+        SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        String firstValue = $x("//tbody//tr[1]//td["+columnNumber+"]").getValue();
-        String lastValue = $x("//tbody//tr[last()]//td["+columnNumber+"]").getValue();
+        String firstValue = $x("//tbody//tr[1]//td[" + columnNumber + "]").getValue();
+        String lastValue = $x("//tbody//tr[last()]//td[" + columnNumber + "]").getValue();
         Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) > 0);
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        firstValue = $x("//tbody//tr[1]//td["+columnNumber+"]").getValue();
-        lastValue = $x("//tbody//tr[last()]//td["+columnNumber+"]").getValue();
+        firstValue = $x("//tbody//tr[1]//td[" + columnNumber + "]").getValue();
+        lastValue = $x("//tbody//tr[last()]//td[" + columnNumber + "]").getValue();
         Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) < 0);
     }
 
     public static void checkSortingByDateField(String header, int columnNumber) {
-        SelenideElement columnHeader = $x("//div[text()='"+header+"']/parent::div");
-        SelenideElement arrowIcon = $x("//div[text()='"+header+"']/following-sibling::*[name()='svg']");
+        SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
+        SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        String firstDateString = $x("//tbody//tr[1]//td["+columnNumber+"]").getValue();
-        String lastDateString = $x("//tbody//tr[last()]//td["+columnNumber+"]").getValue();
+        String firstDateString = $x("//tbody//tr[1]//td[" + columnNumber + "]").getValue();
+        String lastDateString = $x("//tbody//tr[last()]//td[" + columnNumber + "]").getValue();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSSSSSxxx");
         LocalDateTime firstDate = LocalDateTime.parse(firstDateString, formatter);
         LocalDateTime lastDate = LocalDateTime.parse(lastDateString, formatter);
@@ -53,8 +53,8 @@ public class BaseSteps {
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        firstDateString = $x("//tbody//tr[1]//td["+columnNumber+"]").getValue();
-        lastDateString = $x("//tbody//tr[last()]//td["+columnNumber+"]").getValue();
+        firstDateString = $x("//tbody//tr[1]//td[" + columnNumber + "]").getValue();
+        lastDateString = $x("//tbody//tr[last()]//td[" + columnNumber + "]").getValue();
         firstDate = LocalDateTime.parse(firstDateString, formatter);
         lastDate = LocalDateTime.parse(lastDateString, formatter);
         Assertions.assertTrue(lastDate.isBefore(firstDate) || lastDate.isEqual(firstDate));
