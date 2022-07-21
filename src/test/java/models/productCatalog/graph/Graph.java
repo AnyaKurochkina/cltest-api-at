@@ -150,7 +150,7 @@ public class Graph extends Entity {
                         break;
                 }
             }
-            productCatalogSteps.getDeleteObjectResponse(id).assertStatus(200);
+            productCatalogSteps.getDeleteObjectResponse(id).assertStatus(204);
         }
     }
 }
