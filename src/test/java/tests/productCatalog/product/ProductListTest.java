@@ -9,6 +9,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.authorizer.Project;
+import models.productCatalog.Categories;
 import models.productCatalog.Product;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -127,7 +128,8 @@ public class ProductListTest extends Tests {
         }
     }
     //todo Убрать хардкод проекта логику прохождения по списку убрать.
-    @DisplayName("Получение списка по контексту id проекта")
+    @DisplayName("Получение списка продуктов по контексту id проекта")
+    @TmsLink("1039087")
     @Test
     public void getProductListWithProjectContext() {
         Project project = Project.builder().build().createObject();
@@ -146,5 +148,23 @@ public class ProductListTest extends Tests {
             }
             assertTrue(item.getEnvs().contains(envType));
         }
+    }
+    @DisplayName("Получение списка категорий доступных по контексту id проекта")
+    @TmsLink("1039088")
+    @Test
+    public void getCategoriesWithProjectContext() {
+        Project project = Project.builder().build().createObject();
+        List<String> actualList = steps.getAvailableCategoriesByContextProject(project.getId());
+        List<String> categoriesList = Categories.getCategoriesList();
+        assertEquals(categoriesList, actualList);
+    }
+
+    @DisplayName("Получение списка категорий")
+    @TmsLink("1039089")
+    @Test
+    public void getCategories() {
+        List<String> actualList = steps.getAvailableCategories();
+        List<String> categoriesList = Categories.getCategoriesList();
+        assertEquals(categoriesList, actualList);
     }
 }

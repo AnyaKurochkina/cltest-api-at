@@ -2,6 +2,7 @@
   "author": "Morozov Ilya",
   "name": "AtTestGraph",
   "title": "AtTestGraph",
+  "modifications" : [],
   "description": "for at tests",
   "graph": [],
   "type": "action",

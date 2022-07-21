@@ -1,9 +1,10 @@
 package tests.productCatalog.graph;
 
+import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Graph;
+import models.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -91,5 +94,13 @@ public class GraphNegativeTest extends Tests {
                 .build()
                 .createObject();
         steps.deleteObjectByIdWithOutToken(graph.getGraphId());
+    }
+
+    @DisplayName("Негативный тест на получение списка графа по несуществующему ID")
+    @TmsLink("1044118")
+    @Test
+    public void getGraphsByNotExistId() {
+        Response response = steps.getResponseGraphListById("not-exist-id");
+        assertEquals("Введите правильный UUID.", response.jsonPath().getList("id").get(0));
     }
 }

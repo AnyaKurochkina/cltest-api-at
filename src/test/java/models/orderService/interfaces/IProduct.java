@@ -19,7 +19,7 @@ import models.ObjectPoolService;
 import models.authorizer.Organization;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
-import models.productCatalog.Graph;
+import models.productCatalog.graph.Graph;
 import models.productCatalog.Product;
 import models.subModels.Flavor;
 import org.json.JSONObject;
@@ -34,7 +34,6 @@ import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
 
-import javax.annotation.Nullable;
 import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;

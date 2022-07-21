@@ -15,8 +15,10 @@ import models.productCatalog.Action;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
@@ -402,7 +404,7 @@ public class ActionsTest extends Tests {
 
     @Test
     @DisplayName("Загрузка action в GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("975375")
     public void dumpToGitlabAction() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -418,7 +420,7 @@ public class ActionsTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка action из GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("1028840")
     public void loadFromGitlabAction() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

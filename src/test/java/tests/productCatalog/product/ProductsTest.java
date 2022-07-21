@@ -13,11 +13,11 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.authorizer.Project;
+import models.productCatalog.Categories;
 import models.productCatalog.Product;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
@@ -490,7 +490,7 @@ public class ProductsTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Product в GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("975400")
     public void dumpToGitlabProduct() {
         String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -506,7 +506,7 @@ public class ProductsTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Product из GitLab")
-    @EnabledIfEnv("ift")
+    @DisabledIfEnv("ift")
     @TmsLink("1028975")
     public void loadFromGitlabProduct() {
         String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
@@ -552,6 +552,7 @@ public class ProductsTest extends Tests {
                 .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .info(info)
+                .categoryV2(Categories.DEFAULT_VALUE)
                 .build()
                 .createObject();
         GetProductResponse createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
@@ -570,6 +571,7 @@ public class ProductsTest extends Tests {
                 .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .category("postgre")
+                .categoryV2(Categories.APPLICATION_INTEGRATION)
                 .info(info)
                 .build()
                 .createObject();

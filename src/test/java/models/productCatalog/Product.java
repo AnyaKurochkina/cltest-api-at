@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.productCatalog.graph.Graph;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -49,7 +50,7 @@ public class Product extends Entity {
     private Map<String, String> extraData;
     private Boolean inGeneralList;
     private String payment;
-    private String categoryV2;
+    private Categories categoryV2;
 
     public static final String productName = "/api/v1/products/";
     @Builder.Default
@@ -68,6 +69,10 @@ public class Product extends Entity {
 
     @Override
     public JSONObject toJson() {
+        String categor = null;
+        if (categoryV2 != null) {
+            categor = categoryV2.getValue();
+        }
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", name)
                 .set("$.title", title)
@@ -82,11 +87,12 @@ public class Product extends Entity {
                 .set("$.information_systems", informationSystems)
                 .set("$.in_general_list", inGeneralList)
                 .set("$.payment", payment)
-                .set("$.category_v2", categoryV2)
+                .setIfNullRemove("$.category_v2", categor)
                 .build();
     }
 
     @Override
+    @Step("Создание продукта")
     protected void create() {
         if (steps.isExists(name)) {
             steps.deleteByName(name, GetProductsResponse.class);
