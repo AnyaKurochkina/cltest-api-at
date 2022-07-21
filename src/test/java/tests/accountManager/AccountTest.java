@@ -16,7 +16,7 @@ import tests.Tests;
 
 @Epic("Финансы")
 @Feature("Счета")
-@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("accounts"), @Tag("smoke"), @Tag("prod")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class AccountTest extends Tests {
@@ -66,33 +66,30 @@ public class AccountTest extends Tests {
 
     @Test
     @Order(5)
-    @MarkDelete
     @TmsLink("646965")
     @DisplayName("Удаление счета для папки")
     public void DeleteAccount() {
-        Folder folder = Folder.builder().kind(Folder.DEFAULT).build().createObject();
+        Folder folder = Folder.builder().kind(Folder.DEFAULT).build().createObjectPrivateAccess();
         Account.builder().folder(folder).build().createObject().deleteObject();
     }
 
     @Test
     @Order(6)
-    @MarkDelete
     @DisabledIfEnv("prod")
     @TmsLink("646966")
     @DisplayName("Удаление счета для папки Department")
     public void DeleteAccountDepartment() {
-        Folder folder = Folder.builder().kind(Folder.DEPARTMENT).build().createObject();
+        Folder folder = Folder.builder().kind(Folder.DEPARTMENT).build().createObjectPrivateAccess();
         Account.builder().folder(folder).build().createObject().deleteObject();
     }
 
     @Test
     @Order(7)
-    @MarkDelete
     @DisabledIfEnv("prod")
     @TmsLink("646968")
     @DisplayName("Удаление счета для папки Business Block")
     public void DeleteAccountBusinessBlock() {
-        Folder folder = Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObject();
+        Folder folder = Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObjectPrivateAccess();
         Account.builder().folder(folder).build().createObject().deleteObject();
     }
 }
