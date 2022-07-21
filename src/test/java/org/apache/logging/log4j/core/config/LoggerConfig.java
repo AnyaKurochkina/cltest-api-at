@@ -275,20 +275,20 @@ public class LoggerConfig extends AbstractFilterable implements LocationAware {
             return;
         try {
             this.log(logEvent, LoggerConfig.LoggerConfigPredicate.ALL);
+            if (!logEvent.getMessage().getFormattedMessage().startsWith("RESOURCE_LOG"))
+                if (getAppenders().containsKey("CONSOLE")) {
+                    Date date = new Date(logEvent.getTimeMillis());
+                    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    formatter.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
+                    String dateFormatted = formatter.format(date);
 
-            if (getAppenders().containsKey("CONSOLE")) {
-                Date date = new Date(logEvent.getTimeMillis());
-                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                formatter.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-                String dateFormatted = formatter.format(date);
-
-                String s = String.format("%s %s %s:%s - %s",
-                        dateFormatted,
-                        logEvent.getLevel(),
-                        logEvent.getSource().getClassName(), logEvent.getSource().getLineNumber(),
-                        logEvent.getMessage().getFormattedMessage());
-                Tests.putAttachLog(s);
-            }
+                    String s = String.format("%s %s %s:%s - %s",
+                            dateFormatted,
+                            logEvent.getLevel(),
+                            logEvent.getSource().getClassName(), logEvent.getSource().getLineNumber(),
+                            logEvent.getMessage().getFormattedMessage());
+                    Tests.putAttachLog(s);
+                }
 
         } finally {
             ReusableLogEventFactory.release(logEvent);
