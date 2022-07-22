@@ -113,7 +113,7 @@ public class AddNodeTest extends GraphBaseTest {
 
     @Test
     @TmsLink("883206")
-    @DisplayName("Добавление узла графа (по шаблону)")
+    @DisplayName("Добавление узла графа с шаблоном")
     public void addNodeByTemplateTest() {
         TemplateNode node = new TemplateNode(TEMPLATE_NAME);
         new IndexPage().goToGraphsPage()

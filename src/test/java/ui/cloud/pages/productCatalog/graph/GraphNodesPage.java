@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog.graph;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.uiModels.Node;
@@ -58,6 +59,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement additionalTab = $x("//button[text()='Дополнительное']");
     private final SelenideElement paramsTab = $x("//button[text()='Параметры']");
     private final SelenideElement staticData = $x("//label[text()='Static data']/parent::div//textarea");
+    private final SelenideElement searchNodesInput = $x("//input[@placeholder='Поиск...']");
 
     @Step("Добавление узла графа и сохранение")
     public GraphNodesPage addNodeAndSave(Node node) {
@@ -223,6 +225,30 @@ public class GraphNodesPage extends GraphPage {
         isSequentialToggleOn.shouldBe(Condition.visible);
         damageOrderOnErrorToggleOn.shouldBe(Condition.visible);
         formCancelButton.click();
+        return this;
+    }
+
+    @Step("Проверка значений Input, Output в таблице узлов графа")
+    public GraphNodesPage checkInputOutputInNodesTable(Node node) {
+        $x("//div[text()='"+node.getDescription()+"']/ancestor::div[2]//span[contains(text(),'"+node.getInputKey()+"')]")
+                .shouldBe(Condition.visible);
+        $x("//div[text()='"+node.getDescription()+"']/ancestor::div[2]//span[contains(text(),'"+node.getOutputKey()+"')]")
+                .shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Поиск узлов графа")
+    public GraphNodesPage findNode(String text, Node node) {
+        searchNodesInput.setValue(text);
+        $x("//div[text()='"+node.getDescription()+"']/ancestor::div[2]//span[contains(text(),'"+text+"')]")
+                .shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Проверка отсутствия результата поиска")
+    public GraphNodesPage checkNodeNotFound(String text, Node node) {
+        searchNodesInput.setValue(text);
+        Assertions.assertFalse($x("//div[text()='"+node.getDescription()+"']").exists());
         return this;
     }
 

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 public class Node {
     @Getter @Setter
-    String name, description, input, inputKey, output, outputKey, number, timeout, count;
+    String name, description, input, inputKey, inputValue, output, outputKey, number, timeout, count;
 
     public Node() {
         this.name = "node_name";
