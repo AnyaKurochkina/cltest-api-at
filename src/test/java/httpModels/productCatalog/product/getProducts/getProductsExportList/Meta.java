@@ -1,4 +1,4 @@
-package httpModels.productCatalog.product.getProducts.response;
+package httpModels.productCatalog.product.getProducts.getProductsExportList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import httpModels.productCatalog.MetaImpl;
@@ -21,4 +21,19 @@ public class Meta implements MetaImpl {
 
 	@JsonProperty("total_count")
 	private Integer totalCount;
+
+	@Override
+	public String getNext() {
+		return next;
+	}
+
+	@Override
+	public String getPrevious() {
+		return previous;
+	}
+
+	@Override
+	public Integer getTotalCount() {
+		return totalCount;
+	}
 }

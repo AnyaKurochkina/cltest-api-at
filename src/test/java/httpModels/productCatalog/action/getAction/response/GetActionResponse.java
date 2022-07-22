@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import models.productCatalog.VersionDiff;
 
 import java.util.List;
 import java.util.Map;
@@ -135,6 +136,9 @@ public class GetActionResponse implements GetImpl {
 
     @JsonProperty("restricted_developers")
     private List<String> restricted_developers;
+
+    @JsonProperty("version_diff")
+    private VersionDiff versionDiff;
 
     @Override
     public String getId() {

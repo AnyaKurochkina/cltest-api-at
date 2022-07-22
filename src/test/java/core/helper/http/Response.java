@@ -41,6 +41,18 @@ public class Response {
         return response.jsonPath();
     }
 
+    public String getContentType() {
+        String contType = response.getContentType();
+        int start = contType.indexOf("/");
+        int end = 0;
+        if (contType.contains(";")) {
+            end = contType.indexOf(";");
+        } else {
+            end = contType.length();
+        }
+        return contType.substring(start + 1, end);
+    }
+
     @SneakyThrows
     public <T> T extractAs(Class<T> clazz) {
         JSONObject jsonObject = new JSONObject(responseMessage);

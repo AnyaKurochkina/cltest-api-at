@@ -119,17 +119,6 @@ public class ListItem implements ItemImpl {
     @JsonProperty("in_general_list")
     private Boolean inGeneralList;
     private String payment;
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
     @Override
     public String getCreateData() {
         return create_dt;

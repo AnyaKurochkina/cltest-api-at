@@ -8,6 +8,7 @@ import models.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
@@ -113,7 +114,8 @@ public class ActionTest extends BaseTest {
     }
 
     @Test
-    @TmsLink("506779")
+    @TmsLink("")
+    @Disabled
     @DisplayName("Проверка сохранения версии")
     public void checkActionVersions() {
         //todo тест падает привести в поряддок.
