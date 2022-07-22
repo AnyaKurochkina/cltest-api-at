@@ -8,8 +8,11 @@ import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
+import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
+import httpModels.productCatalog.product.getProducts.getProductsExportList.ExportItem;
+import httpModels.productCatalog.product.getProducts.getProductsExportList.GetProductsExportList;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import httpModels.productCatalog.product.getProducts.response.ListItem;
 import httpModels.productCatalog.productOrgInfoSystem.createInfoSystem.CreateInfoSystemResponse;
@@ -222,6 +225,13 @@ public class ProductCatalogSteps {
                 .getJsonTemplate(templatePath)
                 .set("$.name", name)
                 .build();
+    }
+
+    @Step("Сравнение версий объекта")
+    public GetActionResponse compareVersions(String id, String version1, String version2) {
+        return new Http(ProductCatalogURL)
+                .get(productName + id + "/?version={}&compare_with_version={}", version1, version2)
+                .extractAs(GetActionResponse.class);
     }
 
     @Step("Частичное обновление продукта")
@@ -520,6 +530,21 @@ public class ProductCatalogSteps {
         }
         return false;
 
+    }
+
+    @Step("Получение файла экспорта списка продуктов")
+    public List<ExportItem> getProductsExportList() {
+        return new Http(ProductCatalogURL)
+                .get(" /api/v1/products/product_list_export/")
+                .assertStatus(200)
+                .extractAs(GetProductsExportList.class).getList();
+
+    }
+    @Step("Получение файла в формате {format} экспорта списка продуктов")
+    public Response getProductsExportListInFormat(String format) {
+        return new Http(ProductCatalogURL)
+                .get("/api/v1/products/product_list_export/?format={}", format)
+                .assertStatus(200);
     }
 
     private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {

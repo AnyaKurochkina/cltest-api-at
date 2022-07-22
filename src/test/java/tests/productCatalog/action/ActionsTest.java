@@ -12,6 +12,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
+import models.productCatalog.VersionDiff;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -439,6 +440,24 @@ public class ActionsTest extends Tests {
         assertTrue(steps.isExists(actionName));
         steps.deleteByName(actionName, GetActionsListResponse.class);
         assertFalse(steps.isExists(actionName));
+    }
+
+    @Test
+    @DisplayName("Сравнение версий действия")
+    @TmsLink("1063081")
+    public void compareActionVersions() {
+        String actionName = "compare_action_versions_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .build()
+                .createObject();
+        steps.partialUpdateObject(action.getActionId(), new JSONObject().put("priority", 1)
+                .put("available_without_money", true));
+        GetActionResponse getActionResponse = steps.compareVersions(action.getActionId(), "1.0.0", "1.0.1");
+        VersionDiff versionDiff = getActionResponse.getVersionDiff();
+        assertEquals(versionDiff.getDiff().get("priority"), 0);
+        assertEquals(versionDiff.getDiff().get("available_without_money"), false);
     }
 }
 
