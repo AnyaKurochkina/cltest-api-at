@@ -57,7 +57,8 @@ public class PostgreSQL extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/postgresql.json";
-        productName = "PostgreSQL";
+        if (productName == null)
+            productName = "PostgreSQL";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
