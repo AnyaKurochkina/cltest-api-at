@@ -1,8 +1,10 @@
-package ui.elements;
+package ui.cloud.tests.productCatalog;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import ui.elements.Alert;
+import ui.elements.Dialog;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertFalse;
