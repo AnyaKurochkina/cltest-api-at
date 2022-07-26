@@ -31,7 +31,7 @@ public class GraphOrderParamsPage extends GraphPage {
     public GraphOrderParamsPage checkJSONSchemaContains(String value) {
         jsonSchemaButton.click();
         $x("//div[contains(@class,'monaco-editor')]//span[contains(text(),'"
-                +value+"')]").shouldBe(Condition.visible);
+                + value + "')]").shouldBe(Condition.visible);
         return this;
     }
 }

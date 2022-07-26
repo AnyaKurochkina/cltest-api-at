@@ -4,7 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
-import ui.cloud.pages.productCatalog.BaseSteps;
+import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.tests.productCatalog.TestUtils;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -97,7 +97,7 @@ public class GraphsListPage {
     }
 
     private void openActionMenu(String graphName) {
-        $x("//td[text() = '"+graphName+"']//parent::tr//button[@id = 'actions-menu-button']").click();
+        $x("//td[text() = '" + graphName + "']//parent::tr//button[@id = 'actions-menu-button']").click();
     }
 
     @Step("Проверка заголовков списка графов")
@@ -105,8 +105,7 @@ public class GraphsListPage {
         $x("//table[@class='MuiTable-root']//th[1]").shouldHave(Condition.exactText("Наименование"));
         $x("//table[@class='MuiTable-root']//th[2]").shouldHave(Condition.exactText("Код графа"));
         $x("//table[@class='MuiTable-root']//th[3]").shouldHave(Condition.exactText("Дата создания"));
-        $x("//table[@class='MuiTable-root']//th[4]").shouldHave(Condition.exactText("Версия"));
-        $x("//table[@class='MuiTable-root']//th[5]").shouldHave(Condition.exactText("Описание"));
+        $x("//table[@class='MuiTable-root']//th[4]").shouldHave(Condition.exactText("Описание"));
         return this;
     }
 
@@ -146,7 +145,7 @@ public class GraphsListPage {
     public GraphsListPage checkGraphNameValidation(String[] names) {
         createNewGraphButton.shouldBe(Condition.visible).click();
         for (String name : names) {
-            inputNameField.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+            inputNameField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
             inputNameField.setValue(name);
             TestUtils.wait(600);
             if (!graphNameValidationHint.exists()) {
@@ -175,19 +174,19 @@ public class GraphsListPage {
 
     @Step("Проверка сортировки по наименованию")
     public GraphsListPage checkSortingByTitle() {
-        BaseSteps.checkSortingByStringField("Наименование", 1);
+        BaseList.checkSortingByStringField("Наименование", 1);
         return this;
     }
 
     @Step("Проверка сортировки по коду графа")
     public GraphsListPage checkSortingByName() {
-        BaseSteps.checkSortingByStringField("Код графа", 2);
+        BaseList.checkSortingByStringField("Код графа", 2);
         return this;
     }
 
     @Step("Проверка сортировки по дате создания")
     public GraphsListPage checkSortingByCreateDate() {
-        BaseSteps.checkSortingByDateField("Дата создания", 3);
+        BaseList.checkSortingByDateField("Дата создания", 3);
         return this;
     }
 }

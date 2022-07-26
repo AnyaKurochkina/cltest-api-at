@@ -46,7 +46,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement descriptionRequiredFieldHint = $x("//label[contains(text(),'Описание')]/parent::div//div[text()='Поле обязательно для заполнения']");
     private final SelenideElement incorrectNumberHint = $x("//label[text()='Номер']/parent::div//div[text()='Введите корректное значение']");
     private final SelenideElement incorrectTimeoutHint = $x("//label[text()='Время ожидания, сек']/parent::div//div[text()='Введите корректное значение']");
-    private final SelenideElement nameNonUniqueHint = $x("//div[text()='Узел с данным значением \"name\" уже существует']");
+    private final SelenideElement nameNonUniqueHint = $x("//div[text()='Узел с данным названием уже существует']");
     private final SelenideElement onPrebillingToggleOn = $x("//p[text()='Запуск узла на предбиллинге']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement runOnRollbackToggleOn = $x("//p[text()='Запуск узла при откате']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement holdToggleOn = $x("//p[text()='Постановка узла на паузу']/parent::div//span[contains(@class,'checked')]");
@@ -106,7 +106,7 @@ public class GraphNodesPage extends GraphPage {
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
         showSubgraphVersions.click();
-        $x("//div[@title='"+version+"']").shouldBe(Condition.enabled).click();
+        $x("//div[@title='" + version + "']").shouldBe(Condition.enabled).click();
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
         node.setSubgraphVersion(version);
@@ -123,7 +123,7 @@ public class GraphNodesPage extends GraphPage {
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
         showTemplateVersions.click();
-        $x("//div[@title='"+version+"']").shouldBe(Condition.enabled).click();
+        $x("//div[@title='" + version + "']").shouldBe(Condition.enabled).click();
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
         node.setTemplateVersion(version);
@@ -134,7 +134,8 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Копирование узла графа и сохранение")
     public GraphNodesPage copyNodeAndSave(SubgraphNode node) {
-        String cloneName = node.getName()+"_clone";
+        String cloneName = node.getName() + "_clone";
+        TestUtils.scrollToTheBottom();
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
         TestUtils.scrollToTheTop();
         actions().pause(1000)
@@ -151,7 +152,7 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Проверка отсутствия узла графа в списке узлов")
     public GraphNodesPage checkNodeNotFound(SubgraphNode node) {
-        $x("//div[text()='"+node.getDescription()+"']/..//*[name()='svg' and @class]").shouldBe(Condition.not(Condition.visible));
+        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").shouldBe(Condition.not(Condition.visible));
         return this;
     }
 
@@ -213,8 +214,8 @@ public class GraphNodesPage extends GraphPage {
             templateVersion.shouldHave(Condition.exactText(((TemplateNode) node).getTemplateVersion()));
         }
         paramsTab.click();
-        $x("//label[text()='Input']/../..//span[contains(text(),'"+node.getInputKey()+"')]").shouldBe(Condition.visible);
-        $x("//label[text()='Output']/../..//span[contains(text(),'"+node.getOutputKey()+"')]").shouldBe(Condition.visible);
+        $x("//label[text()='Input']/../..//span[contains(text(),'" + node.getInputKey() + "')]").shouldBe(Condition.visible);
+        $x("//label[text()='Output']/../..//span[contains(text(),'" + node.getOutputKey() + "')]").shouldBe(Condition.visible);
         additionalTab.click();
         numberInput.shouldHave(Condition.exactValue(node.getNumber()));
         //timeoutInput.shouldHave(Condition.exactValue(node.getTimeout()));
@@ -230,9 +231,9 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Проверка значений Input, Output в таблице узлов графа")
     public GraphNodesPage checkInputOutputInNodesTable(Node node) {
-        $x("//div[text()='"+node.getDescription()+"']/ancestor::div[2]//span[contains(text(),'"+node.getInputKey()+"')]")
+        $x("//div[text()='" + node.getDescription() + "']/ancestor::div[2]//span[contains(text(),'" + node.getInputKey() + "')]")
                 .shouldBe(Condition.visible);
-        $x("//div[text()='"+node.getDescription()+"']/ancestor::div[2]//span[contains(text(),'"+node.getOutputKey()+"')]")
+        $x("//div[text()='" + node.getDescription() + "']/ancestor::div[2]//span[contains(text(),'" + node.getOutputKey() + "')]")
                 .shouldBe(Condition.visible);
         return this;
     }
@@ -240,7 +241,7 @@ public class GraphNodesPage extends GraphPage {
     @Step("Поиск узлов графа")
     public GraphNodesPage findNode(String text, Node node) {
         searchNodesInput.setValue(text);
-        $x("//div[text()='"+node.getDescription()+"']/ancestor::div[2]//span[contains(text(),'"+text+"')]")
+        $x("//div[text()='" + node.getDescription() + "']/ancestor::div[2]//span[contains(text(),'" + text + "')]")
                 .shouldBe(Condition.visible);
         return this;
     }
@@ -248,7 +249,7 @@ public class GraphNodesPage extends GraphPage {
     @Step("Проверка отсутствия результата поиска")
     public GraphNodesPage checkNodeNotFound(String text, Node node) {
         searchNodesInput.setValue(text);
-        Assertions.assertFalse($x("//div[text()='"+node.getDescription()+"']").exists());
+        Assertions.assertFalse($x("//div[text()='" + node.getDescription() + "']").exists());
         return this;
     }
 

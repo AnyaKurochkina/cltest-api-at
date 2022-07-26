@@ -33,4 +33,11 @@ public class DeleteDialog extends Dialog {
         deleteButton.shouldBe(Condition.enabled).click();
         new Alert().checkText("Удаление выполнено успешно").checkColor(Alert.Color.GREEN);
     }
+
+    @Step("Вводим верный id")
+    public void inputValidId(String alertText) {
+        setInputValue("Идентификатор", id.getText());
+        deleteButton.shouldBe(Condition.enabled).click();
+        new Alert().checkText(alertText).checkColor(Alert.Color.GREEN);
+    }
 }

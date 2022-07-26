@@ -4,8 +4,9 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
-import ui.cloud.pages.productCatalog.BaseSteps;
 import ui.cloud.tests.productCatalog.TestUtils;
+import ui.elements.Alert;
+import ui.elements.DeleteDialog;
 import ui.uiModels.GraphModifier;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -42,39 +43,40 @@ public class GraphModifiersPage extends GraphPage {
         nameInput.setValue(modifier.getName());
         setEnvs(modifier.getEnvs());
         showSchemas.click();
-        $x("//li[@value='"+modifier.getSchema()+"']").shouldBe(Condition.enabled).click();
+        $x("//li[@value='" + modifier.getSchema() + "']").shouldBe(Condition.enabled).click();
         showTypes.click();
-        $x("//li[@value='"+modifier.getType()+"']").shouldBe(Condition.enabled).click();
+        $x("//li[@value='" + modifier.getType() + "']").shouldBe(Condition.enabled).click();
         pathInput.setValue(modifier.getPath());
         modifierData.setValue(modifier.getModifierData());
         formSaveButton.click();
+        new Alert().checkText("Граф успешно сохранен").checkColor(Alert.Color.GREEN).close();
         return this;
     }
 
     public GraphModifiersPage checkModifierAttributes(GraphModifier modifier) {
-        $x("//td[@value='"+modifier.getName()+"']/parent::tr//button[1]").click();
+        $x("//td[@value='" + modifier.getName() + "']/parent::tr//button[1]").click();
         nameInput.shouldHave(Condition.exactValue(modifier.getName()));
         checkSelectedEnvs(modifier.getEnvs());
         numberInput.shouldHave(Condition.exactValue(modifier.getNumber()));
-        $x("//form//div[text()='"+modifier.getSchema()+"']").shouldBe(Condition.visible);
+        $x("//form//div[text()='" + modifier.getSchema() + "']").shouldBe(Condition.visible);
         pathInput.shouldHave(Condition.exactValue(modifier.getPath()));
         $x("//form//div[contains(@class,'monaco-editor')]//span[contains(text(),'"
-                +modifier.getModifierDataSubstring()+"')]")
+                + modifier.getModifierDataSubstring() + "')]")
                 .shouldBe(Condition.visible);
         formCancelButton.click();
         return this;
     }
 
     public GraphModifiersPage editModifierAndSave(GraphModifier modifier) {
-        $x("//td[@value='"+modifier.getName()+"']/parent::tr//button[1]").click();
+        $x("//td[@value='" + modifier.getName() + "']/parent::tr//button[1]").click();
         nameInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nameInput.setValue(modifier.getName());
         clearSelectedEnvs();
         setEnvs(modifier.getEnvs());
         showSchemas.click();
-        $x("//li[@value='"+modifier.getSchema()+"']").shouldBe(Condition.enabled).click();
+        $x("//li[@value='" + modifier.getSchema() + "']").shouldBe(Condition.enabled).click();
         showTypes.click();
-        $x("//li[@value='"+modifier.getType()+"']").shouldBe(Condition.enabled).click();
+        $x("//li[@value='" + modifier.getType() + "']").shouldBe(Condition.enabled).click();
         pathInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         pathInput.setValue(modifier.getPath());
         modifierData.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
@@ -87,7 +89,7 @@ public class GraphModifiersPage extends GraphPage {
         addModifierButton.click();
         TestUtils.wait(500);
         for (String name : names) {
-            nameInput.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+            nameInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
             nameInput.setValue(name);
             TestUtils.wait(600);
             if (!modifierNameValidationHint.exists()) {
@@ -102,7 +104,7 @@ public class GraphModifiersPage extends GraphPage {
 
     public GraphModifiersPage checkNonUniqueModifierName(String name) {
         addModifierButton.click();
-        nameInput.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+        nameInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nameInput.setValue(name);
         nonUniqueModifierNameHint.shouldBe(Condition.visible);
         formSaveButton.shouldBe(Condition.disabled);
@@ -112,7 +114,7 @@ public class GraphModifiersPage extends GraphPage {
 
     public GraphModifiersPage checkNonUniqueModifierNumber(String number) {
         addModifierButton.click();
-        numberInput.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+        numberInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         numberInput.setValue(number);
         nonUniqueModifierNumberHint.shouldBe(Condition.visible);
         formSaveButton.shouldBe(Condition.disabled);
@@ -123,7 +125,7 @@ public class GraphModifiersPage extends GraphPage {
     public GraphModifiersPage checkModifierNumberValidation() {
         addModifierButton.click();
         for (String number : new String[]{"0", "-1"}) {
-            numberInput.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+            numberInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
             numberInput.setValue(number);
             TestUtils.wait(600);
             modifierNumberValidationHint.shouldBe(Condition.visible);
@@ -137,7 +139,7 @@ public class GraphModifiersPage extends GraphPage {
         TestUtils.wait(500);
         TestUtils.scroll(300);
         jsonSchemaButton.click();
-        $x("//div[contains(@class,'monaco-editor')]//span[contains(text(),'"+value+"')]")
+        $x("//div[contains(@class,'monaco-editor')]//span[contains(text(),'" + value + "')]")
                 .shouldBe(Condition.visible);
         return this;
     }
@@ -146,7 +148,7 @@ public class GraphModifiersPage extends GraphPage {
         TestUtils.wait(500);
         TestUtils.scroll(300);
         uiSchemaButton.click();
-        $x("//div[contains(@class,'monaco-editor')]//span[contains(text(),'"+value+"')]")
+        $x("//div[contains(@class,'monaco-editor')]//span[contains(text(),'" + value + "')]")
                 .shouldBe(Condition.visible);
         return this;
     }
@@ -155,21 +157,20 @@ public class GraphModifiersPage extends GraphPage {
         TestUtils.wait(500);
         TestUtils.scroll(300);
         staticDataButton.click();
-        $x("//div[contains(@class,'monaco-editor')]//span[contains(text(),'"+value+"')]")
+        $x("//div[contains(@class,'monaco-editor')]//span[contains(text(),'" + value + "')]")
                 .shouldBe(Condition.visible);
         return this;
     }
 
-    public GraphModifiersPage deleteModifier(GraphModifier modifier) {
-        $x("//td[@value='"+modifier.getName()+"']/parent::tr//button[2]").click();
-        BaseSteps.confirmDelete();
-        deleteModifierSuccessNotification.shouldBe(Condition.visible);
+    public GraphModifiersPage deleteModifier(String name) {
+        $x("//td[@value='" + name + "']/parent::tr//button[2]").click();
+        new DeleteDialog().inputValidId("Модификатор успешно удален");
         TestUtils.wait(1100);
-        Assertions.assertFalse($x("//td[@value='"+modifier.getName()+"']").exists());
+        Assertions.assertFalse($x("//td[@value='" + name + "']").exists());
         return this;
     }
 
-    private void setEnvs (String[] envs) {
+    private void setEnvs(String[] envs) {
         for (String env : envs) {
             switch (env) {
                 case "dev":
@@ -187,14 +188,14 @@ public class GraphModifiersPage extends GraphPage {
 
     private void checkSelectedEnvs(String[] envs) {
         for (String env : envs) {
-            $x("//form//input[@name='"+env+"' and @checked]").shouldBe(Condition.visible);
+            $x("//form//input[@name='" + env + "' and @checked]").shouldBe(Condition.visible);
         }
     }
 
     private void clearSelectedEnvs() {
         for (String env : new String[]{"dev", "test", "prod"}) {
-            if ($x("//form//input[@name='"+env+"' and @checked]").exists()) {
-                $x("//form//input[@name='"+env+"' and @checked]").click();
+            if ($x("//form//input[@name='" + env + "' and @checked]").exists()) {
+                $x("//form//input[@name='" + env + "' and @checked]").click();
             }
         }
     }
