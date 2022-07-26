@@ -24,11 +24,11 @@ import static com.codeborne.selenide.Selenide.$;
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tags({@Tag("ui_windows")})
-class UiWindowsOrderTest extends Tests {
+class UiWindowsCheckUntilOrderTest extends Tests {
     Windows product;
 
     //TODO: пока так :)
-    public UiWindowsOrderTest() {
+    public UiWindowsCheckUntilOrderTest() {
         if (Configure.ENV.equals("prod"))
             product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
             //product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders?page=0&perPage=10&f[category]=vm&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=pending&context=proj-evw9xv5qao&type=project&org=vtb").build();
