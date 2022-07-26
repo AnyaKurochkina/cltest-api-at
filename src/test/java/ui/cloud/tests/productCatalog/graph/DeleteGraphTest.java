@@ -28,7 +28,7 @@ public class DeleteGraphTest extends GraphBaseTest {
     public void deleteGraphFromPage() {
         new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
-                .deleteGraph()
+                .openDeleteDialog()
                 .inputInvalidId("test")
                 .inputValidId();
         new GraphsListPage()

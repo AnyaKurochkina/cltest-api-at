@@ -4,9 +4,9 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
+import ui.cloud.tests.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
-import ui.elements.DeleteDialog;
 import ui.uiModels.GraphModifier;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -30,7 +30,6 @@ public class GraphModifiersPage extends GraphPage {
     private final SelenideElement staticDataButton = $x("//button[@id='StaticData']");
     private final SelenideElement modifierNameValidationHint = $x("//form//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement modifierNumberValidationHint = $x("//form//div[text()='Допустимое значение от 1 до 2147483647']");
-    private final SelenideElement deleteModifierSuccessNotification = $x("//div[text()='Модификатор успешно удален']");
     private final SelenideElement devEnvRadioButton = $x("//input[@type='radio' and @name='dev']/following-sibling::span");
     private final SelenideElement testEnvRadioButton = $x("//input[@type='radio' and @name='test']/following-sibling::span");
     private final SelenideElement prodEnvRadioButton = $x("//input[@type='radio' and @name='prod']/following-sibling::span");

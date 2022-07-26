@@ -2,6 +2,7 @@ package ui.cloud.tests.productCatalog.graph;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
@@ -13,6 +14,7 @@ import ui.uiModels.Graph;
 public class CompareVersionsTest extends GraphBaseTest {
 
     @Test
+    @TmsLink("503532")
     @DisplayName("Сравнение версий графа")
     public void compareVersionsTest() {
         new IndexPage().goToGraphsPage()

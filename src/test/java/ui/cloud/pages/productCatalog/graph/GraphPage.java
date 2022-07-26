@@ -2,10 +2,11 @@ package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
+import ui.cloud.tests.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
-import ui.elements.DeleteDialog;
 import ui.elements.DropDown;
 import ui.uiModels.Graph;
 
@@ -136,8 +137,13 @@ public class GraphPage {
         return new GraphPage();
     }
 
-    public DeleteDialog deleteGraph() {
+    public DeleteDialog openDeleteDialog() {
         deleteButton.click();
         return new DeleteDialog();
+    }
+
+    public void deleteGraph() {
+        deleteButton.click();
+        new DeleteDialog().inputValidId();
     }
 }

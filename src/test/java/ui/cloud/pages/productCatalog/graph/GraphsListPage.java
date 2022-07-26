@@ -6,6 +6,8 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.tests.productCatalog.TestUtils;
+import ui.elements.Alert;
+import ui.elements.InputFile;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -34,6 +36,7 @@ public class GraphsListPage {
     private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::p");
     private final SelenideElement nameRequiredFieldHint = $x("//input[@name='name']/parent::div/following-sibling::p");
     private final SelenideElement authorRequiredFieldHint = $x("//input[@name='author']/parent::div/following-sibling::p");
+    private final SelenideElement importGraphButton = $x("//button[@title='Импортировать граф']");
 
     public GraphsListPage() {
         graphsPageTitle.shouldBe(Condition.visible);
@@ -187,6 +190,14 @@ public class GraphsListPage {
     @Step("Проверка сортировки по дате создания")
     public GraphsListPage checkSortingByCreateDate() {
         BaseList.checkSortingByDateField("Дата создания", 3);
+        return this;
+    }
+
+    @Step("Импорт графа из файла")
+    public GraphsListPage importGraph(String path) {
+        importGraphButton.click();
+        new InputFile(path).importFile();
+        new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
         return this;
     }
 }
