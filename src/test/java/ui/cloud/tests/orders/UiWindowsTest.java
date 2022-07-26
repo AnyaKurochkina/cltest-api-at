@@ -138,7 +138,7 @@ public class UiWindowsTest extends Tests {
     @TmsLink("233926")
     @DisplayName("UI Windows. Расширить диск")
     void expandDisk() {
-        Assumptions.assumeTrue("OpenStack".equals(product.getPlatform()), "Тест отключен для платформы OpenStack");
+        Assumptions.assumeFalse("OpenStack".equals(product.getPlatform()), "Тест отключен для платформы OpenStack");
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("N", "15"));
         winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.expandDisk("N", "20"));
