@@ -10,15 +10,16 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.authorizer.GlobalUser;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
-import models.authorizer.GlobalUser;
 import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
 
+@Deprecated
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2

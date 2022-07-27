@@ -9,7 +9,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.authorizer.Organization;
-import models.orderService.products.Rhel;
+import models.orderService.products.Astra;
 import models.tarifficator.TariffClass;
 import models.tarifficator.TariffPlan;
 import models.tarifficator.TariffPlanStatus;
@@ -144,9 +144,9 @@ public class OrganizationTariffPlanTest extends Tests {
     @TmsLink("531467")
     @ParameterizedTest(name = "Активация и Архивация (без update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    void activateTariffPlanWithoutUpdateOrders(Rhel product) {
+    void activateTariffPlanWithoutUpdateOrders(Astra product) {
         String tariffPlanIdPath = "attrs.tariff_plan_id";
-        try (Rhel rhel = product.createObjectExclusiveAccess()) {
+        try (Astra rhel = product.createObjectExclusiveAccess()) {
             String tariffPlanId = ((String) OrderServiceSteps.getProductsField(rhel, tariffPlanIdPath));
             Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
             TariffPlan tariffPlan = TariffPlan.builder()
@@ -176,9 +176,9 @@ public class OrganizationTariffPlanTest extends Tests {
     @TmsLink("531468")
     @ParameterizedTest(name = "Активация и Архивация (с update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    void activateTariffPlanWithUpdateOrders(Rhel product) {
+    void activateTariffPlanWithUpdateOrders(Astra product) {
         String tariffPlanIdPath = "attrs.tariff_plan_id";
-        try (Rhel rhel = product.createObjectExclusiveAccess()) {
+        try (Astra rhel = product.createObjectExclusiveAccess()) {
             Date date = new CustomDate((Calendar.getInstance().getTimeInMillis() + (16 * 60 * 1000)));
             TariffPlan tariffPlan = TariffPlan.builder()
                     .base(false)
