@@ -23,6 +23,7 @@ import tests.Tests;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ProductSteps.getProductList;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -36,13 +37,13 @@ public class ProductListTest extends Tests {
     @DisplayName("Получение списка продуктов")
     @TmsLink("643387")
     @Test
-    public void getProductList() {
+    public void getProductListTest() {
         String productName = "create_product_example_for_get_list_test_api";
         Product.builder()
                 .name(productName)
                 .build()
                 .createObject();
-        List<ItemImpl> list = steps.getProductObjectList(GetProductsResponse.class);
+        List<ItemImpl> list = getProductList();
         assertTrue(steps.isSorted(list), "Список не отсортирован.");
     }
 

@@ -18,6 +18,7 @@ import tests.Tests;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ActionSteps.getActionList;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -30,13 +31,13 @@ public class ActionsListTest extends Tests {
     @DisplayName("Получение списка действий. Список отсортирован по дате создания от нового к старому и имени без учета спец. символов")
     @TmsLink("642429")
     @Test
-    public void getActionList() {
+    public void getActionListTest() {
         String actionName = "create_action_example_for_get_list_test_api";
         Action.builder()
                 .actionName(actionName)
                 .build()
                 .createObject();
-        List<ItemImpl> list = steps.getProductObjectList(GetActionsListResponse.class);
+        List<ItemImpl> list = getActionList();
         assertTrue(steps.isSorted(list), "Список не отсортирован.");
     }
 

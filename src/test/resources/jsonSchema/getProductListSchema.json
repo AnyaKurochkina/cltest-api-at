@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "total_count": {
+          "type": "integer"
+        },
+        "next": {
+          "type": "string"
+        },
+        "previous": {
+          "type": "null"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "total_count",
+        "next",
+        "previous"
+      ]
+    },
+    "list": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "create_dt": {
+              "type": "string"
+            },
+            "update_dt": {
+              "type": "string"
+            },
+            "current_version": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "is_open": {
+              "type": "boolean"
+            },
+            "number": {
+              "type": "integer"
+            },
+            "envs": {
+              "type": "array",
+              "items": {}
+            },
+            "category": {
+              "type": "string"
+            },
+            "category_v2": {
+              "type": "string"
+            },
+            "payment": {
+              "type": "string"
+            },
+            "info": {
+              "type": "object",
+              "properties": {
+                "inform": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "inform"
+              ]
+            },
+            "in_general_list": {
+              "type": "boolean"
+            },
+            "allowed_groups": {
+              "type": "array",
+              "items": {}
+            },
+            "restricted_groups": {
+              "type": "array",
+              "items": {}
+            },
+            "allowed_developers": {
+              "type": "array",
+              "items": {}
+            },
+            "restricted_developers": {
+              "type": "array",
+              "items": {}
+            },
+            "icon": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "create_dt",
+            "update_dt",
+            "current_version",
+            "name",
+            "title",
+            "description",
+            "is_open",
+            "number",
+            "envs",
+            "category",
+            "category_v2",
+            "payment",
+            "info",
+            "in_general_list",
+            "allowed_groups",
+            "restricted_groups",
+            "allowed_developers",
+            "restricted_developers",
+            "icon"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "create_dt": {
+              "type": "string"
+            },
+            "update_dt": {
+              "type": "string"
+            },
+            "current_version": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "is_open": {
+              "type": "boolean"
+            },
+            "number": {
+              "type": "integer"
+            },
+            "envs": {
+              "type": "array",
+              "items": {}
+            },
+            "category": {
+              "type": "string"
+            },
+            "category_v2": {
+              "type": "string"
+            },
+            "payment": {
+              "type": "string"
+            },
+            "info": {
+              "type": "object"
+            },
+            "in_general_list": {
+              "type": "boolean"
+            },
+            "allowed_groups": {
+              "type": "array",
+              "items": {}
+            },
+            "restricted_groups": {
+              "type": "array",
+              "items": {}
+            },
+            "allowed_developers": {
+              "type": "array",
+              "items": {}
+            },
+            "restricted_developers": {
+              "type": "array",
+              "items": {}
+            },
+            "icon": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "create_dt",
+            "update_dt",
+            "current_version",
+            "name",
+            "title",
+            "description",
+            "is_open",
+            "number",
+            "envs",
+            "category",
+            "category_v2",
+            "payment",
+            "info",
+            "in_general_list",
+            "allowed_groups",
+            "restricted_groups",
+            "allowed_developers",
+            "restricted_developers",
+            "icon"
+          ]
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "meta",
+    "list"
+  ]
+}
