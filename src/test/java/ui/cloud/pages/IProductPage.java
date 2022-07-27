@@ -70,6 +70,11 @@ public abstract class IProductPage {
         return $x("//ancestor::*[.='{}']/parent::*//button[@id='actions-menu-button']", header);
     }
 
+    @Step("Получение таблицы по заголовку")
+    public Table getTableByHeader(String header) {
+        return new Table($x("//ancestor::*[.='Дополнительные точки монтирования']/parent::*//table", header));
+    }
+
     @Step("Получение label")
     public String getLabel() {
         return $x("//span[starts-with(text(),'AT-UI-')]").shouldBe(Condition.visible).getText();
