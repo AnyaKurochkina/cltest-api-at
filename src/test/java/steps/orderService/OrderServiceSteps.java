@@ -15,7 +15,6 @@ import models.authorizer.ProjectEnvironmentPrefix;
 import models.orderService.ResourcePool;
 import models.orderService.interfaces.IProduct;
 import models.orderService.interfaces.ProductStatus;
-import models.orderService.products.Windows;
 import models.subModels.Item;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -54,7 +53,7 @@ public class OrderServiceSteps extends Steps {
         if (!orderStatus.equals(exp_status.toLowerCase())) {
             String error = "null";
             try {
-                error = StateServiceSteps.GetErrorFromStateService(product.getOrderId());
+                error = StateServiceSteps.getErrorFromStateService(product.getOrderId());
             } catch (Throwable e) {
                 e.printStackTrace();
                 log.error("Ошибка в GetErrorFromStateService " + e);
@@ -65,7 +64,7 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    public static String getStatus(IProduct product){
+    public static String getStatus(IProduct product) {
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId())
                 .get("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
@@ -105,6 +104,29 @@ public class OrderServiceSteps extends Steps {
             if (statuses.length == 0) {
                 endPoint = endPoint.substring(0, endPoint.length() - 2);
             }
+            idOfAllSuccessProductsOnOnePage = new Http(OrderServiceURL)
+                    .setProjectId(projectId)
+                    .get(endPoint)
+                    .assertStatus(200)
+                    .jsonPath()
+                    .getList("list.id");
+            idOfAllSuccessProducts.addAll(idOfAllSuccessProductsOnOnePage);
+        } while (idOfAllSuccessProductsOnOnePage.size() != 0);
+        log.info("Список ID проектов со статусом success " + idOfAllSuccessProducts);
+        log.info("Кол-во продуктов " + idOfAllSuccessProducts.size());
+        return idOfAllSuccessProducts;
+    }
+
+    @Step("Получение продуктов со всеми статусами")
+    public static List<String> getProductsWithAllStatus(String projectId) {
+        List<String> idOfAllSuccessProductsOnOnePage;
+        List<String> idOfAllSuccessProducts = new ArrayList<>();
+        int i = 0;
+        do {
+            i++;
+            String endPoint = String.format("/v1/projects/%s/orders?include=total_count&page=" +
+                            i + "&per_page=20",
+                    Objects.requireNonNull(projectId));
             idOfAllSuccessProductsOnOnePage = new Http(OrderServiceURL)
                     .setProjectId(projectId)
                     .get(endPoint)
@@ -271,7 +293,7 @@ public class OrderServiceSteps extends Steps {
         if (!actionStatus.equals(exp_status.toLowerCase())) {
             String error = null;
             try {
-                error = StateServiceSteps.GetErrorFromStateService(product.getOrderId());
+                error = StateServiceSteps.getErrorFromStateService(product.getOrderId());
             } catch (Throwable e) {
                 e.printStackTrace();
             }

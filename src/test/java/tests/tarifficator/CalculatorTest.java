@@ -10,11 +10,9 @@ import models.accountManager.Account;
 import models.authorizer.Folder;
 import models.authorizer.Organization;
 import models.authorizer.Project;
-import models.calculator.DetailsItem;
-import models.calculator.DetailsOrderItem;
 import models.orderService.interfaces.IProduct;
+import models.orderService.products.Astra;
 import models.orderService.products.NT;
-import models.orderService.products.Rhel;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -29,8 +27,6 @@ import steps.orderService.OrderServiceSteps;
 import steps.tarifficator.CostSteps;
 import tests.Tests;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 @Log4j2
@@ -43,8 +39,8 @@ public class CalculatorTest extends Tests {
     @SneakyThrows
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Списание средств за продукт {0}")
-    public void expenseAccount(Rhel resource) {
-        try (Rhel product = resource.createObjectExclusiveAccess()) {
+    public void expenseAccount(Astra resource) {
+        try (Astra product = resource.createObjectExclusiveAccess()) {
             Project projectSource = Project.builder().id(product.getProjectId()).build().createObject();
             String parentFolderId = AuthorizerSteps.getParentProject(product.getProjectId());
             Folder folderTarget = Folder.builder()
@@ -147,8 +143,8 @@ public class CalculatorTest extends Tests {
     @TmsLink("648902")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Сравнение стоимости продукта в статусе ON с ценой предбиллинга")
-    public void costProductStatusOn(Rhel resource) {
-        try (Rhel product = resource.createObjectExclusiveAccess()) {
+    public void costProductStatusOn(Astra resource) {
+        try (Astra product = resource.createObjectExclusiveAccess()) {
             Waiting.sleep(60000);
             Float preBillingCostOn = CostSteps.getPreBillingCostPath(product, "items.find{it.type=='vm'}.resources_statuses.on.collect{it.total_price.toFloat()}.sum().toFloat()");
             Float currentCost = CostSteps.getCurrentCost(product);
@@ -159,8 +155,8 @@ public class CalculatorTest extends Tests {
     @TmsLink("649012")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Сравнение стоимости продукта в статусе OFF с ценой предбиллинга")
-    public void costProductStatusOff(Rhel resource) {
-        try (Rhel product = resource.createObjectExclusiveAccess()) {
+    public void costProductStatusOff(Astra resource) {
+        try (Astra product = resource.createObjectExclusiveAccess()) {
             Waiting.sleep(60000);
             Float preBillingCostOff = CostSteps.getPreBillingCostPath(product, "items.find{it.type=='vm'}.resources_statuses.off.collect{it.total_price.toFloat()}.sum().toFloat()");
             product.stopHard();

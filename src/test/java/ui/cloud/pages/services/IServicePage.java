@@ -1,18 +1,13 @@
 package ui.cloud.pages.services;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
-import core.helper.StringUtils;
-import core.utils.Waiting;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
-import steps.day2.Day2Steps;
 import ui.cloud.pages.EntitiesUtils;
 import ui.cloud.pages.ProductStatus;
-import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
+import ui.elements.Graph;
 import ui.elements.Table;
 
 import java.time.Duration;
@@ -47,7 +42,7 @@ public class IServicePage {
 
     public void checkGraph() {
         new Runs().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        //TODO: Здесь могла быть ваша проверка
+        new Graph().throwNotRunNodes().throwSkipNodes().throwRunNodes().checkGraph();
     }
 
     private class Runs extends Table {

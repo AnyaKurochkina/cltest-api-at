@@ -72,6 +72,11 @@ public abstract class IProductPage {
         return $x("//ancestor::*[.='{}']/parent::*//button[@id='actions-menu-button']", header);
     }
 
+    @Step("Получение таблицы по заголовку")
+    public Table getTableByHeader(String header) {
+        return new Table($x("//ancestor::*[.='{}']/parent::*//table", header));
+    }
+
     @Step("Получение label")
     public String getLabel() {
         return $x("//span[starts-with(text(),'AT-UI-')]").shouldBe(Condition.visible).getText();
@@ -145,7 +150,7 @@ public abstract class IProductPage {
     public void checkErrorByStatus(String status) {
         if (status.equals(ProductStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
-                    product, status, StateServiceSteps.GetErrorFromStateService(product.getOrderId())));
+                    product, status, StateServiceSteps.getErrorFromStateService(product.getOrderId())));
         }
     }
 

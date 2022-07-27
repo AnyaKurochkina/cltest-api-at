@@ -21,19 +21,4 @@ public class Meta implements MetaImpl {
 
 	@JsonProperty("total_count")
 	private Integer totalCount;
-
-	@Override
-	public String getNext() {
-		return next;
-	}
-
-	@Override
-	public String getPrevious() {
-		return previous;
-	}
-
-	@Override
-	public Integer getTotalCount() {
-		return totalCount;
-	}
 }

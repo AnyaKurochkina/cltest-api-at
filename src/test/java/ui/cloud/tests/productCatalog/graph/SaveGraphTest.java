@@ -7,6 +7,7 @@ import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.uiModels.Graph;
 
 @Epic("Графы")
 @Feature("Сохранение графа")
@@ -19,7 +20,6 @@ public class SaveGraphTest extends GraphBaseTest {
         new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
-                .editGraph("edited description")
                 .saveGraphWithManualVersion("1.0.999")
                 .checkGraphVersion("1.0.999");
     }
@@ -31,7 +31,7 @@ public class SaveGraphTest extends GraphBaseTest {
         new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
-                .editGraph("edited description")
+                .editGraph(new Graph("description", "QA-1"))
                 .saveGraphWithPatchVersion()
                 .checkGraphVersion("1.0.1")
                 .trySaveGraphWithIncorrectVersion("1.0.0")
@@ -39,7 +39,7 @@ public class SaveGraphTest extends GraphBaseTest {
     }
 
     @Test
-    @TmsLinks({@TmsLink("487621"),@TmsLink("600394")})
+    @TmsLinks({@TmsLink("487621"), @TmsLink("600394")})
     @DisplayName("Проверка изменений и лимита патч-версий")
     public void checkPatchVersionLimit() {
         new IndexPage().goToGraphsPage()
@@ -47,12 +47,12 @@ public class SaveGraphTest extends GraphBaseTest {
                 .checkGraphVersion("1.0.0")
                 .saveGraphWithManualVersion("1.0.999")
                 .checkGraphVersion("1.0.999")
-                .editGraph("edited description-1")
+                .editGraph(new Graph("description", "QA-1"))
                 .saveGraphWithPatchVersion()
                 .checkGraphVersion("1.1.0")
                 .saveGraphWithManualVersion("1.999.999")
                 .checkGraphVersion("1.999.999")
-                .editGraph("edited description-2")
+                .editGraph(new Graph("description", "QA-2"))
                 .saveGraphWithPatchVersion()
                 .checkGraphVersion("2.0.0")
                 .saveGraphWithManualVersion("999.999.999")
@@ -68,12 +68,12 @@ public class SaveGraphTest extends GraphBaseTest {
                 .checkGraphVersion("1.0.0")
                 .saveGraphWithManualVersion("1.0.999")
                 .checkGraphVersion("1.0.999")
-                .editGraph("edited description-1")
+                .editGraph(new Graph("description", "QA-1"))
                 .checkAndSaveNextManualVersion("1.1.0")
                 .checkGraphVersion("1.1.0")
                 .saveGraphWithManualVersion("1.999.999")
                 .checkGraphVersion("1.999.999")
-                .editGraph("edited description-2")
+                .editGraph(new Graph("description", "QA-2"))
                 .checkAndSaveNextManualVersion("2.0.0")
                 .checkGraphVersion("2.0.0")
                 .saveGraphWithManualVersion("999.999.999")

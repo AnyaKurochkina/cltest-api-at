@@ -59,7 +59,7 @@ public class AddModifierTest extends GraphBaseTest {
                 .addModifierAndSave(modifier2)
                 .checkModifierAttributes(modifier2)
                 .checkModifiedJSONSchemaContains(modifier2.getModifierData())
-                .deleteModifier(modifier2)
+                .deleteModifier(modifier2.getName())
                 .checkModifiedJSONSchemaContains(modifier1.getModifierData());
     }
 

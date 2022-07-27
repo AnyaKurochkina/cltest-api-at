@@ -113,10 +113,9 @@ public class ActionTest extends BaseTest {
     }
 
     @Test
-    @TmsLink("506779")
+    @TmsLink("529395")
     @DisplayName("Проверка сохранения версии")
     public void checkActionVersions() {
-        //todo тест падает привести в поряддок.
         String name = "check_action_versions_test_ui";
         Action action = Action.builder()
                 .actionName(name)
@@ -125,13 +124,35 @@ public class ActionTest extends BaseTest {
                 .createObject();
         steps.partialUpdateObject(action.getActionId(), new JSONObject().put("priority", 1));
         String version = steps.getById(action.getActionId(), GetActionResponse.class).getVersion();
-
-        new IndexPage().goToActionsPage()
+        assertTrue(new IndexPage().goToActionsPage()
                 .openActionForm(name)
                 .inputByLabel("Приоритет", "2")
                 .saveAction()
                 .setInvalidVersion("1.0.1", version)
+                .saveAction()
                 .setInvalidVersion("1.0.0", version)
-                .setVersion(version);
+                .saveAction()
+                .setInvalidFormatVersion("1/0/2")
+                .saveAction()
+                .setVersion("1.0.2")
+                .checkVersion("1.0.2"));
+    }
+
+    @Test
+    @TmsLink("506731")
+    @DisplayName("Редактировать действие")
+    public void editAction() {
+        String name = "edit_action_test_ui";
+        Action.builder()
+                .actionName(name)
+                .title(name)
+                .build()
+                .createObject();
+        assertTrue(new IndexPage().goToActionsPage()
+                .openActionForm(name)
+                .changeGraphVersion("1.0.0")
+                .saveAction()
+                .saveAsNextVersion()
+                .checkVersion("1.0.1"));
     }
 }

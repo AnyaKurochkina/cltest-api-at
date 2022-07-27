@@ -8,7 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import models.accountManager.Account;
 import models.authorizer.Folder;
 import models.authorizer.Project;
-import models.orderService.products.Rhel;
+import models.orderService.products.Astra;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -29,8 +29,8 @@ public class ProductTest extends Tests {
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @TmsLink("584453")
     @ParameterizedTest(name = "Перенос заказа. ВМ {0} при одинаковых префиксах")
-    public void moveProductWithEqualsPrefix(Rhel resource) {
-        try (Rhel product = resource.createObjectExclusiveAccess()) {
+    public void moveProductWithEqualsPrefix(Astra resource) {
+        try (Astra product = resource.createObjectExclusiveAccess()) {
             Project projectSource = Project.builder().id(product.getProjectId()).build().createObject();
             String parentFolderId = AuthorizerSteps.getParentProject(product.getProjectId());
             Folder folderTarget = Folder.builder()

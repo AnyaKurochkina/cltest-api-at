@@ -48,6 +48,6 @@ public class CreateGraphTest extends GraphBaseTest {
     @Step("Создание графа с недопустимым кодом")
     public void checkGraphNameValidation() {
         new IndexPage().goToGraphsPage()
-                .checkGraphNameValidation(new String[] {"Test_name", "test name", "тест", "test_name$"});
+                .checkGraphNameValidation(new String[]{"Test_name", "test name", "тест", "test_name$"});
     }
 }

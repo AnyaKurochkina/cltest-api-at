@@ -3,6 +3,7 @@ package tests.productCatalog.product;
 import core.helper.Configure;
 import core.helper.http.Response;
 import httpModels.productCatalog.ItemImpl;
+import httpModels.productCatalog.product.getProducts.getProductsExportList.ExportItem;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import httpModels.productCatalog.product.getProducts.response.ListItem;
 import io.qameta.allure.Epic;
@@ -22,6 +23,7 @@ import tests.Tests;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ProductSteps.getProductList;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -35,13 +37,13 @@ public class ProductListTest extends Tests {
     @DisplayName("Получение списка продуктов")
     @TmsLink("643387")
     @Test
-    public void getProductList() {
+    public void getProductListTest() {
         String productName = "create_product_example_for_get_list_test_api";
         Product.builder()
                 .name(productName)
                 .build()
                 .createObject();
-        List<ItemImpl> list = steps.getProductObjectList(GetProductsResponse.class);
+        List<ItemImpl> list = getProductList();
         assertTrue(steps.isSorted(list), "Список не отсортирован.");
     }
 
@@ -166,5 +168,27 @@ public class ProductListTest extends Tests {
         List<String> actualList = steps.getAvailableCategories();
         List<String> categoriesList = Categories.getCategoriesList();
         assertEquals(categoriesList, actualList);
+    }
+
+    @DisplayName("Получение списка products export")
+    @TmsLink("1061110")
+    @Test
+    public void getProductExportList() {
+        List<ExportItem> productsExportList = steps.getProductsExportList();
+        for (ExportItem item : productsExportList) {
+          assertNotNull(item.getOrgInfoSystems());
+        }
+    }
+
+    @DisplayName("Получение списка products export в форматах xml/csv/json")
+    @TmsLink("")
+    @Test
+    public void getProductExportListXml() {
+        String xml = "xml";
+        assertEquals(xml, steps.getProductsExportListInFormat(xml).getContentType());
+        String csv = "csv";
+        assertEquals(csv, steps.getProductsExportListInFormat(csv).getContentType());
+        String json = "json";
+        assertEquals(json, steps.getProductsExportListInFormat(json).getContentType());
     }
 }
