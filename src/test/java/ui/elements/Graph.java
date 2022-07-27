@@ -151,7 +151,7 @@ public class Graph implements TypifiedElement {
                     int lenH = 0;
                     n = 0;
                     //замеряем высоту объекта
-                    while (c.equals(colors[x][y + n]) && y + n < h) {
+                    while (y + n < h && c.equals(colors[x][y + n])) {
                         lenH++;
                         n++;
                     }
