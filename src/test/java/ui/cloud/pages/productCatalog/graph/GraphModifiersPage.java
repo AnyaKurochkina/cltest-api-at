@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.tests.productCatalog.DeleteDialog;
@@ -36,6 +37,7 @@ public class GraphModifiersPage extends GraphPage {
     private final SelenideElement nonUniqueModifierNameHint = $x("//form//div[text()='Такое наименование уже существует']");
     private final SelenideElement nonUniqueModifierNumberHint = $x("//form//div[text()='Порядковый номер уже существует']");
 
+    @Step("Добавление модификатора '{modifier.name}' и сохранение графа")
     public GraphModifiersPage addModifierAndSave(GraphModifier modifier) {
         addModifierButton.click();
         TestUtils.wait(500);
@@ -52,6 +54,7 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка атрибутов модификатора")
     public GraphModifiersPage checkModifierAttributes(GraphModifier modifier) {
         $x("//td[@value='" + modifier.getName() + "']/parent::tr//button[1]").click();
         nameInput.shouldHave(Condition.exactValue(modifier.getName()));
@@ -66,6 +69,7 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Редактирование модификатора '{modifier.name}' и сохранение графа")
     public GraphModifiersPage editModifierAndSave(GraphModifier modifier) {
         $x("//td[@value='" + modifier.getName() + "']/parent::tr//button[1]").click();
         nameInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
@@ -84,6 +88,7 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка валидации недопустимого названия модификатора")
     public GraphModifiersPage checkModifierNameValidation(String[] names) {
         addModifierButton.click();
         TestUtils.wait(500);
@@ -101,6 +106,7 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка валидации неуникального названия '{name}' модификатора")
     public GraphModifiersPage checkNonUniqueModifierName(String name) {
         addModifierButton.click();
         nameInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
@@ -111,6 +117,7 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка валидации неуникального номера '{number}' модификатора")
     public GraphModifiersPage checkNonUniqueModifierNumber(String number) {
         addModifierButton.click();
         numberInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
@@ -121,6 +128,7 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка валидации недопустимого номера модификатора")
     public GraphModifiersPage checkModifierNumberValidation() {
         addModifierButton.click();
         for (String number : new String[]{"0", "-1"}) {
@@ -134,6 +142,7 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка, что JSONSchema содержит значение '{value}'")
     public GraphModifiersPage checkModifiedJSONSchemaContains(String value) {
         TestUtils.wait(500);
         TestUtils.scroll(300);
@@ -143,6 +152,7 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка, что UISchema содержит значение '{value}'")
     public GraphModifiersPage checkModifiedUISchemaContains(String value) {
         TestUtils.wait(500);
         TestUtils.scroll(300);
@@ -152,6 +162,7 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка, что StaticData содержит значение '{value}'")
     public GraphModifiersPage checkModifiedStaticDataContains(String value) {
         TestUtils.wait(500);
         TestUtils.scroll(300);
@@ -161,6 +172,7 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Удаление модификатора '{name}'")
     public GraphModifiersPage deleteModifier(String name) {
         $x("//td[@value='" + name + "']/parent::tr//button[2]").click();
         new DeleteDialog().inputValidId("Модификатор успешно удален");
@@ -169,6 +181,7 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Задание сред для модификатора")
     private void setEnvs(String[] envs) {
         for (String env : envs) {
             switch (env) {
@@ -185,12 +198,14 @@ public class GraphModifiersPage extends GraphPage {
         }
     }
 
+    @Step("Проверка выбранных сред модификатора")
     private void checkSelectedEnvs(String[] envs) {
         for (String env : envs) {
             $x("//form//input[@name='" + env + "' and @checked]").shouldBe(Condition.visible);
         }
     }
 
+    @Step("Очистка выбранных сред модификатора")
     private void clearSelectedEnvs() {
         for (String env : new String[]{"dev", "test", "prod"}) {
             if ($x("//form//input[@name='" + env + "' and @checked]").exists()) {
@@ -199,6 +214,7 @@ public class GraphModifiersPage extends GraphPage {
         }
     }
 
+    @Step("Выбор среды просмотра модификатора")
     public GraphModifiersPage selectEnv(String env) {
         switch (env) {
             case "dev":

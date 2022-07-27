@@ -61,7 +61,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement staticData = $x("//label[text()='Static data']/parent::div//textarea");
     private final SelenideElement searchNodesInput = $x("//input[@placeholder='Поиск...']");
 
-    @Step("Добавление узла графа и сохранение")
+    @Step("Добавление узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage addNodeAndSave(Node node) {
         addNodeButton.click();
         nodeName.setValue(node.getName());
@@ -98,6 +98,7 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
+    @Step("Редактирование узла '{node.name}' с подграфом")
     public GraphNodesPage editSubgraphNode(SubgraphNode node, String version, String description) {
         TestUtils.scrollToTheBottom();
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
@@ -115,6 +116,7 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
+    @Step("Редактирование узла '{node.name}' с шаблоном")
     public GraphNodesPage editTemplateNode(TemplateNode node, String version, String description) {
         TestUtils.scrollToTheBottom();
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
@@ -132,7 +134,7 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
-    @Step("Копирование узла графа и сохранение")
+    @Step("Копирование узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage copyNodeAndSave(SubgraphNode node) {
         String cloneName = node.getName() + "_clone";
         TestUtils.scrollToTheBottom();
@@ -150,13 +152,13 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
-    @Step("Проверка отсутствия узла графа в списке узлов")
+    @Step("Проверка отсутствия узла '{node.name}' в списке узлов")
     public GraphNodesPage checkNodeNotFound(SubgraphNode node) {
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").shouldBe(Condition.not(Condition.visible));
         return this;
     }
 
-    @Step("Проверка недоступности добавления узла графа")
+    @Step("Проверка некорректного заполнения полей при добавлении узла")
     public GraphNodesPage checkAddNodeSubgraphDisabled(SubgraphNode node) {
         addNodeButton.click();
         nodeName.setValue(node.getName());
@@ -185,6 +187,7 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка валидации неуникального имени узла при добавлении узла")
     public GraphNodesPage checkAddNodeSubgraphWithNonUniqueNameDisabled(SubgraphNode node) {
         TestUtils.scrollToTheTop();
         addNodeButton.click();
@@ -194,7 +197,7 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
-    @Step("Проверка значений атрибутов узла графа")
+    @Step("Проверка значений атрибутов узла '{node.name}'")
     public GraphNodesPage checkNodeAttributes(Node node) {
         if (node.getNumber().equals("")) {
             node.setNumber("1");
@@ -229,16 +232,7 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
-    @Step("Проверка значений Input, Output в таблице узлов графа")
-    public GraphNodesPage checkInputOutputInNodesTable(Node node) {
-        $x("//div[text()='" + node.getDescription() + "']/ancestor::div[2]//span[contains(text(),'" + node.getInputKey() + "')]")
-                .shouldBe(Condition.visible);
-        $x("//div[text()='" + node.getDescription() + "']/ancestor::div[2]//span[contains(text(),'" + node.getOutputKey() + "')]")
-                .shouldBe(Condition.visible);
-        return this;
-    }
-
-    @Step("Поиск узлов графа")
+    @Step("Проверка, что узел '{node.name}' найден при поиске '{text}'")
     public GraphNodesPage findNode(String text, Node node) {
         searchNodesInput.setValue(text);
         $x("//div[text()='" + node.getDescription() + "']/ancestor::div[2]//span[contains(text(),'" + text + "')]")
@@ -246,13 +240,14 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
-    @Step("Проверка отсутствия результата поиска")
+    @Step("Проверка, что узел '{node.name}' не найден при поиске '{text}'")
     public GraphNodesPage checkNodeNotFound(String text, Node node) {
         searchNodesInput.setValue(text);
         Assertions.assertFalse($x("//div[text()='" + node.getDescription() + "']").exists());
         return this;
     }
 
+    @Step("Удаление узла '{node.name}' и сохранение графа")
     public GraphNodesPage deleteNodeAndSave(Node node) {
         TestUtils.scrollToTheBottom();
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
@@ -262,6 +257,7 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
+    @Step("Задать для StaticData значение '{value}'")
     public GraphNodesPage setStaticData(String value) {
         staticData.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         staticData.setValue(value);

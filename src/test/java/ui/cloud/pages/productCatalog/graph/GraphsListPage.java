@@ -8,8 +8,10 @@ import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.InputFile;
+import ui.elements.Table;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GraphsListPage {
     private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы']");
@@ -42,6 +44,7 @@ public class GraphsListPage {
         graphsPageTitle.shouldBe(Condition.visible);
     }
 
+    @Step("Создание графа '{name}'")
     public GraphsListPage createGraph(String title, String name, String type, String description, String author) {
         createNewGraphButton.click();
         inputTitleField.setValue(title);
@@ -53,6 +56,7 @@ public class GraphsListPage {
         return this;
     }
 
+    @Step("Копирование графа '{name}'")
     public GraphsListPage copyGraph(String name) {
         openActionMenu(name);
         copyAction.click();
@@ -60,6 +64,7 @@ public class GraphsListPage {
         return this;
     }
 
+    @Step("Проверка, что граф найден при поиске по коду '{graphName}'")
     public GraphsListPage findGraphByName(String graphName) {
         if (clearSearchButton.isDisplayed()) {
             clearSearchButton.click();
@@ -70,6 +75,7 @@ public class GraphsListPage {
         return new GraphsListPage();
     }
 
+    @Step("Проверка, что граф найден при поиске по наименованию '{title}'")
     public GraphsListPage findGraphByTitle(String title) {
         if (clearSearchButton.isDisplayed()) {
             clearSearchButton.click();
@@ -80,6 +86,7 @@ public class GraphsListPage {
         return this;
     }
 
+    @Step("Проверка, что граф не найден при поиске по '{graphName}'")
     public GraphsListPage checkGraphNotFound(String graphName) {
         if (clearSearchButton.isDisplayed()) {
             clearSearchButton.click();
@@ -90,6 +97,7 @@ public class GraphsListPage {
         return this;
     }
 
+    @Step("Удаление графа '{name}'")
     public GraphsListPage deleteGraph(String name) {
         openActionMenu(name);
         deleteAction.click();
@@ -99,20 +107,22 @@ public class GraphsListPage {
         return this;
     }
 
+    @Step("Открытие меню действий с графом '{graphName}'")
     private void openActionMenu(String graphName) {
         $x("//td[text() = '" + graphName + "']//parent::tr//button[@id = 'actions-menu-button']").click();
     }
 
     @Step("Проверка заголовков списка графов")
     public GraphsListPage checkGraphsListHeaders() {
-        $x("//table[@class='MuiTable-root']//th[1]").shouldHave(Condition.exactText("Наименование"));
-        $x("//table[@class='MuiTable-root']//th[2]").shouldHave(Condition.exactText("Код графа"));
-        $x("//table[@class='MuiTable-root']//th[3]").shouldHave(Condition.exactText("Дата создания"));
-        $x("//table[@class='MuiTable-root']//th[4]").shouldHave(Condition.exactText("Описание"));
+        Table graphsList = new Table("Код графа");
+        assertEquals(0, graphsList.getHeaderIndex("Наименование"));
+        assertEquals(1, graphsList.getHeaderIndex("Код графа"));
+        assertEquals(2, graphsList.getHeaderIndex("Дата создания"));
+        assertEquals(3, graphsList.getHeaderIndex("Описание"));
         return this;
     }
 
-    @Step("Проверка недоступности создания графа")
+    @Step("Проверка валидации некорректных параметров при создании графа")
     public GraphsListPage checkCreateGraphDisabled(String title, String name, String type, String description, String author) {
         createNewGraphButton.shouldBe(Condition.visible).click();
         inputTitleField.setValue(title);
@@ -134,7 +144,7 @@ public class GraphsListPage {
         return new GraphsListPage();
     }
 
-    @Step("Открытие страницы графа")
+    @Step("Открытие страницы графа '{name}'")
     public GraphPage openGraphPage(String name) {
         if (clearSearchButton.isDisplayed()) {
             clearSearchButton.click();
@@ -144,7 +154,7 @@ public class GraphsListPage {
         return new GraphPage();
     }
 
-    @Step("Проверка указания некорректных значений в коде графа")
+    @Step("Проверка валидации недопустимых значений в коде графа")
     public GraphsListPage checkGraphNameValidation(String[] names) {
         createNewGraphButton.shouldBe(Condition.visible).click();
         for (String name : names) {
@@ -160,6 +170,7 @@ public class GraphsListPage {
         return this;
     }
 
+    @Step("Выбор типа графа '{type}'")
     private void selectType(String type) {
         selectType.click();
         switch (type) {
@@ -177,19 +188,19 @@ public class GraphsListPage {
 
     @Step("Проверка сортировки по наименованию")
     public GraphsListPage checkSortingByTitle() {
-        BaseList.checkSortingByStringField("Наименование", 1);
+        BaseList.checkSortingByStringField("Наименование");
         return this;
     }
 
     @Step("Проверка сортировки по коду графа")
     public GraphsListPage checkSortingByName() {
-        BaseList.checkSortingByStringField("Код графа", 2);
+        BaseList.checkSortingByStringField("Код графа");
         return this;
     }
 
     @Step("Проверка сортировки по дате создания")
     public GraphsListPage checkSortingByCreateDate() {
-        BaseList.checkSortingByDateField("Дата создания", 3);
+        BaseList.checkSortingByDateField("Дата создания");
         return this;
     }
 

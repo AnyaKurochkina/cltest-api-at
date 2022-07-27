@@ -38,23 +38,27 @@ public class GraphPage {
         graphsListLink.shouldBe(Condition.visible);
     }
 
+    @Step("Проверка, что отображаемая версия графа равна '{version}'")
     public GraphPage checkGraphVersion(String version) {
         graphVersion.shouldBe(Condition.visible).shouldHave(Condition.exactText(version));
         return new GraphPage();
     }
 
+    @Step("Выбор версии графа '{version}'")
     public GraphPage selectGraphVersion(String version) {
         DropDown graphVersion = DropDown.byLabel("Выберите версию");
         graphVersion.selectByValue(version);
         return this;
     }
 
+    @Step("Редактирование графа '{graph.name}'")
     public GraphPage editGraph(Graph graph) {
         descriptionField.setValue(graph.getDescription());
         authorInput.setValue(graph.getAuthor());
         return new GraphPage();
     }
 
+    @Step("Сохранение графа со следующей патч-версией")
     public GraphPage saveGraphWithPatchVersion() {
         saveButton.shouldBe(Condition.enabled).click();
         dialogSaveButton.click();
@@ -62,6 +66,7 @@ public class GraphPage {
         return new GraphPage();
     }
 
+    @Step("Проверка, что следующая предлагаемая версия для сохранения равна '{version}'")
     public GraphPage checkAndSaveNextManualVersion(String version) {
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
@@ -71,6 +76,7 @@ public class GraphPage {
         return new GraphPage();
     }
 
+    @Step("Сохранение графа с указанием новой версии '{newVersion}'")
     public GraphPage saveGraphWithManualVersion(String newVersion) {
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
@@ -81,6 +87,7 @@ public class GraphPage {
         return new GraphPage();
     }
 
+    @Step("Проверка сохранения графа с некорректно указанной версией '{newVersion}'")
     public GraphPage trySaveGraphWithIncorrectVersion(String newVersion) {
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
@@ -92,12 +99,14 @@ public class GraphPage {
         return new GraphPage();
     }
 
+    @Step("Проверка недоступности сохранения графа при достижении лимита версий")
     public GraphPage checkVersionLimit() {
         $x("//div[text()='Достигнут предел допустимого значения версии. Нельзя сохранить следующую версию']").shouldBe(Condition.visible);
         saveButton.shouldBe(Condition.disabled);
         return new GraphPage();
     }
 
+    @Step("Просмотр JSON графа")
     public GraphPage viewJSON() {
         viewJSONButton.click();
         $x("//span[text()='\"id\"']").shouldBe(Condition.visible);
@@ -107,29 +116,34 @@ public class GraphPage {
         return new GraphPage();
     }
 
+    @Step("Переход на вкладку Узлы")
     public GraphNodesPage goToNodesTab() {
         nodesTab.click();
         return new GraphNodesPage();
     }
 
+    @Step("Переход на вкладку Модификаторы")
     public GraphModifiersPage goToModifiersTab() {
         TestUtils.scrollToTheTop();
         modifiersTab.click();
         return new GraphModifiersPage();
     }
 
+    @Step("Переход на вкладку Параметры заказа")
     public GraphOrderParamsPage goToOrderParamsTab() {
         TestUtils.scrollToTheTop();
         orderParamsTab.click();
         return new GraphOrderParamsPage();
     }
 
+    @Step("Переход на вкладку Сравнение версий")
     public VersionComparisonPage goToVersionComparisonTab() {
         TestUtils.scrollToTheTop();
         versionComparisonTab.click();
         return new VersionComparisonPage();
     }
 
+    @Step("Проверка атрибутов графа '{name}'")
     public GraphPage checkGraphAttributes(String name, String title, String version) {
         graphNameInput.shouldHave(Condition.exactValue(name));
         graphTitleInput.shouldHave(Condition.exactValue(title));
@@ -137,11 +151,13 @@ public class GraphPage {
         return new GraphPage();
     }
 
+    @Step("Открытие диалога удаления графа")
     public DeleteDialog openDeleteDialog() {
         deleteButton.click();
         return new DeleteDialog();
     }
 
+    @Step("Удаление графа")
     public void deleteGraph() {
         deleteButton.click();
         new DeleteDialog().inputValidId();

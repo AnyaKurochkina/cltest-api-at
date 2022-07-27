@@ -40,7 +40,8 @@ public class NodesListTest extends GraphBaseTest {
                 .openGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
-                .checkInputOutputInNodesTable(node);
+                .findNode(node.getInputKey(), node)
+                .findNode(node.getOutputKey(), node);
     }
 
     @Test
