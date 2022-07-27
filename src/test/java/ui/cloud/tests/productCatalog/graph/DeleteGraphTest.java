@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 
 @Epic("Графы")
 @Feature("Удаление графа")
@@ -27,11 +28,15 @@ public class DeleteGraphTest extends GraphBaseTest {
     public void deleteGraphFromPage() {
         new IndexPage().goToGraphsPage()
                 .openGraphPage(NAME)
-                .deleteGraph()
+                .openDeleteDialog()
+                .inputInvalidId("test")
+                .inputValidId();
+        new GraphsListPage()
                 .checkGraphNotFound(NAME);
     }
 
     @AfterEach
     @DisplayName("Удаление графов, созданных в сетапе")
-    public void tearDownForGraphTests() {}
+    public void tearDownForGraphTests() {
+    }
 }
