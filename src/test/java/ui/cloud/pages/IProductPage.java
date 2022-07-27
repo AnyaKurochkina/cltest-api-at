@@ -72,7 +72,7 @@ public abstract class IProductPage {
 
     @Step("Получение таблицы по заголовку")
     public Table getTableByHeader(String header) {
-        return new Table($x("//ancestor::*[.='Дополнительные точки монтирования']/parent::*//table", header));
+        return new Table($x("//ancestor::*[.='{}']/parent::*//table", header));
     }
 
     @Step("Получение label")
