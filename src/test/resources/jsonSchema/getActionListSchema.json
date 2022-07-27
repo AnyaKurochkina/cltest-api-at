@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "total_count": {
+          "type": "integer"
+        },
+        "next": {
+          "type": "string"
+        },
+        "previous": {
+          "type": "null"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "total_count",
+        "next",
+        "previous"
+      ]
+    },
+        "list": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "create_dt": {
+              "type": "string"
+            },
+            "update_dt": {
+              "type": "string"
+            },
+            "current_version": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "event_type": {
+              "type": "array",
+              "items": {}
+            },
+            "event_provider": {
+              "type": "array",
+              "items": {}
+            },
+            "allowed_groups": {
+              "type": "array",
+              "items": {}
+            },
+            "restricted_groups": {
+              "type": "array",
+              "items": {}
+            },
+            "allowed_paths": {
+              "type": "array",
+              "items": {}
+            },
+            "restricted_paths": {
+              "type": "array",
+              "items": {}
+            },
+            "required_order_statuses": {
+              "type": "array",
+              "items": {}
+            },
+            "required_item_statuses": {
+              "type": "array",
+              "items": {}
+            },
+            "allowed_developers": {
+              "type": "array",
+              "items": {}
+            },
+            "restricted_developers": {
+              "type": "array",
+              "items": {}
+            },
+            "icon": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "create_dt",
+            "update_dt",
+            "current_version",
+            "name",
+            "title",
+            "description",
+            "type",
+            "event_type",
+            "event_provider",
+            "allowed_groups",
+            "restricted_groups",
+            "allowed_paths",
+            "restricted_paths",
+            "required_order_statuses",
+            "required_item_statuses",
+            "allowed_developers",
+            "restricted_developers",
+            "icon"
+          ]
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "meta",
+    "list"
+  ]
+}

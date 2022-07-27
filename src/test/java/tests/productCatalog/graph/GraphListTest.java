@@ -21,6 +21,7 @@ import tests.Tests;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.GraphSteps.getGraphList;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -52,8 +53,8 @@ public class GraphListTest extends Tests {
     @DisplayName("Получение списка графа")
     @TmsLink("642539")
     @Test
-    public void getGraphsList() {
-        List<ItemImpl> list = steps.getProductObjectList(GetGraphsListResponse.class);
+    public void getGraphsListTest() {
+        List<ItemImpl> list = getGraphList();
         assertTrue(steps.isSorted(list), "Список не отсортирован.");
     }
 
@@ -94,7 +95,7 @@ public class GraphListTest extends Tests {
     @TmsLink("1027309")
     @Test
     public void getIcon() {
-        List<ItemImpl> productObjectList = steps.getProductObjectList(GetGraphsListResponse.class);
+        List<ItemImpl> productObjectList = getGraphList();
         for (ItemImpl item : productObjectList) {
             GetGraphResponse graph = (GetGraphResponse) steps.getById(item.getId(), GetGraphResponse.class);
             if (!graph.getGraph().isEmpty()) {

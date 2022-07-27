@@ -403,6 +403,7 @@ public class GraphTest extends Tests {
                 .updateType(UpdateType.DELETE)
                 .rootPath(RootPath.UI_SCHEMA)
                 .build();
+        JsonHelper.toJson(mod);
         Graph graph = Graph.builder()
                 .name("create_graph_with_update_type_delete")
                 .modifications(Collections.singletonList(mod))

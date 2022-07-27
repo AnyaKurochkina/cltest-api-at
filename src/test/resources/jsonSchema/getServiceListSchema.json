@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "total_count": {
+          "type": "integer"
+        },
+        "next": {
+          "type": "null"
+        },
+        "previous": {
+          "type": "null"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "total_count",
+        "next",
+        "previous"
+      ]
+    },
+    "list": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "direction_id": {
+              "type": "string"
+            },
+            "direction_title": {
+              "type": "string"
+            },
+            "direction_name": {
+              "type": "string"
+            },
+            "direction": {
+              "type": "string"
+            },
+            "create_dt": {
+              "type": "string"
+            },
+            "update_dt": {
+              "type": "string"
+            },
+            "current_version": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "is_published": {
+              "type": "boolean"
+            },
+            "allowed_groups": {
+              "type": "array",
+              "items": {}
+            },
+            "restricted_groups": {
+              "type": "array",
+              "items": {}
+            },
+            "allowed_developers": {
+              "type": "array",
+              "items": {}
+            },
+            "restricted_developers": {
+              "type": "array",
+              "items": {}
+            },
+            "icon": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "direction_id",
+            "direction_title",
+            "direction_name",
+            "direction",
+            "create_dt",
+            "update_dt",
+            "current_version",
+            "name",
+            "title",
+            "description",
+            "is_published",
+            "allowed_groups",
+            "restricted_groups",
+            "allowed_developers",
+            "restricted_developers",
+            "icon"
+          ]
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "meta",
+    "list"
+  ]
+}

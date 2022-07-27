@@ -7,6 +7,8 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+
 public class Response {
     final int status;
     String responseMessage;
@@ -51,6 +53,12 @@ public class Response {
             end = contType.length();
         }
         return contType.substring(start + 1, end);
+    }
+
+    public Response compareWithJsonSchema(String path) {
+         response.then().assertThat()
+                .body(matchesJsonSchemaInClasspath(path));
+         return this;
     }
 
     @SneakyThrows
