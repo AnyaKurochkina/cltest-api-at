@@ -2,6 +2,7 @@ package steps.stateService;
 
 import core.helper.Configure;
 import core.helper.http.Http;
+import io.qameta.allure.Step;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
 import ru.testit.annotations.LinkType;
@@ -9,12 +10,14 @@ import ru.testit.junit5.StepsAspects;
 import ru.testit.services.LinkItem;
 import steps.Steps;
 
+import java.util.List;
+
 import static core.helper.Configure.StateServiceURL;
 
 @Log4j2
 public class StateServiceSteps extends Steps {
 
-    public static String GetErrorFromStateService(String orderId) {
+    public static String getErrorFromStateService(String orderId) {
         String traceback = null;
         try {
             traceback = new Http(StateServiceURL)
@@ -29,4 +32,13 @@ public class StateServiceSteps extends Steps {
         }
         return traceback;
     }
+    @Step("Получение списка id из списка items")
+    public static List<String> getOrdersIdList(String projectId) {
+        return new Http(StateServiceURL)
+                .get("/api/v1/projects/{}/items/", projectId)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list.order_id");
+    }
+
 }

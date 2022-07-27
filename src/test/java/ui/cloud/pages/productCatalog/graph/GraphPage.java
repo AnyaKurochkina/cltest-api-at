@@ -2,8 +2,13 @@ package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
+import ui.cloud.tests.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
+import ui.elements.Alert;
+import ui.elements.DropDown;
+import ui.uiModels.Graph;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -12,7 +17,6 @@ public class GraphPage {
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
     private final SelenideElement saveButton = $x("//span[text()='Сохранить']/parent::button");
     private final SelenideElement deleteButton = $x("//span[text()='Удалить']/parent::button");
-    private final SelenideElement confirmDeleteButton = $x("//form//span[text()='Удалить']/parent::button");
     private final SelenideElement dialogCancelButton = $x("//div[@role='dialog']//span[text()='Отмена']/parent::button");
     private final SelenideElement dialogSaveButton = $x("//div[@role='dialog']//span[text()='Сохранить']/parent::button");
     private final SelenideElement saveNextPatchVersionCheckbox = $x("//input[@name='saveAsNextVersion']");
@@ -21,13 +25,12 @@ public class GraphPage {
     private final SelenideElement viewJSONButton = $x("//span[text()='JSON']/parent::button");
     private final SelenideElement expandJSONView = $x("//button[@aria-label='fullscreen']");
     private final SelenideElement closeJSONView = $x("//button[@aria-label='close']");
-    private final SelenideElement nodesTab = $x("//span[text()='Узлы']//ancestor::button");
-    private final SelenideElement modifiersTab = $x("//span[text()='Модификаторы']//ancestor::button");
-    private final SelenideElement orderParamsTab = $x("//span[text()='Параметры заказа']//ancestor::button");
+    private final SelenideElement nodesTab = $x("//span[text()='Узлы']//parent::button");
+    private final SelenideElement modifiersTab = $x("//span[text()='Модификаторы']//parent::button");
+    private final SelenideElement orderParamsTab = $x("//span[text()='Параметры заказа']//parent::button");
+    private final SelenideElement versionComparisonTab = $x("//span[text()='Сравнение версий']//parent::button");
     private final SelenideElement graphNameInput = $x("//input[@name='name']");
     private final SelenideElement graphTitleInput = $x("//input[@name='title']");
-    private final SelenideElement graphId = $x("//form//p//b");
-    private final SelenideElement idInput = $x("//input[@name = 'id']");
     private final SelenideElement authorInput = $x("//input[@name = 'author']");
     private final SelenideElement saveGraphSuccessNotification = $x("//div[text()='Граф успешно сохранен']");
 
@@ -35,25 +38,35 @@ public class GraphPage {
         graphsListLink.shouldBe(Condition.visible);
     }
 
+    @Step("Проверка, что отображаемая версия графа равна '{version}'")
     public GraphPage checkGraphVersion(String version) {
         graphVersion.shouldBe(Condition.visible).shouldHave(Condition.exactText(version));
         return new GraphPage();
     }
 
-    public GraphPage editGraph(String description) {
-        descriptionField.setValue(description);
-        //TODO временно для ПК 2.0 чтобы изменилась версия
-        authorInput.setValue(description);
+    @Step("Выбор версии графа '{version}'")
+    public GraphPage selectGraphVersion(String version) {
+        DropDown graphVersion = DropDown.byLabel("Выберите версию");
+        graphVersion.selectByValue(version);
+        return this;
+    }
+
+    @Step("Редактирование графа '{graph.name}'")
+    public GraphPage editGraph(Graph graph) {
+        descriptionField.setValue(graph.getDescription());
+        authorInput.setValue(graph.getAuthor());
         return new GraphPage();
     }
 
+    @Step("Сохранение графа со следующей патч-версией")
     public GraphPage saveGraphWithPatchVersion() {
         saveButton.shouldBe(Condition.enabled).click();
         dialogSaveButton.click();
-        saveGraphSuccessNotification.shouldBe(Condition.visible);
+        new Alert().checkText("Граф успешно сохранен").checkColor(Alert.Color.GREEN).close();
         return new GraphPage();
     }
 
+    @Step("Проверка, что следующая предлагаемая версия для сохранения равна '{version}'")
     public GraphPage checkAndSaveNextManualVersion(String version) {
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
@@ -63,20 +76,22 @@ public class GraphPage {
         return new GraphPage();
     }
 
+    @Step("Сохранение графа с указанием новой версии '{newVersion}'")
     public GraphPage saveGraphWithManualVersion(String newVersion) {
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
-        newVersionInput.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+        newVersionInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         newVersionInput.setValue(newVersion);
         dialogSaveButton.click();
         saveGraphSuccessNotification.shouldBe(Condition.visible);
         return new GraphPage();
     }
 
+    @Step("Проверка сохранения графа с некорректно указанной версией '{newVersion}'")
     public GraphPage trySaveGraphWithIncorrectVersion(String newVersion) {
         saveButton.shouldBe(Condition.enabled).click();
         saveNextPatchVersionCheckbox.click();
-        newVersionInput.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+        newVersionInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         newVersionInput.setValue(newVersion);
         dialogSaveButton.shouldBe(Condition.disabled);
         $x("//p[text()[contains(., 'Версия должна быть выше, чем')]]").shouldBe(Condition.visible);
@@ -84,12 +99,14 @@ public class GraphPage {
         return new GraphPage();
     }
 
+    @Step("Проверка недоступности сохранения графа при достижении лимита версий")
     public GraphPage checkVersionLimit() {
         $x("//div[text()='Достигнут предел допустимого значения версии. Нельзя сохранить следующую версию']").shouldBe(Condition.visible);
         saveButton.shouldBe(Condition.disabled);
         return new GraphPage();
     }
 
+    @Step("Просмотр JSON графа")
     public GraphPage viewJSON() {
         viewJSONButton.click();
         $x("//span[text()='\"id\"']").shouldBe(Condition.visible);
@@ -99,23 +116,34 @@ public class GraphPage {
         return new GraphPage();
     }
 
+    @Step("Переход на вкладку Узлы")
     public GraphNodesPage goToNodesTab() {
         nodesTab.click();
         return new GraphNodesPage();
     }
 
+    @Step("Переход на вкладку Модификаторы")
     public GraphModifiersPage goToModifiersTab() {
         TestUtils.scrollToTheTop();
         modifiersTab.click();
         return new GraphModifiersPage();
     }
 
+    @Step("Переход на вкладку Параметры заказа")
     public GraphOrderParamsPage goToOrderParamsTab() {
         TestUtils.scrollToTheTop();
         orderParamsTab.click();
         return new GraphOrderParamsPage();
     }
 
+    @Step("Переход на вкладку Сравнение версий")
+    public VersionComparisonPage goToVersionComparisonTab() {
+        TestUtils.scrollToTheTop();
+        versionComparisonTab.click();
+        return new VersionComparisonPage();
+    }
+
+    @Step("Проверка атрибутов графа '{name}'")
     public GraphPage checkGraphAttributes(String name, String title, String version) {
         graphNameInput.shouldHave(Condition.exactValue(name));
         graphTitleInput.shouldHave(Condition.exactValue(title));
@@ -123,11 +151,15 @@ public class GraphPage {
         return new GraphPage();
     }
 
-    public GraphsListPage deleteGraph() {
+    @Step("Открытие диалога удаления графа")
+    public DeleteDialog openDeleteDialog() {
         deleteButton.click();
-        String id = graphId.getText();
-        idInput.setValue(id);
-        confirmDeleteButton.click();
-        return new GraphsListPage();
+        return new DeleteDialog();
+    }
+
+    @Step("Удаление графа")
+    public void deleteGraph() {
+        deleteButton.click();
+        new DeleteDialog().inputValidId();
     }
 }

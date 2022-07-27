@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.ServiceSteps.getServiceList;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -34,8 +35,8 @@ public class ServiceListTest extends Tests {
     @DisplayName("Получение списка сервисов")
     @TmsLink("643450")
     @Test
-    public void getServiceList() {
-        List<ItemImpl> list = steps.getProductObjectList(GetServiceListResponse.class);
+    public void getServiceListTest() {
+        List<ItemImpl> list = getServiceList();
         assertTrue(steps.isSorted(list), "Список не отсортирован.");
     }
 

@@ -4,48 +4,42 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
+import ui.elements.Table;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class BaseSteps {
+public class BaseList {
 
-    private static final SelenideElement id = $x("//form//p//b");
-    private static final SelenideElement idInput = $x("//input[@name = 'id']");
-    private static final SelenideElement confirmDeleteButton = $x("//form//span[text()='Удалить']/parent::button");
-
-    public static void confirmDelete() {
-        idInput.setValue(id.getText());
-        confirmDeleteButton.click();
-    }
-
-    public static void checkSortingByStringField(String header, int columnNumber) {
+    public static void checkSortingByStringField(String header) {
+        Table table = new Table(header);
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
         SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        String firstValue = $x("//tbody//tr[1]//td[" + columnNumber + "]").getValue();
-        String lastValue = $x("//tbody//tr[last()]//td[" + columnNumber + "]").getValue();
+        String firstValue = table.getValueByColumnInFirstRow(header).getValue();
+        String lastValue = table.getValueByColumnInRow(table.getRows().size() - 1, header).getValue();
         Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) > 0);
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        firstValue = $x("//tbody//tr[1]//td[" + columnNumber + "]").getValue();
-        lastValue = $x("//tbody//tr[last()]//td[" + columnNumber + "]").getValue();
+        firstValue = table.getValueByColumnInFirstRow(header).getValue();
+        lastValue = table.getValueByColumnInRow(table.getRows().size() - 1, header).getValue();
         Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) < 0);
     }
 
-    public static void checkSortingByDateField(String header, int columnNumber) {
+    public static void checkSortingByDateField(String header) {
+        Table table = new Table(header);
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
         SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        String firstDateString = $x("//tbody//tr[1]//td[" + columnNumber + "]").getValue();
-        String lastDateString = $x("//tbody//tr[last()]//td[" + columnNumber + "]").getValue();
+        String firstDateString = table.getValueByColumnInFirstRow(header).getValue();
+        String lastDateString = table.getValueByColumnInRow(table.getRows().size() - 1, header).getValue();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSSSSSxxx");
         LocalDateTime firstDate = LocalDateTime.parse(firstDateString, formatter);
         LocalDateTime lastDate = LocalDateTime.parse(lastDateString, formatter);
@@ -53,8 +47,8 @@ public class BaseSteps {
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        firstDateString = $x("//tbody//tr[1]//td[" + columnNumber + "]").getValue();
-        lastDateString = $x("//tbody//tr[last()]//td[" + columnNumber + "]").getValue();
+        firstDateString = table.getValueByColumnInFirstRow(header).getValue();
+        lastDateString = table.getValueByColumnInRow(table.getRows().size() - 1, header).getValue();
         firstDate = LocalDateTime.parse(firstDateString, formatter);
         lastDate = LocalDateTime.parse(lastDateString, formatter);
         Assertions.assertTrue(lastDate.isBefore(firstDate) || lastDate.isEqual(firstDate));

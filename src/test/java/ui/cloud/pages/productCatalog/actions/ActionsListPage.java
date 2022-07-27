@@ -3,8 +3,9 @@ package ui.cloud.pages.productCatalog.actions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
-import ui.elements.DeleteDialog;
+import ui.cloud.tests.productCatalog.DeleteDialog;
 import ui.elements.Table;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -54,6 +55,7 @@ public class ActionsListPage {
     @Step("Открытие формы действия")
     public ActionPage openActionForm(String name) {
         new Table(NAME_COLUMN).getRowElementByColumnValue(NAME_COLUMN, name).click();
+        TestUtils.wait(1000);
         return new ActionPage();
     }
 

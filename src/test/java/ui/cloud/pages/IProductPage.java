@@ -148,7 +148,7 @@ public abstract class IProductPage {
     public void checkErrorByStatus(String status) {
         if (status.equals(ProductStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
-                    product, status, StateServiceSteps.GetErrorFromStateService(product.getOrderId())));
+                    product, status, StateServiceSteps.getErrorFromStateService(product.getOrderId())));
         }
     }
 

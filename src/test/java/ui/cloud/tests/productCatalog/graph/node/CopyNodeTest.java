@@ -27,8 +27,7 @@ public class CopyNodeTest extends GraphBaseTest {
 
     @Test
     @TmsLink("831590")
-    @DisplayName("Копирование узла графа")
-    @Disabled
+    @DisplayName("Копирование узла с подграфом")
     public void copyGraphNode() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
         new IndexPage().goToGraphsPage()

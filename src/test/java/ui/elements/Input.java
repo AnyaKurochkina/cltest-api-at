@@ -6,7 +6,7 @@ import org.openqa.selenium.Keys;
 
 import static core.helper.StringUtils.$x;
 
-public class Input implements TypifiedElement{
+public class Input implements TypifiedElement {
     SelenideElement input;
 
     public Input(SelenideElement input) {
@@ -17,18 +17,17 @@ public class Input implements TypifiedElement{
         return new Input($x("//label[starts-with(.,'{}')]/parent::*//input", label));
     }
 
-    public void click(){
+    public void click() {
         input.click();
     }
 
-    public void setValue(String value){
+    public void setValue(String value) {
         input.shouldBe(Condition.visible).shouldBe(Condition.enabled);
-        input.sendKeys(Keys.CONTROL + "A");
-        input.sendKeys(Keys.BACK_SPACE);
+        input.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         input.setValue(value);
     }
 
-    public String getValue(){
+    public String getValue() {
         input.shouldBe(Condition.visible);
         return input.getValue();
     }

@@ -3,7 +3,6 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import lombok.SneakyThrows;
 import ui.elements.Input;
 import ui.elements.InputFile;
 
@@ -58,13 +57,6 @@ public class OrgDirectionsListPage {
     public OrgDirectionsListPage deleteActionMenu(String dirName) {
         $x("//td[text() = '" + dirName + "']//ancestor::tr//*[@id = 'actions-menu-button']").click();
         deleteAction.click();
-        return this;
-    }
-
-    @SneakyThrows
-    public OrgDirectionsListPage exportActionMenu(String dirName) {
-        $x("//td[text() = '" + dirName + "']//ancestor::tr//*[@id = 'actions-menu-button']").click();
-        exportAction.download();
         return this;
     }
 

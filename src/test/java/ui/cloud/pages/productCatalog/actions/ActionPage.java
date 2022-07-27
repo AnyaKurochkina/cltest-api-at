@@ -3,14 +3,14 @@ package ui.cloud.pages.productCatalog.actions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import ui.elements.DeleteDialog;
+import ui.cloud.tests.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
-import ui.elements.SaveDialog;
+import ui.cloud.tests.productCatalog.SaveDialog;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -29,10 +29,12 @@ public class ActionPage {
     private final SelenideElement cancelButton = $x("//button/span[text() = 'Отмена']");
     private final SelenideElement inputGraphTitle = $x("//*[@id='selectValueWrapper']");
     private final SelenideElement deleteButton = $x("//span[text() ='Удалить']");
+    private final SelenideElement currentVersionInput = $x("//label[starts-with(.,'Выберите версию')]/parent::*//input");
 
 
     public ActionPage() {
         actionsListLink.shouldBe(Condition.visible);
+        info.shouldBe(Condition.visible);
     }
 
     @Step("Возврат на страницу списка Действий")
@@ -47,6 +49,14 @@ public class ActionPage {
         return new DeleteDialog();
     }
 
+    @Step("Изменение версии графа")
+    public ActionPage changeGraphVersion(String value) {
+        graphTab.click();
+        DropDown.byLabel("Значение").selectByTitle(value);
+      //  $x("//label[text() = 'Значение']/parent::div//select").selectOptionByValue("1.0.0");
+        return this;
+    }
+
     @Step("Сохранение действия")
     public SaveDialog saveAction() {
         saveButton.shouldBe(Condition.enabled).click();
@@ -55,7 +65,7 @@ public class ActionPage {
 
     @Step("Проверка текущей версии")
     public boolean checkVersion(String version) {
-        String currentVersion = Input.byLabel("Выберите версию").getValue();
+        String currentVersion = currentVersionInput.getValue();
         return currentVersion.equals(version);
     }
 
@@ -68,7 +78,6 @@ public class ActionPage {
     @Step("Запонение полей для создания действия и сохранение")
     public ActionsListPage fillAndSave(String name, String title, String description, ItemStatus status, OrderStatus orderStatus, ActionType actionType,
                                        String configPath, String configKey, String valueOfData, String graphTitle) {
-        info.shouldBe(Condition.visible);
         inputNameField.setValue(name);
         inputTitleField.setValue(title);
         inputDescriptionField.setValue(description);
