@@ -87,44 +87,44 @@ public class UiPostgreSQLTest extends Tests {
 //        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getCostOrder(), 0.01);
 //    }
 
-    @Test
-    @TmsLink("1076804")
-    @Order(2)
-    @DisplayName("UI PostgreSQL. Проверка заголовка столбцов в Истории действий.")
-    void checkHeaderHistoryTable() {
-        PostgreSqlPage pSqlPage = new PostgreSqlPage(product);
-        pSqlPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
-        pSqlPage.getBtnHistory().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        pSqlPage.checkHeadersHistory();
-    }
+//    @Test
+//    @TmsLink("1076804")
+//    @Order(2)
+//    @DisplayName("UI PostgreSQL. Проверка заголовка столбцов в Истории действий.")
+//    void checkHeaderHistoryTable() {
+//        PostgreSqlPage pSqlPage = new PostgreSqlPage(product);
+//        pSqlPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
+//        pSqlPage.getBtnHistory().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+//        pSqlPage.checkHeadersHistory();
+//    }
 
-    @Test
-    @TmsLink("1076809")
-    @Order(3)
-    @DisplayName("UI PostgreSQL. Проверка элемента 'Схема выполнения'")
-    void checkHistoryGraphScheme() {
-        PostgreSqlPage pSqlPage = new PostgreSqlPage(product);
-        pSqlPage.getBtnHistory().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
-        pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new EntitiesUtils().checkGraphScheme(null);
-    }
+//    @Test
+//    @TmsLink("1076809")
+//    @Order(3)
+//    @DisplayName("UI PostgreSQL. Проверка элемента 'Схема выполнения'")
+//    void checkHistoryGraphScheme() {
+//        PostgreSqlPage pSqlPage = new PostgreSqlPage(product);
+//        pSqlPage.getBtnHistory().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
+//        pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+//        new EntitiesUtils().checkGraphScheme(null);
+//    }
 
-    @Test
-    @TmsLink("2023")
-    @Order(4)
-    @DisplayName("UI PostgreSQL. Проверка 'Защита от удаления'")
-    void checkProtectOrder() {
-        PostgreSqlPage pSqlPage = new PostgreSqlPage(product);
-        pSqlPage.switchProtectOrder("Защита от удаления включена");
-        pSqlPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
-        {
-            Dialog dlgActions = new Dialog("Удаление");
-            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
-        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
-        Selenide.refresh();
-        pSqlPage.switchProtectOrder("Защита от удаления выключена");
-    }
+//    @Test
+//    @TmsLink("2023")
+//    @Order(4)
+//    @DisplayName("UI PostgreSQL. Проверка 'Защита от удаления'")
+//    void checkProtectOrder() {
+//        PostgreSqlPage pSqlPage = new PostgreSqlPage(product);
+//        pSqlPage.switchProtectOrder("Защита от удаления включена");
+//        pSqlPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
+//        {
+//            Dialog dlgActions = new Dialog("Удаление");
+//            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
+//        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
+//        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
+//        Selenide.refresh();
+//        pSqlPage.switchProtectOrder("Защита от удаления выключена");
+//    }
 
 //    @Test
 //    @Order(5)
@@ -135,25 +135,25 @@ public class UiPostgreSQLTest extends Tests {
 //        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::restart);
 //    }
 
-//    @Test
-//    @Order(6)
-//    @TmsLink("109449")
-//    @DisplayName("UI PostgreSQL. Расширить диск")
-//    void expandDisk() {
-//        Assumptions.assumeFalse("OpenStack".equals(product.getPlatform()), "Тест отключен для платформы OpenStack");
-//        PostgreSqlPage pSqlPage = new PostgreSqlPage(product);
-//        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.expandDisk("", "20"));
-//    }
-
     @Test
-    @Order(7)
-    @TmsLink("647428")
-    @DisplayName("UI PostgreSQL. Изменить конфигурацию")
-    void changeConfiguration() {
+    @Order(6)
+    @TmsLink("109449")
+    @DisplayName("UI PostgreSQL. Расширить диск")
+    void expandDisk() {
+      //  Assumptions.assumeFalse("OpenStack".equals(product.getPlatform()), "Тест отключен для платформы OpenStack");
         PostgreSqlPage pSqlPage = new PostgreSqlPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
-
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.expandDisk("Дополнительные точки монтирования", "20"));
     }
+
+//    @Test
+//    @Order(7)
+//    @TmsLink("647428")
+//    @DisplayName("UI PostgreSQL. Изменить конфигурацию")
+//    void changeConfiguration() {
+//        PostgreSqlPage pSqlPage = new PostgreSqlPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
+//
+//    }
 
 
 }

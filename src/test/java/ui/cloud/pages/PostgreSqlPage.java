@@ -16,11 +16,12 @@ import static core.helper.StringUtils.$x;
 public class PostgreSqlPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
-    private static final String HEADER_PATH = "";
+    private static final String HEADER_PATH = "Файловая система";
     private static final String HEADER_DISK_SIZE = "";
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
+    SelenideElement linkPostgreSQL = $x("//a[text()='PostgreSQL']");
 
     public PostgreSqlPage(PostgreSQL product) {
         super(product);
@@ -41,19 +42,20 @@ public class PostgreSqlPage extends IProductPage {
         new PostgreSqlPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-//    public void expandDisk(String name, String size) {
-//        new PostgreSqlPage.VirtualMachineTable().checkPowerStatus(PostgreSqlPage.VirtualMachineTable.POWER_STATUS_ON);
-//        firstVm.shouldBe(Condition.enabled).click();
-//        runActionWithParameters(getBtnAction, "Расширить диск", "Подтвердить", () -> {
-//            Input.byLabel("Итоговый объем дискового пространства, Гб").setValue(size);
-//        });
-//        btnGeneralInfo.shouldBe(Condition.enabled).click();
-//        Assertions.assertEquals(size, new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_DISK_SIZE),
-//                "Неверный размер диска");
-//    }
+    public void expandDisk(String name, String size) {
+        new PostgreSqlPage.VirtualMachineTable().checkPowerStatus(PostgreSqlPage.VirtualMachineTable.POWER_STATUS_ON);
+        firstVm.shouldBe(Condition.enabled).click();
+        runActionWithParameters(getDiskMenuElement(name), "Расширить", "Подтвердить", () -> {
+            Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size);
+        });
+        //linkPostgreSQL.scrollIntoView(true).shouldBe(Condition.enabled).click();
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        Assertions.assertEquals(size, new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_DISK_SIZE),
+                "Неверный размер диска");
+    }
 
     public void changeConfiguration() {
-        new PostgreSqlPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_OFF);
+        new PostgreSqlPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
@@ -61,8 +63,9 @@ public class PostgreSqlPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
+
     private SelenideElement getDiskMenuElement(String name) {
-        return new Table(HEADER_CONNECT_STATUS).getRowElementByColumnValue(HEADER_PATH, name).$("button");
+        return getTableByHeader(name).getRowElementByColumnValue(HEADER_PATH, "xfs").$("button");
     }
 
     public class VirtualMachineTable extends VirtualMachine {
