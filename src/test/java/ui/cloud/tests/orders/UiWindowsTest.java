@@ -17,6 +17,7 @@ import ui.cloud.pages.*;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
+import ui.elements.Graph;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
 
@@ -104,7 +105,7 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         winPage.getBtnHistory().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         winPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new EntitiesUtils().checkGraphScheme(null);
+        new Graph().checkGraph();
     }
 
     @Test

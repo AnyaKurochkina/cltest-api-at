@@ -60,9 +60,8 @@ public class WindowsPage extends IProductPage {
 
     public void expandDisk(String name, String size) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(getDiskMenuElement(name), "Расширить диск", "Подтвердить", () -> {
-            Input.byLabel("Итоговый объем дискового пространства, Гб").setValue(size);
-        });
+        runActionWithParameters(getDiskMenuElement(name), "Расширить диск", "Подтвердить",
+                () -> Input.byLabel("Итоговый объем дискового пространства, Гб").setValue(size));
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         Assertions.assertEquals(size, new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
