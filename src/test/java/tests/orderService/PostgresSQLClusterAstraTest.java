@@ -17,8 +17,9 @@ import tests.Tests;
 @Feature("PostgresSQL Cluster Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresSqlClusterAstra"), @Tag("prod")})
 public class PostgresSQLClusterAstraTest extends Tests {
-    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
+//    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
     static final String productName = "PostgreSQL Cluster Astra Linux";
+    static final String dbName = "db_name";
 
     @TmsLink("810039")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -48,7 +49,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     void createDb(PostgresSQLCluster product) {
         product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd", adminPassword);
+            postgres.createDb(dbName);
         }
     }
 
@@ -59,10 +60,8 @@ public class PostgresSQLClusterAstraTest extends Tests {
     void checkBdConnection(PostgresSQLCluster product) {
         product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            String db = "bd_for_check_connect";
-            postgres.createDb(db, adminPassword);
-            postgres.checkConnection(db, adminPassword);
-            postgres.removeDb(db);
+            postgres.createDb(dbName);
+            postgres.checkConnection(dbName);
         }
     }
 
@@ -73,7 +72,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     void createDbmsUser(PostgresSQLCluster product) {
         product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd", adminPassword);
+            postgres.createDb(dbName);
             postgres.createDbmsUser("testchelik1", "user", "cached_bd");
         }
     }
@@ -85,8 +84,8 @@ public class PostgresSQLClusterAstraTest extends Tests {
     void resetPassword(PostgresSQLCluster product) {
         product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd", adminPassword);
-            postgres.createDbmsUser("chelikforreset1", "user", "cached_bd");
+            postgres.createDb(dbName);
+            postgres.createDbmsUser("chelikforreset1", "user", dbName);
             postgres.resetPassword("chelikforreset1");
         }
     }
@@ -98,8 +97,8 @@ public class PostgresSQLClusterAstraTest extends Tests {
     void removeDbmsUser(PostgresSQLCluster product) {
         product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd", adminPassword);
-            postgres.createDbmsUser("chelikforremove2", "user", "cached_bd");
+            postgres.createDb(dbName);
+            postgres.createDbmsUser("chelikforremove2", "user", dbName);
             postgres.removeDbmsUser("chelikforremove2", "cached_bd");
 //            postgres.removeDb("cached_bd");
         }
@@ -112,8 +111,8 @@ public class PostgresSQLClusterAstraTest extends Tests {
     void resetDbOwnerPassword(PostgresSQLCluster product) {
         product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd", adminPassword);
-            postgres.resetDbOwnerPassword("cached_bd");
+            postgres.createDb(dbName);
+            postgres.resetDbOwnerPassword(dbName);
         }
     }
 
@@ -124,8 +123,8 @@ public class PostgresSQLClusterAstraTest extends Tests {
     void removeDb(PostgresSQLCluster product) {
         product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb("cached_bd", adminPassword);
-            postgres.removeDb("cached_bd");
+            postgres.createDb(dbName);
+            postgres.removeDb(dbName);
         }
     }
 
