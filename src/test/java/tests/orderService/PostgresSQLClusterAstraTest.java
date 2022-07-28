@@ -73,7 +73,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
         product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb(dbName);
-            postgres.createDbmsUser("testchelik1", "user", "cached_bd");
+            postgres.createDbmsUser("testchelik1", "user", dbName);
         }
     }
 
@@ -99,7 +99,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb(dbName);
             postgres.createDbmsUser("chelikforremove2", "user", dbName);
-            postgres.removeDbmsUser("chelikforremove2", "cached_bd");
+            postgres.removeDbmsUser("chelikforremove2", dbName);
 //            postgres.removeDb("cached_bd");
         }
     }
