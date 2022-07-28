@@ -107,29 +107,29 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        new Graph().checkGraph();
 //    }
 
-    @Test
-    @TmsLink("2023")
-    @Order(4)
-    @DisplayName("UI PostgreSQLAstra. Проверка 'Защита от удаления'")
-    void checkProtectOrder() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.switchProtectOrder("Защита от удаления включена");
-        pSqlPage.runActionWithParameters("Приложение", "Удалить рекурсивно", "Удалить", () ->
-        {
-            Dialog dlgActions = new Dialog("Удаление");
-            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
-        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
-        Selenide.refresh();
-        pSqlPage.switchProtectOrder("Защита от удаления выключена");
-    }
+//    @Test
+//    @TmsLink("2023")
+//    @Order(4)
+//    @DisplayName("UI PostgreSQLAstra. Проверка 'Защита от удаления'")
+//    void checkProtectOrder() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.switchProtectOrder("Защита от удаления включена");
+//        pSqlPage.runActionWithParameters("Приложение", "Удалить рекурсивно", "Удалить", () ->
+//        {
+//            Dialog dlgActions = new Dialog("Удаление");
+//            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
+//        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
+//        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
+//        Selenide.refresh();
+//        pSqlPage.switchProtectOrder("Защита от удаления выключена");
+//    }
 
 //    @Test
 //    @Order(5)
 //    @TmsLink("14506")
 //    @DisplayName("UI PostgreSQLAstra. Перезагрузить по питанию")
 //    void restart() {
-//        PostgreSqlPage pSqlPage = new PostgreSqlPage(product);
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
 //        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::restart);
 //    }
 
