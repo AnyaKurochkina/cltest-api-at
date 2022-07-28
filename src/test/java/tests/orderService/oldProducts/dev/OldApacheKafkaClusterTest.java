@@ -84,36 +84,36 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.deleteTopics(Arrays.asList("PacketTopicName01", "PacketTopicName02", "PacketTopicName03"));
     }
 
-    @Order(5)
-    @TmsLink("841728")
-    @DisplayName("Проверить создание ВМ Kafka")
-    @Test
-    void consume() {
-        if (kafka.productStatusIs(STOPPED)) {
-            kafka.start();
-        }
-        String message = "This message from autotest";
-        String topicName = "PacketTopicNameForAcl5";
-        try {
-            kafka.createTopics(Collections.singletonList(topicName));
-            kafka.createAcl(topicName, PRODUCER);
-            kafka.createAcl(topicName, CONSUMER);
-            CustomKafkaConsumer consumer = kafka.consumeMessage(topicName);
-            kafka.produceMessage(topicName, message);
-            List<ConsumerRecord<String, String>> consumerRecords = consumer.getConsumerRecordList();
-            log.info(String.format("Сообщения из топика %s : %s", topicName, consumerRecords));
-            Assertions.assertTrue(
-                    consumerRecords.stream().anyMatch(record -> record.value().equals(message)),
-                    "Сообщения в топике отсутствуют");
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail(e.getMessage() + " ," + e.getCause());
-        } finally {
-            kafka.deleteAcl(topicName, CONSUMER);
-            kafka.deleteAcl(topicName, PRODUCER);
-            kafka.deleteTopics(Collections.singletonList(topicName));
-        }
-    }
+//    @Order(5)
+//    @TmsLink("841728")
+//    @DisplayName("Проверить создание ВМ Kafka")
+//    @Test
+//    void consume() {
+//        if (kafka.productStatusIs(STOPPED)) {
+//            kafka.start();
+//        }
+//        String message = "This message from autotest";
+//        String topicName = "PacketTopicNameForAcl5";
+//        try {
+//            kafka.createTopics(Collections.singletonList(topicName));
+//            kafka.createAcl(topicName, PRODUCER);
+//            kafka.createAcl(topicName, CONSUMER);
+//            CustomKafkaConsumer consumer = kafka.consumeMessage(topicName);
+//            kafka.produceMessage(topicName, message);
+//            List<ConsumerRecord<String, String>> consumerRecords = consumer.getConsumerRecordList();
+//            log.info(String.format("Сообщения из топика %s : %s", topicName, consumerRecords));
+//            Assertions.assertTrue(
+//                    consumerRecords.stream().anyMatch(record -> record.value().equals(message)),
+//                    "Сообщения в топике отсутствуют");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            fail(e.getMessage() + " ," + e.getCause());
+//        } finally {
+//            kafka.deleteAcl(topicName, CONSUMER);
+//            kafka.deleteAcl(topicName, PRODUCER);
+//            kafka.deleteTopics(Collections.singletonList(topicName));
+//        }
+//    }
 
     @Order(6)
     @TmsLink("841717")
