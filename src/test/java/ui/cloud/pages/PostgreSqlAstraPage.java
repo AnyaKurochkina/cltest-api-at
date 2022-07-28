@@ -3,7 +3,7 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import models.orderService.products.PostgreSQL;
-import models.orderService.products.Windows;
+import models.orderService.products.PostgreSQLAstra;
 import models.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import ui.elements.Dialog;
@@ -13,7 +13,7 @@ import ui.elements.Table;
 
 import static core.helper.StringUtils.$x;
 
-public class PostgreSqlPage extends IProductPage {
+public class PostgreSqlAstraPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
     private static final String HEADER_PATH = "Файловая система";
@@ -23,7 +23,7 @@ public class PostgreSqlPage extends IProductPage {
     SelenideElement ram = $x("(//h5)[2]");
     SelenideElement linkPostgreSQL = $x("//a[text()='PostgreSQL']");
 
-    public PostgreSqlPage(PostgreSQL product) {
+    public PostgreSqlAstraPage(PostgreSQLAstra product) {
         super(product);
     }
 
@@ -33,17 +33,17 @@ public class PostgreSqlPage extends IProductPage {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new PostgreSqlPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void restart() {
-        new PostgreSqlPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Перезагрузить");
-        new PostgreSqlPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void expandDisk(String name, String size) {
-        new PostgreSqlPage.VirtualMachineTable().checkPowerStatus(PostgreSqlPage.VirtualMachineTable.POWER_STATUS_ON);
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         firstVm.shouldBe(Condition.enabled).click();
         runActionWithParameters(getDiskMenuElement(name), "Расширить", "Подтвердить", () -> {
             Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size);
@@ -55,7 +55,7 @@ public class PostgreSqlPage extends IProductPage {
     }
 
     public void changeConfiguration() {
-        new PostgreSqlPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
