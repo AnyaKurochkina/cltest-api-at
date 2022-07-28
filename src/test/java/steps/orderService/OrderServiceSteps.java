@@ -360,10 +360,10 @@ public class OrderServiceSteps extends Steps {
         //Получаем все item name
         item.setName(jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.name", action, action)));
         //Достаем item ID и item name и сохраняем в объект Item
-        if (item.getId() == null) {
-            item.setId(jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action)));
-            item.setName(jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.actions.find{it.name.contains('%s')}.name", action, action)));
-        }
+//        if (item.getId() == null) {
+//            item.setId(jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action)));
+//            item.setName(jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.actions.find{it.name.contains('%s')}.name", action, action)));
+//        }
 
         Assertions.assertNotNull(item.getId(), "Action '" + action + "' не найден у продукта " + product.getProductName());
         return item;
