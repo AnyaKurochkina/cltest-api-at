@@ -91,7 +91,7 @@ public class PostgresSQLCluster extends IProduct {
 
     //Расширить
     public void expandMountPoint() {
-        expandMountPoint("expand_mount_point_new", "/app/etcd", 10);
+        expandMountPoint("expand_mount_point_postgresql_pgdata", "/pg_data", 11);
     }
 
     public void createDb(String dbName) {
