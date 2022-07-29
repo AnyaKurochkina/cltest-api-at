@@ -1,0 +1,66 @@
+{
+  "order": {
+    "project_name": "proj-rddf0uwi0q",
+    "product_id": "c462d915-61af-402f-ac51-63afaa46eee5",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 4,
+        "name": "c4m8",
+        "uuid": "1498c9c9-5f20-4c1e-8d53-683bb8c2c205",
+        "memory": 8
+      },
+      "platform": "OpenStack",
+      "boot_disk": {
+        "size": 30
+      },
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "8.4",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "extra_mounts": [
+        {
+          "path": "/app",
+          "size": 30,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_integration": true,
+      "local_executor": false,
+      "airflow_version": "1.10.12",
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-zorg-st-group"
+          ]
+        }
+      ],
+      "web_console_grants": [
+        {
+          "groups": [
+            "cloud-zorg-st-group"
+          ]
+        }
+      ],
+      "additional_config": {
+        "rabbitmq_config": {
+          "broker_host": "rabbit",
+          "broker_vhost": "rabbitVhost",
+          "rabbitmq_cert_CN": "rabbitCn"
+        },
+        "postgresql_config": {
+          "db_host": "postgresBd",
+          "db_user": "bdUser",
+          "db_database": "bdname",
+          "db_password": "bdPassword"
+        }
+      }
+    },
+    "count": 1,
+    "label": "Apache Airflow"
+  }
+}

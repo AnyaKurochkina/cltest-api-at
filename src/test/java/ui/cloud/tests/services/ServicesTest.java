@@ -2,6 +2,7 @@ package ui.cloud.tests.services;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
@@ -31,6 +32,7 @@ public class ServicesTest extends Tests {
     }
 
     @Test
+    @TmsLink("706965")
     @DisplayName("Сервисы. Запуск Smoke TEST")
     void runSmokeTest() {
         SmokeTestPage smokeTestPage = new SmokeTestPage();
@@ -40,6 +42,7 @@ public class ServicesTest extends Tests {
     }
 
     @Test
+    @TmsLink("842450")
     @DisplayName("Сервисы. Запуск Smoke TEST linear")
     void runSmokeTestLinear() {
         SmokeLinearTestPage smokeLinearTestPage = new SmokeLinearTestPage();

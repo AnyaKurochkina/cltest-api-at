@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import tests.Tests;
 
+@Deprecated
 @Epic("Продукты")
 @Feature("Rhel")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("rhel"), @Tag("prod")})

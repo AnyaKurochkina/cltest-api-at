@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.products.Rhel;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.util.Iterator;
@@ -59,9 +58,9 @@ public class ObjectPoolEntity {
         JsonNode jsonNodeThat = mapper.readTree(that);
         removeEmptyNode(jsonNodeThis);
         removeEmptyNode(jsonNodeThat);
-        removeNode(jsonNodeThis, jsonNodeThat);
-        if (o instanceof Rhel)
-            log.warn("jsonNodeThis '{}',  jsonNodeThat '{}' : {}", jsonNodeThis, jsonNodeThat, Objects.equals(jsonNodeThis, jsonNodeThat));
+        removeNode(removeSystemNode(jsonNodeThis), removeSystemNode(jsonNodeThat));
+//        if (o instanceof Rhel)
+//            log.warn("jsonNodeThis '{}',  jsonNodeThat '{}' : {}", jsonNodeThis, jsonNodeThat, Objects.equals(jsonNodeThis, jsonNodeThat));
         return Objects.equals(jsonNodeThis, jsonNodeThat);
     }
 
@@ -92,6 +91,20 @@ public class ObjectPoolEntity {
                 node.remove();
             }
         }
+    }
+
+    private JsonNode removeSystemNode(JsonNode jsonNode) {
+        Iterator<Map.Entry<String, JsonNode>> node = jsonNode.fields();
+        while (node.hasNext()) {
+            Map.Entry<String, JsonNode> entry = node.next();
+            if (entry.getKey().equals("configurationId")) {
+                node.remove();
+            }
+            if (entry.getKey().equals("uuid")) {
+                node.remove();
+            }
+        }
+        return jsonNode;
     }
 
     @ResourceLock(value = "entity", mode = READ)

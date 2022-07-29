@@ -30,7 +30,15 @@ public class Table implements TypifiedElement {
     public Table(String columnName) {
         open();
         table = $x("//table[thead/tr/th[.='{}']]", columnName).shouldBe(Condition.visible);
+        init(table);
+    }
 
+    public Table(SelenideElement table) {
+        open();
+        init(table);
+    }
+
+    public void init(SelenideElement table){
         $x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]").shouldNot(Condition.exist);
         $x("//table[contains(.,'Идет обработка данных')]").shouldNot(Condition.exist);
 

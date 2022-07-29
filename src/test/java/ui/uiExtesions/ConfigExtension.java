@@ -20,7 +20,7 @@ public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, In
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
         SelenideLogger.addListener("AllureSelenide",
-                new AllureSelenide().screenshots(true).savePageSource(true));
+                new AllureSelenide().screenshots(false).savePageSource(false));
         LoggingPreferences logs = new LoggingPreferences();
         logs.enable(LogType.BROWSER, Level.ALL);
         Configuration.browserCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);

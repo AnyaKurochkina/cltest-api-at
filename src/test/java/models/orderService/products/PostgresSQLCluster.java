@@ -43,6 +43,7 @@ public class PostgresSQLCluster extends IProduct {
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
+    private String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
 
     @Override
     @Step("Заказ продукта")
@@ -90,21 +91,21 @@ public class PostgresSQLCluster extends IProduct {
 
     //Расширить
     public void expandMountPoint() {
-        expandMountPoint("expand_mount_point_new", "/app/etcd", 10);
+        expandMountPoint("expand_mount_point_postgresql_pgdata", "/pg_data", 11);
     }
 
-    public void createDb(String dbName, String dbAdminPass) {
+    public void createDb(String dbName) {
         if (database.contains(new Db(dbName)))
             return;
-        OrderServiceSteps.executeAction("postgresql_cluster_create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, dbAdminPass)), this.getProjectId());
+        OrderServiceSteps.executeAction("postgresql_cluster_create_db", this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, adminPassword)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем" + dbName);
         database.add(new Db(dbName));
         log.info("database = " + database);
         save();
     }
 
-    public void checkConnection(String dbName, String password) {
-        checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)).split(",")[0]);
+    public void checkConnection(String dbName) {
+        checkConnectDb(dbName, dbName + "_admin", adminPassword, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)).split(",")[0]);
     }
 
     //Удалить БД
@@ -136,8 +137,8 @@ public class PostgresSQLCluster extends IProduct {
     //Сбросить пароль владельца
     public void resetDbOwnerPassword(String dbName) {
         Assertions.assertTrue(database.stream().anyMatch(db -> db.getNameDB().equals(dbName)), String.format("Базы %s не существует", dbName));
-        String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("postgresql_cluster_reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", dbName + "_admin", password)), this.getProjectId());
+        adminPassword = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
+        OrderServiceSteps.executeAction("postgresql_cluster_reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", dbName + "_admin", adminPassword)), this.getProjectId());
     }
 
     //Удалить пользователя

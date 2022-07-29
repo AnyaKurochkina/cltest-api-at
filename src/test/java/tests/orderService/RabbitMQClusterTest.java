@@ -5,7 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.orderService.products.RabbitMQCluster;
+import models.orderService.products.RabbitMQClusterAstra;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -29,9 +29,9 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLink("377645")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
-    void create(RabbitMQCluster product) {
+    void create(RabbitMQClusterAstra product) {
         //noinspection EmptyTryBlock
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
         }
     }
 
@@ -39,8 +39,8 @@ public class RabbitMQClusterTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
-    void expandMountPoint(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
+    void expandMountPoint(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.expandMountPoint();
         }
     }
@@ -49,8 +49,8 @@ public class RabbitMQClusterTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверить конфигурацию {0}")
-    void refreshVmConfig(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
+    void refreshVmConfig(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.refreshVmConfig();
         }
     }
@@ -59,8 +59,8 @@ public class RabbitMQClusterTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
-    void restart(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
+    void restart(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.restart();
         }
     }
@@ -69,8 +69,8 @@ public class RabbitMQClusterTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
-    void stopSoft(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
+    void stopSoft(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.stopSoft();
             rabbit.start();
         }
@@ -80,8 +80,8 @@ public class RabbitMQClusterTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать пользователя RabbitMQ {0}")
-    void createUser(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
+    void createUser(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.rabbitmqCreateUser("testapiuser");
         }
     }
@@ -90,8 +90,8 @@ public class RabbitMQClusterTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
-    void updateCerts(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbitMQCluster = product.createObjectExclusiveAccess()) {
+    void updateCerts(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbitMQCluster = product.createObjectExclusiveAccess()) {
             rabbitMQCluster.updateCerts();
         }
     }
@@ -100,8 +100,8 @@ public class RabbitMQClusterTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание/Удаление vhosts {0}")
-    void deleteVhostAccessVhost(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
+    void deleteVhostAccessVhost(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             List<String> vhosts = Stream.generate(new Generex("[a-zA-Z0-9]{2,16}")::random)
                     .limit(new Random().nextInt(14) + 1).distinct().collect(Collectors.toList());
             rabbit.addVhost(vhosts);
@@ -113,8 +113,8 @@ public class RabbitMQClusterTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавление/Удаление прав на vhost {0}")
-    void addVhostAccess(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
+    void addVhostAccess(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.rabbitmqCreateUser("vhostUser");
             rabbit.addVhost(Collections.singletonList("vhostAccess"));
             rabbit.addVhostAccess("vhostUser", Arrays.asList("READ", "WRITE", "CONFIGURE"), "vhostAccess");
@@ -126,8 +126,8 @@ public class RabbitMQClusterTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
-    void stopHard(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
+    void stopHard(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.stopHard();
             rabbit.start();
         }
@@ -137,8 +137,8 @@ public class RabbitMQClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
-    void delete(RabbitMQCluster product) {
-        try (RabbitMQCluster rabbit = product.createObjectExclusiveAccess()) {
+    void delete(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.deleteObject();
         }
     }

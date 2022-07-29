@@ -17,6 +17,7 @@ import ui.cloud.pages.*;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
+import ui.elements.Graph;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
 
@@ -104,7 +105,7 @@ public class UiWindowsTest extends Tests {
         WindowsPage winPage = new WindowsPage(product);
         winPage.getBtnHistory().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         winPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new EntitiesUtils().checkGraphScheme(null);
+        new Graph().checkGraph();
     }
 
     @Test
@@ -138,7 +139,7 @@ public class UiWindowsTest extends Tests {
     @TmsLink("233926")
     @DisplayName("UI Windows. Расширить диск")
     void expandDisk() {
-        Assumptions.assumeTrue("OpenStack".equals(product.getPlatform()), "Тест отключен для платформы OpenStack");
+        Assumptions.assumeFalse("OpenStack".equals(product.getPlatform()), "Тест отключен для платформы OpenStack");
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("N", "15"));
         winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.expandDisk("N", "20"));

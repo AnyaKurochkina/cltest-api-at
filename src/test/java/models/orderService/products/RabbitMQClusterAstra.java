@@ -27,7 +27,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class RabbitMQCluster extends IProduct {
+public class RabbitMQClusterAstra extends IProduct {
     private final static String RABBITMQ_USER = "data.find{it.type=='cluster'}.data.config.users.any{it.name=='%s'}";
     private final static String RABBIT_CLUSTER_VHOST = "data.find{it.data.config.containsKey('vhosts')}.data.config.vhosts.any{it.name=='%s'}";
     private final static String RABBIT_CLUSTER_VHOST_ACCESS = "data.find{it.data.config.containsKey('vhost_access')}.data.config.vhost_access.any{it.vhost_name=='%s'}";
@@ -51,7 +51,7 @@ public class RabbitMQCluster extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/rabbitmq_cluster.json";
-        productName = "RabbitMQ Cluster";
+        productName = "RabbitMQ Cluster Astra";
         role = "administrator";
         initProduct();
         if (flavor == null)
