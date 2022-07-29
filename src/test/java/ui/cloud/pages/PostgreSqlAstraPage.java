@@ -21,7 +21,7 @@ public class PostgreSqlAstraPage extends IProductPage {
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
-    SelenideElement linkPostgreSQL = $x("//a[text()='PostgreSQL']");
+    SelenideElement linkPostgreSQL = $x("//a[text()='PostgreSqlAstra']");
 
     public PostgreSqlAstraPage(PostgreSQLAstra product) {
         super(product);
@@ -60,9 +60,12 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
         btnGeneralInfo.shouldBe(Condition.enabled).click();
+        firstVm.shouldBe(Condition.enabled).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
+
+
 
     private SelenideElement getDiskMenuElement(String name) {
         return getTableByHeader(name).getRowElementByColumnValue(HEADER_PATH, "xfs").$("button");

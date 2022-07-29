@@ -35,7 +35,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     public UiPostgreSQLAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
            // product = PostgreSQLAstra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            product = PostgreSQLAstra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/97e9b5cc-d9b0-4d11-a4e6-c27d52e55d63/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            product = PostgreSQLAstra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/e4b010e5-15f8-47a5-b289-b8900d37c5db/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQLAstra.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -143,12 +143,21 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.expandDisk("Дополнительные точки монтирования", "20"));
 //    }
 
+    @Test
+    @Order(7)
+    @TmsLink("647428")
+    @DisplayName("UI PostgreSQLAstra. Изменить конфигурацию")
+    void changeConfiguration() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
+    }
+
 //    @Test
 //    @Order(7)
-//    @TmsLink("647428")
+//    @TmsLink("993398")
 //    @DisplayName("UI PostgreSQLAstra. Изменить конфигурацию")
-//    void changeConfiguration() {
-//        PostgreSqlPage pSqlPage = new PostgreSqlPage(product);
+//    void createDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
 //        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
 //    }
 
