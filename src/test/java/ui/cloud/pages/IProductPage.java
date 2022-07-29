@@ -38,6 +38,7 @@ public abstract class IProductPage {
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
     SelenideElement firstVm = $x("//*[text()='Виртуальные машины']/following::td[1]");
+    SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Application Integration' or text()='Compute' or text()='Containers' or text()='Databases' or text()='DevOps tools' or text()='Logging' or text()='Object Storage' or text()='Web Apps' or text()='Secrets Management' or text()='Network services']/parent::div/following-sibling::div/a)[1]");
 
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     private final SelenideElement preBillingPriceAction = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[2]");

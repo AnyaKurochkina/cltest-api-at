@@ -21,7 +21,7 @@ public class PostgreSqlAstraPage extends IProductPage {
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
-    SelenideElement linkPostgreSQL = $x("//a[text()='PostgreSqlAstra']");
+
 
     public PostgreSqlAstraPage(PostgreSQLAstra product) {
         super(product);
@@ -48,7 +48,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithParameters(getDiskMenuElement(name), "Расширить", "Подтвердить", () -> {
             Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size);
         });
-        //linkPostgreSQL.scrollIntoView(true).shouldBe(Condition.enabled).click();
+        //curentProduct
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         Assertions.assertEquals(size, new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
