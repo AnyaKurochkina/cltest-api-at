@@ -70,7 +70,11 @@ public class PostgreSqlAstraPage extends IProductPage {
 
     public void createDb() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_DB, "Добавить БД");
+        runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
+            Dialog dlg = new Dialog("Добавить БД");
+            dlg.setInputValue("Имя базы данных", "at_db");
+            generatePassButton.shouldBe(Condition.enabled).click();
+        });
 
     }
 
