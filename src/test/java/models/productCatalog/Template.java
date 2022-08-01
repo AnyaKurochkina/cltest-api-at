@@ -3,10 +3,9 @@ package models.productCatalog;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.template.createTemplate.response.CreateTemplateResponse;
-import httpModels.productCatalog.template.createTemplate.response.Input;
-import httpModels.productCatalog.template.createTemplate.response.Output;
 import httpModels.productCatalog.template.createTemplate.response.PrintedOutput;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
+import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -29,6 +28,8 @@ public class Template extends Entity {
     private Boolean additionalInput;
     private String color;
     private String icon;
+    private String iconUrl;
+    private String iconStoreId;
     private String description;
     private String run;
     private Boolean priorityCanBeOverridden;
@@ -75,10 +76,14 @@ public class Template extends Entity {
                 .set("$.input", input)
                 .set("$.output", output)
                 .set("$.timeout", timeout)
+                .set("$.icon", icon)
+                .set("$.icon_url", iconUrl)
+                .set("$.icon_store_id", iconStoreId)
                 .build();
     }
 
     @Override
+    @Step("Создание шаблона")
     protected void create() {
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
         if (productCatalogSteps.isExists(templateName)) {

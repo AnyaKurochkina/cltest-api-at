@@ -18,7 +18,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.productCatalog.ExampleSteps.getExampleById;
+import static steps.productCatalog.ExampleSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -67,7 +67,7 @@ public class ExampleTest extends Tests {
                 .description("desc_multisearch_example_test_api")
                 .build()
                 .createObject();
-        String exampleId = steps.getProductObjectIdByNameWithMultiSearch(createExample.getName(), GetExampleListResponse.class);
+        String exampleId = getExampleIdByNameWithMultiSearch(createExample.getName());
         assertAll(
                 () -> assertNotNull(exampleId, String.format("Пример с именем: %s не найден", createExample.getName())),
                 () -> assertEquals(createExample.getId(), exampleId, "Id примера не совпадают"));
@@ -93,11 +93,9 @@ public class ExampleTest extends Tests {
                 .description(updatedDesc)
                 .build();
         updatedExample.init();
-        steps.putObjectById(exampleId, updatedExample.toJson());
-        GetImpl getUpdatedExample = steps.getById(exampleId, CreateExampleResponse.class);
+        Example getUpdatedExample = putExampleById(exampleId, updatedExample.toJson());
         assertEquals(updatedName, getUpdatedExample.getName());
         assertEquals(updatedTitle, getUpdatedExample.getTitle());
-        assertEquals(updatedDesc, getUpdatedExample.getDescription());
     }
 
     @DisplayName("Частичное обновление Example по Id")

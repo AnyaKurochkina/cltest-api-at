@@ -1,8 +1,8 @@
 {
-  "id": "",
   "name": "test_api",
   "title": "title_test_api",
   "version": "",
+  "icon" : "",
   "run": "run",
   "rollback": "Rollback",
   "type": "check_vm",

@@ -23,6 +23,8 @@ public class OrgDirection extends Entity {
     private ExtraData extraData;
     private String orgDirectionName;
     private String icon;
+    private String iconUrl;
+    private String iconStoreId;
     private String description;
     private String orgDirectionId;
     private String jsonTemplate;
@@ -45,6 +47,9 @@ public class OrgDirection extends Entity {
                 .set("$.name", orgDirectionName)
                 .set("$.title", title)
                 .set("$.description", description)
+                .set("$.icon", icon)
+                .set("$.icon_url", iconUrl)
+                .set("$.icon_store_id", iconStoreId)
                 .build();
     }
 

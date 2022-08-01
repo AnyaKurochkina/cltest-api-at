@@ -1,19 +1,15 @@
 package tests.productCatalog.productOrgInfoSystem;
 
-import core.helper.Configure;
-import core.helper.JsonHelper;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.productOrgInfoSystem.createInfoSystem.CreateInfoSystemResponse;
 import httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.GetInfoSystemListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.path.json.JsonPath;
 import models.authorizer.InformationSystem;
 import models.productCatalog.Product;
 import models.productCatalog.ProductOrgInfoSystem;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -87,16 +83,5 @@ public class ProductOrgInfoSystemTest extends Tests {
            }
         }
         assertFalse(result);
-    }
-
-    @DisplayName("Импорт productOrgInfoSystem")
-    @Disabled
-    @TmsLink("")
-    @Test
-    public void importProductOrgInfoSystem() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/productOrgInfoSystem/importOrgInfoSystem.json");
-        String actionName = new JsonPath(data).get("OrganizationInfoSystems.rel_foreign_models.product.Product.name");
-        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/productOrgInfoSystem/importOrgInfoSystem.json");
-     //   steps.deleteByName(actionName, GetActionsListResponse.class);
     }
 }

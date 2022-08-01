@@ -15,6 +15,7 @@ import io.restassured.path.json.JsonPath;
 import models.authorizer.Project;
 import models.productCatalog.Categories;
 import models.productCatalog.Product;
+import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -59,6 +60,46 @@ public class ProductsTest extends Tests {
                 .createObject();
         GetImpl actualProduct = steps.getById(product.getProductId(), GetProductResponse.class);
         assertEquals(productName, actualProduct.getName());
+    }
+
+    @DisplayName("Создание продукта в продуктовом каталоге с иконкой")
+    @TmsLink("1081698")
+    @Test
+    public void createProductWithIcon() {
+        String productName = "create_product_with_icon_test_api";
+        Product product = Product.builder()
+                .name(productName)
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+        GetProductResponse actualProduct =(GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        assertFalse(actualProduct.getIconStoreId().isEmpty());
+        assertFalse(actualProduct.getIconUrl().isEmpty());
+    }
+
+    @DisplayName("Создание нескольких продуктов в продуктовом каталоге с одинаковой иконкой")
+    @TmsLink("1081741")
+    @Test
+    public void createSeveralProductWithSameIcon() {
+        String productName = "create_first_product_with_same_icon_test_api";
+        Product product = Product.builder()
+                .name(productName)
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+
+        Product secondProduct = Product.builder()
+                .name("create_second_action_with_same_icon_test_api")
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+        GetProductResponse actualFirstProduct =(GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        GetProductResponse actualSecondProduct =(GetProductResponse) steps.getById(secondProduct.getProductId(), GetProductResponse.class);
+        assertEquals(actualFirstProduct.getIconUrl(), actualSecondProduct.getIconUrl());
+        assertEquals(actualFirstProduct.getIconStoreId(), actualSecondProduct.getIconStoreId());
     }
 
     @DisplayName("Создание продукта в продуктовом каталоге с категорией gitlab")
@@ -144,7 +185,6 @@ public class ProductsTest extends Tests {
         }
     }
 
-
     @DisplayName("Удаление продукта со статусом is_open=true")
     @TmsLink("737656")
     @Test
@@ -175,8 +215,15 @@ public class ProductsTest extends Tests {
                 .createObject();
         String productId = product.getProductId();
         steps.getObjectByNameWithPublicToken(productName).assertStatus(200);
-        steps.createProductObjectWithPublicToken(steps.createJsonObject("create_object_with_public_token_api"))
-                .assertStatus(403);
+        JSONObject createProduct = Product.builder()
+                .name("create_object_with_public_token_api")
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
+                .info(info)
+                .build()
+                .init().toJson();
+        steps.createProductObjectWithPublicToken(createProduct).assertStatus(403);
         steps.partialUpdateObjectWithPublicToken(productId, new JSONObject().put("description", "UpdateDescription"))
                 .assertStatus(403);
         steps.putObjectByIdWithPublicToken(productId, steps.createJsonObject("update_object_with_public_token_api"))
@@ -194,6 +241,25 @@ public class ProductsTest extends Tests {
         assertTrue(steps.isExists(name));
         steps.deleteByName(name, GetProductsResponse.class);
         assertFalse(steps.isExists(name));
+    }
+
+    @DisplayName("Импорт продукта c иконкой")
+    @TmsLink("1085928")
+    @Test
+    public void importProductWithIcon() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/products/importProductWithIcon.json");
+        String name = new JsonPath(data).get("Product.name");
+        if(steps.isExists(name)) {
+            steps.deleteByName(name, GetProductsResponse.class);
+        }
+        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProductWithIcon.json");
+        String id = steps.getProductObjectIdByNameWithMultiSearch(name, GetProductsResponse.class);
+        GetProductResponse product =(GetProductResponse) steps.getById(id, GetProductResponse.class);
+        assertFalse(product.getIconStoreId().isEmpty());
+        assertFalse(product.getIconUrl().isEmpty());
+        assertTrue(steps.isExists(name), "Продукт не существует");
+        steps.deleteByName(name, GetProductsResponse.class);
+        assertFalse(steps.isExists(name), "Продукт существует");
     }
 
     @DisplayName("Получение продукта по Id")

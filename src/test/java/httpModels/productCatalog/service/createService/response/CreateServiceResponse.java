@@ -29,6 +29,12 @@ public class CreateServiceResponse{
 	@JsonProperty("icon")
 	private String icon;
 
+	@JsonProperty("icon_url")
+	private String iconUrl;
+
+	@JsonProperty("icon_store_id")
+	private String iconStoreId;
+
 	@JsonProperty("description")
 	private String description;
 

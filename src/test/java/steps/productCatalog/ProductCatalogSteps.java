@@ -50,6 +50,13 @@ public class ProductCatalogSteps {
                 .extractAs(clazz)).getItemsList();
     }
 
+    @Step("Получение версии продуктового каталога")
+    public static Response getProductCatalogVersion() {
+        return new Http(ProductCatalogURL)
+                .get("/api/version/")
+                .assertStatus(200);
+    }
+
     @Step("Загрузка объекта в Gitlab")
     public Response dumpToBitbucket(String id) {
         return new Http(ProductCatalogURL)

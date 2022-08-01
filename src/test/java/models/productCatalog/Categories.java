@@ -15,6 +15,7 @@ public enum Categories {
     NETWORK("network"),
     OBJECT_STORAGE("object_storage"),
     SECRET_MANAGER("secret_manager"),
+    STREAMING("streaming"),
     WEB("web"),
     DEFAULT_VALUE(null);
     private final String value;

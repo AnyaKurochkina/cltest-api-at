@@ -15,6 +15,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import models.productCatalog.Services;
+import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -54,6 +55,46 @@ public class ServicesTest extends Tests {
         assertEquals(name, getService.getName());
     }
 
+    @DisplayName("Создание сервиса в продуктовом каталоге с иконкой")
+    @TmsLink("1082639")
+    @Test
+    public void createServiceWithIcon() {
+        String serviceName = "create_service_with_icon_test_api";
+        Services service = Services.builder()
+                .serviceName(serviceName)
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+        GetServiceResponse actualService = (GetServiceResponse) steps.getById(service.getServiceId(), GetServiceResponse.class);
+        assertFalse(actualService.getIconStoreId().isEmpty());
+        assertFalse(actualService.getIconUrl().isEmpty());
+    }
+
+    @DisplayName("Создание нескольких сервисов в продуктовом каталоге с одинаковой иконкой")
+    @TmsLink("1082663")
+    @Test
+    public void createSeveralServiceWithSameIcon() {
+        String serviceName = "create_first_service_with_same_icon_test_api";
+        Services service = Services.builder()
+                .serviceName(serviceName)
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+
+        Services secondService = Services.builder()
+                .serviceName("create_second_service_with_same_icon_test_api")
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+        GetServiceResponse actualFirstService = (GetServiceResponse) steps.getById(service.getServiceId(), GetServiceResponse.class);
+        GetServiceResponse actualSecondService = (GetServiceResponse) steps.getById(secondService.getServiceId(), GetServiceResponse.class);
+        assertEquals(actualFirstService.getIconUrl(), actualSecondService.getIconUrl());
+        assertEquals(actualFirstService.getIconStoreId(), actualSecondService.getIconStoreId());
+    }
+
     @DisplayName("Проверка существования сервиса по имени")
     @TmsLink("643453")
     @Test
@@ -82,6 +123,25 @@ public class ServicesTest extends Tests {
         Assertions.assertTrue(steps.isExists(serviceName));
         steps.deleteByName(serviceName, GetServiceListResponse.class);
         Assertions.assertFalse(steps.isExists(serviceName));
+    }
+
+    @DisplayName("Импорт сервиса c иконкой")
+    @TmsLink("1085946")
+    @Test
+    public void importServiceWithIcon() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/services/importServiceWithIcon.json");
+        String name = new JsonPath(data).get("Service.name");
+        if (steps.isExists(name)) {
+            steps.deleteByName(name, GetServiceListResponse.class);
+        }
+        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/services/importServiceWithIcon.json");
+        String id = steps.getProductObjectIdByNameWithMultiSearch(name, GetServiceListResponse.class);
+        GetServiceResponse service = (GetServiceResponse) steps.getById(id, GetServiceResponse.class);
+        assertFalse(service.getIconStoreId().isEmpty());
+        assertFalse(service.getIconUrl().isEmpty());
+        assertTrue(steps.isExists(name), "Сервис не существует");
+        steps.deleteByName(name, GetServiceListResponse.class);
+        assertFalse(steps.isExists(name), "Сервис существует");
     }
 
     @DisplayName("Получение сервиса по Id")

@@ -23,6 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Builder
 @Getter
 public class Action extends Entity {
+    private String icon;
+    private String iconStoreId;
+    private String iconUrl;
     private Graph graph;
     private String currentVersion;
     private String jsonTemplate;
@@ -57,6 +60,9 @@ public class Action extends Entity {
     @Override
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
+                .set("$.icon", icon)
+                .set("$.icon_url", iconUrl)
+                .set("$.icon_store_id", iconStoreId)
                 .set("$.name", actionName)
                 .set("$.title", title)
                 .set("$.type", type)

@@ -32,6 +32,12 @@ public class ListItem implements ItemImpl {
     @JsonProperty("icon")
     private String icon;
 
+    @JsonProperty("icon_store_id")
+    private String iconStoreId;
+
+    @JsonProperty("icon_url")
+    private String iconUrl;
+
     @JsonProperty("location_restriction")
     private String locationRestriction;
 
