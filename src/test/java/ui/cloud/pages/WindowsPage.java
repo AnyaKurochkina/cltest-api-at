@@ -27,7 +27,7 @@ public class WindowsPage extends IProductPage {
         super(product);
     }
 
-    public void delete() {
+    public void delete() throws Throwable {
         runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
         {
             Dialog dlgActions = new Dialog("Удаление");
@@ -48,7 +48,7 @@ public class WindowsPage extends IProductPage {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    public void changeConfiguration() {
+    public void changeConfiguration() throws Throwable {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
@@ -58,7 +58,7 @@ public class WindowsPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
 
-    public void expandDisk(String name, String size) {
+    public void expandDisk(String name, String size) throws Throwable {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(getDiskMenuElement(name), "Расширить диск", "Подтвердить",
                 () -> Input.byLabel("Итоговый объем дискового пространства, Гб").setValue(size));
@@ -107,7 +107,7 @@ public class WindowsPage extends IProductPage {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
-    public void addDisk(String name, String size) {
+    public void addDisk(String name, String size) throws Throwable {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("Дополнительные диски", "Добавить диск", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Добавить диск");

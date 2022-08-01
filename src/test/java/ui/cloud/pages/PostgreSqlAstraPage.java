@@ -15,6 +15,7 @@ import static core.helper.StringUtils.$x;
 
 public class PostgreSqlAstraPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
+    private static final String BLOCK_DB = "Базы данных";
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
     private static final String HEADER_PATH = "Файловая система";
     private static final String HEADER_DISK_SIZE = "";
@@ -23,7 +24,7 @@ public class PostgreSqlAstraPage extends IProductPage {
     SelenideElement ram = $x("(//h5)[2]");
 
 
-    public PostgreSqlAstraPage(PostgreSQLAstra product) {
+    public PostgreSqlAstraPage(PostgreSQL product) {
         super(product);
     }
 
@@ -45,6 +46,8 @@ public class PostgreSqlAstraPage extends IProductPage {
     public void expandDisk(String name, String size) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         firstVm.shouldBe(Condition.enabled).click();
+
+
         runActionWithParameters(getDiskMenuElement(name), "Расширить", "Подтвердить", () -> {
             Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size);
         });
@@ -63,6 +66,12 @@ public class PostgreSqlAstraPage extends IProductPage {
         firstVm.shouldBe(Condition.enabled).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
+    }
+
+    public void createDb() {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_DB, "Добавить БД");
+
     }
 
 
