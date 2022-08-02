@@ -167,7 +167,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void createAcl(String topicName, KafkaRoles role) {
-        OrderServiceSteps.executeAction("kafka_create_acl", this, new JSONObject("{\"acls\":[{\"client_cn\":\"APD09.26-1418-kafka-dl-client-cert\",\"topic_type\":\"by_name\",\"client_role\":\"" + role.getRole() + "\",\"topic_names\":[\"" + topicName + "\"]}]}"), this.projectId);
+        OrderServiceSteps.executeAction("kafka_create_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"APD09.26-1418-kafka-dl-client-cert\",\"topic_type\":\"by_name\",\"client_role\":\"" + role.getRole() + "\",\"topic_names\":[\"" + topicName + "\"]}]}"), this.projectId);
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, role.getRole(), topicName)), "ACL на топик не создался");
         save();
     }
@@ -183,7 +183,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void createAclTransaction(String transactionRegex) {
-        OrderServiceSteps.executeAction("kafka_create_transaction_acl", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}]}"), this.projectId);
+        OrderServiceSteps.executeAction("kafka_create_transaction_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}]}"), this.projectId);
         save();
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)), "ACL транзакция не создалась");
     }
