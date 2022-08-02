@@ -18,9 +18,6 @@ public class GetUsedListResponse{
 	@JsonProperty("name")
 	private String name;
 
-	@JsonProperty("description")
-	private String description;
-
 	@JsonProperty("graph_version")
 	private String graphVersion;
 

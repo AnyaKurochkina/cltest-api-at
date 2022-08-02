@@ -30,6 +30,8 @@ public class Product extends Entity {
     private String author;
     private List<String> informationSystems;
     private String icon;
+    private String iconStoreId;
+    private String iconUrl;
     private String description;
     private String graphVersion;
     private List<String> envs;
@@ -81,6 +83,9 @@ public class Product extends Entity {
                 .set("$.version", version)
                 .set("$.category", category)
                 .set("$.info", info)
+                .set("$.icon", icon)
+                .set("$.icon_store_id", iconStoreId)
+                .set("$.icon_url", iconUrl)
                 .set("$.is_open", isOpen)
                 .set("$.current_version", currentVersion)
                 .set("$.extra_data", extraData)

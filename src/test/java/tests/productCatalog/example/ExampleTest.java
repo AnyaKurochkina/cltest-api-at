@@ -7,7 +7,7 @@ import httpModels.productCatalog.example.getExampleList.GetExampleListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Example;
+import models.productCatalog.example.Example;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -18,6 +18,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ExampleSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -32,36 +33,28 @@ public class ExampleTest extends Tests {
     @TmsLink("822241")
     @Test
     public void createExample() {
-        String createName = "create_example_test_api";
-        Example createExample = Example.builder()
-                .name(createName)
+        Example expectedExample = Example.builder()
+                .name("create_example_test_api")
                 .title("create_example_test_api")
                 .description("create_example_test_api")
                 .build()
                 .createObject();
-        GetImpl getCreateExample = steps.getById(createExample.getId(), CreateExampleResponse.class);
-        assertEquals(createName, getCreateExample.getName());
+        Example actualExample = getExampleById(expectedExample.getId());
+        assertEquals(expectedExample, actualExample);
     }
 
     @DisplayName("Получение Example по Id")
     @TmsLink("822383")
     @Test
-    public void getExampleById() {
-        String exampleName = "get_example_by_id_test_api";
-        String exampleTitle = "title_get_example_by_id_test_api";
-        String exampleDescription = "desc_get_example_by_id_test_api";
-        Example createExample = Example.builder()
-                .name(exampleName)
-                .title(exampleTitle)
-                .description(exampleDescription)
+    public void getExampleByIdTest() {
+        Example expectedExample = Example.builder()
+                .name("get_example_by_id_test_api")
+                .title("title_get_example_by_id_test_api")
+                .description("desc_get_example_by_id_test_api")
                 .build()
                 .createObject();
-        GetImpl getExample = steps.getById(createExample.getId(), CreateExampleResponse.class);
-        assertAll(
-                () -> assertEquals(exampleName, getExample.getName()),
-                () -> assertEquals(exampleTitle, getExample.getTitle()),
-                () -> assertEquals(exampleDescription, getExample.getDescription())
-        );
+        Example actualExample = getExampleById(expectedExample.getId());
+        assertEquals(expectedExample, actualExample);
     }
 
     @DisplayName("Поиск Example по имени, с использованием multiSearch")
@@ -74,7 +67,7 @@ public class ExampleTest extends Tests {
                 .description("desc_multisearch_example_test_api")
                 .build()
                 .createObject();
-        String exampleId = steps.getProductObjectIdByNameWithMultiSearch(createExample.getName(), GetExampleListResponse.class);
+        String exampleId = getExampleIdByNameWithMultiSearch(createExample.getName());
         assertAll(
                 () -> assertNotNull(exampleId, String.format("Пример с именем: %s не найден", createExample.getName())),
                 () -> assertEquals(createExample.getId(), exampleId, "Id примера не совпадают"));
@@ -100,11 +93,9 @@ public class ExampleTest extends Tests {
                 .description(updatedDesc)
                 .build();
         updatedExample.init();
-        steps.putObjectById(exampleId, updatedExample.toJson());
-        GetImpl getUpdatedExample = steps.getById(exampleId, CreateExampleResponse.class);
+        Example getUpdatedExample = putExampleById(exampleId, updatedExample.toJson());
         assertEquals(updatedName, getUpdatedExample.getName());
         assertEquals(updatedTitle, getUpdatedExample.getTitle());
-        assertEquals(updatedDesc, getUpdatedExample.getDescription());
     }
 
     @DisplayName("Частичное обновление Example по Id")

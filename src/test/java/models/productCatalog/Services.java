@@ -30,6 +30,8 @@ public class Services extends Entity {
     private List<String> versionList;
     private Boolean isPublished;
     private String icon;
+    private String iconUrl;
+    private String iconStoreId;
     private String description;
     private String serviceInfo;
     private String graphVersion;
@@ -96,6 +98,9 @@ public class Services extends Entity {
                 .set("$.direction_id", directionId)
                 .set("$.direction_name", directionName)
                 .set("$.service_info", serviceInfo)
+                .set("$.icon", icon)
+                .set("$.icon_url", iconUrl)
+                .set("$.icon_store_id", iconStoreId)
                 .build();
     }
 
