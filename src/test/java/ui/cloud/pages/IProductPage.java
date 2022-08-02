@@ -28,6 +28,7 @@ import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.$x;
 import static tests.Tests.activeCnd;
 import static tests.Tests.clickableCnd;
+import static ui.elements.TypifiedElement.scrollCenter;
 
 @Log4j2
 @Getter
@@ -84,12 +85,12 @@ public abstract class IProductPage {
     @Step("Запуск действия '{action}'")
     protected void runActionWithoutParameters(SelenideElement button, String action, ActionParameters params) {
         String productNameText = null;
-        btnGeneralInfo.scrollIntoView("{block: 'center'}").shouldBe(Condition.enabled).click();
+        btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
         if(Objects.nonNull(params.getNode())){
             productNameText = productName.getText();
-            params.getNode().scrollIntoView("{block: 'center'}").click();
+            params.getNode().scrollIntoView(scrollCenter).click();
         }
-        button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
+        button.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = new Dialog(action);
         if (params.isCheckPreBilling())
@@ -100,7 +101,7 @@ public abstract class IProductPage {
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(2000);
         if(Objects.nonNull(params.getNode())){
-            $x("//a[.='{}']", productNameText).scrollIntoView("{block: 'center'}").shouldBe(clickableCnd).click();
+            $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
         if (params.isWaitChangeStatus())
             waitChangeStatus();
@@ -113,12 +114,12 @@ public abstract class IProductPage {
     @Step("Запуск действия '{action}' с параметрами и последующим нажатием на кнопку {textButton}")
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         String productNameText = null;
-        btnGeneralInfo.scrollIntoView("{block: 'center'}").shouldBe(Condition.enabled).click();
+        btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
         if(Objects.nonNull(params.getNode())){
             productNameText = productName.getText();
-            params.getNode().scrollIntoView("{block: 'center'}").click();
+            params.getNode().scrollIntoView(scrollCenter).click();
         }
-        button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
+        button.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
         if (params.isCheckPreBilling())
@@ -129,7 +130,7 @@ public abstract class IProductPage {
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(2000);
         if(Objects.nonNull(params.getNode())){
-            $x("//a[.='{}']", productNameText).scrollIntoView("{block: 'center'}").shouldBe(clickableCnd).click();
+            $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
         if (params.isWaitChangeStatus())
             waitChangeStatus();
