@@ -78,9 +78,9 @@ public abstract class IProductPage {
     public Table getTableByHeader(String header) {
         return new Table($x("//ancestor::*[.='{}']/parent::*//table", header));
     }
-
     @Step("Получение label")
     public String getLabel() {
+
         return $x("//span[starts-with(text(),'AT-UI-')]").shouldBe(Condition.visible).getText();
     }
 

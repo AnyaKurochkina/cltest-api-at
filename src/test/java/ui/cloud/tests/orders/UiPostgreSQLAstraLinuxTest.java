@@ -153,14 +153,22 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
 //    }
 
+//    @Test
+//    @Order(8)
+//    @TmsLink("")
+//    @DisplayName("UI PostgreSQLAstra. Создание БД")
+//    void createDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.createDb();
+//    }
+
     @Test
-    @Order(7)
+    @Order(9)
     @TmsLink("")
-    @DisplayName("UI PostgreSQLAstra. Создание БД")
-    void createDb() {
-        // to do Создание БД
+    @DisplayName("UI PostgreSQLAstra. Удаление БД")
+    void removeDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.createDb();
+        pSqlPage.removeDb("ru_RU.UTF-8");
     }
 
 

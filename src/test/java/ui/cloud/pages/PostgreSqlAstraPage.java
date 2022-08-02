@@ -17,7 +17,9 @@ public class PostgreSqlAstraPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_DB = "Базы данных";
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
+    private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_PATH = "Файловая система";
+    private static final String HEADER_SORT = "Сортировка";
     private static final String HEADER_DISK_SIZE = "";
 
     SelenideElement cpu = $x("(//h5)[1]");
@@ -75,13 +77,22 @@ public class PostgreSqlAstraPage extends IProductPage {
             dlg.setInputValue("Имя базы данных", "at_db");
             generatePassButton.shouldBe(Condition.enabled).click();
         });
-
+    }
+    public void removeDb(String name) {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(getMenuElement(HEADER_LIMIT_CONNECT,name,HEADER_SORT), "Удалить БД");
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
+//        Assertions.assertEquals("Отключен", new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name)
+//                .getValueByColumn(HEADER_CONNECT_STATUS));
     }
 
 
 
     private SelenideElement getDiskMenuElement(String name) {
         return getTableByHeader(name).getRowElementByColumnValue(HEADER_PATH, "xfs").$("button");
+    }
+    private SelenideElement getMenuElement(String header, String name, String value) {
+        return new Table(header).getRowElementByColumnValue(value, name).$("button");
     }
 
     public class VirtualMachineTable extends VirtualMachine {
