@@ -152,7 +152,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
 //        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
 //    }
-
+//
 //    @Test
 //    @Order(8)
 //    @TmsLink("")

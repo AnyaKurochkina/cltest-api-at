@@ -82,8 +82,8 @@ public class PostgreSqlAstraPage extends IProductPage {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getMenuElement(HEADER_LIMIT_CONNECT,name,HEADER_SORT), "Удалить БД");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-//        Assertions.assertEquals("Отключен", new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name)
-//                .getValueByColumn(HEADER_CONNECT_STATUS));
+//        Assertions.assertEquals("", new Table(HEADER_LIMIT_CONNECT).getRowByColumnValue("", "")
+//                .getValueByColumn(HEADER_LIMIT_CONNECT));
     }
 
 
