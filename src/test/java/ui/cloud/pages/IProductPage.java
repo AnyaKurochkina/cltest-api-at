@@ -34,11 +34,12 @@ import static tests.Tests.clickableCnd;
 public abstract class IProductPage {
     IProduct product;
     double preBillingCostAction;
+    SelenideElement productName = $x("(//button[@title='Редактировать']/ancestor::*/span)[1]");
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
-    private final SelenideElement preBillingPriceAction = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[2]");
+    private final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
 
     public IProductPage(IProduct product) {
         if (Objects.nonNull(product.getError()))
@@ -82,7 +83,12 @@ public abstract class IProductPage {
 
     @Step("Запуск действия '{action}'")
     protected void runActionWithoutParameters(SelenideElement button, String action, ActionParameters params) {
+        String productNameText = null;
         btnGeneralInfo.scrollIntoView("{block: 'center'}").shouldBe(Condition.enabled).click();
+        if(Objects.nonNull(params.getNode())){
+            productNameText = productName.getText();
+            params.getNode().scrollIntoView("{block: 'center'}").click();
+        }
         button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = new Dialog(action);
@@ -93,6 +99,9 @@ public abstract class IProductPage {
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(2000);
+        if(Objects.nonNull(params.getNode())){
+            $x("//a[.='{}']", productNameText).scrollIntoView("{block: 'center'}").shouldBe(clickableCnd).click();
+        }
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
@@ -103,7 +112,12 @@ public abstract class IProductPage {
     @SneakyThrows
     @Step("Запуск действия '{action}' с параметрами и последующим нажатием на кнопку {textButton}")
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
+        String productNameText = null;
         btnGeneralInfo.scrollIntoView("{block: 'center'}").shouldBe(Condition.enabled).click();
+        if(Objects.nonNull(params.getNode())){
+            productNameText = productName.getText();
+            params.getNode().scrollIntoView("{block: 'center'}").click();
+        }
         button.shouldBe(activeCnd).scrollIntoView("{block: 'center'}").hover().shouldBe(clickableCnd).click();
         $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
@@ -114,6 +128,9 @@ public abstract class IProductPage {
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(2000);
+        if(Objects.nonNull(params.getNode())){
+            $x("//a[.='{}']", productNameText).scrollIntoView("{block: 'center'}").shouldBe(clickableCnd).click();
+        }
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
@@ -142,6 +159,14 @@ public abstract class IProductPage {
 
     public void runActionWithParameters(String headerBlock, String action, String textButton, Executable executable) {
         runActionWithParameters(getBtnAction(headerBlock), action, textButton, executable, ActionParameters.builder().build());
+    }
+
+    //new Table("Роли узла").getRowByIndex(0)
+    @Step("Расширить диск {name} на {size}ГБ")
+    public void expandDisk(String name, String size, SelenideElement node) {
+        runActionWithParameters($x("//td[.='{}']/../descendant::button", name),
+                "Расширить", "Подтвердить", () -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size),
+                ActionParameters.builder().node(node).build());
     }
 
     @Step("Проверка статуса заказа")
