@@ -16,7 +16,7 @@ public class ViewJSONTest extends GraphBaseTest {
     @DisplayName("Просмотр JSON графа")
     public void viewJSON() {
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .viewJSON();
     }
 }

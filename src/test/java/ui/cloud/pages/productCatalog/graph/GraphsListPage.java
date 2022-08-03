@@ -1,19 +1,24 @@
 package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.InputFile;
 import ui.elements.Table;
+import ui.uiModels.Graph;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GraphsListPage {
+    private static final String graphNameColumn = "Код графа";
     private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы']");
     private final SelenideElement createNewGraphButton = $x("//div[@data-testid = 'graph-list-add-button']//button");
     private final SelenideElement inputTitleField = $x("//*[@name ='title']");
@@ -39,19 +44,21 @@ public class GraphsListPage {
     private final SelenideElement nameRequiredFieldHint = $x("//input[@name='name']/parent::div/following-sibling::p");
     private final SelenideElement authorRequiredFieldHint = $x("//input[@name='author']/parent::div/following-sibling::p");
     private final SelenideElement importGraphButton = $x("//button[@title='Импортировать граф']");
+    private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
+    private final SelenideElement openGraphInANewTab = $x("//div[text()='Дата создания']");
 
     public GraphsListPage() {
         graphsPageTitle.shouldBe(Condition.visible);
     }
 
-    @Step("Создание графа '{name}'")
-    public GraphsListPage createGraph(String title, String name, String type, String description, String author) {
+    @Step("Создание графа '{graph.name}'")
+    public GraphsListPage createGraph(Graph graph) {
         createNewGraphButton.click();
-        inputTitleField.setValue(title);
-        inputNameField.setValue(name);
-        selectType(type);
-        inputDescriptionField.setValue(description);
-        inputAuthorField.setValue(author);
+        inputTitleField.setValue(graph.getTitle());
+        inputNameField.setValue(graph.getName());
+        selectType(graph.getType());
+        inputDescriptionField.setValue(graph.getDescription());
+        inputAuthorField.setValue(graph.getAuthor());
         createGraphButton.click();
         return this;
     }
@@ -114,7 +121,7 @@ public class GraphsListPage {
 
     @Step("Проверка заголовков списка графов")
     public GraphsListPage checkGraphsListHeaders() {
-        Table graphsList = new Table("Код графа");
+        Table graphsList = new Table(graphNameColumn);
         assertEquals(0, graphsList.getHeaderIndex("Наименование"));
         assertEquals(1, graphsList.getHeaderIndex("Код графа"));
         assertEquals(2, graphsList.getHeaderIndex("Дата создания"));
@@ -144,13 +151,26 @@ public class GraphsListPage {
         return new GraphsListPage();
     }
 
-    @Step("Открытие страницы графа '{name}'")
-    public GraphPage openGraphPage(String name) {
+    @Step("Поиск и открытие страницы графа '{name}'")
+    public GraphPage findAndOpenGraphPage(String name) {
         if (clearSearchButton.isDisplayed()) {
             clearSearchButton.click();
         }
         inputSearch.setValue(name);
-        $x("//td[@value = '" + name + "']").shouldBe(Condition.visible).click();
+        TestUtils.wait(500);
+        new Table(graphNameColumn).getRowElementByColumnValue(graphNameColumn, name).click();
+        return new GraphPage();
+    }
+
+    @Step("Открытие страницы графа '{name}'")
+    public GraphPage openGraphPage(String name) {
+        new Table(graphNameColumn).getRowElementByColumnValue(graphNameColumn, name).click();
+        return new GraphPage();
+    }
+
+    @Step("Открытие страницы графа '{name}'")
+    public GraphPage openGraphPageWithMouse(String name) {
+        new Table(graphNameColumn).getRowElementByColumnValue(graphNameColumn, name);
         return new GraphPage();
     }
 
@@ -204,11 +224,46 @@ public class GraphsListPage {
         return this;
     }
 
+    @Step("Сортировка по дате создания")
+    public GraphsListPage sortByCreateDate() {
+        sortByCreateDate.click();
+        return this;
+    }
+
     @Step("Импорт графа из файла")
     public GraphsListPage importGraph(String path) {
         importGraphButton.click();
         new InputFile(path).importFile();
         new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
         return this;
+    }
+
+    @Step("Переход на следующую страницу списка")
+    public GraphsListPage nextPage() {
+        BaseList.nextPage();
+        return this;
+    }
+
+    @Step("Переход на последнюю страницу списка")
+    public GraphsListPage lastPage() {
+        BaseList.lastPage();
+        return this;
+    }
+
+    public void checkGraphIsHighlighted(String name) {
+        Table graphsList = new Table(graphNameColumn);
+        Assertions.assertTrue(graphsList.getRowElementByColumnValue(graphNameColumn, name)
+                .getCssValue("color").contains("196, 202, 212"));
+    }
+
+    public void findAndOpenGraphInNewTab(Graph graph) {
+        findGraphByName(graph.getName());
+        Table graphsList = new Table(graphNameColumn);
+        SelenideElement row = graphsList.getRowElementByColumnValue(graphNameColumn, graph.getName());
+        row.$x(".//a/button").click();
+        Selenide.switchTo().window(1);
+        new GraphPage().checkGraphAttributes(graph);
+        Selenide.switchTo().window(0);
+        new GraphsListPage();
     }
 }

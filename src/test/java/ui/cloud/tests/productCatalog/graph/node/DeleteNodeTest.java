@@ -34,7 +34,7 @@ public class DeleteNodeTest extends GraphBaseTest {
     public void deleteGraphNode() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
                 .deleteNodeAndSave(node)

@@ -37,7 +37,7 @@ public class EditNodeTest extends GraphBaseTest {
     public void editNodeSubgraphTest() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
                 .editSubgraphNode(node, "1.0.0", "edit")
@@ -51,7 +51,7 @@ public class EditNodeTest extends GraphBaseTest {
     public void editTemplateNodeTest() {
         TemplateNode node = new TemplateNode(TEMPLATE_NAME);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
                 .editTemplateNode(node, "1.0.0", "edit")

@@ -47,7 +47,7 @@ public class AddNodeTest extends GraphBaseTest {
     public void addNodeSubgraphWithRequiredParameters() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
                 .checkNodeAttributes(node)
@@ -61,7 +61,7 @@ public class AddNodeTest extends GraphBaseTest {
         node.setTimeout("10");
         node.setCount("2");
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
                 .checkNodeAttributes(node)
@@ -73,19 +73,19 @@ public class AddNodeTest extends GraphBaseTest {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
         node.setName("");
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .checkAddNodeSubgraphDisabled(node);
         node.setName("test_node");
         node.setDescription("");
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .checkAddNodeSubgraphDisabled(node);
         node.setDescription("test_description");
         node.setSubgraphName("");
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .checkAddNodeSubgraphDisabled(node);
     }
@@ -96,7 +96,7 @@ public class AddNodeTest extends GraphBaseTest {
         node.setNumber("0");
         node.setTimeout("0");
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .checkAddNodeSubgraphDisabled(node);
     }
@@ -105,7 +105,7 @@ public class AddNodeTest extends GraphBaseTest {
     public void addNodeSubgraphWithNonUniqueName() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
                 .checkAddNodeSubgraphWithNonUniqueNameDisabled(node);
@@ -117,7 +117,7 @@ public class AddNodeTest extends GraphBaseTest {
     public void addNodeByTemplateTest() {
         TemplateNode node = new TemplateNode(TEMPLATE_NAME);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
                 .checkNodeAttributes(node)

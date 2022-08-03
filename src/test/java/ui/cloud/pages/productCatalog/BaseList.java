@@ -13,6 +13,9 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class BaseList {
 
+    private static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
+    private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
+
     public static void checkSortingByStringField(String header) {
         Table table = new Table(header);
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
@@ -52,5 +55,15 @@ public class BaseList {
         firstDate = LocalDateTime.parse(firstDateString, formatter);
         lastDate = LocalDateTime.parse(lastDateString, formatter);
         Assertions.assertTrue(lastDate.isBefore(firstDate) || lastDate.isEqual(firstDate));
+    }
+
+    public static void nextPage() {
+        TestUtils.scrollToTheBottom();
+        nextPageButton.click();
+    }
+
+    public static void lastPage() {
+        TestUtils.scrollToTheBottom();
+        lastPageButton.click();
     }
 }

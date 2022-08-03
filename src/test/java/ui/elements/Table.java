@@ -67,9 +67,18 @@ public class Table implements TypifiedElement {
     }
 
     @Step("Проверка существования в колонке '{column}' значения '{value}'")
-    public boolean isColumnValueExist(String column, String value) {
+    public boolean hasColumnValue(String column, String value) {
         for (SelenideElement e : rows) {
             if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().equals(value))
+                return true;
+        }
+        return false;
+    }
+
+    @Step("Проверка, что в колонке '{column}' есть значение, содержащее '{value}'")
+    public boolean hasColumnValueContaining(String column, String value) {
+        for (SelenideElement e : rows) {
+            if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().contains(value))
                 return true;
         }
         return false;

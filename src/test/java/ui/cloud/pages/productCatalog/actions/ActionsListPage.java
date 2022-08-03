@@ -34,7 +34,7 @@ public class ActionsListPage {
      * @return true если действие существует, false если действие не существует.
      */
     public boolean isActionExist(String value) {
-        return new Table(NAME_COLUMN).isColumnValueExist(NAME_COLUMN, value);
+        return new Table(NAME_COLUMN).hasColumnValue(NAME_COLUMN, value);
     }
 
     @Step("Копирование действия")

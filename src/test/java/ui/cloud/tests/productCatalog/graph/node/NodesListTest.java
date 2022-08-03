@@ -37,7 +37,7 @@ public class NodesListTest extends GraphBaseTest {
     public void addNodeByTemplateTest() {
         TemplateNode node = new TemplateNode(TEMPLATE_NAME);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
                 .findNode(node.getInputKey(), node)
@@ -50,7 +50,7 @@ public class NodesListTest extends GraphBaseTest {
     public void findNodesTest() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
                 .findNode(node.getInputKey(), node)
