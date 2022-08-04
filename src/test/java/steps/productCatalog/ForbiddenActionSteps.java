@@ -12,12 +12,12 @@ import java.util.List;
 import static core.helper.Configure.ProductCatalogURL;
 
 public class ForbiddenActionSteps extends Steps {
-    private static final String endPoint = "/api/v1/forbidden_action/";
+    private static final String endPoint = "/api/v1/forbidden_actions/";
 
     @Step("Проверка существования запрещенного действия продуктового каталога по имени")
     public static boolean isForbiddenActionExists(String name) {
         return new Http(ProductCatalogURL)
-                .get("/api/v1/forbidden_action/exists/?name=" + name)
+                .get(endPoint + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
     }
 

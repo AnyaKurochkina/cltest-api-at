@@ -1,9 +1,6 @@
 package tests.productCatalog.example;
 
 import core.helper.http.Response;
-import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.example.createExample.CreateExampleResponse;
-import httpModels.productCatalog.example.getExampleList.GetExampleListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -14,7 +11,6 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,13 +22,10 @@ import static steps.productCatalog.ExampleSteps.*;
 @DisabledIfEnv("prod")
 public class ExampleTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/example/",
-            "productCatalog/examples/createExample.json");
-
     @DisplayName("Создание Example в продуктовом каталоге")
     @TmsLink("822241")
     @Test
-    public void createExample() {
+    public void createExampleTest() {
         Example expectedExample = Example.builder()
                 .name("create_example_test_api")
                 .title("create_example_test_api")
@@ -110,9 +103,8 @@ public class ExampleTest extends Tests {
                 .createObject();
         String updatedDesc = "description is updated";
         String exampleId = example.getId();
-        steps.partialUpdateObject(exampleId, new JSONObject().put("description", updatedDesc));
-        GetImpl getUpdatedExample = steps.getById(exampleId, CreateExampleResponse.class);
-        assertEquals(updatedDesc, getUpdatedExample.getDescription());
+        Example updatedExample = partialUpdateExample(exampleId, new JSONObject().put("description", updatedDesc));
+        assertEquals(updatedDesc, updatedExample.getDescription());
     }
 
     @Test
@@ -126,7 +118,7 @@ public class ExampleTest extends Tests {
                 .title(exampleName)
                 .build()
                 .createObject();
-        Response response = steps.dumpToBitbucket(example.getId());
+        Response response = dumpExampleToBitbucket(example.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
     }
 
@@ -141,21 +133,21 @@ public class ExampleTest extends Tests {
                 .title(exampleName)
                 .build()
                 .init().toJson();
-        CreateExampleResponse example = steps.createProductObject(jsonObject).extractAs(CreateExampleResponse.class);
-        Response response = steps.dumpToBitbucket(example.getId());
-        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
-        steps.deleteByName(exampleName, GetExampleListResponse.class);
+        Example example = createExample(jsonObject);
+        String message = dumpExampleToBitbucket(example.getId()).jsonPath().get("message");
+        assertEquals("Committed to bitbucket", message);
+        deleteExampleByName(exampleName);
         String path = "example_" + exampleName;
-        steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(exampleName));
-        steps.deleteByName(exampleName, GetExampleListResponse.class);
-        assertFalse(steps.isExists(exampleName));
+        loadExampleFromBitbucket(path);
+        assertTrue(isExampleExists(exampleName));
+        deleteExampleByName(exampleName);
+        assertFalse(isExampleExists(exampleName));
     }
 
     @DisplayName("Удаление Example по Id")
     @TmsLink("822423")
     @Test
-    public void deleteExampleById() {
+    public void deleteExampleByIdTest() {
         String exampleName = "example_delete_test_api";
         Example example = Example.builder()
                 .name(exampleName)
@@ -163,6 +155,6 @@ public class ExampleTest extends Tests {
                 .description("desc_partial_update_example_test_api")
                 .build()
                 .createObject();
-        steps.deleteById(example.getId());
+        deleteExampleById(example.getId());
     }
 }
