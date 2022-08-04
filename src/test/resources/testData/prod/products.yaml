@@ -65,7 +65,7 @@ PostgreSQL:
       - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
       - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
 
-RabbitMQCluster:
+RabbitMQClusterAstra:
   - options:
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
@@ -193,3 +193,7 @@ Artemis:
 Moon:
   - options:
       - { env: "DEV", resourcePoolLabel: "ds5-genr05.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app" }
+
+GitLab:
+  - options:
+      - { env: "DEV" }

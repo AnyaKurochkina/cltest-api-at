@@ -2,6 +2,7 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import models.orderService.products.Windows;
 import models.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
@@ -58,6 +59,7 @@ public class WindowsPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
 
+    @Step("Расширить диск {name} до {size}ГБ")
     public void expandDisk(String name, String size) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(getDiskMenuElement(name), "Расширить диск", "Подтвердить",
