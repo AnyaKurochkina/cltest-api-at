@@ -172,6 +172,17 @@ public class ArtemisAstraTest extends Tests {
         }
     }
 
+    @TmsLink("1093969")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновление сертификатов Artemis {0}")
+    void updateCerts(Artemis product) {
+        product.setProductName(productName);
+        try (Artemis artemis = product.createObjectExclusiveAccess()) {
+            artemis.updateCerts();
+        }
+    }
+
     @TmsLink("982660")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
