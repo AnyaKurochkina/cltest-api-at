@@ -320,6 +320,8 @@ public abstract class IProduct extends Entity {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(productId, GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         List<String> parameters = (List<String>) graphResponse.getUiSchema().get("ui:order");
+        if(Objects.isNull(parameters))
+            return jsonObject;
         if (graphResponse.getJsonSchema().containsKey("dependencies"))
             parameters.addAll(((Map<String, Object>) graphResponse.getJsonSchema().get("dependencies")).keySet());
         Iterator<String> iterator = jsonObject.getJSONObject("order").getJSONObject("attrs").keys();

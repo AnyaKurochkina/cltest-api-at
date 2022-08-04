@@ -407,7 +407,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     public static <T extends Comparable<T>> Comparable<T> getProductsField(IProduct product, String path) {
-        return (Comparable<T>) getProductsField(product, path, Comparable.class);
+        return (Comparable<T>) getProductsField(product, path, null);
     }
 
 
@@ -420,7 +420,10 @@ public class OrderServiceSteps extends Steps {
                 .get("/v1/projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
-        s = jsonPath.get(path);
+        if(Objects.nonNull(clazz))
+            s = jsonPath.getObject(path, clazz);
+        else
+            s= jsonPath.get(path);
         log.info(String.format("getFiledProduct return: %s", s));
         Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
         return s;

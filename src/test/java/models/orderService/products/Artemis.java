@@ -1,6 +1,7 @@
 package models.orderService.products;
 
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.Data;
@@ -20,6 +21,10 @@ import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+
+import static core.helper.Configure.StateServiceURL;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -148,6 +153,20 @@ public class Artemis extends IProduct {
     public void deleteService(String name) {
         OrderServiceSteps.executeAction("vtb-artemis_delete_service", this, new JSONObject("{\"name\":\"" + name + "\"}"), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
+    }
+
+    public void exportConf(){
+        OrderServiceSteps.executeAction("vtb-artemis_export_conf", this,null);
+        GlobalUser user = GlobalUser.builder().build().createObject();
+        //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
+        new Http(StateServiceURL)
+                .get("/actions/?order_id={}", orderId)
+                .assertStatus(200)
+                .getResponse().then().assertThat()
+                .rootPath("list.find{it.status.contains('send_mail:completed')}.data")
+                .body("status", is(201))
+                .body("response[0].toEmails[0]", equalTo(user.getEmail()))
+                .body("response[0].attachments.size()", is(5));
     }
 
     @Step("Удаление продукта")

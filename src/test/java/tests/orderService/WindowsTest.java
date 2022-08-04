@@ -18,7 +18,7 @@ import tests.Tests;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("windows"), @Tag("prod")})
 public class WindowsTest extends Tests {
 
-    @TmsLink("377721")
+    @TmsLinks({@TmsLink("377721"), @TmsLink("470095")})
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Windows product) {
