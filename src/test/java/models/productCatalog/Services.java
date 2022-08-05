@@ -101,6 +101,7 @@ public class Services extends Entity {
                 .set("$.icon", icon)
                 .set("$.icon_url", iconUrl)
                 .set("$.icon_store_id", iconStoreId)
+                .setIfNullRemove("$.start_btn_label", startBtnLabel)
                 .build();
     }
 
