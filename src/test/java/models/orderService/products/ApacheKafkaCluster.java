@@ -70,7 +70,8 @@ public class ApacheKafkaCluster extends IProduct {
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (kafkaVersion == null)
-            kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
+//            kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
+            kafkaVersion = "2.13-2.4.1";
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
@@ -209,6 +210,12 @@ public class ApacheKafkaCluster extends IProduct {
     public void upgradeVersion() {
         OrderServiceSteps.executeAction("kafka_release_upgrade_version", this, new JSONObject("{dumb: \"empty\"}"), this.projectId);
     }
+
+    public void upgrade281() {
+        OrderServiceSteps.executeAction("kafka_upgrade_281", this, new JSONObject("{dumb: \"empty\"}"), this.projectId);
+        Assertions.assertEquals("2.13-2.8.1", OrderServiceSteps.getProductsField(this, "attrs.kafka_version"), "Версия kafka не изменилась");
+    }
+
 
     public void start() {
         start("start_kafka");
