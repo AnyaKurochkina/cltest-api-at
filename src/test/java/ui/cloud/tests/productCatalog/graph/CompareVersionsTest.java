@@ -19,7 +19,7 @@ public class CompareVersionsTest extends GraphBaseTest {
     public void compareVersionsTest() {
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
-                .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.0.0", "description", "QA-1"))
+                .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.0.0", "", "QA-1"))
                 .saveGraphWithPatchVersion()
                 .goToVersionComparisonTab()
                 .checkCurrentVersion("1.0.1")
