@@ -14,6 +14,7 @@ import ui.uiModels.Graph;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class GraphPage {
+    private static final String saveGraphAlertText = "Граф успешно сохранен";
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
     private final SelenideElement saveButton = $x("//span[text()='Сохранить']/parent::button");
@@ -35,7 +36,6 @@ public class GraphPage {
     private final SelenideElement graphNameInput = $x("//input[@name='name']");
     private final SelenideElement graphTitleInput = $x("//input[@name='title']");
     private final SelenideElement authorInput = $x("//input[@name = 'author']");
-    private final SelenideElement saveGraphSuccessNotification = $x("//div[text()='Граф успешно сохранен']");
     private final SelenideElement graphsList = $x("//a[text()='Список графов']");
 
     public GraphPage() {
@@ -67,7 +67,7 @@ public class GraphPage {
     public GraphPage saveGraphWithPatchVersion() {
         saveButton.shouldBe(Condition.enabled).click();
         dialogSaveButton.click();
-        new Alert().checkText("Граф успешно сохранен").checkColor(Alert.Color.GREEN).close();
+        new Alert().checkText(saveGraphAlertText).checkColor(Alert.Color.GREEN).close();
         return new GraphPage();
     }
 
@@ -77,7 +77,7 @@ public class GraphPage {
         saveNextPatchVersionCheckbox.click();
         newVersionInput.shouldHave(Condition.exactValue(version));
         dialogSaveButton.click();
-        saveGraphSuccessNotification.shouldBe(Condition.visible);
+        new Alert().checkText(saveGraphAlertText).checkColor(Alert.Color.GREEN).close();
         return new GraphPage();
     }
 
@@ -88,7 +88,7 @@ public class GraphPage {
         newVersionInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         newVersionInput.setValue(newVersion);
         dialogSaveButton.click();
-        saveGraphSuccessNotification.shouldBe(Condition.visible);
+        new Alert().checkText(saveGraphAlertText).checkColor(Alert.Color.GREEN).close();
         return new GraphPage();
     }
 
@@ -123,6 +123,7 @@ public class GraphPage {
 
     @Step("Переход на вкладку 'Общая информация'")
     public GraphPage goToMainTab() {
+        TestUtils.scrollToTheTop();
         mainTab.click();
         return this;
     }

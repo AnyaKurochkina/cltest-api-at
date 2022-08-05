@@ -89,7 +89,7 @@ public class WindowsPage extends IProductPage {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getDiskMenuElement(name), "Удалить диск");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(new Table(HEADER_CONNECT_STATUS).hasColumnValue(HEADER_PATH, name), "Диск существует");
+        Assertions.assertFalse(new Table(HEADER_CONNECT_STATUS).isColumnValueEquals(HEADER_PATH, name), "Диск существует");
     }
 
     public void checkConfiguration() {
@@ -119,7 +119,7 @@ public class WindowsPage extends IProductPage {
         });
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         Table diskTable = new Table(HEADER_CONNECT_STATUS);
-        Assertions.assertTrue(diskTable.hasColumnValue(HEADER_PATH, name), "Диск не существует");
+        Assertions.assertTrue(diskTable.isColumnValueEquals(HEADER_PATH, name), "Диск не существует");
         Assertions.assertAll("Проверка полей диска",
                 ()-> Assertions.assertEquals(size, diskTable.getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_DISK_SIZE)
                         , "Неверный размер диска"),

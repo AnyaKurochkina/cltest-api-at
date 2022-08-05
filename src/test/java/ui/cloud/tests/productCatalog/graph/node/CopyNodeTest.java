@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.uiModels.SubgraphNode;
+import ui.uiModels.TemplateNode;
 
 @Epic("Графы")
 @Feature("Копирование узла графа")
@@ -19,6 +20,7 @@ public class CopyNodeTest extends GraphBaseTest {
     @DisplayName("Создание подграфа для узла графа")
     public void setUpForGraphNodesTest() {
         createGraph(SUBGRAPH_NAME, SUBGRAPH_TITLE);
+        createTemplate(TEMPLATE_NAME);
     }
 
     @AfterEach
@@ -26,6 +28,7 @@ public class CopyNodeTest extends GraphBaseTest {
     public void tearDownForGraphTests() {
         deleteGraph(NAME);
         deleteGraph(SUBGRAPH_NAME);
+        deleteTemplate(TEMPLATE_NAME);
     }
 
     @Test
@@ -33,6 +36,18 @@ public class CopyNodeTest extends GraphBaseTest {
     @DisplayName("Копирование узла с подграфом")
     public void copyGraphNode() {
         SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
+        new IndexPage().goToGraphsPage()
+                .findAndOpenGraphPage(NAME)
+                .goToNodesTab()
+                .addNodeAndSave(node)
+                .copyNodeAndSave(node);
+    }
+
+    @Test
+    @TmsLink("1055632")
+    @DisplayName("Копирование узла с шаблоном")
+    public void copyTemplateNode() {
+        TemplateNode node = new TemplateNode(TEMPLATE_NAME);
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()

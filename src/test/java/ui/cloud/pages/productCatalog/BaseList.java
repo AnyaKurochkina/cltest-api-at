@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Table;
@@ -16,6 +17,7 @@ public class BaseList {
     private static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
 
+    @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
         Table table = new Table(header);
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
@@ -34,6 +36,7 @@ public class BaseList {
         Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) < 0);
     }
 
+    @Step("Проверка сортировки по дате по столбцу '{header}'")
     public static void checkSortingByDateField(String header) {
         Table table = new Table(header);
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
@@ -57,11 +60,13 @@ public class BaseList {
         Assertions.assertTrue(lastDate.isBefore(firstDate) || lastDate.isEqual(firstDate));
     }
 
+    @Step("Переход на следующую страницу списка")
     public static void nextPage() {
         TestUtils.scrollToTheBottom();
         nextPageButton.click();
     }
 
+    @Step("Переход на последнюю страницу списка")
     public static void lastPage() {
         TestUtils.scrollToTheBottom();
         lastPageButton.click();

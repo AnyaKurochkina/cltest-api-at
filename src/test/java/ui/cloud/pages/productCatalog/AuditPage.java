@@ -7,9 +7,13 @@ import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.graph.GraphPage;
 import ui.cloud.tests.productCatalog.TestUtils;
+import ui.elements.Alert;
+import ui.elements.DropDown;
+import ui.elements.Input;
 import ui.elements.Table;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.actions;
 
 public class AuditPage extends GraphPage {
 
@@ -19,16 +23,21 @@ public class AuditPage extends GraphPage {
     private final SelenideElement response = $x("//span[text()='Ответ']/ancestor::div[2]");
     private final SelenideElement showRequest = $x("//input[@name='returnLogBody']");
     private final SelenideElement showResponse = $x("//input[@name='returnLogReplyBody']");
-    private final SelenideElement paramsFullView = $x("//div[@role='dialog']//p']");
+    private final SelenideElement paramsFullView = $x("//div[@role='dialog']//p");
     private final SelenideElement copyContextIdButton = $x("//tbody//button[@title='Скопировать данные']");
+    private final SelenideElement showFullView = $x("//span[text()='Ответ']//following::button[@title='Открыть в полном формате']");
     private final SelenideElement copyAddressButton = $x("//span[text()='Адрес']/following::button[@title='Скопировать'][1]");
+    private final SelenideElement additionalFilters = $x("//div[text()='Дополнительные фильтры']");
+    private final SelenideElement clearOperationTypeFilter = $x("//*[@id='searchSelectClearIcon']");
+    private final SelenideElement applyAdditionalFiltersButton = $x("//label[text()='Учетная запись']//following::span[text()='Применить']/parent::button");
+    private final SelenideElement applyFiltersByDateButton = $x("//label[text()='Учетная запись']//preceding::span[text()='Применить']/parent::button");
 
     @Step("Проверка первой записи в таблице аудита")
     public AuditPage checkFirstRecord(String dateTime, String user, String operationType, String object, String statusCode, String status) {
         TestUtils.wait(1000);
         checkAuditIsLoaded();
         Table table = new Table("Учетная запись");
-        if (!table.hasColumnValueContaining("Тип операции", operationType)) {
+        if (!table.isColumnValueContains("Тип операции", operationType)) {
             TestUtils.wait(2000);
             Selenide.refresh();
             new GraphPage().goToAuditTab();
@@ -40,6 +49,14 @@ public class AuditPage extends GraphPage {
         table.getValueByColumnInFirstRow("Объект").shouldHave(Condition.exactText(object));
         table.getValueByColumnInFirstRow("Код статуса").shouldHave(Condition.text(statusCode));
         table.getValueByColumnInFirstRow("Статус").shouldHave(Condition.exactText(status));
+        return this;
+    }
+
+    @Step("Проверка отображения записи с типом операции '{operationType}'")
+    public AuditPage checkRecordWithOperationTypeFound(String operationType) {
+        TestUtils.wait(600);
+        Table table = new Table("Учетная запись");
+        table.getRowElementByColumnValue("Тип операции", operationType);
         return this;
     }
 
@@ -63,6 +80,14 @@ public class AuditPage extends GraphPage {
         return this;
     }
 
+    @Step("Проверка отсутствия записей в аудите")
+    public AuditPage checkRecordsNotFound() {
+        TestUtils.wait(600);
+        Assertions.assertTrue($x("//div[text()='Дата и время']/ancestor::table//td[text()='Нет данных для отображения']")
+                .exists());
+        return this;
+    }
+
     @Step("Включение отображения запроса и ответа")
     public AuditPage showRequestAndResponse() {
         showRequest.click();
@@ -78,6 +103,19 @@ public class AuditPage extends GraphPage {
         Assertions.assertTrue(Selenide.clipboard().getText().contains(contextId.getText()));
         copyAddressButton.click();
         Assertions.assertTrue(Selenide.clipboard().getText().equals(address.getText()));
+        table.getRowByIndex(0).click();
+        return this;
+    }
+
+    @Step("Проверка отображения '{value}' в полноэкранном режиме ответа")
+    public AuditPage checkResponseFullViewContains(String value) {
+        Table table = new Table("Учетная запись");
+        table.getRowByIndex(0).click();
+        showFullView.scrollTo().click();
+        TestUtils.wait(500);
+        Assertions.assertTrue(paramsFullView.getText().contains(value));
+        paramsFullView.hover();
+        actions().moveByOffset(0, 300).click().perform();
         return this;
     }
 
@@ -86,8 +124,72 @@ public class AuditPage extends GraphPage {
         if ($x("//div[text()='Дата и время']/ancestor::table//td[text()='Нет данных для отображения']").exists()) {
             TestUtils.wait(2000);
             Selenide.refresh();
+            new Alert().close();
             new GraphPage().goToAuditTab();
         }
     }
 
+    @Step("Задание фильтра по типу операции")
+    public AuditPage setOperationTypeFilterAndApply(String value) {
+        showAdditionalFilters();
+        DropDown operationTypeDropDown = DropDown.byLabel("Тип операции");
+        operationTypeDropDown.selectByTitle(value);
+        return this;
+    }
+
+    @Step("Задание в фильтре по учетной записи значения '{value}'")
+    public AuditPage setUserFilterAndApply(String value) {
+        showAdditionalFilters();
+        Input userInput = Input.byLabel("Учетная запись");
+        userInput.setValue(value);
+        applyAdditionalFiltersButton.click();
+        return this;
+    }
+
+    @Step("Задание в фильтре по коду статуса значения '{value}'")
+    public AuditPage setStatusCodeFilterAndApply(String value) {
+        showAdditionalFilters();
+        Input statusCodeInput = Input.byLabel("Код статуса");
+        statusCodeInput.setValue(value);
+        applyAdditionalFiltersButton.click();
+        return this;
+    }
+
+    @Step("Раскрытие дополнительных фильтров")
+    private void showAdditionalFilters() {
+        TestUtils.scrollToTheTop();
+        DropDown operationTypeDropDown = DropDown.byLabel("Тип операции");
+        if (!operationTypeDropDown.getElement().isDisplayed()) {
+            additionalFilters.click();
+        }
+    }
+
+    @Step("Очистка дополнительных фильтров")
+    public AuditPage clearAdditionalFilters() {
+        clearOperationTypeFilter.click();
+        Input.byLabel("Учетная запись").clear();
+        Input.byLabel("Код статуса").clear();
+        return this;
+    }
+
+    @Step("Задание фильтра по датам")
+    public AuditPage setFilterByDate(String beginDate, String endDate) {
+        TestUtils.scrollToTheTop();
+        DropDown periodDropDown = DropDown.byLabel("Период");
+        periodDropDown.select("задать период");
+        Input beginDateInput = Input.byLabel("Начало");
+        beginDateInput.setValue(beginDate);
+        Input endDateInput = Input.byLabel("Окончание");
+        endDateInput.setValue(endDate);
+        applyFiltersByDateButton.click();
+        return this;
+    }
+
+    @Step("Выбор периода времени")
+    public AuditPage selectPeriod(String periodName) {
+        TestUtils.scrollToTheTop();
+        DropDown periodDropDown = DropDown.byLabel("Период");
+        periodDropDown.select(periodName);
+        return this;
+    }
 }

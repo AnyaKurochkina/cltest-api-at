@@ -6,6 +6,7 @@ import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.uiModels.Graph;
 
 @Epic("Графы")
@@ -18,7 +19,7 @@ public class CompareVersionsTest extends GraphBaseTest {
     public void compareVersionsTest() {
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
-                .editGraph(new Graph(NAME, "test", "test"))
+                .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.0.0", "description", "QA-1"))
                 .saveGraphWithPatchVersion()
                 .goToVersionComparisonTab()
                 .checkCurrentVersion("1.0.1")

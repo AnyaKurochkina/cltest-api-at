@@ -67,6 +67,7 @@ public class GraphsListPage {
     public GraphsListPage copyGraph(String name) {
         openActionMenu(name);
         copyAction.click();
+        new Alert().checkText("Граф успешно скопирован").checkColor(Alert.Color.GREEN).close();
         cancelButton.shouldBe(Condition.enabled).click();
         return this;
     }

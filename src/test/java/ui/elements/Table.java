@@ -66,8 +66,8 @@ public class Table implements TypifiedElement {
         throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
     }
 
-    @Step("Проверка существования в колонке '{column}' значения '{value}'")
-    public boolean hasColumnValue(String column, String value) {
+    @Step("Проверка, что в колонке '{column}' есть значение, равное '{value}'")
+    public boolean isColumnValueEquals(String column, String value) {
         for (SelenideElement e : rows) {
             if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().equals(value))
                 return true;
@@ -76,7 +76,7 @@ public class Table implements TypifiedElement {
     }
 
     @Step("Проверка, что в колонке '{column}' есть значение, содержащее '{value}'")
-    public boolean hasColumnValueContaining(String column, String value) {
+    public boolean isColumnValueContains(String column, String value) {
         for (SelenideElement e : rows) {
             if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().contains(value))
                 return true;
