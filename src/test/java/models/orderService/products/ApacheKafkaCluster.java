@@ -217,7 +217,7 @@ public class ApacheKafkaCluster extends IProduct {
 
     public void upgrade281() {
         OrderServiceSteps.executeAction("kafka_upgrade_281", this, new JSONObject("{dumb: \"empty\"}"), this.projectId);
-        Assertions.assertEquals("2.13-2.8.1", OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.config.kafka_version"), "Версия kafka не изменилась");
+        Assertions.assertEquals("2.13-2.8.1", OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.data.config.kafka_version"), "Версия kafka не изменилась");
     }
 
 
@@ -239,6 +239,10 @@ public class ApacheKafkaCluster extends IProduct {
 
     public void expandMountPoint() {
         expandMountPoint("expand_mount_point_new", "/app", 10);
+    }
+
+    public void kafkaExpandMountPoint() {
+        expandMountPoint("kafka_expand_mount_point", "/app", 10);
     }
 
     public void restart() {

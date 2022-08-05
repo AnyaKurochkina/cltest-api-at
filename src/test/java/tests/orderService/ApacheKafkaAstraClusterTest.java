@@ -208,6 +208,17 @@ public class ApacheKafkaAstraClusterTest extends Tests {
         }
     }
 
+    @TmsLink("1095609")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Увеличить дисковое пространство {0}")
+    void kafkaExpandMountPoint(ApacheKafkaCluster product) {
+        product.setProductName(productName);
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.kafkaExpandMountPoint();
+        }
+    }
+
     @TmsLink("1055546")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
