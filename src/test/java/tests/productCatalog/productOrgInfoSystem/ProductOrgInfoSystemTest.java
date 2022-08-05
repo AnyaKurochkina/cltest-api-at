@@ -7,7 +7,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.authorizer.InformationSystem;
-import models.productCatalog.Product;
+import models.productCatalog.product.Product;
 import models.productCatalog.ProductOrgInfoSystem;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;

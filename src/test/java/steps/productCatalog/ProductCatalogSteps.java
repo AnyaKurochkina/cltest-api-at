@@ -483,7 +483,7 @@ public class ProductCatalogSteps {
                 .extractAs(GetInfoSystemListResponse.class);
     }
 
-    private static String delNoDigOrLet(String s) {
+    public static String delNoDigOrLet(String s) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             if (Character.isLetterOrDigit(s.charAt(i)))

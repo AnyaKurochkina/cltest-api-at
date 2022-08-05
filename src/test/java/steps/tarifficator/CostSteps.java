@@ -9,7 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
 import models.orderService.interfaces.IProduct;
-import models.productCatalog.Product;
+import models.productCatalog.product.Product;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;

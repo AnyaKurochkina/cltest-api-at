@@ -39,7 +39,7 @@ public class ForbiddenActionTest extends Tests {
     }
 
     @DisplayName("Импорт запрещенного действия действия")
-    @TmsLink("")
+    @TmsLink("1092365")
     @Test
     public void importForbiddenAction() {
         String data = JsonHelper.getStringFromFile("/productCatalog/forbiddenAction/importForbiddenAction.json");

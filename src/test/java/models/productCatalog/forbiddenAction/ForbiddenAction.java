@@ -53,7 +53,7 @@ public class ForbiddenAction extends Entity {
     @Override
     public Entity init() {
         jsonTemplate = "productCatalog/forbiddenAction/createForbiddenAction.json";
-        productName = "/api/v1/forbidden_action/";
+        productName = "/api/v1/forbidden_actions/";
         if (actionId == null) {
             Action action = Action.builder().actionName("action_for_forbidden_action_api_test").build().createObject();
             actionId = action.getActionId();

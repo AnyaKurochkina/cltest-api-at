@@ -10,8 +10,8 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.authorizer.Project;
-import models.productCatalog.Categories;
-import models.productCatalog.Product;
+import models.productCatalog.product.Categories;
+import models.productCatalog.product.Product;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductSteps.getProductList;
+import static steps.productCatalog.ProductSteps.isProductListSorted;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -43,8 +44,8 @@ public class ProductListTest extends Tests {
                 .name(productName)
                 .build()
                 .createObject();
-        List<ItemImpl> list = getProductList();
-        assertTrue(steps.isSorted(list), "Список не отсортирован.");
+        List<Product> list = getProductList();
+        assertTrue(isProductListSorted(list), "Список не отсортирован.");
     }
 
     @DisplayName("Проверка значения next в запросе на получение списка продуктов")

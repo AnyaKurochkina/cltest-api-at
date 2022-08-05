@@ -20,7 +20,7 @@ import models.authorizer.Organization;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
 import models.productCatalog.graph.Graph;
-import models.productCatalog.Product;
+import models.productCatalog.product.Product;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;

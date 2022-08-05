@@ -14,7 +14,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
-import models.productCatalog.Product;
+import models.productCatalog.product.Product;
 import models.productCatalog.Services;
 import models.productCatalog.graph.*;
 import org.apache.commons.lang3.RandomStringUtils;
