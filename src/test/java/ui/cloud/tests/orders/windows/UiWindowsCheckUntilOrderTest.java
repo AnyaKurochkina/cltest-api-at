@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders;
+package ui.cloud.tests.orders.windows;
 
 
 import com.codeborne.selenide.Condition;
@@ -40,55 +40,32 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-//        Configuration.browserSize = "1366x768";
         new LoginPage(product.getProjectId())
                 .signIn();
     }
 
     @Test
     @TmsLink("975914")
-    @Order(1)
-    @DisplayName("UI Windows. Проверка поля Количество VM до заказа продукта")
+    @DisplayName("UI Windows. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
         WindowsOrderPage orderPage = new WindowsOrderPage();
+
+        //Проверка кнопки Заказать на неактивность, до заполнения полей
+        orderPage.getOrderBtn().shouldBe(Condition.disabled);
+
+        //Проверка поля Кол-во
         orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
         orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
         orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "1");
-    }
 
-    @Test
-    @TmsLink("976622")
-    @DisplayName("UI Windows. Проверка поля Метка до заказа продукта")
-    void checkFieldMark() {
-        new IndexPage()
-                .clickOrderMore()
-                .selectProduct(product.getProductName());
-        WindowsOrderPage orderPage = new WindowsOrderPage();
+        //Проверка поля Метка
         orderPage.getLabel().setValue("");
         $(byText("Поле должно содержать от 3 до 64 символов")).should(Condition.exist);
-    }
 
-    @Test
-    @TmsLink("976626")
-    @DisplayName("UI Windows. Проверка кнопки Заказать на неактивность, до заполнения полей")
-    void checkBtnOrderDisabled() {
-        new IndexPage()
-                .clickOrderMore()
-                .selectProduct(product.getProductName());
-        new WindowsOrderPage().getOrderBtn().shouldBe(Condition.disabled);
-    }
-
-    @Test
-    @TmsLink("976724")
-    @DisplayName("UI Windows. Проверка Детали заказа.")
-    void checkDetailsOrder() {
-        new IndexPage()
-                .clickOrderMore()
-                .selectProduct(product.getProductName());
-        WindowsOrderPage orderPage = new WindowsOrderPage();
+        //Проверка Детали заказа
         orderPage.getOsVersion().select(product.getOsVersion());
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
@@ -98,4 +75,5 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         orderPage.getGroup().select(accessGroup.getPrefixName());
         new WindowsOrderPage().checkOrderDetails();
     }
+
 }
