@@ -70,7 +70,8 @@ public class ApacheKafkaCluster extends IProduct {
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (kafkaVersion == null)
-            kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
+//            kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
+            kafkaVersion = "2.13-2.4.1";
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
@@ -166,6 +167,10 @@ public class ApacheKafkaCluster extends IProduct {
         OrderServiceSteps.executeAction("kafka_edit_cluster_name", this, new JSONObject().append("new_name", name), this.projectId);
     }
 
+    public void resize() {
+        resize("kafka_resize_cluster_vms");
+    }
+
     public void createAcl(String topicName, KafkaRoles role) {
         OrderServiceSteps.executeAction("kafka_create_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"APD09.26-1418-kafka-dl-client-cert\",\"topic_type\":\"by_name\",\"client_role\":\"" + role.getRole() + "\",\"topic_names\":[\"" + topicName + "\"]}]}"), this.projectId);
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TOPICS, role.getRole(), topicName)), "ACL на топик не создался");
@@ -210,6 +215,12 @@ public class ApacheKafkaCluster extends IProduct {
         OrderServiceSteps.executeAction("kafka_release_upgrade_version", this, new JSONObject("{dumb: \"empty\"}"), this.projectId);
     }
 
+    public void upgrade281() {
+        OrderServiceSteps.executeAction("kafka_upgrade_281", this, new JSONObject("{dumb: \"empty\"}"), this.projectId);
+        Assertions.assertEquals("2.13-2.8.1", OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.data.config.kafka_version"), "Версия kafka не изменилась");
+    }
+
+
     public void start() {
         start("start_kafka");
     }
@@ -228,6 +239,10 @@ public class ApacheKafkaCluster extends IProduct {
 
     public void expandMountPoint() {
         expandMountPoint("expand_mount_point_new", "/app", 10);
+    }
+
+    public void kafkaExpandMountPoint() {
+        expandMountPoint("kafka_expand_mount_point", "/app", 10);
     }
 
     public void restart() {

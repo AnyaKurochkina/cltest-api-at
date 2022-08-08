@@ -11,6 +11,7 @@ import org.json.JSONObject;
 public class GlobalUser extends Entity {
     String username;
     String password;
+    String email;
     Role role;
 
     @Override

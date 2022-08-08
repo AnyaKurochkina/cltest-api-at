@@ -2,6 +2,7 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import models.orderService.products.Windows;
 import models.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
@@ -27,7 +28,7 @@ public class WindowsPage extends IProductPage {
         super(product);
     }
 
-    public void delete() throws Throwable {
+    public void delete() {
         runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
         {
             Dialog dlgActions = new Dialog("Удаление");
@@ -48,7 +49,7 @@ public class WindowsPage extends IProductPage {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    public void changeConfiguration() throws Throwable {
+    public void changeConfiguration() {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
@@ -58,7 +59,8 @@ public class WindowsPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
 
-    public void expandDisk(String name, String size) throws Throwable {
+    @Step("Расширить диск {name} до {size}ГБ")
+    public void expandDisk(String name, String size) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(getDiskMenuElement(name), "Расширить диск", "Подтвердить",
                 () -> Input.byLabel("Итоговый объем дискового пространства, Гб").setValue(size));
@@ -107,7 +109,7 @@ public class WindowsPage extends IProductPage {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
-    public void addDisk(String name, String size) throws Throwable {
+    public void addDisk(String name, String size) {
         new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("Дополнительные диски", "Добавить диск", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Добавить диск");

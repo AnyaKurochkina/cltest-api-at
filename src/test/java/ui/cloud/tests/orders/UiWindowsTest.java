@@ -93,7 +93,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Проверка заголовка столбцов в Истории действий.")
     void checkHeaderHistoryTable() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click(ClickOptions.usingJavaScript());
+        winPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
         winPage.checkHeadersHistory();
     }
 

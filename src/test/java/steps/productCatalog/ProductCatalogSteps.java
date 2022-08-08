@@ -21,10 +21,13 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -201,10 +204,11 @@ public class ProductCatalogSteps {
         return objectId;
     }
 
+    @SneakyThrows
     @Step("Поиск ID объекта продуктового каталога по Title")
     public String getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(String title, String parameters) {
-        //TODO: временный костыль, из-за того что русские символы кодируются
-        String productNameWithEncode = title.replaceAll("Разработка", "%D0%A0%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B0");
+//        String productNameWithEncode = title.replaceAll("Разработка", "%D0%A0%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B0");
+        String productNameWithEncode = URLEncoder.encode(title, StandardCharsets.UTF_8.name());
         return Objects.requireNonNull(new Http(ProductCatalogURL)
                 .get("{}?multisearch={}&{}", productName, productNameWithEncode, parameters)
                 .assertStatus(200)

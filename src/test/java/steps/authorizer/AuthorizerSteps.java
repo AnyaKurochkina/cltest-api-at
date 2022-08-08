@@ -4,6 +4,7 @@ import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import models.authorizer.Organization;
 import models.authorizer.Project;
 import models.authorizer.UserItem;
 import steps.Steps;
@@ -71,6 +72,13 @@ public class AuthorizerSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .get("[0].unique_name");
+    }
+
+    @Step("Получение списка пользователей организации по тексту '{text}'")
+    public static List<UserItem> findUsers(String text, Organization org) {
+        @SuppressWarnings (value="unchecked")
+        List<UserItem> users = (List<UserItem>) listEntities(IamURL, String.format("/v1/users?q=%s&organization=%s", text, org.getName()), UserItem.class);
+        return users;
     }
 
     @SneakyThrows

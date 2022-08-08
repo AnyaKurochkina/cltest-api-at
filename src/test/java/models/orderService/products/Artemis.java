@@ -1,25 +1,28 @@
 package models.orderService.products;
 
 import core.helper.JsonHelper;
-import core.utils.ssh.SshClient;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.authorizer.GlobalUser;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
-import models.authorizer.GlobalUser;
 import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
-import models.subModels.Db;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static core.helper.Configure.StateServiceURL;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -148,6 +151,32 @@ public class Artemis extends IProduct {
     public void deleteService(String name) {
         OrderServiceSteps.executeAction("vtb-artemis_delete_service", this, new JSONObject("{\"name\":\"" + name + "\"}"), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
+    }
+
+    public void exportConf(){
+        OrderServiceSteps.executeAction("vtb-artemis_export_conf", this,null);
+        GlobalUser user = GlobalUser.builder().build().createObject();
+        //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
+        new Http(StateServiceURL)
+                .get("/actions/?order_id={}", orderId)
+                .assertStatus(200)
+                .getResponse().then().assertThat()
+                .rootPath("list.find{it.status.contains('send_mail:completed')}.data")
+                .body("status", is(201))
+                .body("response[0].toEmails[0]", equalTo(user.getEmail()))
+                .body("response[0].attachments.size()", is(5));
+    }
+
+    @SneakyThrows
+    public void updateCerts() {
+        Date dateBeforeUpdate;
+        Date dateAfterUpdate;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration"));
+        super.updateCerts("vtb-artemis_update-cert");
+        dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration"));
+        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
+
     }
 
     @Step("Удаление продукта")
