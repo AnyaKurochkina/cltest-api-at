@@ -6,6 +6,7 @@ import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.uiModels.Graph;
 
 @Epic("Графы")
 @Feature("Копирование графа")
@@ -20,8 +21,8 @@ public class CopyGraphTest extends GraphBaseTest {
                 .findGraphByName(NAME)
                 .copyGraph(NAME)
                 .findGraphByName(copyName)
-                .openGraphPage(copyName)
-                .checkGraphAttributes(copyName, TITLE, "1.0.0");
+                .findAndOpenGraphPage(copyName)
+                .checkGraphAttributes(new Graph(copyName, TITLE, "1.0.0"));
         deleteGraph(copyName);
     }
 }

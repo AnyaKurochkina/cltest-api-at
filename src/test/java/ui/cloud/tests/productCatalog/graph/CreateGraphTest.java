@@ -7,6 +7,8 @@ import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.productCatalog.enums.graph.GraphType;
+import ui.uiModels.Graph;
 
 @Epic("Графы")
 @Feature("Создание графа")
@@ -26,7 +28,7 @@ public class CreateGraphTest extends GraphBaseTest {
     @Step("Создание графа")
     public void createGraph() {
         new IndexPage().goToGraphsPage()
-                .createGraph(TITLE, name, "action", DESCRIPTION, AUTHOR)
+                .createGraph(new Graph(name, TITLE, GraphType.ACTION, "1.0.0", DESCRIPTION, AUTHOR))
                 .findGraphByName(name);
         deleteGraph(name);
     }

@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
+import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.tests.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
@@ -13,6 +14,7 @@ import ui.uiModels.Graph;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class GraphPage {
+    private static final String saveGraphAlertText = "Граф успешно сохранен";
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
     private final SelenideElement saveButton = $x("//span[text()='Сохранить']/parent::button");
@@ -25,14 +27,16 @@ public class GraphPage {
     private final SelenideElement viewJSONButton = $x("//span[text()='JSON']/parent::button");
     private final SelenideElement expandJSONView = $x("//button[@aria-label='fullscreen']");
     private final SelenideElement closeJSONView = $x("//button[@aria-label='close']");
+    private final SelenideElement mainTab = $x("//span[text()='Общая информация']//parent::button");
     private final SelenideElement nodesTab = $x("//span[text()='Узлы']//parent::button");
     private final SelenideElement modifiersTab = $x("//span[text()='Модификаторы']//parent::button");
     private final SelenideElement orderParamsTab = $x("//span[text()='Параметры заказа']//parent::button");
     private final SelenideElement versionComparisonTab = $x("//span[text()='Сравнение версий']//parent::button");
+    private final SelenideElement auditTab = $x("//span[text()='История изменений']//parent::button");
     private final SelenideElement graphNameInput = $x("//input[@name='name']");
     private final SelenideElement graphTitleInput = $x("//input[@name='title']");
     private final SelenideElement authorInput = $x("//input[@name = 'author']");
-    private final SelenideElement saveGraphSuccessNotification = $x("//div[text()='Граф успешно сохранен']");
+    private final SelenideElement graphsList = $x("//a[text()='Список графов']");
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
@@ -53,6 +57,7 @@ public class GraphPage {
 
     @Step("Редактирование графа '{graph.name}'")
     public GraphPage editGraph(Graph graph) {
+        goToMainTab();
         descriptionField.setValue(graph.getDescription());
         authorInput.setValue(graph.getAuthor());
         return new GraphPage();
@@ -62,7 +67,7 @@ public class GraphPage {
     public GraphPage saveGraphWithPatchVersion() {
         saveButton.shouldBe(Condition.enabled).click();
         dialogSaveButton.click();
-        new Alert().checkText("Граф успешно сохранен").checkColor(Alert.Color.GREEN).close();
+        new Alert().checkText(saveGraphAlertText).checkColor(Alert.Color.GREEN).close();
         return new GraphPage();
     }
 
@@ -72,7 +77,7 @@ public class GraphPage {
         saveNextPatchVersionCheckbox.click();
         newVersionInput.shouldHave(Condition.exactValue(version));
         dialogSaveButton.click();
-        saveGraphSuccessNotification.shouldBe(Condition.visible);
+        new Alert().checkText(saveGraphAlertText).checkColor(Alert.Color.GREEN).close();
         return new GraphPage();
     }
 
@@ -83,7 +88,7 @@ public class GraphPage {
         newVersionInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         newVersionInput.setValue(newVersion);
         dialogSaveButton.click();
-        saveGraphSuccessNotification.shouldBe(Condition.visible);
+        new Alert().checkText(saveGraphAlertText).checkColor(Alert.Color.GREEN).close();
         return new GraphPage();
     }
 
@@ -116,38 +121,52 @@ public class GraphPage {
         return new GraphPage();
     }
 
-    @Step("Переход на вкладку Узлы")
+    @Step("Переход на вкладку 'Общая информация'")
+    public GraphPage goToMainTab() {
+        TestUtils.scrollToTheTop();
+        mainTab.click();
+        return this;
+    }
+
+    @Step("Переход на вкладку 'Узлы'")
     public GraphNodesPage goToNodesTab() {
         nodesTab.click();
         return new GraphNodesPage();
     }
 
-    @Step("Переход на вкладку Модификаторы")
+    @Step("Переход на вкладку 'Модификаторы'")
     public GraphModifiersPage goToModifiersTab() {
         TestUtils.scrollToTheTop();
         modifiersTab.click();
         return new GraphModifiersPage();
     }
 
-    @Step("Переход на вкладку Параметры заказа")
+    @Step("Переход на вкладку 'Параметры заказа'")
     public GraphOrderParamsPage goToOrderParamsTab() {
         TestUtils.scrollToTheTop();
         orderParamsTab.click();
         return new GraphOrderParamsPage();
     }
 
-    @Step("Переход на вкладку Сравнение версий")
+    @Step("Переход на вкладку 'Сравнение версий'")
     public VersionComparisonPage goToVersionComparisonTab() {
         TestUtils.scrollToTheTop();
         versionComparisonTab.click();
         return new VersionComparisonPage();
     }
 
+    @Step("Переход на вкладку 'История изменений'")
+    public AuditPage goToAuditTab() {
+        TestUtils.scrollToTheTop();
+        auditTab.click();
+        return new AuditPage();
+    }
+
     @Step("Проверка атрибутов графа '{name}'")
-    public GraphPage checkGraphAttributes(String name, String title, String version) {
-        graphNameInput.shouldHave(Condition.exactValue(name));
-        graphTitleInput.shouldHave(Condition.exactValue(title));
-        checkGraphVersion(version);
+    public GraphPage checkGraphAttributes(Graph graph) {
+        graphNameInput.shouldHave(Condition.exactValue(graph.getName()));
+        graphTitleInput.shouldHave(Condition.exactValue(graph.getTitle()));
+        checkGraphVersion(graph.getVersion());
         return new GraphPage();
     }
 
@@ -161,5 +180,11 @@ public class GraphPage {
     public void deleteGraph() {
         deleteButton.click();
         new DeleteDialog().inputValidId();
+    }
+
+    @Step("Возврат в список графов")
+    public GraphsListPage returnToGraphsList() {
+        graphsList.click();
+        return new GraphsListPage();
     }
 }
