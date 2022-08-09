@@ -69,7 +69,7 @@ public class GetServiceResponse implements GetImpl {
 	private String direction;
 
 	@JsonProperty("start_btn_label")
-	private Object startBtnLabel;
+	private String startBtnLabel;
 
 	@JsonProperty("version_create_dt")
 	private String versionCreateDt;

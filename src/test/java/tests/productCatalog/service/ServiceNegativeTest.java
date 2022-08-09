@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Сервисы")
@@ -128,5 +130,21 @@ public class ServiceNegativeTest extends Tests {
                 .build().createObject();
         String serviceId = service.getServiceId();
         steps.partialUpdateObject(serviceId, new JSONObject().put("current_version", "2")).assertStatus(500);
+    }
+
+    @DisplayName("Негативный тест на создание сервиса c пустым полем start_btn_label")
+    @TmsLink("1095548")
+    @Test
+    public void createServiceWithOutStartBtnLabel() {
+        JSONObject json = Services.builder()
+                .serviceName("delete_service_with_out_token_test_api")
+                .title("title_service_test_api")
+                .description("ServiceForAT")
+                .startBtnLabel("")
+                .build().init().toJson();
+        Object str = steps.createProductObject(json)
+                .assertStatus(400)
+                .jsonPath().getList("start_btn_label").get(0);
+        assertEquals("Это поле не может быть пустым.", str);
     }
 }

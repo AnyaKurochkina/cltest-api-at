@@ -486,4 +486,19 @@ public class ServicesTest extends Tests {
         steps.deleteByName(serviceName, GetServiceListResponse.class);
         assertFalse(steps.isExists(serviceName));
     }
+
+    @DisplayName("Проверка дефолтного значения start_btn_label")
+    @TmsLink("1095542")
+    @Test
+    public void createServiceWithStartBtnNull() {
+        String name = "create_service_with_start_btn_null";
+        Services service = Services.builder()
+                .serviceName(name)
+                .title("title_service_test_api")
+                .description("ServiceForAT")
+                .build()
+                .createObject();
+        GetServiceResponse getService = (GetServiceResponse) steps.getById(service.getServiceId(), GetServiceResponse.class);
+        assertEquals("Запуск", getService.getStartBtnLabel());
+    }
 }
