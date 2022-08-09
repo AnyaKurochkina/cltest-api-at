@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders;
+package ui.cloud.tests.orders.windows;
 
 import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Condition;
@@ -38,14 +38,13 @@ public class UiWindowsTest extends Tests {
             product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 //            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
-            product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
+            product = Windows.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
     }
 
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        //Configuration.browserSize = "1366x768";
         new LoginPage(product.getProjectId())
                 .signIn();
     }
@@ -84,26 +83,17 @@ public class UiWindowsTest extends Tests {
             throw e;
         }
         WindowsPage winPage = new WindowsPage(product);
-        Assertions.assertEquals(preBillingProductPrice, winPage.getCostOrder(), 0.01);
+        Assertions.assertEquals(preBillingProductPrice, winPage.getCostOrder(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
     }
 
     @Test
     @TmsLink("976726")
     @Order(2)
-    @DisplayName("UI Windows. Проверка заголовка столбцов в Истории действий.")
+    @DisplayName("UI Windows. Проверка полей заказа")
     void checkHeaderHistoryTable() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
         winPage.checkHeadersHistory();
-    }
-
-    @Test
-    @TmsLink("976731")
-    @Order(3)
-    @DisplayName("UI Windows. Проверка элемента 'Схема выполнения'")
-    void checkHistoryGraphScheme() {
-        WindowsPage winPage = new WindowsPage(product);
-        winPage.getBtnHistory().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         winPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();
     }

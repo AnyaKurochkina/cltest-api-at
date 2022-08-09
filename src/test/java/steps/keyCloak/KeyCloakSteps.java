@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.GlobalUser;
 import models.authorizer.ServiceAccount;
 import models.keyCloak.*;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.Objects;
 
@@ -23,6 +24,7 @@ public class KeyCloakSteps {
     public static synchronized String getNewUserToken(Role role) {
         //Получение пользователя из памяти
         GlobalUser globalUser = GlobalUser.builder().role(role).build().createObject();
+        Assertions.assertNotNull(globalUser.getUsername(), String.format("Пользователь с ролью %s не найден", role));
         //Отправка запроса на получение токена
         return new Http(URL)
                 .setContentType("application/x-www-form-urlencoded")

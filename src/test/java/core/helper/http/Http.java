@@ -45,7 +45,7 @@ public class Http {
     String method;
     String token = "";
     private String field = "";
-    private Role role = Role.ADMIN;
+    private Role role;
     String contentType = "application/json";
     private boolean isUsedToken = true;
     private static final Semaphore SEMAPHORE = new Semaphore(2, true);
@@ -240,8 +240,10 @@ public class Http {
             if (isUsedToken) {
                 if (isFixedRole())
                     token = "bearer " + KeyCloakSteps.getUserToken(fixedRole.get());
-                if (token.length() == 0)
+                if (token.length() == 0) {
+                    Assertions.assertNotNull(role, "Не задана роль для запроса");
                     token = "bearer " + KeyCloakSteps.getUserToken(role);
+                }
                 specification.header("Authorization", token);
             }
             if (field.length() > 0) {

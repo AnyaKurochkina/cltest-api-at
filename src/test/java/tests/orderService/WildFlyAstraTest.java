@@ -112,6 +112,17 @@ public class WildFlyAstraTest extends Tests {
         }
     }
 
+    @TmsLink("1095072")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Синхронизировать конфигурацию сервера {0}")
+    void syncDev(WildFly product) {
+        product.setProductName(productName);
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.syncDev();
+        }
+    }
+
     @TmsLinks({@TmsLink("989482"),@TmsLink("989486")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

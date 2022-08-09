@@ -49,7 +49,7 @@ public class VmWareOrganization extends IProduct {
     protected void create() {
         JsonPath jsonPath = new Http(PortalBackURL)
                 .body(toJson())
-                .setRole(Role.T1ADMIN)
+                .setRole(Role.T1_ADMIN)
                 .post("/v1/projects/proj-4h86otzsew/vdc_organizations")
                 .assertStatus(201)
                 .jsonPath();
@@ -59,7 +59,7 @@ public class VmWareOrganization extends IProduct {
     @Override
     protected void delete() {
         new Http(PortalBackURL)
-                .setRole(Role.T1ADMIN)
+                .setRole(Role.T1_ADMIN)
                 .delete("/v1/projects/proj-4h86otzsew/vdc_organizations/" + organizationName)
                 .assertStatus(204)
                 .jsonPath();

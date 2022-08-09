@@ -1,5 +1,6 @@
 package steps.portalBack;
 
+import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
@@ -58,7 +59,7 @@ public class PortalBackSteps extends Steps {
         String folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
         @SuppressWarnings(value = "unchecked")
         List<ProjectEnvironmentPrefix> environmentPrefixes = (List<ProjectEnvironmentPrefix>) listEntities(PortalBackURL, "/v1/folders/" + folderName +
-                "/information_systems/" + informationSystemId + "/environment_prefixes?reserved=false&status=available", ProjectEnvironmentPrefix.class, "list");
+                "/information_systems/" + informationSystemId + "/environment_prefixes?reserved=false&status=available", ProjectEnvironmentPrefix.class, "list", Role.CLOUD_ADMIN);
         environmentPrefixes.forEach(PortalBackSteps::setEnvType);
         return environmentPrefixes;
     }
