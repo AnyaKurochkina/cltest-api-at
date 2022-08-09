@@ -2,7 +2,6 @@ package models.keyCloak;
 
 import core.enums.Role;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import models.Entity;
@@ -20,7 +19,7 @@ public class UserToken extends Entity implements Token {
     @Override
     public Entity init() {
         if(role == null){
-            role = Role.ADMIN;
+            role = Role.CLOUD_ADMIN;
         }
         return this;
     }

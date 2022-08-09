@@ -1,5 +1,6 @@
 package steps.authorizer;
 
+import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
@@ -77,7 +78,7 @@ public class AuthorizerSteps extends Steps {
     @Step("Получение списка пользователей организации по тексту '{text}'")
     public static List<UserItem> findUsers(String text, Organization org) {
         @SuppressWarnings (value="unchecked")
-        List<UserItem> users = (List<UserItem>) listEntities(IamURL, String.format("/v1/users?q=%s&organization=%s", text, org.getName()), UserItem.class);
+        List<UserItem> users = (List<UserItem>) listEntities(IamURL, String.format("/v1/users?q=%s&organization=%s", text, org.getName()), UserItem.class, Role.CLOUD_ADMIN);
         return users;
     }
 
@@ -85,7 +86,7 @@ public class AuthorizerSteps extends Steps {
     @Step("Получение списка пользователей")
     public static List<UserItem> getUserList(String projectId) {
         @SuppressWarnings (value="unchecked")
-        List<UserItem> users = (List<UserItem>) listEntities(IamURL, "/v1/projects/" + projectId + "/users?", UserItem.class);
+        List<UserItem> users = (List<UserItem>) listEntities(IamURL, "/v1/projects/" + projectId + "/users?", UserItem.class, Role.CLOUD_ADMIN);
         return users;
     }
 

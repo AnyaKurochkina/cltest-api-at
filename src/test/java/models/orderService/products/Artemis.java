@@ -1,5 +1,6 @@
 package models.orderService.products;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
@@ -158,6 +159,7 @@ public class Artemis extends IProduct {
         GlobalUser user = GlobalUser.builder().build().createObject();
         //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
         new Http(StateServiceURL)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
                 .get("/actions/?order_id={}", orderId)
                 .assertStatus(200)
                 .getResponse().then().assertThat()

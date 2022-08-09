@@ -35,7 +35,7 @@ public class LoginPage {
     }
 
     public IndexPage signIn(){
-        GlobalUser user = GlobalUser.builder().role(Role.ADMIN).build().createObject();
+        GlobalUser user = GlobalUser.builder().role(Role.ORDER_SERVICE_ADMIN).build().createObject();
         return signIn(user.getUsername(), user.getPassword());
     }
 

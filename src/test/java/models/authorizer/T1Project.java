@@ -13,8 +13,6 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 
-import java.util.Objects;
-
 @Builder
 @Getter
 @Setter
@@ -41,7 +39,7 @@ public class T1Project extends Entity {
     protected void create() {
         id = new Http(Configure.ResourceManagerURL)
                 .body(toJson())
-                .setRole(Role.T1ADMIN)
+                .setRole(Role.T1_ADMIN)
                 .post(String.format("v1/organizations/org1/projects"))
                 .assertStatus(201)
                 .jsonPath()

@@ -16,7 +16,7 @@ PostgreSQL:
       - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
       - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
-RabbitMQCluster:
+RabbitMQClusterAstra:
   - options:
       - { platform: "vSphere", env: "DSO", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 

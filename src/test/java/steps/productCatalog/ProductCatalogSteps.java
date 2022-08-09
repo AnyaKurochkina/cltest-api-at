@@ -210,6 +210,7 @@ public class ProductCatalogSteps {
 //        String productNameWithEncode = title.replaceAll("Разработка", "%D0%A0%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B0");
         String productNameWithEncode = URLEncoder.encode(title, StandardCharsets.UTF_8.name());
         return Objects.requireNonNull(new Http(ProductCatalogURL)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
                 .get("{}?multisearch={}&{}", productName, productNameWithEncode, parameters)
                 .assertStatus(200)
                 .jsonPath()
