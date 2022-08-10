@@ -294,7 +294,7 @@ public class Http {
                 throw e;
             if (response != null)
                 status = response.getStatusCode();
-            Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e, status));
+            Assertions.fail(String.format("Ошибка отправки http запроса (%s) %s. \nОшибка: %s\nСтатус: %s", role, (host + path), e, status));
         } finally {
 //            if (path.endsWith("/cost") || path.contains("order-service"))
             if (!(host + path).endsWith("/openid-connect/token"))

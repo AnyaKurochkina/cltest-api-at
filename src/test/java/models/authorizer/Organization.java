@@ -37,7 +37,8 @@ public class Organization extends Entity {
                 .get("/v1/organizations?page=1&per_page=25")
                 .assertStatus(200)
                 .jsonPath()
-                .getString(String.format("data.find{it.title=='%s'}.name", title));
+                .getString("data[0]");
+//                .getString(String.format("data.find{it.title=='%s'}.name", title));
     }
 
     @Override
