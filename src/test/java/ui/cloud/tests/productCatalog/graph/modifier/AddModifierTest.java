@@ -24,7 +24,7 @@ public class AddModifierTest extends GraphBaseTest {
         modifier.setModifierData(modifierData);
         modifier.setModifierDataSubstring(modifierData);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToOrderParamsTab()
                 .setJSONSchemaAndSave("{\"title\":\"defaultTitle\"}")
                 .goToModifiersTab()
@@ -51,7 +51,7 @@ public class AddModifierTest extends GraphBaseTest {
         modifier2.setModifierDataSubstring(modifierData);
         modifier2.setNumber("2");
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToOrderParamsTab()
                 .setJSONSchemaAndSave("{\"title\":\"defaultTitle\"}")
                 .goToModifiersTab()
@@ -71,10 +71,10 @@ public class AddModifierTest extends GraphBaseTest {
         modifier.setType("update");
         String modifierData = "{\"type\": \"object\"}";
         modifier.setModifierData(modifierData);
-        String modifierDataSubstring = modifierData.substring(1,modifierData.indexOf(":"));
+        String modifierDataSubstring = modifierData.substring(1, modifierData.indexOf(":"));
         modifier.setModifierDataSubstring(modifierDataSubstring);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToOrderParamsTab()
                 .setJSONSchemaAndSave("{\"title\":\"defaultTitle\"}")
                 .goToModifiersTab()
@@ -93,10 +93,10 @@ public class AddModifierTest extends GraphBaseTest {
         modifier.setSchema("ui_schema");
         String modifierData = "[\"data_center\"]";
         modifier.setModifierData(modifierData);
-        String modifierDataSubstring = modifierData.substring(1, modifierData.length()-1);
+        String modifierDataSubstring = modifierData.substring(1, modifierData.length() - 1);
         modifier.setModifierDataSubstring(modifierDataSubstring);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToOrderParamsTab()
                 .setUISchemaAndSave("{\"ui:order\":[\"title\", \"platform\"]}")
                 .goToModifiersTab()
@@ -116,7 +116,7 @@ public class AddModifierTest extends GraphBaseTest {
         modifier.setModifierData(modifierData);
         modifier.setModifierDataSubstring(modifierData);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .setStaticData("{\"quantity\": 2}")
                 .goToModifiersTab()
@@ -131,7 +131,7 @@ public class AddModifierTest extends GraphBaseTest {
     public void createModifierWithIncorrectParameters() {
         GraphModifier modifier = new GraphModifier("test-modifier");
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToModifiersTab()
                 .addModifierAndSave(modifier);
 

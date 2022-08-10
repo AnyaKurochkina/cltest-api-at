@@ -9,10 +9,10 @@
           "type": "integer"
         },
         "next": {
-          "type": "string"
+          "type": ["string", "null"]
         },
         "previous": {
-          "type": "null"
+          "type": ["string", "null"]
         }
       },
       "additionalProperties": false,

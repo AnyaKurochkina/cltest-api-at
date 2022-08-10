@@ -1,5 +1,6 @@
 package steps.productCatalog;
 
+import core.enums.Role;
 import core.helper.http.Http;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
@@ -16,6 +17,7 @@ public class GraphSteps extends Steps {
     @Step("Получение списка Графов продуктового каталога")
     public static List<ItemImpl> getGraphList() {
         return ((GetListImpl) new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/graphs/")
                 .compareWithJsonSchema("jsonSchema/getGraphListSchema.json")
                 .assertStatus(200)

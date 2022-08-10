@@ -23,7 +23,7 @@ public class EditModifierTest extends GraphBaseTest {
         modifier.setPath("title");
         modifier.setModifierData(modifierData);
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToOrderParamsTab()
                 .setJSONSchemaAndSave("{\"title\":\"defaultTitle\"}")
                 .goToModifiersTab()

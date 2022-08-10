@@ -1,5 +1,6 @@
 package models.productCatalog;
 
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -23,6 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Builder
 @Getter
 public class Action extends Entity {
+    private String icon;
+    private String iconStoreId;
+    private String iconUrl;
     private Graph graph;
     private String currentVersion;
     private String jsonTemplate;
@@ -57,6 +61,9 @@ public class Action extends Entity {
     @Override
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
+                .set("$.icon", icon)
+                .set("$.icon_url", iconUrl)
+                .set("$.icon_store_id", iconStoreId)
                 .set("$.name", actionName)
                 .set("$.title", title)
                 .set("$.type", type)
@@ -79,6 +86,7 @@ public class Action extends Entity {
             productCatalogSteps.deleteByName(actionName, GetActionsListResponse.class);
         }
         actionId = new Http(Configure.ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -91,6 +99,7 @@ public class Action extends Entity {
     @Step("Удаление экшена")
     protected void delete() {
         new Http(Configure.ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + actionId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);

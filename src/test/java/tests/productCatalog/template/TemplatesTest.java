@@ -12,6 +12,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Template;
+import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -47,6 +48,46 @@ public class TemplatesTest extends Tests {
                 .createObject();
         GetImpl getTemplate = steps.getById(String.valueOf(template.getTemplateId()), GetTemplateResponse.class);
         assertEquals(templateName, getTemplate.getName());
+    }
+
+    @DisplayName("Создание шаблона в продуктовом каталоге с иконкой")
+    @TmsLink("1086277")
+    @Test
+    public void createTemplateWithIcon() {
+        String templateName = "create_template_with_icon_test_api";
+        Template template = Template.builder()
+                .templateName(templateName)
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+        GetTemplateResponse actualTemplate =(GetTemplateResponse) steps.getById(String.valueOf(template.getTemplateId()), GetTemplateResponse.class);
+        assertFalse(actualTemplate.getIconStoreId().isEmpty());
+        assertFalse(actualTemplate.getIconUrl().isEmpty());
+    }
+
+    @DisplayName("Создание нескольких шаблонов в продуктовом каталоге с одинаковой иконкой")
+    @TmsLink("1086329")
+    @Test
+    public void createSeveralTemplateWithSameIcon() {
+        String templateName = "create_first_template_with_same_icon_test_api";
+        Template template = Template.builder()
+                .templateName(templateName)
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+
+        Template secondTemplate = Template.builder()
+                .templateName("create_second_template_with_same_icon_test_api")
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+        GetTemplateResponse actualFirstTemplate =(GetTemplateResponse) steps.getById(String.valueOf(template.getTemplateId()), GetTemplateResponse.class);
+        GetTemplateResponse actualSecondTemplate =(GetTemplateResponse) steps.getById(String.valueOf(secondTemplate.getTemplateId()), GetTemplateResponse.class);
+        assertEquals(actualFirstTemplate.getIconUrl(), actualSecondTemplate.getIconUrl());
+        assertEquals(actualFirstTemplate.getIconStoreId(), actualSecondTemplate.getIconStoreId());
     }
 
     @DisplayName("Проверка на существование шаблона по имени")
@@ -119,6 +160,25 @@ public class TemplatesTest extends Tests {
         Assertions.assertTrue(steps.isExists(templateName));
         steps.deleteByName(templateName, GetTemplateListResponse.class);
         Assertions.assertFalse(steps.isExists(templateName));
+    }
+
+    @DisplayName("Импорт шаблона c иконкой")
+    @TmsLink("1086370")
+    @Test
+    public void importTemplateWithIcon() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/templates/importTemplateWithIcon.json");
+        String name = new JsonPath(data).get("Template.name");
+        if(steps.isExists(name)) {
+            steps.deleteByName(name, GetTemplateListResponse.class);
+        }
+        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplateWithIcon.json");
+        String id = steps.getProductObjectIdByNameWithMultiSearch(name, GetTemplateListResponse.class);
+        GetTemplateResponse template =(GetTemplateResponse) steps.getById(id, GetTemplateResponse.class);
+        assertFalse(template.getIconStoreId().isEmpty());
+        assertFalse(template.getIconUrl().isEmpty());
+        assertTrue(steps.isExists(name), "Шаблон не существует");
+        steps.deleteByName(name, GetTemplateListResponse.class);
+        assertFalse(steps.isExists(name), "Шаблон существует");
     }
 
     @DisplayName("Обновление шаблона узла с указанием версии в граничных значениях")

@@ -23,12 +23,16 @@ public class Input implements TypifiedElement {
 
     public void setValue(String value) {
         input.shouldBe(Condition.visible).shouldBe(Condition.enabled);
-        input.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
+        input.clear();
         input.setValue(value);
     }
 
     public String getValue() {
         input.shouldBe(Condition.visible);
         return input.getValue();
+    }
+
+    public void clear() {
+        input.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
     }
 }

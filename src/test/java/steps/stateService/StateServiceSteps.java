@@ -2,6 +2,7 @@ package steps.stateService;
 
 import core.helper.Configure;
 import core.helper.http.Http;
+import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
@@ -32,6 +33,7 @@ public class StateServiceSteps extends Steps {
         }
         return traceback;
     }
+
     @Step("Получение списка id из списка items")
     public static List<String> getOrdersIdList(String projectId) {
         return new Http(StateServiceURL)
@@ -41,4 +43,10 @@ public class StateServiceSteps extends Steps {
                 .getList("list.order_id");
     }
 
+    @Step("Получение версии state service")
+    public static Response getStateServiceVersion() {
+         return new Http(StateServiceURL)
+                .get("/version/")
+                .assertStatus(200);
+    }
 }

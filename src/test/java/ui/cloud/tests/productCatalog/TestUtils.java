@@ -1,7 +1,9 @@
 package ui.cloud.tests.productCatalog;
 
+import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
 
 import java.util.concurrent.TimeUnit;
 

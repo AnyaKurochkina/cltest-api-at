@@ -29,6 +29,7 @@ public class GraphBaseTest extends BaseTest {
     protected final String TEMPLATE_NAME = UUID.randomUUID().toString();
     protected ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json");
+    protected Graph graph;
 
     @BeforeEach
     @DisplayName("Создание графов через API")
@@ -43,7 +44,7 @@ public class GraphBaseTest extends BaseTest {
     }
 
     public void createGraph(String name, String title) {
-        Graph.builder()
+        graph = Graph.builder()
                 .name(name)
                 .title(title)
                 .version("1.0.0")

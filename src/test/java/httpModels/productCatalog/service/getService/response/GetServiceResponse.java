@@ -32,6 +32,12 @@ public class GetServiceResponse implements GetImpl {
 	@JsonProperty("icon")
 	private String icon;
 
+	@JsonProperty("icon_url")
+	private String iconUrl;
+
+	@JsonProperty("icon_store_id")
+	private String iconStoreId;
+
 	@JsonProperty("description")
 	private String description;
 
@@ -63,7 +69,7 @@ public class GetServiceResponse implements GetImpl {
 	private String direction;
 
 	@JsonProperty("start_btn_label")
-	private Object startBtnLabel;
+	private String startBtnLabel;
 
 	@JsonProperty("version_create_dt")
 	private String versionCreateDt;
