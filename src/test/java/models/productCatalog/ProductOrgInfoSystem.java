@@ -1,5 +1,6 @@
 package models.productCatalog;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.productOrgInfoSystem.createInfoSystem.CreateInfoSystemResponse;
@@ -44,6 +45,7 @@ public class ProductOrgInfoSystem extends Entity {
     @Override
     protected void create() {
         id = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -55,6 +57,7 @@ public class ProductOrgInfoSystem extends Entity {
     @Override
     protected void delete() {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + product + "/organizations/" + organization + "/")
                 .assertStatus(204);
     }

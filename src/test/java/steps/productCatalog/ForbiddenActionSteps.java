@@ -1,5 +1,6 @@
 package steps.productCatalog;
 
+import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import models.productCatalog.forbiddenAction.ForbiddenAction;
@@ -17,6 +18,7 @@ public class ForbiddenActionSteps extends Steps {
     @Step("Проверка существования запрещенного действия продуктового каталога по имени")
     public static boolean isForbiddenActionExists(String name) {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
     }
@@ -25,6 +27,7 @@ public class ForbiddenActionSteps extends Steps {
     public static Integer getForbiddenActionIdByNameWithMultiSearch(String name) {
         Integer objectId = null;
         List<ForbiddenAction> list = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "?include=total_count&page=1&per_page=50&multisearch=" + name)
                 .assertStatus(200).extractAs(GetForbiddenActionList.class).getList();
         for (ForbiddenAction forbiddenAction : list) {
@@ -39,6 +42,7 @@ public class ForbiddenActionSteps extends Steps {
 
     public static void deleteForbiddenActionById(Integer id) {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(endPoint + id + "/")
                 .assertStatus(204);
     }

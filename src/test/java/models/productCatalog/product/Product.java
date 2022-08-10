@@ -1,6 +1,7 @@
 package models.productCatalog.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
@@ -147,6 +148,7 @@ public class Product extends Entity {
             steps.deleteByName(name, GetProductsResponse.class);
         }
         CreateProductResponse createProductResponse = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -166,6 +168,7 @@ public class Product extends Entity {
     @Override
     protected void delete() {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + productId + "/")
                 .assertStatus(204);
         ProductCatalogSteps steps = new ProductCatalogSteps(productName,"productCatalog/products/createProduct.json");

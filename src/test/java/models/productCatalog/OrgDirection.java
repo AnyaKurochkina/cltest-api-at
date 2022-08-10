@@ -1,5 +1,6 @@
 package models.productCatalog;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.orgDirection.createOrgDirection.response.CreateOrgDirectionResponse;
@@ -60,6 +61,7 @@ public class OrgDirection extends Entity {
             productCatalogSteps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
         }
         CreateOrgDirectionResponse createOrgDirectionResponse = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -72,6 +74,7 @@ public class OrgDirection extends Entity {
     @Step("Удаление направления")
     protected void delete() {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + orgDirectionId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);

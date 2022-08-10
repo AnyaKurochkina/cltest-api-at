@@ -1,6 +1,7 @@
 package models.productCatalog.example;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.example.createExample.CreateExampleResponse;
@@ -78,6 +79,7 @@ public class Example extends Entity {
             steps.deleteByName(name, GetExampleListResponse.class);
         }
         CreateExampleResponse example = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -92,6 +94,7 @@ public class Example extends Entity {
     @Step("Удаление примера")
     protected void delete() {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + id + "/")
                 .assertStatus(204);
     }

@@ -1,5 +1,6 @@
 package steps.productCatalog;
 
+import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import models.productCatalog.icon.GetIconList;
@@ -17,6 +18,7 @@ public class IconSteps extends Steps {
     @Step("Проверка существования Иконки по имени")
     public static boolean isIconExists(String name) {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
     }
@@ -24,6 +26,7 @@ public class IconSteps extends Steps {
     @Step("Удаление иконки по id")
     public static void deleteIconById(String id) {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(endPoint + id + "/");
     }
 

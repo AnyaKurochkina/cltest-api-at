@@ -1,5 +1,6 @@
 package models.productCatalog;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.template.createTemplate.response.CreateTemplateResponse;
@@ -90,6 +91,7 @@ public class Template extends Entity {
             productCatalogSteps.deleteByName(templateName, GetTemplateListResponse.class);
         }
         CreateTemplateResponse createTemplateResponse = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -101,6 +103,7 @@ public class Template extends Entity {
     @Override
     protected void delete() {
          new Http(ProductCatalogURL)
+                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + templateId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);

@@ -1,6 +1,5 @@
 package tests.productCatalog.example;
 
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -14,6 +13,7 @@ import tests.Tests;
 
 import java.util.List;
 
+import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ExampleSteps.*;
@@ -43,10 +43,9 @@ public class ExampleListTest extends Tests {
     @Test
     public void getMeta() {
         String str = getExampleMeta().getNext();
-        String env = Configure.ENV;
+        String url = getAppProp("url.kong");
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"), "Значение поля next " +
-                    "несоответсвует ожидаемому");
+            assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
         }
     }
 

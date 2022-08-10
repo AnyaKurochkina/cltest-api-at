@@ -1,6 +1,7 @@
 package models.productCatalog.forbiddenAction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import lombok.*;
@@ -83,6 +84,7 @@ public class ForbiddenAction extends Entity {
             deleteForbiddenActionByName(name);
         }
         ForbiddenAction forbiddenAction = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
