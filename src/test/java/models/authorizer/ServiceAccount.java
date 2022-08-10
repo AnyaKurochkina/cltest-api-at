@@ -106,6 +106,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
                 .set("$.service_account.policy.bindings.[0].role", "roles/viewer")
                 .set("$.service_account.title", title)
                 .send(Configure.IamURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .patch("/v1/projects/{}/service_accounts/{}", projectId, id)
                 .assertStatus(200)
                 .jsonPath();
