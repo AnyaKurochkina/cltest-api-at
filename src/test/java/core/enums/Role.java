@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public enum Role {
     VIEWER("will be remove"),
-    ADMIN("will be remove"),
+
+    @SerializedName("product-catalog.viewer")
+    PRODUCT_CATALOG_VIEWER("will be remove"),
 
     @SerializedName("roles/admin")
     CLOUD_ADMIN("roles/admin"),
