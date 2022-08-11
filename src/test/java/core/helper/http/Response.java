@@ -29,7 +29,7 @@ public class Response {
     public Response assertStatus(int s) {
         String headers = response.getHeaders().toString();
         if (s != status())
-            throw new Http.StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\n%s\nResponse: %s\n", s, status(), http.method, http.token, headers, http.host + http.path, http.body, responseMessage), status);
+            throw new Http.StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nRole: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\n%s\nResponse: %s\n", s, status(), http.method, http.role, http.token, headers, http.host + http.path, http.body, responseMessage), status);
         return this;
     }
 
