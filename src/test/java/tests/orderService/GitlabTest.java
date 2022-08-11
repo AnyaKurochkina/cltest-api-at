@@ -1,5 +1,6 @@
 package tests.orderService;
 
+import com.google.gson.Gson;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -78,8 +79,8 @@ public class GitlabTest extends Tests {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             String userName = "vtb4050570";
             gitLab.addUser(userName, "developer");
-            JSONObject user = new JSONObject(OrderServiceSteps.getProductsField(gitLab,
-                    String.format("data.find{it.data.acls.find{it.username=='%s'}}.data.acls.find{it.username=='%s'}", userName, userName), Map.class));
+            JSONObject user = new JSONObject(new Gson().toJson(OrderServiceSteps.getProductsField(gitLab,
+                    String.format("data.find{it.data.acls.find{it.username=='%s'}}.data.acls.find{it.username=='%s'}", userName, userName), Map.class)));
             gitLab.updateUser(user, "guest");
         }
     }
@@ -91,8 +92,8 @@ public class GitlabTest extends Tests {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             String userName = "vtb4057583";
             gitLab.addUser(userName, "developer");
-            JSONObject user = new JSONObject(OrderServiceSteps.getProductsField(gitLab,
-                    String.format("data.find{it.data.acls.find{it.username=='%s'}}.data.acls.find{it.username=='%s'}", userName, userName), Map.class));
+            JSONObject user = new JSONObject(new Gson().toJson(OrderServiceSteps.getProductsField(gitLab,
+                    String.format("data.find{it.data.acls.find{it.username=='%s'}}.data.acls.find{it.username=='%s'}", userName, userName), Map.class)));
             gitLab.deleteUser(user);
         }
     }
@@ -156,8 +157,8 @@ public class GitlabTest extends Tests {
             String tokenName = "token2";
             gitLab.createProject(project);
             gitLab.createProjectToken(tokenName, Collections.singletonList("api"));
-            JSONObject token = new JSONObject(OrderServiceSteps.getProductsField(gitLab,
-                    String.format("data.find{it.data.config.tokens.find{it.name=='%s'}}.data.config.tokens.find{it.name=='%s'}", tokenName, tokenName), Map.class));
+            JSONObject token = new JSONObject(new Gson().toJson(OrderServiceSteps.getProductsField(gitLab,
+                    String.format("data.find{it.data.config.tokens.find{it.name=='%s'}}.data.config.tokens.find{it.name=='%s'}", tokenName, tokenName), Map.class)));
             gitLab.deleteProjectToken(token);
         }
     }
