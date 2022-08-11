@@ -36,6 +36,6 @@ public class Product {
     @Step("Проверка поля с входящими и ожидаемыми значениями")
     public void autoChangeableFieldCheck(Input input, String value, String exValue) {
         input.setValue(value);
-        Assertions.assertEquals(input.getValue(), exValue);
+        Assertions.assertEquals(exValue, input.getValue());
     }
 }
