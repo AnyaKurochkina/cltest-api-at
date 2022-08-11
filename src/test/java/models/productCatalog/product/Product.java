@@ -160,6 +160,7 @@ public class Product extends Entity {
     @Step("Обновление продукта")
     public void updateProduct() {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(this.getTemplate().set("$.version", "1.1.1").build())
                 .patch(productName + productId + "/")
                 .assertStatus(200);
