@@ -79,6 +79,7 @@ public class PortalBackSteps extends Steps {
     @Step("Получение пользователя из LDAP")
     public static String getUsers(Project project, String username) {
         return new Http(PortalBackURL)
+                .setRole(Role.ACCESS_GROUP_ADMIN)
                 .get("/v1/users?q={}&project_name={}", username, project.getId())
                 .assertStatus(200)
                 .jsonPath()
