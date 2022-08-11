@@ -2,6 +2,7 @@ package ui.cloud.tests.orders.windows;
 
 
 import com.codeborne.selenide.Condition;
+import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
@@ -41,7 +42,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @Title("Авторизация на портале")
     void beforeEach() {
         new LoginPage(product.getProjectId())
-                .signIn();
+                .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
     @Test
