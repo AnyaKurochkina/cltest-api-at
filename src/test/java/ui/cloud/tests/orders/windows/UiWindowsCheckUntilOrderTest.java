@@ -61,10 +61,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
         orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
         orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "30");
-
-        //Проверка поля Метка
-        orderPage.getLabel().setValue("");
-        $(byText("Поле должно содержать от 3 до 64 символов")).should(Condition.exist);
+        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "30");
 
         //Проверка Детали заказа
         orderPage.getOsVersion().select(product.getOsVersion());
