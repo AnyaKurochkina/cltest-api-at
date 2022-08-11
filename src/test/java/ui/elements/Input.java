@@ -25,6 +25,7 @@ public class Input implements TypifiedElement {
         input.shouldBe(Condition.visible).shouldBe(Condition.enabled);
         input.clear();
         input.setValue(value);
+        input.sendKeys(Keys.chord(Keys.TAB));
     }
 
     public String getValue() {
