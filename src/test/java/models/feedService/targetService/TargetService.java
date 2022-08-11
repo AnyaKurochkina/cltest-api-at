@@ -1,5 +1,6 @@
 package models.feedService.targetService;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
@@ -55,6 +56,7 @@ public class TargetService extends Entity {
             FeedServiceSteps.deleteTargetService(targetServiceByName.getId());
         }
         id = new Http(FeedServiceURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(feedService)
                 .assertStatus(201)
@@ -66,6 +68,7 @@ public class TargetService extends Entity {
     @Step("Удаление TargetService")
     protected void delete() {
         new Http(FeedServiceURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(feedService + id + "/")
                 .assertStatus(204);
     }

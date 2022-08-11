@@ -1,5 +1,6 @@
 package models.feedService.event;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import lombok.*;
@@ -100,6 +101,7 @@ public class Event extends Entity {
             FeedServiceSteps.deleteEvent(event.getId());
         }
         id = new Http(FeedServiceURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(feedService)
                 .assertStatus(201)
@@ -110,6 +112,7 @@ public class Event extends Entity {
     @Override
     protected void delete() {
         new Http(FeedServiceURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(feedService + id + "/")
                 .assertStatus(204);
     }
