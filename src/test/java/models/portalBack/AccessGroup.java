@@ -1,6 +1,7 @@
 package models.portalBack;
 
 import com.mifmif.common.regex.Generex;
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.http.Http;
 import core.helper.JsonHelper;
@@ -70,6 +71,7 @@ public class AccessGroup extends Entity {
     @Step("Создание группы доступа")
     protected void create() {
         prefixName = new Http(Configure.PortalBackURL)
+                .setRole(Role.ACCESS_GROUP_ADMIN)
                 .body(toJson())
                 .post("/v1/projects/{}/access_groups", projectName)
                 .assertStatus(201)
@@ -80,6 +82,7 @@ public class AccessGroup extends Entity {
     @Step("Редактирование группы доступа")
     public void editGroup(String newDescription) {
         description = new Http(Configure.PortalBackURL)
+                .setRole(Role.ACCESS_GROUP_ADMIN)
                 .body(String.format("{\"access_group\":{\"description\":\"%s\"}}", newDescription))
                 .patch("/v1/projects/{}/access_groups/{}", projectName, prefixName)
                 .assertStatus(200)
@@ -92,6 +95,7 @@ public class AccessGroup extends Entity {
     @Step("Удаление группы доступа")
     protected void delete() {
         new Http(Configure.PortalBackURL)
+                .setRole(Role.ACCESS_GROUP_ADMIN)
                 .delete(String.format("/v1/projects/%s/access_groups/%s", projectName, prefixName))
                 .assertStatus(204)
                 .jsonPath();
