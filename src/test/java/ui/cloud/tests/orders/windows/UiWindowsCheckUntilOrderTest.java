@@ -34,7 +34,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
             product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
             //product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders?page=0&perPage=10&f[category]=vm&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=pending&context=proj-evw9xv5qao&type=project&org=vtb").build();
         else
-            product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
+            product = Windows.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
     }
 
