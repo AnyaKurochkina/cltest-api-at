@@ -1,0 +1,16 @@
+{
+  "name": "string",
+  "title": "string",
+  "description": "string",
+  "event_type": [
+    "vm"
+  ],
+  "event_provider": [
+    "openstack"
+  ],
+  "direction": "parent_to_child",
+  "is_all_levels": true,
+  "config_restriction": "string",
+  "item_restriction": "string",
+  "action": null
+}

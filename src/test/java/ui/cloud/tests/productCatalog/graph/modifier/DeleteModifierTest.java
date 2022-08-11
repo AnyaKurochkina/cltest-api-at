@@ -46,7 +46,7 @@ public class DeleteModifierTest extends GraphBaseTest {
     @DisplayName("Удаление модификатора")
     public void deleteModifier() {
         new IndexPage().goToGraphsPage()
-                .openGraphPage(NAME)
+                .findAndOpenGraphPage(NAME)
                 .goToOrderParamsTab()
                 .setJSONSchemaAndSave("{\"title\":\"defaultTitle\"}")
                 .goToModifiersTab()

@@ -1,4 +1,6 @@
-package models.productCatalog;
+package models.productCatalog.product;
+
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +17,7 @@ public enum Categories {
     NETWORK("network"),
     OBJECT_STORAGE("object_storage"),
     SECRET_MANAGER("secret_manager"),
+    STREAMING("streaming"),
     WEB("web"),
     DEFAULT_VALUE(null);
     private final String value;
@@ -23,6 +26,7 @@ public enum Categories {
         this.value = value;
     }
 
+    @JsonValue
     public String getValue() {
         return value;
 

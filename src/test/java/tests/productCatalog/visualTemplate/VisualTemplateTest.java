@@ -265,7 +265,7 @@ public class VisualTemplateTest extends Tests {
 
     @DisplayName("Сортировка шаблонов визуализации по статусу")
     //todo убрать логику
-    @TmsLink("")
+    @TmsLink("1086581")
     @Test
     public void orderingByStatus() {
         List<ItemImpl> list = steps.orderingByStatus(GetVisualTemplateListResponse.class).getItemsList();
@@ -382,5 +382,25 @@ public class VisualTemplateTest extends Tests {
         assertTrue(steps.isExists(visualTemplateName));
         steps.deleteByName(visualTemplateName, GetVisualTemplateListResponse.class);
         assertFalse(steps.isExists(visualTemplateName));
+    }
+
+    @DisplayName("Проверка отсутствия поля default_item в шаблона визуализации по event_provider, event_type")
+    @TmsLink("1078708")
+    @Test
+    public void getVisualTemplateByProviderAndTypeAndCheckDefaultItemIsNull() {
+        String name = "get_by_provider_type_item_visual_template_and_check_default_test_api";
+        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+                .name(name)
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(true)
+                .build()
+                .createObject();
+        GetVisualTemplateResponse visualTemplate = steps
+                .getItemVisualTemplate(visualTemplates.getEventType().get(0), visualTemplates.getEventProvider().get(0));
+        steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
+        assertNull(visualTemplate.getDefaultItem());
     }
 }

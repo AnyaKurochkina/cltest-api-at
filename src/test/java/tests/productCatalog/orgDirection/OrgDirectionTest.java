@@ -1,5 +1,6 @@
 package tests.productCatalog.orgDirection;
 
+import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
@@ -11,6 +12,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
+import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -51,6 +53,43 @@ public class OrgDirectionTest extends Tests {
         assertEquals(orgName, getOrgDirection.getName());
     }
 
+    @DisplayName("Создание направления в продуктовом каталоге с иконкой")
+    @TmsLink("1082790")
+    @Test
+    public void createOrgDirectionWithIcon() {
+        String orgName = "create_org_direction_with_icon_test_api";
+        OrgDirection orgDirection = OrgDirection.builder()
+                .orgDirectionName(orgName)
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+        GetOrgDirectionResponse actualOrgDirection = (GetOrgDirectionResponse) steps.getById(orgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class);
+        assertFalse(actualOrgDirection.getIconStoreId().isEmpty());
+        assertFalse(actualOrgDirection.getIconUrl().isEmpty());
+    }
+
+    @DisplayName("Создание нескольких направлений в продуктовом каталоге с одинаковой иконкой")
+    @TmsLink("1082792")
+    @Test
+    public void createSeveralOrgDirectionWithSameIcon() {
+        String orgName = "create_first_org_direction_with_same_icon_test_api";
+        OrgDirection orgDirection = OrgDirection.builder()
+                .orgDirectionName(orgName)
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+
+        OrgDirection secondOrgDirection = OrgDirection.builder()
+                .orgDirectionName("create_second_org_direction_with_same_icon_test_api")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+        GetOrgDirectionResponse actualFirstOrgDirection = (GetOrgDirectionResponse) steps.getById(orgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class);
+        GetOrgDirectionResponse actualSecondOrgDirection = (GetOrgDirectionResponse) steps.getById(secondOrgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class);
+        assertEquals(actualFirstOrgDirection.getIconUrl(), actualSecondOrgDirection.getIconUrl());
+        assertEquals(actualFirstOrgDirection.getIconStoreId(), actualSecondOrgDirection.getIconStoreId());
+    }
+
     @DisplayName("Проверка существования направления по имени")
     @TmsLink("643309")
     @Test
@@ -75,6 +114,25 @@ public class OrgDirectionTest extends Tests {
         Assertions.assertTrue(steps.isExists(orgDirectionName));
         steps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
         Assertions.assertFalse(steps.isExists(orgDirectionName));
+    }
+
+    @DisplayName("Импорт направления c иконкой")
+    @TmsLink("1086532")
+    @Test
+    public void importOrgDirectionWithIcon() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirectionWithIcon.json");
+        String name = new JsonPath(data).get("OrgDirection.name");
+        if (steps.isExists(name)) {
+            steps.deleteByName(name, GetOrgDirectionListResponse.class);
+        }
+        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirectionWithIcon.json");
+        String id = steps.getProductObjectIdByNameWithMultiSearch(name, GetOrgDirectionListResponse.class);
+        GetOrgDirectionResponse orgDirection = (GetOrgDirectionResponse) steps.getById(id, GetOrgDirectionResponse.class);
+        assertFalse(orgDirection.getIconStoreId().isEmpty());
+        assertFalse(orgDirection.getIconUrl().isEmpty());
+        assertTrue(steps.isExists(name), "Направление не существует");
+        steps.deleteByName(name, GetOrgDirectionListResponse.class);
+        assertFalse(steps.isExists(name), "Направление существует");
     }
 
     @DisplayName("Получение направления по Id")

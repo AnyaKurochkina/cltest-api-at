@@ -9,10 +9,10 @@
           "type": "integer"
         },
         "next": {
-          "type": "string"
+          "type": ["string", "null"]
         },
         "previous": {
-          "type": "null"
+          "type": ["string", "null"]
         }
       },
       "additionalProperties": false,
@@ -94,6 +94,12 @@
             },
             "icon": {
               "type": "string"
+            },
+            "icon_url": {
+              "type": "string"
+            },
+            "icon_store_id": {
+              "type": ["string", "null"]
             }
           },
           "additionalProperties": false,
@@ -116,7 +122,9 @@
             "required_item_statuses",
             "allowed_developers",
             "restricted_developers",
-            "icon"
+            "icon",
+            "icon_url",
+            "icon_store_id"
           ]
         }
       ]

@@ -13,6 +13,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Action;
 import models.productCatalog.VersionDiff;
+import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -52,6 +53,46 @@ public class ActionsTest extends Tests {
                 .createObject();
         GetImpl actualAction = steps.getById(action.getActionId(), GetActionResponse.class);
         assertEquals(actionName, actualAction.getName());
+    }
+
+    @DisplayName("Создание действия в продуктовом каталоге с иконкой")
+    @TmsLink("1081243")
+    @Test
+    public void createActionWithIcon() {
+        String actionName = "create_action_with_icon_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+        GetActionResponse actualAction =(GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
+        assertFalse(actualAction.getIconStoreId().isEmpty());
+        assertFalse(actualAction.getIconUrl().isEmpty());
+    }
+
+    @DisplayName("Создание нескольких действий в продуктовом каталоге с одинаковой иконкой")
+    @TmsLink("1081441")
+    @Test
+    public void createSeveralActionWithSameIcon() {
+        String actionName = "create_first_action_with_same_icon_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+
+        Action secondAction = Action.builder()
+                .actionName("create_second_action_with_same_icon_test_api")
+                .version("1.0.1")
+                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+        GetActionResponse actualFirstAction =(GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
+        GetActionResponse actualSecondAction =(GetActionResponse) steps.getById(secondAction.getActionId(), GetActionResponse.class);
+        assertEquals(actualFirstAction.getIconUrl(), actualSecondAction.getIconUrl());
+        assertEquals(actualFirstAction.getIconStoreId(), actualSecondAction.getIconStoreId());
     }
 
     @DisplayName("Проверка существования действия по имени")
@@ -109,6 +150,25 @@ public class ActionsTest extends Tests {
             steps.deleteByName(actionName, GetActionsListResponse.class);
         }
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
+        assertTrue(steps.isExists(actionName), "Действие не существует");
+        steps.deleteByName(actionName, GetActionsListResponse.class);
+        assertFalse(steps.isExists(actionName), "Действие существует");
+    }
+
+    @DisplayName("Импорт действия c иконкой")
+    @TmsLink("1085391")
+    @Test
+    public void importActionWithIcon() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importActionWithIcon.json");
+        String actionName = new JsonPath(data).get("Action.name");
+        if(steps.isExists(actionName)) {
+            steps.deleteByName(actionName, GetActionsListResponse.class);
+        }
+        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithIcon.json");
+        String id = steps.getProductObjectIdByNameWithMultiSearch(actionName, GetActionsListResponse.class);
+        GetActionResponse action =(GetActionResponse) steps.getById(id, GetActionResponse.class);
+        assertFalse(action.getIconStoreId().isEmpty());
+        assertFalse(action.getIconUrl().isEmpty());
         assertTrue(steps.isExists(actionName), "Действие не существует");
         steps.deleteByName(actionName, GetActionsListResponse.class);
         assertFalse(steps.isExists(actionName), "Действие существует");

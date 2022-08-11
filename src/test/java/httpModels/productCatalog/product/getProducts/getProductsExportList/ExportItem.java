@@ -28,6 +28,12 @@ public class ExportItem implements ItemImpl {
 	@JsonProperty("icon")
 	private String icon;
 
+	@JsonProperty("icon_store_id")
+	private String iconStoreId;
+
+	@JsonProperty("icon_url")
+	private String iconUrl;
+
 	@JsonProperty("current_version")
 	private String currentVersion;
 

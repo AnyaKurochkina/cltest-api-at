@@ -1,6 +1,5 @@
 package tests.productCatalog.visualTemplate;
 
-import core.helper.Configure;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.*;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
@@ -20,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -48,10 +48,9 @@ public class VisualTemplateListTest extends Tests {
     @Test
     public void getMeta() {
         String str = steps.getMeta(GetVisualTemplateListResponse.class).getNext();
-        String env = Configure.ENV;
+        String url = getAppProp("url.kong");
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
-                    "Значение поля next несоответсвует ожидаемому");
+            assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
         }
     }
 

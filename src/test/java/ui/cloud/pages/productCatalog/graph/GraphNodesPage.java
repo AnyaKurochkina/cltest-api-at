@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.uiModels.Node;
@@ -135,7 +136,7 @@ public class GraphNodesPage extends GraphPage {
     }
 
     @Step("Копирование узла графа '{node.name}' и сохранение графа")
-    public GraphNodesPage copyNodeAndSave(SubgraphNode node) {
+    public GraphNodesPage copyNodeAndSave(Node node) {
         String cloneName = node.getName() + "_clone";
         TestUtils.scrollToTheBottom();
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
@@ -147,6 +148,7 @@ public class GraphNodesPage extends GraphPage {
                 .perform();
         copyNode.click();
         nodeName.shouldHave(Condition.exactValue(cloneName));
+        TestUtils.wait(500);
         formAddNodeButton.click();
         saveGraphWithPatchVersion();
         return this;

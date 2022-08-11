@@ -1,12 +1,16 @@
-package models.productCatalog;
+package models.productCatalog.product;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import io.qameta.allure.Step;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.productCatalog.graph.Graph;
@@ -23,34 +27,77 @@ import static core.helper.Configure.ProductCatalogURL;
 @Log4j2
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product extends Entity {
 
+    @JsonProperty("allowed_paths")
     private List<Object> allowedPaths;
-    private Boolean isOpen;
+    @JsonProperty("is_open")
+    private boolean isOpen;
+    @JsonProperty("version_list")
+    private List<String> versionList;
     private String author;
-    private List<String> informationSystems;
+    @JsonProperty("current_version")
+    private String currentVersion;
+    @JsonProperty("information_systems")
+    private List<Object> informationSystems;
+    @JsonProperty("icon")
     private String icon;
-    private String description;
-    private String graphVersion;
+    @JsonProperty("icon_store_id")
+    private String iconStoreId;
+    @JsonProperty("icon_url")
+    private String iconUrl;
+    @JsonProperty("version_create_dt")
+    private String versionCreateDt;
+    @JsonProperty("envs")
     private List<String> envs;
+    @JsonProperty("description")
+    private String description;
+    @JsonProperty("graph_version")
+    private String graphVersion;
+    @JsonProperty("restricted_groups")
     private List<Object> restrictedGroups;
     private String title;
+    @JsonProperty("graph_id")
     private String graphId;
     private String version;
-    private Integer maxCount;
+    @JsonProperty("max_count")
+    private int maxCount;
+    private int number;
+    @JsonProperty("version_changed_by_user")
+    private String versionChangedByUser;
     private String name;
+    @JsonProperty("restricted_paths")
     private List<Object> restrictedPaths;
-    private String graphVersionPattern;
+    @JsonProperty("allowed_groups")
     private List<Object> allowedGroups;
+    @JsonProperty("graph_version_pattern")
+    private String graphVersionPattern;
+    @JsonProperty("id")
     private String productId;
+    @JsonProperty("graph_version_calculated")
+    private String graphVersionCalculated;
     private String category;
-    private String jsonTemplate;
-    private Map<String, String> info;
-    private String currentVersion;
-    private Map<String, String> extraData;
-    private Boolean inGeneralList;
-    private String payment;
+    @JsonProperty("category_v2")
     private Categories categoryV2;
+    @JsonProperty("last_version")
+    private String lastVersion;
+    private Map<String, String> info;
+    @JsonProperty("create_dt")
+    private String createDt;
+    @JsonProperty("update_dt")
+    private String updateDt;
+    @JsonProperty("extra_data")
+    private Map<String, String> extraData;
+    @JsonProperty("in_general_list")
+    private Boolean inGeneralList;
+    @JsonProperty("allowed_developers")
+    private List<String> allowedDevelopers;
+    @JsonProperty("restricted_developers")
+    private List<String> restrictedDevelopers;
+    private String payment;
+    private String jsonTemplate;
 
     public static final String productName = "/api/v1/products/";
     @Builder.Default
@@ -81,6 +128,9 @@ public class Product extends Entity {
                 .set("$.version", version)
                 .set("$.category", category)
                 .set("$.info", info)
+                .set("$.icon", icon)
+                .set("$.icon_store_id", iconStoreId)
+                .set("$.icon_url", iconUrl)
                 .set("$.is_open", isOpen)
                 .set("$.current_version", currentVersion)
                 .set("$.extra_data", extraData)
@@ -98,6 +148,7 @@ public class Product extends Entity {
             steps.deleteByName(name, GetProductsResponse.class);
         }
         CreateProductResponse createProductResponse = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -117,6 +168,7 @@ public class Product extends Entity {
     @Override
     protected void delete() {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + productId + "/")
                 .assertStatus(204);
         ProductCatalogSteps steps = new ProductCatalogSteps(productName,"productCatalog/products/createProduct.json");
