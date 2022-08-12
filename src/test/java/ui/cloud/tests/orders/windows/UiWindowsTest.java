@@ -3,6 +3,7 @@ package ui.cloud.tests.orders.windows;
 import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
+import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -46,7 +47,7 @@ public class UiWindowsTest extends Tests {
     @Title("Авторизация на портале")
     void beforeEach() {
         new LoginPage(product.getProjectId())
-                .signIn();
+                .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
     @Test

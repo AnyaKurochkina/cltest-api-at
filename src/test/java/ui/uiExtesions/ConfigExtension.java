@@ -19,8 +19,8 @@ import static com.codeborne.selenide.Selenide.closeWebDriver;
 public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, InvocationInterceptor {
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
-        SelenideLogger.addListener("AllureSelenide",
-                new AllureSelenide().screenshots(false).savePageSource(false));
+//        SelenideLogger.addListener("AllureSelenide",
+//                new AllureSelenide().screenshots(false).savePageSource(false));
         LoggingPreferences logs = new LoggingPreferences();
         logs.enable(LogType.BROWSER, Level.ALL);
         Configuration.browserCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
@@ -37,8 +37,8 @@ public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, In
             invocation.proceed();
         } catch (Throwable e) {
             Utils.attachRequests();
-            if (Objects.nonNull(e.getMessage()))
-                if (!e.getMessage().contains("Screenshot: file:/"))
+//            if (Objects.nonNull(e.getMessage()))
+//                if (!e.getMessage().contains("Screenshot: file:/"))
                     Utils.attachFiles();
             throw e;
         }

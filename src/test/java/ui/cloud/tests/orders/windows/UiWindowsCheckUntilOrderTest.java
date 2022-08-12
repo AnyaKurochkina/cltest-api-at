@@ -2,6 +2,7 @@ package ui.cloud.tests.orders.windows;
 
 
 import com.codeborne.selenide.Condition;
+import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
@@ -33,7 +34,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
             product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
             //product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders?page=0&perPage=10&f[category]=vm&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=pending&context=proj-evw9xv5qao&type=project&org=vtb").build();
         else
-            product = Windows.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
+            product = Windows.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
     }
 
@@ -41,7 +42,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @Title("Авторизация на портале")
     void beforeEach() {
         new LoginPage(product.getProjectId())
-                .signIn();
+                .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
     @Test
@@ -59,11 +60,8 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         //Проверка поля Кол-во
         orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
         orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "1");
-
-        //Проверка поля Метка
-        orderPage.getLabel().setValue("");
-        $(byText("Поле должно содержать от 3 до 64 символов")).should(Condition.exist);
+        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "30");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "30");
 
         //Проверка Детали заказа
         orderPage.getOsVersion().select(product.getOsVersion());

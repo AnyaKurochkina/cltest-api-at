@@ -4,7 +4,6 @@ import com.mifmif.common.regex.Generex;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.authorizer.InformationSystem;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
 import models.portalBack.AccessGroup;
@@ -24,15 +23,18 @@ import tests.Tests;
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AccessGroupTest extends Tests {
-
     String name = new Generex("[a-z]{5,15}").random();
+    Project projectDev = Project.builder().isForOrders(true)
+            .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV")).isForOrders(true).build().createObject();
+    Project projectTest = Project.builder().isForOrders(true)
+            .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("TEST")).isForOrders(true).build().createObject();
 
     @Test
     @Order(1)
     @TmsLink("377438")
     @DisplayName("Создание Группы доступа compute")
     void createAccessGroup() {
-        AccessGroup.builder().name(name).build().createObject();
+        AccessGroup.builder().name(name).projectName(projectDev.getId()).build().createObject();
     }
 
     @Test
@@ -40,7 +42,7 @@ public class AccessGroupTest extends Tests {
     @TmsLink("996161")
     @DisplayName("Создание Группы доступа vlt")
     void createAccessGroupVlt() {
-        AccessGroup.builder().codePurpose("vlt").build().createObject();
+        AccessGroup.builder().projectName(projectDev.getId()).codePurpose("vlt").build().createObject();
     }
 
     @Test
@@ -48,7 +50,7 @@ public class AccessGroupTest extends Tests {
     @TmsLink("648626")
     @DisplayName("Редактирование группы доступа")
     void editServiceAccount() {
-        AccessGroup group = AccessGroup.builder().name(name).build().createObject();
+        AccessGroup group = AccessGroup.builder().name(name).projectName(projectDev.getId()).name(name).build().createObject();
         group.editGroup("new description");
     }
 
@@ -59,13 +61,8 @@ public class AccessGroupTest extends Tests {
     @TmsLink("377442")
     @DisplayName("Добавление пользователя в группу доступа для среды TEST")
     void addUserAccessGroupTest() {
-        String informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
-        ProjectEnvironmentPrefix projectEnvironment = PortalBackSteps.getProjectEnvironmentPrefix("TEST", informationSystem);
-        Project project = Project.builder()
-                .projectEnvironmentPrefix(projectEnvironment)
-                .build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").projectName(project.getId()).build().createObject();
-        AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(project, "VTB4043473"));
+        AccessGroup accessGroup = AccessGroup.builder().name(name).projectName(projectTest.getId()).build().createObject();
+        AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(projectTest, "VTB4043473"));
     }
 
     @Test
@@ -73,13 +70,8 @@ public class AccessGroupTest extends Tests {
     @TmsLink("377440")
     @DisplayName("Добавление пользователя в группу доступа для среды DEV")
     void addUserAccessGroupDev() {
-        String informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
-        ProjectEnvironmentPrefix projectEnvironment = PortalBackSteps.getProjectEnvironmentPrefix("DEV", informationSystem);
-        Project project = Project.builder()
-                .projectEnvironmentPrefix(projectEnvironment)
-                .build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").projectName(project.getId()).build().createObject();
-        AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(project, "VTB4043473"));
+        AccessGroup accessGroup = AccessGroup.builder().name(name).projectName(projectDev.getId()).build().createObject();
+        AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(projectDev, "VTB4043473"));
     }
 
     @Test
@@ -87,9 +79,8 @@ public class AccessGroupTest extends Tests {
     @TmsLink("377441")
     @DisplayName("Удаление пользователя из группы доступа")
     void deleteUserAccessGroup() {
-        AccessGroup accessGroup = AccessGroup.builder().description("accessgroup").build().createObject();
-        Project project = Project.builder().id(accessGroup.getProjectName()).build().createObject();
-        String user = PortalBackSteps.getUsers(project, "VTB4043473");
+        AccessGroup accessGroup = AccessGroup.builder().name(name).projectName(projectDev.getId()).build().createObject();
+        String user = PortalBackSteps.getUsers(projectDev, "VTB4043473");
         AccessGroupSteps.addUsersToGroup(accessGroup, user);
         AccessGroupSteps.removeUserFromGroup(accessGroup, user);
     }
@@ -100,6 +91,6 @@ public class AccessGroupTest extends Tests {
     @MarkDelete
     @DisplayName("Удаление Группы доступа")
     void deleteAccessGroup() {
-        AccessGroup.builder().description("accessgroup").build().createObject().deleteObject();
+        AccessGroup.builder().name(name).projectName(projectDev.getId()).build().createObjectExclusiveAccess().deleteObject();
     }
 }
