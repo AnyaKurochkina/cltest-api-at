@@ -64,7 +64,7 @@ public class Product extends Entity {
     private String version;
     @JsonProperty("max_count")
     private int maxCount;
-    private int number;
+    private Integer number;
     @JsonProperty("version_changed_by_user")
     private String versionChangedByUser;
     private String name;
@@ -138,6 +138,7 @@ public class Product extends Entity {
                 .set("$.in_general_list", inGeneralList)
                 .set("$.payment", payment)
                 .setIfNullRemove("$.category_v2", categor)
+                .setIfNullRemove("$.number", number)
                 .build();
     }
 

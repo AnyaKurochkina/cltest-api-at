@@ -53,7 +53,6 @@ public class ActionPage {
     public ActionPage changeGraphVersion(String value) {
         graphTab.click();
         DropDown.byLabel("Значение").selectByTitle(value);
-      //  $x("//label[text() = 'Значение']/parent::div//select").selectOptionByValue("1.0.0");
         return this;
     }
 
@@ -71,6 +70,7 @@ public class ActionPage {
 
     @Step("Ввод значения в поле {label}")
     public ActionPage inputByLabel(String label, String value) {
+        Input.byLabel(label).clear();
         Input.byLabel(label).setValue(value);
         return this;
     }

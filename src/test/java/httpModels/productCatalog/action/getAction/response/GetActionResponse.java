@@ -106,6 +106,7 @@ public class GetActionResponse implements GetImpl {
 
     @JsonProperty("name")
     private String name;
+    private Integer number;
 
     @JsonProperty("allowed_groups")
     private List<Object> allowedGroups;
