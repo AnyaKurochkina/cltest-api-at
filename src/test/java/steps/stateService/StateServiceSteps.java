@@ -23,6 +23,7 @@ public class StateServiceSteps extends Steps {
         String traceback = null;
         try {
             traceback = new Http(StateServiceURL)
+                    .setRole(Role.CLOUD_ADMIN)
                     .get("/actions/?order_id={}", orderId)
                     .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {
