@@ -672,4 +672,21 @@ public class ProductsTest extends Tests {
         createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
         assertEquals("partly_paid", createdProduct.getPayment());
     }
+
+    @DisplayName("Создание продукта c дефолтным значением number")
+    @TmsLink("1107406")
+    @Test
+    public void createProductWithDefaultNumber() {
+        String productName = "create_product_with_default_number";
+        Product product = Product.builder()
+                .name(productName)
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
+                .info(info)
+                .build()
+                .createObject();
+        GetProductResponse actualProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        assertEquals(50, actualProduct.getNumber());
+    }
 }

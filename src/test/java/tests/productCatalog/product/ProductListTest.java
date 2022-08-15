@@ -158,7 +158,7 @@ public class ProductListTest extends Tests {
         Project project = Project.builder().build().createObject();
         List<String> actualList = steps.getAvailableCategoriesByContextProject(project.getId());
         List<String> categoriesList = Categories.getCategoriesList();
-        assertEquals(categoriesList, actualList);
+        assertTrue(categoriesList.containsAll(actualList));
     }
 
     @DisplayName("Получение списка категорий")
@@ -168,7 +168,6 @@ public class ProductListTest extends Tests {
         List<String> actualList = steps.getAvailableCategories();
         List<String> categoriesList = Categories.getCategoriesList();
         assertTrue(categoriesList.containsAll(actualList));
-      //  assertEquals(categoriesList, actualList);
     }
 
     @DisplayName("Получение списка products export")

@@ -66,7 +66,7 @@ public class ActionsTest extends Tests {
                 .icon(IconStorage.ICON_FOR_AT_TEST)
                 .build()
                 .createObject();
-        GetActionResponse actualAction =(GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
+        GetActionResponse actualAction = (GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
         assertFalse(actualAction.getIconStoreId().isEmpty());
         assertFalse(actualAction.getIconUrl().isEmpty());
     }
@@ -89,8 +89,8 @@ public class ActionsTest extends Tests {
                 .icon(IconStorage.ICON_FOR_AT_TEST)
                 .build()
                 .createObject();
-        GetActionResponse actualFirstAction =(GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
-        GetActionResponse actualSecondAction =(GetActionResponse) steps.getById(secondAction.getActionId(), GetActionResponse.class);
+        GetActionResponse actualFirstAction = (GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
+        GetActionResponse actualSecondAction = (GetActionResponse) steps.getById(secondAction.getActionId(), GetActionResponse.class);
         assertEquals(actualFirstAction.getIconUrl(), actualSecondAction.getIconUrl());
         assertEquals(actualFirstAction.getIconStoreId(), actualSecondAction.getIconStoreId());
     }
@@ -146,7 +146,7 @@ public class ActionsTest extends Tests {
     public void importAction() {
         String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
         String actionName = new JsonPath(data).get("Action.name");
-        if(steps.isExists(actionName)) {
+        if (steps.isExists(actionName)) {
             steps.deleteByName(actionName, GetActionsListResponse.class);
         }
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
@@ -161,12 +161,12 @@ public class ActionsTest extends Tests {
     public void importActionWithIcon() {
         String data = JsonHelper.getStringFromFile("/productCatalog/actions/importActionWithIcon.json");
         String actionName = new JsonPath(data).get("Action.name");
-        if(steps.isExists(actionName)) {
+        if (steps.isExists(actionName)) {
             steps.deleteByName(actionName, GetActionsListResponse.class);
         }
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithIcon.json");
         String id = steps.getProductObjectIdByNameWithMultiSearch(actionName, GetActionsListResponse.class);
-        GetActionResponse action =(GetActionResponse) steps.getById(id, GetActionResponse.class);
+        GetActionResponse action = (GetActionResponse) steps.getById(id, GetActionResponse.class);
         assertFalse(action.getIconStoreId().isEmpty());
         assertFalse(action.getIconUrl().isEmpty());
         assertTrue(steps.isExists(actionName), "Действие не существует");
@@ -219,7 +219,7 @@ public class ActionsTest extends Tests {
         steps.copyById(action.getActionId());
         String cloneId = steps.getProductObjectIdByNameWithMultiSearch(cloneName, GetActionsListResponse.class);
         steps.partialUpdateObject(cloneId, new JSONObject().put("priority", 1));
-        GetActionResponse importedAction =(GetActionResponse) steps.getByIdAndVersion(cloneId, "1.0.1", GetActionResponse.class);
+        GetActionResponse importedAction = (GetActionResponse) steps.getByIdAndVersion(cloneId, "1.0.1", GetActionResponse.class);
         assertAll(
                 () -> assertEquals("1.0.1", importedAction.getVersion()),
                 () -> assertEquals(1, importedAction.getPriority())
@@ -518,6 +518,20 @@ public class ActionsTest extends Tests {
         VersionDiff versionDiff = getActionResponse.getVersionDiff();
         assertEquals(versionDiff.getDiff().get("priority"), 0);
         assertEquals(versionDiff.getDiff().get("available_without_money"), false);
+    }
+
+    @DisplayName("Создание действия c дефолтным значением number")
+    @TmsLink("")
+    @Test
+    public void createActionWithDefaultNumber() {
+        String actionName = "create_action_with_default_number";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .version("1.0.1")
+                .build()
+                .createObject();
+        GetActionResponse actualAction = (GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
+        assertEquals(50, actualAction.getNumber());
     }
 }
 

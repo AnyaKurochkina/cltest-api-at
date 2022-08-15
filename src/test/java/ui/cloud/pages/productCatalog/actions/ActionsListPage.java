@@ -55,7 +55,7 @@ public class ActionsListPage {
     @Step("Открытие формы действия")
     public ActionPage openActionForm(String name) {
         new Table(NAME_COLUMN).getRowElementByColumnValue(NAME_COLUMN, name).click();
-        TestUtils.wait(1000);
+        TestUtils.wait(2000);
         return new ActionPage();
     }
 

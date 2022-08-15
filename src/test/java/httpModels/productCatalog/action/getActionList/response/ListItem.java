@@ -61,6 +61,7 @@ public class ListItem implements ItemImpl {
 
     @JsonProperty("type")
     private Object type;
+    private Integer number;
 
     @JsonProperty("event_type")
     private List<String> eventType;
