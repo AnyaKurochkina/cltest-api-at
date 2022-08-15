@@ -33,6 +33,7 @@ public class Action extends Entity {
     private String actionName;
     private String graphId;
     private String title;
+    private Integer number;
     private String description;
     private String actionId;
     private String version;
@@ -76,6 +77,7 @@ public class Action extends Entity {
                 .set("$.priority", priority)
                 .set("$.extra_data", extraData)
                 .set("$.location_restriction", locationRestriction)
+                .setIfNullRemove("$.number", number)
                 .build();
     }
 
