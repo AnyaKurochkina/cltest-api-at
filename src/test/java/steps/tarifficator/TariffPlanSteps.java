@@ -2,6 +2,7 @@ package steps.tarifficator;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
@@ -33,6 +34,7 @@ public class TariffPlanSteps extends Steps {
     @Step("Создание тарифного плана {tariffPlan}")
     public static TariffPlan createTariffPlan(TariffPlan tariffPlan) {
         String object = new Http(TarifficatorURL)
+                .setRole(Role.TARIFFICATOR_ADMIN)
                 .body(tariffPlan.toJson())
                 .post("/v1/tariff_plans")
                 .assertStatus(201)
@@ -55,6 +57,7 @@ public class TariffPlanSteps extends Steps {
         int i = 1;
         do {
             responseList = new Http(TarifficatorURL)
+                    .setRole(Role.TARIFFICATOR_ADMIN)
                     .get("/v1/tariff_plans?page={}&per_page=100&{}", i, urlParameters)
                     .assertStatus(200)
                     .jsonPath()
@@ -74,6 +77,7 @@ public class TariffPlanSteps extends Steps {
     @Step("Получение тарифного плана {tariffPlanId}")
     public static TariffPlan getTariffPlan(String tariffPlanId) {
         String object = new Http(TarifficatorURL)
+                .setRole(Role.TARIFFICATOR_ADMIN)
                 .get("/v1/tariff_plans/{}?include=tariff_classes", tariffPlanId)
                 .assertStatus(200)
                 .toString();
@@ -89,6 +93,7 @@ public class TariffPlanSteps extends Steps {
     @Step("Редактирование тарифного плана {tariffPlan}")
     public static TariffPlan editTariffPlan(TariffPlan tariffPlan) {
         String object = new Http(TarifficatorURL)
+                .setRole(Role.TARIFFICATOR_ADMIN)
                 .body(tariffPlan.toJson())
                 .patch("/v1/tariff_plans/{}", tariffPlan.getId())
                 .assertStatus(200)
@@ -101,6 +106,7 @@ public class TariffPlanSteps extends Steps {
     @Step("Редактирование тарифного класса {tariffClass}")
     public static TariffClass editTariffClass(TariffClass tariffClass, TariffPlan tariffPlan) {
         String object = new Http(TarifficatorURL)
+                .setRole(Role.TARIFFICATOR_ADMIN)
                 .body(tariffClass.toJson())
                 .patch("/v1/tariff_plans/{}/tariff_classes/{}", tariffPlan.getId(), tariffClass.getId())
                 .assertStatus(200)
