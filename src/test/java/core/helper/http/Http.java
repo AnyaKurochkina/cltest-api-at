@@ -1,6 +1,7 @@
 package core.helper.http;
 
 import core.enums.Role;
+import core.helper.DataFileHelper;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.restassured.RestAssured;
@@ -16,6 +17,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.json.JSONObject;
+import org.junit.TestsExecutionListener;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 import steps.keyCloak.KeyCloakSteps;
@@ -302,6 +304,10 @@ public class Http {
 //            if (path.endsWith("/cost") || path.contains("order-service"))
             if (!(host + path).endsWith("/openid-connect/token"))
                 SEMAPHORE.release();
+            if(response != null)
+                if(response.getTime() > 1000)
+                DataFileHelper.appendToFile(TestsExecutionListener.responseTimeLog,
+                        String.format("[%s ms] %s %s (%s)\n", response.getTime(), method, (host + path), response.getHeader("x-request-id")));
         }
         if (isLogged)
             log.debug(String.format("RESPONSE (%s): %s\n\n", response.getHeader("x-request-id"), response.getBody().asPrettyString()));
