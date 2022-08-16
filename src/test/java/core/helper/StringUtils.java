@@ -4,6 +4,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.intellij.lang.annotations.Language;
 
 import java.lang.reflect.Field;
@@ -45,15 +46,7 @@ public final class StringUtils {
         }
     }
     public static String getStackTraceThrowable(Throwable e){
-        StringJoiner stack = new StringJoiner("\n\t");
-        stack.add(e.toString());
-        for (StackTraceElement s : e.getStackTrace()) {
-            String str = s.toString();
-            stack.add(str);
-            if(str.startsWith("tests."))
-                break;
-        }
-        return stack.toString();
+        return ExceptionUtils.getStackTrace(e).replaceFirst("(.at.tests[\\w\\W]*)", "").trim();
     }
 
     public static String getStackTrace(StackTraceElement[] trace){
