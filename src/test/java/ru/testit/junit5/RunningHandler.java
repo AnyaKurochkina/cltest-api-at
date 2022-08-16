@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static core.helper.StringUtils.getStackTrace;
+import static core.helper.StringUtils.getStackTraceThrowable;
 import static ru.testit.junit5.StepsAspects.removeCurrentStep;
 
 @Log4j2
@@ -116,7 +116,7 @@ public class RunningHandler {
         parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
         parentStep.setFailureReason(thrown);
         if (thrown != null)
-            Tests.putAttachLog(getStackTrace(thrown.getStackTrace()));
+            Tests.putAttachLog(getStackTraceThrowable(thrown));
         parentStep.setCompletedOn(new Date());
         if (currentMethod == MethodType.BEFORE_METHOD) {
             StepsAspects.returnStepNode();

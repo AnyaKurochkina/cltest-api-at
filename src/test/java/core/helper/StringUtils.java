@@ -44,6 +44,17 @@ public final class StringUtils {
             }
         }
     }
+    public static String getStackTraceThrowable(Throwable e){
+        StringJoiner stack = new StringJoiner("\n\t");
+        stack.add(e.toString());
+        for (StackTraceElement s : e.getStackTrace()) {
+            String str = s.toString();
+            stack.add(str);
+            if(str.startsWith("tests."))
+                break;
+        }
+        return stack.toString();
+    }
 
     public static String getStackTrace(StackTraceElement[] trace){
         StringJoiner stack = new StringJoiner("\n\t");
