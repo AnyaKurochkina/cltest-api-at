@@ -88,7 +88,7 @@ public class ReferencesStep extends Steps {
     @Step("Получение списка в справочнике по параметрам {attrs}")
     public static JsonPath getJsonPathList(String attrs) {
         return new Http(ReferencesURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
                 .get("/api/v1/pages/?{}", attrs)
                 .assertStatus(200)
                 .jsonPath();
