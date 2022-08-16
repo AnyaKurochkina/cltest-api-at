@@ -12,6 +12,7 @@ import ru.testit.services.TestITClient;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static core.helper.StringUtils.getStackTrace;
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 public class TestResultRequestFactory {
@@ -115,7 +116,7 @@ public class TestResultRequestFactory {
         final Throwable failureReason = parentStep.getFailureReason();
         if (failureReason != null) {
             testResult.setMessage(failureReason.getMessage());
-            testResult.setTraces(escapeHtml(ExceptionUtils.getStackTrace(failureReason)));
+            testResult.setTraces(escapeHtml(getStackTrace(failureReason.getStackTrace())));
         }
         testResult.getLinks().addAll(this.makeInnerLinks(parentStep.getLinkItems()).stream().distinct().collect(Collectors.toList()));
         final InnerResult innerResult;
