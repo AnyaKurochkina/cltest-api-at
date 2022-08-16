@@ -28,10 +28,7 @@ import java.nio.file.Files;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
@@ -260,7 +257,14 @@ public class Http {
             if (body.length() > 0)
                 specification.body(body);
 
-            specification.params(getParamsUrl(StringUtils.findByRegex("\\?(.*)", path)));
+//            specification.params(getParamsUrl(StringUtils.findByRegex("\\?(.*)", path)));
+            String params = StringUtils.findByRegex("\\?(.*)", path);
+            List<String> values;
+            for(String key : getParamsUrl(params)) {
+                values = URLEncodedUtils.parse(params, StandardCharsets.UTF_8).stream().filter(s -> s.getName().equals(key)).map(NameValuePair::getValue).collect(Collectors.toList());
+                specification.params(key, values);
+            }
+
             String pathWithoutParameters = path.replaceFirst("\\?.*", "");
             switch (method) {
                 case "POST":
@@ -315,8 +319,8 @@ public class Http {
     }
 
     @SneakyThrows
-    public static Map<String, String> getParamsUrl(String params) {
-        return URLEncodedUtils.parse(params, StandardCharsets.UTF_8).stream().collect(Collectors.toMap(NameValuePair::getName, p -> Optional.ofNullable(p.getValue()).orElse("")));
+    public static Set<String> getParamsUrl(String params) {
+        return URLEncodedUtils.parse(params, StandardCharsets.UTF_8).stream().map(NameValuePair::getName).collect(Collectors.toSet());
     }
 
 //    public static class ConnectException extends AssertionError {
