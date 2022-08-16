@@ -132,7 +132,7 @@ public class ProductCatalogSteps {
     @Step("Получение объекта продуктового каталога по Id и Env")
     public GetImpl getByIdAndEnv(String objectId, String env, Class<?> clazz) {
         return (GetImpl) new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
                 .get(productName + objectId + "/?env={}", env)
                 .extractAs(clazz);
     }
