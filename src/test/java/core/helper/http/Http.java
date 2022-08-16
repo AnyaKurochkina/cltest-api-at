@@ -220,11 +220,6 @@ public class Http {
         SSLConfig config = new SSLConfig().with().sslSocketFactory(clientAuthFactory).and().allowAllHostnames();
         io.restassured.response.Response response = null;
         try {
-
-//            if (path.endsWith("/cost") || path.contains("order-service"))
-            if (!(host + path).endsWith("/openid-connect/token"))
-                SEMAPHORE.acquire();
-
             RequestSpecBuilder build = new RequestSpecBuilder();
             build.setBaseUri(host);
             build.build();
@@ -246,6 +241,10 @@ public class Http {
                 }
                 specification.header("Authorization", token);
             }
+
+            if (!(host + path).endsWith("/openid-connect/token"))
+                SEMAPHORE.acquire();
+
             if (field.length() > 0) {
                 String mimeType = URLConnection.guessContentTypeFromName(fileName);
                 if (Objects.isNull(mimeType))
