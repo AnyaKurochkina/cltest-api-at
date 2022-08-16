@@ -114,6 +114,21 @@ public class PostgreSQL extends IProduct {
         save();
     }
 
+    public void createNonProd(String dbName, String dbAdminPass) {
+        if (database.contains(new Db(dbName)))
+            return;
+
+        OrderServiceSteps.executeAction("create_db_nonprod", this,
+                new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: -1}", dbName, dbAdminPass)), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
+                "База данных не создалась c именем " + dbName);
+        database.add(new Db(dbName));
+        log.info("database = " + database);
+        save();
+    }
+
+    //TODO:добавить действие Назначить предел подключений
+
     //Удалить БД
     public void removeDb(String dbName) {
         OrderServiceSteps.executeAction("remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"), this.getProjectId());
