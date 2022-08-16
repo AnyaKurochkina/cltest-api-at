@@ -2,6 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import org.openqa.selenium.Keys;
 
 import static core.helper.StringUtils.$x;
@@ -23,7 +24,7 @@ public class Input implements TypifiedElement {
 
     public void setValue(String value) {
         input.shouldBe(Condition.visible).shouldBe(Condition.enabled);
-        input.clear();
+        clear();
         input.setValue(value);
     }
 
