@@ -1,5 +1,6 @@
 package models.accountManager;
 
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -57,6 +58,7 @@ public class Account extends Entity {
     @Step("Создание счета")
     protected void create() {
         accountId = new Http(Configure.AccountManagerURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .post(String.format("/api/v1/organizations/%s/accounts", organization))
                 .assertStatus(200)
