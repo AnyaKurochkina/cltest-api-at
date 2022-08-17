@@ -30,7 +30,7 @@ public class LoginPage {
         usernameInput.shouldBe(Condition.visible).val(user);
         passwordInput.shouldBe(Condition.visible).val(password);
         passwordInput.submit();
-        new Alert().close();
+        new Alert().closeAll();
         return new IndexPage();
     }
 
