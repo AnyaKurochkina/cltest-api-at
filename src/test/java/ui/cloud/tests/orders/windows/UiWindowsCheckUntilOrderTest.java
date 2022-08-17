@@ -60,8 +60,8 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         //Проверка поля Кол-во
         orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
         orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "30");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "30");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "1");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "1");
 
         //Проверка Детали заказа
         orderPage.getOsVersion().select(product.getOsVersion());
