@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import org.junit.TestsExecutionListener;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
+import ru.testit.services.TestITClient;
 import steps.keyCloak.KeyCloakSteps;
 
 import java.io.File;
@@ -262,7 +263,7 @@ public class Http {
 //            specification.params(getParamsUrl(StringUtils.findByRegex("\\?(.*)", path)));
             String params = StringUtils.findByRegex("\\?(.*)", path);
             List<String> values;
-            for(String key : getParamsUrl(params)) {
+            for (String key : getParamsUrl(params)) {
                 values = URLEncodedUtils.parse(params, StandardCharsets.UTF_8).stream().filter(s -> s.getName().equals(key)).map(NameValuePair::getValue).collect(Collectors.toList());
                 specification.params(key, values);
             }
@@ -304,10 +305,11 @@ public class Http {
 //            if (path.endsWith("/cost") || path.contains("order-service"))
             if (!(host + path).endsWith("/openid-connect/token"))
                 SEMAPHORE.release();
-            if(response != null)
-                if(response.getTime() > 1000)
-                DataFileHelper.appendToFile(TestsExecutionListener.responseTimeLog,
-                        String.format("[%s ms] %s %s (%s)\n", response.getTime(), method, (host + path), response.getHeader("x-request-id")));
+            if (response != null)
+                if (response.getTime() > 1000)
+                    if (!((host + path).contains(TestITClient.properties.getUrl())))
+                        DataFileHelper.appendToFile(TestsExecutionListener.responseTimeLog,
+                                String.format("[%s ms] %s %s (%s)\n", response.getTime(), method, (host + path), response.getHeader("x-request-id")));
         }
         if (isLogged)
             log.debug(String.format("RESPONSE (%s): %s\n\n", response.getHeader("x-request-id"), response.getBody().asPrettyString()));
