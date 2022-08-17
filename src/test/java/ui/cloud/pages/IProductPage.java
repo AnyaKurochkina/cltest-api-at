@@ -219,11 +219,11 @@ public abstract class IProductPage {
     @SneakyThrows
     @Step("Запуска действия с проверкой стоимости")
     public void runActionWithCheckCost(CompareType type, Executable executable) {
-        Selenide.refresh();
+        TypifiedElement.refresh();
         waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
-        Selenide.refresh();
+        TypifiedElement.refresh();
         currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
         Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if (type == CompareType.MORE)

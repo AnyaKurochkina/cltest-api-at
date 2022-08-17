@@ -19,6 +19,7 @@ import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.Graph;
+import ui.elements.TypifiedElement;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
 
@@ -137,7 +138,7 @@ public class UiWindowsTest extends Tests {
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
         new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
-        Selenide.refresh();
+        TypifiedElement.refresh();
         winPage.switchProtectOrder("Защита от удаления выключена");
     }
 
