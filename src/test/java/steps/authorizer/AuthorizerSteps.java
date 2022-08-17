@@ -79,7 +79,7 @@ public class AuthorizerSteps extends Steps {
     @Step("Получение списка пользователей организации по тексту '{text}'")
     public static List<UserItem> findUsers(String text, Organization org) {
         @SuppressWarnings(value = "unchecked")
-        List<UserItem> users = (List<UserItem>) listEntities(IamURL, String.format("/v1/users?q=%s&organization=%s", text, org.getName()), UserItem.class, Role.CLOUD_ADMIN);
+        List<UserItem> users = (List<UserItem>) listEntities(IamURL, String.format("/v1/organizations/%s/users/search?search=%s", org.getName(), text), UserItem.class, Role.CLOUD_ADMIN);
         return users;
     }
 
