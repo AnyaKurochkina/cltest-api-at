@@ -19,36 +19,6 @@ import static core.helper.Configure.*;
 @Log4j2
 public class AuthorizerSteps extends Steps {
 
-    @Step("Получить все проекты папки")
-    public static void getAllProjectFromFolder(String folderId) {
-        ArrayList<String> projectId = new Http(IamURL)
-                .get("/v1/folders/" + Objects.requireNonNull(folderId) + "/children")
-                .assertStatus(200)
-                .jsonPath()
-                .get("data.name");
-        log.info(projectId);
-    }
-
-    @Step("Получение пути до папки/проекта")
-    public static String getPathToFolder(String target) {
-        String url;
-        if (Objects.requireNonNull(target).startsWith("fold")) {
-            url = "/v1/folders/" + target + "/path";
-        } else if (target.startsWith("proj")) {
-            url = "/v1/projects/" + target + "/path";
-        } else {
-            throw new Error("Invalid target: " + target + "\nYour target must start with \"fold\" or \"proj\"");
-        }
-
-        String path = new Http(IamURL)
-                .get(url)
-                .assertStatus(200)
-                .jsonPath()
-                .get("data.path");
-        Objects.requireNonNull(path);
-        return path;
-    }
-
     @Step("Получение родителя папки/проекта")
     public static String getParentProject(String target) {
         String url;
@@ -65,15 +35,6 @@ public class AuthorizerSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .get(String.format("data.find{it.name=='%s'}.parent", target)));
-    }
-
-    @Step("Получение пользователя из LDAP")
-    public static String getLDAPUserList(Project project, String username) {
-        return new Http(PortalBackURL)
-                .get("/v1/users?q={}&project_name={}", username, project.getId())
-                .assertStatus(200)
-                .jsonPath()
-                .get("[0].unique_name");
     }
 
     @Step("Получение списка пользователей организации по тексту '{text}'")
