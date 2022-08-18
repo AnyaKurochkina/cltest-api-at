@@ -7,6 +7,6 @@ public interface TypifiedElement {
 
     static void refresh(){
         Selenide.refresh();
-        new Alert().close();
+        new Alert().closeAll();
     }
 }
