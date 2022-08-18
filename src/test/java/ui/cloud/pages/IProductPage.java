@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.open;
+import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static tests.Tests.activeCnd;
 import static tests.Tests.clickableCnd;
@@ -91,7 +92,8 @@ public abstract class IProductPage {
             params.getNode().scrollIntoView(scrollCenter).click();
         }
         button.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
-        $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        $$x("//li[.='{}']", action).shouldBe(CollectionCondition.anyMatch("Ожидание отображения пункта меню", WebElement::isDisplayed))
+                .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = new Dialog(action);
         if (params.isCheckPreBilling())
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
@@ -120,7 +122,8 @@ public abstract class IProductPage {
             params.getNode().scrollIntoView(scrollCenter).click();
         }
         button.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
-        $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        $$x("//li[.='{}']", action).shouldBe(CollectionCondition.anyMatch("Ожидание отображения пункта меню", WebElement::isDisplayed))
+                .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
         if (params.isCheckPreBilling())
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
