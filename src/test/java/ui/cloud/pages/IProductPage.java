@@ -19,10 +19,8 @@ import ui.elements.*;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
-import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.$x;
 import static tests.Tests.activeCnd;
 import static tests.Tests.clickableCnd;
@@ -49,7 +47,7 @@ public abstract class IProductPage {
         if (Objects.nonNull(product.getError()))
             throw new CreateEntityException(String.format("Продукт необходимый для выполнения теста был создан с ошибкой:\n%s", product.getError()));
         if (Objects.nonNull(product.getLink()))
-            open(product.getLink());
+            TypifiedElement.open(product.getLink());
         btnGeneralInfo.shouldBe(Condition.enabled);
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
         product.addLinkProduct();

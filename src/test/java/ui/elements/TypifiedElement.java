@@ -9,4 +9,9 @@ public interface TypifiedElement {
         Selenide.refresh();
         new Alert().close();
     }
+
+    static void open(String url){
+        Selenide.open(url);
+        new Alert().close();
+    }
 }

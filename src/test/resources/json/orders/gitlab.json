@@ -1,9 +1,21 @@
 {
   "order": {
-    "project_name": "proj-frybyv41jh",
+    "project_name": "proj-ln4zg69jek",
     "product_id": "e290cb46-6dbf-4ad9-b52a-32c5bc897eb1",
     "attrs": {
-      "group_name": "vtb-gitlab-grou"
+      "group_name": "vtb-gitlab-grou-2050879919",
+      "initial_users": {
+        "users": [
+          {
+            "id": "78bf39e4-11f1-44a0-ac3e-9a3f860856e4",
+            "name": "Морозов Илья Андреевич (4050570)",
+            "email": "ia.morozov@vtb.ru",
+            "lastname": "Морозов",
+            "username": "vtb4050570"
+          }
+        ],
+        "access_level": "guest"
+      }
     },
     "count": 1,
     "label": "Группа Gitlab"
