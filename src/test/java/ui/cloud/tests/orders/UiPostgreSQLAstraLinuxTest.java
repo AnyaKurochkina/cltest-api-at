@@ -153,51 +153,51 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
 //        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
 //    }
-
-//    @Test
-//    @Order(8)
-//    @TmsLink("")
-//    @DisplayName("UI PostgreSQLAstra. Создание БД")
-//    void createDb() {
-//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-//        pSqlPage.createDb();
-//    }
 //
-//    @Test
-//    @Order(9)
-//    @TmsLink("")
-//    @DisplayName("UI PostgreSQLAstra. Назначить предел подключений")
-//    void setLimitConnectDb() {
-//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-//        pSqlPage.setLimitConnectDb();
-//    }
-//
-//    @Test
-//    @Order(10)
-//    @TmsLink("")
-//    @DisplayName("UI PostgreSQLAstra. Убрать предел подключений")
-//    void removeLimitConnectDb() {
-//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-//        pSqlPage.removeLimitConnectDb("ru_RU.UTF-8");
-//    }
+    @Test
+    @Order(8)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Создание БД")
+    void createDb() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.createDb();
+    }
 
-//    @Test
-//    @Order(11)
-//    @TmsLink("")
-//    @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД")
-//    void resetPasswordDb() {
-//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-//        pSqlPage.resetPasswordDb();
-//    }
+    @Test
+    @Order(9)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Назначить предел подключений")
+    void setLimitConnectDb() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.setLimitConnectDb();
+    }
 
-//    @Test
-//    @Order(12)
-//    @TmsLink("")
-//    @DisplayName("UI PostgreSQLAstra. Добавить пользователя")
-//    void createUserDb() {
-//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-//        pSqlPage.createUserDb();
-//    }
+    @Test
+    @Order(10)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Убрать предел подключений")
+    void removeLimitConnectDb() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.removeLimitConnectDb("ru_RU.UTF-8");
+    }
+
+    @Test
+    @Order(11)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД")
+    void resetPasswordDb() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.resetPasswordDb();
+    }
+
+    @Test
+    @Order(12)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Добавить пользователя")
+    void createUserDb() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.createUserDb();
+    }
 
     @Test
     @Order(13)
@@ -207,30 +207,24 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.resetPasswordUserDb();
     }
-//
-//    @Test
-//    @Order(14)
-//    @TmsLink("")
-//    @DisplayName("UI PostgreSQLAstra. Удалить пользователя БД")
-//    void deletePasswordUserDb() {
-//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-//        pSqlPage.deletePasswordUserDb();
-//    }
 
+    @Test
+    @Order(14)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Удалить пользователя БД")
+    void deletePasswordUserDb() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.deletePasswordUserDb();
+    }
 
-
-
-
-
-//
-//    @Test
-//    @Order(11)
-//    @TmsLink("")
-//    @DisplayName("UI PostgreSQLAstra. Удаление БД")
-//    void removeDb() {
-//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-//        pSqlPage.removeDb("ru_RU.UTF-8");
-//    }
+    @Test
+    @Order(15)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Удаление БД")
+    void removeDb() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.removeDb("ru_RU.UTF-8");
+    }
 
 
 }

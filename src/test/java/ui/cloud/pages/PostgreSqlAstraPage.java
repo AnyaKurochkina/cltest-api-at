@@ -119,6 +119,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithParameters(BLOCK_AT_DB_ADMIN, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
+            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
     }
     public void resetPasswordUserDb() {
