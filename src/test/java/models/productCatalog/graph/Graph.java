@@ -1,5 +1,6 @@
 package models.productCatalog.graph;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.graphs.createGraph.response.CreateGraphResponse;
@@ -90,6 +91,7 @@ public class Graph extends Entity {
     protected void create() {
         deleteIfExist(name);
         graphId = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -102,6 +104,7 @@ public class Graph extends Entity {
     @Step("Удаление графа")
     protected void delete() {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + graphId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);

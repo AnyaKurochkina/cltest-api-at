@@ -1,5 +1,6 @@
 package models.authorizer;
 
+import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.Builder;
@@ -32,10 +33,12 @@ public class Organization extends Entity {
     @Step("Получение организации")
     protected void create() {
         name = new Http(ResourceManagerURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/organizations?page=1&per_page=25")
                 .assertStatus(200)
                 .jsonPath()
-                .getString(String.format("data.find{it.title=='%s'}.name", title));
+                .getString("data[0].name");
+//                .getString(String.format("data.find{it.title=='%s'}.name", title));
     }
 
     @Override

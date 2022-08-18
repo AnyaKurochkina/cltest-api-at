@@ -1,5 +1,6 @@
 package models.productCatalog;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.CompactTemplate;
@@ -68,6 +69,7 @@ public class ItemVisualTemplates extends Entity {
             steps.deleteById(objectId);
         }
         itemId = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -81,6 +83,7 @@ public class ItemVisualTemplates extends Entity {
     protected void delete() {
         ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + itemId + "/")
                 .assertStatus(204);
         Assertions.assertEquals(0, steps.getObjectListByName(name, GetVisualTemplateListResponse.class)

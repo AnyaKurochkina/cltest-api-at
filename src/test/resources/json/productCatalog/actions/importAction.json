@@ -57,9 +57,9 @@
         "modifications": [],
         "printed_output": {},
         "current_version": "",
-        "allowed_developers": "",
+        "allowed_developers": [],
         "damage_order_on_error": false,
-        "restricted_developers": "",
+        "restricted_developers": [],
         "version_arr": [
           1,
           0,

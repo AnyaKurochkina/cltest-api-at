@@ -1,5 +1,6 @@
 package models.feedService.tag;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
@@ -58,6 +59,7 @@ public class FeedTag extends Entity {
 			FeedServiceSteps.deleteTag(feedByName.getId());
 		}
 		id = new Http(FeedServiceURL)
+				.setRole(Role.PRODUCT_CATALOG_ADMIN)
 				.body(toJson())
 				.post(feedService)
 				.assertStatus(201)
@@ -69,6 +71,7 @@ public class FeedTag extends Entity {
 	@Step("Удаление Tag")
 	protected void delete() {
 		new Http(FeedServiceURL)
+				.setRole(Role.PRODUCT_CATALOG_ADMIN)
 				.delete(feedService + id + "/")
 				.assertStatus(204);
 	}

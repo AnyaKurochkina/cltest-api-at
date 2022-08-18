@@ -1,6 +1,5 @@
 package tests.productCatalog.template;
 
-import core.helper.Configure;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
 import io.qameta.allure.Epic;
@@ -15,6 +14,7 @@ import tests.Tests;
 
 import java.util.List;
 
+import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Epic("Продуктовый каталог")
@@ -38,10 +38,9 @@ public class TemplatesListTest extends Tests {
     @Test
     public void getMeta() {
         String str = steps.getMeta(GetTemplateListResponse.class).getNext();
-        String env = Configure.ENV;
+        String url = getAppProp("url.kong");
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
-                    "Значение поля next несоответсвует ожидаемому");
+            assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
         }
     }
 }

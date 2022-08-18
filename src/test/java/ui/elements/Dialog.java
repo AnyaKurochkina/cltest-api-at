@@ -2,7 +2,6 @@ package ui.elements;
 
 import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
-import org.openqa.selenium.Keys;
 
 import static core.helper.StringUtils.$x;
 
@@ -16,6 +15,7 @@ public class Dialog implements TypifiedElement {
 
     public void setInputValue(String label, String value){
         SelenideElement element = dialog.$x(String.format("descendant::div[label[starts-with(.,'%s')]]/div/input", label));
+        new Input(element).clear();
         new Input(element).setValue(value);
     }
 

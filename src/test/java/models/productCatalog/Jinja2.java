@@ -1,5 +1,6 @@
 package models.productCatalog;
 
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -53,6 +54,7 @@ public class Jinja2 extends Entity {
             productCatalogSteps.deleteByName(name, GetJinjaListResponse.class);
         }
         jinjaId = new Http(Configure.ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -65,6 +67,7 @@ public class Jinja2 extends Entity {
     @Step("Удаление jinja2")
     protected void delete() {
         new Http(Configure.ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + jinjaId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);

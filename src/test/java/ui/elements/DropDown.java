@@ -36,7 +36,7 @@ public class DropDown implements TypifiedElement {
         if (element.getText().equals(value))
             return;
         element.shouldBe(clickableCnd).click();
-        $x("//ul/li[text()='{}']", value)
+        $x("//li[text()='{}']", value)
                 .shouldBe(Condition.enabled)
                 .click();
     }
@@ -54,8 +54,14 @@ public class DropDown implements TypifiedElement {
     }
 
     public DropDown click() {
-        element.scrollIntoView("{block: 'center'}");
+        element.scrollIntoView(scrollCenter);
         element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
+        return this;
+    }
+
+    @Step("Очистить select")
+    public DropDown clear() {
+        element.scrollIntoView(scrollCenter).$x("descendant::button[@aria-label='Clear']").hover().click();
         return this;
     }
 

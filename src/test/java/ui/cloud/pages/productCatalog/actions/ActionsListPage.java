@@ -34,7 +34,7 @@ public class ActionsListPage {
      * @return true если действие существует, false если действие не существует.
      */
     public boolean isActionExist(String value) {
-        return new Table(NAME_COLUMN).isColumnValueExist(NAME_COLUMN, value);
+        return new Table(NAME_COLUMN).isColumnValueEquals(NAME_COLUMN, value);
     }
 
     @Step("Копирование действия")
@@ -55,7 +55,7 @@ public class ActionsListPage {
     @Step("Открытие формы действия")
     public ActionPage openActionForm(String name) {
         new Table(NAME_COLUMN).getRowElementByColumnValue(NAME_COLUMN, name).click();
-        TestUtils.wait(1000);
+        TestUtils.wait(2000);
         return new ActionPage();
     }
 

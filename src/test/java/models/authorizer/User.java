@@ -1,5 +1,6 @@
 package models.authorizer;
 
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -40,6 +41,7 @@ public class User extends Entity {
     @Override
     protected void create() {
         new Http(Configure.IamURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .post("/v1/projects/{}/policy/add-members", projectName)
                 .assertStatus(201);
@@ -74,6 +76,7 @@ public class User extends Entity {
     @Override
     protected void delete() {
         new Http(Configure.IamURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .post("/v1/projects/{}/policy/remove-members", projectName)
                 .assertStatus(201);

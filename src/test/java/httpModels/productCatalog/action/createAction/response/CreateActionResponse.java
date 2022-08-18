@@ -30,6 +30,12 @@ public class CreateActionResponse{
 	@JsonProperty("icon")
 	private String icon;
 
+	@JsonProperty("icon_store_id")
+	private String iconStoreId;
+
+	@JsonProperty("icon_url")
+	private String iconUrl;
+
 	@JsonProperty("current_version")
 	private String currentVersion;
 
@@ -125,6 +131,7 @@ public class CreateActionResponse{
 
 	@JsonProperty("update_dt")
 	private String update_dt;
+	private Integer number;
 
 	@JsonProperty("extra_data")
 	private Map<String, String> extraData;

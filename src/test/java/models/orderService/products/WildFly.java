@@ -100,7 +100,7 @@ public class WildFly extends IProduct {
     }
 
     public void syncDev() {
-        OrderServiceSteps.executeAction("wildfly_sync_dev", this, null, this.getProjectId());
+        OrderServiceSteps.executeAction("wildfly_sync", this, null, this.getProjectId());
     }
 
     //Добавление пользователя WildFly

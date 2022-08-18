@@ -3,8 +3,8 @@
     "objectClassName": "models.authorizer.Project",
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
-    "id": "proj-ie2s5l0ycr",
-    "projectName": "PROJECT_TEST",
+    "id": "proj-z4sozqtzjr",
+    "projectName": "TEST",
     "projectEnvironmentPrefix": {
       "env": "IFT",
       "id": "df8e9a1f-7bc2-4ada-9f92-005c1b5e59b3",
@@ -15,19 +15,19 @@
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
-    "id": "sa_proj-ie2s5l0ycr-4d",
-    "secret": "3e747bdfd4c07dbde85e0bda902a0860",
+    "id": "sa_proj-z4sozqtzjr-1v",
+    "secret": "33f96f852ea5a483378970798639c336",
     "isDeleted": false,
-    "projectId": "proj-ie2s5l0ycr",
+    "projectId": "proj-z4sozqtzjr",
     "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e64",
     "isForOrders": true
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "prefixName": "cloud-ifplux-test-acces-group",
+    "prefixName": "cloud-plux-group",
     "user": "",
     "isDeleted": false,
-    "projectName": "proj-ie2s5l0ycr",
+    "projectName": "proj-z4sozqtzjr",
     "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f576",
     "isForOrders": true
   },
@@ -35,31 +35,31 @@
     "objectClassName": "models.authorizer.Project",
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
-    "id": "proj-xazpppulba",
-    "projectName": "PROJECT_DEV",
+    "id": "proj-pkvckn08w9",
+    "projectName": "DEV",
     "projectEnvironmentPrefix": {
-      "env": "DSO",
-      "id": "2636779e-2ddc-4446-8cc4-ae1a71a23cd1",
+      "env": "DEV",
+      "id": "ccdf17a9-b2a6-4d23-9f7b-af5cc4575839",
       "envType": "DEV",
-      "projectEnvironmentId": "395a0a01-e83a-4ede-80a5-7354f2a8db39"
+      "projectEnvironmentId": "447044a8-00ae-486e-8e59-6136353ca4ce"
     },
     "isForOrders": true
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "prefixName": "cloud-d2plux-xazppulba",
+    "prefixName": "cloud-plux-group-at",
     "user": "",
     "isDeleted": false,
-    "projectName": "proj-xazpppulba",
+    "projectName": "proj-pkvckn08w9",
     "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f575",
     "isForOrders": true
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
-    "id": "sa_proj-xazpppulba-uu",
-    "secret": "cfa68697054fbcf180ef036aad03c7f8",
+    "id": "sa_proj-pkvckn08w9-1u",
+    "secret": "f1f0533ce9761f0a2cabf35ec59c386a",
     "isDeleted": false,
-    "projectId": "proj-xazpppulba",
+    "projectId": "proj-pkvckn08w9",
     "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e63",
     "isForOrders": true
   },

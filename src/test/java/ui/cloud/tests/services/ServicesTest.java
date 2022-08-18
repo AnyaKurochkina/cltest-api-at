@@ -1,5 +1,6 @@
 package ui.cloud.tests.services;
 
+import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -28,7 +29,7 @@ public class ServicesTest extends Tests {
     @Title("Авторизация на портале")
     void beforeEach() {
         new LoginPage(project.getId())
-                .signIn();
+                .signIn(Role.DAY2_SERVICE_MANAGER);
     }
 
     @Test

@@ -6,12 +6,17 @@ import io.qameta.allure.Step;
 import models.orderService.products.Windows;
 import models.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.NotFoundException;
 import ui.elements.Dialog;
 import ui.elements.DropDown;
 import ui.elements.Input;
 import ui.elements.Table;
 
+import java.util.List;
+
 import static core.helper.StringUtils.$x;
+import static tests.Tests.activeCnd;
+import static tests.Tests.clickableCnd;
 
 public class WindowsPage extends IProductPage {
     private static final String BLOCK_VM = "Виртуальная машина";
@@ -28,29 +33,34 @@ public class WindowsPage extends IProductPage {
         super(product);
     }
 
+    @Override
+    void checkPowerStatus(String expectedStatus) {
+        new VirtualMachineTable().checkPowerStatus(expectedStatus);
+    }
+
     public void delete() {
         runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
         {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_DELETED);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void start() {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
         runActionWithoutParameters(BLOCK_VM, "Включить");
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void restart() {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Перезагрузить по питанию");
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void changeConfiguration() {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
@@ -61,7 +71,7 @@ public class WindowsPage extends IProductPage {
 
     @Step("Расширить диск {name} до {size}ГБ")
     public void expandDisk(String name, String size) {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(getDiskMenuElement(name), "Расширить диск", "Подтвердить",
                 () -> Input.byLabel("Итоговый объем дискового пространства, Гб").setValue(size));
         btnGeneralInfo.shouldBe(Condition.enabled).click();
@@ -70,7 +80,7 @@ public class WindowsPage extends IProductPage {
     }
 
     public void disableDisk(String name) {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getDiskMenuElement(name), "Отключить в ОС");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         Assertions.assertEquals("Отключен", new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name)
@@ -78,7 +88,7 @@ public class WindowsPage extends IProductPage {
     }
 
     public void enableDisk(String name) {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getDiskMenuElement(name), "Подключить в ОС");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         Assertions.assertEquals("Подключен", new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name)
@@ -86,31 +96,31 @@ public class WindowsPage extends IProductPage {
     }
 
     public void deleteDisk(String name) {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getDiskMenuElement(name), "Удалить диск");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(new Table(HEADER_CONNECT_STATUS).isColumnValueExist(HEADER_PATH, name), "Диск существует");
+        Assertions.assertFalse(new Table(HEADER_CONNECT_STATUS).isColumnValueEquals(HEADER_PATH, name), "Диск существует");
     }
 
     public void checkConfiguration() {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
     }
 
     public void stopSoft() {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Выключить");
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void stopHard() {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Выключить принудительно");
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void addDisk(String name, String size) {
-        new VirtualMachineTable().checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("Дополнительные диски", "Добавить диск", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Добавить диск");
             dlg.setInputValue("Дополнительный объем дискового пространства", size);
@@ -119,13 +129,40 @@ public class WindowsPage extends IProductPage {
         });
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         Table diskTable = new Table(HEADER_CONNECT_STATUS);
-        Assertions.assertTrue(diskTable.isColumnValueExist(HEADER_PATH, name), "Диск не существует");
+        Assertions.assertTrue(diskTable.isColumnValueEquals(HEADER_PATH, name), "Диск не существует");
         Assertions.assertAll("Проверка полей диска",
                 ()-> Assertions.assertEquals(size, diskTable.getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_DISK_SIZE)
                         , "Неверный размер диска"),
                 ()-> Assertions.assertEquals("Подключен", diskTable.getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_CONNECT_STATUS),
                         HEADER_CONNECT_STATUS)
         );
+    }
+    
+    @Step("Добавить новые группы {group} с ролью {role}")
+    public void addGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
+            DropDown.byLabel("Роль").selectByValue(role);
+            groups.forEach(group -> DropDown.byLabel("Группы").select(group));
+        });
+        groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+    }
+
+    @Step("Изменить состав групп у роли {role} на {groups}")
+    public void updateGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
+            DropDown groupsElement = DropDown.byLabel("Группы").clear();
+            groups.forEach(groupsElement::select);
+        });
+        groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+    }
+
+    @Step("Удалить группу доступа с ролью {role}")
+    public void deleteGroup(String role) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
+        Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
     }
 
     private SelenideElement getDiskMenuElement(String name) {
@@ -140,6 +177,30 @@ public class WindowsPage extends IProductPage {
         @Override
         public String getPowerStatus() {
             return getPowerStatus("Питание");
+        }
+    }
+
+    //Таблица ролей
+    public class RoleTable extends Table {
+        @Override
+        protected void open() {
+            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        }
+
+        public RoleTable() {
+            super("Группы");
+        }
+
+        private SelenideElement getRoleMenuElement(String name) {
+            return getRoleRow(name).$("button");
+        }
+
+        private SelenideElement getRoleRow(String name) {
+            return getRowElementByColumnValue("", name);
+        }
+
+        private String getGroupsRole(String name) {
+            return getRowByColumnValue("", name).getValueByColumn("Группы");
         }
     }
 }

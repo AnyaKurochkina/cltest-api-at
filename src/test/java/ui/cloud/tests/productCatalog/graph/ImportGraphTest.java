@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.BaseTest;
+import ui.uiModels.Graph;
 
 @Epic("Графы")
 @Feature("Импорт графа")
@@ -27,8 +28,8 @@ public class ImportGraphTest extends BaseTest {
         new IndexPage()
                 .goToGraphsPage()
                 .importGraph("src/test/resources/json/productCatalog/graphs/importGraph.json")
-                .openGraphPage(name)
-                .checkGraphAttributes(name, title, "1.0.0")
+                .findAndOpenGraphPage(name)
+                .checkGraphAttributes(new Graph(name, title, "1.0.0"))
                 .deleteGraph();
     }
 }

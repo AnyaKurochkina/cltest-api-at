@@ -93,6 +93,7 @@ public abstract class Entity implements AutoCloseable {
         try {
             init();
             create();
+
         } catch (Http.StatusResponseException e) {
             if(e.getStatus() != expectedStatus)
                 throw e;

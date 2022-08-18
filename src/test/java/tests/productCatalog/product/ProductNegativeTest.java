@@ -5,7 +5,7 @@ import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Product;
+import models.productCatalog.product.Product;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -184,9 +184,9 @@ public class ProductNegativeTest extends Tests {
                 .version("1.0.0")
                 .build().createObject();
         String productId = product.getProductId();
-       Response response = steps.getDeleteObjectResponse(productId).assertStatus(403);
-       steps.partialUpdateObject(productId, new JSONObject().put("is_open", false));
-       assertEquals(errorText, response.jsonPath().get("error"));
+        Response response = steps.getDeleteObjectResponse(productId).assertStatus(403);
+        steps.partialUpdateObject(productId, new JSONObject().put("is_open", false));
+        assertEquals(errorText, response.jsonPath().get("error"));
     }
 
     @Test
@@ -206,5 +206,25 @@ public class ProductNegativeTest extends Tests {
                 .assertStatus(400);
         assertEquals("Значения test нет среди допустимых вариантов.", response.jsonPath()
                 .getList("payment").get(0));
+    }
+
+    @DisplayName("Негативный тест на cоздание продукта cо значением number меньше min значения")
+    @TmsLink("")
+    @Test
+    public void createProductWithDefaultNumber() {
+        String productName = "create_product_with_default_number";
+        JSONObject product = Product.builder()
+                .name(productName)
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
+                .number(-1)
+                .info(info)
+                .build()
+                .init()
+                .toJson();
+        Response response = steps.createProductObject(product).assertStatus(400);
+        Object msg = response.jsonPath().getList("number").get(0);
+        assertEquals("Убедитесь, что это значение больше либо равно 0.", msg);
     }
 }

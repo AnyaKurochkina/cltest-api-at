@@ -26,16 +26,16 @@ public class LoginPage {
         open("");
     }
 
-    public IndexPage signIn(String user, String password){
+    private IndexPage signIn(String user, String password){
         usernameInput.shouldBe(Condition.visible).val(user);
         passwordInput.shouldBe(Condition.visible).val(password);
         passwordInput.submit();
-        new Alert().close();
+        new Alert().closeAll();
         return new IndexPage();
     }
 
-    public IndexPage signIn(){
-        GlobalUser user = GlobalUser.builder().role(Role.ADMIN).build().createObject();
+    public IndexPage signIn(Role role){
+        GlobalUser user = GlobalUser.builder().role(role).build().createObject();
         return signIn(user.getUsername(), user.getPassword());
     }
 

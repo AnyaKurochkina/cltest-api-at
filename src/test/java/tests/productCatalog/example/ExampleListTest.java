@@ -1,24 +1,22 @@
 package tests.productCatalog.example;
 
-import core.helper.Configure;
-import httpModels.productCatalog.GetListImpl;
-import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.example.getExampleList.GetExampleListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Example;
+import models.productCatalog.example.Example;
+import models.productCatalog.example.GetExampleList;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import java.util.List;
 
+import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.ExampleSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -26,39 +24,35 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisabledIfEnv("prod")
 public class ExampleListTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/example/",
-            "productCatalog/examples/createExample.json");
-
     @DisplayName("Получение списка Examples")
     @TmsLink("822245")
     @Test
-    public void getExampleList() {
+    public void getExampleListTest() {
         Example.builder()
                 .name("create_example_for_list_test_api")
                 .title("create_example_for_list_test_api")
                 .description("create_example_for_list_test_api")
                 .build()
                 .createObject();
-        List<ItemImpl> list = steps.getProductObjectList(GetExampleListResponse.class);
-        assertTrue(steps.isSorted(list), "Список не отсортирован.");
+        List<Example> list = getExampleList();
+        assertTrue(isExampleSorted(list), "Список не отсортирован.");
     }
 
     @DisplayName("Проверка значения next в запросе на получение списка Examples")
     @TmsLink("822314")
     @Test
     public void getMeta() {
-        String str = steps.getMeta(GetExampleListResponse.class).getNext();
-        String env = Configure.ENV;
+        String str = getExampleMeta().getNext();
+        String url = getAppProp("url.kong");
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"), "Значение поля next " +
-                    "несоответсвует ожидаемому");
+            assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
         }
     }
 
     @DisplayName("Получение списка Examples по имени")
     @TmsLink("822376")
     @Test
-    public void getExampleListByName() {
+    public void getExampleListByNameTest() {
         String exampleName = "create_example_for_list_by_name_test_api";
         Example createExample = Example.builder()
                 .name(exampleName)
@@ -66,9 +60,9 @@ public class ExampleListTest extends Tests {
                 .description("create_example_for_list_by_name_test_api")
                 .build()
                 .createObject();
-        GetListImpl exampleListByName = steps.getObjectListByName(exampleName, GetExampleListResponse.class);
-        assertEquals(createExample.getName(), exampleListByName.getItemsList().get(0).getName());
-        assertEquals(1, exampleListByName.getItemsList().size(),
+        GetExampleList exampleListByName = getExampleListByName(exampleName);
+        assertEquals(createExample.getName(), exampleListByName.getList().get(0).getName());
+        assertEquals(1, exampleListByName.getList().size(),
                 "Список не содержит значений");
     }
 
@@ -90,8 +84,7 @@ public class ExampleListTest extends Tests {
                 .description("description_second_example_for_list_by_name_test_api")
                 .build()
                 .createObject();
-        GetListImpl exampleListByName = steps.getObjectsListByNames(GetExampleListResponse.class, exampleName, exampleName2);
-        assertEquals(2, exampleListByName.getItemsList().size(),
-                "Список не содержит значений");
+        GetExampleList exampleListByName = getExampleListByNames(exampleName, exampleName2);
+        assertEquals(2, exampleListByName.getList().size(), "Список не содержит значений");
     }
 }

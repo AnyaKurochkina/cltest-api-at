@@ -1,5 +1,6 @@
 package models.productCatalog;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
@@ -30,6 +31,8 @@ public class Services extends Entity {
     private List<String> versionList;
     private Boolean isPublished;
     private String icon;
+    private String iconUrl;
+    private String iconStoreId;
     private String description;
     private String serviceInfo;
     private String graphVersion;
@@ -96,6 +99,10 @@ public class Services extends Entity {
                 .set("$.direction_id", directionId)
                 .set("$.direction_name", directionName)
                 .set("$.service_info", serviceInfo)
+                .set("$.icon", icon)
+                .set("$.icon_url", iconUrl)
+                .set("$.icon_store_id", iconStoreId)
+                .setIfNullRemove("$.start_btn_label", startBtnLabel)
                 .build();
     }
 
@@ -106,6 +113,7 @@ public class Services extends Entity {
             productCatalogSteps.deleteByName(serviceName, GetServiceListResponse.class);
         }
         CreateServiceResponse createServiceResponse = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -118,6 +126,7 @@ public class Services extends Entity {
     @Step("Удаление сервиса")
     protected void delete() {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + serviceId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);

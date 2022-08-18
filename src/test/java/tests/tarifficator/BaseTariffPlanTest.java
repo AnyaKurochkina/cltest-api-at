@@ -1,5 +1,6 @@
 package tests.tarifficator;
 
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.CustomDate;
 import core.helper.http.Http;
@@ -72,6 +73,7 @@ public class BaseTariffPlanTest extends Tests {
                 .build()
                 .toJson();
         new Http(Configure.TarifficatorURL)
+                .setRole(Role.TARIFFICATOR_ADMIN)
                 .body(object)
                 .post("/v1/tariff_plans")
                 .assertStatus(422);

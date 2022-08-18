@@ -1,5 +1,6 @@
 package models.authorizer;
 
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -73,6 +74,7 @@ public class Folder extends Entity {
 
     public void edit() {
         String titleNew = new Http(Configure.ResourceManagerURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .patch("/v1/folders/{}", name)
                 .assertStatus(200)
@@ -84,11 +86,13 @@ public class Folder extends Entity {
 
     public static Folder getParent(Folder folder) {
         String parentId = new Http(Configure.ResourceManagerURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/folders/{}", folder.getName())
                 .assertStatus(200)
                 .jsonPath()
                 .getString("data.parent");
         JsonPath path = new Http(Configure.ResourceManagerURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/folders/{}", parentId)
                 .assertStatus(200)
                 .jsonPath();
@@ -102,6 +106,7 @@ public class Folder extends Entity {
     protected void create() {
         String url = kind.equals(BUSINESS_BLOCK) ? "/v1/organizations/vtb/folders" : String.format("/v1/folders/%s/folders", parentId);
         name = new Http(Configure.ResourceManagerURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .post(url)
                 .assertStatus(201)
@@ -113,6 +118,7 @@ public class Folder extends Entity {
     @Step("Удаление папки")
     protected void delete() {
         new Http(Configure.ResourceManagerURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .delete("/v1/folders/" + name)
                 .assertStatus(204);
     }

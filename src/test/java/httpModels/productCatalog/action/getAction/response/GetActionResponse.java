@@ -32,6 +32,12 @@ public class GetActionResponse implements GetImpl {
     @JsonProperty("icon")
     private String icon;
 
+    @JsonProperty("icon_store_id")
+    private String iconStoreId;
+
+    @JsonProperty("icon_url")
+    private String iconUrl;
+
     @JsonProperty("location_restriction")
     private String locationRestriction;
 
@@ -100,6 +106,7 @@ public class GetActionResponse implements GetImpl {
 
     @JsonProperty("name")
     private String name;
+    private Integer number;
 
     @JsonProperty("allowed_groups")
     private List<Object> allowedGroups;

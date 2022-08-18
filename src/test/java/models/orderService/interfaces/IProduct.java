@@ -1,6 +1,7 @@
 package models.orderService.interfaces;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import core.enums.Role;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
 import core.helper.Configure;
@@ -20,7 +21,7 @@ import models.authorizer.Organization;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
 import models.productCatalog.graph.Graph;
-import models.productCatalog.Product;
+import models.productCatalog.product.Product;
 import models.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;

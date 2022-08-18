@@ -1,5 +1,6 @@
 package steps.tarifficator;
 
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import core.utils.Waiting;
@@ -9,7 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
 import models.orderService.interfaces.IProduct;
-import models.productCatalog.Product;
+import models.productCatalog.product.Product;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -34,6 +35,7 @@ public class CostSteps extends Steps {
         float consumption = 0F;
         for (String product : productsId) {
             consumptionOfOneProduct = new Http(CalculatorURL)
+                    .setRole(Role.ORDER_SERVICE_ADMIN)
                     .get("/orders/cost/?uuid__in={}", product)
                     .assertStatus(200)
                     .jsonPath()
@@ -50,6 +52,7 @@ public class CostSteps extends Steps {
     @Step("Получение расхода для папки/проекта")
     public static double getConsumptionByPath(String path) {
         double consumption = new Http(CalculatorURL)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
                 .get("/orders/cost/?folder__startswith={}", path)
                 .assertStatus(200)
                 .jsonPath()
@@ -210,6 +213,7 @@ public class CostSteps extends Steps {
     @Step("Запрос цен по ID тарифного плана")
     public static HashMap<String, Double> getPrices(String tariffPlanId) {
         JSONArray consumption = new Http(TarifficatorURL)
+                .setRole(Role.TARIFFICATOR_ADMIN)
                 .get("/v1/tariff_plans/{}?include=tariff_classes", tariffPlanId)
                 .assertStatus(200)
                 .toJson()
@@ -226,6 +230,7 @@ public class CostSteps extends Steps {
     @Step("Получение ID активного тарифного плана")
     public static String getActiveTariffId() {
         return new Http(TarifficatorURL)
+                .setRole(Role.TARIFFICATOR_ADMIN)
                 .get("/v1/tariff_plans?include=total_count&page=1&per_page=10&f[base]=false&f[organization_name]=vtb&sort=status&acc=up&f[status][]=active")
                 .assertStatus(200)
                 .jsonPath()

@@ -2,6 +2,7 @@ package steps.orderService;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -159,6 +160,7 @@ public class OrderServiceSteps extends Steps {
                 .set("$.item_id", item.getId())
                 .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
                 .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
 
@@ -317,12 +319,14 @@ public class OrderServiceSteps extends Steps {
     public static String getDomainByProject(String project) {
         if (Configure.ENV.equals("ift")) {
             return new Http(OrderServiceURL)
+                    .setRole(Role.ORDER_SERVICE_ADMIN)
                     .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25", project)
                     .assertStatus(200)
                     .jsonPath()
                     .get("list.find{it.code=='corp.dev.vtb'}.code");
         } else {
             return new Http(OrderServiceURL)
+                    .setRole(Role.ORDER_SERVICE_ADMIN)
                     .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25", project)
                     .assertStatus(200)
                     .jsonPath()
