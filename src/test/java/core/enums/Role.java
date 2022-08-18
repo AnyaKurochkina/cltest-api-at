@@ -3,8 +3,6 @@ package core.enums;
 import com.google.gson.annotations.SerializedName;
 
 public enum Role {
-    VIEWER("will be remove"),
-
     @SerializedName("product-catalog.viewer")
     PRODUCT_CATALOG_VIEWER("product-catalog.viewer"),
 

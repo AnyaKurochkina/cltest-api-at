@@ -241,10 +241,7 @@ public class Http {
                 }
                 specification.header("Authorization", token);
             }
-
-            if (!(host + path).endsWith("/openid-connect/token"))
-                SEMAPHORE.acquire();
-
+            SEMAPHORE.acquire();
             if (field.length() > 0) {
                 String mimeType = URLConnection.guessContentTypeFromName(fileName);
                 if (Objects.isNull(mimeType))
@@ -302,9 +299,7 @@ public class Http {
                 status = response.getStatusCode();
             Assertions.fail(String.format("Ошибка отправки http запроса (%s) %s. \nОшибка: %s\nСтатус: %s", role, (host + path), e, status));
         } finally {
-//            if (path.endsWith("/cost") || path.contains("order-service"))
-            if (!(host + path).endsWith("/openid-connect/token"))
-                SEMAPHORE.release();
+            SEMAPHORE.release();
             if (response != null)
                 if (response.getTime() > 1000)
                     if (!((host + path).contains(TestITClient.properties.getUrl())))

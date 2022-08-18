@@ -220,7 +220,6 @@ public class ApacheKafkaCluster extends IProduct {
         Assertions.assertEquals("2.13-2.8.1", OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.data.config.kafka_version"), "Версия kafka не изменилась");
     }
 
-
     public void start() {
         start("start_kafka");
     }
