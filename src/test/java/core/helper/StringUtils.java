@@ -1,5 +1,6 @@
 package core.helper;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import lombok.SneakyThrows;
@@ -32,6 +33,10 @@ public final class StringUtils {
 
     public static SelenideElement $x(@Language("XPath") String xpath, Object ... args) {
         return Selenide.$x(format(xpath, args));
+    }
+
+    public static ElementsCollection $$x(@Language("XPath") String xpath, Object ... args) {
+        return Selenide.$$x(format(xpath, args));
     }
 
     @SneakyThrows
