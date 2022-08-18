@@ -3,6 +3,7 @@ package ui.cloud.tests.orders;
 import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
+import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
@@ -36,7 +37,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     public UiPostgreSQLAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
             //product = PostgreSQL.builder().productName("PostgreSQL (Astra Linux)").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/bd979c51-8213-486a-a168-67f3787cb0f1/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/6c3749e1-605a-4724-8335-9b19069bd5a9/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQL.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -47,9 +48,9 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     void beforeEach() {
         //Configuration.browserSize = "1366x768";
         new LoginPage(product.getProjectId())
-                .signIn();
+                .signIn(Role.ORDER_SERVICE_ADMIN);
     }
-
+//
 //    @Test
 //    @TmsLink("16306")
 //    @Order(1)
@@ -96,7 +97,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        pSqlPage.getBtnHistory().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
 //        pSqlPage.checkHeadersHistory();
 //    }
-
+//
 //    @Test
 //    @TmsLink("1076809")
 //    @Order(3)
@@ -107,7 +108,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
 //        new Graph().checkGraph();
 //    }
-
+//
 //    @Test
 //    @TmsLink("2023")
 //    @Order(4)
@@ -124,7 +125,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        Selenide.refresh();
 //        pSqlPage.switchProtectOrder("Защита от удаления выключена");
 //    }
-
+//
 //    @Test
 //    @Order(5)
 //    @TmsLink("14506")
@@ -152,7 +153,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
 //        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
 //    }
-//
+
 //    @Test
 //    @Order(8)
 //    @TmsLink("")
@@ -161,15 +162,75 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
 //        pSqlPage.createDb();
 //    }
+//
+//    @Test
+//    @Order(9)
+//    @TmsLink("")
+//    @DisplayName("UI PostgreSQLAstra. Назначить предел подключений")
+//    void setLimitConnectDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.setLimitConnectDb();
+//    }
+//
+//    @Test
+//    @Order(10)
+//    @TmsLink("")
+//    @DisplayName("UI PostgreSQLAstra. Убрать предел подключений")
+//    void removeLimitConnectDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.removeLimitConnectDb("ru_RU.UTF-8");
+//    }
+
+//    @Test
+//    @Order(11)
+//    @TmsLink("")
+//    @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД")
+//    void resetPasswordDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.resetPasswordDb();
+//    }
+
+//    @Test
+//    @Order(12)
+//    @TmsLink("")
+//    @DisplayName("UI PostgreSQLAstra. Добавить пользователя")
+//    void createUserDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.createUserDb();
+//    }
 
     @Test
-    @Order(9)
+    @Order(13)
     @TmsLink("")
-    @DisplayName("UI PostgreSQLAstra. Удаление БД")
-    void removeDb() {
+    @DisplayName("UI PostgreSQLAstra. Сбросить пароль пользователя БД")
+    void resetPasswordUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.removeDb("ru_RU.UTF-8");
+        pSqlPage.resetPasswordUserDb();
     }
+//
+//    @Test
+//    @Order(14)
+//    @TmsLink("")
+//    @DisplayName("UI PostgreSQLAstra. Удалить пользователя БД")
+//    void deletePasswordUserDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.deletePasswordUserDb();
+//    }
+
+
+
+
+
+
+//
+//    @Test
+//    @Order(11)
+//    @TmsLink("")
+//    @DisplayName("UI PostgreSQLAstra. Удаление БД")
+//    void removeDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.removeDb("ru_RU.UTF-8");
+//    }
 
 
 }

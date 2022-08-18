@@ -3,19 +3,19 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import models.orderService.products.PostgreSQL;
-import models.orderService.products.PostgreSQLAstra;
 import models.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
-import ui.elements.Dialog;
-import ui.elements.DropDown;
-import ui.elements.Input;
-import ui.elements.Table;
+import ui.elements.*;
 
 import static core.helper.StringUtils.$x;
 
 public class PostgreSqlAstraPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_DB = "Базы данных";
+    private static final String BLOCK_AT_DB = "at_db";
+    private static final String BLOCK_AT_DB_ADMIN = "at_db_admin";
+    private static final String BLOCK_DB_AT_USER = "at_db_at_user";
+    private static final String BLOCK_DB_USERS = "Пользователи";
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_PATH = "Файловая система";
@@ -28,6 +28,11 @@ public class PostgreSqlAstraPage extends IProductPage {
 
     public PostgreSqlAstraPage(PostgreSQL product) {
         super(product);
+    }
+
+    @Override
+    void checkPowerStatus(String expectedStatus) {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(expectedStatus);
     }
 
     public void delete() {
@@ -76,16 +81,57 @@ public class PostgreSqlAstraPage extends IProductPage {
             Dialog dlg = new Dialog("Добавить БД");
             dlg.setInputValue("Имя базы данных", "at_db");
             generatePassButton.shouldBe(Condition.enabled).click();
+            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
     }
+    public void createUserDb() {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
+            Dialog dlg = new Dialog("Добавить пользователя");
+            dlg.setDropDownValue("Имя базы данных", "at_db");
+            dlg.setInputValue("Имя пользователя", "at_user");
+            dlg.setInputValue("Комментарий", "Пользователь для тестов");
+            generatePassButton.shouldBe(Condition.enabled).click();
+            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+        });
+    }
+
     public void removeDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getMenuElement(HEADER_LIMIT_CONNECT,name,HEADER_SORT), "Удалить БД");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-//        Assertions.assertEquals("", new Table(HEADER_LIMIT_CONNECT).getRowByColumnValue("", "")
-//                .getValueByColumn(HEADER_LIMIT_CONNECT));
     }
 
+    public void setLimitConnectDb() {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_AT_DB, "Назначить предел подключений", "Подтвердить", () -> {
+            Dialog dlg = new Dialog("Назначить предел подключений");
+            dlg.setInputValue("Предел подключений", "23");
+        });
+    }
+    public void removeLimitConnectDb(String name) {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(getMenuElement(HEADER_LIMIT_CONNECT,name,HEADER_SORT), "Убрать предел подключений");
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
+    }
+    public void resetPasswordDb() {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_AT_DB_ADMIN, "Сбросить пароль", "Подтвердить", () -> {
+            Dialog dlg = new Dialog("Сбросить пароль");
+            generatePassButton.shouldBe(Condition.enabled).click();
+        });
+    }
+    public void resetPasswordUserDb() {
+        runActionWithParameters(BLOCK_DB_AT_USER, "Сбросить пароль", "Подтвердить", () -> {
+            Dialog dlg = new Dialog("Сбросить пароль");
+            generatePassButton.shouldBe(Condition.enabled).click();
+            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+        });
+    }
+    public void deletePasswordUserDb() {
+        runActionWithParameters(BLOCK_DB_AT_USER, "Удалить пользователя", "Подтвердить", () -> {
+        });
+    }
 
 
     private SelenideElement getDiskMenuElement(String name) {

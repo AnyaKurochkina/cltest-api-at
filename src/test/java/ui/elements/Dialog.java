@@ -18,5 +18,12 @@ public class Dialog implements TypifiedElement {
         new Input(element).clear();
         new Input(element).setValue(value);
     }
+    public void setDropDownValue(String label,String value){
+        SelenideElement element = dialog.$x(String.format("descendant::div[label[starts-with(.,'%s')]]/div/input", label));
+        DropDown dropDown = new DropDown(element);
+        dropDown.select(value);
+    }
+
+
 
 }
