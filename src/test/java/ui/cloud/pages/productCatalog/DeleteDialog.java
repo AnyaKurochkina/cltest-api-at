@@ -1,4 +1,4 @@
-package ui.cloud.tests.productCatalog;
+package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
@@ -28,14 +28,14 @@ public class DeleteDialog extends Dialog {
     }
 
     @Step("Вводим верный id")
-    public void inputValidId() {
+    public void inputValidIdAndDelete() {
         setInputValue("Идентификатор", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
         new Alert().checkText("Удаление выполнено успешно").checkColor(Alert.Color.GREEN);
     }
 
     @Step("Вводим верный id")
-    public void inputValidId(String alertText) {
+    public void inputValidIdAndDelete(String alertText) {
         setInputValue("Идентификатор", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
         new Alert().checkText(alertText).checkColor(Alert.Color.GREEN);

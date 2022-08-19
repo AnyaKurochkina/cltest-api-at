@@ -3,14 +3,14 @@ package ui.cloud.pages.productCatalog.actions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import ui.cloud.tests.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
-import ui.cloud.tests.productCatalog.SaveDialog;
+import ui.cloud.pages.productCatalog.SaveDialog;
 
 import static com.codeborne.selenide.Selenide.$x;
 

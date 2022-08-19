@@ -5,7 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
-import ui.cloud.tests.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.uiModels.GraphModifier;
@@ -175,7 +175,7 @@ public class GraphModifiersPage extends GraphPage {
     @Step("Удаление модификатора '{name}'")
     public GraphModifiersPage deleteModifier(String name) {
         $x("//td[@value='" + name + "']/parent::tr//button[2]").click();
-        new DeleteDialog().inputValidId("Модификатор успешно удален");
+        new DeleteDialog().inputValidIdAndDelete("Модификатор успешно удален");
         TestUtils.wait(1100);
         Assertions.assertFalse($x("//td[@value='" + name + "']").exists());
         return this;
