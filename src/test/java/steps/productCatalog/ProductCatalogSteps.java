@@ -124,7 +124,7 @@ public class ProductCatalogSteps {
     @Step("Получение объекта продуктового каталога по Id")
     public GetImpl getById(String objectId, Class<?> clazz) {
         return (GetImpl) new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
                 .get(productName + objectId + "/")
                 .extractAs(clazz);
     }
@@ -132,7 +132,7 @@ public class ProductCatalogSteps {
     @Step("Получение объекта продуктового каталога по Id и Env")
     public GetImpl getByIdAndEnv(String objectId, String env, Class<?> clazz) {
         return (GetImpl) new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
                 .get(productName + objectId + "/?env={}", env)
                 .extractAs(clazz);
     }
@@ -140,7 +140,7 @@ public class ProductCatalogSteps {
     @Step("Получение объекта продуктового каталога по Id и по версии объекта")
     public GetImpl getByIdAndVersion(String objectId, String version, Class<?> clazz) {
         return (GetImpl) new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .setRole(Role.PRODUCT_CATALOG_VIEWER)
                 .get(productName + objectId + "/?version=" + version)
                 .extractAs(clazz);
     }

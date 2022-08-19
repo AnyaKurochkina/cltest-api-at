@@ -15,16 +15,13 @@ import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.Alert;
-import ui.elements.Dialog;
-import ui.elements.Input;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.codeborne.selenide.Selenide.open;
+import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static tests.Tests.activeCnd;
 import static tests.Tests.clickableCnd;
@@ -36,6 +33,7 @@ public abstract class IProductPage {
     IProduct product;
     double preBillingCostAction;
     SelenideElement productName = $x("(//button[@title='Редактировать']/ancestor::*/span)[1]");
+    abstract void checkPowerStatus(String expectedStatus);
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
@@ -46,7 +44,7 @@ public abstract class IProductPage {
         if (Objects.nonNull(product.getError()))
             throw new CreateEntityException(String.format("Продукт необходимый для выполнения теста был создан с ошибкой:\n%s", product.getError()));
         if (Objects.nonNull(product.getLink()))
-            open(product.getLink());
+            TypifiedElement.open(product.getLink());
         btnGeneralInfo.shouldBe(Condition.enabled);
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
         product.addLinkProduct();
@@ -86,12 +84,13 @@ public abstract class IProductPage {
     protected void runActionWithoutParameters(SelenideElement button, String action, ActionParameters params) {
         String productNameText = null;
         btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
-        if(Objects.nonNull(params.getNode())){
+        if (Objects.nonNull(params.getNode())) {
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
         }
         button.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
-        $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        $$x("//li[.='{}']", action).shouldBe(CollectionCondition.anyMatch("Ожидание отображения пункта меню", WebElement::isDisplayed))
+                .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = new Dialog(action);
         if (params.isCheckPreBilling())
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
@@ -100,7 +99,7 @@ public abstract class IProductPage {
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(2000);
-        if(Objects.nonNull(params.getNode())){
+        if (Objects.nonNull(params.getNode())) {
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
         if (params.isWaitChangeStatus())
@@ -115,12 +114,13 @@ public abstract class IProductPage {
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         String productNameText = null;
         btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
-        if(Objects.nonNull(params.getNode())){
+        if (Objects.nonNull(params.getNode())) {
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
         }
         button.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
-        $x("//li[.='{}']", action).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        $$x("//li[.='{}']", action).shouldBe(CollectionCondition.anyMatch("Ожидание отображения пункта меню", WebElement::isDisplayed))
+                .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
         if (params.isCheckPreBilling())
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
@@ -129,7 +129,7 @@ public abstract class IProductPage {
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(2000);
-        if(Objects.nonNull(params.getNode())){
+        if (Objects.nonNull(params.getNode())) {
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
         if (params.isWaitChangeStatus())
@@ -164,7 +164,8 @@ public abstract class IProductPage {
 
     //new Table("Роли узла").getRowByIndex(0)
     @Step("Расширить диск {name} на {size}ГБ")
-    public void expandDisk(String name, String size, SelenideElement node) {
+    protected void expandDisk(String name, String size, SelenideElement node) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters($x("//td[.='{}']/../descendant::button", name),
                 "Расширить", "Подтвердить", () -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size),
                 ActionParameters.builder().node(node).build());
@@ -219,11 +220,11 @@ public abstract class IProductPage {
     @SneakyThrows
     @Step("Запуска действия с проверкой стоимости")
     public void runActionWithCheckCost(CompareType type, Executable executable) {
-        Selenide.refresh();
+        TypifiedElement.refresh();
         waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
-        Selenide.refresh();
+        TypifiedElement.refresh();
         currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
         Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if (type == CompareType.MORE)

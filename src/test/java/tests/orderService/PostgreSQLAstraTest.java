@@ -47,7 +47,7 @@ public class PostgreSQLAstraTest extends Tests {
     void createDb(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd", adminPassword);
+            postgreSQL.createNonProd("cached_bd", adminPassword);
         }
     }
 
@@ -59,7 +59,7 @@ public class PostgreSQLAstraTest extends Tests {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             String db = "bd_for_check_connection";
-            postgreSQL.createDb(db, adminPassword);
+            postgreSQL.createNonProd(db, adminPassword);
             postgreSQL.checkConnection(db, adminPassword);
             postgreSQL.removeDb(db);
         }
@@ -72,7 +72,7 @@ public class PostgreSQLAstraTest extends Tests {
     void createDbmsUser(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd", adminPassword);
+            postgreSQL.createNonProd("cached_bd", adminPassword);
             postgreSQL.createDbmsUser("chelik1", "user", "cached_bd");
         }
     }
@@ -84,7 +84,7 @@ public class PostgreSQLAstraTest extends Tests {
     void resetPassword(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd", adminPassword);
+            postgreSQL.createNonProd("cached_bd", adminPassword);
             postgreSQL.createDbmsUser("chelikforreset1", "user", "cached_bd");
             postgreSQL.resetPassword("chelikforreset1");
         }
@@ -97,7 +97,7 @@ public class PostgreSQLAstraTest extends Tests {
     void resetDbOwnerPassword(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd", adminPassword);
+            postgreSQL.createNonProd("cached_bd", adminPassword);
             postgreSQL.resetDbOwnerPassword("cached_bd");
         }
     }
@@ -109,7 +109,7 @@ public class PostgreSQLAstraTest extends Tests {
     void removeDbmsUser(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd", adminPassword);
+            postgreSQL.createNonProd("cached_bd", adminPassword);
             postgreSQL.createDbmsUser("chelikforreset2", "user", "cached_bd");
             postgreSQL.removeDbmsUser("chelikforreset2", "cached_bd");
         }
@@ -133,7 +133,7 @@ public class PostgreSQLAstraTest extends Tests {
     void removeDb(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb("cached_bd", adminPassword);
+            postgreSQL.createNonProd("cached_bd", adminPassword);
             postgreSQL.removeDb("cached_bd");
         }
     }

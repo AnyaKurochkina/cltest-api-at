@@ -1,5 +1,6 @@
 package models.tarifficator;
 
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
@@ -68,6 +69,7 @@ public class TariffPlan extends Entity {
     @Step("Создание тарифного плана")
     protected void create() {
         String id = new Http(Configure.TarifficatorURL)
+                .setRole(Role.TARIFFICATOR_ADMIN)
                 .body(toJson())
                 .post("/v1/tariff_plans")
                 .assertStatus(201)

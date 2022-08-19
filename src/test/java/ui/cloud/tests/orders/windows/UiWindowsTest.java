@@ -1,8 +1,8 @@
 package ui.cloud.tests.orders.windows;
 
-import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
+import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
@@ -19,10 +19,13 @@ import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.Graph;
+import ui.elements.TypifiedElement;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
 
 @ExtendWith(InterceptTestExtension.class)
 @ExtendWith(ConfigExtension.class)
@@ -37,7 +40,7 @@ public class UiWindowsTest extends Tests {
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod"))
             product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-//            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+//            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/87e70133-31fa-4c41-a320-2151dcd6a820/main?context=proj-rddf0uwi0q&type=project&org=vtb").build().buildFromLink();
         else
             product = Windows.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -100,8 +103,31 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
+    @TmsLinks({@TmsLink("1057146"), @TmsLink("1057141")})
+    @Order(3)
+    @DisplayName("UI Windows. Добавление/удаление группы доступа")
+    void deleteGroup() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.deleteGroup("Administrators"));
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.addGroup("Administrators", Collections.singletonList(accessGroup.getPrefixName())));
+    }
+
+    @Test
+    @TmsLink("1057193")
+    @Order(5)
+    @DisplayName("UI Windows. Изменение группы доступа")
+    void updateGroup() {
+        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.updateGroup("Administrators",
+                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+    }
+
+    @Test
     @TmsLink("2023")
-    @Order(4)
+    @Order(6)
     @DisplayName("UI Windows. Проверка 'Защита от удаления'")
     void checkProtectOrder() {
         WindowsPage winPage = new WindowsPage(product);
@@ -112,12 +138,12 @@ public class UiWindowsTest extends Tests {
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
         new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
-        Selenide.refresh();
+        TypifiedElement.refresh();
         winPage.switchProtectOrder("Защита от удаления выключена");
     }
 
     @Test
-    @Order(5)
+    @Order(7)
     @TmsLink("872666")
     @DisplayName("UI Windows. Перезагрузить по питанию")
     void restart() {
@@ -126,7 +152,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(6)
+    @Order(8)
     @TmsLink("233926")
     @DisplayName("UI Windows. Расширить диск")
     void expandDisk() {
@@ -137,7 +163,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(7)
+    @Order(9)
     @TmsLink("14510")
     @DisplayName("UI Windows. Изменить конфигурацию")
     void changeConfiguration() {
@@ -151,7 +177,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(8)
+    @Order(10)
     @TmsLink("233925")
     @DisplayName("UI Windows. Добавить диск")
     void discActAdd() {
@@ -160,7 +186,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(9)
+    @Order(11)
     @TmsLink("714872")
     @DisplayName("UI Windows. Отключить в ОС")
     void discActOff() {
@@ -170,7 +196,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(10)
+    @Order(12)
     @TmsLink("714878")
     @DisplayName("UI Windows. Подключить в ОС")
     void discActOn() {
@@ -181,7 +207,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(11)
+    @Order(13)
     @TmsLink("646056")
     @DisplayName("UI Windows. Удалить диск")
     void discActDelete() {
@@ -192,7 +218,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(12)
+    @Order(14)
     @TmsLink("647426")
     @DisplayName("UI Windows. Проверить конфигурацию")
     void vmActCheckConfig() {
@@ -201,7 +227,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(13)
+    @Order(15)
     @TmsLinks({@TmsLink("14485"), @TmsLink("247978")})
     @DisplayName("UI Windows. Выключить принудительно / Включить")
     void stopHard() {
@@ -211,7 +237,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(14)
+    @Order(16)
     @TmsLink("872682")
     @DisplayName("UI Windows. Выключить")
     void stopSoft() {

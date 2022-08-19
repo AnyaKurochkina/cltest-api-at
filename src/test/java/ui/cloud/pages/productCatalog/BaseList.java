@@ -71,4 +71,18 @@ public class BaseList {
         TestUtils.scrollToTheBottom();
         lastPageButton.click();
     }
+
+    @Step("Раскрытие меню действий для строки, содержащей в столбце 'columnName' значение 'value'")
+    public static void openActionMenu(String columnName, String value) {
+        new Table(columnName).getRowElementByColumnValue(columnName, value).$x(".//button[@id = 'actions-menu-button']")
+                .click();
+        TestUtils.wait(500);
+    }
+
+    @Step("Проверка, что строка, содержащая в столбце 'columnName' значение 'value', подсвечена как ранее выбранная")
+    public static void checkRowIsHighlighted(String columnName, String value) {
+        Table table = new Table(columnName);
+        Assertions.assertTrue(table.getRowElementByColumnValue(columnName, value)
+                .getCssValue("color").contains("196, 202, 212"));
+    }
 }

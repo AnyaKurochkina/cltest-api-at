@@ -22,6 +22,7 @@ public class AccountSteps extends Steps {
                 .set("$.amount", Objects.requireNonNull(amount))
                 .set("$.reason", Objects.requireNonNull(reason))
                 .send(AccountManagerURL)
+                .setRole(Role.ACCOUNT_MANAGER_TRANSFER_ADMIN)
                 .post("/api/v1/organizations/vtb/accounts/transfers")
                 .assertStatus(200);
     }

@@ -1,9 +1,5 @@
 package ru.testit.utils;
 
-import core.helper.Configure;
-import core.helper.DataFileHelper;
-import io.qameta.allure.Allure;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import ru.testit.junit5.MethodType;
 import ru.testit.model.request.*;
 import ru.testit.services.LinkItem;
@@ -12,6 +8,7 @@ import ru.testit.services.TestITClient;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static core.helper.StringUtils.getStackTraceThrowable;
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 public class TestResultRequestFactory {
@@ -115,7 +112,7 @@ public class TestResultRequestFactory {
         final Throwable failureReason = parentStep.getFailureReason();
         if (failureReason != null) {
             testResult.setMessage(failureReason.getMessage());
-            testResult.setTraces(escapeHtml(ExceptionUtils.getStackTrace(failureReason)));
+            testResult.setTraces(escapeHtml(getStackTraceThrowable(failureReason)));
         }
         testResult.getLinks().addAll(this.makeInnerLinks(parentStep.getLinkItems()).stream().distinct().collect(Collectors.toList()));
         final InnerResult innerResult;

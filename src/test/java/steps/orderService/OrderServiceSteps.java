@@ -160,6 +160,7 @@ public class OrderServiceSteps extends Steps {
                 .set("$.item_id", item.getId())
                 .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
                 .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
     }
 

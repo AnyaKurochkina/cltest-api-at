@@ -16,11 +16,13 @@ public class CopyGraphTest extends GraphBaseTest {
     @TmsLink("486880")
     @DisplayName("Копирование графа")
     public void copyGraph() {
+        Graph graph = new Graph(NAME);
         String copyName = NAME + "-clone";
+        Graph graphCopy = new Graph(copyName);
         new IndexPage().goToGraphsPage()
-                .findGraphByName(NAME)
+                .findGraphByValue(NAME, graph)
                 .copyGraph(NAME)
-                .findGraphByName(copyName)
+                .findGraphByValue(copyName, graphCopy)
                 .findAndOpenGraphPage(copyName)
                 .checkGraphAttributes(new Graph(copyName, TITLE, "1.0.0"));
         deleteGraph(copyName);

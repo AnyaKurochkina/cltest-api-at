@@ -83,6 +83,9 @@ public class Project extends Entity {
     @Override
     @Step("Создание проекта")
     protected void create() {
+        if (Objects.nonNull(isForOrders))
+            if (isForOrders)
+                Assertions.fail("Попытка создать isForOrders проект");
         id = new Http(Configure.ResourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
