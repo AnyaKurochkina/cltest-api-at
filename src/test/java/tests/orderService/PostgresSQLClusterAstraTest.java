@@ -8,6 +8,7 @@ import models.orderService.products.PostgresSQLCluster;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -156,6 +157,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Назначить предел подключений {0}")
     void setConnLimit(PostgresSQLCluster product) {
+        Assumptions.assumeTrue("LT".equalsIgnoreCase(product.getEnv()), "Тест включен только для среды LT");
         product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb(dbName);
