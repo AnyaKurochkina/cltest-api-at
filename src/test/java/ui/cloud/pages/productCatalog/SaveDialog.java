@@ -1,4 +1,4 @@
-package ui.cloud.tests.productCatalog;
+package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;

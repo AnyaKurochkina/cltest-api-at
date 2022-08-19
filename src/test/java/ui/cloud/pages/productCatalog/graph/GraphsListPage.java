@@ -1,15 +1,15 @@
 package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.BaseList;
+import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
+import ui.elements.Input;
 import ui.elements.InputFile;
 import ui.elements.Table;
 import ui.uiModels.Graph;
@@ -30,12 +30,9 @@ public class GraphsListPage {
     private final SelenideElement creatingType = $x("//*[@data-value='creating']");
     private final SelenideElement serviceType = $x("//*[@data-value='service']");
     private final SelenideElement createGraphButton = $x("//*[text()='Создать']/..");
-    private final SelenideElement inputSearch = $x("//input[@placeholder = 'Поиск']");
+    private final Input searchInput = Input.byPlaceholder("Поиск");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
-    private final SelenideElement graphId = $x("//form//p//b");
-    private final SelenideElement idInput = $x("//input[@name = 'id']");
-    private final SelenideElement deleteButton = $x("//span[text() = 'Удалить']");
     private final SelenideElement clearSearchButton = $x("//*[@placeholder='Поиск']/../button");
     private final SelenideElement cancelButton = $x("//span[text()='Отмена']/..");
     private final SelenideElement nothingFoundMessage = $x("//td[text()='Нет данных для отображения']");
@@ -45,7 +42,6 @@ public class GraphsListPage {
     private final SelenideElement authorRequiredFieldHint = $x("//input[@name='author']/parent::div/following-sibling::p");
     private final SelenideElement importGraphButton = $x("//button[@title='Импортировать граф']");
     private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
-    private final SelenideElement openGraphInANewTab = $x("//div[text()='Дата создания']");
 
     public GraphsListPage() {
         graphsPageTitle.shouldBe(Condition.visible);
@@ -72,34 +68,21 @@ public class GraphsListPage {
         return this;
     }
 
-    @Step("Проверка, что граф найден при поиске по коду '{graphName}'")
-    public GraphsListPage findGraphByName(String graphName) {
-        if (clearSearchButton.isDisplayed()) {
-            clearSearchButton.click();
-        }
-        inputSearch.setValue(graphName);
+    @Step("Проверка, что граф '{graph.name}' найден при поиске по значению '{value}'")
+    public GraphsListPage findGraphByValue(String value, Graph graph) {
+        searchInput.setValue(value);
         TestUtils.wait(1000);
-        $x("//*[@value = '" + graphName + "']").shouldBe(Condition.visible);
-        return new GraphsListPage();
-    }
-
-    @Step("Проверка, что граф найден при поиске по наименованию '{title}'")
-    public GraphsListPage findGraphByTitle(String title) {
-        if (clearSearchButton.isDisplayed()) {
-            clearSearchButton.click();
-        }
-        inputSearch.setValue(title);
-        TestUtils.wait(1000);
-        $x("//*[@value = '" + title + "']").shouldBe(Condition.visible);
+        new Table(graphNameColumn).isColumnValueEquals(graphNameColumn, graph.getName());
         return this;
     }
+
 
     @Step("Проверка, что граф не найден при поиске по '{graphName}'")
     public GraphsListPage checkGraphNotFound(String graphName) {
         if (clearSearchButton.isDisplayed()) {
             clearSearchButton.click();
         }
-        inputSearch.setValue(graphName);
+        searchInput.setValue(graphName);
         TestUtils.wait(1000);
         nothingFoundMessage.shouldBe(Condition.visible);
         return this;
@@ -109,9 +92,7 @@ public class GraphsListPage {
     public GraphsListPage deleteGraph(String name) {
         openActionMenu(name);
         deleteAction.click();
-        String id = graphId.getText();
-        idInput.setValue(id);
-        deleteButton.click();
+        new DeleteDialog().inputValidIdAndDelete();
         return this;
     }
 
@@ -157,7 +138,7 @@ public class GraphsListPage {
         if (clearSearchButton.isDisplayed()) {
             clearSearchButton.click();
         }
-        inputSearch.setValue(name);
+        searchInput.setValue(name);
         TestUtils.wait(500);
         new Table(graphNameColumn).getRowElementByColumnValue(graphNameColumn, name).click();
         return new GraphPage();
@@ -255,16 +236,5 @@ public class GraphsListPage {
         Table graphsList = new Table(graphNameColumn);
         Assertions.assertTrue(graphsList.getRowElementByColumnValue(graphNameColumn, name)
                 .getCssValue("color").contains("196, 202, 212"));
-    }
-
-    public void findAndOpenGraphInNewTab(Graph graph) {
-        findGraphByName(graph.getName());
-        Table graphsList = new Table(graphNameColumn);
-        SelenideElement row = graphsList.getRowElementByColumnValue(graphNameColumn, graph.getName());
-        row.$x(".//a/button").click();
-        Selenide.switchTo().window(1);
-        new GraphPage().checkGraphAttributes(graph);
-        Selenide.switchTo().window(0);
-        new GraphsListPage();
     }
 }

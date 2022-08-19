@@ -87,7 +87,7 @@ public class ActionTest extends BaseTest {
                 .openActionForm(name)
                 .deleteFromActionForm()
                 .inputInvalidId("invalid")
-                .inputValidId();
+                .inputValidIdAndDelete();
         assertFalse(new ActionsListPage().isActionExist(name));
     }
 
@@ -108,7 +108,7 @@ public class ActionTest extends BaseTest {
         new IndexPage().goToActionsPage()
                 .deleteAction(name)
                 .inputInvalidId("invalid")
-                .inputValidId();
+                .inputValidIdAndDelete();
         assertFalse(new ActionsListPage().isActionExist(name));
     }
 
