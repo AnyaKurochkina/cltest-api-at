@@ -28,8 +28,8 @@ import java.util.List;
 @SuperBuilder
 public class PostgreSQL extends IProduct {
     private final static String DB_NAME_PATH = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.any{it.db_name=='%s'}";
-    private final static String DB_CONN_LIMIT = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.find{it.db_name=='%s'}.conn_limit";
-    private final static String IS_DB_CONN_LIMIT = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.find{it.db_name=='%s'}.containsKey('conn_limit')";
+    public final static String DB_CONN_LIMIT = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.find{it.db_name=='%s'}.conn_limit";
+    public final static String IS_DB_CONN_LIMIT = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.find{it.db_name=='%s'}.containsKey('conn_limit')";
     private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
     private final static String DB_OWNER_NAME_PATH = "data.find{it.data.config.containsKey('db_owners')}.data.config.db_owners.user_name";
     //    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";

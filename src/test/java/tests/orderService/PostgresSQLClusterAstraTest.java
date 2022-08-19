@@ -151,6 +151,18 @@ public class PostgresSQLClusterAstraTest extends Tests {
         }
     }
 
+    @TmsLink("1117590")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Назначить предел подключений {0}")
+    void setConnLimit(PostgresSQLCluster product) {
+        product.setProductName(productName);
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.createDb(dbName);
+            postgres.setConnLimit(dbName, 30);
+        }
+    }
+
     @TmsLinks({@TmsLink("810036"),@TmsLink("810037")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
