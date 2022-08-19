@@ -6,6 +6,7 @@ import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebElement;
 import ui.elements.Table;
+import ui.elements.TypifiedElement;
 
 import java.time.Duration;
 import java.util.List;
@@ -16,11 +17,11 @@ public class EntitiesUtils {
 
     @Step("Ожидание выполнение действия с продуктом")
     public static void waitChangeStatus(Table table, Duration duration) {
-        table.getValueByColumnInFirstRow("Статус").scrollIntoView(true).$$x("descendant::*[@title]")
+        table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
                         ProductStatus.isNeedWaiting(e.getAttribute("title"))), duration);
         Waiting.sleep(1000);
-        List<String> titles = table.getValueByColumnInFirstRow("Статус").scrollIntoView(true).$$x("descendant::*[@title]")
+        List<String> titles = table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[@title]")
                 .shouldBe(CollectionCondition.sizeNotEqual(0))
                 .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                 .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());

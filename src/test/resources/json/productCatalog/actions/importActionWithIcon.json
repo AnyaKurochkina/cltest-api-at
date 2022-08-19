@@ -34,11 +34,8 @@
     "required_order_statuses": [],
     "current_version": "",
     "allowed_groups": [
-      "test2"
     ],
     "restricted_groups": [
-      "restricted",
-      "test2"
     ],
     "version_arr": [
       1,
@@ -78,9 +75,9 @@
         "modifications": [],
         "printed_output": {},
         "current_version": "",
-        "allowed_developers": "",
+        "allowed_developers": [],
         "damage_order_on_error": false,
-        "restricted_developers": "",
+        "restricted_developers": [],
         "version_arr": [
           1,
           0,

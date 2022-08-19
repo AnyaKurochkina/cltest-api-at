@@ -13,10 +13,10 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.StringJoiner;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static core.helper.StringUtils.getStackTrace;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
@@ -138,13 +138,6 @@ public class ObjectPoolEntity {
     }
 
     private static void writeLog(String text) {
-        StringJoiner stack = new StringJoiner("\n\t");
-        for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
-            String e = s.toString();
-            stack.add(e);
-            if(e.startsWith("tests."))
-                break;
-        }
-        log.info("RESOURCE_LOG {} \n {}\n", text, stack);
+        log.info("RESOURCE_LOG {} \n {}\n", text, getStackTrace(Thread.currentThread().getStackTrace()));
     }
 }

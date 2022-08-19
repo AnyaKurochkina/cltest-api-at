@@ -1,5 +1,6 @@
 package models.productCatalog;
 
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -32,6 +33,7 @@ public class Action extends Entity {
     private String actionName;
     private String graphId;
     private String title;
+    private Integer number;
     private String description;
     private String actionId;
     private String version;
@@ -75,6 +77,7 @@ public class Action extends Entity {
                 .set("$.priority", priority)
                 .set("$.extra_data", extraData)
                 .set("$.location_restriction", locationRestriction)
+                .setIfNullRemove("$.number", number)
                 .build();
     }
 
@@ -85,6 +88,7 @@ public class Action extends Entity {
             productCatalogSteps.deleteByName(actionName, GetActionsListResponse.class);
         }
         actionId = new Http(Configure.ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -97,6 +101,7 @@ public class Action extends Entity {
     @Step("Удаление экшена")
     protected void delete() {
         new Http(Configure.ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + actionId + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);

@@ -27,6 +27,7 @@ import static core.helper.Configure.*;
 @Log4j2
 public class TestsExecutionListener implements TestExecutionListener {
     private static final String URL = getAppProp("base.url");
+    public static final String responseTimeLog = "logs/ResponseTime.log";
 
     @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
@@ -56,6 +57,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
         //####Config for Ui###
+        Files.deleteIfExists(Paths.get(responseTimeLog));
 
         String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
         if (Files.exists(Paths.get(fileSecret)))

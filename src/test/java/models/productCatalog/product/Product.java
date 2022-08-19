@@ -1,6 +1,7 @@
 package models.productCatalog.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.product.createProduct.response.CreateProductResponse;
@@ -63,7 +64,7 @@ public class Product extends Entity {
     private String version;
     @JsonProperty("max_count")
     private int maxCount;
-    private int number;
+    private Integer number;
     @JsonProperty("version_changed_by_user")
     private String versionChangedByUser;
     private String name;
@@ -137,6 +138,7 @@ public class Product extends Entity {
                 .set("$.in_general_list", inGeneralList)
                 .set("$.payment", payment)
                 .setIfNullRemove("$.category_v2", categor)
+                .setIfNullRemove("$.number", number)
                 .build();
     }
 
@@ -147,6 +149,7 @@ public class Product extends Entity {
             steps.deleteByName(name, GetProductsResponse.class);
         }
         CreateProductResponse createProductResponse = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
@@ -158,6 +161,7 @@ public class Product extends Entity {
     @Step("Обновление продукта")
     public void updateProduct() {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(this.getTemplate().set("$.version", "1.1.1").build())
                 .patch(productName + productId + "/")
                 .assertStatus(200);
@@ -166,6 +170,7 @@ public class Product extends Entity {
     @Override
     protected void delete() {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(productName + productId + "/")
                 .assertStatus(204);
         ProductCatalogSteps steps = new ProductCatalogSteps(productName,"productCatalog/products/createProduct.json");

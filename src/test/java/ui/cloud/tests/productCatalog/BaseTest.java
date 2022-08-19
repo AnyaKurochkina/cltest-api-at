@@ -1,5 +1,6 @@
 package ui.cloud.tests.productCatalog;
 
+import core.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -14,6 +15,6 @@ abstract public class BaseTest extends Tests {
 
     @BeforeEach
     public void init() {
-        new LoginPage().signIn();
+        new LoginPage().signIn(Role.PRODUCT_CATALOG_ADMIN);
     }
 }

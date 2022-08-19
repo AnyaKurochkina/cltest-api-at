@@ -1,6 +1,7 @@
 package core.helper.http;
 
 import core.enums.Role;
+import core.helper.DataFileHelper;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.restassured.RestAssured;
@@ -16,8 +17,10 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.json.JSONObject;
+import org.junit.TestsExecutionListener;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
+import ru.testit.services.TestITClient;
 import steps.keyCloak.KeyCloakSteps;
 
 import java.io.File;
@@ -28,10 +31,7 @@ import java.nio.file.Files;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
@@ -45,7 +45,7 @@ public class Http {
     String method;
     String token = "";
     private String field = "";
-    private Role role = Role.ADMIN;
+    Role role;
     String contentType = "application/json";
     private boolean isUsedToken = true;
     private static final Semaphore SEMAPHORE = new Semaphore(2, true);
@@ -220,11 +220,6 @@ public class Http {
         SSLConfig config = new SSLConfig().with().sslSocketFactory(clientAuthFactory).and().allowAllHostnames();
         io.restassured.response.Response response = null;
         try {
-
-//            if (path.endsWith("/cost") || path.contains("order-service"))
-            if (!(host + path).endsWith("/openid-connect/token"))
-                SEMAPHORE.acquire();
-
             RequestSpecBuilder build = new RequestSpecBuilder();
             build.setBaseUri(host);
             build.build();
@@ -240,10 +235,13 @@ public class Http {
             if (isUsedToken) {
                 if (isFixedRole())
                     token = "bearer " + KeyCloakSteps.getUserToken(fixedRole.get());
-                if (token.length() == 0)
+                if (token.length() == 0) {
+                    Assertions.assertNotNull(role, "Не задана роль для запроса");
                     token = "bearer " + KeyCloakSteps.getUserToken(role);
+                }
                 specification.header("Authorization", token);
             }
+            SEMAPHORE.acquire();
             if (field.length() > 0) {
                 String mimeType = URLConnection.guessContentTypeFromName(fileName);
                 if (Objects.isNull(mimeType))
@@ -259,7 +257,14 @@ public class Http {
             if (body.length() > 0)
                 specification.body(body);
 
-            specification.params(getParamsUrl(StringUtils.findByRegex("\\?(.*)", path)));
+//            specification.params(getParamsUrl(StringUtils.findByRegex("\\?(.*)", path)));
+            String params = StringUtils.findByRegex("\\?(.*)", path);
+            List<String> values;
+            for (String key : getParamsUrl(params)) {
+                values = URLEncodedUtils.parse(params, StandardCharsets.UTF_8).stream().filter(s -> s.getName().equals(key)).map(NameValuePair::getValue).collect(Collectors.toList());
+                specification.params(key, values);
+            }
+
             String pathWithoutParameters = path.replaceFirst("\\?.*", "");
             switch (method) {
                 case "POST":
@@ -292,11 +297,14 @@ public class Http {
                 throw e;
             if (response != null)
                 status = response.getStatusCode();
-            Assertions.fail(String.format("Ошибка отправки http запроса %s. \nОшибка: %s\nСтатус: %s", (host + path), e, status));
+            Assertions.fail(String.format("Ошибка отправки http запроса (%s) %s. \nОшибка: %s\nСтатус: %s", role, (host + path), e, status));
         } finally {
-//            if (path.endsWith("/cost") || path.contains("order-service"))
-            if (!(host + path).endsWith("/openid-connect/token"))
-                SEMAPHORE.release();
+            SEMAPHORE.release();
+            if (response != null)
+                if (response.getTime() > 1000)
+                    if (!((host + path).contains(TestITClient.properties.getUrl())))
+                        DataFileHelper.appendToFile(TestsExecutionListener.responseTimeLog,
+                                String.format("[%s ms] %s %s (%s)\n", response.getTime(), method, (host + path), response.getHeader("x-request-id")));
         }
         if (isLogged)
             log.debug(String.format("RESPONSE (%s): %s\n\n", response.getHeader("x-request-id"), response.getBody().asPrettyString()));
@@ -314,8 +322,8 @@ public class Http {
     }
 
     @SneakyThrows
-    public static Map<String, String> getParamsUrl(String params) {
-        return URLEncodedUtils.parse(params, StandardCharsets.UTF_8).stream().collect(Collectors.toMap(NameValuePair::getName, p -> Optional.ofNullable(p.getValue()).orElse("")));
+    public static Set<String> getParamsUrl(String params) {
+        return URLEncodedUtils.parse(params, StandardCharsets.UTF_8).stream().map(NameValuePair::getName).collect(Collectors.toSet());
     }
 
 //    public static class ConnectException extends AssertionError {

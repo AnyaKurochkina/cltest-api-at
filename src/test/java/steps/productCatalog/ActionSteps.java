@@ -1,5 +1,6 @@
 package steps.productCatalog;
 
+import core.enums.Role;
 import core.helper.http.Http;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
@@ -16,6 +17,7 @@ public class ActionSteps extends Steps {
     @Step("Получение списка Действий продуктового каталога")
     public static List<ItemImpl> getActionList() {
         return ((GetListImpl) new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/actions/")
                 .compareWithJsonSchema("jsonSchema/getActionListSchema.json")
                 .assertStatus(200)

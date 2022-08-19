@@ -133,7 +133,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить кластер Kafka {0}")
-    void resize(ApacheKafkaCluster product) {
+    void restart(ApacheKafkaCluster product) {
         product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.restart();
@@ -208,7 +208,17 @@ public class ApacheKafkaAstraClusterTest extends Tests {
         }
     }
 
-    @Tag("qaz")
+    @TmsLink("1095609")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Увеличить дисковое пространство {0}")
+    void kafkaExpandMountPoint(ApacheKafkaCluster product) {
+        product.setProductName(productName);
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.kafkaExpandMountPoint();
+        }
+    }
+
     @TmsLink("1055546")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -217,6 +227,28 @@ public class ApacheKafkaAstraClusterTest extends Tests {
         product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.changeName("new_name");
+        }
+    }
+
+    @TmsLink("1095198")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновление версии до Kafka 2.8.1 {0}")
+    void upgrade281(ApacheKafkaCluster product) {
+        product.setProductName(productName);
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.upgrade281();
+        }
+    }
+
+    @TmsLink("1095239")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Изменить конфигурацию кластера {0}")
+    void resize(ApacheKafkaCluster product) {
+        product.setProductName(productName);
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.resize();
         }
     }
 

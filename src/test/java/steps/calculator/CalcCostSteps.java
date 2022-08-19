@@ -1,5 +1,6 @@
 package steps.calculator;
 
+import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
@@ -18,6 +19,7 @@ public class CalcCostSteps extends Steps {
     @Step("Получение расхода для папки/проекта")
     public static Float getCostByPath(String path) {
         Float cost = new Http(CalculatorURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/orders/cost/?folder__startswith={}", path)
                 .assertStatus(200)
                 .jsonPath()

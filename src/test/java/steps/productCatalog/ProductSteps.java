@@ -1,5 +1,6 @@
 package steps.productCatalog;
 
+import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import models.productCatalog.product.GetProductList;
@@ -15,6 +16,7 @@ public class ProductSteps extends Steps {
     @Step("Получение списка Продуктов продуктового каталога")
     public static List<Product> getProductList() {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/products/")
                 .compareWithJsonSchema("jsonSchema/getProductListSchema.json")
                 .assertStatus(200)

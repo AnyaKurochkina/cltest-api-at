@@ -1,5 +1,6 @@
 package steps.productCatalog;
 
+import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
@@ -23,6 +24,7 @@ public class ExampleSteps extends Steps {
     @Step("Получение Примера продуктового каталога по Id")
     public static Example getExampleById(String exampleId) {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + exampleId + "/")
                 .extractAs(Example.class);
     }
@@ -31,6 +33,7 @@ public class ExampleSteps extends Steps {
     public static String getExampleIdByNameWithMultiSearch(String name) {
         String objectId = null;
         List<Example> list = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "?include=total_count&page=1&per_page=50&multisearch=" + name)
                 .assertStatus(200).extractAs(GetExampleList.class).getList();
         for (Example example : list) {
@@ -46,6 +49,7 @@ public class ExampleSteps extends Steps {
     @Step("Обновление всего примера продуктового каталога по Id")
     public static Example putExampleById(String objectId, JSONObject body) {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .put(endPoint + objectId + "/")
                 .assertStatus(200).extractAs(Example.class);
@@ -54,6 +58,7 @@ public class ExampleSteps extends Steps {
     @Step("Частичное обновление примера")
     public static Example partialUpdateExample(String id, JSONObject object) {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(endPoint + id + "/")
                 .assertStatus(200)
@@ -63,6 +68,7 @@ public class ExampleSteps extends Steps {
     @Step("Загрузка примера в Gitlab")
     public static Response dumpExampleToBitbucket(String id) {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(endPoint + id + "/dump_to_bitbucket/")
                 .assertStatus(201);
     }
@@ -70,6 +76,7 @@ public class ExampleSteps extends Steps {
     @Step("Выгрузка объекта из Gitlab")
     public static void loadExampleFromBitbucket(String path) {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("path", path))
                 .post(endPoint + "load_from_bitbucket/")
                 .assertStatus(200);
@@ -78,6 +85,7 @@ public class ExampleSteps extends Steps {
     @Step("Создание Примера продуктового каталога")
     public static Example createExample(JSONObject body) {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(endPoint)
                 .assertStatus(201)
@@ -87,6 +95,7 @@ public class ExampleSteps extends Steps {
     @Step("Удаление Примера продуктового каталога по id")
     public static void deleteExampleById(String id) {
         new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(endPoint + id + "/")
                 .assertStatus(204);
     }
@@ -99,6 +108,7 @@ public class ExampleSteps extends Steps {
     @Step("Проверка существования Примера продуктового каталога по имени")
     public static boolean isExampleExists(String name) {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
     }
@@ -106,6 +116,7 @@ public class ExampleSteps extends Steps {
     @Step("Получение списка Примеров продуктового каталога")
     public static List<Example> getExampleList() {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint)
                 .assertStatus(200)
                 .extractAs(GetExampleList.class).getList();
@@ -131,6 +142,7 @@ public class ExampleSteps extends Steps {
     @Step("Получение Meta данных объекта продуктового каталога")
     public static Meta getExampleMeta() {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint)
                 .assertStatus(200)
                 .extractAs(GetExampleList.class).getMeta();
@@ -139,6 +151,7 @@ public class ExampleSteps extends Steps {
     @Step("Получение списка Примеров продуктового каталога по имени")
     public static GetExampleList getExampleListByName(String name) {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "?name=" + name)
                 .assertStatus(200)
                 .extractAs(GetExampleList.class);
@@ -148,6 +161,7 @@ public class ExampleSteps extends Steps {
     public static GetExampleList getExampleListByNames(String... name) {
         String names = String.join(",", name);
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "?name__in=" + names)
                 .assertStatus(200)
                 .extractAs(GetExampleList.class);

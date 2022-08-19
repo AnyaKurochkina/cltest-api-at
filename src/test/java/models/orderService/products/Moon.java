@@ -55,7 +55,8 @@ public class Moon extends IProduct {
     public JSONObject toJson() {
         List<ResourcePool> resourcePoolList = OrderServiceSteps.getResourcesPoolList("container", projectId);
         ResourcePool resourcePool = resourcePoolList.stream().
-                filter(r -> r.getLabel().equals(resourcePoolLabel)).findFirst().orElseThrow(NoSuchFieldException::new);
+                filter(r -> r.getLabel().equals(resourcePoolLabel))
+                .findFirst().orElseThrow(() -> new NoSuchFieldException(String.format("Кластер '%s' не найден", resourcePoolLabel)));
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.product_id", productId)

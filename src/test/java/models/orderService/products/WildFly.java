@@ -99,6 +99,10 @@ public class WildFly extends IProduct {
         OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
     }
 
+    public void syncDev() {
+        OrderServiceSteps.executeAction("wildfly_sync", this, null, this.getProjectId());
+    }
+
     //Добавление пользователя WildFly
     public void addUser(String username, String role) {
         OrderServiceSteps.executeAction("wildfly_add_user", this,

@@ -2,6 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import static core.helper.StringUtils.$x;
 
 public class Alert implements TypifiedElement {
-    SelenideElement element = $x("//div[@role='alert']");
+    SelenideElement element = $x("(//div[@role='alert' and descendant::button])[last()]");
 
     public Alert() {
         element.shouldBe(Condition.visible).shouldBe(Condition.matchText(".{1,}"));
@@ -33,6 +34,13 @@ public class Alert implements TypifiedElement {
         Assertions.assertEquals(color.toString(), org.openqa.selenium.support.Color.fromString(element.getCssValue("background-color")).asHex(),
                 "Произошла ошибка: " + element.getText());
         return this;
+    }
+
+    public void closeAll(){
+        while (element.exists() && element.isDisplayed()){
+            close();
+            Waiting.sleep(1000);
+        }
     }
 
     public enum Color {

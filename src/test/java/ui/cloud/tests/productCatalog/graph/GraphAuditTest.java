@@ -35,7 +35,7 @@ public class GraphAuditTest extends GraphBaseTest {
 
     @Step("Проверка записи аудита")
     private void checkAuditRecord() {
-        user = GlobalUser.builder().role(Role.ADMIN).build().createObject();
+        user = GlobalUser.builder().role(Role.CLOUD_ADMIN).build().createObject();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu");
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)

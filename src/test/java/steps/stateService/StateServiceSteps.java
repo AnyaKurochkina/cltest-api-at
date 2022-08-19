@@ -1,5 +1,6 @@
 package steps.stateService;
 
+import core.enums.Role;
 import core.helper.Configure;
 import core.helper.http.Http;
 import core.helper.http.Response;
@@ -22,6 +23,7 @@ public class StateServiceSteps extends Steps {
         String traceback = null;
         try {
             traceback = new Http(StateServiceURL)
+                    .setRole(Role.CLOUD_ADMIN)
                     .get("/actions/?order_id={}", orderId)
                     .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {
@@ -37,6 +39,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка id из списка items")
     public static List<String> getOrdersIdList(String projectId) {
         return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/items/", projectId)
                 .assertStatus(200)
                 .jsonPath()
@@ -45,7 +48,8 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение версии state service")
     public static Response getStateServiceVersion() {
-         return new Http(StateServiceURL)
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/version/")
                 .assertStatus(200);
     }

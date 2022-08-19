@@ -3,13 +3,11 @@ package ru.testit.junit5;
 import core.exception.CreateEntityException;
 import io.qameta.allure.Allure;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.opentest4j.TestAbortedException;
 import ru.testit.annotations.Description;
 import ru.testit.annotations.Title;
-import ru.testit.properties.TestProperties;
 import ru.testit.services.TestITClient;
 import ru.testit.utils.*;
 import tests.Tests;
@@ -19,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static core.helper.StringUtils.getStackTraceThrowable;
 import static ru.testit.junit5.StepsAspects.removeCurrentStep;
 
 @Log4j2
@@ -117,7 +116,7 @@ public class RunningHandler {
         parentStep.setOutcome((thrown == null) ? Outcome.PASSED.getValue() : Outcome.FAILED.getValue());
         parentStep.setFailureReason(thrown);
         if (thrown != null)
-            Tests.putAttachLog(ExceptionUtils.getStackTrace(thrown));
+            Tests.putAttachLog(getStackTraceThrowable(thrown));
         parentStep.setCompletedOn(new Date());
         if (currentMethod == MethodType.BEFORE_METHOD) {
             StepsAspects.returnStepNode();

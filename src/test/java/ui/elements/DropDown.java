@@ -54,8 +54,14 @@ public class DropDown implements TypifiedElement {
     }
 
     public DropDown click() {
-        element.scrollIntoView("{block: 'center'}");
+        element.scrollIntoView(scrollCenter);
         element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
+        return this;
+    }
+
+    @Step("Очистить select")
+    public DropDown clear() {
+        element.scrollIntoView(scrollCenter).$x("descendant::button[@aria-label='Clear']").hover().click();
         return this;
     }
 
