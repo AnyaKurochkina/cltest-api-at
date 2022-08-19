@@ -292,13 +292,7 @@ public class ProductCatalogSteps {
         return response.getTime();
     }
 
-    @Step("Получение массива объектов используещих граф")
-    public JsonPath getObjectArrayUsedGraph(String id) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("graphs/" + id + "/used/")
-                .assertStatus(200).jsonPath();
-    }
+
 
     public Response getDeleteObjectResponse(String id) {
         return new Http(ProductCatalogURL)
@@ -400,14 +394,6 @@ public class ProductCatalogSteps {
                 .get(productName + "?type=" + type)
                 .assertStatus(200)
                 .extractAs(clazz);
-    }
-
-    @Step("Получение info продукта")
-    public Response getInfoProduct(String id) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + id + "/info/")
-                .assertStatus(200);
     }
 
     @Step("Получение шаблона визуализации по event_type и event_provider")

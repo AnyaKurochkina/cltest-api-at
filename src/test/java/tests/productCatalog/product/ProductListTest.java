@@ -23,8 +23,7 @@ import java.util.List;
 
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.productCatalog.ProductSteps.getProductList;
-import static steps.productCatalog.ProductSteps.isProductListSorted;
+import static steps.productCatalog.ProductSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -190,5 +189,13 @@ public class ProductListTest extends Tests {
         assertEquals(csv, steps.getProductsExportListInFormat(csv).getContentType());
         String json = "json";
         assertEquals(json, steps.getProductsExportListInFormat(json).getContentType());
+    }
+
+    @DisplayName("Получение списка продуктов отсортированного по статусу")
+    @TmsLink("806312")
+    @Test
+    public void orderingByStatus() {
+        List<Product> list = getProductListOrderingByStatus();
+        assertTrue(isOrderingByStatus(list), "Список не отсортирован.");
     }
 }

@@ -65,9 +65,6 @@ public class GetServiceResponse implements GetImpl {
 	@JsonProperty("id")
 	private String id;
 
-	@JsonProperty("direction")
-	private String direction;
-
 	@JsonProperty("start_btn_label")
 	private String startBtnLabel;
 

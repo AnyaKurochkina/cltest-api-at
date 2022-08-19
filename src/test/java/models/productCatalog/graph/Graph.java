@@ -25,6 +25,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static steps.productCatalog.GraphSteps.getObjectArrayUsedGraph;
 
 @Log4j2
 @Builder
@@ -114,7 +115,7 @@ public class Graph extends Entity {
     private void deleteIfExist(String name) {
         if (productCatalogSteps.isExists(name)) {
             String id = productCatalogSteps.getProductObjectIdByNameWithMultiSearch(name, GetGraphsListResponse.class);
-            List<GetUsedListResponse> list = productCatalogSteps.getObjectArrayUsedGraph(id).getList("", GetUsedListResponse.class);
+            List<GetUsedListResponse> list = getObjectArrayUsedGraph(id).getList("", GetUsedListResponse.class);
             for (GetUsedListResponse resp : list) {
                 String type = resp.getType();
                 switch (type) {
