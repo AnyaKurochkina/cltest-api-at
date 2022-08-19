@@ -167,7 +167,7 @@ public class GraphUsedListTest extends Tests {
     }
 
     @DisplayName("Получение последних версий объектов использующего граф")
-    @TmsLink("")
+    @TmsLink("1117927")
     @Test
     public void getLastVersionUsedGraphList() {
         Graph usedGraphApi = Graph.builder()
