@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 import ui.cloud.tests.productCatalog.TestUtils;
+import ui.elements.DropDown;
 import ui.uiModels.Node;
 import ui.uiModels.SubgraphNode;
 import ui.uiModels.TemplateNode;
@@ -208,10 +209,12 @@ public class GraphNodesPage extends GraphPage {
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
         TestUtils.scrollToTheTop();
         editNodeButton.click();
+        TestUtils.wait(500);
         nodeName.shouldHave(Condition.exactValue(node.getName()));
         nodeDescription.shouldHave(Condition.exactValue(node.getDescription()));
         if (node instanceof SubgraphNode) {
-            $x("//div[text() = '" + ((SubgraphNode) node).getSubgraphName() + "']").shouldBe(Condition.visible);
+            DropDown subgraphDropDown = DropDown.byLabel("Подграф");
+            Assertions.assertTrue(subgraphDropDown.getElement().getText().contains(((SubgraphNode) node).getSubgraphName()));
             subgraphVersion.shouldHave(Condition.exactText(((SubgraphNode) node).getSubgraphVersion()));
         }
         if (node instanceof TemplateNode) {

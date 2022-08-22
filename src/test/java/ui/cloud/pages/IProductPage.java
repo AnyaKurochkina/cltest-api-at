@@ -15,10 +15,7 @@ import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.Alert;
-import ui.elements.Dialog;
-import ui.elements.Input;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.time.Duration;
 import java.util.Arrays;

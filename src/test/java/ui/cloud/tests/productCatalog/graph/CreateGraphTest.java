@@ -27,9 +27,10 @@ public class CreateGraphTest extends GraphBaseTest {
 
     @Step("Создание графа")
     public void createGraph() {
+        Graph graph = new Graph(name, TITLE, GraphType.ACTION, "1.0.0", DESCRIPTION, AUTHOR);
         new IndexPage().goToGraphsPage()
-                .createGraph(new Graph(name, TITLE, GraphType.ACTION, "1.0.0", DESCRIPTION, AUTHOR))
-                .findGraphByName(name);
+                .createGraph(graph)
+                .findGraphByValue(name, graph);
         deleteGraph(name);
     }
 

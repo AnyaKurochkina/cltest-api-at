@@ -8,29 +8,32 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
+import ui.uiModels.Graph;
 
 @Epic("Графы")
 @Feature("Удаление графа")
 public class DeleteGraphTest extends GraphBaseTest {
 
     @Test
-    @TmsLink("540702")
+    @TmsLink("1114449")
     @DisplayName("Удаление графа из списка")
     public void deleteGraphFromList() {
+        Graph graph = new Graph(NAME);
         new IndexPage().goToGraphsPage()
-                .findGraphByName(NAME)
+                .findGraphByValue(NAME, graph)
                 .deleteGraph(NAME)
                 .checkGraphNotFound(NAME);
     }
 
     @Test
+    @TmsLink("540702")
     @DisplayName("Удаление графа со страницы графа")
     public void deleteGraphFromPage() {
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .openDeleteDialog()
                 .inputInvalidId("test")
-                .inputValidId();
+                .inputValidIdAndDelete();
         new GraphsListPage()
                 .checkGraphNotFound(NAME);
     }

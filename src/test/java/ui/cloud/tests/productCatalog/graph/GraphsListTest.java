@@ -29,11 +29,12 @@ public class GraphsListTest extends GraphBaseTest {
     @TmsLink("962859")
     @DisplayName("Поиск в списке графов")
     public void searchGraphTest() {
+        Graph graph = new Graph(NAME);
         new IndexPage().goToGraphsPage()
-                .findGraphByName(NAME)
-                .findGraphByName(TITLE)
-                .findGraphByName(NAME.substring(1).toUpperCase())
-                .findGraphByTitle(TITLE.substring(1).toUpperCase());
+                .findGraphByValue(NAME, graph)
+                .findGraphByValue(TITLE, graph)
+                .findGraphByValue(NAME.substring(1).toUpperCase(), graph)
+                .findGraphByValue(TITLE.substring(1).toUpperCase(), graph);
     }
 
     @Test
@@ -49,27 +50,5 @@ public class GraphsListTest extends GraphBaseTest {
         new GraphsListPage().openGraphPage(NAME);
         Selenide.back();
         new GraphsListPage().checkGraphIsHighlighted(NAME);
-    }
-
-    @Test
-    @TmsLink("807492")
-    @DisplayName("Возврат в список со страницы графа")
-    public void openGraph() {
-        new IndexPage().goToGraphsPage()
-                .sortByCreateDate()
-                .lastPage()
-                .openGraphPage(NAME)
-                .returnToGraphsList()
-                .checkGraphIsHighlighted(NAME);
-        new GraphsListPage().openGraphPage(NAME);
-        Selenide.back();
-        new GraphsListPage().checkGraphIsHighlighted(NAME);
-    }
-
-    @Test
-    @DisplayName("Открытие графа в новой вкладке с переключением")
-    public void openGraphInNewTabAndSwitchTest() {
-        new IndexPage().goToGraphsPage()
-                .findAndOpenGraphInNewTab(new Graph(NAME));
     }
 }
