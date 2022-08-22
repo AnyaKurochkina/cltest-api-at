@@ -1,6 +1,7 @@
 package models.orderService.interfaces;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import core.enums.Role;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
 import core.helper.Configure;
@@ -10,12 +11,18 @@ import core.utils.Waiting;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
 import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
 import io.qameta.allure.Step;
+import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
+import io.restassured.response.ValidatableResponseOptions;
+import io.restassured.specification.RequestSpecification;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.ObjectPoolService;
+import models.authorizer.GlobalUser;
 import models.authorizer.Organization;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
@@ -38,8 +45,10 @@ import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static core.helper.Configure.OrderServiceURL;
+import static org.hamcrest.Matchers.equalTo;
 
 
 @SuperBuilder
@@ -63,6 +72,10 @@ public abstract class IProduct extends Entity {
     public static final String START = "Включить";
     public static final String STOP_HARD = "Выключить принудительно";
     public static final String RESIZE = "Изменить конфигурацию";
+
+    @ToString.Include
+    @Getter
+    String platform;
 
     protected String jsonTemplate;
 
@@ -103,7 +116,7 @@ public abstract class IProduct extends Entity {
     }
 
     public void addLinkProduct() {
-        if(Objects.nonNull(getOrderId())) {
+        if (Objects.nonNull(getOrderId())) {
             if (StepsAspects.getCurrentStep().get() != null) {
                 Organization org = Organization.builder().build().createObject();
                 StepsAspects.getCurrentStep().get().addLinkItem(
@@ -189,6 +202,30 @@ public abstract class IProduct extends Entity {
     protected void delete(String action) {
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
         Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
+        if (platform.equalsIgnoreCase("vSphere") && Configure.ENV.equalsIgnoreCase("IFT")) {
+            GlobalUser user = GlobalUser.builder().role(Role.IPAM).build().createObject();
+            List<String> ipList = ((List<String>) OrderServiceSteps.getProductsField(this, "data.data.config.default_v4_address", List.class))
+                    .stream().filter(Objects::nonNull).collect(Collectors.toList());
+
+            RequestSpecification specification = RestAssured.given()
+                    .baseUri("https://dev-php-ipam.apps.d0-oscp.corp.dev.vtb")
+                    .config(RestAssured.config().sslConfig(Http.sslConfig));
+
+            String token = specification.auth().preemptive().basic(user.getUsername(), user.getPassword())
+                    .post("/api/cloud/user/")
+                    .then()
+                    .statusCode(200)
+                    .extract()
+                    .jsonPath()
+                    .getString("data.token");
+
+            ValidatableResponseOptions<ValidatableResponse, Response> options = specification.header("token", token)
+                    .get("/api/cloud/subnets/56291/addresses")
+                    .then()
+                    .statusCode(200);
+            for(String ip : ipList)
+                options.body(String.format("data.find{it.ip=='%s'}.hostname", ip), equalTo("reserve"));
+        }
     }
 
     public boolean productStatusIs(ProductStatus status) {
@@ -320,7 +357,7 @@ public abstract class IProduct extends Entity {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps(Product.productName).getById(productId, GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         List<String> parameters = (List<String>) graphResponse.getUiSchema().get("ui:order");
-        if(Objects.isNull(parameters))
+        if (Objects.isNull(parameters))
             return jsonObject;
         if (graphResponse.getJsonSchema().containsKey("dependencies"))
             parameters.addAll(((Map<String, Object>) graphResponse.getJsonSchema().get("dependencies")).keySet());
