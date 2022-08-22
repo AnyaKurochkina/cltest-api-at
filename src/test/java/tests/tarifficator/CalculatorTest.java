@@ -56,7 +56,8 @@ public class CalculatorTest extends Tests {
                     .folderName(folderTarget.getName())
                     .build()
                     .createObject();
-            String accountFrom = AccountSteps.getAccountIdByContext(parentFolderId);
+            String accountFromId = AccountSteps.getAccountIdByContext(parentFolderId);
+            Account accountFrom = Account.builder().accountId(accountFromId).folderId(parentFolderId).build();
             String accountTo = ((Account) Account.builder().folder(folderTarget).build().createObject()).getAccountId();
             AccountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
             try {
@@ -91,9 +92,10 @@ public class CalculatorTest extends Tests {
 //    @Source(ProductArgumentsProvider.ONE_PRODUCT)
     public void bigIntegrationCalculatorTest() {
         Organization organization = Organization.builder().build().createObject();
-        String accountOrganization = AccountSteps.getAccountIdByContext(organization.getName());
+        String accountOrganizationId = AccountSteps.getAccountIdByContext(organization.getName());
+        Account accountOrganization = Account.builder().accountId(accountOrganizationId).folderId(organization.getName()).build();
         Folder businessBlock = Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObjectPrivateAccess();
-        Account accountBusinessBlock = Account.builder().parentId(accountOrganization).folder(businessBlock).build().createObjectPrivateAccess();
+        Account accountBusinessBlock = Account.builder().parentId(accountOrganizationId).folder(businessBlock).build().createObjectPrivateAccess();
         Folder department = Folder.builder().parentId(businessBlock.getName()).kind(Folder.DEPARTMENT).build().createObjectPrivateAccess();
         Account accountDepartment = Account.builder().folder(department).parentId(accountBusinessBlock.getAccountId()).build().createObjectPrivateAccess();
         Folder folder = Folder.builder()
