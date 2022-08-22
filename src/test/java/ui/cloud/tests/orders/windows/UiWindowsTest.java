@@ -1,7 +1,6 @@
 package ui.cloud.tests.orders.windows;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import core.helper.Configure;

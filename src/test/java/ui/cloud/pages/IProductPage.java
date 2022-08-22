@@ -38,9 +38,11 @@ public abstract class IProductPage {
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
-    SelenideElement firstVm = $x("//*[text()='Виртуальные машины']/following::td[1]");
+    SelenideElement btnFirstVm = $x("//*[text()='Виртуальные машины']/following::td[1]");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
-    SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Application Integration' or text()='Compute' or text()='Containers' or text()='Databases' or text()='DevOps tools' or text()='Logging' or text()='Object Storage' or text()='Web Apps' or text()='Secrets Management' or text()='Network services']/parent::div/following-sibling::div/a)[1]");
+    SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
+    SelenideElement btnUsers = $x("//button[.='Пользователи']");
+    SelenideElement btnCurrentProduct = $x("(//span/preceding-sibling::a[text()='Application Integration' or text()='Compute' or text()='Containers' or text()='Databases' or text()='DevOps tools' or text()='Logging' or text()='Object Storage' or text()='Web Apps' or text()='Secrets Management' or text()='Network services']/parent::div/following-sibling::div/a)[1]");
 
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     private final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
@@ -88,7 +90,7 @@ public abstract class IProductPage {
     @Step("Запуск действия '{action}'")
     protected void runActionWithoutParameters(SelenideElement button, String action, ActionParameters params) {
         String productNameText = null;
-        btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
+        //btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
         if(Objects.nonNull(params.getNode())){
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
@@ -118,7 +120,7 @@ public abstract class IProductPage {
     @Step("Запуск действия '{action}' с параметрами и последующим нажатием на кнопку {textButton}")
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         String productNameText = null;
-        btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
+        //btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
         if(Objects.nonNull(params.getNode())){
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();

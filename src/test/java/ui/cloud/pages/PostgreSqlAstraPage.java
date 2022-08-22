@@ -3,14 +3,19 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import models.orderService.products.PostgreSQL;
+import models.orderService.products.Windows;
 import models.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
+import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
 import static core.helper.StringUtils.$x;
+import static tests.Tests.activeCnd;
+import static tests.Tests.clickableCnd;
 
 public class PostgreSqlAstraPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
+    private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_DB = "Базы данных";
     private static final String BLOCK_AT_DB = "at_db";
     private static final String BLOCK_AT_DB_ADMIN = "at_db_admin";
@@ -34,6 +39,20 @@ public class PostgreSqlAstraPage extends IProductPage {
     void checkPowerStatus(String expectedStatus) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(expectedStatus);
     }
+    public void start() {
+        checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_OFF);
+        runActionWithoutParameters(BLOCK_APP, "Включить");
+        checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+    public void stopSoft() {
+        checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Выключить");
+        checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_OFF);
+    }
+    public void checkConfiguration() {
+        checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию",ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
+    }
 
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
@@ -49,19 +68,27 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_APP, "Перезагрузить");
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
     }
-
-    public void expandDisk(String name, String size) {
-        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        firstVm.shouldBe(Condition.enabled).click();
-
-
-        runActionWithParameters(getDiskMenuElement(name), "Расширить", "Подтвердить", () -> {
-            Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size);
+    public void getActualConfiguration() {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Получить актуальную конфигурацию");
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+    public void changeTransactionIsolation() {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Изменить default_transaction_isolation");
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+    public void changeMaxConnections() {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_APP, "Изменить max_connections", "Подтвердить", () -> {
+            Dialog dlg = new Dialog("Изменить max_connections");
+            dlg.setInputValue("max_connections", "145");
         });
-        //curentProduct
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
-        Assertions.assertEquals(size, new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_PATH, name).getValueByColumn(HEADER_DISK_SIZE),
-                "Неверный размер диска");
+    }
+    public void stopHard() {
+        checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
+        checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void changeConfiguration() {
@@ -70,13 +97,14 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-        firstVm.shouldBe(Condition.enabled).click();
+        btnFirstVm.shouldBe(Condition.enabled).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
 
     public void createDb() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Добавить БД");
             dlg.setInputValue("Имя базы данных", "at_db");
@@ -84,8 +112,9 @@ public class PostgreSqlAstraPage extends IProductPage {
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
     }
-    public void createUserDb() {
+    public void addUserDb() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        getBtnUsers().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Добавить пользователя");
             dlg.setDropDownValue("Имя базы данных", "at_db");
@@ -98,12 +127,14 @@ public class PostgreSqlAstraPage extends IProductPage {
 
     public void removeDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithoutParameters(getMenuElement(HEADER_LIMIT_CONNECT,name,HEADER_SORT), "Удалить БД");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
     }
 
     public void setLimitConnectDb() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_AT_DB, "Назначить предел подключений", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Назначить предел подключений");
             dlg.setInputValue("Предел подключений", "23");
@@ -111,11 +142,13 @@ public class PostgreSqlAstraPage extends IProductPage {
     }
     public void removeLimitConnectDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithoutParameters(getMenuElement(HEADER_LIMIT_CONNECT,name,HEADER_SORT), "Убрать предел подключений");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
     }
     public void resetPasswordDb() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_AT_DB_ADMIN, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -123,6 +156,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         });
     }
     public void resetPasswordUserDb() {
+        getBtnUsers().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_DB_AT_USER, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -130,6 +164,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         });
     }
     public void deletePasswordUserDb() {
+        getBtnUsers().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_DB_AT_USER, "Удалить пользователя", "Подтвердить", () -> {
         });
     }
