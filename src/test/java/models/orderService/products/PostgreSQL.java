@@ -28,7 +28,8 @@ import java.util.List;
 @SuperBuilder
 public class PostgreSQL extends IProduct {
     private final static String DB_NAME_PATH = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.any{it.db_name=='%s'}";
-    //    private final static String DB_SIZE_PATH = "data.find{it.type=='app'}.config.dbs.size()";
+    public final static String DB_CONN_LIMIT = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.find{it.db_name=='%s'}.conn_limit";
+    public final static String IS_DB_CONN_LIMIT = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.find{it.db_name=='%s'}.containsKey('conn_limit')";
     private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
     private final static String DB_OWNER_NAME_PATH = "data.find{it.data.config.containsKey('db_owners')}.data.config.db_owners.user_name";
     //    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
@@ -58,7 +59,7 @@ public class PostgreSQL extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/postgresql.json";
         if (productName == null)
-            productName = "PostgreSQL";
+            productName = "PostgreSQL (Astra Linux)";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
@@ -127,7 +128,15 @@ public class PostgreSQL extends IProduct {
         save();
     }
 
-    //TODO:добавить действие Назначить предел подключений
+    public void setConnLimit(String dbName, int count) {
+        OrderServiceSteps.executeAction("set_conn_limit", this, new JSONObject().put("db_name", dbName).put("conn_limit", count), this.getProjectId());
+        Assertions.assertEquals(count, (Integer) OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
+    }
+
+    public void removeConnLimit(String dbName) {
+        OrderServiceSteps.executeAction("remove_conn_limit", this, new JSONObject().put("db_name", dbName).put("conn_limit", -1), this.getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(IS_DB_CONN_LIMIT, dbName)));
+    }
 
     //Удалить БД
     public void removeDb(String dbName) {

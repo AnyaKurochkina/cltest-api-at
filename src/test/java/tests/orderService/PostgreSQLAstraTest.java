@@ -19,6 +19,7 @@ import tests.Tests;
 public class PostgreSQLAstraTest extends Tests {
     static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
     static final String productName = "PostgreSQL (Astra Linux)";
+    static final String dbName = "cached_bd";
 
     @TmsLink("1057046")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -47,7 +48,7 @@ public class PostgreSQLAstraTest extends Tests {
     void createDb(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd("cached_bd", adminPassword);
+            postgreSQL.createNonProd(dbName, adminPassword);
         }
     }
 
@@ -72,8 +73,8 @@ public class PostgreSQLAstraTest extends Tests {
     void createDbmsUser(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd("cached_bd", adminPassword);
-            postgreSQL.createDbmsUser("chelik1", "user", "cached_bd");
+            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDbmsUser("chelik1", "user", dbName);
         }
     }
 
@@ -84,8 +85,8 @@ public class PostgreSQLAstraTest extends Tests {
     void resetPassword(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd("cached_bd", adminPassword);
-            postgreSQL.createDbmsUser("chelikforreset1", "user", "cached_bd");
+            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDbmsUser("chelikforreset1", "user", dbName);
             postgreSQL.resetPassword("chelikforreset1");
         }
     }
@@ -97,8 +98,8 @@ public class PostgreSQLAstraTest extends Tests {
     void resetDbOwnerPassword(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd("cached_bd", adminPassword);
-            postgreSQL.resetDbOwnerPassword("cached_bd");
+            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.resetDbOwnerPassword(dbName);
         }
     }
 
@@ -109,9 +110,9 @@ public class PostgreSQLAstraTest extends Tests {
     void removeDbmsUser(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd("cached_bd", adminPassword);
-            postgreSQL.createDbmsUser("chelikforreset2", "user", "cached_bd");
-            postgreSQL.removeDbmsUser("chelikforreset2", "cached_bd");
+            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDbmsUser("chelikforreset2", "user", dbName);
+            postgreSQL.removeDbmsUser("chelikforreset2", dbName);
         }
     }
 
@@ -133,8 +134,8 @@ public class PostgreSQLAstraTest extends Tests {
     void removeDb(PostgreSQL product) {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd("cached_bd", adminPassword);
-            postgreSQL.removeDb("cached_bd");
+            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.removeDb(dbName);
         }
     }
 
@@ -192,6 +193,19 @@ public class PostgreSQLAstraTest extends Tests {
         product.setProductName(productName);
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.updateMaxConnections("OLTP", 99);
+        }
+    }
+
+    @TmsLinks({@TmsLink("1116377"),@TmsLink("1116378")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Назначить/Убрать предел подключений {0}")
+    void setConnLimit(PostgreSQL product) {
+        product.setProductName(productName);
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.setConnLimit(dbName, 20);
+            postgreSQL.removeConnLimit(dbName);
         }
     }
 
