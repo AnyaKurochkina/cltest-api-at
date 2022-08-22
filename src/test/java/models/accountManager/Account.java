@@ -50,7 +50,6 @@ public class Account extends Entity {
         return JsonHelper.getJsonTemplate("/accountManager/accountTemplate.json")
                 .set("$.parent_id", Objects.requireNonNull(parentId))
                 .set("$.name", String.format("%s (%s)", folder.getTitle(), folderId))
-                .set("$.folder_uid", folderId)
                 .build();
     }
 
@@ -60,7 +59,7 @@ public class Account extends Entity {
         accountId = new Http(Configure.AccountManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
-                .post(String.format("/api/v1/organizations/%s/accounts", organization))
+                .post(String.format("/api/v1/folders/%s/accounts", folderId))
                 .assertStatus(200)
                 .jsonPath()
                 .getString("account.account_id");

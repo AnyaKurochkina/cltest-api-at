@@ -59,11 +59,12 @@ public class ProductTest extends Tests {
                     .folderName(folderTarget2.getName())
                     .build()
                     .createObjectPrivateAccess();
-            String accountFrom = AccountSteps.getAccountIdByContext(parentFolderId);
-            String accountTo = ((Account) Account.builder().folder(folderTarget).build().createObject()).getAccountId();
-            AccountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
-            String accountTo2 = ((Account) Account.builder().folder(folderTarget2).build().createObject()).getAccountId();
-            AccountSteps.transferMoney(accountFrom, accountTo2, "1000.00", "Перевод в рамках тестирования");
+            String accountFromId = AccountSteps.getAccountIdByContext(parentFolderId);
+            Account accountFrom = Account.builder().accountId(accountFromId).folderId(parentFolderId).build();
+            Account accountTo = Account.builder().folder(folderTarget).build().createObject();
+            AccountSteps.transferMoney(accountFrom, accountTo.getAccountId(), "1000.00", "Перевод в рамках тестирования");
+            Account accountTo2 = Account.builder().folder(folderTarget2).build().createObject();
+            AccountSteps.transferMoney(accountFrom, accountTo2.getAccountId(), "1000.00", "Перевод в рамках тестирования");
             Waiting.sleep(60000);
             OrderServiceSteps.changeProjectForOrder(product, projectTarget);
             Waiting.sleep(60000);
