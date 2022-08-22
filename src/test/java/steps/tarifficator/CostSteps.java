@@ -10,7 +10,6 @@ import lombok.extern.log4j.Log4j2;
 import models.authorizer.Project;
 import models.authorizer.ProjectEnvironmentPrefix;
 import models.orderService.interfaces.IProduct;
-import models.productCatalog.product.Product;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -97,7 +96,7 @@ public class CostSteps extends Steps {
                 .isForOrders(true)
                 .build()
                 .createObject();
-        String productId = new ProductCatalogSteps(Product.productName)
+        String productId = new ProductCatalogSteps("/api/v1/products/")
                 .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
                         "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()));
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
@@ -151,7 +150,7 @@ public class CostSteps extends Steps {
                 .isForOrders(true)
                 .build()
                 .createObject();
-        String productId = new ProductCatalogSteps(Product.productName)
+        String productId = new ProductCatalogSteps("/api/v1/products/")
                 .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
                         "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType()).toLowerCase());
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());

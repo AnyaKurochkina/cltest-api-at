@@ -1,4 +1,4 @@
-package models.productCatalog.graph;
+package models.productCatalog;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
