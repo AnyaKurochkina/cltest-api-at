@@ -1,6 +1,5 @@
 package tests.productCatalog.service;
 
-import core.helper.Configure;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
@@ -19,6 +18,7 @@ import tests.Tests;
 
 import java.util.List;
 
+import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ServiceSteps.getServiceList;
@@ -45,10 +45,9 @@ public class ServiceListTest extends Tests {
     @Test
     public void getMeta() {
         String str = steps.getMeta(GetServiceListResponse.class).getNext();
-        String env = Configure.ENV;
+        String url = getAppProp("url.kong");
         if (!(str == null)) {
-            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
-                    "Значение поля next несоответсвует ожидаемому");
+            assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
         }
     }
 

@@ -11,7 +11,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.Action;
+import models.productCatalog.action.Action;
 import models.productCatalog.VersionDiff;
 import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang3.RandomStringUtils;
