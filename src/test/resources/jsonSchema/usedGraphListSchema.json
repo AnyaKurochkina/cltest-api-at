@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "array",
+  "items": [
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "graph_version": {
+          "type": "string"
+        },
+        "graph_version_pattern": {
+          "type": "string"
+        },
+        "graph_version_calculated": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "id",
+        "version",
+        "name",
+        "title",
+        "graph_version",
+        "graph_version_pattern",
+        "graph_version_calculated"
+      ]
+    }
+  ]
+}

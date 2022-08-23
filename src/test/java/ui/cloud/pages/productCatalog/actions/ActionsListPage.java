@@ -5,7 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
-import ui.cloud.tests.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Table;
 
 import static com.codeborne.selenide.Selenide.$x;

@@ -3,7 +3,7 @@ package ui.cloud.tests.productCatalog.action;
 import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.action.getActionList.response.GetActionsListResponse;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Action;
+import models.productCatalog.action.Action;
 import models.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -87,7 +87,7 @@ public class ActionTest extends BaseTest {
                 .openActionForm(name)
                 .deleteFromActionForm()
                 .inputInvalidId("invalid")
-                .inputValidId();
+                .inputValidIdAndDelete();
         assertFalse(new ActionsListPage().isActionExist(name));
     }
 
@@ -108,7 +108,7 @@ public class ActionTest extends BaseTest {
         new IndexPage().goToActionsPage()
                 .deleteAction(name)
                 .inputInvalidId("invalid")
-                .inputValidId();
+                .inputValidIdAndDelete();
         assertFalse(new ActionsListPage().isActionExist(name));
     }
 

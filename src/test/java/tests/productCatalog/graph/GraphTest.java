@@ -13,10 +13,14 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.Action;
-import models.productCatalog.product.Product;
+import models.productCatalog.action.Action;
+import models.productCatalog.Env;
 import models.productCatalog.Services;
-import models.productCatalog.graph.*;
+import models.productCatalog.graph.Graph;
+import models.productCatalog.graph.Modification;
+import models.productCatalog.graph.RootPath;
+import models.productCatalog.graph.UpdateType;
+import models.productCatalog.product.Product;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -76,6 +80,9 @@ public class GraphTest extends Tests {
     public void importGraph() {
         String data = JsonHelper.getStringFromFile("/productCatalog/graphs/importGraph.json");
         String graphName = new JsonPath(data).get("Graph.name");
+        if (steps.isExists(graphName)) {
+            steps.deleteByName(graphName, GetGraphsListResponse.class);
+        }
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json");
         Assertions.assertTrue(steps.isExists(graphName));
         steps.getDeleteObjectResponse(steps
@@ -219,44 +226,6 @@ public class GraphTest extends Tests {
                 .put("version", "999.999.999"));
         steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true))
                 .assertStatus(500);
-    }
-
-    @DisplayName("Получение списка объектов использующих граф")
-    @TmsLink("642681")
-    @Test
-    public void getUsedGraphList() {
-        Graph usedGraphApi = Graph.builder()
-                .name("used_graph_api")
-                .build()
-                .createObject();
-        String usedGraphId = usedGraphApi.getGraphId();
-
-        Product createProductResponse = Product.builder()
-                .name("product_for_used_graph_test_api")
-                .graphId(usedGraphId)
-                .build()
-                .createObject();
-
-        Services createServiceResponse = Services.builder()
-                .serviceName("service_for_used_graph_test_api")
-                .title("service_title")
-                .isPublished(false)
-                .graphId(usedGraphId)
-                .build()
-                .createObject();
-
-        Action createActionResponse = Action.builder()
-                .actionName("action_for_used_graph_test_api")
-                .graphId(usedGraphId)
-                .build()
-                .createObject();
-
-        JsonPath jsonPath = steps.getObjectArrayUsedGraph(usedGraphId);
-        assertAll(
-                () -> assertEquals(createProductResponse.getProductId(), jsonPath.getString("id[0]")),
-                () -> assertEquals(createActionResponse.getActionId(), jsonPath.getString("id[1]")),
-                () -> assertEquals(createServiceResponse.getServiceId(), jsonPath.getString("id[2]"))
-        );
     }
 
     @DisplayName("Проверка отсутсвия ' в значениях ключя template_id")

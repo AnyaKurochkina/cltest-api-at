@@ -14,7 +14,7 @@
     "service_info": "",
     "graph_version": "",
     "auto_open_form": false,
-    "start_btn_label": "",
+    "start_btn_label": "Запуск",
     "auto_open_results": false,
     "inventory_actions": [],
     "turn_off_inventory": false,

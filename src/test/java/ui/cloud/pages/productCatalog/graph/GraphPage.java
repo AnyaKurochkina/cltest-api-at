@@ -5,7 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.AuditPage;
-import ui.cloud.tests.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.DropDown;
@@ -179,7 +179,7 @@ public class GraphPage {
     @Step("Удаление графа")
     public void deleteGraph() {
         deleteButton.click();
-        new DeleteDialog().inputValidId();
+        new DeleteDialog().inputValidIdAndDelete();
     }
 
     @Step("Возврат в список графов")
