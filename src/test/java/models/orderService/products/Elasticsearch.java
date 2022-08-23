@@ -29,8 +29,6 @@ public class Elasticsearch extends IProduct {
     String segment;
     String dataCentre;
     @ToString.Include
-    String platform;
-    @ToString.Include
     String osVersion;
     @ToString.Include
     String elasticsearchVersion;
@@ -84,7 +82,7 @@ public class Elasticsearch extends IProduct {
                 .set("$.order.attrs.flavor_kibana", new JSONObject(flavorKibana.toString()))
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.admin_password", adminPassword)
                 .set("$.order.attrs.kibana_password", kibanaPassword)
                 .set("$.order.attrs.fluentd_password", fluentdPassword)

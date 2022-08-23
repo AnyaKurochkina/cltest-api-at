@@ -34,8 +34,6 @@ public class RabbitMQClusterAstra extends IProduct {
     @ToString.Include
     String segment;
     String dataCentre;
-    @ToString.Include
-    String platform;
     String domain;
     String role;
     Flavor flavor;
@@ -74,7 +72,7 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.attrs.web_console_grants[0].role", role)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
