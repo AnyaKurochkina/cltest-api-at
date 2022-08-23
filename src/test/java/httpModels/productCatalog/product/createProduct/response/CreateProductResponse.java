@@ -15,9 +15,6 @@ import java.util.Map;
 @NoArgsConstructor
 public class CreateProductResponse{
 
-	@JsonProperty("allowed_paths")
-	private List<Object> allowedPaths;
-
 	@JsonProperty("current_version")
 	private String currentVersion;
 
