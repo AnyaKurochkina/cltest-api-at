@@ -7,6 +7,7 @@ import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.Table;
+import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -40,7 +41,7 @@ public class ActionsListPage {
             if (table.isColumnValueEquals(NAME_COLUMN, value)) {
                 return true;
             } else {
-                nextPageButton.click();
+                nextPageButton.scrollIntoView(TypifiedElement.scrollCenter).click();
             }
         }
         return false;
