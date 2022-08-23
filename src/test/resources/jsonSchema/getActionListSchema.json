@@ -37,6 +37,9 @@
             "update_dt": {
               "type": "string"
             },
+            "number": {
+              "type": "integer"
+            },
             "current_version": {
               "type": "string"
             },
@@ -107,6 +110,7 @@
             "id",
             "create_dt",
             "update_dt",
+            "number",
             "current_version",
             "name",
             "title",

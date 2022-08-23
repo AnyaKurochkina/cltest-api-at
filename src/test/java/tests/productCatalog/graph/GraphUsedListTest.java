@@ -7,7 +7,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.Action;
+import models.productCatalog.action.Action;
 import models.productCatalog.Services;
 import models.productCatalog.graph.Graph;
 import models.productCatalog.product.Product;

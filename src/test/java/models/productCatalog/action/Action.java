@@ -1,5 +1,6 @@
-package models.productCatalog;
+package models.productCatalog.action;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
@@ -7,14 +8,15 @@ import core.helper.http.Http;
 import httpModels.productCatalog.action.createAction.response.CreateActionResponse;
 import httpModels.productCatalog.action.getActionList.response.GetActionsListResponse;
 import io.qameta.allure.Step;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.productCatalog.VersionDiff;
 import models.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import steps.productCatalog.ProductCatalogSteps;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -23,27 +25,93 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Log4j2
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class Action extends Entity {
-    private String icon;
-    private String iconStoreId;
-    private String iconUrl;
-    private Graph graph;
+
+    @JsonProperty("available_without_money")
+    private Boolean availableWithoutMoney;
+    @JsonProperty("version_list")
+    private List<String> versionList;
+    @JsonProperty("current_version")
     private String currentVersion;
-    private String jsonTemplate;
-    private String actionName;
-    private String graphId;
-    private String title;
-    private Integer number;
-    private String description;
-    private String actionId;
-    private String version;
-    private String type;
-    private Boolean isMultiple;
-    private String createDt;
-    private String updateDt;
-    private String locationRestriction;
     private Integer priority;
+    private String icon;
+    @JsonProperty("icon_store_id")
+    private String iconStoreId;
+    @JsonProperty("icon_url")
+    private String iconUrl;
+    @JsonProperty("location_restriction")
+    private String locationRestriction;
+    @JsonProperty("graph_version")
+    private String graphVersion;
+    private String description;
+    @JsonProperty("skip_on_prebilling")
+    private Boolean skipOnPrebilling;
+    @JsonProperty("item_restriction")
+    private Object itemRestriction;
+    @JsonProperty("auto_removing_if_failed")
+    private Boolean autoRemovingIfFailed;
+    private String title;
+    private String type;
+    @JsonProperty("event_type")
+    private List<Object> eventType;
+    @JsonProperty("required_item_statuses")
+    private List<Object> requiredItemStatuses;
+    @JsonProperty("data_config_path")
+    private String dataConfigPath;
+    @JsonProperty("restricted_paths")
+    private List<Object> restrictedPaths;
+    @JsonProperty("graph_version_pattern")
+    private String graphVersionPattern;
+    @JsonProperty("id")
+    private String actionId;
+    @JsonProperty("allowed_paths")
+    private List<Object> allowedPaths;
+    @JsonProperty("event_provider")
+    private List<Object> eventProvider;
+    @JsonProperty("restricted_groups")
+    private List<Object> restrictedGroups;
+    @JsonProperty("graph_id")
+    private String graphId;
+    private String version;
+    @JsonProperty("last_version")
+    private String lastVersion;
+    @JsonProperty("config_restriction")
+    private String configRestriction;
+    @JsonProperty("data_config_key")
+    private String dataConfigKey;
+    @JsonProperty("name")
+    private String actionName;
+    private Integer number;
+    @JsonProperty("allowed_groups")
+    private List<Object> allowedGroups;
+    @JsonProperty("graph_version_calculated")
+    private String graphVersionCalculated;
+    @JsonProperty("data_config_fields")
+    private List<Object> dataConfigFields;
+    @JsonProperty("required_order_statuses")
+    private List<Object> requiredOrderStatuses;
+    @JsonProperty("version_create_dt")
+    private String version_create_dt;
+    @JsonProperty("version_changed_by_user")
+    private String version_changed_by_user;
+    @JsonProperty("multiple")
+    private boolean isMultiple;
+    @JsonProperty("create_dt")
+    private String createDt;
+    @JsonProperty("update_dt")
+    private String updateDt;
+    @JsonProperty("extra_data")
     private Map<String, String> extraData;
+    @JsonProperty("allowed_developers")
+    private List<String> allowed_developers;
+    @JsonProperty("restricted_developers")
+    private List<String> restricted_developers;
+    @JsonProperty("version_diff")
+    private VersionDiff versionDiff;
+    private String jsonTemplate;
     private final String productName = "/api/v1/actions/";
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/actions/",

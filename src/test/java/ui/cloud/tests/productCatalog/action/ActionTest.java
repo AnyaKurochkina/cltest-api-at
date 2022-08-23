@@ -3,7 +3,7 @@ package ui.cloud.tests.productCatalog.action;
 import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.action.getActionList.response.GetActionsListResponse;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Action;
+import models.productCatalog.action.Action;
 import models.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
