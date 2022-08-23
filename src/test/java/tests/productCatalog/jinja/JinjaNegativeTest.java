@@ -3,7 +3,7 @@ package tests.productCatalog.jinja;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Action;
+import models.productCatalog.action.Action;
 import models.productCatalog.Jinja2;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;

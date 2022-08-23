@@ -6,7 +6,7 @@ import httpModels.productCatalog.action.getActionList.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Action;
+import models.productCatalog.action.Action;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -19,6 +19,7 @@ import java.util.List;
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.getActionList;
+import static steps.productCatalog.ActionSteps.isActionListSorted;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -28,7 +29,7 @@ public class ActionsListTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/","productCatalog/actions/createAction.json");
 
-    @DisplayName("Получение списка действий. Список отсортирован по дате создания от нового к старому и имени без учета спец. символов")
+    @DisplayName("Получение списка действий. Список отсортирован по number и title без учета спец. символов")
     @TmsLink("642429")
     @Test
     public void getActionListTest() {
@@ -37,8 +38,8 @@ public class ActionsListTest extends Tests {
                 .actionName(actionName)
                 .build()
                 .createObject();
-        List<ItemImpl> list = getActionList();
-        assertTrue(steps.isSorted(list), "Список не отсортирован.");
+        List<Action> list = getActionList();
+        assertTrue(isActionListSorted(list), "Список не отсортирован.");
     }
 
     @DisplayName("Проверка значения next в запросе на получение списка действий")
@@ -73,18 +74,20 @@ public class ActionsListTest extends Tests {
         String actionName = "create_action_example_for_get_list_by_names_1_test_api";
         Action.builder()
                 .actionName(actionName)
+                .title("api_test")
                 .build()
                 .createObject();
         String secondAction = "create_action_example_for_get_list_by_names_2_test_api";
         Action.builder()
                 .actionName(secondAction)
+                .title("test")
                 .build()
                 .createObject();
         GetActionsListResponse list = (GetActionsListResponse) steps.getObjectsListByNames(GetActionsListResponse.class,
                 actionName, secondAction);
         assertEquals(2, list.getList().size(), "Список не содержит значений");
-        assertEquals(secondAction, list.getList().get(0).getName());
-        assertEquals(actionName, list.getList().get(1).getName());
+        assertEquals(secondAction, list.getList().get(1).getName());
+        assertEquals(actionName, list.getList().get(0).getName());
     }
 
     @DisplayName("Получение списка действий по типу")
