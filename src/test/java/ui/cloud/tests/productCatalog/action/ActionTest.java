@@ -47,7 +47,7 @@ public class ActionTest extends BaseTest {
                 .fillAndSave(name, "create_action_test_ui", "test",
                         ItemStatus.ON, OrderStatus.DAMAGED, ActionType.ON, "configPath", "configKey",
                         "valueOfData", graph.getTitle())
-                .isActionExist(name));
+                .isActionExist(name), "Созданное действие не найдено в списке действий.");
         steps.deleteByName(name, GetActionsListResponse.class);
     }
 
@@ -60,6 +60,7 @@ public class ActionTest extends BaseTest {
         Action.builder()
                 .actionName(name)
                 .title(name)
+                .number(0)
                 .build()
                 .createObject();
         assertTrue(new IndexPage().goToActionsPage()
@@ -80,6 +81,7 @@ public class ActionTest extends BaseTest {
         JSONObject json = Action.builder()
                 .actionName(name)
                 .title(name)
+                .number(0)
                 .build()
                 .init().toJson();
         steps.createProductObject(json);
@@ -102,6 +104,7 @@ public class ActionTest extends BaseTest {
         JSONObject json = Action.builder()
                 .actionName(name)
                 .title(name)
+                .number(0)
                 .build()
                 .init().toJson();
         steps.createProductObject(json);
@@ -120,6 +123,7 @@ public class ActionTest extends BaseTest {
         Action action = Action.builder()
                 .actionName(name)
                 .title(name)
+                .number(0)
                 .build()
                 .createObject();
         steps.partialUpdateObject(action.getActionId(), new JSONObject().put("priority", 1));
@@ -146,6 +150,7 @@ public class ActionTest extends BaseTest {
         Action.builder()
                 .actionName(name)
                 .title(name)
+                .number(0)
                 .build()
                 .createObject();
         assertTrue(new IndexPage().goToActionsPage()

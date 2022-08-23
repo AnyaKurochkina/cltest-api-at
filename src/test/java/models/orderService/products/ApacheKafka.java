@@ -30,8 +30,6 @@ public class ApacheKafka extends IProduct {
     String segment;
     String dataCentre;
     @ToString.Include
-    String platform;
-    @ToString.Include
     String kafkaVersion;
     String domain;
     Flavor flavor;
@@ -68,7 +66,7 @@ public class ApacheKafka extends IProduct {
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.attrs.os_version", osVersion)

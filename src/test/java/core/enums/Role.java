@@ -28,7 +28,10 @@ public enum Role {
     PRODUCT_CATALOG_ADMIN("product-catalog.admin"),
 
     @SerializedName("t1.admin")
-    T1_ADMIN("roles/admin");
+    T1_ADMIN("roles/admin"),
+
+    @SerializedName("ipam")
+    IPAM("ipam");
 
     private final String name;
 

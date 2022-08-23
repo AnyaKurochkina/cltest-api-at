@@ -37,8 +37,6 @@ public class ApacheKafkaCluster extends IProduct {
     @ToString.Include
     String segment;
     String dataCentre;
-    @ToString.Include
-    String platform;
     String kafkaVersion;
     String domain;
     @Builder.Default
@@ -91,7 +89,7 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.attrs.layout", getIdGeoDistribution())
