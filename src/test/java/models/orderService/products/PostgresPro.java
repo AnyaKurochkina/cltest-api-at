@@ -34,8 +34,6 @@ public class PostgresPro extends IProduct {
     @ToString.Include
     String segment;
     String dataCentre;
-    @ToString.Include
-    String platform;
     String osVersion;
     @ToString.Include
     String postgresproVersion;
@@ -78,7 +76,7 @@ public class PostgresPro extends IProduct {
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.postgrespro_version", postgresproVersion)

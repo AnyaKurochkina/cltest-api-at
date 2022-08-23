@@ -28,8 +28,6 @@ public class Nginx extends IProduct {
     String dataCentre;
     String domain;
     @ToString.Include
-    String platform;
-    @ToString.Include
     String osVersion;
     Flavor flavor;
 
@@ -64,7 +62,7 @@ public class Nginx extends IProduct {
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)

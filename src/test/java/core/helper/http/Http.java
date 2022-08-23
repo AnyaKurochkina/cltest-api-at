@@ -39,6 +39,7 @@ import static core.helper.JsonHelper.stringPrettyFormat;
 
 @Log4j2
 public class Http {
+    public static SSLConfig sslConfig;
     String host;
     String path;
     String body = "";
@@ -55,6 +56,16 @@ public class Http {
     boolean isLogged = true;
     private static final InheritableThreadLocal<Role> fixedRole = new InheritableThreadLocal<>();
     Map<String, String> headers = new HashMap<>();
+
+    static {
+        org.apache.http.conn.ssl.SSLSocketFactory clientAuthFactory = null;
+        try {
+            clientAuthFactory = new org.apache.http.conn.ssl.SSLSocketFactory(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build());
+        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+            e.printStackTrace();
+        }
+        sslConfig = new SSLConfig().with().sslSocketFactory(clientAuthFactory).and().allowAllHostnames();
+    }
 
     public Http(String host) {
         this.host = host;
@@ -211,13 +222,7 @@ public class Http {
         int status = 0;
 //        host = StringUtils.findByRegex("(.*//[^/]*)/", host + path);
 //        path = url.getFile();
-        org.apache.http.conn.ssl.SSLSocketFactory clientAuthFactory = null;
-        try {
-            clientAuthFactory = new org.apache.http.conn.ssl.SSLSocketFactory(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build());
-        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-            e.printStackTrace();
-        }
-        SSLConfig config = new SSLConfig().with().sslSocketFactory(clientAuthFactory).and().allowAllHostnames();
+
         io.restassured.response.Response response = null;
         try {
             RequestSpecBuilder build = new RequestSpecBuilder();
@@ -227,7 +232,7 @@ public class Http {
             RequestSpecification specification = RestAssured.given()
                     .spec(build.build())
                     .filter(new SwaggerCoverage())
-                    .config(RestAssured.config().sslConfig(config))
+                    .config(RestAssured.config().sslConfig(sslConfig))
                     .contentType(contentType)
                     .headers(headers)
                     .header("Accept", "application/json, text/plain, */*");

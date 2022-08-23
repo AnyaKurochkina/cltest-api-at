@@ -27,8 +27,6 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     String segment;
     String dataCentre;
     @ToString.Include
-    String platform;
-    @ToString.Include
     String osVersion;
     @ToString.Include
     String elasticsearchVersion;
@@ -66,7 +64,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
 //                .set("$.order.attrs.flavor_kibana", new JSONObject(flavorKibana.toString()))
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.attrs.system_adm_groups[0]", accessGroup.getPrefixName())
