@@ -91,6 +91,16 @@ public class NginxAstraTest extends Tests {
         }
     }
 
+    @TmsLink("1127039")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить сертификаты {0}")
+    void updateCerts(Nginx product){
+        product.setProductName(productName);
+        try(Nginx nginx = product.createObjectExclusiveAccess()){
+            nginx.updateCerts();
+        }
+    }
+
     @TmsLink("846593")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
