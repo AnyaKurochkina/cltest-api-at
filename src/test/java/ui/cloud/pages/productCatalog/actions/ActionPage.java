@@ -4,13 +4,13 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
-import ui.cloud.pages.productCatalog.SaveDialog;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -75,6 +75,14 @@ public class ActionPage {
     public ActionPage inputByLabel(String label, String value) {
         Input.byLabel(label).clear();
         Input.byLabel(label).setValue(value);
+        return this;
+    }
+
+    @Step("Сравнение значений полей")
+    public ActionPage compareFields(String name, String title, String version) {
+        inputNameField.shouldHave(Condition.exactValue(name));
+        inputTitleField.shouldHave(Condition.exactValue(title));
+        currentVersionInput.shouldHave(Condition.exactValue(version));
         return this;
     }
 

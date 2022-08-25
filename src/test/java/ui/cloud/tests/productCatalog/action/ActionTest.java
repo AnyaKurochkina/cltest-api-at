@@ -1,14 +1,15 @@
 package ui.cloud.tests.productCatalog.action;
 
+import core.helper.JsonHelper;
 import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.action.getActionList.response.GetActionsListResponse;
 import io.qameta.allure.TmsLink;
+import io.restassured.path.json.JsonPath;
 import models.productCatalog.action.Action;
 import models.productCatalog.graph.Graph;
 import models.productCatalog.icon.IconStorage;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
@@ -19,29 +20,30 @@ import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.BaseTest;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.ActionSteps.deleteActionByName;
+import static steps.productCatalog.ActionSteps.isActionExists;
 
 @DisabledIfEnv("prod")
 public class ActionTest extends BaseTest {
-    static Graph graph;
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
             "productCatalog/actions/createAction.json");
-
-    @BeforeAll
-    static void createGraph() {
-        graph = Graph.builder()
-                .name("graph_for_ui_test")
-                .title("graph_for_ui_test")
-                .type("action")
-                .build()
-                .createObject();
-    }
 
     @Test
     @TmsLink("505750")
     @DisplayName("Создание действия")
     public void createAction() {
+        Graph graph = Graph.builder()
+                .name("graph_for_ui_test")
+                .title("graph_for_ui_test")
+                .type("action")
+                .build()
+                .createObject();
         String name = "create_action_test_ui";
         assertTrue(new IndexPage().goToActionsPage()
                 .createAction()
@@ -182,5 +184,26 @@ public class ActionTest extends BaseTest {
                 .reTurnToActionsListPage()
                 .openActionForm(name)
                 .isIconExist());
+    }
+
+    @Test
+    @DisplayName("Импорт действия до первого существующего объекта")
+    @TmsLink("506795")
+    public void importActionTest() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
+        JsonPath json = new JsonPath(data);
+        String name = json.get("Action.name");
+        String title = json.get("Action.title");
+        if (isActionExists(name)) {
+            deleteActionByName(name);
+        }
+        List<Integer> versionArr = json.get("Action.version_arr");
+        String version = versionArr.stream().map(Objects::toString).collect(Collectors.joining("."));
+        new IndexPage()
+                .goToActionsPage()
+                .importAction("src/test/resources/json/productCatalog/actions/importAction.json")
+                .openActionForm(name)
+                .compareFields(name, title, version);
+        deleteActionByName(name);
     }
 }
