@@ -69,7 +69,7 @@ public class Account extends Entity {
     @Step("Удаление счета")
     protected void delete() {
         new Http(Configure.AccountManagerURL)
-                .setRole(Role.ACCOUNT_MANAGER_TRANSFER_ADMIN)
+                .setRole(Role.CLOUD_ADMIN)
                 .delete("/api/v1/folders/{}/accounts", folderId)
                 .assertStatus(200);
     }
