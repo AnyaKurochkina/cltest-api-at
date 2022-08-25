@@ -73,10 +73,11 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_APP, "Получить актуальную конфигурацию");
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
     }
-    public void changeTransactionIsolation() {
+    public void changeTransactionIsolation(String value) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_APP, "Изменить default_transaction_isolation");
-        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_APP, "Изменить default_transaction_isolation","Подтвердить",() -> {
+            DropDown.byLabel("default_transaction_isolation").select(value);
+        });
     }
     public void changeMaxConnections() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);

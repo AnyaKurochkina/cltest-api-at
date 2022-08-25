@@ -128,7 +128,7 @@ public class UiWindowsTest extends Tests {
     @TmsLink("2023")
     @Order(6)
     @DisplayName("UI Windows. Проверка 'Защита от удаления'")
-    void checkProtectOrder() throws Throwable {
+    void checkProtectOrder() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.switchProtectOrder("Защита от удаления включена");
         winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
