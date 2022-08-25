@@ -64,7 +64,7 @@ public class StateServiceListTest extends Tests {
 
     @Test
     @DisplayName("Получение списка items по значению ключа в data.config")
-    @TmsLink("")
+    @TmsLink("1129761")
     public void getItemListWithByDataConfigKey() {
         String key = "environment";
         String value = "IFT";

@@ -160,4 +160,23 @@ public class ActionTest extends BaseTest {
                 .saveAsNextVersion()
                 .checkVersion("1.0.1"));
     }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Удаление иконки")
+    public void deleteIcon() {
+        String name = "delete_icon_action_test_ui";
+        Action.builder()
+                .actionName(name)
+                .title(name)
+                .number(0)
+                .build()
+                .createObject();
+        assertTrue(new IndexPage().goToActionsPage()
+                .openActionForm(name)
+                .changeGraphVersion("1.0.0")
+                .saveAction()
+                .saveAsNextVersion()
+                .checkVersion("1.0.1"));
+    }
 }

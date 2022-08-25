@@ -9,6 +9,7 @@ import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
 import models.stateService.GetItemList;
 import models.stateService.Item;
+import org.json.JSONObject;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
 import ru.testit.services.LinkItem;
@@ -77,5 +78,14 @@ public class StateServiceSteps extends Steps {
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/version/")
                 .assertStatus(200);
+    }
+
+    @Step("Создаем Event")
+    public static Response createEventStateService(JSONObject body) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .body(body)
+                .post("/api/v1/events/")
+                .assertStatus(201);
     }
 }
