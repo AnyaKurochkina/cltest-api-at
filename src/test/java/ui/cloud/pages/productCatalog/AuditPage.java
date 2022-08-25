@@ -63,6 +63,7 @@ public class AuditPage extends GraphPage {
     @Step("Проверка детальных сведений первой записи в таблице аудита")
     public AuditPage checkFirstRecordDetails(String contextId, String address, String request, String response) {
         Table table = new Table("Учетная запись");
+        TestUtils.scrollToTheBottom();
         table.getRowByIndex(0).click();
         this.contextId.shouldHave(Condition.exactText(contextId));
         this.address.shouldHave(Condition.text(address));
@@ -103,6 +104,7 @@ public class AuditPage extends GraphPage {
         Assertions.assertTrue(Selenide.clipboard().getText().contains(contextId.getText()));
         copyAddressButton.click();
         Assertions.assertTrue(Selenide.clipboard().getText().equals(address.getText()));
+        TestUtils.scrollToTheTop();
         table.getRowByIndex(0).click();
         return this;
     }

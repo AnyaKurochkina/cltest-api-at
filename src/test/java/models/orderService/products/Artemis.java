@@ -36,8 +36,6 @@ public class Artemis extends IProduct {
     String segment;
     String dataCentre;
     @ToString.Include
-    String platform;
-    @ToString.Include
     String osVersion;
     String artemisVersion;
     String domain;
@@ -84,7 +82,7 @@ public class Artemis extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.artemis_version", artemisVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
@@ -174,9 +172,9 @@ public class Artemis extends IProduct {
         Date dateBeforeUpdate;
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration"));
+        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
         super.updateCerts("vtb-artemis_update-cert");
-        dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration"));
+        dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
 
     }

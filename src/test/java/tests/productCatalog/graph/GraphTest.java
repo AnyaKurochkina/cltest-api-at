@@ -13,7 +13,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.Action;
+import models.productCatalog.action.Action;
 import models.productCatalog.Env;
 import models.productCatalog.Services;
 import models.productCatalog.graph.Graph;
@@ -80,6 +80,9 @@ public class GraphTest extends Tests {
     public void importGraph() {
         String data = JsonHelper.getStringFromFile("/productCatalog/graphs/importGraph.json");
         String graphName = new JsonPath(data).get("Graph.name");
+        if (steps.isExists(graphName)) {
+            steps.deleteByName(graphName, GetGraphsListResponse.class);
+        }
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json");
         Assertions.assertTrue(steps.isExists(graphName));
         steps.getDeleteObjectResponse(steps

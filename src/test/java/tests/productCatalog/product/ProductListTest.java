@@ -34,7 +34,7 @@ public class ProductListTest extends Tests {
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/products/",
             "productCatalog/products/createProduct.json");
 
-    @DisplayName("Получение списка продуктов")
+    @DisplayName("Получение списка продуктов. Список отсортирован по number и title без учета спец. символов")
     @TmsLink("643387")
     @Test
     public void getProductListTest() {

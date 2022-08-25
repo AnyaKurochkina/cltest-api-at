@@ -3,10 +3,11 @@ package ui.cloud.pages.productCatalog.actions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
-import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Table;
+import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -15,6 +16,7 @@ public class ActionsListPage {
     private final SelenideElement createButton = $x("//*[@title= 'Создать']");
     private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
+    private static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
 
     public ActionsListPage() {
         SelenideElement actionPageTitle = $x("//div[text() = 'Действия']");
@@ -34,7 +36,15 @@ public class ActionsListPage {
      * @return true если действие существует, false если действие не существует.
      */
     public boolean isActionExist(String value) {
-        return new Table(NAME_COLUMN).isColumnValueEquals(NAME_COLUMN, value);
+        Table table = new Table(NAME_COLUMN);
+        while (nextPageButton.isEnabled()) {
+            if (table.isColumnValueEquals(NAME_COLUMN, value)) {
+                return true;
+            } else {
+                nextPageButton.scrollIntoView(TypifiedElement.scrollCenter).click();
+            }
+        }
+        return false;
     }
 
     @Step("Копирование действия")

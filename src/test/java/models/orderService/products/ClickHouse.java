@@ -31,8 +31,6 @@ public class ClickHouse extends IProduct {
     @ToString.Include
     String segment;
     String dataCentre;
-    @ToString.Include
-    String platform;
     String osVersion;
     String domain;
     @Builder.Default
@@ -186,7 +184,7 @@ public class ClickHouse extends IProduct {
                 .set("$.order.attrs.ch_version", chVersion)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())

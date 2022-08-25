@@ -7,7 +7,7 @@ import core.helper.http.Http;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.productCatalog.Action;
+import models.productCatalog.action.Action;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
