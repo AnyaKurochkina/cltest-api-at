@@ -5,6 +5,7 @@ import httpModels.productCatalog.action.getActionList.response.GetActionsListRes
 import io.qameta.allure.TmsLink;
 import models.productCatalog.action.Action;
 import models.productCatalog.graph.Graph;
+import models.productCatalog.icon.IconStorage;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeAll;
@@ -128,7 +129,7 @@ public class ActionTest extends BaseTest {
                 .createObject();
         steps.partialUpdateObject(action.getActionId(), new JSONObject().put("priority", 1));
         String version = steps.getById(action.getActionId(), GetActionResponse.class).getVersion();
-        assertTrue(new IndexPage().goToActionsPage()
+        new IndexPage().goToActionsPage()
                 .openActionForm(name)
                 .inputByLabel("Приоритет", "2")
                 .saveAction()
@@ -139,7 +140,7 @@ public class ActionTest extends BaseTest {
                 .setInvalidFormatVersion("1/0/2")
                 .saveAction()
                 .setVersion("1.0.2")
-                .checkVersion("1.0.2"));
+                .checkVersion("1.0.2");
     }
 
     @Test
@@ -153,16 +154,16 @@ public class ActionTest extends BaseTest {
                 .number(0)
                 .build()
                 .createObject();
-        assertTrue(new IndexPage().goToActionsPage()
+        new IndexPage().goToActionsPage()
                 .openActionForm(name)
                 .changeGraphVersion("1.0.0")
                 .saveAction()
                 .saveAsNextVersion()
-                .checkVersion("1.0.1"));
+                .checkVersion("1.0.1");
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("631141")
     @DisplayName("Удаление иконки")
     public void deleteIcon() {
         String name = "delete_icon_action_test_ui";
@@ -170,13 +171,16 @@ public class ActionTest extends BaseTest {
                 .actionName(name)
                 .title(name)
                 .number(0)
+                .icon(IconStorage.ICON_FOR_AT_TEST)
                 .build()
                 .createObject();
-        assertTrue(new IndexPage().goToActionsPage()
+        assertFalse(new IndexPage().goToActionsPage()
                 .openActionForm(name)
-                .changeGraphVersion("1.0.0")
+                .deleteIcon()
                 .saveAction()
                 .saveAsNextVersion()
-                .checkVersion("1.0.1"));
+                .reTurnToActionsListPage()
+                .openActionForm(name)
+                .isIconExist());
     }
 }
