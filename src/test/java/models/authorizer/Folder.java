@@ -67,8 +67,6 @@ public class Folder extends Entity {
         return JsonHelper.getJsonTemplate("/structure/create_folder.json")
                 .set("$.folder.kind", kind)
                 .set("$.folder.title", title)
-                .set("$.folder.name", name)
-                .set("$.folder.information_system_ids", informationSystemIds)
                 .build();
     }
 
@@ -112,6 +110,12 @@ public class Folder extends Entity {
                 .assertStatus(201)
                 .jsonPath()
                 .getString("data.name");
+
+        new Http(Configure.PortalBackURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .body(new JSONObject().put("information_system_ids", informationSystemIds))
+                .post("/v1/folders/{}/information_systems/add_to_folder", name)
+                .assertStatus(201);
     }
 
     @Override

@@ -47,7 +47,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static core.helper.Configure.OrderServiceURL;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.emptyOrNullString;
 
 
 @SuperBuilder
@@ -211,7 +211,7 @@ public abstract class IProduct extends Entity {
                     .baseUri("https://dev-php-ipam.apps.d0-oscp.corp.dev.vtb")
                     .config(RestAssured.config().sslConfig(Http.sslConfig));
 
-            String token = specification.auth().preemptive().basic(user.getUsername(), user.getPassword())
+            String token = RestAssured.given().spec(specification).auth().preemptive().basic(user.getUsername(), user.getPassword())
                     .post("/api/cloud/user/")
                     .then()
                     .statusCode(200)
@@ -219,12 +219,12 @@ public abstract class IProduct extends Entity {
                     .jsonPath()
                     .getString("data.token");
 
-            ValidatableResponseOptions<ValidatableResponse, Response> options = specification.header("token", token)
+            ValidatableResponseOptions<ValidatableResponse, Response> options = RestAssured.given().spec(specification).header("token", token)
                     .get("/api/cloud/subnets/56291/addresses")
                     .then()
                     .statusCode(200);
             for(String ip : ipList)
-                options.body(String.format("data.find{it.ip=='%s'}.hostname", ip), equalTo("reserve"));
+                options.body(String.format("data.find{it.ip=='%s'}.hostname", ip), emptyOrNullString());
         }
     }
 

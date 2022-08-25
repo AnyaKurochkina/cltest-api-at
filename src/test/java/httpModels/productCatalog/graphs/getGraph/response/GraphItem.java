@@ -14,6 +14,9 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GraphItem{
+	@JsonProperty("icon_url")
+	private Object iconUrl;
+
 	@JsonProperty("is_sequential")
 	private Boolean isSequential;
 

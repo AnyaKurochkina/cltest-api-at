@@ -51,7 +51,8 @@ public final class StringUtils {
         }
     }
     public static String getStackTraceThrowable(Throwable e){
-        return ExceptionUtils.getStackTrace(e).replaceFirst("(.at.tests[\\w\\W]*)", "").trim();
+        return ExceptionUtils.getStackTrace(e).replaceFirst(".at.tests.*\\n([\\w\\W]*)", "")
+                .replaceFirst(".at ui.cloud.tests.*\\n([\\w\\W]*)", "").trim();
     }
 
     public static String getStackTrace(StackTraceElement[] trace){
@@ -59,7 +60,7 @@ public final class StringUtils {
         for (StackTraceElement s : trace) {
             String e = s.toString();
             stack.add(e);
-            if(e.startsWith("tests."))
+            if(e.startsWith("tests.") || e.startsWith("ui.cloud.tests."))
                 break;
         }
         return stack.toString();

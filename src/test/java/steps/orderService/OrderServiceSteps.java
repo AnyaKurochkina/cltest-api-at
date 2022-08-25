@@ -166,6 +166,7 @@ public class OrderServiceSteps extends Steps {
 
     public static Response changeProjectForOrderRequest(IProduct product, Project target) {
         return new Http(OrderServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
                 .body(new JSONObject(String.format("{target_project_name: \"%s\"}", target.getId())))
                 .patch("/v1/projects/{}/orders/{}/change_project", product.getProjectId(), product.getOrderId());
     }

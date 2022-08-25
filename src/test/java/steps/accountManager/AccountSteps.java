@@ -23,7 +23,7 @@ public class AccountSteps extends Steps {
                 .set("$.amount", Objects.requireNonNull(amount))
                 .set("$.reason", Objects.requireNonNull(reason))
                 .send(AccountManagerURL)
-                .setRole(Role.ACCOUNT_MANAGER_TRANSFER_ADMIN)
+                .setRole(Role.CLOUD_ADMIN)
                 .post("/api/v1/folders/{}/transfers", from.getFolderId())
                 .assertStatus(200);
     }
@@ -43,7 +43,7 @@ public class AccountSteps extends Steps {
         log.info("Получение account_id для контекста - " + Objects.requireNonNull(context));
         String account_id = null;
         int total_count = new Http(AccountManagerURL)
-                .setRole(Role.ACCOUNT_MANAGER_TRANSFER_ADMIN)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/organizations/vtb/accounts")
                 .assertStatus(200)
                 .jsonPath()
@@ -51,7 +51,7 @@ public class AccountSteps extends Steps {
         int countOfIteration = total_count / 100 + 1;
         for (int i = 1; i <= countOfIteration; i++) {
             account_id = new Http(AccountManagerURL)
-                    .setRole(Role.ACCOUNT_MANAGER_TRANSFER_ADMIN)
+                    .setRole(Role.CLOUD_ADMIN)
                     .get("/api/v1/organizations/vtb/accounts?page=" + i + "&per_page=100")
                     .assertStatus(200)
                     .jsonPath()
