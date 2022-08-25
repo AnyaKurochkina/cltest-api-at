@@ -7,6 +7,8 @@ import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
+import models.stateService.GetItemList;
+import models.stateService.Item;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
 import ru.testit.services.LinkItem;
@@ -15,6 +17,7 @@ import steps.Steps;
 import java.util.List;
 
 import static core.helper.Configure.StateServiceURL;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Log4j2
 public class StateServiceSteps extends Steps {
@@ -44,6 +47,28 @@ public class StateServiceSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .getList("list.order_id");
+    }
+
+    @Step("Получение списка items у которых parent {isExist}")
+    public static List<Item> getItemsWithParentExist(boolean isExist) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/?parent_exists={}", isExist)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
+    @Step("Получение списка items по значению ключа {key} в data.config")
+    public static List<Item> getItemsByDataConfigKey(String key, String value) {
+        List<Item> result = new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/?data__config__{}={}", key, value)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+        assertFalse(result.isEmpty(), "Ключа или ключа с таким значением не существует");
+        return result;
     }
 
     @Step("Получение версии state service")

@@ -9,7 +9,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static steps.productCatalog.ProductCatalogSteps.getHealthCheckStatus;
 import static steps.productCatalog.ProductCatalogSteps.getProductCatalogVersion;
 
 @Epic("Product Catalog")
@@ -26,5 +28,12 @@ public class ProductCatalogApiTest {
         assertNotNull(resp.jsonPath().get("build"));
         assertNotNull(resp.jsonPath().get("date"));
         assertNotNull(resp.jsonPath().get("git_hash"));
+    }
+
+    @DisplayName("Получение статуса health check")
+    @TmsLink("")
+    @Test
+    public void healthCheckTest() {
+        assertEquals("ok", getHealthCheckStatus());
     }
 }
