@@ -38,11 +38,9 @@ public abstract class IProductPage {
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
-    SelenideElement btnFirstVm = $x("//*[text()='Виртуальные машины']/following::td[1]");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
-    SelenideElement btnCurrentProduct = $x("(//span/preceding-sibling::a[text()='Application Integration' or text()='Compute' or text()='Containers' or text()='Databases' or text()='DevOps tools' or text()='Logging' or text()='Object Storage' or text()='Web Apps' or text()='Secrets Management' or text()='Network services']/parent::div/following-sibling::div/a)[1]");
 
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     private final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
@@ -51,7 +49,7 @@ public abstract class IProductPage {
         if (Objects.nonNull(product.getError()))
             throw new CreateEntityException(String.format("Продукт необходимый для выполнения теста был создан с ошибкой:\n%s", product.getError()));
         if (Objects.nonNull(product.getLink()))
-            open(product.getLink());
+            TypifiedElement.open(product.getLink());
         btnGeneralInfo.shouldBe(Condition.enabled);
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
         product.addLinkProduct();
@@ -226,10 +224,12 @@ public abstract class IProductPage {
     @SneakyThrows
     @Step("Запуска действия с проверкой стоимости")
     public void runActionWithCheckCost(CompareType type, Executable executable) {
+        TypifiedElement.refresh();
         Selenide.refresh();
         waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
+        TypifiedElement.refresh();
         Selenide.refresh();
         currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
         Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");

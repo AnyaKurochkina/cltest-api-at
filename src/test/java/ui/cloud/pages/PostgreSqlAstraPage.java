@@ -97,7 +97,8 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-        btnFirstVm.shouldBe(Condition.enabled).click();
+        Table table = new Table("Роли узла");
+        table.getRowByIndex(0).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
