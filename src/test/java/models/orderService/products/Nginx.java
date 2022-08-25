@@ -2,10 +2,7 @@ package models.orderService.products;
 
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -14,7 +11,11 @@ import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -100,5 +101,16 @@ public class Nginx extends IProduct {
     @Override
     protected void delete() {
         delete("delete_two_layer");
+    }
+
+    @SneakyThrows
+    public void updateCerts() {
+        Date dateBeforeUpdate;
+        Date dateAfterUpdate;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
+        super.updateCerts("nginx_update_certs");
+        dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
+        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
 }
