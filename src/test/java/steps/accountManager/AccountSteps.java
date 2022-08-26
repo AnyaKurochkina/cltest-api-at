@@ -23,8 +23,21 @@ public class AccountSteps extends Steps {
                 .set("$.amount", Objects.requireNonNull(amount))
                 .set("$.reason", Objects.requireNonNull(reason))
                 .send(AccountManagerURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .setRole(Role.ACCOUNT_MANAGER_TRANSFER_ADMIN)
                 .post("/api/v1/folders/{}/transfers", from.getFolderId())
+                .assertStatus(200);
+    }
+
+    @Step("Перевод со счета {from} на счет {to} суммы {amount} c комментарием {reason}")
+    public static void transferMoneyOrganization(Account from, String to, String amount, String reason) {
+        JsonHelper.getJsonTemplate("/accountManager/transaction.json")
+                .set("$.from_account_id", Objects.requireNonNull(from.getAccountId()))
+                .set("$.to_account_id", Objects.requireNonNull(to))
+                .set("$.amount", Objects.requireNonNull(amount))
+                .set("$.reason", Objects.requireNonNull(reason))
+                .send(AccountManagerURL)
+                .setRole(Role.ACCOUNT_MANAGER_TRANSFER_ADMIN)
+                .post("/api/v1/organizations/{}/transfers", from.getFolderId())
                 .assertStatus(200);
     }
 

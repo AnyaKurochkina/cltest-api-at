@@ -61,7 +61,7 @@ public class AccountTest extends Tests {
         Account accountFrom = Account.builder().accountId(accountFromId).folderId(organization.getName()).build();
         Folder folderTo = Folder.builder().kind(Folder.DEFAULT).build().createObject();
         Account accountTo = Account.builder().folder(folderTo).build().createObject();
-        AccountSteps.transferMoney(accountFrom, accountTo.getAccountId(), "10000.00", "Перевод в рамках тестирования");
+        AccountSteps.transferMoneyOrganization(accountFrom, accountTo.getAccountId(), "10000.00", "Перевод в рамках тестирования");
         AccountSteps.transferMoney(accountTo, accountFrom.getAccountId(), "10000.00", "Перевод в рамках тестирования");
     }
 
