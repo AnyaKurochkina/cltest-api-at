@@ -89,7 +89,7 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform",  getPlatform())
+                .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.attrs.layout", getIdGeoDistribution())
@@ -140,6 +140,7 @@ public class ApacheKafkaCluster extends IProduct {
                 "      \"operation\": \"change_cleanup_policy\",\n" +
                 "      \"parameters\": {\n" +
                 "        \"cleanup^policy\": \"delete\",\n" +
+                "        \"_cleanup^limit_by\": \"time\",\n" +
                 "        \"retention^ms\": 1800001\n" +
                 "      },\n" +
                 "      \"topic_name\": \"" + topic + "\"\n" +
