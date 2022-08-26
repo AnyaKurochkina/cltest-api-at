@@ -151,6 +151,7 @@ public abstract class IProduct extends Entity {
         }
     }
 
+    public static String certPath = "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration";
     //Обновить сертификаты
     protected void updateCerts(String action) {
         OrderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"), this.getProjectId());
