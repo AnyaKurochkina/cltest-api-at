@@ -79,11 +79,11 @@ public class PostgreSqlAstraPage extends IProductPage {
             DropDown.byLabel("default_transaction_isolation").select(value);
         });
     }
-    public void changeMaxConnections() {
+    public void changeMaxConnections(String value) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить max_connections", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Изменить max_connections");
-            dlg.setInputValue("max_connections", "145");
+            dlg.setInputValue("max_connections", value);
         });
     }
     public void stopHard() {
@@ -104,16 +104,17 @@ public class PostgreSqlAstraPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
 
-    public void createDb() {
+    public void createDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Добавить БД");
-            dlg.setInputValue("Имя базы данных", "at_db");
+            dlg.setInputValue("Имя базы данных", name);
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
     }
+
     public void addUserDb() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         getBtnUsers().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
