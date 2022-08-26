@@ -52,7 +52,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
-//    @Test
+    //    @Test
 //    @TmsLink("988624")
 //    @Order(1)
 //    @DisplayName("UI PostgreSQLAstra. Заказ")
@@ -98,6 +98,17 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        pSqlPage.getBtnHistory().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
 //        pSqlPage.checkHeadersHistory();
 //    }
+    @Test
+    @TmsLink("1076804")
+    @Order(2)
+    @DisplayName("UI PostgreSQLAstra. Проверка полей заказа")
+    void checkHeaderHistoryTable() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        pSqlPage.checkHeadersHistory();
+        pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        new Graph().checkGraph();
+    }
 //
 //    @Test
 //    @TmsLink("1076809")
@@ -127,7 +138,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
 //        pSqlPage.switchProtectOrder("Защита от удаления выключена");
 //    }
 
-//    @Test
+    //    @Test
 //    @Order(5)
 //    @TmsLink("993396")
 //    @DisplayName("UI PostgreSQLAstra. Перезагрузить по питанию")
@@ -151,7 +162,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     @DisplayName("UI PostgreSQLAstra. Изменить default_transaction_isolation на REPEATABLE READ")
     void changeTransactionIsolation() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->  pSqlPage.changeTransactionIsolation("REPEATABLE READ"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeTransactionIsolation("REPEATABLE READ"));
     }
 //
 //    @Test
