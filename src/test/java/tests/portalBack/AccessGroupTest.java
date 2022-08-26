@@ -61,7 +61,7 @@ public class AccessGroupTest extends Tests {
     @TmsLink("377442")
     @DisplayName("Добавление пользователя в группу доступа для среды TEST")
     void addUserAccessGroupTest() {
-        AccessGroup accessGroup = AccessGroup.builder().name(name).projectName(projectTest.getId()).build().createObject();
+        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("[a-z]{5,15}").random()).projectName(projectTest.getId()).build().createObject();
         AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(projectTest, "VTB4043473"));
     }
 
