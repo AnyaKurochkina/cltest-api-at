@@ -210,6 +210,8 @@ public abstract class IProduct extends Entity {
     protected void delete(String action) {
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
         Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
+        if(Objects.isNull(platform))
+            return;
         if (platform.equalsIgnoreCase("vSphere") && Configure.ENV.equalsIgnoreCase("IFT")) {
             GlobalUser user = GlobalUser.builder().role(Role.IPAM).build().createObject();
             List<String> ipList = ((List<String>) OrderServiceSteps.getProductsField(this, "data.data.config.default_v4_address", List.class))
