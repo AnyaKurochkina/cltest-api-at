@@ -1,6 +1,6 @@
 package models.subModels;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,6 +13,6 @@ public class KafkaTopic {
 //    int replicationFactor;
     long retentionMs;
     String topicName;
-    @JsonProperty("_cleanup^limit_by")
+    @SerializedName("_cleanup^limit_by")
     final String cleanupLimitBy = "time";
 }

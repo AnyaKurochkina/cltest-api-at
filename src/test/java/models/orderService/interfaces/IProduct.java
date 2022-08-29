@@ -106,6 +106,14 @@ public abstract class IProduct extends Entity {
         save();
     }
 
+    @Step("Получение Id geoDistribution у продукта '{product}' с именем '{name}'")
+    protected String getIdGeoDistribution(String product, String name) {
+        Organization org = Organization.builder().build().createObject();
+        return Objects.requireNonNull(ReferencesStep
+                .getJsonPathList(String.format("tags__contains=%s,%s,%s&directory__name=geo_distribution", envType().toUpperCase(), product, org.getName()))
+                .getString(String.format("find{it.name == '%s'}.id", name)), "Id geo_distribution not found");
+    }
+
     @Override
     protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
         T entity = ObjectPoolService.create(this, exclusiveAccess, isPublic);
@@ -223,7 +231,7 @@ public abstract class IProduct extends Entity {
                     .get("/api/cloud/subnets/56291/addresses")
                     .then()
                     .statusCode(200);
-            for(String ip : ipList)
+            for (String ip : ipList)
                 options.body(String.format("data.find{it.ip=='%s'}.hostname", ip), emptyOrNullString());
         }
     }

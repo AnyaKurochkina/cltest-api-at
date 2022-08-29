@@ -118,13 +118,14 @@ public class ObjectPoolEntity {
     }
 
     public void lock() {
-        writeLog("lock() " + entity);
+        writeLog("lock() " + status + " " + entity);
         lock.lock();
+        writeLog("lockPost() " + status + " " + entity);
     }
 
     public void release() {
         try {
-            writeLog("unlock() " + entity);
+            writeLog("unlock() " + status + " " + entity);
             lock.unlock();
         } catch (IllegalMonitorStateException e) {
             writeLog("error" + e);
@@ -138,6 +139,6 @@ public class ObjectPoolEntity {
     }
 
     private static void writeLog(String text) {
-        log.info("RESOURCE_LOG {} \n {}\n", text, getStackTrace(Thread.currentThread().getStackTrace()));
+        log.info("{} RESOURCE_LOG {} \n {}\n", Thread.currentThread().getName(), text, getStackTrace(Thread.currentThread().getStackTrace()));
     }
 }
