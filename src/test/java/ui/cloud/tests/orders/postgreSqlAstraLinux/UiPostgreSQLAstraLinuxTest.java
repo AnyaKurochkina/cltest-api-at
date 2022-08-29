@@ -35,11 +35,12 @@ import java.time.Duration;
 public class UiPostgreSQLAstraLinuxTest extends Tests {
 
     PostgreSQL product;
+    String nameDb = "at_db";
 
     public UiPostgreSQLAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
             product = PostgreSQL.builder().productName("PostgreSQL (Astra Linux)").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/c3d9e196-8c07-4226-9f89-b689315501c4/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/1c8015bd-3290-4e05-acc6-d5429cddc716/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQL.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -171,7 +172,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     @DisplayName("UI PostgreSQLAstra. Создание БД")
     void createDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb("at_db"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
     }
 
     @Test
@@ -189,8 +190,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     @DisplayName("UI PostgreSQLAstra. Убрать предел подключений")
     void removeLimitConnectDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.removeLimitConnectDb("ru_RU.UTF-8"));
-
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.removeLimitConnectDb(nameDb));
     }
 
     @Test
@@ -208,7 +208,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     @DisplayName("UI PostgreSQLAstra. Добавить пользователя")
     void addUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::addUserDb);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb,"at_user"));
     }
 
     @Test
@@ -235,9 +235,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     @DisplayName("UI PostgreSQLAstra. Удаление БД")
     void removeDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.removeDb("ru_RU.UTF-8");
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.removeDb("ru_RU.UTF-8"));
-
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.removeDb(nameDb));
     }
 
     @Test

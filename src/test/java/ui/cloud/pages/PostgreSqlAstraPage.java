@@ -115,13 +115,13 @@ public class PostgreSqlAstraPage extends IProductPage {
         });
     }
 
-    public void addUserDb() {
+    public void addUserDb(String nameDb, String nameUserDb) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         getBtnUsers().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Добавить пользователя");
-            dlg.setDropDownValue("Имя базы данных", "at_db");
-            dlg.setInputValue("Имя пользователя", "at_user");
+            dlg.setDropDownValue("Имя базы данных", nameDb);
+            dlg.setInputValue("Имя пользователя", nameUserDb);
             dlg.setInputValue("Комментарий", "Пользователь для тестов");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
@@ -131,7 +131,7 @@ public class PostgreSqlAstraPage extends IProductPage {
     public void removeDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        runActionWithoutParameters(getMenuElement(HEADER_LIMIT_CONNECT,name,HEADER_SORT), "Удалить БД");
+        runActionWithoutParameters(name, "Удалить БД");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
     }
 
@@ -146,7 +146,7 @@ public class PostgreSqlAstraPage extends IProductPage {
     public void removeLimitConnectDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        runActionWithoutParameters(getMenuElement(HEADER_LIMIT_CONNECT,name,HEADER_SORT), "Убрать предел подключений");
+        runActionWithoutParameters(name, "Убрать предел подключений");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
     }
     public void resetPasswordDb() {
