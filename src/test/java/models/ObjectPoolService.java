@@ -42,6 +42,10 @@ public class ObjectPoolService {
     public static final List<String> deleteClassesName = Collections.synchronizedList(new ArrayList<>());
     public static final List<String> createdEntities = Collections.synchronizedList(new ArrayList<>());
 
+    private static boolean isNeedLock(ObjectPoolEntity e, boolean exclusive){
+        return e.getStatus() == ObjectStatus.NOT_CREATED || exclusive;
+    }
+
     @SneakyThrows
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess, boolean isPublic) {
         ObjectPoolEntity objectPoolEntity;
@@ -49,15 +53,19 @@ public class ObjectPoolService {
             objectPoolEntity = createObjectPoolEntity(e);
             objectPoolEntity.setPublic(isPublic);
         }
-        objectPoolEntity.lock();
+        if (isNeedLock(objectPoolEntity, exclusiveAccess)) {
+            objectPoolEntity.lock();
+        }
 
         if (Configure.isTestItCreateAutotest && e instanceof IProduct) {
-            objectPoolEntity.release();
+            if (isNeedLock(objectPoolEntity, exclusiveAccess))
+                objectPoolEntity.release();
             throw new CreateEntityException("Создание объекта пропущенно (isTestItCreateAutotest = true)");
         }
 
         if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
-            objectPoolEntity.release();
+            if (isNeedLock(objectPoolEntity, exclusiveAccess))
+                objectPoolEntity.release();
             if (e instanceof IProduct)
                 ((IProduct) e).addLinkProduct();
             throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой:\n%s",
@@ -78,16 +86,16 @@ public class ObjectPoolService {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED);
                     objectPoolEntity.setError(throwable);
                 }
-                objectPoolEntity.release();
                 if (e instanceof IProduct)
                     ((IProduct) e).addLinkProduct();
+                objectPoolEntity.release();
                 throw throwable;
             }
             objectPoolEntity.setStatus(ObjectStatus.CREATED);
+            if(!exclusiveAccess)
+                objectPoolEntity.release();
         }
-        if (!exclusiveAccess) {
-            objectPoolEntity.release();
-        }
+
         T entity = objectPoolEntity.get();
         toStringProductStep(entity);
         if (Objects.nonNull(objectPoolEntity.getError())) {
