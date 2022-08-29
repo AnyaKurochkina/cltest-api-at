@@ -86,13 +86,14 @@ public class ObjectPoolService {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED);
                     objectPoolEntity.setError(throwable);
                 }
-                if (exclusiveAccess)
-                    objectPoolEntity.release();
                 if (e instanceof IProduct)
                     ((IProduct) e).addLinkProduct();
+                objectPoolEntity.release();
                 throw throwable;
             }
             objectPoolEntity.setStatus(ObjectStatus.CREATED);
+            if(!exclusiveAccess)
+                objectPoolEntity.release();
         }
 
         T entity = objectPoolEntity.get();
