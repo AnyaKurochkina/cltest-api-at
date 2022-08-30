@@ -5,7 +5,6 @@ import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.CompactTemplate;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.CreateItemVisualResponse;
-import httpModels.productCatalog.itemVisualItem.createVisualTemplate.DefaultItem;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.FullTemplate;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
 import io.qameta.allure.Step;
@@ -17,6 +16,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -32,7 +32,7 @@ public class ItemVisualTemplates extends Entity {
     private FullTemplate fullTemplate;
     private List<String> eventProvider;
     private String name;
-    private DefaultItem defaultItem;
+    private LinkedHashMap<String, Object> defaultItem;
     private String description;
     private String itemId;
     private String title;
@@ -56,6 +56,7 @@ public class ItemVisualTemplates extends Entity {
                 .set("$.event_type", eventType)
                 .set("$.compact_template", new JSONObject(compactTemplate))
                 .set("$.full_template", new JSONObject(fullTemplate))
+                .set("$.default_item", defaultItem)
                 .build();
     }
 
