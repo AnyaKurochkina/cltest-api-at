@@ -27,6 +27,9 @@ public class PostgreSqlAstraPage extends IProductPage {
     private static final String HEADER_SORT = "Сортировка";
     private static final String HEADER_DISK_SIZE = "";
 
+
+    SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
+    SelenideElement btnUsers = $x("//button[.='Пользователи']");
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
 
@@ -106,7 +109,7 @@ public class PostgreSqlAstraPage extends IProductPage {
 
     public void createDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
-        getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Добавить БД");
             dlg.setInputValue("Имя базы данных", name);
@@ -117,7 +120,7 @@ public class PostgreSqlAstraPage extends IProductPage {
 
     public void addUserDb(String nameDb, String nameUserDb) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
-        getBtnUsers().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Добавить пользователя");
             dlg.setDropDownValue("Имя базы данных", nameDb);
@@ -130,28 +133,28 @@ public class PostgreSqlAstraPage extends IProductPage {
 
     public void removeDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
-        getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithoutParameters(name, "Удалить БД");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
     }
 
-    public void setLimitConnectDb() {
+    public void setLimitConnectDb(String value) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
-        getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_AT_DB, "Назначить предел подключений", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Назначить предел подключений");
-            dlg.setInputValue("Предел подключений", "23");
+            dlg.setInputValue("Предел подключений", value);
         });
     }
     public void removeLimitConnectDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
-        getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithoutParameters(name, "Убрать предел подключений");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
     }
     public void resetPasswordDb() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
-        getBtnDb().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_AT_DB_ADMIN, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -159,7 +162,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         });
     }
     public void resetPasswordUserDb() {
-        getBtnUsers().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_DB_AT_USER, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -167,7 +170,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         });
     }
     public void deletePasswordUserDb() {
-        getBtnUsers().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_DB_AT_USER, "Удалить пользователя", "Подтвердить", () -> {
         });
     }

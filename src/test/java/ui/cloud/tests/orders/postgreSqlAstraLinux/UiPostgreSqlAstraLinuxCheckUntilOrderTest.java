@@ -19,7 +19,7 @@ import ui.uiExtesions.ConfigExtension;
 @Log4j2
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Tags({@Tag("ui_postgreSQL")})
+@Tags({@Tag("ui_postgreSQL_Astra")})
 class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
     PostgreSQL product;
 
@@ -41,8 +41,8 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
     }
 
     @Test
-    @TmsLink("975914")
-    @DisplayName("UI Windows. Проверка полей при заказе продукта")
+    @TmsLink("1139488")
+    @DisplayName("UI PostgreSQLAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
                 .clickOrderMore()

@@ -181,10 +181,9 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     @DisplayName("UI PostgreSQLAstra. Назначить предел подключений")
     void setLimitConnectDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::setLimitConnectDb);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS,() -> pSqlPage.setLimitConnectDb("23"));
     }
 
-    @Test
     @Order(14)
     @TmsLink("1111705")
     @DisplayName("UI PostgreSQLAstra. Убрать предел подключений")

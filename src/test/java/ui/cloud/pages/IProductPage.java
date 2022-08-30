@@ -34,13 +34,13 @@ public abstract class IProductPage {
     IProduct product;
     double preBillingCostAction;
     SelenideElement productName = $x("(//button[@title='Редактировать']/ancestor::*/span)[1]");
+
     abstract void checkPowerStatus(String expectedStatus);
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
-    SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
-    SelenideElement btnUsers = $x("//button[.='Пользователи']");
+
 
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     private final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
@@ -225,12 +225,10 @@ public abstract class IProductPage {
     @Step("Запуска действия с проверкой стоимости")
     public void runActionWithCheckCost(CompareType type, Executable executable) {
         TypifiedElement.refresh();
-        Selenide.refresh();
         waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
         TypifiedElement.refresh();
-        Selenide.refresh();
         currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
         Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if (type == CompareType.MORE)
