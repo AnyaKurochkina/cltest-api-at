@@ -1,6 +1,7 @@
 package ui.cloud.pages.productCatalog.actions;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.DeleteDialog;
@@ -40,9 +41,15 @@ public class ActionPage {
         info.shouldBe(Condition.visible);
     }
 
-    @Step("Возврат на страницу списка Действий")
-    public ActionsListPage reTurnToActionsListPage() {
+    @Step("Возврат на страницу списка Действий через кнопку Отмена")
+    public ActionsListPage reTurnToActionsListPageByCancelButton() {
         cancelButton.click();
+        return new ActionsListPage();
+    }
+
+    @Step("Возврат на страницу списка Действий через ссылку Список дейтвий ")
+    public ActionsListPage reTurnToActionsListPageByLink() {
+        actionsListLink.click();
         return new ActionsListPage();
     }
 
@@ -84,6 +91,12 @@ public class ActionPage {
         inputTitleField.shouldHave(Condition.exactValue(title));
         currentVersionInput.shouldHave(Condition.exactValue(version));
         return this;
+    }
+
+    @Step("Возврат на страницу списка действий через кнопку назад в браузере")
+    public ActionsListPage back() {
+        Selenide.back();
+        return new ActionsListPage();
     }
 
     @Step("Удаление иконки")

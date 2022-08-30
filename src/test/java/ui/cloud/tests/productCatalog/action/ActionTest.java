@@ -68,7 +68,7 @@ public class ActionTest extends BaseTest {
                 .createObject();
         assertTrue(new IndexPage().goToActionsPage()
                 .copyAction(name)
-                .reTurnToActionsListPage()
+                .reTurnToActionsListPageByCancelButton()
                 .isActionExist(cloneName));
         steps.deleteByName(cloneName, GetActionsListResponse.class);
     }
@@ -181,7 +181,7 @@ public class ActionTest extends BaseTest {
                 .deleteIcon()
                 .saveAction()
                 .saveAsNextVersion()
-                .reTurnToActionsListPage()
+                .reTurnToActionsListPageByCancelButton()
                 .openActionForm(name)
                 .isIconExist());
     }
@@ -205,5 +205,20 @@ public class ActionTest extends BaseTest {
                 .openActionForm(name)
                 .compareFields(name, title, version);
         deleteActionByName(name);
+    }
+
+    @Test
+    @TmsLink("807603")
+    @DisplayName("Возврат в список со страницы действия")
+    public void returnToActionListFromActionPage() {
+        new IndexPage()
+                .goToActionsPage()
+                .goToNextPageActionList()
+                .openActionFormByRowNumber(2)
+                .back()
+                .checkActionIsHighlighted(2)
+                .openActionFormByRowNumber(3)
+                .reTurnToActionsListPageByLink()
+                .checkActionIsHighlighted(3);
     }
 }
