@@ -58,6 +58,7 @@ public class Moon extends IProduct {
 //                .filter(r -> r.getLabel().equals(resourcePoolLabel))
 //                .findFirst().orElseThrow(() -> new NoSuchFieldException(String.format("Кластер '%s' не найден", resourcePoolLabel)));
                 .findFirst().orElseThrow(() -> new NoSuchFieldException("Список кластеров пуст"));
+        resourcePoolLabel = resourcePool.getLabel();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.product_id", productId)
