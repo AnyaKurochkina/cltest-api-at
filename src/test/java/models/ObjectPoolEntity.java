@@ -139,6 +139,6 @@ public class ObjectPoolEntity {
     }
 
     private static void writeLog(String text) {
-        log.info("{} RESOURCE_LOG {} \n {}\n", Thread.currentThread().getName(), text, getStackTrace(Thread.currentThread().getStackTrace()));
+        log.info("RESOURCE_LOG {} {} \n {}\n", Thread.currentThread().getName(), text, getStackTrace(Thread.currentThread().getStackTrace()));
     }
 }
