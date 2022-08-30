@@ -209,7 +209,7 @@ public class ProductNegativeTest extends Tests {
     }
 
     @DisplayName("Негативный тест на cоздание продукта cо значением number меньше min значения")
-    @TmsLink("")
+    @TmsLink("1107460")
     @Test
     public void createProductWithDefaultNumber() {
         String productName = "create_product_with_default_number";

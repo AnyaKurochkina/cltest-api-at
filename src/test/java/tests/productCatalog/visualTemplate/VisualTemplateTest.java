@@ -25,9 +25,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -240,6 +238,43 @@ public class VisualTemplateTest extends Tests {
         GetImpl getResponse = steps.getById(visualTemplates.getItemId(), GetVisualTemplateResponse.class);
         String actualDescription = getResponse.getDescription();
         assertEquals(expectedDescription, actualDescription);
+    }
+
+    @DisplayName("Обновление default_item шаблона визуализации")
+    @TmsLink("1127554")
+    @Test
+    public void updateDefaultItemVisualTemplate() {
+        String name = "update_default_item_visual_template_test_api";
+        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+                .name(name)
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .defaultItem(new LinkedHashMap<String, Object>() {{
+                    put("default_key", "value_key");
+                }})
+                .isActive(false)
+                .build()
+                .createObject();
+        LinkedHashMap<String, Object> defaultItem = new LinkedHashMap<String, Object>() {{
+            put("default_key", "value_key");
+            put("default_key2", "value_key2");
+        }};
+
+        JSONObject json = ItemVisualTemplates.builder()
+                .name(name)
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .defaultItem(defaultItem)
+                .isActive(false)
+                .build()
+                .init().toJson();
+        steps.partialUpdateObject(visualTemplates.getItemId(), json);
+        GetVisualTemplateResponse getResponse = (GetVisualTemplateResponse) steps.getById(visualTemplates.getItemId(), GetVisualTemplateResponse.class);
+        assertEquals(defaultItem, getResponse.getDefaultItem());
     }
 
     @DisplayName("Получение шаблона визуализации по event_provider, event_type")

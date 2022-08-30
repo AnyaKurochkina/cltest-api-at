@@ -6,6 +6,7 @@ import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
+import ui.elements.InputFile;
 import ui.elements.Table;
 import ui.elements.TypifiedElement;
 
@@ -17,6 +18,7 @@ public class ActionsListPage {
     private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
+    private final SelenideElement importActionButton = $x("//button[@title='Импортировать действие']");
 
     public ActionsListPage() {
         SelenideElement actionPageTitle = $x("//div[text() = 'Действия']");
@@ -67,6 +69,14 @@ public class ActionsListPage {
         new Table(NAME_COLUMN).getRowElementByColumnValue(NAME_COLUMN, name).click();
         TestUtils.wait(2000);
         return new ActionPage();
+    }
+
+    @Step("Импорт действия из файла")
+    public ActionsListPage importAction(String path) {
+        importActionButton.click();
+        new InputFile(path).importFile();
+        new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
+        return this;
     }
 
 

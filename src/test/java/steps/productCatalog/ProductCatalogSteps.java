@@ -62,6 +62,16 @@ public class ProductCatalogSteps {
                 .assertStatus(200);
     }
 
+    @Step("Получение статуса health check")
+    public static String getHealthCheckStatus() {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/healthcheck/")
+                .assertStatus(200)
+                .jsonPath()
+                .getString("status");
+    }
+
     @Step("Загрузка объекта в Gitlab")
     public Response dumpToBitbucket(String id) {
         return new Http(ProductCatalogURL)
