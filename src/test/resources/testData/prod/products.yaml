@@ -4,15 +4,15 @@ S3Ceph:
 
 OpenShiftProject:
   - options:
-      #      - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app" }
-      - { env: "DEV", resourcePoolLabel: "ds1-lpad01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app" }
-      - { env: "ST", resourcePoolLabel: "ds5-genr03.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app" }
-      - { env: "IFT", resourcePoolLabel: "ss5-genr02.test.vtb.ru - TEST-SRV-SYNT", segment: "test-srv-synt" }
-      - { env: "LT", resourcePoolLabel: "ls5-genr02.test.vtb.ru - TEST-SRV-PERF", segment: "test-srv-perf" }
-      - { env: "LT", resourcePoolLabel: "ls5-lpal01.test.vtb.ru - TEST-SRV-PERF", segment: "test-srv-perf" }
-      - { env: "HOTFIX", resourcePoolLabel: "rs5-genr02.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
-      - { env: "HOTFIX", resourcePoolLabel: "rs5-lpar01.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
-      - { env: "PREPROD", resourcePoolLabel: "rs1-lpar01.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
+#      - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app" }
+      - { env: "DEV", segment: "dev-srv-app" }
+#      - { env: "ST", resourcePoolLabel: "ds5-genr03.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app" }
+#      - { env: "IFT", resourcePoolLabel: "ss5-genr02.test.vtb.ru - TEST-SRV-SYNT", segment: "test-srv-synt" }
+#      - { env: "LT", resourcePoolLabel: "ls5-genr02.test.vtb.ru - TEST-SRV-PERF", segment: "test-srv-perf" }
+#      - { env: "LT", resourcePoolLabel: "ls5-lpal01.test.vtb.ru - TEST-SRV-PERF", segment: "test-srv-perf" }
+#      - { env: "HOTFIX", resourcePoolLabel: "rs5-genr02.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
+#      - { env: "HOTFIX", resourcePoolLabel: "rs5-lpar01.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
+#      - { env: "PREPROD", resourcePoolLabel: "rs1-lpar01.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
 
 ClickHouse:
   - options:
