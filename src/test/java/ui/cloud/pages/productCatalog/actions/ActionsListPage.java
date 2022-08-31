@@ -3,6 +3,8 @@ package ui.cloud.pages.productCatalog.actions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import org.junit.jupiter.api.Assertions;
+import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
@@ -11,8 +13,9 @@ import ui.elements.Table;
 import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class ActionsListPage {
+public class ActionsListPage extends BaseList {
     private static final String NAME_COLUMN = "Код действия";
     private final SelenideElement createButton = $x("//*[@title= 'Создать']");
     private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
@@ -37,6 +40,7 @@ public class ActionsListPage {
      * @param value знаение для поиска в колонке "Код действия"
      * @return true если действие существует, false если действие не существует.
      */
+    @Step("Проверка существования действия {value}")
     public boolean isActionExist(String value) {
         Table table = new Table(NAME_COLUMN);
         while (nextPageButton.isEnabled()) {
@@ -49,7 +53,7 @@ public class ActionsListPage {
         return false;
     }
 
-    @Step("Копирование действия")
+    @Step("Копирование действия {name}")
     public ActionPage copyAction(String name) {
         openActionMenu(name);
         copyAction.click();
@@ -57,16 +61,23 @@ public class ActionsListPage {
         return new ActionPage();
     }
 
-    @Step("Удаление действия")
+    @Step("Удаление действия {name}")
     public DeleteDialog deleteAction(String name) {
         openActionMenu(name);
         deleteAction.click();
         return new DeleteDialog();
     }
 
-    @Step("Открытие формы действия")
+    @Step("Открытие формы действия {name}")
     public ActionPage openActionForm(String name) {
         new Table(NAME_COLUMN).getRowElementByColumnValue(NAME_COLUMN, name).click();
+        TestUtils.wait(2000);
+        return new ActionPage();
+    }
+
+    @Step("Открытие формы действия по строке {number}")
+    public ActionPage openActionFormByRowNumber(int number) {
+        new Table(NAME_COLUMN).getValueByColumnInRow(number, NAME_COLUMN).click();
         TestUtils.wait(2000);
         return new ActionPage();
     }
@@ -76,6 +87,24 @@ public class ActionsListPage {
         importActionButton.click();
         new InputFile(path).importFile();
         new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
+        return this;
+    }
+
+    @Step("Переход на следующую страницу списка действий")
+    public ActionsListPage goToNextPageActionList() {
+        String firstActionName = new Table("Наименование").getFirstValueByColumn("Наименование");
+        TestUtils.scrollToTheBottom();
+        nextPageButton.click();
+        String secondActionName = new Table("Наименование").getFirstValueByColumn("Наименование");
+        assertNotEquals(firstActionName, secondActionName);
+        return this;
+    }
+
+    @Step("Проверяем, что строка отличается визуально")
+    public ActionsListPage checkActionIsHighlighted(int rowNumber) {
+        Table actionList = new Table(NAME_COLUMN);
+        Assertions.assertTrue(actionList.getRowByIndex(rowNumber)
+                .getCssValue("color").contains("196, 202, 212"));
         return this;
     }
 

@@ -76,7 +76,7 @@ public class StateServiceSteps extends Steps {
     public static Response getStateServiceVersion() {
         return new Http(StateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
-                .get("/version/")
+                .get("/api/version/")
                 .assertStatus(200);
     }
 
@@ -87,5 +87,15 @@ public class StateServiceSteps extends Steps {
                 .body(body)
                 .post("/api/v1/events/")
                 .assertStatus(201);
+    }
+
+    @Step("Получение статуса health")
+    public static String getHealthStateService() {
+        return new Http(StateServiceURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/health/")
+                .assertStatus(200)
+                .jsonPath()
+                .getString("status");
     }
 }
