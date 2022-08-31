@@ -1,24 +1,18 @@
 package ui.cloud.tests.orders.postgreSqlAstraLinux;
 
-import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.PostgreSQL;
-import models.orderService.products.Windows;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import tests.Tests;
 import ui.cloud.pages.*;
-import ui.cloud.tests.ActionParameters;
-import ui.elements.Alert;
-import ui.elements.Dialog;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.uiExtesions.ConfigExtension;
@@ -40,7 +34,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     public UiPostgreSQLAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
             product = PostgreSQL.builder().productName("PostgreSQL (Astra Linux)").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/1c8015bd-3290-4e05-acc6-d5429cddc716/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/caa9fb11-476d-45c3-a413-13e19c0ebb23/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQL.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -144,9 +138,10 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     @TmsLink("993389")
     @DisplayName("UI PostgreSQLAstra. Расширить диск")
     void expandDisk() {
-        IProductPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.expandDisk("/pg_data", "20", new Table("Роли узла").getRowByIndex(0)));
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", new Table("Роли узла").getRowByIndex(0)));
     }
+
 
     @Test
     @Order(10)
@@ -175,22 +170,22 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
     }
 
-    @Test
-    @Order(13)
-    @TmsLink("1088139")
-    @DisplayName("UI PostgreSQLAstra. Назначить предел подключений")
-    void setLimitConnectDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS,() -> pSqlPage.setLimitConnectDb("23"));
-    }
-
-    @Order(14)
-    @TmsLink("1111705")
-    @DisplayName("UI PostgreSQLAstra. Убрать предел подключений")
-    void removeLimitConnectDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.removeLimitConnectDb(nameDb));
-    }
+//    @Test
+//    @Order(13)
+//    @TmsLink("1088139")
+//    @DisplayName("UI PostgreSQLAstra. Назначить предел подключений")
+//    void setLimitConnectDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS,() -> pSqlPage.setLimitConnectDb("23"));
+//    }
+//
+//    @Order(14)
+//    @TmsLink("1111705")
+//    @DisplayName("UI PostgreSQLAstra. Убрать предел подключений")
+//    void removeLimitConnectDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.removeLimitConnectDb(nameDb));
+//    }
 
     @Test
     @Order(15)
@@ -207,7 +202,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     @DisplayName("UI PostgreSQLAstra. Добавить пользователя")
     void addUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb,"at_user"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb,"at_user","Пользователь для тестов"));
     }
 
     @Test
@@ -223,9 +218,9 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     @Order(18)
     @TmsLink("993395")
     @DisplayName("UI PostgreSQLAstra. Удалить пользователя БД")
-    void deletePasswordUserDb() {
+    void deleteUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::deletePasswordUserDb);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::deleteUserDb);
     }
 
     @Test

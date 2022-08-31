@@ -40,7 +40,7 @@ public abstract class IProductPage {
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
-
+    SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
 
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     private final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
