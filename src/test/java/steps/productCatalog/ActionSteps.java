@@ -5,6 +5,7 @@ import core.helper.http.Http;
 import io.qameta.allure.Step;
 import models.productCatalog.action.Action;
 import models.productCatalog.action.GetActionList;
+import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 
 import java.util.List;
@@ -14,11 +15,13 @@ import static steps.productCatalog.ProductCatalogSteps.delNoDigOrLet;
 
 public class ActionSteps extends Steps {
 
+    private static final String actionUrl = "/api/v1/actions/";
+
     @Step("Получение списка Действий продуктового каталога")
     public static List<Action> getActionList() {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/actions/")
+                .get(actionUrl)
                 .compareWithJsonSchema("jsonSchema/getActionListSchema.json")
                 .assertStatus(200)
                 .extractAs(GetActionList.class).getList();
@@ -41,5 +44,43 @@ public class ActionSteps extends Steps {
             }
         }
         return true;
+    }
+
+    @Step("Удаление действия")
+    public static void deleteActionById(String id) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(actionUrl + id + "/")
+                .assertStatus(204);
+    }
+
+    @Step("Поиск ID действия по имени с использованием multiSearch")
+    public static String getActionIdByNameWithMultiSearch(String name) {
+        String actionId = null;
+        List<Action> list = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(actionUrl + "?include=total_count&page=1&per_page=50&multisearch=" + name)
+                .assertStatus(200).extractAs(GetActionList.class).getList();
+        for (Action action : list) {
+            if (action.getActionName().equals(name)) {
+                actionId = action.getActionId();
+                break;
+            }
+        }
+        Assertions.assertNotNull(actionId, String.format("Действие с именем: %s, с помощью multiSearch не найден", name));
+        return actionId;
+    }
+
+    @Step("Удаление действия по имени")
+    public static void deleteActionByName(String name) {
+        deleteActionById(getActionIdByNameWithMultiSearch(name));
+    }
+
+    @Step("Проверка существования действия по имени")
+    public static boolean isActionExists(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(actionUrl + "exists/?name=" + name)
+                .assertStatus(200).jsonPath().get("exists");
     }
 }

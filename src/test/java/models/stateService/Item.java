@@ -1,9 +1,17 @@
 package models.stateService;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.LinkedHashMap;
 
+@Log4j2
+@Builder
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Item {
     private String id;
     private LinkedHashMap<String, Object> data;
@@ -16,8 +24,8 @@ public class Item {
     private String createdRowDt;
     @JsonProperty("create_dt")
     private String createDt;
-    @JsonProperty("update_data")
-    private LinkedHashMap<String, Object> updateData;
+    @JsonProperty("update_dt")
+    private String updateDt;
     @JsonProperty("graph_id")
     private String graphId;
     private String type;

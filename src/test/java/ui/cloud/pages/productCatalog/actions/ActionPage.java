@@ -4,15 +4,16 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
-import ui.cloud.pages.productCatalog.SaveDialog;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ActionPage {
     private final SelenideElement actionsListLink = $x("//a[text() = 'Список действий']");
@@ -30,6 +31,8 @@ public class ActionPage {
     private final SelenideElement inputGraphTitle = $x("//*[@id='selectValueWrapper']");
     private final SelenideElement deleteButton = $x("//span[text() ='Удалить']");
     private final SelenideElement currentVersionInput = $x("//label[starts-with(.,'Выберите версию')]/parent::*//input");
+    private final SelenideElement deleteIconSvG = $x("(//div/*[local-name()='svg']/*[local-name()='svg']/*[local-name()='path'])[6]");
+    private final SelenideElement addIcon = $x("//label[@for = 'attachment-input']");
 
 
     public ActionPage() {
@@ -63,9 +66,9 @@ public class ActionPage {
     }
 
     @Step("Проверка текущей версии")
-    public boolean checkVersion(String version) {
+    public void checkVersion(String version) {
         String currentVersion = currentVersionInput.getValue();
-        return currentVersion.equals(version);
+        assertEquals(version, currentVersion);
     }
 
     @Step("Ввод значения в поле {label}")
@@ -73,6 +76,26 @@ public class ActionPage {
         Input.byLabel(label).clear();
         Input.byLabel(label).setValue(value);
         return this;
+    }
+
+    @Step("Сравнение значений полей")
+    public ActionPage compareFields(String name, String title, String version) {
+        inputNameField.shouldHave(Condition.exactValue(name));
+        inputTitleField.shouldHave(Condition.exactValue(title));
+        currentVersionInput.shouldHave(Condition.exactValue(version));
+        return this;
+    }
+
+    @Step("Удаление иконки")
+    public ActionPage deleteIcon() {
+        deleteIconSvG.click();
+        addIcon.shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Проверка отсутствия иконки")
+    public boolean isIconExist() {
+        return deleteIconSvG.is(Condition.visible);
     }
 
     @Step("Запонение полей для создания действия и сохранение")
