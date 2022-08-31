@@ -28,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static core.helper.Configure.OrderServiceURL;
@@ -466,6 +467,24 @@ public class OrderServiceSteps extends Steps {
                 e.printStackTrace();
             }
         }
+
+        if(Configure.ENV.equalsIgnoreCase("IFT")) {
+            orders = new Http(OrderServiceURL)
+                    .setProjectId(project.id)
+                    .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=failure&f[status][]=pending", project.id)
+                    .assertStatus(200)
+                    .jsonPath()
+                    .get("list.findAll{!(it.status == 'success' && it.deletable == true)}.id");
+
+            StringJoiner params = new StringJoiner("&order_ids[]=", "order_ids[]=", "");
+            orders.forEach(params::add);
+
+            new Http(OrderServiceURL)
+                    .setRole(Role.CLOUD_ADMIN)
+                    .delete("/v1/orders?&force=false&{}", params.toString());
+            log.trace("list = " + orders);
+        }
+
     }
 
     public static void deleteProduct(IProduct product) {
