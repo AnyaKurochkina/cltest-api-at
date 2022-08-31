@@ -215,10 +215,30 @@ public class ActionTest extends BaseTest {
                 .goToActionsPage()
                 .goToNextPageActionList()
                 .openActionFormByRowNumber(2)
-                .back()
+                .backByBrowserButtonBack()
                 .checkActionIsHighlighted(2)
                 .openActionFormByRowNumber(3)
                 .reTurnToActionsListPageByLink()
                 .checkActionIsHighlighted(3);
+    }
+
+    @Test
+    @TmsLink("1071773")
+    @DisplayName("Баннер при закрытии формы с несохраненными данными, Отмена")
+    public void bannerWhenCloseFormAndNotSaveCancel() {
+        String name = "action_for_banner_test_ui";
+        Action.builder()
+                .actionName(name)
+                .title(name)
+                .number(0)
+                .build()
+                .createObject();
+        new IndexPage()
+                .goToActionsPage()
+                .openActionForm(name)
+                .inputByLabel("Приоритет сообщения", "1")
+                .backOnBrowserAndAlertCancel()
+                .backByActionsLinkAndAlertCancel()
+                .closeTabAndAlertCancel();
     }
 }

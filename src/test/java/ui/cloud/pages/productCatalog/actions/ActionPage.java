@@ -1,7 +1,6 @@
 package ui.cloud.pages.productCatalog.actions;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.DeleteDialog;
@@ -13,7 +12,7 @@ import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
 
-import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ActionPage {
@@ -94,9 +93,39 @@ public class ActionPage {
     }
 
     @Step("Возврат на страницу списка действий через кнопку назад в браузере")
-    public ActionsListPage back() {
-        Selenide.back();
+    public ActionsListPage backByBrowserButtonBack() {
+        back();
         return new ActionsListPage();
+    }
+
+    @Step("Назад с помощью кнопки броузера и отмена оповещения о несохранненных данных")
+    public ActionPage backOnBrowserAndAlertCancel() {
+        back();
+        String alertMsg = switchTo().alert().getText();
+        assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", alertMsg);
+        switchTo().alert().dismiss();
+        actionsListLink.shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Закрытие текущей вкладки и отмена оповещения о несохранненных данных")
+    public ActionPage closeTabAndAlertCancel() {
+        closeWindow();
+        String alertMsg = switchTo().alert().getText();
+        assertEquals("Возможно, внесенные изменения не сохранятся.", alertMsg);
+        switchTo().alert().dismiss();
+        actionsListLink.shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Переход на список действий и отмена оповещения о несохранненных данных")
+    public ActionPage backByActionsLinkAndAlertCancel() {
+        actionsListLink.click();
+        String alertMsg = switchTo().alert().getText();
+        assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", alertMsg);
+        switchTo().alert().dismiss();
+        actionsListLink.shouldBe(Condition.visible);
+        return this;
     }
 
     @Step("Удаление иконки")
