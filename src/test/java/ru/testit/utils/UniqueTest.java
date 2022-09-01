@@ -14,11 +14,13 @@ import java.util.StringJoiner;
 @Getter
 @ToString(onlyExplicitlyIncluded = true)
 public class UniqueTest {
+    @EqualsAndHashCode.Include
+    @ToString.Exclude
     String externalId;
+    @EqualsAndHashCode.Include
+    @ToString.Exclude
     String configurationId;
     @Setter
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     boolean finished;
 
     public UniqueTest(String externalId, String configurationId) {
