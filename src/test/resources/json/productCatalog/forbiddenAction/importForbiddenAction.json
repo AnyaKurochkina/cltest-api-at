@@ -9,6 +9,9 @@
     "event_provider": [],
     "direction": "parent_to_child",
     "is_all_levels": false,
+    "environment_type_restriction": [
+
+    ],
     "config_restriction": null,
     "item_restriction": null,
     "action_id": "e4ea7f99-cd33-4612-a193-c7379477f327"

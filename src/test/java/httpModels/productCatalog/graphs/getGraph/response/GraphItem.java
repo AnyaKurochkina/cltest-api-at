@@ -32,6 +32,9 @@ public class GraphItem{
 	@JsonProperty("icon")
 	private String icon;
 
+	@JsonProperty("icon_url")
+	private String iconUrl;
+
 	@JsonProperty("subgraph_version_pattern")
 	private String subgraphVersionPattern;
 

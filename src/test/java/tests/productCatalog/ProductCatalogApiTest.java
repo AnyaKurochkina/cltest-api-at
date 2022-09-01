@@ -31,13 +31,6 @@ public class ProductCatalogApiTest extends Tests {
         assertNotNull(resp.jsonPath().get("stage"));
     }
 
-    @DisplayName("Получение статуса health check")
-    @TmsLink("1129771")
-    @Test
-    public void healthCheckTest() {
-        assertEquals("ok", getHealthCheckStatusProductCatalog());
-    }
-
     @DisplayName("Получение статуса health")
     @TmsLink("1139584")
     @Test

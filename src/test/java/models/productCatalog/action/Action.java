@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import core.helper.http.Http;
-import httpModels.productCatalog.action.createAction.response.CreateActionResponse;
-import httpModels.productCatalog.action.getActionList.response.GetActionsListResponse;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
@@ -14,13 +13,13 @@ import models.Entity;
 import models.productCatalog.VersionDiff;
 import models.productCatalog.graph.Graph;
 import org.json.JSONObject;
-import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static steps.productCatalog.ActionSteps.*;
 
 @Log4j2
 @Builder
@@ -112,10 +111,6 @@ public class Action extends Entity {
     @JsonProperty("version_diff")
     private VersionDiff versionDiff;
     private String jsonTemplate;
-    private final String productName = "/api/v1/actions/";
-    @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/actions/",
-            "productCatalog/actions/createAction.json");
 
     @Override
     public Entity init() {
@@ -152,27 +147,23 @@ public class Action extends Entity {
     @Override
     @Step("Создание экшена")
     protected void create() {
-        if (productCatalogSteps.isExists(actionName)) {
-            productCatalogSteps.deleteByName(actionName, GetActionsListResponse.class);
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
         }
-        actionId = new Http(Configure.ProductCatalogURL)
+        Action createAction = new Http(Configure.ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
-                .post(productName)
+                .post("/api/v1/actions/")
                 .assertStatus(201)
-                .extractAs(CreateActionResponse.class)
-                .getId();
-        assertNotNull(actionId, "Экшен с именем: " + actionName + ", не создался");
+                .extractAs(Action.class);
+        StringUtils.copyAvailableFields(createAction, this);
+        assertNotNull(actionId, "Действие с именем: " + actionName + ", не создался");
     }
 
     @Override
     @Step("Удаление экшена")
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(productName + actionId + "/")
-                .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        assertFalse(productCatalogSteps.isExists(actionName));
+        deleteActionById(actionId);
+        assertFalse(isActionExists(actionName));
     }
 }

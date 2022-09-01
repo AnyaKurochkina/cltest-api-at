@@ -40,6 +40,7 @@ public class ForbiddenActionSteps extends Steps {
         return objectId;
     }
 
+    @Step("Удаление запрещенного действия по id")
     public static void deleteForbiddenActionById(Integer id) {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
@@ -49,5 +50,13 @@ public class ForbiddenActionSteps extends Steps {
 
     public static void deleteForbiddenActionByName(String name) {
         deleteForbiddenActionById(getForbiddenActionIdByNameWithMultiSearch(name));
+    }
+
+    @Step("Получение запрещенного действия по Id")
+    public static ForbiddenAction getForbiddenActionById(Integer objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .get(endPoint + objectId + "/")
+                .extractAs(ForbiddenAction.class);
     }
 }
