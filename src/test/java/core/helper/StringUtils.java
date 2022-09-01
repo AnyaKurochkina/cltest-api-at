@@ -10,6 +10,8 @@ import org.intellij.lang.annotations.Language;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.regex.Matcher;
@@ -25,17 +27,17 @@ public final class StringUtils {
         return null;
     }
 
-    public static String format(String str, Object ... args){
+    public static String format(String str, Object... args) {
         for (Object arg : args)
             str = str.replaceFirst("\\{}", Objects.requireNonNull(arg).toString());
         return str;
     }
 
-    public static SelenideElement $x(@Language("XPath") String xpath, Object ... args) {
+    public static SelenideElement $x(@Language("XPath") String xpath, Object... args) {
         return Selenide.$x(format(xpath, args));
     }
 
-    public static ElementsCollection $$x(@Language("XPath") String xpath, Object ... args) {
+    public static ElementsCollection $$x(@Language("XPath") String xpath, Object... args) {
         return Selenide.$$x(format(xpath, args));
     }
 
@@ -50,17 +52,25 @@ public final class StringUtils {
             }
         }
     }
-    public static String getStackTraceThrowable(Throwable e){
-        return ExceptionUtils.getStackTrace(e).replaceFirst(".at.tests.*\\n([\\w\\W]*)", "")
-                .replaceFirst(".at ui.cloud.tests.*\\n([\\w\\W]*)", "").trim();
+
+    public static String getStackTraceThrowable(Throwable e) {
+        List<String> regexList = Arrays.asList(".at.tests.*([\\w\\W]*)", ".at ui.cloud.tests.*\\n([\\w\\W]*)");
+        String stackTrace = ExceptionUtils.getStackTrace(e);
+        for (@Language("regexp") String regex : regexList) {
+            String post = findByRegex(regex, stackTrace);
+            if (Objects.nonNull(post)) {
+                stackTrace = stackTrace.substring(0, stackTrace.indexOf(post));
+            }
+        }
+        return stackTrace;
     }
 
-    public static String getStackTrace(StackTraceElement[] trace){
+    public static String getStackTrace(StackTraceElement[] trace) {
         StringJoiner stack = new StringJoiner("\n\t");
         for (StackTraceElement s : trace) {
             String e = s.toString();
             stack.add(e);
-            if(e.startsWith("tests.") || e.startsWith("ui.cloud.tests."))
+            if (e.startsWith("tests.") || e.startsWith("ui.cloud.tests."))
                 break;
         }
         return stack.toString();

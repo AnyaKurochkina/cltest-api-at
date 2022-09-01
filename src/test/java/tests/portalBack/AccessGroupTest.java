@@ -42,7 +42,7 @@ public class AccessGroupTest extends Tests {
     @TmsLink("996161")
     @DisplayName("Создание Группы доступа vlt")
     void createAccessGroupVlt() {
-        AccessGroup.builder().projectName(projectDev.getId()).codePurpose("vlt").build().createObject();
+        AccessGroup.builder().projectName(projectDev.getId()).codePurpose("vlt").build().createObjectPrivateAccess();
     }
 
     @Test

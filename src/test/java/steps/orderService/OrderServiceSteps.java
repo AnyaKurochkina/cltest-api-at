@@ -399,10 +399,11 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Получение списка ресурсных пулов для категории {category} и проекта {projectId}")
-    public static List<ResourcePool> getResourcesPoolList(String category, String projectId) {
+    public static List<ResourcePool> getResourcesPoolList(String category, String projectId, String productName) {
         String jsonArray = new Http(OrderServiceURL)
                 .setProjectId(projectId)
-                .get("/v1/products/resource_pools?category={}&project_name={}&resource_type=cluster:openshift&quota[cpu]=1&quota[memory]=1", category, projectId)
+                .get("/v1/products/resource_pools?category={}&project_name={}&resource_type=cluster:openshift&quota[cpu]=1&quota[memory]=1&product_name={}",
+                        category, projectId, productName)
                 .assertStatus(200)
                 .toJson()
                 .getJSONArray("list")

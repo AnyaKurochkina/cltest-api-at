@@ -1,20 +1,25 @@
 package ru.testit.utils;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import ru.testit.model.request.Attachment;
-import ru.testit.services.LinkItem;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.StringJoiner;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 public class UniqueTest {
     String externalId;
     String configurationId;
+    @Setter
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    boolean finished;
 
     public UniqueTest(String externalId, String configurationId) {
         this.externalId = externalId;

@@ -90,6 +90,8 @@ public class RunningHandler {
 
     public static void endTest(final Method atomicTest, String configurationId) {
         UniqueTest test = new UniqueTest(extractExternalID(atomicTest, null), configurationId);
+        if(test.isFinished())
+            return;
         if (Objects.isNull(includedTests.get(test))) {
             test = new UniqueTest(extractExternalID(atomicTest, null), TestITClient.getConfigurationId());
         }
@@ -100,6 +102,7 @@ public class RunningHandler {
         testITClient.sendTestItemsUniqueTest(createTestItemRequestFactory.getCreateTestRequests(test));
         testResultRequestFactory.processFinishLaunchUniqueTest(test, utilsMethodSteps, parentStep);
         removeCurrentStep();
+        test.setFinished(true);
     }
 
     public static void startUtilMethod(final MethodType currentMethod, final Method method, ExtensionContext context) {

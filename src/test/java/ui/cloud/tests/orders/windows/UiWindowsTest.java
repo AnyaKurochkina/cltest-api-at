@@ -119,7 +119,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Изменение группы доступа")
     void updateGroup() {
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
+        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.updateGroup("Administrators",
                 Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
