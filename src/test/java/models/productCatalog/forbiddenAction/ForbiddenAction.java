@@ -3,7 +3,9 @@ package models.productCatalog.forbiddenAction;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import core.helper.http.Http;
+import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -33,6 +35,8 @@ public class ForbiddenAction extends Entity {
     private String title;
     @JsonProperty("event_type")
     private List<String> eventType;
+    @JsonProperty("environment_type_restriction")
+    private List<String> environmentTypeRestriction;
     @JsonProperty("config_restriction")
     private Object configRestriction;
     @JsonProperty("update_dt")
@@ -79,6 +83,7 @@ public class ForbiddenAction extends Entity {
     }
 
     @Override
+    @Step("Создание запрещенного действия")
     protected void create() {
         if (isForbiddenActionExists(name)) {
             deleteForbiddenActionByName(name);
@@ -89,14 +94,13 @@ public class ForbiddenAction extends Entity {
                 .post(productName)
                 .assertStatus(201)
                 .extractAs(ForbiddenAction.class);
-        id = forbiddenAction.getId();
-        updateDt = forbiddenAction.getUpdateDt();
-        createDt = forbiddenAction.getCreateDt();
+        StringUtils.copyAvailableFields(forbiddenAction, this);
         Assertions.assertNotNull(id, "Пример с именем: " + name + ", не создался");
 
     }
 
     @Override
+    @Step("Удаление запрещенного действия")
     protected void delete() {
         deleteForbiddenActionById(id);
     }

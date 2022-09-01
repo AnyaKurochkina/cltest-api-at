@@ -67,7 +67,7 @@ public class StateServiceListTest extends Tests {
     @TmsLink("1129761")
     public void getItemListWithByDataConfigKey() {
         String key = "environment";
-        String value = "IFT";
+        String value = "DEV";
         List<Item> list = getItemsByDataConfigKey(key, value);
         for (Item item : list) {
             Object config = item.getData().get("config");
