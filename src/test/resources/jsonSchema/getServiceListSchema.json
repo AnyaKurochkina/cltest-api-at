@@ -40,9 +40,6 @@
             "direction_name": {
               "type": "string"
             },
-            "direction": {
-              "type": "string"
-            },
             "create_dt": {
               "type": "string"
             },
@@ -99,7 +96,6 @@
             "direction_id",
             "direction_title",
             "direction_name",
-            "direction",
             "create_dt",
             "update_dt",
             "current_version",

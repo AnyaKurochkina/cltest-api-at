@@ -12,7 +12,7 @@ import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
 
-import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ActionPage {
@@ -40,9 +40,15 @@ public class ActionPage {
         info.shouldBe(Condition.visible);
     }
 
-    @Step("Возврат на страницу списка Действий")
-    public ActionsListPage reTurnToActionsListPage() {
+    @Step("Возврат на страницу списка Действий через кнопку Отмена")
+    public ActionsListPage reTurnToActionsListPageByCancelButton() {
         cancelButton.click();
+        return new ActionsListPage();
+    }
+
+    @Step("Возврат на страницу списка Действий через ссылку Список дейтвий ")
+    public ActionsListPage reTurnToActionsListPageByLink() {
+        actionsListLink.click();
         return new ActionsListPage();
     }
 
@@ -83,6 +89,42 @@ public class ActionPage {
         inputNameField.shouldHave(Condition.exactValue(name));
         inputTitleField.shouldHave(Condition.exactValue(title));
         currentVersionInput.shouldHave(Condition.exactValue(version));
+        return this;
+    }
+
+    @Step("Возврат на страницу списка действий через кнопку назад в браузере")
+    public ActionsListPage backByBrowserButtonBack() {
+        back();
+        return new ActionsListPage();
+    }
+
+    @Step("Назад с помощью кнопки броузера и отмена оповещения о несохранненных данных")
+    public ActionPage backOnBrowserAndAlertCancel() {
+        back();
+        String alertMsg = switchTo().alert().getText();
+        assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", alertMsg);
+        switchTo().alert().dismiss();
+        actionsListLink.shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Закрытие текущей вкладки и отмена оповещения о несохранненных данных")
+    public ActionPage closeTabAndAlertCancel() {
+        closeWindow();
+        String alertMsg = switchTo().alert().getText();
+        assertEquals("Возможно, внесенные изменения не сохранятся.", alertMsg);
+        switchTo().alert().dismiss();
+        actionsListLink.shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Переход на список действий и отмена оповещения о несохранненных данных")
+    public ActionPage backByActionsLinkAndAlertCancel() {
+        actionsListLink.click();
+        String alertMsg = switchTo().alert().getText();
+        assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", alertMsg);
+        switchTo().alert().dismiss();
+        actionsListLink.shouldBe(Condition.visible);
         return this;
     }
 

@@ -68,7 +68,7 @@ public class ActionTest extends BaseTest {
                 .createObject();
         assertTrue(new IndexPage().goToActionsPage()
                 .copyAction(name)
-                .reTurnToActionsListPage()
+                .reTurnToActionsListPageByCancelButton()
                 .isActionExist(cloneName));
         steps.deleteByName(cloneName, GetActionsListResponse.class);
     }
@@ -181,7 +181,7 @@ public class ActionTest extends BaseTest {
                 .deleteIcon()
                 .saveAction()
                 .saveAsNextVersion()
-                .reTurnToActionsListPage()
+                .reTurnToActionsListPageByCancelButton()
                 .openActionForm(name)
                 .isIconExist());
     }
@@ -205,5 +205,40 @@ public class ActionTest extends BaseTest {
                 .openActionForm(name)
                 .compareFields(name, title, version);
         deleteActionByName(name);
+    }
+
+    @Test
+    @TmsLink("807603")
+    @DisplayName("Возврат в список со страницы действия")
+    public void returnToActionListFromActionPage() {
+        new IndexPage()
+                .goToActionsPage()
+                .goToNextPageActionList()
+                .openActionFormByRowNumber(2)
+                .backByBrowserButtonBack()
+                .checkActionIsHighlighted(2)
+                .openActionFormByRowNumber(3)
+                .reTurnToActionsListPageByLink()
+                .checkActionIsHighlighted(3);
+    }
+
+    @Test
+    @TmsLink("1071773")
+    @DisplayName("Баннер при закрытии формы с несохраненными данными, Отмена")
+    public void bannerWhenCloseFormAndNotSaveCancel() {
+        String name = "action_for_banner_test_ui";
+        Action.builder()
+                .actionName(name)
+                .title(name)
+                .number(0)
+                .build()
+                .createObject();
+        new IndexPage()
+                .goToActionsPage()
+                .openActionForm(name)
+                .inputByLabel("Приоритет сообщения", "1")
+                .backOnBrowserAndAlertCancel()
+                .backByActionsLinkAndAlertCancel()
+                .closeTabAndAlertCancel();
     }
 }

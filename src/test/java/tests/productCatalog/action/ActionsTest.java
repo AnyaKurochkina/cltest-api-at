@@ -3,7 +3,6 @@ package tests.productCatalog.action;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
-import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.action.getActionList.response.GetActionsListResponse;
@@ -11,8 +10,8 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.action.Action;
 import models.productCatalog.VersionDiff;
+import models.productCatalog.action.Action;
 import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
@@ -31,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ActionSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -51,8 +51,8 @@ public class ActionsTest extends Tests {
                 .version("1.0.1")
                 .build()
                 .createObject();
-        GetImpl actualAction = steps.getById(action.getActionId(), GetActionResponse.class);
-        assertEquals(actionName, actualAction.getName());
+        Action actualAction = getActionById(action.getActionId());
+        assertEquals(action, actualAction);
     }
 
     @DisplayName("Создание действия в продуктовом каталоге с иконкой")
@@ -66,7 +66,7 @@ public class ActionsTest extends Tests {
                 .icon(IconStorage.ICON_FOR_AT_TEST)
                 .build()
                 .createObject();
-        GetActionResponse actualAction = (GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
+        Action actualAction = getActionById(action.getActionId());
         assertFalse(actualAction.getIconStoreId().isEmpty());
         assertFalse(actualAction.getIconUrl().isEmpty());
     }
@@ -89,8 +89,8 @@ public class ActionsTest extends Tests {
                 .icon(IconStorage.ICON_FOR_AT_TEST)
                 .build()
                 .createObject();
-        GetActionResponse actualFirstAction = (GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
-        GetActionResponse actualSecondAction = (GetActionResponse) steps.getById(secondAction.getActionId(), GetActionResponse.class);
+        Action actualFirstAction = getActionById(action.getActionId());
+        Action actualSecondAction = getActionById(secondAction.getActionId());
         assertEquals(actualFirstAction.getIconUrl(), actualSecondAction.getIconUrl());
         assertEquals(actualFirstAction.getIconStoreId(), actualSecondAction.getIconStoreId());
     }
@@ -105,8 +105,8 @@ public class ActionsTest extends Tests {
                 .title(actionName)
                 .build()
                 .createObject();
-        assertTrue(steps.isExists(action.getActionName()), "Действие не существует");
-        assertFalse(steps.isExists("NoExistsAction"), "Действие существует");
+        assertTrue(isActionExists(action.getActionName()), "Действие не существует");
+        assertFalse(isActionExists("NoExistsAction"), "Действие существует");
     }
 
     @DisplayName("Проверка дефолтного значения поля location_restriction в действиях")
@@ -119,7 +119,7 @@ public class ActionsTest extends Tests {
                 .title(actionName)
                 .build()
                 .createObject();
-        GetActionResponse getAction = (GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
+        Action getAction = getActionById(action.getActionId());
         assertEquals("", getAction.getLocationRestriction());
     }
 
@@ -136,23 +136,23 @@ public class ActionsTest extends Tests {
                 .locationRestriction(fieldName)
                 .build()
                 .createObject();
-        GetActionResponse getAction = (GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
+        Action getAction = getActionById(action.getActionId());
         assertEquals(fieldName, getAction.getLocationRestriction());
     }
 
     @DisplayName("Импорт действия")
     @TmsLink("642433")
     @Test
-    public void importAction() {
+    public void importActionTest() {
         String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
         String actionName = new JsonPath(data).get("Action.name");
-        if (steps.isExists(actionName)) {
-            steps.deleteByName(actionName, GetActionsListResponse.class);
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
         }
-        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
-        assertTrue(steps.isExists(actionName), "Действие не существует");
-        steps.deleteByName(actionName, GetActionsListResponse.class);
-        assertFalse(steps.isExists(actionName), "Действие существует");
+        importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
+        assertTrue(isActionExists(actionName), "Действие не существует");
+        deleteActionByName(actionName);
+        assertFalse(isActionExists(actionName), "Действие существует");
     }
 
     @DisplayName("Импорт действия c иконкой")
@@ -161,37 +161,37 @@ public class ActionsTest extends Tests {
     public void importActionWithIcon() {
         String data = JsonHelper.getStringFromFile("/productCatalog/actions/importActionWithIcon.json");
         String actionName = new JsonPath(data).get("Action.name");
-        if (steps.isExists(actionName)) {
-            steps.deleteByName(actionName, GetActionsListResponse.class);
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
         }
-        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithIcon.json");
-        String id = steps.getProductObjectIdByNameWithMultiSearch(actionName, GetActionsListResponse.class);
-        GetActionResponse action = (GetActionResponse) steps.getById(id, GetActionResponse.class);
+        importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithIcon.json");
+        String id = getActionIdByNameWithMultiSearch(actionName);
+        Action action = getActionById(id);
         assertFalse(action.getIconStoreId().isEmpty());
         assertFalse(action.getIconUrl().isEmpty());
-        assertTrue(steps.isExists(actionName), "Действие не существует");
-        steps.deleteByName(actionName, GetActionsListResponse.class);
-        assertFalse(steps.isExists(actionName), "Действие существует");
+        assertTrue(isActionExists(actionName), "Действие не существует");
+        deleteActionByName(actionName);
+        assertFalse(isActionExists(actionName), "Действие существует");
     }
 
     @DisplayName("Получение действия по Id")
     @TmsLink("642436")
     @Test
-    public void getActionById() {
+    public void getActionByIdTest() {
         String actionName = "get_action_by_id_example_test_api";
         Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
-        GetImpl getAction = steps.getById(action.getActionId(), GetActionResponse.class);
-        assertEquals(action.getActionName(), getAction.getName());
+        Action getAction = getActionById(action.getActionId());
+        assertEquals(action, getAction);
     }
 
     @DisplayName("Копирование действия по Id")
     @TmsLink("642489")
     @Test
-    public void copyActionById() {
+    public void copyActionByIdTest() {
         String actionName = "clone_action_test_api";
         Action action = Action.builder()
                 .actionName(actionName)
@@ -199,10 +199,10 @@ public class ActionsTest extends Tests {
                 .build()
                 .createObject();
         String cloneName = action.getActionName() + "-clone";
-        steps.copyById(action.getActionId());
-        assertTrue(steps.isExists(cloneName), "Действие не существует");
-        steps.deleteByName(cloneName, GetActionsListResponse.class);
-        assertFalse(steps.isExists(cloneName), "Действие существует");
+        copyActionById(action.getActionId());
+        assertTrue(isActionExists(cloneName), "Действие не существует");
+        deleteActionByName(cloneName);
+        assertFalse(isActionExists(cloneName), "Действие существует");
     }
 
     @DisplayName("Копирование действия по Id и проверка на соответствие полей")
@@ -216,17 +216,17 @@ public class ActionsTest extends Tests {
                 .build()
                 .createObject();
         String cloneName = action.getActionName() + "-clone";
-        steps.copyById(action.getActionId());
-        String cloneId = steps.getProductObjectIdByNameWithMultiSearch(cloneName, GetActionsListResponse.class);
+        copyActionById(action.getActionId());
+        String cloneId = getActionIdByNameWithMultiSearch(cloneName);
         steps.partialUpdateObject(cloneId, new JSONObject().put("priority", 1));
         GetActionResponse importedAction = (GetActionResponse) steps.getByIdAndVersion(cloneId, "1.0.1", GetActionResponse.class);
         assertAll(
                 () -> assertEquals("1.0.1", importedAction.getVersion()),
                 () -> assertEquals(1, importedAction.getPriority())
         );
-        assertTrue(steps.isExists(cloneName));
-        steps.deleteByName(cloneName, GetActionsListResponse.class);
-        assertFalse(steps.isExists(cloneName));
+        assertTrue(isActionExists(cloneName));
+        deleteActionByName(cloneName);
+        assertFalse(isActionExists(cloneName));
     }
 
     @DisplayName("Проверка сортировки по дате создания в действиях")
@@ -497,9 +497,9 @@ public class ActionsTest extends Tests {
         steps.deleteByName(actionName, GetActionsListResponse.class);
         String path = "action_" + actionName + "_" + action.getVersion();
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(actionName));
+        assertTrue(isActionExists(actionName));
         steps.deleteByName(actionName, GetActionsListResponse.class);
-        assertFalse(steps.isExists(actionName));
+        assertFalse(isActionExists(actionName));
     }
 
     @Test
@@ -521,7 +521,7 @@ public class ActionsTest extends Tests {
     }
 
     @DisplayName("Создание действия c дефолтным значением number")
-    @TmsLink("")
+    @TmsLink("1143273")
     @Test
     public void createActionWithDefaultNumber() {
         String actionName = "create_action_with_default_number";
@@ -530,7 +530,7 @@ public class ActionsTest extends Tests {
                 .version("1.0.1")
                 .build()
                 .createObject();
-        GetActionResponse actualAction = (GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
+        Action actualAction = getActionById(action.getActionId());
         assertEquals(50, actualAction.getNumber());
     }
 }

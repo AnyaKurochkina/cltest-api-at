@@ -11,10 +11,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static steps.stateService.StateServiceSteps.createEventStateService;
-import static steps.stateService.StateServiceSteps.getStateServiceVersion;
+import static org.junit.jupiter.api.Assertions.*;
+import static steps.stateService.StateServiceSteps.*;
 
 @Tag("state_service")
 @Epic("State Service")
@@ -30,6 +28,7 @@ public class StateServiceTest extends Tests {
         assertNotNull(resp.jsonPath().get("build"));
         assertNotNull(resp.jsonPath().get("date"));
         assertNotNull(resp.jsonPath().get("git_hash"));
+        assertNotNull(resp.jsonPath().get("stage"));
     }
 
     @Test
@@ -50,5 +49,12 @@ public class StateServiceTest extends Tests {
                 "            \"update_data\": null\n" +
                 "        }"));
         assertTrue(response.jsonPath().getString("status").isEmpty(), "Поле status не пустое");
+    }
+
+    @DisplayName("Получение статуса health")
+    @TmsLink("1139586")
+    @Test
+    public void healthTest() {
+        assertEquals("ok", getHealthStateService());
     }
 }

@@ -14,10 +14,8 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static steps.productCatalog.ForbiddenActionSteps.deleteForbiddenActionByName;
-import static steps.productCatalog.ForbiddenActionSteps.isForbiddenActionExists;
+import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ForbiddenActionSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -28,7 +26,7 @@ public class ForbiddenActionTest extends Tests {
             "productCatalog/graphs/createGraph.json");
 
     @DisplayName("Создание запрещенного действия действия")
-    @TmsLink("")
+    @TmsLink("1144654")
     @Test
     public void createForbiddenAction() {
         ForbiddenAction forbiddenAction = ForbiddenAction.builder()
@@ -36,6 +34,8 @@ public class ForbiddenActionTest extends Tests {
                 .title("create_forbidden_action_test_api")
                 .build()
                 .createObject();
+        ForbiddenAction getForbiddenAction = getForbiddenActionById(forbiddenAction.getId());
+        assertEquals(forbiddenAction, getForbiddenAction);
     }
 
     @DisplayName("Импорт запрещенного действия действия")
