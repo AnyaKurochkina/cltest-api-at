@@ -34,7 +34,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     public UiPostgreSQLAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
             product = PostgreSQL.builder().productName("PostgreSQL (Astra Linux)").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/caa9fb11-476d-45c3-a413-13e19c0ebb23/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+//          product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/4c44e817-348f-46ba-8ee6-038706fc64a5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQL.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -169,23 +169,6 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
     }
-
-//    @Test
-//    @Order(13)
-//    @TmsLink("1088139")
-//    @DisplayName("UI PostgreSQLAstra. Назначить предел подключений")
-//    void setLimitConnectDb() {
-//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS,() -> pSqlPage.setLimitConnectDb("23"));
-//    }
-//
-//    @Order(14)
-//    @TmsLink("1111705")
-//    @DisplayName("UI PostgreSQLAstra. Убрать предел подключений")
-//    void removeLimitConnectDb() {
-//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.removeLimitConnectDb(nameDb));
-//    }
 
     @Test
     @Order(15)

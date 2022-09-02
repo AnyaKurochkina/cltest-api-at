@@ -92,7 +92,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             DropDown.byLabel("default_transaction_isolation").select(value);
         });
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-        Assertions.assertEquals(value.toLowerCase(), default_transaction_isolation.getText(), "Максимальное количество подключений " +
+        Assertions.assertEquals(value.toLowerCase(), default_transaction_isolation.getText(), "default_transaction_isolation " +
                 "не соответствует установленному значению ");
     }
 
@@ -150,7 +150,8 @@ public class PostgreSqlAstraPage extends IProductPage {
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Assertions.assertEquals(nameDb, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, nameDb).getValueByColumn(HEADER_NAME_DB));
+        Assertions.assertTrue(new Table(HEADER_NAME_DB).isColumnValueContains("", nameDb + "_" + nameUserDb), "Пользователь не существует");
+        Assertions.assertEquals(nameDb, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, nameDb).getValueByColumn(HEADER_NAME_DB), "БД не принадлежит пользователю");
     }
 
     public void removeDb(String name) {
@@ -159,16 +160,23 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithoutParameters(name, "Удалить БД");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Assertions.assertTrue(noData.exists(), "Ошибка удаления БД");
+        Assertions.assertFalse(new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name), "БД существует");
     }
 
     public void enlargeDisk(String name, String size, SelenideElement node) {
+        node.scrollIntoView(scrollCenter).click();
+        String firstSizeDisk = String.valueOf(Integer.parseInt(getTableByHeader("Дополнительные точки монтирования")
+                .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE)));
         expandDisk(name, size, node);
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-        Table table = new Table("Роли узла");
-        table.getRowByIndex(0).scrollIntoView(scrollCenter).click();
-        Assertions.assertEquals(getTableByHeader("Дополнительные точки монтирования").getRowByColumnValue(HEADER_PATH, "xfs").getValueByColumn(HEADER_DISK_SIZE), new Table(HEADER_CONNECT_STATUS).getRowByColumnValue(HEADER_CONNECT_STATUS, "—").getValueByColumn(HEADER_DISK_SIZE),
+        node.scrollIntoView(scrollCenter).click();
+        Assertions.assertEquals(String.valueOf(Integer.parseInt(firstSizeDisk) +
+                        Integer.parseInt(size)), getTableByHeader("Дополнительные точки монтирования")
+                        .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
+        Assertions.assertTrue(new Table(HEADER_CONNECT_STATUS).isColumnValueContains(HEADER_DISK_SIZE,
+                String.valueOf(Integer.parseInt(firstSizeDisk) +
+                        Integer.parseInt(size))));
     }
 
     public void setLimitConnectDb(String value) {
@@ -178,6 +186,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             Dialog dlg = new Dialog("Назначить предел подключений");
             dlg.setInputValue("Предел подключений", value);
         });
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
     }
 
     public void removeLimitConnectDb(String name) {
@@ -211,7 +220,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithParameters(BLOCK_DB_AT_USER, "Удалить пользователя", "Подтвердить", () -> {
         });
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Assertions.assertTrue(noData.exists(), "Ошибка удаления пользователя БД");
+        Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueContains("", BLOCK_DB_AT_USER), "Ошибка удаления пользователя БД");
     }
 
 

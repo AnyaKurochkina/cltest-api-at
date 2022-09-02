@@ -39,7 +39,7 @@ public class UiWindowsTest extends Tests {
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod"))
             product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-//            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/87e70133-31fa-4c41-a320-2151dcd6a820/main?context=proj-rddf0uwi0q&type=project&org=vtb").build().buildFromLink();
+            //product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/73553716-011d-40b7-b131-d868d153137b/main?context=proj-ln4zg69jek&type=project&org=vtb").build().buildFromLink();
         else
             product = Windows.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();

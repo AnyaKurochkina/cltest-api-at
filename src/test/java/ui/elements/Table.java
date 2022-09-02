@@ -68,15 +68,25 @@ public class Table implements TypifiedElement {
 
     @Step("Проверка, что в колонке '{column}' есть значение, равное '{value}'")
     public boolean isColumnValueEquals(String column, String value) {
+        if(isEmpty())
+            return false;
         for (SelenideElement e : rows) {
             if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().equals(value))
                 return true;
         }
         return false;
     }
-
+    public boolean isEmpty() {
+        if (rows.isEmpty())
+            return true;
+        if (rows.size() == 1)
+            return rows.first().$$x("td").size() == 1 && headers.size() > 1;
+        return false;
+    }
     @Step("Проверка, что в колонке '{column}' есть значение, содержащее '{value}'")
     public boolean isColumnValueContains(String column, String value) {
+        if(isEmpty())
+            return false;
         for (SelenideElement e : rows) {
             if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().contains(value))
                 return true;
