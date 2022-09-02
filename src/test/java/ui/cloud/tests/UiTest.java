@@ -1,6 +1,7 @@
 package ui.cloud.tests;
 
 import com.codeborne.selenide.Selenide;
+import core.enums.Role;
 import io.qameta.allure.TmsLink;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,7 @@ import models.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import tests.Tests;
+import ui.cloud.pages.LoginPage;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.uiExtesions.ConfigExtension;
@@ -40,9 +42,9 @@ public class UiTest extends Tests {
     @Test
     void name() {
 //        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
-        Selenide.open("https://ift-portal-front.apps.d0-oscp.corp.dev.vtb/compute/orders/910b162c-79bb-42dd-97fe-560fa0fc3149/history?context=proj-xazpppulba&type=project&org=vtb");
+        Selenide.open("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/?context=proj-pkvckn08w9&type=project&org=vtb");
 //        Table.getTableByColumnName("Дата запуска");
-
+new LoginPage().signIn(Role.ORDER_SERVICE_ADMIN);
         System.out.println(1);
 
 //        Selenide.$x("//canvas");

@@ -6,6 +6,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
+import tests.Tests;
 
 import static core.helper.StringUtils.$x;
 
@@ -18,7 +19,7 @@ public class Alert implements TypifiedElement {
 
     @Step("Закрыть alert")
     public void close() {
-        element.$("button").shouldBe(Condition.enabled).click();
+        element.$("button").hover().shouldBe(Condition.enabled).click();
         element.shouldNotBe(Condition.visible);
     }
 
@@ -39,7 +40,7 @@ public class Alert implements TypifiedElement {
     public void closeAll(){
         while (element.exists() && element.isDisplayed()){
             close();
-            Waiting.sleep(1000);
+            Waiting.sleep(2000);
         }
     }
 
