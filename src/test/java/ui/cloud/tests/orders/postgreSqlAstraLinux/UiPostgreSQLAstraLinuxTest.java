@@ -34,7 +34,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     public UiPostgreSQLAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
             product = PostgreSQL.builder().productName("PostgreSQL (Astra Linux)").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-//          product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/4c44e817-348f-46ba-8ee6-038706fc64a5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            //         product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/4c44e817-348f-46ba-8ee6-038706fc64a5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQL.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -171,6 +171,25 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     }
 
     @Test
+    @Order(13)
+    @TmsLink("1088139")
+    @Disabled
+    @DisplayName("UI PostgreSQLAstra. Назначить предел подключений")
+    void setLimitConnectDb() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.setLimitConnectDb("23"));
+    }
+
+    @Order(14)
+    @TmsLink("1111705")
+    @Disabled
+    @DisplayName("UI PostgreSQLAstra. Убрать предел подключений")
+    void removeLimitConnectDb() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.removeLimitConnectDb(nameDb));
+    }
+
+    @Test
     @Order(15)
     @TmsLink("993388")
     @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД")
@@ -185,7 +204,7 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
     @DisplayName("UI PostgreSQLAstra. Добавить пользователя")
     void addUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb,"at_user","Пользователь для тестов"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb, "at_user", "Пользователь для тестов"));
     }
 
     @Test
