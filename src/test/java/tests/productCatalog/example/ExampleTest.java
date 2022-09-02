@@ -109,7 +109,6 @@ public class ExampleTest extends Tests {
 
     @Test
     @DisplayName("Загрузка example в GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("975378")
     public void dumpToGitlabExample() {
         String exampleName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -124,7 +123,6 @@ public class ExampleTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка example из GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("1028842")
     public void loadFromGitlabExample() {
         String exampleName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

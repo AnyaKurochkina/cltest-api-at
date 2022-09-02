@@ -518,7 +518,6 @@ public class ProductsTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Product в GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("975400")
     public void dumpToGitlabProduct() {
         String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -534,7 +533,6 @@ public class ProductsTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Product из GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("1028975")
     public void loadFromGitlabProduct() {
         String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

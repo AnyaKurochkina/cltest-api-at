@@ -451,7 +451,6 @@ public class ServicesTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Service в GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("975412")
     public void dumpToGitlabService() {
         String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -466,7 +465,6 @@ public class ServicesTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Service из GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("1029279")
     public void loadFromGitlabService() {
         String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

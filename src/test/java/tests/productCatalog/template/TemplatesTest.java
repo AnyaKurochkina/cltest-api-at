@@ -264,7 +264,6 @@ public class TemplatesTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Template в GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("975415")
     public void dumpToGitlabTemplate() {
         String templateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -279,7 +278,6 @@ public class TemplatesTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка Template из GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("1029293")
     public void loadFromGitlabTemplate() {
         String templateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
