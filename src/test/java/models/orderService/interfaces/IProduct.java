@@ -218,7 +218,7 @@ public abstract class IProduct extends Entity {
                     .stream().filter(Objects::nonNull).collect(Collectors.toList());
 
             RequestSpecification specification = RestAssured.given()
-                    .baseUri("https://dev-php-ipam.apps.d0-oscp.corp.dev.vtb")
+                    .baseUri("https://d5-phpipam.apps.dk5-soul01.corp.dev.vtb")
                     .config(RestAssured.config().sslConfig(Http.sslConfig));
 
             String token = RestAssured.given().spec(specification).auth().preemptive().basic(user.getUsername(), user.getPassword())
