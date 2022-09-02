@@ -8,6 +8,7 @@ import models.productCatalog.action.GetActionList;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 
+import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -46,7 +47,7 @@ public class ActionSteps extends Steps {
         return true;
     }
 
-    @Step("Удаление действия")
+    @Step("Удаление действия по id")
     public static void deleteActionById(String id) {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
@@ -82,5 +83,29 @@ public class ActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(actionUrl + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
+    }
+
+    @Step("Получение действия по Id")
+    public static Action getActionById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .get(actionUrl + objectId + "/")
+                .extractAs(Action.class);
+    }
+
+    @Step("Импорт действия продуктового каталога")
+    public static void importAction(String pathName) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .multiPart(actionUrl + "obj_import/", "file", new File(pathName))
+                .assertStatus(200);
+    }
+
+    @Step("Копирование действия по Id")
+    public static void copyActionById(String objectId) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(actionUrl + objectId + "/copy/")
+                .assertStatus(200);
     }
 }

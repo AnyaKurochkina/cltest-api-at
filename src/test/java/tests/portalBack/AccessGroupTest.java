@@ -42,7 +42,7 @@ public class AccessGroupTest extends Tests {
     @TmsLink("996161")
     @DisplayName("Создание Группы доступа vlt")
     void createAccessGroupVlt() {
-        AccessGroup.builder().projectName(projectDev.getId()).codePurpose("vlt").build().createObject();
+        AccessGroup.builder().projectName(projectDev.getId()).codePurpose("vlt").build().createObjectPrivateAccess();
     }
 
     @Test
@@ -62,7 +62,7 @@ public class AccessGroupTest extends Tests {
     @DisplayName("Добавление пользователя в группу доступа для среды TEST")
     void addUserAccessGroupTest() {
         AccessGroup accessGroup = AccessGroup.builder().name(new Generex("[a-z]{5,15}").random()).projectName(projectTest.getId()).build().createObject();
-        AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(projectTest, "VTB4043473"));
+        AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(projectTest, "VTB4043473", accessGroup.getDomain()));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class AccessGroupTest extends Tests {
     @DisplayName("Добавление пользователя в группу доступа для среды DEV")
     void addUserAccessGroupDev() {
         AccessGroup accessGroup = AccessGroup.builder().name(name).projectName(projectDev.getId()).build().createObject();
-        AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(projectDev, "VTB4043473"));
+        AccessGroupSteps.addUsersToGroup(accessGroup, PortalBackSteps.getUsers(projectDev, "VTB4043473", accessGroup.getDomain()));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class AccessGroupTest extends Tests {
     @DisplayName("Удаление пользователя из группы доступа")
     void deleteUserAccessGroup() {
         AccessGroup accessGroup = AccessGroup.builder().name(name).projectName(projectDev.getId()).build().createObject();
-        String user = PortalBackSteps.getUsers(projectDev, "VTB4043473");
+        String user = PortalBackSteps.getUsers(projectDev, "VTB4043473", accessGroup.getDomain());
         AccessGroupSteps.addUsersToGroup(accessGroup, user);
         AccessGroupSteps.removeUserFromGroup(accessGroup, user);
     }
