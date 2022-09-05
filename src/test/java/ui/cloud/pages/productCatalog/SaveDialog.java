@@ -31,7 +31,7 @@ public class SaveDialog extends Dialog {
     }
 
     @Step("Сохранение с указанной версией 'newVersion'")
-    public void saveWithManualVersion(String newVersion, String alertText) {
+    public void saveWithVersion(String newVersion, String alertText) {
         saveAsNextVersionCheckBox.click();
         setInputValue("Новая версия", newVersion);
         saveButton.shouldBe(Condition.enabled).click();

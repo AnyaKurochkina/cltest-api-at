@@ -67,16 +67,16 @@ public class ActionPage {
     }
 
     @Step("Сохранение действия со следующей патч версией")
-    public ActionPage saveActionWithPatchVersion() {
+    public ActionPage saveWithNextPatchVersion() {
         saveButton.shouldBe(Condition.enabled).click();
         new SaveDialog().saveWithNextPatchVersion(saveActionAlertText);
         return new ActionPage();
     }
 
     @Step("Сохранение действия с указанием версии")
-    public ActionPage saveActionWithManualVersion(String newVersion) {
+    public ActionPage saveWithVersion(String newVersion) {
         saveButton.shouldBe(Condition.enabled).click();
-        new SaveDialog().saveWithManualVersion(newVersion, saveActionAlertText);
+        new SaveDialog().saveWithVersion(newVersion, saveActionAlertText);
         return new ActionPage();
     }
 

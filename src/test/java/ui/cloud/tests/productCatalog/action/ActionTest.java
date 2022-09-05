@@ -134,14 +134,10 @@ public class ActionTest extends BaseTest {
         new IndexPage().goToActionsPage()
                 .openActionForm(name)
                 .inputByLabel("Приоритет", "2")
-                .saveAction()
-                .setInvalidVersion("1.0.1", version)
-                .saveAction()
-                .setInvalidVersion("1.0.0", version)
-                .saveAction()
-                .setInvalidFormatVersion("1/0/2")
-                .saveAction()
-                .setVersion("1.0.2")
+                .checkSaveWithInvalidVersion("1.0.1", version)
+                .checkSaveWithInvalidVersion("1.0.0", version)
+                .checkSaveWithInvalidVersionFormat("1/0/2")
+                .saveWithVersion("1.0.2")
                 .checkVersion("1.0.2");
     }
 
@@ -159,8 +155,7 @@ public class ActionTest extends BaseTest {
         new IndexPage().goToActionsPage()
                 .openActionForm(name)
                 .changeGraphVersion("1.0.0")
-                .saveAction()
-                .saveAsNextVersion()
+                .saveWithNextPatchVersion()
                 .checkVersion("1.0.1");
     }
 
@@ -179,8 +174,7 @@ public class ActionTest extends BaseTest {
         assertFalse(new IndexPage().goToActionsPage()
                 .openActionForm(name)
                 .deleteIcon()
-                .saveAction()
-                .saveAsNextVersion()
+                .saveWithNextPatchVersion()
                 .reTurnToActionsListPageByCancelButton()
                 .openActionForm(name)
                 .isIconExist());

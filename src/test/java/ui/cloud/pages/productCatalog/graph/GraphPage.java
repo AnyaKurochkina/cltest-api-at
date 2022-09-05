@@ -82,7 +82,7 @@ public class GraphPage {
     @Step("Сохранение графа с указанием новой версии '{newVersion}'")
     public GraphPage saveGraphWithManualVersion(String newVersion) {
         saveButton.shouldBe(Condition.enabled).click();
-        new SaveDialog().saveWithManualVersion(newVersion, saveGraphAlertText);
+        new SaveDialog().saveWithVersion(newVersion, saveGraphAlertText);
         return new GraphPage();
     }
 

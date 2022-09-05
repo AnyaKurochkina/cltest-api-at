@@ -97,7 +97,7 @@ public class TemplatePage {
     @Step("Сохранение шаблона с указанием версии")
     public TemplatePage saveWithManualVersion(String newVersion) {
         saveButton.shouldBe(Condition.enabled).click();
-        new SaveDialog().saveWithManualVersion(newVersion, saveTemplateAlertText);
+        new SaveDialog().saveWithVersion(newVersion, saveTemplateAlertText);
         return new TemplatePage();
     }
 
