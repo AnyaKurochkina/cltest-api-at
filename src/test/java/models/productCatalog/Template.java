@@ -74,12 +74,14 @@ public class Template extends Entity {
                 .set("$.type", type)
                 .set("$.title", title)
                 .set("$.run", run)
+                .set("$.rollback", rollback)
                 .set("$.input", input)
                 .set("$.output", output)
                 .set("$.timeout", timeout)
                 .set("$.icon", icon)
                 .set("$.icon_url", iconUrl)
                 .set("$.icon_store_id", iconStoreId)
+                .set("$.description", description)
                 .build();
     }
 

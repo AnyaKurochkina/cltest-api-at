@@ -178,7 +178,7 @@ public class AuditPage extends GraphPage {
     public AuditPage setFilterByDate(String beginDate, String endDate) {
         TestUtils.scrollToTheTop();
         DropDown periodDropDown = DropDown.byLabel("Период");
-        periodDropDown.select("задать период");
+        periodDropDown.selectByTitle("задать период");
         Input beginDateInput = Input.byLabel("Начало");
         beginDateInput.setValue(beginDate);
         Input endDateInput = Input.byLabel("Окончание");
@@ -191,7 +191,7 @@ public class AuditPage extends GraphPage {
     public AuditPage selectPeriod(String periodName) {
         TestUtils.scrollToTheTop();
         DropDown periodDropDown = DropDown.byLabel("Период");
-        periodDropDown.select(periodName);
+        periodDropDown.selectByTitle(periodName);
         return this;
     }
 }
