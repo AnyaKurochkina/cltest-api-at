@@ -16,6 +16,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ActionPage {
+    private static final String saveActionAlertText = "Действие успешно изменено";
     private final SelenideElement actionsListLink = $x("//a[text() = 'Список действий']");
     private final SelenideElement inputNameField = $x("//*[@name ='name']");
     private final SelenideElement inputTitleField = $x("//*[@name ='title']");
@@ -65,10 +66,32 @@ public class ActionPage {
         return this;
     }
 
-    @Step("Сохранение действия")
-    public SaveDialog saveAction() {
+    @Step("Сохранение действия со следующей патч версией")
+    public ActionPage saveWithNextPatchVersion() {
         saveButton.shouldBe(Condition.enabled).click();
-        return new SaveDialog();
+        new SaveDialog().saveWithNextPatchVersion(saveActionAlertText);
+        return new ActionPage();
+    }
+
+    @Step("Сохранение действия с указанием версии")
+    public ActionPage saveWithVersion(String newVersion) {
+        saveButton.shouldBe(Condition.enabled).click();
+        new SaveDialog().saveWithVersion(newVersion, saveActionAlertText);
+        return new ActionPage();
+    }
+
+    @Step("Проверка сохранения действия с некорректно указанной версией '{newVersion}'")
+    public ActionPage checkSaveWithInvalidVersion(String newVersion, String currentVersion) {
+        saveButton.shouldBe(Condition.enabled).click();
+        new SaveDialog().checkSaveWithInvalidVersion(newVersion, currentVersion);
+        return new ActionPage();
+    }
+
+    @Step("Проверка сохранения действия с указанной версией некорректного формата '{newVersion}'")
+    public ActionPage checkSaveWithInvalidVersionFormat(String newVersion) {
+        saveButton.shouldBe(Condition.enabled).click();
+        new SaveDialog().checkSaveWithInvalidVersionFormat(newVersion);
+        return new ActionPage();
     }
 
     @Step("Проверка текущей версии")

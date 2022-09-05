@@ -16,6 +16,7 @@ public class BaseList {
 
     private static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
+    private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
@@ -77,6 +78,13 @@ public class BaseList {
         new Table(columnName).getRowElementByColumnValue(columnName, value).$x(".//button[@id = 'actions-menu-button']")
                 .click();
         TestUtils.wait(500);
+    }
+
+    @Step("Выполнение действия копирования для строки, содержащей в столбце 'columnName' значение 'value'")
+    public void copy(String columnName, String value) {
+        new Table(columnName).getRowElementByColumnValue(columnName, value).$x(".//button[@id = 'actions-menu-button']")
+                .click();
+        copyAction.click();
     }
 
     @Step("Проверка, что строка, содержащая в столбце 'columnName' значение 'value', подсвечена как ранее выбранная")
