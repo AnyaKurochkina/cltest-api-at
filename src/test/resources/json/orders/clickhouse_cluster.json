@@ -1,0 +1,92 @@
+{
+  "order": {
+    "project_name": "proj-ln4zg69jek",
+    "product_id": "5663dc54-ab0a-4680-b319-6f8e4156bdb0",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "platform": "OpenStack",
+      "boot_disk": {
+        "size": 30
+      },
+      "flavor_ch": {
+        "cpus": 4,
+        "name": "c4m8",
+        "uuid": "1498c9c9-5f20-4c1e-8d53-683bb8c2c205",
+        "memory": 8
+      },
+      "flavor_zk": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "ch_db_name": "bd_name",
+      "ch_version": "22.3.2.2",
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "1.7",
+      "zk_version": "3.7.0",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "nodes_count": {
+        "zookeeper": 3,
+        "clickhouse": 2
+      },
+      "cluster_name": "at",
+      "ad_integration": true,
+      "ch_extra_mounts": [
+        {
+          "path": "/app/clickhouse",
+          "size": 100,
+          "file_system": "xfs"
+        }
+      ],
+      "zk_extra_mounts": [
+        {
+          "path": "/app/zookeeper",
+          "size": 80,
+          "file_system": "xfs"
+        }
+      ],
+      "ch_customer_admin": "portal_admin",
+      "ch_customer_password": "l8yPSaKJPgZ5liNtUyGFi1q8j8i9ZDc7FsCwlFvYvYB",
+      "ch_customer_admin_password": "zWYVWBnqpYZ2X8Fj7rLaQM",
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ],
+      "system_adm_groups": [
+        {
+          "role": "system_adm_groups",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ],
+      "clickhouse_user_ad_groups": [
+        {
+          "role": "clickhouse_user_ad_groups",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ],
+      "clickhouse_app_admin_ad_groups": [
+        {
+          "role": "clickhouse_app_admin_ad_groups",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "ClickHouse Cluster"
+  }
+}
