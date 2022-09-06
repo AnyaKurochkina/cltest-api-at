@@ -26,15 +26,17 @@ import java.time.Duration;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags({@Tag("ui_postgresql_astra")})
 @Log4j2
-public class UiPostgreSQLAstraLinuxTest extends Tests {
+public class _0053_UiPostgreSQLAstraLinuxTest extends Tests {
 
     PostgreSQL product;
     String nameDb = "at_db";
+    String shortNameUserDB = "at_user";
+    String fullNameUserDB = "at_db_at_user";
 
-    public UiPostgreSQLAstraLinuxTest() {
+    public _0053_UiPostgreSQLAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
             product = PostgreSQL.builder().productName("PostgreSQL (Astra Linux)").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //         product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/4c44e817-348f-46ba-8ee6-038706fc64a5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/1f61c81b-1bed-4869-9b76-747a41dc0b56/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQL.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -170,67 +172,56 @@ public class UiPostgreSQLAstraLinuxTest extends Tests {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
     }
 
-    @Test
-    @Order(13)
-    @TmsLink("1088139")
-    @Disabled
-    @DisplayName("UI PostgreSQLAstra. Назначить предел подключений")
-    void setLimitConnectDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.setLimitConnectDb("23"));
-    }
-
-    @Order(14)
-    @TmsLink("1111705")
-    @Disabled
-    @DisplayName("UI PostgreSQLAstra. Убрать предел подключений")
-    void removeLimitConnectDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.removeLimitConnectDb(nameDb));
-    }
 
     @Test
     @Order(15)
-    @TmsLink("993388")
-    @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД")
+    @TmsLinks({@TmsLink("993388"), @TmsLink("993394")})
+    @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД/Создание БД")
     void resetPasswordDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::resetPasswordDb);
     }
 
     @Test
     @Order(16)
-    @TmsLink("993394")
-    @DisplayName("UI PostgreSQLAstra. Добавить пользователя")
+    @TmsLinks({@TmsLink("993394"), @TmsLink("993394")})
+    @DisplayName("UI PostgreSQLAstra. Добавить пользователя /Создание БД")
     void addUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb, "at_user", "Пользователь для тестов"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb, shortNameUserDB, "Пользователь для тестов"));
     }
 
     @Test
     @Order(17)
-    @TmsLink("993387")
-    @DisplayName("UI PostgreSQLAstra. Сбросить пароль пользователя БД")
+    @TmsLinks({@TmsLink("993387"), @TmsLink("993394"),@TmsLink("993395")})
+    @DisplayName("UI PostgreSQLAstra. Сбросить пароль пользователя БД /Создание БД / Добавить пользователя ")
     void resetPasswordUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::resetPasswordUserDb);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb, shortNameUserDB, "Пользователь для тестов"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.resetPasswordUserDb(fullNameUserDB));
     }
 
     @Test
     @Order(18)
-    @TmsLink("993395")
-    @DisplayName("UI PostgreSQLAstra. Удалить пользователя БД")
+    @TmsLinks({@TmsLink("993398"), @TmsLink("993394"),@TmsLink("993395")})
+    @DisplayName("UI PostgreSQLAstra. Удалить пользователя БД / Создание БД / Добавить пользователя")
     void deleteUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::deleteUserDb);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb, shortNameUserDB, "Пользователь для тестов"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.deleteUserDb(fullNameUserDB));
     }
 
     @Test
     @Order(19)
-    @TmsLink("993400")
-    @DisplayName("UI PostgreSQLAstra. Удаление БД")
+    @TmsLinks({@TmsLink("993400"), @TmsLink("993394")})
+    @DisplayName("UI PostgreSQLAstra. Удаление БД /Создание БД")
     void removeDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.removeDb(nameDb));
     }
 
