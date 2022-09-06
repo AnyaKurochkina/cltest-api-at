@@ -25,9 +25,9 @@ import tests.Tests;
 public class AccessGroupTest extends Tests {
     String name = new Generex("[a-z]{5,15}").random();
     Project projectDev = Project.builder().isForOrders(true)
-            .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV")).isForOrders(true).build().createObject();
+            .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV")).build().createObject();
     Project projectTest = Project.builder().isForOrders(true)
-            .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("TEST")).isForOrders(true).build().createObject();
+            .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("TEST")).build().createObject();
 
     @Test
     @Order(1)
