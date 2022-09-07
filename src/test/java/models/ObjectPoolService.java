@@ -53,8 +53,11 @@ public class ObjectPoolService {
             objectPoolEntity = createObjectPoolEntity(e);
             objectPoolEntity.setPublic(isPublic);
         }
+
         if (isNeedLock(objectPoolEntity, exclusiveAccess)) {
             objectPoolEntity.lock();
+            if(!exclusiveAccess && objectPoolEntity.getStatus().equals(ObjectStatus.CREATED))
+                objectPoolEntity.release();
         }
 
         if (Configure.isTestItCreateAutotest && e instanceof IProduct) {
