@@ -19,9 +19,8 @@ import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
 
 import java.time.Duration;
-
-@ExtendWith(InterceptTestExtension.class)
 @ExtendWith(ConfigExtension.class)
+@ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags({@Tag("ui_postgresql_astra")})
@@ -36,7 +35,7 @@ public class _0053_UiPostgreSQLAstraLinuxTest extends Tests {
     public _0053_UiPostgreSQLAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
             product = PostgreSQL.builder().productName("PostgreSQL (Astra Linux)").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/1f61c81b-1bed-4869-9b76-747a41dc0b56/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/486a999a-8e2c-4a98-afc3-6e03861444c4/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQL.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -176,7 +175,7 @@ public class _0053_UiPostgreSQLAstraLinuxTest extends Tests {
     @Test
     @Order(15)
     @TmsLinks({@TmsLink("993388"), @TmsLink("993394")})
-    @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД/Создание БД")
+    @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД / Создание БД")
     void resetPasswordDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
@@ -186,7 +185,7 @@ public class _0053_UiPostgreSQLAstraLinuxTest extends Tests {
     @Test
     @Order(16)
     @TmsLinks({@TmsLink("993394"), @TmsLink("993394")})
-    @DisplayName("UI PostgreSQLAstra. Добавить пользователя /Создание БД")
+    @DisplayName("UI PostgreSQLAstra. Добавить пользователя / Создание БД")
     void addUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
@@ -196,7 +195,7 @@ public class _0053_UiPostgreSQLAstraLinuxTest extends Tests {
     @Test
     @Order(17)
     @TmsLinks({@TmsLink("993387"), @TmsLink("993394"),@TmsLink("993395")})
-    @DisplayName("UI PostgreSQLAstra. Сбросить пароль пользователя БД /Создание БД / Добавить пользователя ")
+    @DisplayName("UI PostgreSQLAstra. Сбросить пароль пользователя БД / Создание БД / Добавить пользователя ")
     void resetPasswordUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
