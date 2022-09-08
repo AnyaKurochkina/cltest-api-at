@@ -88,6 +88,7 @@ public class Artemis extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", getProjectId())
                 .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.layout", getIdGeoDistribution("artemis", "artemis-1:artemis-1"))
                 .set("$.order.label", getLabel())
                 .build();
     }
@@ -154,7 +155,7 @@ public class Artemis extends IProduct {
 
     public void exportConf(){
         OrderServiceSteps.executeAction("vtb-artemis_export_conf", this,null);
-        GlobalUser user = GlobalUser.builder().build().createObject();
+        GlobalUser user = GlobalUser.builder().role(Role.ORDER_SERVICE_ADMIN).build().createObject();
         //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
         new Http(StateServiceURL)
                 .setRole(Role.ORDER_SERVICE_ADMIN)

@@ -7,11 +7,17 @@ public interface TypifiedElement {
 
     static void refresh(){
         Selenide.refresh();
-        new Alert().close();
+        checkProject();
+    }
+
+    //TODO: До фикса доступа к балансу учеток закрываем все окна
+    static void checkProject(){
+//        new Alert().checkColor(Alert.Color.GREEN).checkText("Выбран контекст").close();
+        new Alert().closeAll();
     }
 
     static void open(String url){
         Selenide.open(url);
-        new Alert().close();
+        checkProject();
     }
 }

@@ -47,7 +47,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static core.helper.Configure.OrderServiceURL;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.emptyOrNullString;
 
 
 @SuperBuilder
@@ -104,6 +104,14 @@ public abstract class IProduct extends Entity {
     public void setStatus(ProductStatus status) {
         this.status = status;
         save();
+    }
+
+    @Step("Получение Id geoDistribution у продукта '{product}' с именем '{name}'")
+    protected String getIdGeoDistribution(String product, String name) {
+        Organization org = Organization.builder().build().createObject();
+        return Objects.requireNonNull(ReferencesStep
+                .getJsonPathList(String.format("tags__contains=%s,%s,%s&directory__name=geo_distribution", envType().toUpperCase(), product, org.getName()))
+                .getString(String.format("find{it.name == '%s'}.id", name)), "Id geo_distribution not found");
     }
 
     @Override
@@ -202,16 +210,18 @@ public abstract class IProduct extends Entity {
     protected void delete(String action) {
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
         Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
+        if(Objects.isNull(platform))
+            return;
         if (platform.equalsIgnoreCase("vSphere") && Configure.ENV.equalsIgnoreCase("IFT")) {
             GlobalUser user = GlobalUser.builder().role(Role.IPAM).build().createObject();
             List<String> ipList = ((List<String>) OrderServiceSteps.getProductsField(this, "data.data.config.default_v4_address", List.class))
                     .stream().filter(Objects::nonNull).collect(Collectors.toList());
 
             RequestSpecification specification = RestAssured.given()
-                    .baseUri("https://dev-php-ipam.apps.d0-oscp.corp.dev.vtb")
+                    .baseUri("https://d5-phpipam.apps.dk5-soul01.corp.dev.vtb")
                     .config(RestAssured.config().sslConfig(Http.sslConfig));
 
-            String token = specification.auth().preemptive().basic(user.getUsername(), user.getPassword())
+            String token = RestAssured.given().spec(specification).auth().preemptive().basic(user.getUsername(), user.getPassword())
                     .post("/api/cloud/user/")
                     .then()
                     .statusCode(200)
@@ -219,12 +229,12 @@ public abstract class IProduct extends Entity {
                     .jsonPath()
                     .getString("data.token");
 
-            ValidatableResponseOptions<ValidatableResponse, Response> options = specification.header("token", token)
+            ValidatableResponseOptions<ValidatableResponse, Response> options = RestAssured.given().spec(specification).header("token", token)
                     .get("/api/cloud/subnets/56291/addresses")
                     .then()
                     .statusCode(200);
-            for(String ip : ipList)
-                options.body(String.format("data.find{it.ip=='%s'}.hostname", ip), equalTo("reserve"));
+            for (String ip : ipList)
+                options.body(String.format("data.find{it.ip=='%s'}.hostname", ip), emptyOrNullString());
         }
     }
 

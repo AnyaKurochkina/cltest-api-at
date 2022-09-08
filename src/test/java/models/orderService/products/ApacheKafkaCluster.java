@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.authorizer.Organization;
 import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
@@ -75,11 +76,6 @@ public class ApacheKafkaCluster extends IProduct {
         return this;
     }
 
-    private String getIdGeoDistribution() {
-        return Objects.requireNonNull(ReferencesStep.getJsonPathList("tags__contains=" + envType().toUpperCase() + ",kafka&directory__name=geo_distribution")
-                .getString("find{it.name == 'kafka:zookeeper'}.id"), "Id geo_distribution not found");
-    }
-
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
@@ -89,10 +85,10 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform",  getPlatform())
+                .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
-                .set("$.order.attrs.layout", getIdGeoDistribution())
+                .set("$.order.attrs.layout", getIdGeoDistribution("kafka", "kafka:zookeeper"))
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
 
                 .remove("$.order.attrs.ad_logon_grants", isTest())

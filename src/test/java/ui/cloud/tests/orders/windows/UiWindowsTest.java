@@ -1,7 +1,6 @@
 package ui.cloud.tests.orders.windows;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import core.helper.Configure;
@@ -27,8 +26,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
-@ExtendWith(InterceptTestExtension.class)
 @ExtendWith(ConfigExtension.class)
+@ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags({@Tag("ui_windows")})
@@ -119,7 +118,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Изменение группы доступа")
     void updateGroup() {
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
+        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.updateGroup("Administrators",
                 Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));

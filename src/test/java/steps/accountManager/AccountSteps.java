@@ -5,6 +5,7 @@ import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
+import models.accountManager.Account;
 import steps.Steps;
 
 import java.util.Objects;
@@ -15,15 +16,28 @@ import static core.helper.Configure.AccountManagerURL;
 public class AccountSteps extends Steps {
 
     @Step("Перевод со счета {from} на счет {to} суммы {amount} c комментарием {reason}")
-    public static void transferMoney(String from, String to, String amount, String reason) {
+    public static void transferMoney(Account from, String to, String amount, String reason) {
         JsonHelper.getJsonTemplate("/accountManager/transaction.json")
-                .set("$.from_account_id", Objects.requireNonNull(from))
+                .set("$.from_account_id", Objects.requireNonNull(from.getAccountId()))
                 .set("$.to_account_id", Objects.requireNonNull(to))
                 .set("$.amount", Objects.requireNonNull(amount))
                 .set("$.reason", Objects.requireNonNull(reason))
                 .send(AccountManagerURL)
                 .setRole(Role.ACCOUNT_MANAGER_TRANSFER_ADMIN)
-                .post("/api/v1/organizations/vtb/accounts/transfers")
+                .post("/api/v1/folders/{}/transfers", from.getFolderId())
+                .assertStatus(200);
+    }
+
+    @Step("Перевод со счета {from} на счет {to} суммы {amount} c комментарием {reason}")
+    public static void transferMoneyOrganization(Account from, String to, String amount, String reason) {
+        JsonHelper.getJsonTemplate("/accountManager/transaction.json")
+                .set("$.from_account_id", Objects.requireNonNull(from.getAccountId()))
+                .set("$.to_account_id", Objects.requireNonNull(to))
+                .set("$.amount", Objects.requireNonNull(amount))
+                .set("$.reason", Objects.requireNonNull(reason))
+                .send(AccountManagerURL)
+                .setRole(Role.ACCOUNT_MANAGER_TRANSFER_ADMIN)
+                .post("/api/v1/organizations/{}/transfers", from.getFolderId())
                 .assertStatus(200);
     }
 
@@ -42,7 +56,7 @@ public class AccountSteps extends Steps {
         log.info("Получение account_id для контекста - " + Objects.requireNonNull(context));
         String account_id = null;
         int total_count = new Http(AccountManagerURL)
-                .setRole(Role.ACCOUNT_MANAGER_TRANSFER_ADMIN)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/organizations/vtb/accounts")
                 .assertStatus(200)
                 .jsonPath()
@@ -50,7 +64,7 @@ public class AccountSteps extends Steps {
         int countOfIteration = total_count / 100 + 1;
         for (int i = 1; i <= countOfIteration; i++) {
             account_id = new Http(AccountManagerURL)
-                    .setRole(Role.ACCOUNT_MANAGER_TRANSFER_ADMIN)
+                    .setRole(Role.CLOUD_ADMIN)
                     .get("/api/v1/organizations/vtb/accounts?page=" + i + "&per_page=100")
                     .assertStatus(200)
                     .jsonPath()
