@@ -388,8 +388,10 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
+        String tag = "itemvisualisationtemplate_" + visualTemplateName;
         Response response = steps.dumpToBitbucket(visualTemplate.getItemId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        assertEquals(tag, response.jsonPath().get("tag"));
     }
 
     @Test

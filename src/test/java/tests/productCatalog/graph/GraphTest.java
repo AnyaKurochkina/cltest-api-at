@@ -299,10 +299,13 @@ public class GraphTest extends Tests {
         Graph graph = Graph.builder()
                 .name(graphName)
                 .title(graphName)
+                .version("1.0.0")
                 .build()
                 .createObject();
+        String tag = "graph_" + graphName + "_" + graph.getVersion();
         Response response = steps.dumpToBitbucket(graph.getGraphId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        assertEquals(tag, response.jsonPath().get("tag"));
     }
 
     @Test

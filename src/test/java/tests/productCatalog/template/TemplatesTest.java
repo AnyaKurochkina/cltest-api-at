@@ -270,10 +270,13 @@ public class TemplatesTest extends Tests {
         Template template = Template.builder()
                 .templateName(templateName)
                 .title(templateName)
+                .version("1.0.0")
                 .build()
                 .createObject();
+        String tag = "template_" + templateName + "_" + template.getVersion();
         Response response = steps.dumpToBitbucket(String.valueOf(template.getTemplateId()));
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        assertEquals(tag, response.jsonPath().get("tag"));
     }
 
     @Test

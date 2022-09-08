@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string"
+    },
+    "tag": {
+      "type": "string"
+    },
+    "commit": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "message",
+    "tag",
+    "commit"
+  ]
+}

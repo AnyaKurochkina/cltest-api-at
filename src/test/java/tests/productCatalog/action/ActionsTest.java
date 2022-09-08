@@ -474,8 +474,10 @@ public class ActionsTest extends Tests {
                 .version("1.0.0")
                 .build()
                 .createObject();
+        String tag = "action_" + actionName + "_" + action.getVersion();
         Response response = steps.dumpToBitbucket(action.getActionId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        assertEquals(tag, response.jsonPath().get("tag"));
     }
 
     @Test
