@@ -32,7 +32,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Getter
 public abstract class IProductPage {
     IProduct product;
-    double preBillingCostAction;
+    Double preBillingCostAction;
     SelenideElement productName = $x("(//button[@title='Редактировать']/ancestor::*/span)[1]");
 
     abstract void checkPowerStatus(String expectedStatus);
@@ -228,6 +228,8 @@ public abstract class IProductPage {
         waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
+        if(preBillingCostAction == null)
+            return;
         TypifiedElement.refresh();
         currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
         Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");

@@ -19,7 +19,6 @@ public class PostgreSqlAstraPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_DB = "Базы данных";
-    private static final String BLOCK_AT_DB = "at_db";
     private static final String BLOCK_AT_DB_ADMIN = "at_db_admin";
     private static final String BLOCK_DB_AT_USER = "at_db_at_user";
     private static final String BLOCK_DB_USERS = "Пользователи";
@@ -38,7 +37,6 @@ public class PostgreSqlAstraPage extends IProductPage {
     SelenideElement ram = $x("(//h5)[2]");
     SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
     SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
-    SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
 
     public PostgreSqlAstraPage(PostgreSQL product) {
         super(product);
@@ -127,9 +125,9 @@ public class PostgreSqlAstraPage extends IProductPage {
     }
 
     public void createDb(String name) {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_LIMIT_CONNECT).isColumnValueContains("", name))) {
-            new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
                 Dialog dlg = new Dialog("Добавить БД");
@@ -139,15 +137,13 @@ public class PostgreSqlAstraPage extends IProductPage {
             });
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             Assertions.assertEquals(name, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, name).getValueByColumn(HEADER_NAME_DB));
-        } else {
-            preBillingCostAction = getCostOrder();
         }
     }
 
     public void addUserDb(String nameDb, String nameUserDb, String comment) {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_NAME_DB).isColumnValueContains("", nameDb + "_" + nameUserDb))) {
-            new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
                 Dialog dlg = new Dialog("Добавить пользователя");
@@ -160,15 +156,13 @@ public class PostgreSqlAstraPage extends IProductPage {
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             Assertions.assertTrue(new Table(HEADER_NAME_DB).isColumnValueContains("", nameDb + "_" + nameUserDb), "Пользователь не существует");
             Assertions.assertEquals(nameDb, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, nameDb).getValueByColumn(HEADER_NAME_DB), "БД не принадлежит пользователю");
-        } else {
-            preBillingCostAction = getCostOrder();
         }
     }
 
     public void removeDb(String name) {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
-            new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             runActionWithoutParameters(name, "Удалить БД");
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -183,30 +177,13 @@ public class PostgreSqlAstraPage extends IProductPage {
         expandDisk(name, size, node);
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         node.scrollIntoView(scrollCenter).click();
-        Assertions.assertEquals(String.valueOf(Integer.parseInt(firstSizeDisk) +
-                        Integer.parseInt(size)), getTableByHeader("Дополнительные точки монтирования")
+        String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
+                Integer.parseInt(size));
+        Assertions.assertEquals(value, getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
         Assertions.assertTrue(new Table(HEADER_CONNECT_STATUS).isColumnValueContains(HEADER_DISK_SIZE,
-                String.valueOf(Integer.parseInt(firstSizeDisk) +
-                        Integer.parseInt(size))));
-    }
-
-    public void setLimitConnectDb(String value) {
-        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        runActionWithParameters(BLOCK_AT_DB, "Назначить предел подключений", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Назначить предел подключений");
-            dlg.setInputValue("Предел подключений", value);
-        });
-        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-    }
-
-    public void removeLimitConnectDb(String name) {
-        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        runActionWithoutParameters(name, "Убрать предел подключений");
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+                value));
     }
 
     public void resetPasswordDb() {
@@ -238,14 +215,6 @@ public class PostgreSqlAstraPage extends IProductPage {
         }
     }
 
-
-    private SelenideElement getDiskMenuElement(String name) {
-        return getTableByHeader(name).getRowElementByColumnValue(HEADER_PATH, "xfs").$("button");
-    }
-
-    private SelenideElement getMenuElement(String header, String name, String value) {
-        return new Table(header).getRowElementByColumnValue(value, name).$("button");
-    }
 
     public class VirtualMachineTable extends VirtualMachine {
         public VirtualMachineTable() {
