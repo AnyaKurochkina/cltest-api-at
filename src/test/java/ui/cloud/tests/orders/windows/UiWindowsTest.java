@@ -57,7 +57,6 @@ public class UiWindowsTest extends Tests {
     @Order(1)
     @DisplayName("UI Windows. Заказ")
     void orderWindows() {
-        int f = 5/0;
         double preBillingProductPrice;
         try {
             new IndexPage()

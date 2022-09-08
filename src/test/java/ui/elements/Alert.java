@@ -2,11 +2,11 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.ElementNotFound;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
-import tests.Tests;
 
 import static core.helper.StringUtils.$x;
 
@@ -39,7 +39,10 @@ public class Alert implements TypifiedElement {
 
     public void closeAll(){
         while (element.exists() && element.isDisplayed()){
-            close();
+            try {
+                close();
+            }
+            catch (ElementNotFound ignored){}
             Waiting.sleep(2000);
         }
     }
