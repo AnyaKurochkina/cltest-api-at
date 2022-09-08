@@ -1,7 +1,6 @@
 package ui.cloud.tests.orders.windows;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import core.helper.Configure;
@@ -58,7 +57,6 @@ public class UiWindowsTest extends Tests {
     @Order(1)
     @DisplayName("UI Windows. Заказ")
     void orderWindows() {
-        int f = 5/0;
         double preBillingProductPrice;
         try {
             new IndexPage()
