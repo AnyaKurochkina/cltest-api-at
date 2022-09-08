@@ -27,8 +27,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
-@ExtendWith(InterceptTestExtension.class)
 @ExtendWith(ConfigExtension.class)
+@ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags({@Tag("ui_windows")})
@@ -58,6 +58,7 @@ public class UiWindowsTest extends Tests {
     @Order(1)
     @DisplayName("UI Windows. Заказ")
     void orderWindows() {
+        int f = 5/0;
         double preBillingProductPrice;
         try {
             new IndexPage()
