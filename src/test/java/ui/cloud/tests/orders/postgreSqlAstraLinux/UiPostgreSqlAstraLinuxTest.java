@@ -23,16 +23,16 @@ import java.time.Duration;
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_postgresql_astra")})
+@Tags({@Tag("ui_postgre_sql_astra")})
 @Log4j2
-public class UiPostgreSQLAstraLinuxTest extends Tests {
+public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     PostgreSQL product;
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
 
-    public UiPostgreSQLAstraLinuxTest() {
+    public UiPostgreSqlAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
             product = PostgreSQL.builder().productName("PostgreSQL (Astra Linux)").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
             //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/486a999a-8e2c-4a98-afc3-6e03861444c4/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
