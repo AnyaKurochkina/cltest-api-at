@@ -70,7 +70,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new PostgreSqlAstraPage.VirtualMachineTable("Статус").checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void restart() {
@@ -219,6 +219,9 @@ public class PostgreSqlAstraPage extends IProductPage {
     public class VirtualMachineTable extends VirtualMachine {
         public VirtualMachineTable() {
             super("Роли узла");
+        }
+        public VirtualMachineTable(String columnName) {
+            super(columnName);
         }
 
         @Override
