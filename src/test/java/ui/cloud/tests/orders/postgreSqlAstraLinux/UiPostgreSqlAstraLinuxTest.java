@@ -174,7 +174,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     @Test
     @Order(15)
-    @TmsLinks(@TmsLink("993388"))
+    @TmsLink("993388")
     @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД")
     void resetPasswordDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -184,7 +184,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     @Test
     @Order(16)
-    @TmsLinks(@TmsLink("993394"))
+    @TmsLink("993394")
     @DisplayName("UI PostgreSQLAstra. Добавить пользователя")
     void addUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -194,7 +194,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     @Test
     @Order(17)
-    @TmsLinks(@TmsLink("993387"))
+    @TmsLink("993387")
     @DisplayName("UI PostgreSQLAstra. Сбросить пароль пользователя БД")
     void resetPasswordUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -205,7 +205,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     @Test
     @Order(18)
-    @TmsLinks(@TmsLink("993398"))
+    @TmsLink("993398")
     @DisplayName("UI PostgreSQLAstra. Удалить пользователя БД")
     void deleteUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -216,7 +216,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     @Test
     @Order(19)
-    @TmsLinks(@TmsLink("993400"))
+    @TmsLink("993400")
     @DisplayName("UI PostgreSQLAstra. Удаление БД")
     void removeDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
