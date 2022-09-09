@@ -2,6 +2,7 @@ package ui.cloud.tests.orders.postgreSqlAstraLinux;
 
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
@@ -16,11 +17,14 @@ import tests.Tests;
 import ui.cloud.pages.*;
 import ui.uiExtesions.ConfigExtension;
 
+import static com.codeborne.selenide.Selenide.$x;
+
 @Log4j2
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tags({@Tag("ui_postgreSQL_Astra")})
 class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
+
     PostgreSQL product;
 
     //TODO: пока так :)
@@ -48,7 +52,7 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
         PostgreSQLAstraOrderPage orderPage = new PostgreSQLAstraOrderPage();
-        orderPage.checkOrderDetails();
+
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.getOrderBtn().shouldBe(Condition.disabled);
 
