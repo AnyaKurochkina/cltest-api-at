@@ -465,7 +465,6 @@ public class ActionsTest extends Tests {
 
     @Test
     @DisplayName("Загрузка action в GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("975375")
     public void dumpToGitlabAction() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -481,7 +480,6 @@ public class ActionsTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка action из GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("1028840")
     public void loadFromGitlabAction() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

@@ -3,6 +3,7 @@ package ui.cloud.tests.productCatalog.template;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
+import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
@@ -14,6 +15,7 @@ public class CreateTemplateTest extends TemplateBaseTest {
     private static final String name = "at_ui_create_template_test";
 
     @Test
+    @TmsLink("504210")
     @DisplayName("Создание шаблона узлов")
     public void createTemplateTest() {
         checkTemplateNameValidation();

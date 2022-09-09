@@ -22,6 +22,9 @@ public class TemplateBaseTest extends BaseTest {
     protected final static String TYPE = "system_nodes";
     protected final static String QUEUE_NAME = "internal";
     protected final String NAME = UUID.randomUUID().toString();
+    protected Template template;
+    protected ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/templates/",
+            "productCatalog/templates/createTemplate.json");
 
     @BeforeEach
     @DisplayName("Создание графов через API")
@@ -41,12 +44,13 @@ public class TemplateBaseTest extends BaseTest {
         Map<String, Map<String, String>> output = new LinkedHashMap<>();
         input.put(new Node().getInputKey(), value);
         output.put(new Node().getOutputKey(), value);
-        Template.builder()
+        template = Template.builder()
                 .templateName(name)
                 .title(TITLE)
                 .description(DESCRIPTION)
                 .type(TYPE)
                 .run(QUEUE_NAME)
+                .rollback("")
                 .input(input)
                 .output(output)
                 .timeout(100)

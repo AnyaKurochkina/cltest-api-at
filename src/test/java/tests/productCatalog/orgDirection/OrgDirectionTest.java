@@ -258,7 +258,6 @@ public class OrgDirectionTest extends Tests {
 
     @Test
     @DisplayName("Загрузка OrgDirection в GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("975382")
     public void dumpToGitlabOrgDirection() {
         String orgDirection = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -273,7 +272,6 @@ public class OrgDirectionTest extends Tests {
 
     @Test
     @DisplayName("Выгрузка OrgDirection из GitLab")
-    @DisabledIfEnv("ift")
     @TmsLink("1028957")
     public void loadFromGitlabOrgDirection() {
         String orgDirectionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";

@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog.graph;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import org.jsoup.Connection;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.BaseList;
@@ -32,7 +33,6 @@ public class GraphsListPage {
     private final SelenideElement createGraphButton = $x("//*[text()='Создать']/..");
     private final Input searchInput = Input.byPlaceholder("Поиск");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
-    private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private final SelenideElement clearSearchButton = $x("//*[@placeholder='Поиск']/../button");
     private final SelenideElement cancelButton = $x("//span[text()='Отмена']/..");
     private final SelenideElement nothingFoundMessage = $x("//td[text()='Нет данных для отображения']");
@@ -61,8 +61,7 @@ public class GraphsListPage {
 
     @Step("Копирование графа '{name}'")
     public GraphsListPage copyGraph(String name) {
-        openActionMenu(name);
-        copyAction.click();
+        new BaseList().copy(graphNameColumn, name);
         new Alert().checkText("Граф успешно скопирован").checkColor(Alert.Color.GREEN).close();
         cancelButton.shouldBe(Condition.enabled).click();
         return this;
@@ -75,7 +74,6 @@ public class GraphsListPage {
         new Table(graphNameColumn).isColumnValueEquals(graphNameColumn, graph.getName());
         return this;
     }
-
 
     @Step("Проверка, что граф не найден при поиске по '{graphName}'")
     public GraphsListPage checkGraphNotFound(String graphName) {
@@ -90,15 +88,10 @@ public class GraphsListPage {
 
     @Step("Удаление графа '{name}'")
     public GraphsListPage deleteGraph(String name) {
-        openActionMenu(name);
+        BaseList.openActionMenu(graphNameColumn, name);
         deleteAction.click();
         new DeleteDialog().inputValidIdAndDelete();
         return this;
-    }
-
-    @Step("Открытие меню действий с графом '{graphName}'")
-    private void openActionMenu(String graphName) {
-        $x("//td[text() = '" + graphName + "']//parent::tr//button[@id = 'actions-menu-button']").click();
     }
 
     @Step("Проверка заголовков списка графов")
@@ -141,6 +134,7 @@ public class GraphsListPage {
         searchInput.setValue(name);
         TestUtils.wait(500);
         new Table(graphNameColumn).getRowElementByColumnValue(graphNameColumn, name).click();
+        TestUtils.wait(500);
         return new GraphPage();
     }
 
