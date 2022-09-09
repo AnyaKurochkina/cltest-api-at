@@ -5,11 +5,10 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.SaveDialog;
+import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Alert;
-import ui.elements.DropDown;
-import ui.elements.Input;
-import ui.elements.Table;
+import ui.elements.*;
 import ui.uiModels.Template;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -35,12 +34,14 @@ public class TemplatesListPage {
     private final SelenideElement runQueueRequiredFieldHint =
             $x("//input[@name='run']/parent::div/following-sibling::p[text()='Должно быть заполнено поле \"Название очереди для старта задачи\" и/или \"Название очереди для отката\"']");
     private final SelenideElement rollbackQueueRequiredFieldHint =
-            $x("//input[@name='run']/parent::div/following-sibling::p[text()='Должно быть заполнено поле \"Название очереди для старта задачи\" и/или \"Название очереди для отката\"']");
+            $x("//input[@name='rollback']/parent::div/following-sibling::p[text()='Должно быть заполнено поле \"Название очереди для старта задачи\" и/или \"Название очереди для отката\"']");
     private final SelenideElement nonuniqueNameValidationHint = $x("//input[@name='name']/parent::div/following-sibling::p[text()='Шаблон с таким именем уже существует']");
     private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
     private final SelenideElement saveButton = $x("//span[text()='Сохранить']/parent::button");
-    private final SelenideElement dialogSaveButton = $x("//div[@role='dialog']//span[text()='Сохранить']/parent::button");
-
+    private final TextArea input = TextArea.byLabel("Input");
+    private final TextArea output = TextArea.byLabel("Output");
+    private final TextArea printedOutput = TextArea.byLabel("Printed output");
+    private final SelenideElement importTemplateButton = $x("//button[@title='Импортировать шаблон']");
 
     public TemplatesListPage() {
         pageTitle.shouldBe(Condition.visible);
@@ -55,9 +56,12 @@ public class TemplatesListPage {
         runQueueInput.setValue(template.getRunQueue());
         rollbackQueueInput.setValue(template.getRollbackQueue());
         typeDropDown.select(template.getType());
+        input.setValue(template.getInput());
+        output.setValue(template.getOutput());
+        printedOutput.setValue(template.getPrintedOutput());
         saveButton.shouldBe(Condition.enabled).click();
-        dialogSaveButton.click();
-        new Alert().close();
+        new SaveDialog().saveWithNextPatchVersion();
+        TestUtils.wait(2000);
         return new TemplatePage();
     }
 
@@ -66,6 +70,13 @@ public class TemplatesListPage {
         searchInput.setValue(value);
         TestUtils.wait(1000);
         new Table(templateNameColumn).isColumnValueEquals(templateNameColumn, template.getName());
+        return this;
+    }
+
+    @Step("Поиск шаблона по значению 'value'")
+    public TemplatesListPage search(String value) {
+        searchInput.setValue(value);
+        TestUtils.wait(1000);
         return this;
     }
 
@@ -79,6 +90,7 @@ public class TemplatesListPage {
 
     @Step("Удаление шаблона '{name}'")
     public TemplatesListPage deleteTemplate(String name) {
+        search(name);
         BaseList.openActionMenu(templateNameColumn, name);
         deleteAction.click();
         new DeleteDialog().inputValidIdAndDelete();
@@ -191,6 +203,23 @@ public class TemplatesListPage {
         searchInput.setValue(name);
         TestUtils.wait(500);
         new Table(templateNameColumn).getRowElementByColumnValue(templateNameColumn, name).click();
+        TestUtils.wait(600);
         return new TemplatePage();
+    }
+
+    @Step("Копирование шаблона '{name}'")
+    public TemplatesListPage copyTemplate(String name) {
+        new BaseList().copy(templateNameColumn, name);
+        new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();
+        cancelButton.shouldBe(Condition.enabled).click();
+        return this;
+    }
+
+    @Step("Импорт шаблона из файла 'path'")
+    public TemplatesListPage importTemplate(String path) {
+        importTemplateButton.click();
+        new InputFile(path).importFile();
+        new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
+        return this;
     }
 }

@@ -38,7 +38,7 @@ public class Table implements TypifiedElement {
         init(table);
     }
 
-    public void init(SelenideElement table){
+    public void init(SelenideElement table) {
         $x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]").shouldNot(Condition.exist);
         $x("//table[contains(.,'Идет обработка данных')]").shouldNot(Condition.exist);
 
@@ -76,6 +76,7 @@ public class Table implements TypifiedElement {
         }
         return false;
     }
+
     public boolean isEmpty() {
         if (rows.isEmpty())
             return true;
@@ -83,6 +84,7 @@ public class Table implements TypifiedElement {
             return rows.first().$$x("td").size() == 1 && headers.size() > 1;
         return false;
     }
+
     @Step("Проверка, что в колонке '{column}' есть значение, содержащее '{value}'")
     public boolean isColumnValueContains(String column, String value) {
         if(isEmpty())
@@ -103,17 +105,17 @@ public class Table implements TypifiedElement {
      * Возвращает индекс заголовка таблицы
      * @return int
      */
-    public int getHeaderIndex(String column){
+    public int getHeaderIndex(String column) {
         int index = headers.indexOf(column);
         Assertions.assertNotEquals(-1, index, String.format("Колонка %s не найдена. Колонки: %s", column, StringUtils.join(headers, ",")));
         return index;
     }
 
     @AllArgsConstructor
-    public class Row{
+    public class Row {
         int row;
 
-        public String getValueByColumn(String column){
+        public String getValueByColumn(String column) {
             return getValueByColumnInRow(row, column).hover().getText();
         }
     }
