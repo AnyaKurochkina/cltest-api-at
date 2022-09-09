@@ -44,7 +44,7 @@ public class ActionsTest extends Tests {
     @DisplayName("Создание действия в продуктовом каталоге")
     @TmsLink("640545")
     @Test
-    public void createAction() {
+    public void createActionTest() {
         String actionName = "create_action_test_api";
         Action action = Action.builder()
                 .actionName(actionName)
@@ -198,8 +198,8 @@ public class ActionsTest extends Tests {
                 .title(actionName)
                 .build()
                 .createObject();
-        String cloneName = action.getActionName() + "-clone";
-        copyActionById(action.getActionId());
+        Action cloneAction = copyActionById(action.getActionId());
+        String cloneName = cloneAction.getActionName();
         assertTrue(isActionExists(cloneName), "Действие не существует");
         deleteActionByName(cloneName);
         assertFalse(isActionExists(cloneName), "Действие существует");
@@ -216,14 +216,12 @@ public class ActionsTest extends Tests {
                 .build()
                 .createObject();
         String cloneName = action.getActionName() + "-clone";
-        copyActionById(action.getActionId());
-        String cloneId = getActionIdByNameWithMultiSearch(cloneName);
-        steps.partialUpdateObject(cloneId, new JSONObject().put("priority", 1));
-        GetActionResponse importedAction = (GetActionResponse) steps.getByIdAndVersion(cloneId, "1.0.1", GetActionResponse.class);
-        assertAll(
-                () -> assertEquals("1.0.1", importedAction.getVersion()),
-                () -> assertEquals(1, importedAction.getPriority())
-        );
+        Action cloneAction = copyActionById(action.getActionId());
+        String cloneId = cloneAction.getActionId();
+        Action updatedCloneAction = partialUpdateAction(cloneId, new JSONObject().put("priority", 1))
+                .extractAs(Action.class);
+        Action actualAction = getActionByFilter(updatedCloneAction.getActionId(), "version", updatedCloneAction.getVersion());
+        assertEquals(updatedCloneAction, actualAction);
         assertTrue(isActionExists(cloneName));
         deleteActionByName(cloneName);
         assertFalse(isActionExists(cloneName));
@@ -311,7 +309,7 @@ public class ActionsTest extends Tests {
         String version = action.getVersion();
         String id = action.getActionId();
         List<String> list = Collections.singletonList("restricted");
-        steps.partialUpdateObject(action.getActionId(), new JSONObject().put("restricted_groups", list));
+        partialUpdateAction(action.getActionId(), new JSONObject().put("restricted_groups", list));
         List<String> restricted_groups = steps.getJsonPath(id).get("restricted_groups");
         String newVersion = steps.getById(id, GetActionResponse.class).getVersion();
         assertEquals(list, restricted_groups, "Доступные группы не соврадают");
@@ -328,17 +326,17 @@ public class ActionsTest extends Tests {
                 .priority(0)
                 .build()
                 .createObject();
-        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("priority", 1));
+        partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 1));
         String currentVersion = steps.getById(actionTest.getActionId(), GetActionResponse.class).getVersion();
         Assertions.assertEquals("1.1.0", currentVersion);
-        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("priority", 2)
+        partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 2)
                 .put("version", "1.999.999"));
-        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("priority", 3));
+        partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 3));
         currentVersion = steps.getById(actionTest.getActionId(), GetActionResponse.class).getVersion();
         Assertions.assertEquals("2.0.0", currentVersion);
-        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("priority", 4)
+        partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 4)
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(actionTest.getActionId(), new JSONObject().put("priority", 5))
+        partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 5))
                 .assertStatus(500);
     }
 
@@ -396,7 +394,7 @@ public class ActionsTest extends Tests {
                 .title(actionName)
                 .build()
                 .createObject();
-        steps.partialUpdateObject(action.getActionId(), new JSONObject().put("current_version", "1.0.0"));
+        partialUpdateAction(action.getActionId(), new JSONObject().put("current_version", "1.0.0"));
         GetActionResponse getAction = (GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
         assertEquals("1.0.0", getAction.getCurrentVersion());
     }
@@ -414,8 +412,8 @@ public class ActionsTest extends Tests {
                 .build()
                 .createObject();
         String actionId = action.getActionId();
-        steps.partialUpdateObject(actionId, new JSONObject().put("priority", 1));
-        steps.partialUpdateObject(actionId, new JSONObject().put("current_version", "1.0.1"));
+        partialUpdateAction(actionId, new JSONObject().put("priority", 1));
+        partialUpdateAction(actionId, new JSONObject().put("current_version", "1.0.1"));
         GetActionResponse getAction = (GetActionResponse) steps.getById(actionId, GetActionResponse.class);
         assertEquals("1.0.1", getAction.getCurrentVersion());
         assertTrue(getAction.getVersionList().contains(getAction.getCurrentVersion()));
@@ -434,8 +432,8 @@ public class ActionsTest extends Tests {
                 .build()
                 .createObject();
         String actionId = action.getActionId();
-        steps.partialUpdateObject(actionId, new JSONObject().put("priority", 2));
-        steps.partialUpdateObject(actionId, new JSONObject().put("current_version", "1.0.0"));
+        partialUpdateAction(actionId, new JSONObject().put("priority", 2));
+        partialUpdateAction(actionId, new JSONObject().put("current_version", "1.0.0"));
         GetActionResponse getAction = (GetActionResponse) steps.getById(actionId, GetActionResponse.class);
         assertEquals("1.0.0", getAction.getCurrentVersion());
         assertEquals(action.getPriority(), getAction.getPriority());

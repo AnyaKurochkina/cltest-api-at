@@ -264,14 +264,6 @@ public class ProductCatalogSteps {
                 .getString("list.find{it.title.toLowerCase()=='" + title.toLowerCase() + "'}.id"), "ID продукта: " + title + " не найден");
     }
 
-    @Step("Обновление объекта продуктового каталога")
-    public Response patchRow(JSONObject body, String actionId) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(body)
-                .patch(productName + actionId + "/");
-    }
-
     @Step("Создание JSON объекта продуктового каталога")
     public JSONObject createJsonObject(String name) {
         return JsonHelper
