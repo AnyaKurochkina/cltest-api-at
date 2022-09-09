@@ -205,7 +205,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     @Test
     @Order(18)
-    @TmsLink("993398")
+    @TmsLink("993395")
     @DisplayName("UI PostgreSQLAstra. Удалить пользователя БД")
     void deleteUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
