@@ -19,6 +19,9 @@ import steps.orderService.OrderServiceSteps;
 import java.util.ArrayList;
 import java.util.List;
 
+import static models.orderService.products.PostgreSQL.DB_CONN_LIMIT;
+import static models.orderService.products.PostgreSQL.IS_DB_CONN_LIMIT;
+
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -32,8 +35,6 @@ public class PostgresSQLCluster extends IProduct {
     @ToString.Include
     String segment;
     String dataCentre;
-    @ToString.Include
-    String platform;
     String osVersion;
     @ToString.Include
     String postgresqlVersion;
@@ -78,7 +79,7 @@ public class PostgresSQLCluster extends IProduct {
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.postgresql_version", postgresqlVersion)
@@ -150,6 +151,11 @@ public class PostgresSQLCluster extends IProduct {
                 String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));
         log.info("users = " + users);
         save();
+    }
+
+    public void setConnLimit(String dbName, int count) {
+        OrderServiceSteps.executeAction("postgresql_cluster_set_conn_limit", this, new JSONObject().put("db_name", dbName).put("conn_limit", count), this.getProjectId());
+        Assertions.assertEquals(count, (Integer) OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
     }
 
     public void restart() {

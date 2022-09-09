@@ -60,7 +60,7 @@ public class Graph implements TypifiedElement {
             return;
         for (Point point : lastNodesList) {
             actions().moveToElement(canvas.getWrappedElement(), point.getX() - rect.getWidth() / 2, point.getY() - rect.getHeight() / 2).perform();
-            List<String> texts = toolTip.shouldBe(CollectionCondition.size(3)).texts();
+            List<String> texts = toolTip.shouldBe(CollectionCondition.sizeGreaterThan(2)).texts();
 
             //Проверяем что все узлы без ошибок
             Assertions.assertNotEquals("Ошибка", texts.get(2));

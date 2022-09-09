@@ -6,6 +6,7 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.DropDown;
@@ -71,24 +72,17 @@ public class GraphPage {
         return new GraphPage();
     }
 
-    @Step("Проверка, что следующая предлагаемая версия для сохранения равна '{version}'")
-    public GraphPage checkAndSaveNextManualVersion(String version) {
+    @Step("Проверка, что следующая предлагаемая версия равна '{nextVersion}', и сохранение")
+    public GraphPage checkNextVersionAndSave(String nextVersion) {
         saveButton.shouldBe(Condition.enabled).click();
-        saveNextPatchVersionCheckbox.click();
-        newVersionInput.shouldHave(Condition.exactValue(version));
-        dialogSaveButton.click();
-        new Alert().checkText(saveGraphAlertText).checkColor(Alert.Color.GREEN).close();
+        new SaveDialog().checkNextVersionAndSave(nextVersion, saveGraphAlertText);
         return new GraphPage();
     }
 
     @Step("Сохранение графа с указанием новой версии '{newVersion}'")
     public GraphPage saveGraphWithManualVersion(String newVersion) {
         saveButton.shouldBe(Condition.enabled).click();
-        saveNextPatchVersionCheckbox.click();
-        newVersionInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
-        newVersionInput.setValue(newVersion);
-        dialogSaveButton.click();
-        new Alert().checkText(saveGraphAlertText).checkColor(Alert.Color.GREEN).close();
+        new SaveDialog().saveWithVersion(newVersion, saveGraphAlertText);
         return new GraphPage();
     }
 

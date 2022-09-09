@@ -60,10 +60,12 @@ public class OpenShiftProject extends IProduct {
     @Override
     public JSONObject toJson() {
         AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
-        List<ResourcePool> resourcePoolList = OrderServiceSteps.getResourcesPoolList("container", projectId);
-        ResourcePool resourcePool = resourcePoolList.stream().
-                filter(r -> r.getLabel().equals(resourcePoolLabel))
-                .findFirst().orElseThrow(() -> new NoSuchFieldException(String.format("Кластер '%s' не найден", resourcePoolLabel)));
+        List<ResourcePool> resourcePoolList = OrderServiceSteps.getResourcesPoolList("container", projectId, "openshift_project");
+        ResourcePool resourcePool = resourcePoolList.stream()
+//                .filter(r -> r.getLabel().equals(resourcePoolLabel))
+//                .findFirst().orElseThrow(() -> new NoSuchFieldException(String.format("Кластер '%s' не найден", resourcePoolLabel)));
+                .findFirst().orElseThrow(() -> new NoSuchFieldException("Список кластеров пуст"));
+        resourcePoolLabel = resourcePool.getLabel();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup.getPrefixName())
@@ -110,5 +112,4 @@ public class OpenShiftProject extends IProduct {
                 .toString();
         return jsonArray.contains(resourcePoolLabel);
     }
-
 }

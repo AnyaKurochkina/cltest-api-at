@@ -34,8 +34,6 @@ public class RabbitMQClusterAstra extends IProduct {
     @ToString.Include
     String segment;
     String dataCentre;
-    @ToString.Include
-    String platform;
     String domain;
     String role;
     Flavor flavor;
@@ -74,7 +72,7 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform", platform)
+                .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.attrs.web_console_grants[0].role", role)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
@@ -82,6 +80,7 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.layout", getIdGeoDistribution("rabbitmq", "rabbitmq-2"))
                 .set("$.order.label", getLabel())
                 .build();
     }
@@ -103,10 +102,10 @@ public class RabbitMQClusterAstra extends IProduct {
         Date dateBeforeUpdate;
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration"));
+        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
         super.updateCerts("rabbitmq_update_certs");
 //        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
-        dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration"));
+        dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
 //        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
         Assertions.assertNotEquals(0, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }

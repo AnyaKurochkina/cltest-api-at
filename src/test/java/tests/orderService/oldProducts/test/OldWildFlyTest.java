@@ -22,7 +22,7 @@ public class OldWildFlyTest extends Tests {
             .productName("WildFly Astra")
             .projectId("proj-bhbyhmik3a")
             .productId("4a8959f3-f926-4497-a61b-46a227ebed9b")
-            .orderId("e2664055-0045-45c8-bd52-3eead07cdce4")
+            .orderId("5efcd4d2-714f-4eb1-b320-b4d2c7b503b5")
             .build();
 
     @Order(1)

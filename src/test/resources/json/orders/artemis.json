@@ -32,7 +32,8 @@
       "ad_integration": true,
       "artemis_version": "2.19.1",
       "type_load_balancer": "ON_DEMAND",
-      "artemis_node_number": 2,
+      "geo_distribution": true,
+      "layout": "",
       "ad_logon_grants": [
         {
           "role": "user",

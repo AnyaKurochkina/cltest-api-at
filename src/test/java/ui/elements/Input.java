@@ -23,6 +23,10 @@ public class Input implements TypifiedElement {
         return new Input($x("//input[@placeholder='{}']", placeholder));
     }
 
+    public static Input byName(String name) {
+        return new Input($x("//input[@name='{}']", name));
+    }
+
     public void click() {
         input.click();
     }

@@ -57,11 +57,12 @@ public class AccountTest extends Tests {
     @DisplayName("Перевод средств между организацией и любой другой папкой")
     void transferMoneyFromAccountOrganizationToBusinessBlock() {
         Organization organization = Organization.builder().build().createObject();
-        String accountFrom = AccountSteps.getAccountIdByContext(organization.getName());
-        Folder folderTo = Folder.builder().build().createObject();
-        String accountTo = ((Account) Account.builder().folder(folderTo).build().createObject()).getAccountId();
-        AccountSteps.transferMoney(accountFrom, accountTo, "10000.00", "Перевод в рамках тестирования");
-        AccountSteps.transferMoney(accountTo, accountFrom, "10000.00", "Перевод в рамках тестирования");
+        String accountFromId = AccountSteps.getAccountIdByContext(organization.getName());
+        Account accountFrom = Account.builder().accountId(accountFromId).folderId(organization.getName()).build();
+        Folder folderTo = Folder.builder().kind(Folder.DEFAULT).build().createObject();
+        Account accountTo = Account.builder().folder(folderTo).build().createObject();
+        AccountSteps.transferMoneyOrganization(accountFrom, accountTo.getAccountId(), "10000.00", "Перевод в рамках тестирования");
+        AccountSteps.transferMoney(accountTo, accountFrom.getAccountId(), "10000.00", "Перевод в рамках тестирования");
     }
 
     @Test

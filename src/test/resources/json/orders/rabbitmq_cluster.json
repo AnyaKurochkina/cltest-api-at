@@ -4,6 +4,8 @@
 		"product_id": "78388428-6548-4417-a18f-f0c4643d93bb",
 		"label": "RabbitMQ Cluster",
 		"attrs": {
+			"geo_distribution": true,
+			"layout": "34eb2a04-4646-4385-817f-4184514b6d2d",
 			"domain": "corp.dev.vtb",
 			"flavor": {
 				"cpus": 2,

@@ -40,7 +40,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         if (title == null)
             title = new Generex("[a-z]{5,18}").random();
         if (projectId == null)
-            projectId = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
+            projectId = ((Project) Project.builder().build().createObject()).getId();
         return this;
     }
 

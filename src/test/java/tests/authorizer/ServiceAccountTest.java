@@ -3,6 +3,8 @@ package tests.authorizer;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.authorizer.Project;
+import models.authorizer.ProjectEnvironmentPrefix;
 import models.authorizer.ServiceAccount;
 import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
@@ -42,8 +44,10 @@ public class ServiceAccountTest extends Tests {
     @TmsLink("534448")
     @DisplayName("Создание статического ключа досутпа hcp bucket")
     void createStaticKey() {
-        try (ServiceAccount account = ServiceAccount.builder().title("deleteServiceAccount").build().createObjectExclusiveAccess()) {
+        Project projectDev = Project.builder().projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV")).isForOrders(true).build().createObject();
+        try (ServiceAccount account = ServiceAccount.builder().projectId(projectDev.getId()).title("createServiceAccount").build().createObjectExclusiveAccess()) {
             account.createStaticKey();
+            account.deleteStaticKey();
         }
     }
 
@@ -52,7 +56,9 @@ public class ServiceAccountTest extends Tests {
     @TmsLink("534451")
     @DisplayName("Удаление статического ключа досутпа hcp bucket")
     void deleteStaticKey() {
-        try (ServiceAccount account = ServiceAccount.builder().title("deleteServiceAccount").build().createObjectExclusiveAccess()) {
+        Project projectDev = Project.builder().projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV")).isForOrders(true).build().createObject();
+        try (ServiceAccount account = ServiceAccount.builder().projectId(projectDev.getId()).title("deleteServiceAccount").build().createObjectExclusiveAccess()) {
+            account.createStaticKey();
             account.deleteStaticKey();
         }
     }
