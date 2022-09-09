@@ -34,6 +34,6 @@ public class PostgreSQLAstraOrderPage extends Product {
         }
         getProcessor().shouldBe(Condition.visible);
         getHardDrive().shouldBe(Condition.visible);
-        getWindowsOS().shouldBe(Condition.visible);
+        getOpMemory().shouldBe(Condition.visible);
     }
 }

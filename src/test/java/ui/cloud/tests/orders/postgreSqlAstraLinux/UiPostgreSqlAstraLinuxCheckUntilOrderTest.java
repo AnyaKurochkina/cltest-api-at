@@ -48,7 +48,7 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
         PostgreSQLAstraOrderPage orderPage = new PostgreSQLAstraOrderPage();
-
+        orderPage.checkOrderDetails();
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.getOrderBtn().shouldBe(Condition.disabled);
 
