@@ -118,7 +118,9 @@ public class ExampleTest extends Tests {
                 .build()
                 .createObject();
         Response response = dumpExampleToBitbucket(example.getId());
+        String tag = "example_" + exampleName;
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        assertEquals(tag, response.jsonPath().get("tag"));
     }
 
     @Test

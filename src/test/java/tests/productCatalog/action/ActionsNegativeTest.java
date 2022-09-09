@@ -10,10 +10,11 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.ActionSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -21,33 +22,30 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisabledIfEnv("prod")
 public class ActionsNegativeTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
-            "productCatalog/actions/createAction.json");
-
     @DisplayName("Негативный тест на получение действия по Id без токена")
     @TmsLink("642485")
     @Test
-    public void getActionByIdWithOutToken() {
+    public void getActionByIdWithOutTokenTest() {
         String actionName = "get_action_without_token_example_test_api";
         Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
-        steps.getByIdWithOutToken(action.getActionId());
+        assertEquals("Unauthorized", getActionByIdWithOutToken(action.getActionId()));
     }
 
     @DisplayName("Негативный тест на копирование действия по Id без токена")
     @TmsLink("642497")
     @Test
-    public void copyActionByIdWithOutToken() {
+    public void copyActionByIdWithOutTokenTest() {
         String actionName = "copy_action_without_token_example_test_api";
         Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
-        steps.copyByIdWithOutToken(action.getActionId());
+        assertEquals("Unauthorized", copyActionByIdWithOutToken(action.getActionId()));
     }
 
     @DisplayName("Негативный тест на удаление действия без токена")
@@ -60,8 +58,8 @@ public class ActionsNegativeTest extends Tests {
                 .title(actionName)
                 .build()
                 .createObject();
-        steps.deleteObjectByIdWithOutToken(action.getActionId());
-        assertTrue(steps.isExists(actionName), "Действие существует");
+        assertEquals("Unauthorized", deleteActionByIdWithOutToken(action.getActionId()));
+        assertTrue(isActionExists(actionName), "Действие существует");
     }
 
     @DisplayName("Негативный тест на создание действия с недопустимыми символами в имени")
@@ -103,13 +101,19 @@ public class ActionsNegativeTest extends Tests {
     @Test
     public void createActionWithSameName() {
         String actionName = "create_action_with_same_name_example_test_api";
-        Action action = Action.builder()
+        Action.builder()
                 .actionName(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
-        steps.createProductObject(steps
-                .createJsonObject(action.getActionName())).assertStatus(400);
+        JSONObject json = Action.builder()
+                .actionName(actionName)
+                .title("title")
+                .build()
+                .init()
+                .toJson();
+        String errorMessage = createAction(json).assertStatus(400).jsonPath().getList("name", String.class).get(0);
+        assertEquals("action с таким name уже существует.", errorMessage);
     }
 
     @DisplayName("Негативный тест на обновление действия по Id без токена")
@@ -122,23 +126,23 @@ public class ActionsNegativeTest extends Tests {
                 .title(actionName)
                 .build()
                 .createObject();
-        steps.partialUpdateObjectWithOutToken(action.getActionId(),
-                new JSONObject().put("description", "UpdateDescription"));
+        assertEquals("Unauthorized", partialUpdateActionWithOutToken(action.getActionId(),
+                new JSONObject().put("description", "UpdateDescription")));
     }
 
     @DisplayName("Негативный тест на создание действия с двумя параметрами одновременно graph_version_pattern и graph_version")
     @TmsLink("642514")
     @Test
     public void doubleVersionTest() {
-        Response response = steps.createProductObject(Action.builder()
-                        .actionName("negative_object")
-                        .build()
-                        .init()
-                        .getTemplate()
-                        .set("$.version", "1.1.1")
-                        .set("$.graph_version", "1.0.0")
-                        .set("$.graph_version_pattern", "1.")
-                        .build())
+        Response response = createAction(Action.builder()
+                .actionName("negative_object")
+                .build()
+                .init()
+                .getTemplate()
+                .set("$.version", "1.1.1")
+                .set("$.graph_version", "1.0.0")
+                .set("$.graph_version_pattern", "1.")
+                .build())
                 .assertStatus(400);
         assertEquals(response.jsonPath().getList("non_field_errors").get(0),
                 "You can't use both 'version' and 'version pattern' at same time in the ActionVersionSerializer");
@@ -155,9 +159,9 @@ public class ActionsNegativeTest extends Tests {
                 .version("1.0.1")
                 .build()
                 .createObject();
-        steps.patchRow(Action.builder().actionName(actionName).build().init().getTemplate()
+        partialUpdateAction(action.getActionId(), Action.builder().actionName(actionName).build().init().getTemplate()
                 .set("$.version", "1.0.1")
-                .build(), action.getActionId()).assertStatus(500);
+                .build()).assertStatus(500);
     }
 
     @Test
@@ -172,6 +176,6 @@ public class ActionsNegativeTest extends Tests {
                 .build()
                 .createObject();
         String actionId = action.getActionId();
-        steps.partialUpdateObject(actionId, new JSONObject().put("current_version", "2")).assertStatus(500);
+        partialUpdateAction(actionId, new JSONObject().put("current_version", "2")).assertStatus(500);
     }
 }

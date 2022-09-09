@@ -260,14 +260,16 @@ public class OrgDirectionTest extends Tests {
     @DisplayName("Загрузка OrgDirection в GitLab")
     @TmsLink("975382")
     public void dumpToGitlabOrgDirection() {
-        String orgDirection = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
+        String orgDirectionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         OrgDirection jinja = OrgDirection.builder()
-                .orgDirectionName(orgDirection)
-                .title(orgDirection)
+                .orgDirectionName(orgDirectionName)
+                .title(orgDirectionName)
                 .build()
                 .createObject();
+        String tag = "orgdirection_" + orgDirectionName;
         Response response = steps.dumpToBitbucket(jinja.getOrgDirectionId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        assertEquals(tag, response.jsonPath().get("tag"));
     }
 
     @Test
