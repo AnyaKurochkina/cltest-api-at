@@ -77,7 +77,7 @@ public abstract class IProductPage {
 
     @Step("Получение таблицы по заголовку")
     public Table getTableByHeader(String header) {
-        return new Table($x("//ancestor::*[.='{}']/parent::*//table", header));
+        return new Table($$x("//ancestor::*[.='{}']/parent::*//table", header).filter(Condition.visible).first());
     }
 
     @Step("Получение label")
