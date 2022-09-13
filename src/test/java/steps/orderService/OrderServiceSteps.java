@@ -60,6 +60,8 @@ public class OrderServiceSteps extends Steps {
                 e.printStackTrace();
                 log.error("Ошибка в GetErrorFromStateService " + e);
             }
+            if(Objects.isNull(error))
+                error = "Отсутствует информация о заказе в state service";
             if (error.equals("null"))
                 error = "Продукт не развернулся по таймауту";
             Assertions.fail(String.format("Ошибка заказа продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product, orderStatus, error));
