@@ -457,10 +457,13 @@ public class ServicesTest extends Tests {
         Services service = Services.builder()
                 .serviceName(serviceName)
                 .title(serviceName)
+                .version("1.0.0")
                 .build()
                 .createObject();
+        String tag = "service_" + serviceName + "_" + service.getVersion();
         Response response = steps.dumpToBitbucket(service.getServiceId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        assertEquals(tag, response.jsonPath().get("tag"));
     }
 
     @Test

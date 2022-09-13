@@ -527,8 +527,10 @@ public class ProductsTest extends Tests {
                 .version("1.0.2")
                 .build()
                 .createObject();
+        String tag = "product_" + productName + "_" + product.getVersion();
         Response response = steps.dumpToBitbucket(product.getProductId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        assertEquals(tag, response.jsonPath().get("tag"));
     }
 
     @Test

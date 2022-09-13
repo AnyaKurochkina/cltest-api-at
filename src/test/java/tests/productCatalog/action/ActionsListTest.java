@@ -1,8 +1,5 @@
 package tests.productCatalog.action;
 
-import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.action.getActionList.response.GetActionsListResponse;
-import httpModels.productCatalog.action.getActionList.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -11,23 +8,19 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import java.util.List;
 
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.productCatalog.ActionSteps.getActionList;
-import static steps.productCatalog.ActionSteps.isActionListSorted;
+import static steps.productCatalog.ActionSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")
 public class ActionsListTest extends Tests {
-
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/","productCatalog/actions/createAction.json");
 
     @DisplayName("Получение списка действий. Список отсортирован по number и title без учета спец. символов")
     @TmsLink("642429")
@@ -46,31 +39,31 @@ public class ActionsListTest extends Tests {
     @TmsLink("679025")
     @Test
     public void getMeta() {
-        String str = steps.getMeta(GetActionsListResponse.class).getNext();
+        String nextPage = getMetaActionList().getNext();
         String url = getAppProp("url.kong");
-        if (!(str == null)) {
-            assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
+        if (!(nextPage == null)) {
+            assertTrue(nextPage.startsWith(url), "Значение поля next несоответсвует ожидаемому");
         }
     }
 
     @DisplayName("Получение списка действий по имени")
     @TmsLink("642526")
     @Test
-    public void getActionListByName() {
+    public void getActionListByNameTest() {
         String actionName = "create_action_example_for_get_list_by_name_test_api";
         Action.builder()
                 .actionName(actionName)
                 .build()
                 .createObject();
-        GetActionsListResponse list = (GetActionsListResponse) steps.getObjectListByName(actionName, GetActionsListResponse.class);
-        assertEquals(1, list.getList().size());
-        assertEquals(actionName, list.getList().get(0).getName());
+        List<Action> list = getActionListByName(actionName);
+        assertEquals(1, list.size());
+        assertEquals(actionName, list.get(0).getActionName());
     }
 
     @DisplayName("Получение списка действий по именам")
     @TmsLink("783457")
     @Test
-    public void getActionListByNames() {
+    public void getActionListByNamesTest() {
         String actionName = "create_action_example_for_get_list_by_names_1_test_api";
         Action.builder()
                 .actionName(actionName)
@@ -83,17 +76,16 @@ public class ActionsListTest extends Tests {
                 .title("test")
                 .build()
                 .createObject();
-        GetActionsListResponse list = (GetActionsListResponse) steps.getObjectsListByNames(GetActionsListResponse.class,
-                actionName, secondAction);
-        assertEquals(2, list.getList().size(), "Список не содержит значений");
-        assertEquals(secondAction, list.getList().get(1).getName());
-        assertEquals(actionName, list.getList().get(0).getName());
+        List<Action> list = getActionListByNames(actionName, secondAction);
+        assertEquals(2, list.size(), "Список не содержит значений");
+        assertEquals(secondAction, list.get(1).getActionName());
+        assertEquals(actionName, list.get(0).getActionName());
     }
 
     @DisplayName("Получение списка действий по типу")
     @TmsLink("783463")
     @Test
-    public void getActionListByType() {
+    public void getActionListByTypeTest() {
         String actionName = "create_action_example_for_get_list_by_type_test_api";
         String actionType = "delete";
         Action.builder()
@@ -101,8 +93,8 @@ public class ActionsListTest extends Tests {
                 .type(actionType)
                 .build()
                 .createObject();
-        GetActionsListResponse list = (GetActionsListResponse) steps.getObjectListByType(actionType, GetActionsListResponse.class);
-        for (ListItem item : list.getList()) {
+        List<Action> list = getActionListByType(actionType);
+        for (Action item : list) {
             assertEquals(actionType, item.getType());
         }
     }
@@ -118,10 +110,9 @@ public class ActionsListTest extends Tests {
                 .title(actionTitle)
                 .build()
                 .createObject();
-        List<ItemImpl> list =  steps.getProductObjectListWithMultiSearch(GetActionsListResponse.class, actionTitle);
-        for (ItemImpl item : list) {
-            ListItem listItem =(ListItem) item;
-            assertTrue(listItem.getTitle().contains(actionTitle));
+        List<Action> list = getActionListWithMultiSearch(actionTitle);
+        for (Action item : list) {
+            assertTrue(item.getTitle().contains(actionTitle));
         }
     }
 
@@ -135,7 +126,7 @@ public class ActionsListTest extends Tests {
                 .title(actionName)
                 .build()
                 .createObject();
-        String actionIdWithMultiSearch = steps.getProductObjectIdByNameWithMultiSearch(action.getActionName(), GetActionsListResponse.class);
+        String actionIdWithMultiSearch = getActionIdByNameWithMultiSearch(action.getActionName());
         assertAll(
                 () -> assertNotNull(actionIdWithMultiSearch, String.format("Действие с именем: %s не найден", actionName)),
                 () -> assertEquals(action.getActionId(), actionIdWithMultiSearch, "Id действия не совпадают"));
@@ -145,9 +136,7 @@ public class ActionsListTest extends Tests {
     @TmsLink("982796")
     @Test
     public void getActionListForItems() {
-        List<ItemImpl> productObjectList = steps.getProductObjectList(GetActionsListResponse.class, "?for_items=true");
-        ItemImpl item = productObjectList.get(0);
-        ListItem getActionResponse = (ListItem) item;
-        assertNotNull(getActionResponse.getPriority());
+        List<Action> productObjectList = getActionListByFilter("for_items",true);
+        assertNotNull(productObjectList.get(0).getPriority());
     }
 }
