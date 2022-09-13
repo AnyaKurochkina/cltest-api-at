@@ -19,6 +19,10 @@ ClickHouse:
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
       - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
 
+ClickHouseCluster:
+    - options:
+          - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+
 Podman:
   - options:
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }

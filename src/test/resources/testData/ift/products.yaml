@@ -11,6 +11,10 @@ Rhel:
       - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
       - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
+ClickHouseCluster:
+  - options:
+      - { platform: "vSphere", env: "DEV", segment: "dev-srv-app" }
+
 PostgreSQL:
   - options:
       - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
