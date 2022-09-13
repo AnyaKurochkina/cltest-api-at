@@ -61,6 +61,10 @@ class UiClickHouseCheckUntilOrderTest extends Tests {
 
         //Проверка Детали заказа
         orderPage.getOsVersion().select(product.getOsVersion());
+        orderPage.getNameUser().setValue("at_user");
+        orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
+        orderPage.getNameDB().setValue("at_db");
+        orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
         orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));

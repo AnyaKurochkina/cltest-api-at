@@ -32,10 +32,6 @@ public class ClickHouseOrderPage extends Product {
     public ClickHouseOrderPage() {
         label.setValue(labelValue);
         platform.getElement().shouldBe(Condition.enabled);
-        nameUser.setValue("at_user");
-        generatePassButton1.shouldBe(Condition.enabled).click();
-        nameDB.setValue("at_db");
-        generatePassButton2.shouldBe(Condition.enabled).click();
     }
 
     public void checkOrderDetails(){
