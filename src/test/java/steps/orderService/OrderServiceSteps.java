@@ -142,8 +142,8 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Отправка action {action}")
-    public static Response sendAction(String action, IProduct product, JSONObject jsonData, String projectId) {
-        Item item = getItemIdByOrderIdAndActionTitle(action, product);
+    public static Response sendAction(String action, IProduct product, JSONObject jsonData, String projectId, String filter) {
+        Item item = getItemIdByOrderIdAndActionTitle(action, product, "");
         return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.getId())
                 .set("$.order.attrs", jsonData)
@@ -154,8 +154,8 @@ public class OrderServiceSteps extends Steps {
 
     //{"order":{"attrs":{"client_types":"own","name":"dfghjkl","owner_cert":"dfghjkl"},"graph_version":"1.0.7"},"item_id":"ad08595a-c325-5434-9e5b-3d8b1bda7306"}
     @Step("Отправка action {action}")
-    public static Response sendAction(String action, IProduct product, JSONObject jsonData) {
-        Item item = getItemIdByOrderIdAndActionTitle(action, product);
+    public static Response sendAction(String action, IProduct product, JSONObject jsonData, String filter) {
+        Item item = getItemIdByOrderIdAndActionTitle(action, product, filter);
         return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.getId())
                 .set("$.order.attrs", jsonData)
@@ -178,7 +178,15 @@ public class OrderServiceSteps extends Steps {
     }
 
     public static void executeAction(String action, IProduct product, JSONObject jsonData, String projectId) {
-        executeAction(action, product, jsonData, null, projectId);
+        executeAction(action, product, jsonData, null, projectId, "");
+    }
+
+    public static void executeActionWidthFilter(String action, IProduct product, JSONObject jsonData, String projectId, String filter) {
+        executeAction(action, product, jsonData, null, projectId, filter);
+    }
+
+    public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId) {
+        executeAction(action, product, jsonData, status, projectId, "");
     }
 
     /**
@@ -190,9 +198,9 @@ public class OrderServiceSteps extends Steps {
      * @param jsonData  параметр дата в запросе, к примеру: "order":{"data":{}}}
      */
     @Step("Выполнение action \"{action}\"")
-    public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId) {
+    public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId, String filter) {
         //Получение item'ов для экшена
-        Item item = getItemIdByOrderIdAndActionTitle(action, product);
+        Item item = getItemIdByOrderIdAndActionTitle(action, product, "");
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
         //TODO: Возможно стоит сделать более детальную проверку на значение
 
@@ -205,7 +213,7 @@ public class OrderServiceSteps extends Steps {
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
                 () -> {
-                    actionId.set(sendAction(action, product, jsonData, projectId)
+                    actionId.set(sendAction(action, product, jsonData, projectId, filter)
                             .assertStatus(200)
                             .jsonPath()
                             .get("action_id"));
@@ -241,7 +249,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Выполнение action \"{action}\"")
     public static void executeAction(String action, IProduct product, JSONObject jsonData) {
         //Получение item'ов для экшена
-        Item item = getItemIdByOrderIdAndActionTitle(action, product);
+        Item item = getItemIdByOrderIdAndActionTitle(action, product, "");
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
         //TODO: Возможно стоит сделать более детальную проверку на значение
 
@@ -254,7 +262,7 @@ public class OrderServiceSteps extends Steps {
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
                 () -> {
-                    actionId.set(sendAction(action, product, jsonData)
+                    actionId.set(sendAction(action, product, jsonData, "")
                             .assertStatus(200)
                             .jsonPath()
                             .get("action_id"));
@@ -349,7 +357,7 @@ public class OrderServiceSteps extends Steps {
      * @param product продукт
      * @return - возвращаем ID айтема
      */
-    public static Item getItemIdByOrderIdAndActionTitle(String action, IProduct product) {
+    public static Item getItemIdByOrderIdAndActionTitle(String action, IProduct product, String filter) {
         log.info("Получение item_id для " + Objects.requireNonNull(action));
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
@@ -359,8 +367,10 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath();
 
         Item item = new Item();
+        if(!filter.equals(""))
+            filter = "it.data.config." + filter + " &&";
         //Получаем все item ID по name, например: "expand_mount_point"
-        item.setId(jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.item_id", action)));
+        item.setId(jsonPath.get(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action)));
         //Получаем все item name
         item.setName(jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.name", action, action)));
         //Достаем item ID и item name и сохраняем в объект Item
@@ -424,10 +434,10 @@ public class OrderServiceSteps extends Steps {
                 .get("/v1/projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
-        if(Objects.nonNull(clazz))
+        if (Objects.nonNull(clazz))
             s = jsonPath.getObject(path, clazz);
         else
-            s= jsonPath.get(path);
+            s = jsonPath.get(path);
         log.info(String.format("getFiledProduct return: %s", s));
         Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
         return s;

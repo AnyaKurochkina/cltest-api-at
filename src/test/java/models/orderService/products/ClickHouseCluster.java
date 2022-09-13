@@ -40,6 +40,11 @@ public class ClickHouseCluster extends IProduct {
     String chCustomerPassword;
     String chCustomerAdminPassword;
 
+    public static final String DB_USERS_AD = "data.find{it.type=='cluster'}.data.config.db_users_ad.any{it.user_name=='%s'}";
+    public static final String DB_USERS = "data.find{it.type=='cluster'}.data.config.db_users.any{it.user_name=='%s'}";
+    public static final String DB_USER_GROUP = "data.find{it.type=='cluster'}.data.config.db_user_group.any{it.dbms_role=='user' && it.user_name.contains('%s')}";
+    public static final String DB_ADMIN_GROUP = "data.find{it.type=='cluster'}.data.config.db_app_admin_group.any{it.dbms_role=='admin' && it.user_name.contains('%s')}";
+
     @Override
     @Step("Заказ продукта")
     protected void create() {
@@ -112,8 +117,8 @@ public class ClickHouseCluster extends IProduct {
                 .set("$.order.attrs.ch_version", chVersion)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform",  getPlatform())
-                .set("$.order.attrs.ch_db_name",  clickhouseBb)
+                .set("$.order.attrs.platform", getPlatform())
+                .set("$.order.attrs.ch_db_name", clickhouseBb)
                 .set("$.order.attrs.flavor_ch", new JSONObject(flavorCh.toString()))
                 .set("$.order.attrs.flavor_zk", new JSONObject(flavorZk.toString()))
                 .set("$.order.attrs.os_version", osVersion)
@@ -130,11 +135,77 @@ public class ClickHouseCluster extends IProduct {
 
     }
 
-    public void checkConnectDb() {
+    public void resetPasswordCustomer() {
+        String password = "RXlpeN0MztCYS3XDP6i75";
+        OrderServiceSteps.executeAction("clickhouse_cluster_reset_db_user_password", this, new JSONObject().put("user_name", "ch_customer").put("user_password", password), getProjectId());
+        chCustomerPassword = password;
+        save();
+    }
+
+    public void checkConnectDb(int node) {
         checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", chCustomerAdmin, chCustomerAdminPassword,
-                ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL))
+                ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL + "[" + node + "]"))
                         .replaceFirst("/play", "")
                         .replaceFirst("https:", "clickhouse:"));
     }
 
+    public void createUserAccount(String user, String password) {
+        OrderServiceSteps.executeAction("clickhouse_cluster_create_local_tuz", this, new JSONObject().put("user_name", user).put("user_password", password), getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS, user)), String.format("Пользователь %s не найден", user));
+    }
+
+    public void addUserAd(String user) {
+        OrderServiceSteps.executeAction("clickhouse_cluster_create_new_tuz_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS_AD, user)), String.format("Пользователь %s не найден", user));
+    }
+
+    public void deleteUserAccount(String user) {
+        OrderServiceSteps.executeAction("clickhouse_cluster_remove_local_tuz", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS, user)), String.format("Пользователь %s найден", user));
+    }
+
+    public void deleteUserAd(String user) {
+        OrderServiceSteps.executeAction("clickhouse_cluster_remove_new_tuz_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS_AD, user)), String.format("Пользователь %s найден", user));
+    }
+
+    public void deleteGroupAdmin(String user) {
+        OrderServiceSteps.executeAction("clickhouse_cluster_remove_new_app_admin_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s найдена", user));
+    }
+
+    public void addGroupAdmin(String user) {
+        JSONObject object = new JSONObject("{\n" +
+                "  \"ad_integration\": true,\n" +
+                "  \"clickhouse_app_admin_ad_groups\": [\n" +
+                "    {\n" +
+                "      \"groups\": [\n" +
+                "        \"" + user + "\"\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}");
+        OrderServiceSteps.executeAction("clickhouse_cluster_create_new_app_admin_group_ad", this, object, getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s не найдена", user));
+    }
+
+    public void deleteGroupAd(String user) {
+        OrderServiceSteps.executeAction("clickhouse_cluster_remove_new_app_user_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USER_GROUP, user)), String.format("Группа %s найдена", user));
+    }
+
+    public void addGroupAd(String user) {
+        JSONObject object = new JSONObject("{\n" +
+                "  \"ad_integration\": true,\n" +
+                "  \"clickhouse_user_ad_groups\": [\n" +
+                "    {\n" +
+                "      \"groups\": [\n" +
+                "        \"" + user + "\"\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}");
+        OrderServiceSteps.executeAction("clickhouse_cluster_create_new_app_user_group_ad", this, object, getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USER_GROUP, user)), String.format("Группа %s не найдена", user));
+    }
 }
