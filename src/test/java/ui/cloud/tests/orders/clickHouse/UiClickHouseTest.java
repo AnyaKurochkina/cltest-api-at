@@ -85,7 +85,7 @@ public class UiClickHouseTest extends Tests {
 
 
     @Test
-    @TmsLink("")
+    @TmsLink("1162624")
     @Order(2)
     @DisplayName("UI ClickHouse. Проверка полей заказа")
     void
@@ -118,7 +118,7 @@ public class UiClickHouseTest extends Tests {
 
     @Test
     @Order(11)
-    @TmsLink("")
+    @TmsLink("1162629")
     @DisplayName("UI ClickHouse. Проверить конфигурацию")
     void vmActCheckConfig() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -127,7 +127,7 @@ public class UiClickHouseTest extends Tests {
 
     @Test
     @Order(15)
-    @TmsLink("")
+    @TmsLink("1162627")
     @DisplayName("UI ClickHouse. Сбросить пароль владельца БД")
     void resetPasswordDb() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
