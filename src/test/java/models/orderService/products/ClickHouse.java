@@ -109,12 +109,14 @@ public class ClickHouse extends IProduct {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         OrderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", clickhouseUser, password)), this.getProjectId());
         clickhousePassword = password;
+        save();
     }
 
     public void resetPasswordCustomer() {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         OrderServiceSteps.executeAction("clickhouse_reset_ch_customer_password", this, new JSONObject(String.format("{\"user_name\":\"ch_customer\",\"user_password\":\"%s\"}", password)), this.getProjectId());
         chCustomerPassword = password;
+        save();
     }
 
     public void removeDbmsUser(String username, String dbName) {
