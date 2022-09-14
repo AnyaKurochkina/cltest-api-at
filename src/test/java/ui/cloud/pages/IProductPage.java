@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static tests.Tests.activeCnd;
@@ -31,12 +32,16 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Getter
 public abstract class IProductPage {
     IProduct product;
-    double preBillingCostAction;
+    Double preBillingCostAction;
     SelenideElement productName = $x("(//button[@title='Редактировать']/ancestor::*/span)[1]");
+
     abstract void checkPowerStatus(String expectedStatus);
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
+    SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
+    SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
+
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     private final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
 
@@ -72,7 +77,7 @@ public abstract class IProductPage {
 
     @Step("Получение таблицы по заголовку")
     public Table getTableByHeader(String header) {
-        return new Table($x("//ancestor::*[.='{}']/parent::*//table", header));
+        return new Table($$x("//ancestor::*[.='{}']/parent::*//table", header).filter(Condition.visible).first());
     }
 
     @Step("Получение label")
@@ -83,8 +88,8 @@ public abstract class IProductPage {
     @Step("Запуск действия '{action}'")
     protected void runActionWithoutParameters(SelenideElement button, String action, ActionParameters params) {
         String productNameText = null;
-        btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
-        if (Objects.nonNull(params.getNode())) {
+        //btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
+        if(Objects.nonNull(params.getNode())){
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
         }
@@ -99,7 +104,7 @@ public abstract class IProductPage {
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(2000);
-        if (Objects.nonNull(params.getNode())) {
+        if(Objects.nonNull(params.getNode())){
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
         if (params.isWaitChangeStatus())
@@ -113,8 +118,8 @@ public abstract class IProductPage {
     @Step("Запуск действия '{action}' с параметрами и последующим нажатием на кнопку {textButton}")
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         String productNameText = null;
-        btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
-        if (Objects.nonNull(params.getNode())) {
+        //btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
+        if(Objects.nonNull(params.getNode())){
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
         }
@@ -129,7 +134,7 @@ public abstract class IProductPage {
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(2000);
-        if (Objects.nonNull(params.getNode())) {
+        if(Objects.nonNull(params.getNode())){
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
         if (params.isWaitChangeStatus())
@@ -164,8 +169,7 @@ public abstract class IProductPage {
 
     //new Table("Роли узла").getRowByIndex(0)
     @Step("Расширить диск {name} на {size}ГБ")
-    protected void expandDisk(String name, String size, SelenideElement node) {
-        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+    public void expandDisk(String name, String size, SelenideElement node) {
         runActionWithParameters($x("//td[.='{}']/../descendant::button", name),
                 "Расширить", "Подтвердить", () -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size),
                 ActionParameters.builder().node(node).build());
@@ -224,6 +228,8 @@ public abstract class IProductPage {
         waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
+        if(preBillingCostAction == null)
+            return;
         TypifiedElement.refresh();
         currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
         Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");

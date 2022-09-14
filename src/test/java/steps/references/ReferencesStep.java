@@ -69,12 +69,12 @@ public class ReferencesStep extends Steps {
         return list.stream().sorted(Comparator.comparing(Flavor::getCpus).thenComparing(Flavor::getMemory)).collect(Collectors.toList());
     }
 
-    @Step("Получение списка flavors по page_filter {pageFilter}")
+    @Step("Получение списка flavors по page_filter_chain {pageFilter}")
     public static List<Flavor> getFlavorsByPageFilterLinkedList(IProduct product, String pageFilter) {
         String jsonArray = new Http(ReferencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .setProjectId(Objects.requireNonNull(product).getProjectId())
-                .get("/api/v1/pages/?page_filter={}", pageFilter)
+                .get("/api/v1/pages/?page_filter_chain={}", pageFilter)
                 .assertStatus(200)
                 .toString();
 
