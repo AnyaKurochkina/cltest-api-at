@@ -30,7 +30,7 @@ class UiClickHouseCheckUntilOrderTest extends Tests {
             product = ClickHouse.builder().productName("ClickHouse").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
             //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/41ccc48d-5dd0-4892-ae5e-3f1f360885ac/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
-            product = ClickHouse.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
+            product = ClickHouse.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
     }
 

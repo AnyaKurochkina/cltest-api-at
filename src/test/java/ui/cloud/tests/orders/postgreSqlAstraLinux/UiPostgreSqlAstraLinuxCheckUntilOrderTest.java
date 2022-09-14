@@ -33,7 +33,7 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
             product = PostgreSQL.builder().productName("PostgreSQL (Astra Linux)").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
             //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/41ccc48d-5dd0-4892-ae5e-3f1f360885ac/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
-            product = PostgreSQL.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
+            product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
     }
 

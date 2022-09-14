@@ -36,7 +36,7 @@ public class UiClickHouseTest extends Tests {
             product = ClickHouse.builder().productName("ClickHouse").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
             //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/0d492d40-f7f0-4f9b-9cf8-8c38aaa0efe9/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
-            product = ClickHouse.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
+            product = ClickHouse.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
     }
 

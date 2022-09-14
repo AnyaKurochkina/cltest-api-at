@@ -39,7 +39,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
             product = PostgresSQLCluster.builder().productName("PostgreSQL Cluster Astra Linux").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 //            product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/6ccb7b81-d557-47ae-8754-39517eac139b/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
-            product = PostgresSQLCluster.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
+            product = PostgresSQLCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
     }
 
