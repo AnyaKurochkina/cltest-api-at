@@ -2,22 +2,21 @@ package ui.cloud.tests.orders.postgreSqlAstraLinux;
 
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.PostgreSQL;
-import models.orderService.products.Windows;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import tests.Tests;
-import ui.cloud.pages.*;
+import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.PostgreSQLAstraOrderPage;
+import ui.cloud.pages.Product;
 import ui.uiExtesions.ConfigExtension;
-
-import static com.codeborne.selenide.Selenide.$x;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
@@ -30,10 +29,10 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
     //TODO: пока так :)
     public UiPostgreSqlAstraLinuxCheckUntilOrderTest() {
         if (Configure.ENV.equals("prod"))
-            product = PostgreSQL.builder().productName("PostgreSQL (Astra Linux)").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+            product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
             //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/41ccc48d-5dd0-4892-ae5e-3f1f360885ac/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
-            product = PostgreSQL.builder().env("DSO").platform("vSphere").segment("dev-srv-app").build();
+            product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
     }
 
