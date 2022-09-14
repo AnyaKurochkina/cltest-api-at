@@ -222,8 +222,10 @@ public class JinjaTest extends Tests {
                 .title(jinjaName)
                 .build()
                 .createObject();
+        String tag = "jinja2template_" + jinjaName;
         Response response = steps.dumpToBitbucket(jinja.getJinjaId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
+        assertEquals(tag, response.jsonPath().get("tag"));
     }
 
     @Test

@@ -1,12 +1,8 @@
 package models.productCatalog.action;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import core.enums.Role;
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
-import core.helper.http.Http;
-import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -145,15 +141,11 @@ public class Action extends Entity {
     }
 
     @Override
-    @Step("Создание экшена")
     protected void create() {
         if (isActionExists(actionName)) {
             deleteActionByName(actionName);
         }
-        Action createAction = new Http(Configure.ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(toJson())
-                .post("/api/v1/actions/")
+        Action createAction = createAction(toJson())
                 .assertStatus(201)
                 .extractAs(Action.class);
         StringUtils.copyAvailableFields(createAction, this);
@@ -161,7 +153,6 @@ public class Action extends Entity {
     }
 
     @Override
-    @Step("Удаление экшена")
     protected void delete() {
         deleteActionById(actionId);
         assertFalse(isActionExists(actionName));

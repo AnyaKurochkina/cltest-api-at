@@ -87,6 +87,7 @@ public class ProductCatalogSteps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(productName + id + "/dump_to_bitbucket/")
+                .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
                 .assertStatus(201);
     }
 
@@ -261,14 +262,6 @@ public class ProductCatalogSteps {
                 .assertStatus(200)
                 .jsonPath()
                 .getString("list.find{it.title.toLowerCase()=='" + title.toLowerCase() + "'}.id"), "ID продукта: " + title + " не найден");
-    }
-
-    @Step("Обновление объекта продуктового каталога")
-    public Response patchRow(JSONObject body, String actionId) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(body)
-                .patch(productName + actionId + "/");
     }
 
     @Step("Создание JSON объекта продуктового каталога")
