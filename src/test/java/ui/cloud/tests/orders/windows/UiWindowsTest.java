@@ -74,8 +74,8 @@ public class UiWindowsTest extends Tests {
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
             new OrdersPage()
-                    .getRowElementByColumnValue("Продукт",
-                            orderPage.getLabelValue())
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
                     .hover()
                     .click();
             WindowsPage winPages = new WindowsPage(product);

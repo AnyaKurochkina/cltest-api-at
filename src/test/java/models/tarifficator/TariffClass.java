@@ -25,6 +25,8 @@ public class TariffClass {
 	private String unit;
 	private List<String> itemStates;
 	private CalculateAttrs calculateAttrs;
+	private Boolean discount;
+	private Object tag;
 
 	@SneakyThrows
 	public JSONObject toJson() {

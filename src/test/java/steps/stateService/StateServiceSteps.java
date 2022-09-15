@@ -83,7 +83,7 @@ public class StateServiceSteps extends Steps {
     @Step("Создаем Event")
     public static Response createEventStateService(JSONObject body) {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .withServiceToken()
                 .body(body)
                 .post("/api/v1/events/")
                 .assertStatus(201);
