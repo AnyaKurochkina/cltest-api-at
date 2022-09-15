@@ -3,12 +3,10 @@ package ui.cloud.pages.productCatalog.graph;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Alert;
 import ui.elements.DropDown;
 import ui.uiModels.Graph;
 
@@ -20,10 +18,6 @@ public class GraphPage {
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
     private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
     private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
-    private final SelenideElement dialogCancelButton = $x("//div[@role='dialog']//span[text()='Отмена']/parent::button");
-    private final SelenideElement dialogSaveButton = $x("//div[@role='dialog']//span[text()='Сохранить']/parent::button");
-    private final SelenideElement saveNextPatchVersionCheckbox = $x("//input[@name='saveAsNextVersion']");
-    private final SelenideElement newVersionInput = $x("//input[@name='newVersion']");
     private final SelenideElement descriptionField = $x("//textarea[@name='description']");
     private final SelenideElement viewJSONButton = $x("//div[text()='JSON']/parent::button");
     private final SelenideElement expandJSONView = $x("//button[@aria-label='fullscreen']");

@@ -3,7 +3,6 @@ package ui.cloud.pages.productCatalog.graph;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import org.jsoup.Connection;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.BaseList;
