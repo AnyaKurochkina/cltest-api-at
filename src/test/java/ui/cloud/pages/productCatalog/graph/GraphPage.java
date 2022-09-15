@@ -3,12 +3,10 @@ package ui.cloud.pages.productCatalog.graph;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Alert;
 import ui.elements.DropDown;
 import ui.uiModels.Graph;
 
@@ -18,14 +16,10 @@ public class GraphPage {
     private static final String saveGraphAlertText = "Граф успешно сохранен";
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
-    private final SelenideElement saveButton = $x("//span[text()='Сохранить']/parent::button");
-    private final SelenideElement deleteButton = $x("//span[text()='Удалить']/parent::button");
-    private final SelenideElement dialogCancelButton = $x("//div[@role='dialog']//span[text()='Отмена']/parent::button");
-    private final SelenideElement dialogSaveButton = $x("//div[@role='dialog']//span[text()='Сохранить']/parent::button");
-    private final SelenideElement saveNextPatchVersionCheckbox = $x("//input[@name='saveAsNextVersion']");
-    private final SelenideElement newVersionInput = $x("//input[@name='newVersion']");
+    private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
+    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final SelenideElement descriptionField = $x("//textarea[@name='description']");
-    private final SelenideElement viewJSONButton = $x("//span[text()='JSON']/parent::button");
+    private final SelenideElement viewJSONButton = $x("//div[text()='JSON']/parent::button");
     private final SelenideElement expandJSONView = $x("//button[@aria-label='fullscreen']");
     private final SelenideElement closeJSONView = $x("//button[@aria-label='close']");
     private final SelenideElement mainTab = $x("//span[text()='Общая информация']//parent::button");
@@ -67,8 +61,7 @@ public class GraphPage {
     @Step("Сохранение графа со следующей патч-версией")
     public GraphPage saveGraphWithPatchVersion() {
         saveButton.shouldBe(Condition.enabled).click();
-        dialogSaveButton.click();
-        new Alert().checkText(saveGraphAlertText).checkColor(Alert.Color.GREEN).close();
+        new SaveDialog().saveWithNextPatchVersion(saveGraphAlertText);
         return new GraphPage();
     }
 
@@ -87,14 +80,9 @@ public class GraphPage {
     }
 
     @Step("Проверка сохранения графа с некорректно указанной версией '{newVersion}'")
-    public GraphPage trySaveGraphWithIncorrectVersion(String newVersion) {
+    public GraphPage trySaveGraphWithIncorrectVersion(String newVersion, String currentVersion) {
         saveButton.shouldBe(Condition.enabled).click();
-        saveNextPatchVersionCheckbox.click();
-        newVersionInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
-        newVersionInput.setValue(newVersion);
-        dialogSaveButton.shouldBe(Condition.disabled);
-        $x("//p[text()[contains(., 'Версия должна быть выше, чем')]]").shouldBe(Condition.visible);
-        dialogCancelButton.click();
+        new SaveDialog().checkSaveWithInvalidVersion(newVersion, currentVersion);
         return new GraphPage();
     }
 
@@ -125,6 +113,7 @@ public class GraphPage {
     @Step("Переход на вкладку 'Узлы'")
     public GraphNodesPage goToNodesTab() {
         nodesTab.click();
+        TestUtils.wait(500);
         return new GraphNodesPage();
     }
 

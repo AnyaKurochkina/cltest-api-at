@@ -6,7 +6,6 @@ import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
-import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 import ui.uiModels.Template;
@@ -26,7 +25,7 @@ public class TemplatesListPage {
     private final DropDown typeDropDown = DropDown.byLabel("Тип");
     private final Input searchInput = Input.byPlaceholder("Поиск");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
-    private final SelenideElement cancelButton = $x("//span[text()='Отмена']/parent::button");
+    private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
     private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
     private final SelenideElement templateNameValidationHint = $x("//p[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::p[text()='Поле обязательно для заполнения']");
@@ -37,7 +36,7 @@ public class TemplatesListPage {
             $x("//input[@name='rollback']/parent::div/following-sibling::p[text()='Должно быть заполнено поле \"Название очереди для старта задачи\" и/или \"Название очереди для отката\"']");
     private final SelenideElement nonuniqueNameValidationHint = $x("//input[@name='name']/parent::div/following-sibling::p[text()='Шаблон с таким именем уже существует']");
     private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
-    private final SelenideElement saveButton = $x("//span[text()='Сохранить']/parent::button");
+    private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
     private final TextArea input = TextArea.byLabel("Input");
     private final TextArea output = TextArea.byLabel("Output");
     private final TextArea printedOutput = TextArea.byLabel("Printed output");

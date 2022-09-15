@@ -15,9 +15,9 @@ public class OrgDirectionPage {
     private final SelenideElement inputNameField = $x("//*[@name ='name']");
     private final SelenideElement inputTitleField = $x("//*[@name ='title']");
     private final SelenideElement inputDescriptionField = $x("//textarea[@name ='description']");
-    private final SelenideElement saveButton = $x("//button/span[text() = 'Сохранить']");
-    private final SelenideElement cancelButton = $x("//button/span[text() = 'Отмена']");
-    private final SelenideElement deleteButton = $x("//span[text() ='Удалить']");
+    private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
+    private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
+    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final SelenideElement id = $x("//form//p//b");
     private final SelenideElement inputId = $x("//input[@name = 'id']");
     private final SelenideElement frameDeleteButton = $x("//button[@type ='submit']");

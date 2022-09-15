@@ -27,10 +27,10 @@ public class ActionPage {
     private final SelenideElement dataConfigPath = $x("//input[@name = 'data_config_path']");
     private final SelenideElement dataConfigKey = $x("//input[@name = 'data_config_key']");
     private final SelenideElement data = $x("//*[@placeholder = 'Введите данные через запятую']");
-    private final SelenideElement saveButton = $x("//button/span[text() = 'Сохранить']");
-    private final SelenideElement cancelButton = $x("//button/span[text() = 'Отмена']");
+    private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
+    private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
     private final SelenideElement inputGraphTitle = $x("//*[@id='selectValueWrapper']");
-    private final SelenideElement deleteButton = $x("//span[text() ='Удалить']");
+    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final SelenideElement currentVersionInput = $x("//label[starts-with(.,'Выберите версию')]/parent::*//input");
     private final SelenideElement deleteIconSvG = $x("(//div/*[local-name()='svg']/*[local-name()='svg']/*[local-name()='path'])[6]");
     private final SelenideElement addIcon = $x("//label[@for = 'attachment-input']");
