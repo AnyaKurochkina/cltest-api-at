@@ -40,6 +40,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
         else
             product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
+
     }
 
     @BeforeEach

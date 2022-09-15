@@ -32,6 +32,7 @@ class UiClickHouseCheckUntilOrderTest extends Tests {
         else
             product = ClickHouse.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
+
     }
 
     @BeforeEach
@@ -43,7 +44,7 @@ class UiClickHouseCheckUntilOrderTest extends Tests {
 
     @Test
     @TmsLink("1162642")
-    @DisplayName("UI PostgreSQLAstra. Проверка полей при заказе продукта")
+    @DisplayName("UI ClickHouse. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
                 .clickOrderMore()

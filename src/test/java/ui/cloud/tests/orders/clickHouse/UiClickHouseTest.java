@@ -34,10 +34,11 @@ public class UiClickHouseTest extends Tests {
     public UiClickHouseTest() {
         if (Configure.ENV.equals("prod"))
             product = ClickHouse.builder().productName("ClickHouse").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/0d492d40-f7f0-4f9b-9cf8-8c38aaa0efe9/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/49ddbac6-6240-4f47-8465-11aefd6e7f4e/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = ClickHouse.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
+
     }
 
     @BeforeEach
@@ -59,12 +60,15 @@ public class UiClickHouseTest extends Tests {
                     .selectProduct(product.getProductName());
             ClickHouseOrderPage orderPage = new ClickHouseOrderPage();
             orderPage.getOsVersion().select(product.getOsVersion());
+            orderPage.getNameUser().setValue("at_user");
+            orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
+            orderPage.getNameDB().setValue("at_db");
+            orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
             orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
             new OrdersPage()

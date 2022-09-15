@@ -32,6 +32,7 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
         else
             product = PostgresSQLCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
+
     }
 
     @BeforeEach
