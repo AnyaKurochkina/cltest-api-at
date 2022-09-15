@@ -25,7 +25,7 @@ public class DropDown implements TypifiedElement {
     }
 
     public static DropDown byLabel(String name) {
-        return new DropDown($x("//div[label[text()='{}']]/div", name));
+        return new DropDown($x("//label[text()='{}']/following::div[1]", name));
     }
 
     @Step("Выбрать в select элемент с названием '{value}'")

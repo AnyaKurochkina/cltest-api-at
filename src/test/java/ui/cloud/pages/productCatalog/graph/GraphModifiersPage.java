@@ -8,6 +8,7 @@ import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
+import ui.elements.DropDown;
 import ui.uiModels.GraphModifier;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -20,7 +21,7 @@ public class GraphModifiersPage extends GraphPage {
     private final SelenideElement testEnvCheckbox = $x("//form//input[@name='test']");
     private final SelenideElement prodEnvCheckbox = $x("//form//input[@name='prod']");
     private final SelenideElement numberInput = $x("//form//label[contains(text(),'Порядок применения')]/..//input");
-    private final SelenideElement showSchemas = $x("//form//label[text()='Схема']/..//*[name()='svg']");
+    private final SelenideElement showSchemas = $x("//form//label[text()='Схема']/following::*[name()='svg'][1]");
     private final SelenideElement showTypes = $x("//form//label[text()='Способ изменения']/..//*[name()='svg']");
     private final SelenideElement pathInput = $x("//form//input[@name='path']");
     private final SelenideElement modifierData = $x("//form//span[text()='ModifierData']/ancestor::div[2]//textarea");

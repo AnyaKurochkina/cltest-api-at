@@ -34,7 +34,7 @@ public class GraphsListPage {
     private final Input searchInput = Input.byPlaceholder("Поиск");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SelenideElement clearSearchButton = $x("//*[@placeholder='Поиск']/../button");
-    private final SelenideElement cancelButton = $x("//span[text()='Отмена']/..");
+    private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
     private final SelenideElement nothingFoundMessage = $x("//td[text()='Нет данных для отображения']");
     private final SelenideElement graphNameValidationHint = $x("//p[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::p");
