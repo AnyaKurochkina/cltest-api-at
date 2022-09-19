@@ -19,14 +19,14 @@ public class TemplatePage {
     private static final String saveTemplateAlertText = "Шаблон успешно изменен";
     private final SelenideElement templatesListLink = $x("//a[text() = 'Список шаблонов узлов']");
     private final SelenideElement templateVersion = $x("//div[@aria-labelledby='version']");
-    private final SelenideElement deleteButton = $x("//span[text()='Удалить']/parent::button");
+    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final Input nameInput = Input.byLabel("Код шаблона");
     private final Input titleInput = Input.byLabel("Наименование");
     private final TextArea description = TextArea.byName("description");
     private final Input runQueueInput = Input.byLabel("Название очереди для старта задачи");
     private final Input rollbackQueueInput = Input.byLabel("Название очереди для отката");
     private final DropDown typeDropDown = DropDown.byLabel("Тип");
-    private final SelenideElement saveButton = $x("//span[text()='Сохранить']/parent::button");
+    private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
 
     public TemplatePage() {
         templatesListLink.shouldBe(Condition.visible);
