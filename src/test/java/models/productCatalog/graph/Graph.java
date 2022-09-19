@@ -1,20 +1,17 @@
 package models.productCatalog.graph;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import core.helper.http.Http;
-import httpModels.productCatalog.graphs.createGraph.response.CreateGraphResponse;
-import httpModels.productCatalog.graphs.createGraph.response.JsonSchema;
-import httpModels.productCatalog.graphs.createGraph.response.StaticData;
-import httpModels.productCatalog.graphs.createGraph.response.UiSchema;
+import httpModels.productCatalog.graphs.getGraph.response.PrintedOutput;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.graphs.getUsedList.GetUsedListResponse;
 import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import io.qameta.allure.Step;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.SneakyThrows;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONArray;
@@ -23,6 +20,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
+import java.util.Map;
 
 import static core.helper.Configure.ProductCatalogURL;
 import static steps.productCatalog.GraphSteps.getObjectArrayUsedGraph;
@@ -30,26 +28,63 @@ import static steps.productCatalog.GraphSteps.getObjectArrayUsedGraph;
 @Log4j2
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class Graph extends Entity {
-
+    @JsonProperty("version_list")
+    private List<String> versionList;
+    @JsonProperty("author")
     private String author;
-    private JsonSchema jsonSchema;
-    private String name;
+    @JsonProperty("version_create_dt")
+    private String versionCreateDt;
+    @JsonProperty("description")
     private String description;
-    private StaticData staticData;
-    private String graphId;
-    private String title;
-    private String type;
-    private UiSchema uiSchema;
-    private String version;
-    private String jsonTemplate;
-    private String createDt;
-    private String updateDt;
+    @JsonProperty("damage_order_on_error")
     private Boolean damageOrderOnError;
-    private Boolean lockOrderOnError;
-    private List<String> allowedDevelopers;
-    private List<String> restrictedDevelopers;
+    @JsonProperty("type")
+    private String type;
+    @JsonProperty("title")
+    private String title;
+    @JsonProperty("version")
+    private String version;
+    @JsonProperty("last_version")
+    private String lastVersion;
+    @JsonProperty("graph")
+    private List<GraphItem> graph;
+    @JsonProperty("output")
+    private Map<String, String> output;
+    @JsonProperty("printed_output")
+    private PrintedOutput printedOutput;
+    @JsonProperty("json_schema")
+    private Map<String, Object> jsonSchema;
+    @JsonProperty("version_changed_by_user")
+    private String versionChangedByUser;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("static_data")
+    private Map<String, Object> staticData;
+    @JsonProperty("id")
+    private String graphId;
+    @JsonProperty("ui_schema")
+    private Map<String, Object> uiSchema;
+    @JsonProperty("modifications")
     private List<Modification> modifications;
+    @JsonProperty("create_dt")
+    private String createDt;
+    @JsonProperty("update_dt")
+    private String updateDt;
+    @JsonProperty("is_sequential")
+    private Boolean isSequential;
+    @JsonProperty("allowed_developers")
+    private List<String> allowedDevelopers;
+    @JsonProperty("restricted_developers")
+    private List<String> restrictedDevelopers;
+    @JsonProperty("current_version")
+    private String currentVersion;
+    @JsonProperty("lock_order_on_error")
+    private Boolean lockOrderOnError;
+    private String jsonTemplate;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json");
@@ -69,7 +104,6 @@ public class Graph extends Entity {
         if (modifications != null) {
             mod = new JSONArray(JsonHelper.getCustomObjectMapper().writeValueAsString(modifications));
         }
-
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", name)
                 .set("$.title", title)
@@ -91,13 +125,13 @@ public class Graph extends Entity {
     @Step("Создание графа")
     protected void create() {
         deleteIfExist(name);
-        graphId = new Http(ProductCatalogURL)
+        Graph graph = new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
-                .extractAs(CreateGraphResponse.class)
-                .getId();
+                .extractAs(Graph.class);
+        StringUtils.copyAvailableFields(graph, this);
         Assertions.assertNotNull(graphId, "Граф с именем: " + name + ", не создался");
     }
 

@@ -12,6 +12,8 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.Template;
+import models.productCatalog.graph.Graph;
+import models.productCatalog.graph.GraphItem;
 import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
@@ -24,9 +26,11 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.GraphSteps.partialUpdateGraph;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны")
@@ -299,5 +303,34 @@ public class TemplatesTest extends Tests {
         assertTrue(steps.isExists(templateName));
         steps.deleteByName(templateName, GetTemplateListResponse.class);
         assertFalse(steps.isExists(templateName));
+    }
+
+    @DisplayName("Удаление шаблона используемого в узле графа")
+    @TmsLink("1177502")
+    @Test
+    public void deleteTemplateUsedInGraphNode() {
+        Template template = Template.builder()
+                .templateName("delete_template_used_in_graph_node")
+                .build()
+                .createObject();
+        JSONObject graphItem = GraphItem.builder()
+                .name("graph_node_test_api")
+                .templateId(template.getTemplateId())
+                .build()
+                .toJson();
+        Graph graph = Graph.builder()
+                .name("graph_for_delete_used_template_test_api")
+                .title("graph_for_delete_used_template_test_api")
+                .build()
+                .createObject();
+        List<JSONObject> list = new ArrayList<>();
+        list.add(graphItem);
+        JSONObject obj = new JSONObject().put("graph", list);
+        partialUpdateGraph(graph.getGraphId(), obj);
+        String errMsg = steps.getDeleteObjectResponse(Integer.toString(template.getTemplateId())).assertStatus(400)
+                .jsonPath().getString("err");
+        String expectedErrorMessage = String.format("Нельзя удалить шаблон: %s. Он используется:\nGraph: (name: %s, version: %s)"
+        , template.getTemplateName(), graph.getName(), "1.0.1");
+        assertEquals(expectedErrorMessage, errMsg);
     }
 }
