@@ -12,6 +12,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
+import models.productCatalog.Services;
 import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
@@ -254,6 +255,20 @@ public class OrgDirectionTest extends Tests {
                 .build()
                 .createObject();
         orgDirection.deleteObject();
+    }
+
+    @DisplayName("Удаление направления используемого в сервисе")
+    @TmsLink("1172114")
+    @Test
+    public void deleteOrgDirectionUsedInService() {
+        Services service = Services.builder()
+                .serviceName("service_for_delete_org_direction_test_api")
+                .title("service_for_delete_org_direction_test_api")
+                .build()
+                .createObject();
+        String errorMessage = steps.getDeleteObjectResponse(service.getDirectionId())
+                .assertStatus(400).jsonPath().getString("error");
+        assertEquals("Deletion not allowed. Direction is used", errorMessage);
     }
 
     @Test

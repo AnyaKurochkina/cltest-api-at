@@ -18,19 +18,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ActionPage {
     private static final String saveActionAlertText = "Действие успешно изменено";
     private final SelenideElement actionsListLink = $x("//a[text() = 'Список действий']");
-    private final SelenideElement inputNameField = $x("//*[@name ='name']");
-    private final SelenideElement inputTitleField = $x("//*[@name ='title']");
+    private final SelenideElement inputNameField = $x("//*[@name = 'name']");
+    private final SelenideElement inputTitleField = $x("//*[@name = 'title']");
     private final SelenideElement info = $x("//div[@role = 'status']");
     private final SelenideElement inputDescriptionField = $x("//textarea[@name ='description']");
     private final SelenideElement locationInOrderTab = $x("//*[text()= 'Расположение в заказе']");
-    private final SelenideElement graphTab = $x("//*[text()= 'Граф']");
+    private final SelenideElement graphTab = $x("//*[text() = 'Граф']");
+    private final SelenideElement graphInputField = $x("//*[@id = 'selectValueWrapper']/input");
+    private final SelenideElement graphVersionField = $x("(//*[@id= 'selectValueWrapper'])[2]");
     private final SelenideElement dataConfigPath = $x("//input[@name = 'data_config_path']");
     private final SelenideElement dataConfigKey = $x("//input[@name = 'data_config_key']");
     private final SelenideElement data = $x("//*[@placeholder = 'Введите данные через запятую']");
-    private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
-    private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
+    private final SelenideElement saveButton = $x("//button/div[text() = 'Сохранить']");
+    private final SelenideElement cancelButton = $x("//button/div[text() = 'Отмена']");
     private final SelenideElement inputGraphTitle = $x("//*[@id='selectValueWrapper']");
-    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
+    private final SelenideElement deleteButton = $x("//div[text() ='Удалить']");
     private final SelenideElement currentVersionInput = $x("//label[starts-with(.,'Выберите версию')]/parent::*//input");
     private final SelenideElement deleteIconSvG = $x("(//div/*[local-name()='svg']/*[local-name()='svg']/*[local-name()='path'])[6]");
     private final SelenideElement addIcon = $x("//label[@for = 'attachment-input']");
@@ -62,7 +64,9 @@ public class ActionPage {
     @Step("Изменение версии графа")
     public ActionPage changeGraphVersion(String value) {
         graphTab.click();
-        DropDown.byLabel("Значение").selectByTitle(value);
+        $x("//*[@id=\"root\"]").scrollIntoView(true);
+        graphVersionField.scrollTo();
+        new DropDown(graphVersionField).selectByTitle(value);
         return this;
     }
 
@@ -180,7 +184,7 @@ public class ActionPage {
         data.setValue(valueOfData);
         graphTab.click();
         inputGraphTitle.click();
-        Input.byLabel("Граф").setValue(graphTitle);
+        graphInputField.setValue(graphTitle);
         TestUtils.wait(1000);
         $x("//div[contains(@title, '" + graphTitle + "')]").click();
         TestUtils.scrollToTheBottom();

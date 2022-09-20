@@ -30,7 +30,7 @@ public class ActionsListPage extends BaseList {
 
     @Step("Создание действия")
     public ActionPage createAction() {
-        createButton.click();
+        createButton.scrollIntoView(TypifiedElement.scrollCenter).click();
         return new ActionPage();
     }
 
