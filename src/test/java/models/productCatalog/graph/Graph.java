@@ -5,7 +5,6 @@ import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.http.Http;
-import httpModels.productCatalog.graphs.getGraph.response.PrintedOutput;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.graphs.getUsedList.GetUsedListResponse;
 import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
@@ -23,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.GraphSteps.getObjectArrayUsedGraph;
 
 @Log4j2
@@ -31,6 +31,7 @@ import static steps.productCatalog.GraphSteps.getObjectArrayUsedGraph;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@ToString
 public class Graph extends Entity {
     @JsonProperty("version_list")
     private List<String> versionList;
@@ -55,7 +56,7 @@ public class Graph extends Entity {
     @JsonProperty("output")
     private Map<String, String> output;
     @JsonProperty("printed_output")
-    private PrintedOutput printedOutput;
+    private Object printedOutput;
     @JsonProperty("json_schema")
     private Map<String, Object> jsonSchema;
     @JsonProperty("version_changed_by_user")
@@ -125,12 +126,7 @@ public class Graph extends Entity {
     @Step("Создание графа")
     protected void create() {
         deleteIfExist(name);
-        Graph graph = new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(toJson())
-                .post(productName)
-                .assertStatus(201)
-                .extractAs(Graph.class);
+        Graph graph = createGraph(toJson());
         StringUtils.copyAvailableFields(graph, this);
         Assertions.assertNotNull(graphId, "Граф с именем: " + name + ", не создался");
     }

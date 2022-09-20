@@ -8,6 +8,7 @@ import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import models.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import steps.Steps;
 
@@ -72,5 +73,31 @@ public class GraphSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(graphUrl + id + "/");
+    }
+
+    @Step("Создание графа")
+    public static Graph createGraph(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post(graphUrl)
+                .assertStatus(201)
+                .extractAs(Graph.class);
+    }
+
+    @Step("Получение графа по Id")
+    public static Graph getGraphById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .get(graphUrl + objectId + "/")
+                .extractAs(Graph.class);
+    }
+
+    @Step("Проверка существования графа по имени")
+    public static boolean isGraphExists(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + "exists/?name=" + name)
+                .assertStatus(200).jsonPath().get("exists");
     }
 }

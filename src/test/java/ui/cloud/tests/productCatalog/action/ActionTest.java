@@ -1,8 +1,6 @@
 package ui.cloud.tests.productCatalog.action;
 
 import core.helper.JsonHelper;
-import httpModels.productCatalog.action.getAction.response.GetActionResponse;
-import httpModels.productCatalog.action.getActionList.response.GetActionsListResponse;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.action.Action;
@@ -12,9 +10,9 @@ import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.ActionSteps;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
@@ -26,8 +24,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static steps.productCatalog.ActionSteps.deleteActionByName;
-import static steps.productCatalog.ActionSteps.isActionExists;
+import static steps.productCatalog.ActionSteps.*;
 
 @DisabledIfEnv("prod")
 public class ActionTest extends BaseTest {
@@ -51,7 +48,7 @@ public class ActionTest extends BaseTest {
                         ItemStatus.ON, OrderStatus.DAMAGED, ActionType.ON, "configPath", "configKey",
                         "valueOfData", graph.getTitle())
                 .isActionExist(name), "Созданное действие не найдено в списке действий.");
-        steps.deleteByName(name, GetActionsListResponse.class);
+        deleteActionByName(name);
     }
 
     @Test
@@ -70,7 +67,7 @@ public class ActionTest extends BaseTest {
                 .copyAction(name)
                 .reTurnToActionsListPageByCancelButton()
                 .isActionExist(cloneName));
-        steps.deleteByName(cloneName, GetActionsListResponse.class);
+        deleteActionByName(cloneName);
     }
 
     @Test
@@ -78,8 +75,8 @@ public class ActionTest extends BaseTest {
     @DisplayName("Удаление из формы действия")
     public void deleteActionForm() {
         String name = "delete_action_form_test_ui";
-        if (steps.isExists(name)) {
-            steps.deleteByName(name, GetActionsListResponse.class);
+        if (isActionExists(name)) {
+            deleteActionByName(name);
         }
         JSONObject json = Action.builder()
                 .actionName(name)
@@ -87,13 +84,13 @@ public class ActionTest extends BaseTest {
                 .number(0)
                 .build()
                 .init().toJson();
-        steps.createProductObject(json);
+        ActionSteps.createAction(json);
         new IndexPage().goToActionsPage()
                 .openActionForm(name)
                 .deleteFromActionForm()
                 .inputInvalidId("invalid")
                 .inputValidIdAndDelete();
-        assertFalse(new ActionsListPage().isActionExist(name));
+        assertFalse(isActionExists(name));
     }
 
     @Test
@@ -101,8 +98,8 @@ public class ActionTest extends BaseTest {
     @DisplayName("Удалить действие из выпадающего меню")
     public void deleteActionMenu() {
         String name = "delete_action_form_menu_test_ui";
-        if (steps.isExists(name)) {
-            steps.deleteByName(name, GetActionsListResponse.class);
+        if (isActionExists(name)) {
+            deleteActionByName(name);
         }
         JSONObject json = Action.builder()
                 .actionName(name)
@@ -110,12 +107,12 @@ public class ActionTest extends BaseTest {
                 .number(0)
                 .build()
                 .init().toJson();
-        steps.createProductObject(json);
+        ActionSteps.createAction(json);
         new IndexPage().goToActionsPage()
                 .deleteAction(name)
                 .inputInvalidId("invalid")
                 .inputValidIdAndDelete();
-        assertFalse(new ActionsListPage().isActionExist(name));
+        assertFalse(isActionExists(name));
     }
 
     @Test
@@ -129,8 +126,8 @@ public class ActionTest extends BaseTest {
                 .number(0)
                 .build()
                 .createObject();
-        steps.partialUpdateObject(action.getActionId(), new JSONObject().put("priority", 1));
-        String version = steps.getById(action.getActionId(), GetActionResponse.class).getVersion();
+        partialUpdateAction(action.getActionId(), new JSONObject().put("priority", 1));
+        String version = getActionById(action.getActionId()).getVersion();
         new IndexPage().goToActionsPage()
                 .openActionForm(name)
                 .inputByLabel("Приоритет", "2")
