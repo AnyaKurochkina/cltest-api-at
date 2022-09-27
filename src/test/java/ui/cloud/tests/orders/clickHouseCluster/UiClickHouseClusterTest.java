@@ -56,7 +56,7 @@ public class UiClickHouseClusterTest extends Tests {
     @TmsLink("1138094")
     @Order(1)
     @DisplayName("UI ClickHouse Cluster. Заказ")
-    void orderClickHouse() {
+    void orderClickHouseCluster() {
         double preBillingProductPrice;
         try {
             new IndexPage()
@@ -175,7 +175,7 @@ public class UiClickHouseClusterTest extends Tests {
     @Test
     @Order(11)
     @TmsLink("1152780")
-    @DisplayName("UI ClickHouse Cluster. Удаление УЗ АД")
+    @DisplayName("UI ClickHouse Cluster. Удаление УЗ АD")
     void deleteAccountAD() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteAccountAD(nameAD));

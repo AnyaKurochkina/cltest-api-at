@@ -11,7 +11,7 @@ import java.util.UUID;
 import static com.codeborne.selenide.Selenide.$x;
 
 @Getter
-public class PostgreSQLAstraOrderPage extends Product {
+public class PostgreSqlAstraOrderPage extends Product {
 
     SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
     SelenideElement hardDrive2 = $x("(//div[contains(text(),'Жесткий диск')])[2]");
@@ -28,7 +28,7 @@ public class PostgreSQLAstraOrderPage extends Product {
 
     String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
-    public PostgreSQLAstraOrderPage() {
+    public PostgreSqlAstraOrderPage() {
         label.setValue(labelValue);
         platform.getElement().shouldBe(Condition.enabled);
     }

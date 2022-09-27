@@ -36,7 +36,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     public UiPostgreSqlAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
             product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/486a999a-8e2c-4a98-afc3-6e03861444c4/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+          // product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/1c7e72be-76e3-4460-9e8c-e27aeddb4b13/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -60,7 +60,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
-            PostgreSQLAstraOrderPage orderPage = new PostgreSQLAstraOrderPage();
+            PostgreSqlAstraOrderPage orderPage = new PostgreSqlAstraOrderPage();
             orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());

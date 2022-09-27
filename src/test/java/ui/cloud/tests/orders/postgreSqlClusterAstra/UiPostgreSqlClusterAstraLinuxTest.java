@@ -59,7 +59,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
     @TmsLink("851404")
     @Order(1)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Заказ")
-    void orderPostgreSQL() {
+    void orderPostgreSqlCluster() {
         double preBillingProductPrice;
         try {
             new IndexPage()
