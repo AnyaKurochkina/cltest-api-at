@@ -53,6 +53,18 @@ public class DropDown implements TypifiedElement {
                 .click();
     }
 
+    @Step("Выбрать в select элемент с ID равным '{value}'")
+    public void selectById(String value) {
+        click();
+        if (element.$x(String.format("input[@value='%s']", value)).exists())
+            return;
+        element.click();
+        $x("//ul/li//div[@id='{}']", value)
+                .shouldBe(activeCnd)
+                .hover().shouldBe(clickableCnd)
+                .click();
+    }
+
     public DropDown click() {
         element.scrollIntoView(scrollCenter);
         element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
