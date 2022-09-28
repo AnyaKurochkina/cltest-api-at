@@ -51,6 +51,7 @@ public class ActionPage {
 
     @Step("Возврат на страницу списка Действий через ссылку Список дейтвий ")
     public ActionsListPage reTurnToActionsListPageByLink() {
+        TestUtils.scrollToTheTop();
         actionsListLink.click();
         return new ActionsListPage();
     }
@@ -147,6 +148,7 @@ public class ActionPage {
 
     @Step("Переход на список действий и отмена оповещения о несохранненных данных")
     public ActionPage backByActionsLinkAndAlertCancel() {
+        TestUtils.scrollToTheTop();
         actionsListLink.click();
         String alertMsg = switchTo().alert().getText();
         assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", alertMsg);
