@@ -5,7 +5,6 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 import ui.uiModels.Template;
@@ -55,11 +54,12 @@ public class TemplatesListPage {
         runQueueInput.setValue(template.getRunQueue());
         rollbackQueueInput.setValue(template.getRollbackQueue());
         typeDropDown.select(template.getType());
+        new TemplatePage().goToParamsTab();
         input.setValue(template.getInput());
         output.setValue(template.getOutput());
         printedOutput.setValue(template.getPrintedOutput());
         saveButton.shouldBe(Condition.enabled).click();
-        new SaveDialog().saveWithNextPatchVersion();
+        new Alert().checkText("Шаблон успешно создан").checkColor(Alert.Color.GREEN).close();
         TestUtils.wait(2000);
         return new TemplatePage();
     }
@@ -108,6 +108,7 @@ public class TemplatesListPage {
 
     @Step("Проверка валидации некорректных параметров при создании шаблона")
     public TemplatesListPage checkCreateTemplateDisabled(Template template) {
+        TestUtils.scrollToTheTop();
         createTemplateButton.click();
         titleInput.setValue(template.getTitle());
         nameInput.setValue(template.getName());
@@ -152,8 +153,9 @@ public class TemplatesListPage {
         createTemplateButton.shouldBe(Condition.visible).click();
         for (String name : names) {
             nameInput.setValue(name);
-            TestUtils.wait(600);
+            TestUtils.wait(500);
             if (!templateNameValidationHint.exists()) {
+                TestUtils.wait(500);
                 nameInput.getInput().sendKeys("t");
             }
             templateNameValidationHint.shouldBe(Condition.visible);

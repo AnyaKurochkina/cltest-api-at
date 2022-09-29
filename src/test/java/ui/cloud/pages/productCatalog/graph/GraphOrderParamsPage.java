@@ -9,7 +9,7 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class GraphOrderParamsPage extends GraphPage {
 
-    private final SelenideElement schema = $x("//div[text()='JSON']/ancestor::div[4]//textarea");
+    private final SelenideElement schema = $x("//button[@id='JSON']/following::textarea[1]");
     private final SelenideElement jsonSchemaButton = $x("//button[@id='JSON']");
     private final SelenideElement uiSchemaButton = $x("//button[@id='UI']");
 
