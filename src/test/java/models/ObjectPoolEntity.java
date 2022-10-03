@@ -4,16 +4,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import core.enums.ObjectStatus;
+import core.exception.CreateEntityException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.locks.Lock;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static core.helper.StringUtils.getStackTrace;
@@ -22,6 +24,8 @@ import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
 @Log4j2
 public class ObjectPoolEntity {
+    private static final Map<String, List<ObjectPoolEntity>> threads = new ConcurrentHashMap<>();
+
     private String entity;
     @Setter
     @Getter
@@ -34,7 +38,7 @@ public class ObjectPoolEntity {
     private Throwable error;
     @Getter
     public final Class<? extends Entity> clazz;
-    private final Lock lock = new ReentrantLock();
+    private final CustomReentrantLock lock = new CustomReentrantLock();
 
     public ObjectPoolEntity(Entity entity) {
         this.clazz = entity.getClass();
@@ -117,7 +121,28 @@ public class ObjectPoolEntity {
         this.entity = ObjectPoolService.toJson(entity);
     }
 
+
+    private List<String> getLockedThreads(String rootThread) {
+        ThreadInfo[] infos = ManagementFactory.getThreadMXBean().dumpAllThreads(true, true);
+        List<String> threads = new ArrayList<>();
+        for (ThreadInfo info : infos) {
+            if (Objects.nonNull(info.getLockOwnerName()))
+                if (info.getLockOwnerName().equals(rootThread))
+                    if (!threads.contains(info.getThreadName()))
+                        threads.addAll(getLockedThreads(info.getThreadName()));
+        }
+        return threads;
+    }
+
+    private boolean isDeadLock(String thread) {
+        if(Objects.isNull(thread))
+            return false;
+        return getLockedThreads(thread).contains(Thread.currentThread().getName());
+    }
+
     public void lock() {
+        if(isDeadLock(lock.getOwnerThreadName()))
+            throw new CreateEntityException("Тестовое исключение. Надо перезапустить тест :(");
         writeLog("lock() " + status + " " + entity);
         lock.lock();
         writeLog("lockPost() " + status + " " + entity);
@@ -140,5 +165,18 @@ public class ObjectPoolEntity {
 
     private static void writeLog(String text) {
         log.info("RESOURCE_LOG {} {} \n {}\n", Thread.currentThread().getName(), text, getStackTrace(Thread.currentThread().getStackTrace()));
+    }
+
+    private static class CustomReentrantLock extends ReentrantLock {
+        @Override
+        public boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException {
+            return super.tryLock(timeout, unit);
+        }
+
+        public String getOwnerThreadName() {
+            if(Objects.nonNull(getOwner()))
+                return getOwner().getName();
+            return null;
+        }
     }
 }

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import tests.Tests;
-import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.LoginPageControlPanel;
 import ui.uiExtesions.ConfigExtension;
 
 @ExtendWith(ConfigExtension.class)
@@ -15,6 +15,6 @@ abstract public class BaseTest extends Tests {
 
     @BeforeEach
     public void init() {
-        new LoginPage().signIn(Role.PRODUCT_CATALOG_ADMIN);
+        new LoginPageControlPanel().signIn(Role.PRODUCT_CATALOG_ADMIN);
     }
 }

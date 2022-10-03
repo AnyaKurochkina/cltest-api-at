@@ -18,7 +18,6 @@ import ui.cloud.pages.Product;
 import ui.cloud.pages.WindowsOrderPage;
 import ui.uiExtesions.ConfigExtension;
 
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 @Log4j2

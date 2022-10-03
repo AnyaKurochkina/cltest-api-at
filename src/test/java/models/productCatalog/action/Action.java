@@ -22,7 +22,7 @@ import static steps.productCatalog.ActionSteps.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(exclude = "active", callSuper = false)
 public class Action extends Entity {
 
     @JsonProperty("available_without_money")
@@ -32,7 +32,6 @@ public class Action extends Entity {
     @JsonProperty("current_version")
     private String currentVersion;
     private Integer priority;
-    private String icon;
     @JsonProperty("icon_store_id")
     private String iconStoreId;
     @JsonProperty("icon_url")
@@ -106,7 +105,11 @@ public class Action extends Entity {
     private List<String> restricted_developers;
     @JsonProperty("version_diff")
     private VersionDiff versionDiff;
+    @JsonProperty("active")
+    private Boolean active;
     private String jsonTemplate;
+    @JsonProperty("context_restrictions")
+    private Object contextRestrictions;
 
     @Override
     public Entity init() {
@@ -121,9 +124,8 @@ public class Action extends Entity {
     @Override
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.icon", icon)
                 .set("$.icon_url", iconUrl)
-                .set("$.icon_store_id", iconStoreId)
+                .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .set("$.name", actionName)
                 .set("$.title", title)
                 .set("$.type", type)
@@ -136,6 +138,7 @@ public class Action extends Entity {
                 .set("$.priority", priority)
                 .set("$.extra_data", extraData)
                 .set("$.location_restriction", locationRestriction)
+                .set("$.context_restrictions", contextRestrictions)
                 .setIfNullRemove("$.number", number)
                 .build();
     }

@@ -14,10 +14,20 @@ import static core.helper.Configure.ImageService;
 public class ImageServiceSteps extends Steps {
 
     @Step("Полуение списка image groups")
-    public static List<ImageGroups> getImageGroupsList() {
+    public static List<ImageGroups> getImageGroupsList(boolean isNeedAll) {
         return new Http(ImageService)
                 .setRole(T1_ADMIN)
-                .get("/image_groups")
+                .get("/image_groups?need_all={}", isNeedAll)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("", ImageGroups.class);
+    }
+
+    @Step("Полуение списка image groups по region {region}")
+    public static List<ImageGroups> getImageGroupsListByRegion(String region) {
+        return new Http(ImageService)
+                .setRole(T1_ADMIN)
+                .get("/image_groups?availability_zone={}", region)
                 .assertStatus(200)
                 .jsonPath()
                 .getList("", ImageGroups.class);
@@ -40,6 +50,15 @@ public class ImageServiceSteps extends Steps {
                 .assertStatus(200);
     }
 
+    @Step("Частичное обновление image groups по id {id}")
+    public static void partialUpdateImageGroupById(String id, JSONObject body) {
+        new Http(ImageService)
+                .setRole(T1_ADMIN)
+                .body(body)
+                .patch("/image_groups/{}", id)
+                .assertStatus(200);
+    }
+
     @Step("Создание image groups")
     public static ImageGroups createImageGroup(JSONObject object) {
         return new Http(ImageService)
@@ -51,8 +70,8 @@ public class ImageServiceSteps extends Steps {
     }
 
     @Step("Проверка существования image group c именем {name}")
-    public static boolean isImageGroupExist(String name) {
-        List<ImageGroups> imageGroupList = getImageGroupsList();
+    public static boolean isImageGroupExist(String name, boolean isNeedAll) {
+        List<ImageGroups> imageGroupList = getImageGroupsList(isNeedAll);
         for (ImageGroups imageGroup : imageGroupList) {
             if (imageGroup.getName().equals(name)) {
                 return true;

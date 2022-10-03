@@ -95,7 +95,7 @@ public class ForbiddenAction extends Entity {
                 .assertStatus(201)
                 .extractAs(ForbiddenAction.class);
         StringUtils.copyAvailableFields(forbiddenAction, this);
-        Assertions.assertNotNull(id, "Пример с именем: " + name + ", не создался");
+        Assertions.assertNotNull(id, "Запрещенное действие с именем: " + name + ", не создался");
 
     }
 

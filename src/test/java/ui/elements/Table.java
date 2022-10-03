@@ -118,6 +118,10 @@ public class Table implements TypifiedElement {
         public String getValueByColumn(String column) {
             return getValueByColumnInRow(row, column).hover().getText();
         }
+
+        public SelenideElement getElementByColumn(String column) {
+            return getValueByColumnInRow(row, column);
+        }
     }
 
     public String getFirstValueByColumn(String column) {

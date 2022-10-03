@@ -2,7 +2,7 @@
   "name": "test_api",
   "title": "title_test_api",
   "version": "",
-  "icon" : "",
+  "icon_store_id" : "",
   "run": "run",
   "rollback": "Rollback",
   "type": "check_vm",

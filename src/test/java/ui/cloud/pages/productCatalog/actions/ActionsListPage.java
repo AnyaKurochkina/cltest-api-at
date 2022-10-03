@@ -30,7 +30,7 @@ public class ActionsListPage extends BaseList {
 
     @Step("Создание действия")
     public ActionPage createAction() {
-        createButton.click();
+        createButton.scrollIntoView(TypifiedElement.scrollCenter).click();
         return new ActionPage();
     }
 
@@ -84,6 +84,7 @@ public class ActionsListPage extends BaseList {
 
     @Step("Импорт действия из файла")
     public ActionsListPage importAction(String path) {
+        importActionButton.scrollIntoView(TypifiedElement.scrollCenter);
         importActionButton.click();
         new InputFile(path).importFile();
         new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();

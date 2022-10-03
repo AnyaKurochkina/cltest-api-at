@@ -12,6 +12,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.VersionDiff;
 import models.productCatalog.action.Action;
+import models.productCatalog.icon.Icon;
 import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
@@ -59,11 +60,16 @@ public class ActionsTest extends Tests {
     @TmsLink("1081243")
     @Test
     public void createActionWithIcon() {
+        Icon icon = Icon.builder()
+                .name("icon_for_api_test")
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
         String actionName = "create_action_with_icon_test_api";
         Action action = Action.builder()
                 .actionName(actionName)
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         Action actualAction = getActionById(action.getActionId());
@@ -75,18 +81,22 @@ public class ActionsTest extends Tests {
     @TmsLink("1081441")
     @Test
     public void createSeveralActionWithSameIcon() {
+        Icon icon = Icon.builder()
+                .name("icon_for_api_test2")
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
         String actionName = "create_first_action_with_same_icon_test_api";
         Action action = Action.builder()
                 .actionName(actionName)
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-
         Action secondAction = Action.builder()
                 .actionName("create_second_action_with_same_icon_test_api")
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         Action actualFirstAction = getActionById(action.getActionId());
@@ -483,14 +493,13 @@ public class ActionsTest extends Tests {
     @TmsLink("1028840")
     public void loadFromGitlabAction() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
-        JSONObject jsonObject = Action.builder()
+        Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
                 .version("1.0.0")
                 .build()
-                .init().toJson();
-        GetActionResponse action = steps.createProductObject(jsonObject).extractAs(GetActionResponse.class);
-        Response response = steps.dumpToBitbucket(action.getId());
+                .createObject();
+        Response response = steps.dumpToBitbucket(action.getActionId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         steps.deleteByName(actionName, GetActionsListResponse.class);
         String path = "action_" + actionName + "_" + action.getVersion();

@@ -35,8 +35,8 @@ public class SaveGraphTest extends GraphBaseTest {
                 .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.0.0", "", "QA-1"))
                 .saveGraphWithPatchVersion()
                 .checkGraphVersion("1.0.1")
-                .trySaveGraphWithIncorrectVersion("1.0.0")
-                .trySaveGraphWithIncorrectVersion("1.0.1");
+                .trySaveGraphWithIncorrectVersion("1.0.0", "1.0.1")
+                .trySaveGraphWithIncorrectVersion("1.0.1", "1.0.1");
     }
 
     @Test

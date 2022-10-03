@@ -20,12 +20,12 @@ public class GraphModifiersPage extends GraphPage {
     private final SelenideElement testEnvCheckbox = $x("//form//input[@name='test']");
     private final SelenideElement prodEnvCheckbox = $x("//form//input[@name='prod']");
     private final SelenideElement numberInput = $x("//form//label[contains(text(),'Порядок применения')]/..//input");
-    private final SelenideElement showSchemas = $x("//form//label[text()='Схема']/..//*[name()='svg']");
+    private final SelenideElement showSchemas = $x("//form//label[text()='Схема']/following::*[name()='svg'][1]");
     private final SelenideElement showTypes = $x("//form//label[text()='Способ изменения']/..//*[name()='svg']");
     private final SelenideElement pathInput = $x("//form//input[@name='path']");
     private final SelenideElement modifierData = $x("//form//span[text()='ModifierData']/ancestor::div[2]//textarea");
-    private final SelenideElement formSaveButton = $x("//form//span[text()='Сохранить']/parent::button");
-    private final SelenideElement formCancelButton = $x("//form//span[text()='Отмена']/parent::button");
+    private final SelenideElement formSaveButton = $x("//form//div[text()='Сохранить']/parent::button");
+    private final SelenideElement formCancelButton = $x("//form//div[text()='Отмена']/parent::button");
     private final SelenideElement jsonSchemaButton = $x("//button[@id='JSON']");
     private final SelenideElement uiSchemaButton = $x("//button[@id='UI']");
     private final SelenideElement staticDataButton = $x("//button[@id='StaticData']");
