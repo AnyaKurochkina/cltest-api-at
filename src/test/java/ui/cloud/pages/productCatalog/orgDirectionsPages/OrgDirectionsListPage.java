@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.elements.Input;
 import ui.elements.InputFile;
+import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -30,6 +31,7 @@ public class OrgDirectionsListPage {
     }
 
     public OrgDirectionPage createDirection() {
+        createButton.scrollIntoView(TypifiedElement.scrollCenter);
         createButton.click();
         return new OrgDirectionPage();
     }
@@ -83,14 +85,14 @@ public class OrgDirectionsListPage {
 
     @Step("Выбор и импорт файла")
     public OrgDirectionsListPage uploadFile(String path) {
-        importDirection.click();
+        importDirection.scrollIntoView(TypifiedElement.scrollCenter).click();
         new InputFile(path).importFile();
         return this;
     }
 
     @Step("Проверка существования направления")
-    public boolean isNotExist(String dirName) {
+    public boolean isOrgDirectionExist(String dirName) {
         new Input(inputSearch).setValue(dirName);
-        return noData.exists();
+        return !noData.exists();
     }
 }

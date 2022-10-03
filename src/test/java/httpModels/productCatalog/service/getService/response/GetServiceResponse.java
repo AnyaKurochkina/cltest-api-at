@@ -29,9 +29,6 @@ public class GetServiceResponse implements GetImpl {
 	@JsonProperty("is_published")
 	private Boolean isPublished;
 
-	@JsonProperty("icon")
-	private String icon;
-
 	@JsonProperty("icon_url")
 	private String iconUrl;
 

@@ -14,6 +14,7 @@ import io.restassured.path.json.JsonPath;
 import models.productCatalog.Template;
 import models.productCatalog.graph.Graph;
 import models.productCatalog.graph.GraphItem;
+import models.productCatalog.icon.Icon;
 import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
@@ -58,11 +59,16 @@ public class TemplatesTest extends Tests {
     @TmsLink("1086277")
     @Test
     public void createTemplateWithIcon() {
+        Icon icon = Icon.builder()
+                .name("template_icon_for_api_test")
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
         String templateName = "create_template_with_icon_test_api";
         Template template = Template.builder()
                 .templateName(templateName)
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         GetTemplateResponse actualTemplate =(GetTemplateResponse) steps.getById(String.valueOf(template.getTemplateId()), GetTemplateResponse.class);
@@ -74,18 +80,23 @@ public class TemplatesTest extends Tests {
     @TmsLink("1086329")
     @Test
     public void createSeveralTemplateWithSameIcon() {
+        Icon icon = Icon.builder()
+                .name("template_icon_for_api_test2")
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
         String templateName = "create_first_template_with_same_icon_test_api";
         Template template = Template.builder()
                 .templateName(templateName)
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
 
         Template secondTemplate = Template.builder()
                 .templateName("create_second_template_with_same_icon_test_api")
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         GetTemplateResponse actualFirstTemplate =(GetTemplateResponse) steps.getById(String.valueOf(template.getTemplateId()), GetTemplateResponse.class);

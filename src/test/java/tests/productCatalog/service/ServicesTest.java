@@ -15,6 +15,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import models.productCatalog.Services;
+import models.productCatalog.icon.Icon;
 import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
@@ -59,11 +60,16 @@ public class ServicesTest extends Tests {
     @TmsLink("1082639")
     @Test
     public void createServiceWithIcon() {
+        Icon icon = Icon.builder()
+                .name("service_icon_for_api_test")
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
         String serviceName = "create_service_with_icon_test_api";
         Services service = Services.builder()
                 .serviceName(serviceName)
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         GetServiceResponse actualService = (GetServiceResponse) steps.getById(service.getServiceId(), GetServiceResponse.class);
@@ -75,18 +81,23 @@ public class ServicesTest extends Tests {
     @TmsLink("1082663")
     @Test
     public void createSeveralServiceWithSameIcon() {
+        Icon icon = Icon.builder()
+                .name("service_icon_for_api_test2")
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
         String serviceName = "create_first_service_with_same_icon_test_api";
         Services service = Services.builder()
                 .serviceName(serviceName)
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
 
         Services secondService = Services.builder()
                 .serviceName("create_second_service_with_same_icon_test_api")
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         GetServiceResponse actualFirstService = (GetServiceResponse) steps.getById(service.getServiceId(), GetServiceResponse.class);

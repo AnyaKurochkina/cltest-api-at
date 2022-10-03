@@ -20,6 +20,9 @@ public class Image {
     @JsonProperty("schema")
     private String schema;
 
+    @JsonProperty("availability_zone")
+    private String availabilityZone;
+
     @JsonProperty("marketing")
     private Object marketing;
 
@@ -84,7 +87,7 @@ public class Image {
     private List<String> tags;
 
     @JsonProperty("size")
-    private Integer size;
+    private Long size;
 
     @JsonProperty("name")
     private String name;
@@ -107,9 +110,6 @@ public class Image {
 
     @JsonProperty("os_distro")
     private String osDistro;
-
-    @JsonProperty("region")
-    private String region;
 
     @JsonProperty("virtual_size")
     private Long virtualSize;

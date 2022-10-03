@@ -13,6 +13,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
 import models.productCatalog.Services;
+import models.productCatalog.icon.Icon;
 import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
@@ -58,10 +59,15 @@ public class OrgDirectionTest extends Tests {
     @TmsLink("1082790")
     @Test
     public void createOrgDirectionWithIcon() {
+        Icon icon = Icon.builder()
+                .name("org_direction_icon_for_api_test")
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
         String orgName = "create_org_direction_with_icon_test_api";
         OrgDirection orgDirection = OrgDirection.builder()
                 .orgDirectionName(orgName)
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         GetOrgDirectionResponse actualOrgDirection = (GetOrgDirectionResponse) steps.getById(orgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class);
@@ -73,16 +79,21 @@ public class OrgDirectionTest extends Tests {
     @TmsLink("1082792")
     @Test
     public void createSeveralOrgDirectionWithSameIcon() {
+        Icon icon = Icon.builder()
+                .name("org_direction_icon_for_api_test2")
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
         String orgName = "create_first_org_direction_with_same_icon_test_api";
         OrgDirection orgDirection = OrgDirection.builder()
                 .orgDirectionName(orgName)
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
 
         OrgDirection secondOrgDirection = OrgDirection.builder()
                 .orgDirectionName("create_second_org_direction_with_same_icon_test_api")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         GetOrgDirectionResponse actualFirstOrgDirection = (GetOrgDirectionResponse) steps.getById(orgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class);
@@ -268,7 +279,7 @@ public class OrgDirectionTest extends Tests {
                 .createObject();
         String errorMessage = steps.getDeleteObjectResponse(service.getDirectionId())
                 .assertStatus(400).jsonPath().getString("error");
-        assertEquals("Deletion not allowed. Direction is used", errorMessage);
+        assertEquals(String.format("Нельзя удалить направление %s. Оно используется:\nService: (name: %s)", service.getDirectionName(), service.getServiceName()), errorMessage);
     }
 
     @Test

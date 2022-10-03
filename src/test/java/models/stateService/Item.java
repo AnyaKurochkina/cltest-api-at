@@ -3,8 +3,10 @@ package models.stateService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
+import models.productCatalog.action.Action;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Log4j2
 @Builder
@@ -26,8 +28,12 @@ public class Item {
     private String createDt;
     @JsonProperty("update_dt")
     private String updateDt;
+    @JsonProperty("actions")
+    private List<Action> actions;
     @JsonProperty("graph_id")
     private String graphId;
+    @JsonProperty("provider")
+    private String provider;
     private String type;
     @JsonProperty("order_id")
     private String orderId;

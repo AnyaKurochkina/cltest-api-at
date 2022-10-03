@@ -38,8 +38,6 @@ public class Product extends Entity {
     private String currentVersion;
     @JsonProperty("information_systems")
     private List<Object> informationSystems;
-    @JsonProperty("icon")
-    private String icon;
     @JsonProperty("icon_store_id")
     private String iconStoreId;
     @JsonProperty("icon_url")
@@ -93,6 +91,8 @@ public class Product extends Entity {
     @JsonProperty("restricted_developers")
     private List<String> restrictedDevelopers;
     private String payment;
+    @JsonProperty("context_restrictions")
+    private Object contextRestrictions;
 
     @Override
     public Entity init() {
@@ -117,8 +117,7 @@ public class Product extends Entity {
                 .set("$.version", version)
                 .set("$.category", category)
                 .set("$.info", info)
-                .set("$.icon", icon)
-                .set("$.icon_store_id", iconStoreId)
+                .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .set("$.icon_url", iconUrl)
                 .set("$.is_open", isOpen)
                 .set("$.current_version", currentVersion)

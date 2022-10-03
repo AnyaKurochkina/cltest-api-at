@@ -16,7 +16,6 @@ import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.BaseTest;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("product_catalog_ui")
@@ -84,7 +83,7 @@ public class OrgDirectionTest extends BaseTest {
                 .deleteActionMenu(name)
                 .inputInvalidId("invalid-id45")
                 .fillIdAndDelete()
-                .isNotExist(name), "Направление существует.");
+                .isOrgDirectionExist(name), "Направление существует.");
     }
 
     @Test
@@ -97,7 +96,7 @@ public class OrgDirectionTest extends BaseTest {
         if (steps.isExists(name)) {
             steps.deleteByName(name, GetOrgDirectionListResponse.class);
         }
-        assertFalse(new IndexPage()
+        assertTrue(new IndexPage()
                 .goToOrgDirectionsPage()
                 .createDirection()
                 .fillAndSave(title, name, description)
@@ -105,7 +104,7 @@ public class OrgDirectionTest extends BaseTest {
                 .deleteDirection()
                 .inputInvalidId("invalid-id45")
                 .fillIdAndDelete()
-                .isNotExist(name), "Направление существует.");
+                .isOrgDirectionExist(name), "Направление существует.");
     }
 
     @Test
