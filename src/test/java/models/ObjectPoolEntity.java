@@ -128,8 +128,10 @@ public class ObjectPoolEntity {
         for (ThreadInfo info : infos) {
             if (Objects.nonNull(info.getLockOwnerName()))
                 if (info.getLockOwnerName().equals(rootThread))
-                    if (!threads.contains(info.getThreadName()))
+                    if (!threads.contains(info.getThreadName())) {
+                        threads.add(info.getThreadName());
                         threads.addAll(getLockedThreads(info.getThreadName()));
+                    }
         }
         return threads;
     }
