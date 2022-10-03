@@ -146,7 +146,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Отправка action {action}")
     public static Response sendAction(String action, IProduct product, JSONObject jsonData, String projectId, String filter) {
-        Item item = getItemIdByOrderIdAndActionTitle(action, product, "");
+        Item item = getItemIdByOrderIdAndActionTitle(action, product, filter);
         return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.getId())
                 .set("$.order.attrs", jsonData)
@@ -204,7 +204,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Выполнение action \"{action}\"")
     public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId, String filter) {
         //Получение item'ов для экшена
-        Item item = getItemIdByOrderIdAndActionTitle(action, product, "");
+        Item item = getItemIdByOrderIdAndActionTitle(action, product, filter);
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
         //TODO: Возможно стоит сделать более детальную проверку на значение
 
