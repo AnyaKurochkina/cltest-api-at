@@ -66,7 +66,7 @@ ClickHouse:
 
 Podman:
   - options:
-      - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 PostgresSQLCluster:
   - options:
