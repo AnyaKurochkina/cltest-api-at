@@ -10,6 +10,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.authorizer.Project;
+import models.productCatalog.icon.Icon;
 import models.productCatalog.icon.IconStorage;
 import models.productCatalog.product.Categories;
 import models.productCatalog.product.Product;
@@ -61,11 +62,16 @@ public class ProductsTest extends Tests {
     @TmsLink("1081698")
     @Test
     public void createProductWithIcon() {
+        Icon icon = Icon.builder()
+                .name("product_icon_for_api_test")
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
         String productName = "create_product_with_icon_test_api";
         Product product = Product.builder()
                 .name(productName)
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         Product actualProduct = getProductById(product.getProductId());
@@ -77,18 +83,22 @@ public class ProductsTest extends Tests {
     @TmsLink("1081741")
     @Test
     public void createSeveralProductWithSameIcon() {
+        Icon icon = Icon.builder()
+                .name("product_icon_for_api_test2")
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
         String productName = "create_first_product_with_same_icon_test_api";
         Product product = Product.builder()
                 .name(productName)
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-
         Product secondProduct = Product.builder()
                 .name("create_second_action_with_same_icon_test_api")
                 .version("1.0.1")
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         Product actualFirstProduct = getProductById(product.getProductId());
@@ -362,14 +372,6 @@ public class ProductsTest extends Tests {
         partialUpdateProduct(productTest.getProductId(), new JSONObject()
                 .put("max_count", 6))
                 .assertStatus(500);
-    }
-
-    @DisplayName("Получение время отклика на запрос")
-    @TmsLink("643431")
-    @Test
-    public void getTime() {
-        Assertions.assertTrue(2000 > steps.getTime("http://d4-product-catalog.apps" +
-                ".d0-oscp.corp.dev.vtb/products/?is_open=true&env=dev&information_systems=c9fd31c7-25a5-45ca-863c-18425d1ae927&page=1&per_page=100"));
     }
 
     @DisplayName("Получение значения ключа info")

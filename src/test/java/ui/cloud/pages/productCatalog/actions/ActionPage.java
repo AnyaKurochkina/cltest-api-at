@@ -11,6 +11,7 @@ import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
+import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +35,7 @@ public class ActionPage {
     private final SelenideElement inputGraphTitle = $x("//*[@id='selectValueWrapper']");
     private final SelenideElement deleteButton = $x("//div[text() ='Удалить']");
     private final SelenideElement currentVersionInput = $x("//label[starts-with(.,'Выберите версию')]/parent::*//input");
-    private final SelenideElement deleteIconSvG = $x("(//div/*[local-name()='svg']/*[local-name()='svg']/*[local-name()='path'])[6]");
+    private final SelenideElement deleteIconSvG = $x("(//div/*[local-name()='svg']/*[local-name()='svg']/*[local-name()='path'])[3]");
     private final SelenideElement addIcon = $x("//label[@for = 'attachment-input']");
 
 
@@ -147,6 +148,7 @@ public class ActionPage {
 
     @Step("Переход на список действий и отмена оповещения о несохранненных данных")
     public ActionPage backByActionsLinkAndAlertCancel() {
+        actionsListLink.scrollIntoView(TypifiedElement.scrollCenter);
         actionsListLink.click();
         String alertMsg = switchTo().alert().getText();
         assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", alertMsg);

@@ -1,17 +1,14 @@
 package models.productCatalog.icon;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import core.enums.Role;
 import core.helper.JsonHelper;
-import core.helper.http.Http;
-import io.qameta.allure.Step;
+import core.helper.StringUtils;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
-import static core.helper.Configure.ProductCatalogURL;
 import static steps.productCatalog.IconSteps.*;
 
 @Log4j2
@@ -34,19 +31,17 @@ public class Icon extends Entity {
 	private String updateDt;
 	@JsonProperty("create_dt")
 	private String createDt;
-	private String jsonTemplate;
 	private String productName;
 
 	@Override
 	public Entity init() {
-		jsonTemplate = "productCatalog/examples/createExample.json";
-		productName = "/api/v1/example/";
+		productName = "/api/v1/icons/";
 		return this;
 	}
 
 	@Override
 	public JSONObject toJson() {
-		return JsonHelper.getJsonTemplate(jsonTemplate)
+		return JsonHelper.getJsonTemplate("productCatalog/icon/createIcon.json")
 				.set("$.name", name)
 				.set("$.title", title)
 				.set("$.description", description)
@@ -59,23 +54,14 @@ public class Icon extends Entity {
 	}
 
 	@Override
-	@Step("Создание Иконки")
 	protected void create() {
 		if (isIconExists(name)) {
 			deleteIconByName(name);
 		}
-		Icon icon = new Http(ProductCatalogURL)
-				.setRole(Role.PRODUCT_CATALOG_ADMIN)
-				.body(toJson())
-				.post(productName)
-				.assertStatus(201)
-				.extractAs(Icon.class);
-		id = icon.getId();
-		updateDt = icon.getUpdateDt();
-		createDt = icon.getCreateDt();
-		Assertions.assertNotNull(id, "Пример с именем: " + name + ", не создался");
+		Icon icon = createIcon(toJson());
+		StringUtils.copyAvailableFields(icon, this);
+		Assertions.assertNotNull(id, "Иконка с именем: " + name + ", не создалась");
 	}
-
 
 	@Override
 	protected void delete() {

@@ -13,6 +13,8 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.TemplateSteps.createTemplate;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны")
@@ -69,6 +71,21 @@ public class TemplateNegativeTest extends Tests {
                 .build()
                 .createObject();
         steps.createProductObject(steps.createJsonObject(templateName)).assertStatus(400);
+    }
+
+    @DisplayName("Негативный тест на создание шаблона с пустым полем run")
+    @TmsLink("1202400")
+    @Test
+    public void createTemplateWithEmptyFieldRun() {
+        String templateName = "create_template_with_empty_name_run_test_api";
+        JSONObject json = Template.builder()
+                .templateName(templateName)
+                .run("")
+                .build()
+                .init()
+                .toJson();
+        String errorMessage = createTemplate(json).assertStatus(400).jsonPath().getList("run", String.class).get(0);
+        assertEquals("Это поле не может быть пустым.", errorMessage);
     }
 
     @DisplayName("Негативный тест на создание шаблона с недопустимыми символами в имени")

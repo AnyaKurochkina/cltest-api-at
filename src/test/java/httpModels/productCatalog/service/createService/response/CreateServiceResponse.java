@@ -124,5 +124,7 @@ public class CreateServiceResponse{
 
 	@JsonProperty("restricted_developers")
 	private List<String> restricted_developers;
-	private String direction_name;
+
+	@JsonProperty("direction_name")
+	private String directionName;
 }
