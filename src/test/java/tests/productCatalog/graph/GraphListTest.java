@@ -2,7 +2,7 @@ package tests.productCatalog.graph;
 
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
-import httpModels.productCatalog.graphs.getGraph.response.GraphItem;
+import models.productCatalog.graph.GraphItem;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.graphs.getGraphsList.response.ListItem;
 import io.qameta.allure.Epic;

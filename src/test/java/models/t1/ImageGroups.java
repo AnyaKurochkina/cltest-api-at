@@ -25,9 +25,10 @@ public class ImageGroups extends Entity {
     private String id;
     private String name;
     private String title;
-    private List<Object> images;
+    private List<Image> images;
     private List<Object> tags;
     private String distro;
+    private String logo;
     @JsonProperty("synced_at")
     private String syncedAt;
     private String jsonTemplate;

@@ -38,6 +38,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.GraphSteps.getGraphById;
+import static steps.productCatalog.GraphSteps.isGraphExists;
 
 @Tag("product_catalog")
 @Tag("Graphs")
@@ -58,8 +60,8 @@ public class GraphTest extends Tests {
                 .version("1.0.0")
                 .build()
                 .createObject();
-        GetImpl createdGraph = steps.getById(graph.getGraphId(), GetGraphResponse.class);
-        assertEquals(graph.getName(), createdGraph.getName());
+        Graph createdGraph = getGraphById(graph.getGraphId());
+        assertEquals(graph, createdGraph);
     }
 
     @DisplayName("Проверка существования графа по имени")
@@ -70,8 +72,8 @@ public class GraphTest extends Tests {
                 .name("graph_check_exist_test_api")
                 .build()
                 .createObject();
-        Assertions.assertTrue(steps.isExists(graph.getName()));
-        Assertions.assertFalse(steps.isExists("NoExistsAction"));
+        Assertions.assertTrue(isGraphExists(graph.getName()));
+        Assertions.assertFalse(isGraphExists("NoExistsAction"));
     }
 
     @DisplayName("Импорт графа")
@@ -93,7 +95,7 @@ public class GraphTest extends Tests {
     @DisplayName("Получение графа по Id")
     @TmsLink("642631")
     @Test
-    public void getGraphById() {
+    public void getGraphByIdTest() {
         Graph graph = Graph.builder()
                 .name("graph_get_by_id_test_api")
                 .build()
