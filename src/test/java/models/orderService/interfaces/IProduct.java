@@ -302,6 +302,10 @@ public abstract class IProduct extends Entity {
         GetProductResponse productResponse = (GetProductResponse) new ProductCatalogSteps("/api/v1/products/").getById(getProductId(), GetProductResponse.class);
         GetGraphResponse graphResponse = (GetGraphResponse) new ProductCatalogSteps(Graph.productName).getByIdAndEnv(productResponse.getGraphId(), envType(), GetGraphResponse.class);
         Boolean support = (Boolean) graphResponse.getStaticData().get("on_support");
+        if(Objects.isNull(support)) {
+            support = JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getJsonSchema().get("properties")))
+                    .getBoolean("on_support.default");
+        }
         return Objects.requireNonNull(support, "on_support не найден в графе");
     }
 
