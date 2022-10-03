@@ -158,7 +158,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void changeName(String name) {
-        OrderServiceSteps.executeAction("kafka_edit_cluster_name", this, new JSONObject().append("new_name", name), this.projectId);
+        OrderServiceSteps.executeAction("kafka_edit_cluster_name", this, new JSONObject().put("new_name", name), this.projectId);
     }
 
     public void resize() {
