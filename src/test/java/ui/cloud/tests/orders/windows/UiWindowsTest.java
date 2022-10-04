@@ -131,14 +131,17 @@ public class UiWindowsTest extends Tests {
     void checkProtectOrder() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.switchProtectOrder("Защита от удаления включена");
-        winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
-        {
-            Dialog dlgActions = new Dialog("Удаление");
-            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
-        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
-        TypifiedElement.refresh();
-        winPage.switchProtectOrder("Защита от удаления выключена");
+        try {
+            winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
+            {
+                Dialog dlgActions = new Dialog("Удаление");
+                dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
+            }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
+            new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
+            TypifiedElement.refresh();
+        } finally {
+            winPage.switchProtectOrder("Защита от удаления выключена");
+        }
     }
 
     @Test
