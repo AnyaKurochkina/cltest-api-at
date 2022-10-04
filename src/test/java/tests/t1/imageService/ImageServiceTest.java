@@ -30,11 +30,11 @@ public class ImageServiceTest extends Tests {
     public void getImageGroupsListTest() {
         ImageGroups imageGroup = ImageGroups.builder()
                 .name("get_image_groups_test_api")
-                .tags(Collections.singletonList("os:linux"))
-                .distro("fedora")
+                .tags(Collections.singletonList("type:os"))
+                .distro("ubuntu")
                 .build()
                 .createObject();
-        Waiting.sleep(8);
+        Waiting.sleep(15000);
         assertTrue(isImageGroupExist(imageGroup.getName(), false), String.format("Группы с именем %s нет в списке", imageGroup.getName()));
     }
 
@@ -60,7 +60,7 @@ public class ImageServiceTest extends Tests {
         for (ImageGroups groups : imageGroupsList) {
             List<Image> imageList = groups.getImages();
             for (Image image : imageList) {
-                assertEquals(region, image.getRegion(), "Регионы не совпадают");
+                assertEquals(region, image.getAvailabilityZone(), "Регионы не совпадают");
             }
         }
     }
@@ -121,6 +121,6 @@ public class ImageServiceTest extends Tests {
                 .build();
         JSONObject jsonObject = updatedImageGroups.init().toJson();
         partialUpdateImageGroupById(imageGroups.getId(), jsonObject);
-        assertEquals(getImageGroup(imageGroups.getId()), updatedImageGroups);
+        assertEquals(getImageGroup(imageGroups.getId()).getTags(), updatedImageGroups.getTags());
     }
 }

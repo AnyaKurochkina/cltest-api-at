@@ -21,7 +21,9 @@ import static steps.t1.imageService.ImageServiceSteps.deleteImageGroupById;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@ToString
 public class ImageGroups extends Entity {
+
     private String id;
     private String name;
     private String title;

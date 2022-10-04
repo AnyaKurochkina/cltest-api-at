@@ -27,7 +27,7 @@ public class ImageServiceSteps extends Steps {
     public static List<ImageGroups> getImageGroupsListByRegion(String region) {
         return new Http(ImageService)
                 .setRole(T1_ADMIN)
-                .get("/image_groups?region={}", region)
+                .get("/image_groups?availability_zone={}", region)
                 .assertStatus(200)
                 .jsonPath()
                 .getList("", ImageGroups.class);

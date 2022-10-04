@@ -5,6 +5,7 @@ import core.helper.http.Http;
 import io.qameta.allure.Step;
 import models.productCatalog.icon.GetIconList;
 import models.productCatalog.icon.Icon;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 
@@ -14,6 +15,16 @@ import static core.helper.Configure.ProductCatalogURL;
 
 public class IconSteps extends Steps {
     private static final String endPoint = "/api/v1/icons/";
+
+    @Step("Создание иконки")
+    public static Icon createIcon(JSONObject json) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(json)
+                .post(endPoint)
+                .assertStatus(201)
+                .extractAs(Icon.class);
+    }
 
     @Step("Проверка существования Иконки по имени")
     public static boolean isIconExists(String name) {
@@ -34,6 +45,7 @@ public class IconSteps extends Steps {
     public static String getIconIdByNameWithMultiSearch(String name) {
         String objectId = null;
         List<Icon> list = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "?include=total_count&page=1&per_page=50&multisearch=" + name)
                 .assertStatus(200).extractAs(GetIconList.class).getList();
         for (Icon Icon : list) {

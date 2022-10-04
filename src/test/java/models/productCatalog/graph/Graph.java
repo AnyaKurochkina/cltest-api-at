@@ -7,12 +7,12 @@ import core.helper.StringUtils;
 import core.helper.http.Http;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.graphs.getUsedList.GetUsedListResponse;
-import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.productCatalog.product.Product;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -24,6 +24,7 @@ import java.util.Map;
 import static core.helper.Configure.ProductCatalogURL;
 import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.GraphSteps.getObjectArrayUsedGraph;
+import static steps.productCatalog.ProductSteps.*;
 
 @Log4j2
 @Builder
@@ -156,13 +157,12 @@ public class Graph extends Entity {
                         }
                         break;
                     case ("Product"):
-                        ProductCatalogSteps productSteps = new ProductCatalogSteps("/products/", ProductCatalogURL + "/api/v1/");
-                        if (productSteps.isExists(resp.getName())) {
-                            GetProductResponse getProduct = (GetProductResponse) productSteps.getById(resp.getId(), GetProductResponse.class);
-                            if (getProduct.isOpen()) {
-                                productSteps.partialUpdateObject(getProduct.getId(), new JSONObject().put("is_open", false));
+                        if (isProductExists(resp.getName())) {
+                            Product product = getProductById(resp.getId());
+                            if (product.getIsOpen()) {
+                                partialUpdateProduct(product.getProductId(), new JSONObject().put("is_open", false));
                             }
-                            productSteps.deleteById(resp.getId());
+                            deleteProductById(resp.getId());
                         }
                         break;
                     case ("Service"):

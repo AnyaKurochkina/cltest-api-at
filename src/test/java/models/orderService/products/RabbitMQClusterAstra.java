@@ -79,7 +79,7 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", /*isTest()*/getSupport())
                 .set("$.order.attrs.layout", getIdGeoDistribution("rabbitmq", "rabbitmq-2"))
                 .set("$.order.label", getLabel())
                 .build();

@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static core.helper.Configure.ProductCatalogURL;
-import static io.restassured.RestAssured.given;
 
 @Data
 @AllArgsConstructor
@@ -297,15 +296,6 @@ public class ProductCatalogSteps {
                 .patch(productName + id + "/")
                 .assertStatus(401);
     }
-
-    @Step("Получение времени отклика на запрос")
-    public long getTime(String url) {
-        io.restassured.response.Response response = given()
-                .get(url);
-        return response.getTime();
-    }
-
-
 
     public Response getDeleteObjectResponse(String id) {
         return new Http(ProductCatalogURL)

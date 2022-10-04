@@ -112,7 +112,7 @@ public class TestResultRequestFactory {
         final Throwable failureReason = parentStep.getFailureReason();
         if (failureReason != null) {
             testResult.setMessage(failureReason.getMessage());
-            testResult.setTraces(escapeHtml(getStackTraceThrowable(failureReason)));
+            testResult.setTraces(getStackTraceThrowable(failureReason));
         }
         testResult.getLinks().addAll(this.makeInnerLinks(parentStep.getLinkItems()).stream().distinct().collect(Collectors.toList()));
         final InnerResult innerResult;

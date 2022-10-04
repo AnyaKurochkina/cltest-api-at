@@ -215,7 +215,7 @@ public class ApacheKafkaClusterTest extends Tests {
     void changeName(ApacheKafkaCluster product) {
         product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.changeName("new_name");
+            kafka.changeName("new-name");
         }
     }
 

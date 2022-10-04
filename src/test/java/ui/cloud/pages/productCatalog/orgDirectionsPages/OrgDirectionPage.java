@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Input;
+import ui.elements.TypifiedElement;
 
 import java.util.Objects;
 
@@ -28,10 +29,11 @@ public class OrgDirectionPage {
 
     public OrgDirectionPage editNameField(String name) {
         new Input(inputNameField).setValue(name);
-        TestUtils.scrollToTheBottom();
+        saveButton.scrollIntoView(TypifiedElement.scrollCenter);
         saveButton.click();
         return this;
     }
+
     @Step("Запонение полей title, name, description и сохранение")
     public OrgDirectionsListPage fillAndSave(String title, String name, String description) {
         inputTitleField.setValue(title);
@@ -43,17 +45,20 @@ public class OrgDirectionPage {
         cancelButton.click();
         return new OrgDirectionsListPage();
     }
+
     @Step("Удаление направления")
     public OrgDirectionPage deleteDirection() {
         deleteButton.click();
         return this;
     }
+
     @Step("Ввод id и удаление")
     public OrgDirectionsListPage fillIdAndDelete() {
         new Input(inputId).setValue(id.getText());
         frameDeleteButton.shouldBe(Condition.enabled).click();
         return new OrgDirectionsListPage();
     }
+
     @Step("Ввод невалидного id")
     public OrgDirectionPage inputInvalidId(String dirId) {
         new Input(inputId).setValue(dirId);
@@ -61,6 +66,7 @@ public class OrgDirectionPage {
         inputId.clear();
         return this;
     }
+
     @Step("Проверка значений полей")
     public boolean isFieldsCompare(String name, String title, String description) {
         String cloneName = name + "-clone";
@@ -71,8 +77,10 @@ public class OrgDirectionPage {
                 && Objects.requireNonNull(inputNameField.getValue()).equals(cloneName)
                 && Objects.requireNonNull(inputDescriptionField.getValue()).equals(description);
     }
+
     @Step("Проверка изменения имени")
     public boolean isNameChanged(String name) {
+        TestUtils.wait(1000);
         return name.equals(inputNameField.getValue());
     }
 

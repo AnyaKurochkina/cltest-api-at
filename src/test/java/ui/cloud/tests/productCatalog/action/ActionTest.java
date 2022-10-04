@@ -5,7 +5,6 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.action.Action;
 import models.productCatalog.graph.Graph;
-import models.productCatalog.icon.IconStorage;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -165,7 +164,7 @@ public class ActionTest extends BaseTest {
                 .actionName(name)
                 .title(name)
                 .number(0)
-                .icon(IconStorage.ICON_FOR_AT_TEST)
+                //.icon(IconStorage.ICON_FOR_AT_TEST)
                 .build()
                 .createObject();
         assertFalse(new IndexPage().goToActionsPage()

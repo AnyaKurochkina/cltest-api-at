@@ -23,7 +23,6 @@ import static core.helper.Configure.ProductCatalogURL;
 public class OrgDirection extends Entity {
     private ExtraData extraData;
     private String orgDirectionName;
-    private String icon;
     private String iconUrl;
     private String iconStoreId;
     private String description;
@@ -48,9 +47,9 @@ public class OrgDirection extends Entity {
                 .set("$.name", orgDirectionName)
                 .set("$.title", title)
                 .set("$.description", description)
-                .set("$.icon", icon)
-                .set("$.icon_url", iconUrl)
                 .set("$.icon_store_id", iconStoreId)
+                .set("$.icon_url", iconUrl)
+                .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .build();
     }
 

@@ -1,32 +1,24 @@
-package models.productCatalog.forbiddenAction;
+package models.productCatalog.allowedAction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import core.enums.Role;
 import core.helper.JsonHelper;
-import core.helper.StringUtils;
-import core.helper.http.Http;
-import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.productCatalog.action.Action;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogURL;
-import static steps.productCatalog.ForbiddenActionSteps.*;
+import static steps.productCatalog.AllowedActionSteps.isAllowedActionExists;
 
 @Log4j2
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"jsonTemplate", "productName"}, callSuper = false)
-@ToString(exclude = {"jsonTemplate", "productName"})
-public class ForbiddenAction extends Entity {
-
+@EqualsAndHashCode(exclude = "active", callSuper = false)
+public class AllowedAction extends Entity {
     @JsonProperty("event_provider")
     private List<String> eventProvider;
     private String description;
@@ -54,13 +46,12 @@ public class ForbiddenAction extends Entity {
     private String direction;
     private String jsonTemplate;
     private String productName;
-
     @Override
     public Entity init() {
-        jsonTemplate = "productCatalog/forbiddenAction/createForbiddenAction.json";
-        productName = "/api/v1/forbidden_actions/";
+        jsonTemplate = "productCatalog/allowedAction/createAllowedAction.json";
+        productName = "/api/v1/allowed_actions/";
         if (actionId == null) {
-            Action action = Action.builder().actionName("action_for_forbidden_action_api_test").build().createObject();
+            Action action = Action.builder().actionName("action_for_allowed_action_api_test").build().createObject();
             actionId = action.getActionId();
         }
         return this;
@@ -79,29 +70,20 @@ public class ForbiddenAction extends Entity {
                 .set("$.config_restriction", configRestriction)
                 .set("$.is_all_levels", isAllLevels)
                 .set("$.direction", direction)
+                .set("$.environment_type_restriction", environmentTypeRestriction)
                 .build();
     }
 
     @Override
-    @Step("Создание запрещенного действия")
     protected void create() {
-        if (isForbiddenActionExists(name)) {
-            deleteForbiddenActionByName(name);
+        if (isAllowedActionExists(name)) {
+
         }
-        ForbiddenAction forbiddenAction = new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(toJson())
-                .post(productName)
-                .assertStatus(201)
-                .extractAs(ForbiddenAction.class);
-        StringUtils.copyAvailableFields(forbiddenAction, this);
-        Assertions.assertNotNull(id, "Запрещенное действие с именем: " + name + ", не создался");
 
     }
 
     @Override
-    @Step("Удаление запрещенного действия")
     protected void delete() {
-        deleteForbiddenActionById(id);
+
     }
 }

@@ -30,7 +30,6 @@ public class Services extends Entity {
     private Boolean turnOffInventory;
     private List<String> versionList;
     private Boolean isPublished;
-    private String icon;
     private String iconUrl;
     private String iconStoreId;
     private String description;
@@ -99,9 +98,8 @@ public class Services extends Entity {
                 .set("$.direction_id", directionId)
                 .set("$.direction_name", directionName)
                 .set("$.service_info", serviceInfo)
-                .set("$.icon", icon)
                 .set("$.icon_url", iconUrl)
-                .set("$.icon_store_id", iconStoreId)
+                .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .setIfNullRemove("$.start_btn_label", startBtnLabel)
                 .build();
     }
@@ -119,6 +117,7 @@ public class Services extends Entity {
                 .assertStatus(201)
                 .extractAs(CreateServiceResponse.class);
         serviceId = createServiceResponse.getId();
+        directionName = createServiceResponse.getDirectionName();
         Assertions.assertNotNull(serviceId, "Сервис с именем: " + serviceName + ", не создался");
     }
 
