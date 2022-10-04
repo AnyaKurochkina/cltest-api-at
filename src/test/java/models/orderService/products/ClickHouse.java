@@ -201,7 +201,7 @@ public class ClickHouse extends IProduct {
 
 
     public void checkConnectDb() {
-        checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
+//        checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
         checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword,
                 ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL))
                         .replaceFirst("/play", "")
