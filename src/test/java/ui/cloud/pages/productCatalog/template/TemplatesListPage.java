@@ -97,7 +97,7 @@ public class TemplatesListPage {
     }
 
     @Step("Проверка заголовков списка графов")
-    public TemplatesListPage checkTemplatesListHeaders() {
+    public TemplatesListPage checkHeaders() {
         Table templatesList = new Table(templateNameColumn);
         assertEquals(0, templatesList.getHeaderIndex("Наименование"));
         assertEquals(1, templatesList.getHeaderIndex(templateNameColumn));

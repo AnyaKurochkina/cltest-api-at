@@ -25,6 +25,7 @@ public class IndexPage {
     private final SelenideElement directions = $x("//*[@href='/meccano/org_direction']");
     private final SelenideElement actions = $x("//*[@href='/meccano/actions']");
     private final SelenideElement templates = $x("//a[@href='/meccano/templates']");
+    private final SelenideElement orderTemplates = $x("//a[@href='/meccano/order-templates']");
 
     public ProductsPage clickOrderMore() {
         orderMoreBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover().click();
@@ -60,6 +61,12 @@ public class IndexPage {
     @Step("Переход на страницу Конструктор.Шаблоны узлов")
     public TemplatesListPage goToTemplatesPage() {
         templates.click();
+        return new TemplatesListPage();
+    }
+
+    @Step("Переход на страницу Конструктор.Шаблоны отображения")
+    public TemplatesListPage goToOrderTemplatesPage() {
+        orderTemplates.click();
         return new TemplatesListPage();
     }
 }

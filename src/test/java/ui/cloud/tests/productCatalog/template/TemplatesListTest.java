@@ -17,9 +17,9 @@ public class TemplatesListTest extends TemplateBaseTest {
     @Test
     @TmsLink("486731")
     @DisplayName("Проверка заголовков списка, сортировка")
-    public void checkGraphsListSorting() {
+    public void checkHeadersAndSorting() {
         new IndexPage().goToTemplatesPage()
-                .checkTemplatesListHeaders()
+                .checkHeaders()
                 .checkSortingByTitle()
                 .checkSortingByName()
                 .checkSortingByCreateDate();
