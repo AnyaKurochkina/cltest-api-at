@@ -8,6 +8,7 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
+import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.pages.services.ServicesListPage;
@@ -65,8 +66,8 @@ public class IndexPage {
     }
 
     @Step("Переход на страницу Конструктор.Шаблоны отображения")
-    public TemplatesListPage goToOrderTemplatesPage() {
+    public OrderTemplatesListPage goToOrderTemplatesPage() {
         orderTemplates.click();
-        return new TemplatesListPage();
+        return new OrderTemplatesListPage();
     }
 }

@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog.template;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -13,7 +14,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TemplatesListPage {
-    private static final String templateNameColumn = "Код шаблона";
+    private static final String columnName = "Код шаблона";
     private final SelenideElement pageTitle = $x("//div[text() = 'Шаблоны узлов']");
     private final SelenideElement createTemplateButton = $x("//div[@data-testid = 'add-button']//button");
     private final Input nameInput = Input.byLabel("Код шаблона");
@@ -68,7 +69,7 @@ public class TemplatesListPage {
     public TemplatesListPage findTemplateByValue(String value, Template template) {
         searchInput.setValue(value);
         TestUtils.wait(1000);
-        new Table(templateNameColumn).isColumnValueEquals(templateNameColumn, template.getName());
+        Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, template.getName()));
         return this;
     }
 
@@ -90,7 +91,7 @@ public class TemplatesListPage {
     @Step("Удаление шаблона '{name}'")
     public TemplatesListPage deleteTemplate(String name) {
         search(name);
-        BaseList.openActionMenu(templateNameColumn, name);
+        BaseList.openActionMenu(columnName, name);
         deleteAction.click();
         new DeleteDialog().inputValidIdAndDelete();
         return this;
@@ -98,9 +99,9 @@ public class TemplatesListPage {
 
     @Step("Проверка заголовков списка графов")
     public TemplatesListPage checkHeaders() {
-        Table templatesList = new Table(templateNameColumn);
+        Table templatesList = new Table(columnName);
         assertEquals(0, templatesList.getHeaderIndex("Наименование"));
-        assertEquals(1, templatesList.getHeaderIndex(templateNameColumn));
+        assertEquals(1, templatesList.getHeaderIndex(columnName));
         assertEquals(2, templatesList.getHeaderIndex("Дата создания"));
         assertEquals(3, templatesList.getHeaderIndex("Описание"));
         return this;
@@ -144,7 +145,7 @@ public class TemplatesListPage {
 
     @Step("Открытие страницы шаблона '{name}'")
     public TemplatePage openTemplatePage(String name) {
-        new Table(templateNameColumn).getRowElementByColumnValue(templateNameColumn, name).click();
+        new Table(columnName).getRowElementByColumnValue(columnName, name).click();
         return new TemplatePage();
     }
 
@@ -172,7 +173,7 @@ public class TemplatesListPage {
 
     @Step("Проверка сортировки по коду шаблона")
     public TemplatesListPage checkSortingByName() {
-        BaseList.checkSortingByStringField(templateNameColumn);
+        BaseList.checkSortingByStringField(columnName);
         return this;
     }
 
@@ -196,21 +197,21 @@ public class TemplatesListPage {
 
     @Step("Проверка, что подсвечен шаблон 'name'")
     public void checkTemplateIsHighlighted(String name) {
-        BaseList.checkRowIsHighlighted(templateNameColumn, name);
+        BaseList.checkRowIsHighlighted(columnName, name);
     }
 
     @Step("Поиск и открытие страницы шаблона '{name}'")
     public TemplatePage findAndOpenTemplatePage(String name) {
         searchInput.setValue(name);
         TestUtils.wait(500);
-        new Table(templateNameColumn).getRowElementByColumnValue(templateNameColumn, name).click();
+        new Table(columnName).getRowElementByColumnValue(columnName, name).click();
         TestUtils.wait(600);
         return new TemplatePage();
     }
 
     @Step("Копирование шаблона '{name}'")
     public TemplatesListPage copyTemplate(String name) {
-        new BaseList().copy(templateNameColumn, name);
+        new BaseList().copy(columnName, name);
         new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();
         cancelButton.shouldBe(Condition.enabled).click();
         return this;

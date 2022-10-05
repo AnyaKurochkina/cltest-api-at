@@ -25,8 +25,8 @@ public class TemplatesListTest extends TemplateBaseTest {
                 .checkSortingByCreateDate();
     }
 
-    @TmsLink("1116098")
     @Test
+    @TmsLink("1116098")
     @DisplayName("Поиск в списке шаблонов")
     public void searchGraphTest() {
         Template template = new Template(NAME);

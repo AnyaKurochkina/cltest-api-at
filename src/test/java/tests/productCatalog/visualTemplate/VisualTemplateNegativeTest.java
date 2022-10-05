@@ -6,7 +6,7 @@ import httpModels.productCatalog.itemVisualItem.createVisualTemplate.*;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.ItemVisualTemplates;
+import models.productCatalog.ItemVisualTemplate;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +38,7 @@ public class VisualTemplateNegativeTest extends Tests {
     @Test
     public void createVisualTemplateWithNotUniqueEventTypeEventProvider() {
         String name = "create_visual_template_with_not_unique_type_provider";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -62,7 +62,7 @@ public class VisualTemplateNegativeTest extends Tests {
     @Test
     public void getVisualTemplateByIdWithOutToken() {
         String name = "get_by_id_with_out_token_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -79,7 +79,7 @@ public class VisualTemplateNegativeTest extends Tests {
     @Test
     public void createVisualTemplateWithNonUniqueName() {
         String name = "create_with_same_name_item_visual_template_test_api";
-        ItemVisualTemplates.builder()
+        ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))

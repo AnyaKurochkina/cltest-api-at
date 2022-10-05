@@ -24,7 +24,7 @@ import static core.helper.Configure.ProductCatalogURL;
 @Log4j2
 @Builder
 @Getter
-public class ItemVisualTemplates extends Entity {
+public class ItemVisualTemplate extends Entity {
 
     private List<String> eventType;
     private CompactTemplate compactTemplate;
