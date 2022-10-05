@@ -372,7 +372,7 @@ public class OrderServiceSteps extends Steps {
 
         Item item = new Item();
         if(!filter.equals(""))
-            filter = "it.data.config." + filter + " &&";
+            filter = "it.data.config." + filter + " && ";
         //Получаем все item ID по name, например: "expand_mount_point"
         item.setId(jsonPath.get(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action)));
         //Получаем все item name
