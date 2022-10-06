@@ -25,6 +25,8 @@ import steps.stateService.StateServiceSteps;
 import steps.tarifficator.CostSteps;
 
 import java.lang.reflect.Type;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -317,6 +319,16 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
+    private static void waitStatus(Duration timeout, IProduct product){
+        Instant startTime = Instant.now();
+        String status;
+        do {
+            Waiting.sleep(20000);
+            status = getStatus(product);
+        } while (status.equals("pending") || status.equals("changing")
+                && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
+    }
+
     @Step("Получение домена для сегмента сети {netSegment}")
     public static String getDomainBySegment(IProduct product, String netSegment) {
         return new Http(OrderServiceURL)
@@ -369,6 +381,8 @@ public class OrderServiceSteps extends Steps {
                 .get("/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
+
+        waitStatus(Duration.ofMinutes(10), product);
 
         Item item = new Item();
         if(!filter.equals(""))
