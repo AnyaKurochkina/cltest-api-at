@@ -10,6 +10,7 @@ import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualT
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ public class ItemVisualTemplate extends Entity {
     private Boolean isActive;
     private FullTemplate fullTemplate;
     private List<String> eventProvider;
+    @Setter
     private String name;
     private LinkedHashMap<String, Object> defaultItem;
     private String description;

@@ -50,7 +50,8 @@ public class VisualTemplateNegativeTest extends Tests {
         JSONObject jsonObject = JsonHelper.getJsonTemplate("productCatalog/itemVisualTemplate/createItemVisual.json")
                 .set("name", "visual")
                 .set("event_provider", Collections.singletonList("docker"))
-                .set("event_type", Collections.singletonList("app")).build();
+                .set("event_type", Collections.singletonList("app"))
+                .set("is_active", true).build();
         Response response = steps.createProductObject(jsonObject).assertStatus(422);
         steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
         assertEquals(name, response.jsonPath().get("name[0]").toString());

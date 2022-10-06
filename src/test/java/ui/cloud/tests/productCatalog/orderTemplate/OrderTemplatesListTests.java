@@ -1,10 +1,12 @@
 package ui.cloud.tests.productCatalog.orderTemplate;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 
+@Feature("Действия со списком шаблонов отображения")
 public class OrderTemplatesListTests extends OrderTemplateBaseTest {
 
     @Test

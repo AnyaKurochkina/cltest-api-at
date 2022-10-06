@@ -16,8 +16,11 @@ public class Input implements TypifiedElement {
     }
 
     public static Input byLabel(String label) {
-        //new Input($x("//label[starts-with(.,'{}')]/following::input[1]", label));
         return new Input($x("//label[starts-with(.,'{}')]/parent::*//input", label));
+    }
+
+    public static Input byLabelV2(String label) {
+        return new Input($x("//label[starts-with(.,'{}')]/following::input[1]", label));
     }
 
     public static Input byPlaceholder(String placeholder) {

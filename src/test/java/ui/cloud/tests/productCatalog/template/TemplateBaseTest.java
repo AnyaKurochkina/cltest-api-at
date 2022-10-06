@@ -27,13 +27,11 @@ public class TemplateBaseTest extends BaseTest {
             "productCatalog/templates/createTemplate.json");
 
     @BeforeEach
-    @DisplayName("Создание графов через API")
     public void setUp() {
         createTemplate(NAME);
     }
 
     @AfterEach
-    @DisplayName("Удаление графов, созданных в сетапе")
     public void tearDown() {
         deleteTemplate(NAME);
     }

@@ -24,7 +24,6 @@ public class TemplatesListPage {
     private final Input rollbackQueueInput = Input.byLabel("Название очереди для отката");
     private final DropDown typeDropDown = DropDown.byLabel("Тип");
     private final Input searchInput = Input.byPlaceholder("Поиск");
-    private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
     private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
     private final SelenideElement templateNameValidationHint = $x("//p[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
@@ -67,14 +66,13 @@ public class TemplatesListPage {
 
     @Step("Проверка, что шаблон '{template.name}' найден при поиске по значению '{value}'")
     public TemplatesListPage findTemplateByValue(String value, Template template) {
-        searchInput.setValue(value);
-        TestUtils.wait(1000);
+        search(value);
         Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, template.getName()));
         return this;
     }
 
     @Step("Поиск шаблона по значению 'value'")
-    public TemplatesListPage search(String value) {
+    private TemplatesListPage search(String value) {
         searchInput.setValue(value);
         TestUtils.wait(1000);
         return this;
@@ -82,8 +80,7 @@ public class TemplatesListPage {
 
     @Step("Проверка, что шаблоны не найдены при поиске по '{value}'")
     public TemplatesListPage checkTemplateNotFound(String value) {
-        searchInput.setValue(value);
-        TestUtils.wait(1000);
+        search(value);
         noDataFound.shouldBe(Condition.visible);
         return this;
     }
@@ -91,8 +88,7 @@ public class TemplatesListPage {
     @Step("Удаление шаблона '{name}'")
     public TemplatesListPage deleteTemplate(String name) {
         search(name);
-        BaseList.openActionMenu(columnName, name);
-        deleteAction.click();
+        BaseList.delete(columnName, name);
         new DeleteDialog().inputValidIdAndDelete();
         return this;
     }
@@ -132,7 +128,7 @@ public class TemplatesListPage {
         return this;
     }
 
-    @Step("Проверка валидации неуникального имени шаблона узла 'template.name'")
+    @Step("Проверка валидации неуникального имени шаблона узла '{template.name}'")
     public TemplatesListPage checkNonUniqueNameValidation(Template template) {
         createTemplateButton.click();
         nameInput.setValue(template.getName());
@@ -202,8 +198,7 @@ public class TemplatesListPage {
 
     @Step("Поиск и открытие страницы шаблона '{name}'")
     public TemplatePage findAndOpenTemplatePage(String name) {
-        searchInput.setValue(name);
-        TestUtils.wait(500);
+        search(name);
         new Table(columnName).getRowElementByColumnValue(columnName, name).click();
         TestUtils.wait(600);
         return new TemplatePage();
