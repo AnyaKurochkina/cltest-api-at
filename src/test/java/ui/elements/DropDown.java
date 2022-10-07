@@ -31,6 +31,10 @@ public class DropDown implements TypifiedElement {
         return new DropDown($x(xpath));
     }
 
+    public static DropDown byInputName(String name) {
+        return new DropDown($x("//div[input[@name='{}']]", name));
+    }
+
     @Step("Выбрать в select элемент с названием '{value}'")
     public void select(String value) {
         click();
