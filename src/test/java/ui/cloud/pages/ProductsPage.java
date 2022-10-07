@@ -7,7 +7,7 @@ import static com.codeborne.selenide.Selenide.$$x;
 import static tests.Tests.clickableCnd;
 
 public class ProductsPage {
-    ElementsCollection products = $$x("//button[img]");
+    ElementsCollection products = $$x("//img/ancestor::button");
 
     public void selectProduct(String product){
         products.find(Condition.exactText(product)).$("img").hover()

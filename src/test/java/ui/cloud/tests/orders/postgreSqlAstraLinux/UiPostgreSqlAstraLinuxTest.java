@@ -35,8 +35,8 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     public UiPostgreSqlAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
-            product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-          // product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/1c7e72be-76e3-4460-9e8c-e27aeddb4b13/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+           product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+           //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/c24c4e41-5ead-47e1-beab-2d0d1425b742/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -132,7 +132,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     @DisplayName("UI PostgreSQLAstra. Изменить max_connections")
     void changeMaxConnections() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("145"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
     }
 
 
@@ -218,6 +218,26 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     @Test
     @Order(19)
+    @TmsLink("1171237")
+    @DisplayName("UI PostgreSQLAstra. Актуализировать extensions")
+    void updateExtensions() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.updateExtensions(nameDb));
+    }
+
+    @Test
+    @Order(20)
+    @TmsLink("1171241")
+    @DisplayName("UI PostgreSQLAstra. Изменить extensions")
+    void changeExtensions() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeExtensions(nameDb));
+    }
+
+    @Test
+    @Order(21)
     @TmsLink("993400")
     @DisplayName("UI PostgreSQLAstra. Удаление БД")
     void removeDb() {
@@ -227,7 +247,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     }
 
     @Test
-    @Order(20)
+    @Order(22)
     @TmsLinks({@TmsLink("993397"), @TmsLink("993401")})
     @DisplayName("UI PostgreSQLAstra. Выключить принудительно / Включить")
     void stopHard() {
@@ -237,7 +257,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     }
 
     @Test
-    @Order(21)
+    @Order(23)
     @TmsLink("993390")
     @DisplayName("UI PostgreSQLAstra. Выключить")
     void stopSoft() {

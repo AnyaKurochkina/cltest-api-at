@@ -34,7 +34,7 @@ public class UiClickHouseTest extends Tests {
     public UiClickHouseTest() {
         if (Configure.ENV.equals("prod"))
             product = ClickHouse.builder().productName("ClickHouse").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/49ddbac6-6240-4f47-8465-11aefd6e7f4e/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/aa9f092f-dd38-4333-a7f0-a8ec35203f9e/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = ClickHouse.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -72,8 +72,8 @@ public class UiClickHouseTest extends Tests {
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
             new OrdersPage()
-                    .getRowElementByColumnValue("Продукт",
-                            orderPage.getLabelValue())
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
                     .hover()
                     .click();
             ClickHousePage clickHousePages = new ClickHousePage(product);
@@ -122,7 +122,7 @@ public class UiClickHouseTest extends Tests {
 
     @Test
     @Order(11)
-    @TmsLink("1162629")
+    @TmsLink("1177396")
     @DisplayName("UI ClickHouse. Проверить конфигурацию")
     void vmActCheckConfig() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
