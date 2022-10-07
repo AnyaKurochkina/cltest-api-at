@@ -206,6 +206,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Выполнение action \"{action}\"")
     public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId, String filter) {
         //Получение item'ов для экшена
+        waitStatus(Duration.ofMinutes(10), product);
         Item item = getItemIdByOrderIdAndActionTitle(action, product, filter);
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
         //TODO: Возможно стоит сделать более детальную проверку на значение
@@ -381,8 +382,6 @@ public class OrderServiceSteps extends Steps {
                 .get("/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
-
-        waitStatus(Duration.ofMinutes(10), product);
 
         Item item = new Item();
         if(!filter.equals(""))
