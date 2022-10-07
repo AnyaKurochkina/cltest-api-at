@@ -1,12 +1,14 @@
-package ui.cloud.tests.orders.postgreSqlAstraLinux;
+package ui.cloud.tests.orders.postgreSqlClusterAstra;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.PostgreSQL;
+import models.orderService.products.PostgresSQLCluster;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,25 +22,28 @@ import ui.uiExtesions.InterceptTestExtension;
 
 import java.time.Duration;
 
+import static core.helper.StringUtils.$x;
+
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_postgre_sql_astra")})
+@Tags({@Tag("ui_postgre_sql_cluster_astra")})
 @Log4j2
-public class UiPostgreSqlAstraLinuxTest extends Tests {
+public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
 
-    PostgreSQL product;
+    PostgresSQLCluster product;
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
+    SelenideElement node = $x("(//td[.='postgresql'])[1]");
 
-    public UiPostgreSqlAstraLinuxTest() {
+    public UiPostgreSqlClusterAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
-            product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/486a999a-8e2c-4a98-afc3-6e03861444c4/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+           product = PostgresSQLCluster.builder().productName("PostgreSQL Cluster Astra Linux").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+         //     product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/a15246a4-c244-43d6-8af3-da5f860c84ce/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
-            product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
+            product = PostgresSQLCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
 
     }
@@ -51,16 +56,16 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     }
 
     @Test
-    @TmsLink("988624")
+    @TmsLink("851404")
     @Order(1)
-    @DisplayName("UI PostgreSQLAstra. Заказ")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Заказ")
     void orderPostgreSQL() {
         double preBillingProductPrice;
         try {
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
-            PostgreSQLAstraOrderPage orderPage = new PostgreSQLAstraOrderPage();
+            PostgreSqlClusterAstraOrderPage orderPage = new PostgreSqlClusterAstraOrderPage();
             orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
@@ -71,28 +76,28 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
             new OrdersPage()
-                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-                    .getElementByColumn("Продукт")
+                    .getRowElementByColumnValue("Продукт",
+                            orderPage.getLabelValue())
                     .hover()
                     .click();
-            PostgreSqlAstraPage pSqlPages = new PostgreSqlAstraPage(product);
+            PostgreSqlClusterAstraPage pSqlPages = new PostgreSqlClusterAstraPage(product);
             pSqlPages.waitChangeStatus(Duration.ofMinutes(25));
             pSqlPages.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
         }
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         Assertions.assertEquals(preBillingProductPrice, pSqlPage.getCostOrder(), 0.01);
     }
 
 
     @Test
-    @TmsLink("1156591")
+    @TmsLink("1151310")
     @Order(2)
-    @DisplayName("UI PostgreSQLAstra. Проверка полей заказа")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверка полей заказа")
     void checkHeaderHistoryTable() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
         pSqlPage.checkHeadersHistory();
         pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
@@ -101,116 +106,107 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     @Test
     @Order(5)
-    @TmsLink("993396")
-    @DisplayName("UI PostgreSQLAstra. Перезагрузить по питанию")
+    @TmsLink("851706")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Перезагрузить по питанию")
     void restart() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::restart);
     }
 
     @Test
     @Order(6)
-    @TmsLink("993391")
-    @DisplayName("UI PostgreSQLAstra. Получить актуальную конфигурацию")
+    @TmsLink("851809")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Получить актуальную конфигурацию")
     void getActualConfiguration() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::getActualConfiguration);
     }
 
     @Test
     @Order(7)
-    @TmsLink("993402")
-    @DisplayName("UI PostgreSQLAstra. Изменить default_transaction_isolation на REPEATABLE READ")
+    @TmsLink("851813")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить default_transaction_isolation на REPEATABLE READ")
     void changeTransactionIsolation() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeTransactionIsolation("REPEATABLE READ"));
     }
 
     @Test
     @Order(8)
-    @TmsLink("993392")
-    @DisplayName("UI PostgreSQLAstra. Изменить max_connections")
+    @TmsLink("851811")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить max_connections")
     void changeMaxConnections() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("145"));
     }
 
 
     @Test
     @Order(9)
-    @TmsLink("993389")
-    @DisplayName("UI PostgreSQLAstra. Расширить диск")
+    @TmsLink("851714")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Расширить диск")
     void expandDisk() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", new Table("Роли узла").getRowByIndex(0)));
-    }
-
-
-    @Test
-    @Order(10)
-    @TmsLink("993393")
-    @DisplayName("UI PostgreSQLAstra. Изменить конфигурацию")
-    void changeConfiguration() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", node));
     }
 
     @Test
     @Order(11)
-    @TmsLink("994656")
-    @DisplayName("UI PostgreSQLAstra. Проверить конфигурацию")
+    @TmsLink("852936")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверить конфигурацию")
     void vmActCheckConfig() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::checkConfiguration);
     }
 
     @Test
     @Order(12)
-    @TmsLink("993398")
-    @DisplayName("UI PostgreSQLAstra. Создание БД")
+    @TmsLink("851716")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Создание БД")
     void createDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
     }
 
 
     @Test
     @Order(15)
-    @TmsLink("993388")
-    @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД")
+    @TmsLink("851771")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Сбросить пароль владельца БД")
     void resetPasswordDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::resetPasswordDb);
     }
 
     @Test
     @Order(16)
-    @TmsLink("993394")
-    @DisplayName("UI PostgreSQLAstra. Добавить пользователя")
+    @TmsLink("851725")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Добавить пользователя")
     void addUserDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb, shortNameUserDB, "Пользователь для тестов"));
     }
 
     @Test
     @Order(17)
-    @TmsLink("993387")
-    @DisplayName("UI PostgreSQLAstra. Сбросить пароль пользователя БД")
+    @TmsLink("851793")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Сбросить пароль пользователя БД")
     void resetPasswordUserDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb, shortNameUserDB, "Пользователь для тестов"));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.resetPasswordUserDb(fullNameUserDB));
+
     }
 
     @Test
     @Order(18)
-    @TmsLink("993395")
-    @DisplayName("UI PostgreSQLAstra. Удалить пользователя БД")
+    @TmsLink("851797")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Удалить пользователя БД")
     void deleteUserDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.addUserDb(nameDb, shortNameUserDB, "Пользователь для тестов"));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.deleteUserDb(fullNameUserDB));
@@ -218,39 +214,39 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     @Test
     @Order(19)
-    @TmsLink("993400")
-    @DisplayName("UI PostgreSQLAstra. Удаление БД")
+    @TmsLink("851796")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Удаление БД")
     void removeDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.removeDb(nameDb));
     }
 
     @Test
     @Order(20)
-    @TmsLinks({@TmsLink("993397"), @TmsLink("993401")})
-    @DisplayName("UI PostgreSQLAstra. Выключить принудительно / Включить")
+    @TmsLinks({@TmsLink("851703"), @TmsLink("851698")})
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Выключить принудительно / Включить")
     void stopHard() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.LESS, pSqlPage::stopHard);
         pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::start);
     }
 
     @Test
     @Order(21)
-    @TmsLink("993390")
-    @DisplayName("UI PostgreSQLAstra. Выключить")
+    @TmsLink("851702")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Выключить")
     void stopSoft() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.LESS, pSqlPage::stopSoft);
     }
 
     @Test
     @Order(100)
-    @TmsLink("993399")
-    @DisplayName("UI PostgreSQLAstra. Удаление продукта")
+    @TmsLink("851707")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Удаление продукта")
     void delete() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.delete();
     }
 

@@ -27,6 +27,9 @@ public class DropDown implements TypifiedElement {
     public static DropDown byLabel(String name) {
         return new DropDown($x("//label[text()='{}']/following::div[1]", name));
     }
+    public static DropDown byXpath(String xpath) {
+        return new DropDown($x(xpath));
+    }
 
     @Step("Выбрать в select элемент с названием '{value}'")
     public void select(String value) {
