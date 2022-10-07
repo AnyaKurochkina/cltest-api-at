@@ -29,8 +29,8 @@ public class AuditPage extends GraphPage {
     private final SelenideElement copyAddressButton = $x("//span[text()='Адрес']/following::button[@title='Скопировать'][1]");
     private final SelenideElement additionalFilters = $x("//div[text()='Дополнительные фильтры']");
     private final SelenideElement clearOperationTypeFilter = $x("//*[@id='searchSelectClearIcon']");
-    private final SelenideElement applyAdditionalFiltersButton = $x("//label[text()='Учетная запись']//following::span[text()='Применить']/parent::button");
-    private final SelenideElement applyFiltersByDateButton = $x("//label[text()='Учетная запись']//preceding::span[text()='Применить']/parent::button");
+    private final SelenideElement applyAdditionalFiltersButton = $x("//label[text()='Учетная запись']//following::div[text()='Применить']/parent::button");
+    private final SelenideElement applyFiltersByDateButton = $x("//label[text()='Учетная запись']//preceding::div[text()='Применить']/parent::button");
 
     @Step("Проверка первой записи в таблице аудита")
     public AuditPage checkFirstRecord(String dateTime, String user, String operationType, String object, String statusCode, String status) {
@@ -104,7 +104,6 @@ public class AuditPage extends GraphPage {
         Assertions.assertTrue(Selenide.clipboard().getText().contains(contextId.getText()));
         copyAddressButton.click();
         Assertions.assertTrue(Selenide.clipboard().getText().equals(address.getText()));
-        TestUtils.scrollToTheTop();
         table.getRowByIndex(0).click();
         return this;
     }
@@ -142,18 +141,18 @@ public class AuditPage extends GraphPage {
     @Step("Задание в фильтре по учетной записи значения '{value}'")
     public AuditPage setUserFilterAndApply(String value) {
         showAdditionalFilters();
-        Input userInput = Input.byLabel("Учетная запись");
+        Input userInput = Input.byLabelV2("Учетная запись");
         userInput.setValue(value);
-        applyAdditionalFiltersButton.click();
+        applyAdditionalFiltersButton.scrollTo().click();
         return this;
     }
 
     @Step("Задание в фильтре по коду статуса значения '{value}'")
     public AuditPage setStatusCodeFilterAndApply(String value) {
         showAdditionalFilters();
-        Input statusCodeInput = Input.byLabel("Код статуса");
+        Input statusCodeInput = Input.byLabelV2("Код статуса");
         statusCodeInput.setValue(value);
-        applyAdditionalFiltersButton.click();
+        applyAdditionalFiltersButton.scrollTo().click();
         return this;
     }
 
@@ -169,8 +168,8 @@ public class AuditPage extends GraphPage {
     @Step("Очистка дополнительных фильтров")
     public AuditPage clearAdditionalFilters() {
         clearOperationTypeFilter.click();
-        Input.byLabel("Учетная запись").clear();
-        Input.byLabel("Код статуса").clear();
+        Input.byLabelV2("Учетная запись").clear();
+        Input.byLabelV2("Код статуса").clear();
         return this;
     }
 
@@ -179,9 +178,9 @@ public class AuditPage extends GraphPage {
         TestUtils.scrollToTheTop();
         DropDown periodDropDown = DropDown.byLabel("Период");
         periodDropDown.selectByTitle("задать период");
-        Input beginDateInput = Input.byLabel("Начало");
+        Input beginDateInput = Input.byLabelV2("Начало");
         beginDateInput.setValue(beginDate);
-        Input endDateInput = Input.byLabel("Окончание");
+        Input endDateInput = Input.byLabelV2("Окончание");
         endDateInput.setValue(endDate);
         applyFiltersByDateButton.click();
         return this;
