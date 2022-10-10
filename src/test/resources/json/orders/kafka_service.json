@@ -1,0 +1,20 @@
+{
+  "order": {
+    "project_name": "proj-ln4zg69jek",
+    "product_id": "764a84cf-c49b-4cc4-aa27-18755d8ec028",
+    "attrs": {
+      "size": 1,
+      "domain": "corp.dev.vtb",
+      "platform": "kafka_topic",
+      "topic_name": "1418_topic_name",
+      "data_center": "5",
+      "net_segment": "dev-srv-app",
+      "cluster_name": "taas-kafka-0001",
+      "is_retention_ms": true,
+      "partitions_number": 1,
+      "retention_ms": 1800000
+    },
+    "count": 1,
+    "label": "Kafka Topic как услуга"
+  }
+}
