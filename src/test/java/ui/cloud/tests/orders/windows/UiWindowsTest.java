@@ -73,6 +73,7 @@ public class UiWindowsTest extends Tests {
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
+            new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")

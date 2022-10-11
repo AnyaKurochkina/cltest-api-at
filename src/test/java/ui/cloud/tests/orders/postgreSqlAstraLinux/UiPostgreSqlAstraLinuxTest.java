@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import tests.Tests;
 import ui.cloud.pages.*;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.uiExtesions.ConfigExtension;
@@ -70,6 +71,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
+            new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")
