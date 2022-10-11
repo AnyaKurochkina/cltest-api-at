@@ -117,13 +117,13 @@ Redis:
 ApacheKafkaCluster:
   - options:
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-      - { platform: "Nutanix", env: "EDU", segment: "test-srv-synt" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
+#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
+#      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
+#      - { platform: "Nutanix", env: "EDU", segment: "test-srv-synt" }
+#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
+#      - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
+#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
+#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
 
 Ubuntu:
   - options:

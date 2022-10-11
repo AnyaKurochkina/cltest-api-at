@@ -20,7 +20,7 @@ public class GraphModifiersPage extends GraphPage {
     private final SelenideElement devEnvCheckbox = $x("//form//input[@name='dev']");
     private final SelenideElement testEnvCheckbox = $x("//form//input[@name='test']");
     private final SelenideElement prodEnvCheckbox = $x("//form//input[@name='prod']");
-    private final Input numberInput = Input.byLabel("Порядок применения");
+    private final Input numberInput = Input.byLabelV2("Порядок применения");
     private final SelenideElement showSchemas = $x("//form//label[text()='Схема']/following::*[name()='svg'][1]");
     private final SelenideElement showTypes = $x("//form//label[text()='Способ изменения']/..//*[name()='svg']");
     private final SelenideElement pathInput = $x("//form//input[@name='path']");

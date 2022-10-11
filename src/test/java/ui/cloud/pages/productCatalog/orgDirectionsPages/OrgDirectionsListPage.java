@@ -49,12 +49,14 @@ public class OrgDirectionsListPage {
         descriptionColumn.shouldBe(Condition.visible);
         return new OrgDirectionsListPage();
     }
+
     @Step("Переход на страницу редактирования направления с именем {name}")
     public OrgDirectionPage openOrgDirectionPage(String name) {
         inputSearch.setValue(name);
         $x("//td[@value = '" + name + "']").shouldBe(Condition.visible).click();
         return new OrgDirectionPage();
     }
+
     @Step("Выбор действия 'удаление'")
     public OrgDirectionsListPage deleteActionMenu(String dirName) {
         $x("//td[text() = '" + dirName + "']//ancestor::tr//*[@id = 'actions-menu-button']").click();
@@ -68,6 +70,7 @@ public class OrgDirectionsListPage {
         copyAction.click();
         return new OrgDirectionPage();
     }
+
     @Step("Ввод валидного id и удаление")
     public OrgDirectionsListPage fillIdAndDelete() {
         new Input(inputId).setValue(id.getText());

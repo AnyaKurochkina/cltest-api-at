@@ -21,10 +21,7 @@ import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static core.utils.Waiting.sleep;
 
@@ -88,9 +85,9 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
-                .set("$.order.attrs.layout", getIdGeoDistribution("kafka", "kafka:zookeeper"))
+                .set("$.order.attrs.layout", getIdGeoDistribution("kafka", "kafka-3:zookeeper-1"))
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
-
+                .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .remove("$.order.attrs.ad_logon_grants", isTest())
                 //Fix
 
@@ -234,8 +231,17 @@ public class ApacheKafkaCluster extends IProduct {
         expandMountPoint("expand_mount_point_new", "/app", 10);
     }
 
+//    public void kafkaExpandMountPoint() {
+//        expandMountPoint("kafka_expand_mount_point", "/app", 10);
+//    }
+
     public void kafkaExpandMountPoint() {
-        expandMountPoint("kafka_expand_mount_point", "/app", 10);
+        int size = 10;
+        String mount = "/app";
+        Float sizeBefore = (Float) OrderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount, mount));
+        OrderServiceSteps.executeAction("kafka_expand_mount_point", this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}"), this.getProjectId());
+        float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
+        Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }
 
     public void restart() {

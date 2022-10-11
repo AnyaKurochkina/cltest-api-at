@@ -128,7 +128,7 @@ public class GitLab extends IProduct {
     @Step("Создать токен")
     public void createProjectToken(String name, List<String> scopes) {
         OrderServiceSteps.executeAction("create_project_token_gitlab", this,
-                new JSONObject().put("name", name).put("scopes", new JSONArray(scopes)), this.getProjectId());
+                new JSONObject().put("name", name).put("scopes", new JSONArray(scopes)));
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(XPATH_TOKEN, name)), "Токен не создался");
     }
 
