@@ -57,7 +57,7 @@ public class Pipeline {
             }
         }
 
-        setEnv(testPlanName, Arrays.asList("dev", "ift"));
+        setEnv(testPlanName, Arrays.asList("dev", "ift", "blue"));
 
         JsonPath jsonPath = RestAssured.given()
                 .config(RestAssured.config().sslConfig(config))
