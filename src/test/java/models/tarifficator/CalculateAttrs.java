@@ -15,4 +15,5 @@ public class CalculateAttrs{
 	private List<String> environment;
 	private List<String> environmentPath;
 	private List<String> providerPath;
+	private List<String> environmentTypePath;
 }
