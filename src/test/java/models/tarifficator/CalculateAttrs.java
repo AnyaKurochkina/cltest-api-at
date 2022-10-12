@@ -14,4 +14,5 @@ public class CalculateAttrs{
 	private String osType;
 	private List<String> environment;
 	private List<String> environmentPath;
+	private List<String> providerPath;
 }
