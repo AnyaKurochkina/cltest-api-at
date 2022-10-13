@@ -133,14 +133,12 @@ public class ObjectPoolEntity {
                         threads.addAll(getLockedThreads(info.getThreadName()));
                     }
         }
-        System.out.println(Arrays.toString(threads.toArray()));
         return threads;
     }
 
     private boolean isDeadLock(String thread, String threadLock) {
         if(Objects.isNull(thread))
             return false;
-        System.out.println(getLockedThreads(thread).contains(threadLock));
         return getLockedThreads(thread).contains(threadLock);
     }
 
