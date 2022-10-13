@@ -121,7 +121,7 @@ public class ObjectPoolEntity {
         this.entity = ObjectPoolService.toJson(entity);
     }
 
-
+//если другой какой либо поток заблочил этот ресурс и он заблокирован моим
     private List<String> getLockedThreads(String rootThread) {
         ThreadInfo[] infos = ManagementFactory.getThreadMXBean().dumpAllThreads(true, true);
         List<String> threads = new ArrayList<>();
@@ -133,17 +133,19 @@ public class ObjectPoolEntity {
                         threads.addAll(getLockedThreads(info.getThreadName()));
                     }
         }
+        System.out.println(Arrays.toString(threads.toArray()));
         return threads;
     }
 
-    private boolean isDeadLock(String thread) {
+    private boolean isDeadLock(String thread, String threadLock) {
         if(Objects.isNull(thread))
             return false;
-        return getLockedThreads(thread).contains(Thread.currentThread().getName());
+        System.out.println(getLockedThreads(thread).contains(threadLock));
+        return getLockedThreads(thread).contains(threadLock);
     }
 
     public void lock() {
-        if(isDeadLock(lock.getOwnerThreadName()))
+        if(isDeadLock(Thread.currentThread().getName(), lock.getOwnerThreadName()))
             throw new CreateEntityException("Тестовое исключение. Надо перезапустить тест :(");
         writeLog("lock() " + status + " " + entity);
         lock.lock();
