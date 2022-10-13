@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -202,11 +203,11 @@ public class ClickHouse extends IProduct {
 
 
     public void checkConnectDb() {
-//        checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
+        Assertions.assertThrows(ConnectException.class, () ->
         checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword,
                 ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL))
                         .replaceFirst("/play", "")
-                        .replaceFirst("https:", "clickhouse:"));
+                        .replaceFirst("https:", "clickhouse:")), "UNKNOWN_DATABASE");
     }
 
 }
