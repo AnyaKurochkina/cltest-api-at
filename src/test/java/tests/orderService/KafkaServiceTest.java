@@ -4,6 +4,7 @@ import core.enums.KafkaRoles;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.orderService.products.KafkaService;
 import models.orderService.products.Moon;
 import org.junit.MarkDelete;
@@ -21,7 +22,7 @@ import tests.Tests;
 public class KafkaServiceTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
-//    @TmsLink("847365")
+    @TmsLink("1232494")
     @ParameterizedTest(name = "Создание {0}")
     void create(KafkaService product) {
         //noinspection EmptyTryBlock
@@ -29,7 +30,7 @@ public class KafkaServiceTest extends Tests {
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
-//    @TmsLink("847365")
+    @TmsLinks({@TmsLink("1232495"), @TmsLink("1232497")})
     @ParameterizedTest(name = "Создание/удаление acl {0}")
     void createAcl(KafkaService product) {
         try (KafkaService kafkaService = product.createObjectExclusiveAccess()) {
@@ -38,7 +39,17 @@ public class KafkaServiceTest extends Tests {
         }
     }
 
-//    @TmsLink("847367")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @TmsLinks({@TmsLink("1232500"), @TmsLink("1232501")})
+    @ParameterizedTest(name = "Создание/удаление acl группы {0}")
+    void createAclGroup(KafkaService product) {
+        try (KafkaService kafkaService = product.createObjectExclusiveAccess()) {
+            kafkaService.createAclGroup("1418_topic_name_consumergroup_group");
+            kafkaService.deleteAclGroup("1418_topic_name_consumergroup_group");
+        }
+    }
+
+    @TmsLink("1232502")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удаление {0}")
     @MarkDelete

@@ -29,6 +29,7 @@ import java.util.Random;
 @SuperBuilder
 public class KafkaService extends IProduct {
     public static final String KAFKA_CLUSTER_ACL_ROLE = "data[0].data.config.acls.any{it.client_cn=='%s' & it.client_role=='%s'}";
+    public static final String KAFKA_CLUSTER_ACL_GROUP = "data[0].data.config.group_acls.any{it.group_name=='%s'}";
     @ToString.Include
     String segment;
     String dataCentre;
@@ -75,6 +76,17 @@ public class KafkaService extends IProduct {
         JSONObject object = new JSONObject().put("client_cn", cert).put("client_role", role.getRole());
         OrderServiceSteps.executeAction("taas_delete_acls", this, new JSONObject().put("selected", new JSONArray().put(object.put("rawData", new JSONObject(object.toMap())))), this.projectId);
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_ROLE, cert, role.getRole())), "ACL не создался");
+    }
+
+    public void createAclGroup(String group) {
+        OrderServiceSteps.executeAction("taas_create_group_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"*\",\"group_name\":\"" + group + "\"}]}"), this.projectId);
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_GROUP, group)), "ACL не создался");
+    }
+
+    public void deleteAclGroup(String group) {
+        JSONObject object = new JSONObject().put("client_cn", "*").put("group_name", group);
+        OrderServiceSteps.executeAction("taas_delete_group_acls", this, new JSONObject().put("selected", new JSONArray().put(object.put("rawData", new JSONObject(object.toMap())))), this.projectId);
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_GROUP, group)), "ACL не создался");
     }
 
     @Step("Удаление продукта")
