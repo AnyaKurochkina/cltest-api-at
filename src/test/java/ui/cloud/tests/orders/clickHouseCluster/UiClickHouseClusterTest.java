@@ -8,6 +8,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.ClickHouseCluster;
+import models.orderService.products.PostgreSQL;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,11 +36,11 @@ public class UiClickHouseClusterTest extends Tests {
     ClickHouseCluster product;
     String nameAD= "at_ad_user";
     String nameLocalAD= "at_local_user";
-    String nameGroup ="cloud-zorg-winawisbmoz";
+    String nameGroup ="cloud-zorg-winxtkhxxdw";
     SelenideElement node = $x("(//td[.='clickhouse'])[1]");
     public UiClickHouseClusterTest() {
         if (Configure.ENV.equals("prod"))
-            product = ClickHouseCluster.builder().productName("ClickHouse Cluster").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+            product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
             //product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/80372031-092b-4529-9b09-d31780d3abea/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = ClickHouseCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
@@ -57,7 +58,7 @@ public class UiClickHouseClusterTest extends Tests {
     @TmsLink("1138094")
     @Order(1)
     @DisplayName("UI ClickHouse Cluster. Заказ")
-    void orderClickHouse() {
+    void orderClickHouseCluster() {
         double preBillingProductPrice;
         try {
             new IndexPage()
@@ -82,13 +83,13 @@ public class UiClickHouseClusterTest extends Tests {
             orderPage.orderClick();
             new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
             new OrdersPage()
-                    .getRowElementByColumnValue("Продукт",
-                            orderPage.getLabelValue())
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
                     .hover()
                     .click();
-            ClickHouseClusterPage ClickHouseClusterPages = new ClickHouseClusterPage(product);
-            ClickHouseClusterPages.waitChangeStatus(Duration.ofMinutes(25));
-            ClickHouseClusterPages.checkLastAction("Развертывание");
+            ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+            clickHouseClusterPage.waitChangeStatus(Duration.ofMinutes(25));
+            clickHouseClusterPage.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
@@ -177,7 +178,7 @@ public class UiClickHouseClusterTest extends Tests {
     @Test
     @Order(11)
     @TmsLink("1152780")
-    @DisplayName("UI ClickHouse Cluster. Удаление УЗ АД")
+    @DisplayName("UI ClickHouse Cluster. Удаление УЗ АD")
     void deleteAccountAD() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteAccountAD(nameAD));
@@ -241,7 +242,7 @@ public class UiClickHouseClusterTest extends Tests {
 
     @Test
     @Order(100)
-    @TmsLink("")
+    @TmsLink("1138090")
     @DisplayName("UI ClickHouse Cluster. Удаление продукта")
     void delete() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);

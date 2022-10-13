@@ -41,8 +41,8 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
 
     public UiPostgreSqlClusterAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
-           product = PostgresSQLCluster.builder().productName("PostgreSQL Cluster Astra Linux").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-         //     product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/a15246a4-c244-43d6-8af3-da5f860c84ce/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+         // product = PostgresSQLCluster.builder().env("DEV").productName("PostgreSQL Cluster Astra Linux").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+        product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/4ae82e4a-50fd-4786-afc5-cc4ff8f0bab5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgresSQLCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -60,7 +60,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
     @TmsLink("851404")
     @Order(1)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Заказ")
-    void orderPostgreSQL() {
+    void orderPostgreSqlCluster() {
         double preBillingProductPrice;
         try {
             new IndexPage()
@@ -139,7 +139,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить max_connections")
     void changeMaxConnections() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("145"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
     }
 
 
@@ -168,6 +168,27 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
     void createDb() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+    }
+
+
+    @Test
+    @Order(19)
+    @TmsLink("1171491")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Актуализировать extensions")
+    void updateExtensions() {
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.updateExtensions(nameDb));
+    }
+
+    @Test
+    @Order(20)
+    @TmsLink("1171492")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить extensions")
+    void changeExtensions() {
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeExtensions(nameDb));
     }
 
 
