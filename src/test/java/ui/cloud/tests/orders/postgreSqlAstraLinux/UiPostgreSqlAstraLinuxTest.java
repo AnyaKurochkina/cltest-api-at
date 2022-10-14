@@ -90,7 +90,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
 
     @Test
-    @TmsLink("1156591")
+    @TmsLink("1139488")
     @Order(2)
     @DisplayName("UI PostgreSQLAstra. Проверка полей заказа")
     void checkHeaderHistoryTable() {
@@ -131,7 +131,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     @Test
     @Order(8)
     @TmsLink("993392")
-    @DisplayName("UI PostgreSQLAstra. Изменить max_connections")
+    @DisplayName("UI PostgreSQLAstra. Максимизировать max_connections")
     void changeMaxConnections() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));

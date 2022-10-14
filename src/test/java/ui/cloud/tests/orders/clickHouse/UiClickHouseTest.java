@@ -91,7 +91,7 @@ public class UiClickHouseTest extends Tests {
 
 
     @Test
-    @TmsLink("1162624")
+    @TmsLink("1162642")
     @Order(2)
     @DisplayName("UI ClickHouse. Проверка полей заказа")
     void

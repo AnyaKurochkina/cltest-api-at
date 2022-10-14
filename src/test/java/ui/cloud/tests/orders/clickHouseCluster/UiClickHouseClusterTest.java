@@ -40,8 +40,8 @@ public class UiClickHouseClusterTest extends Tests {
     SelenideElement node = $x("(//td[.='clickhouse'])[1]");
     public UiClickHouseClusterTest() {
         if (Configure.ENV.equals("prod"))
-            product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/80372031-092b-4529-9b09-d31780d3abea/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+           product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+          //  product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/cffa192c-aab5-4826-9c11-a8a87b3d6684/user?context=proj-pkvckn08w9&type=project&org=vtb").build();
         else
             product = ClickHouseCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -69,7 +69,7 @@ public class UiClickHouseClusterTest extends Tests {
             orderPage.getNameCluster().setValue("cluster");
             orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-            orderPage.getNameDB().setValue("at_db");
+           // orderPage.getNameDB().setValue("at_db");
             orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
