@@ -29,13 +29,13 @@ public class BaseList {
         arrowIcon.shouldBe(Condition.visible);
         String firstValue = table.getValueByColumnInFirstRow(header).getValue();
         String lastValue = table.getValueByColumnInRow(table.getRows().size() - 1, header).getValue();
-        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) > 0);
+        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) > 0 || lastValue.equals(firstValue));
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
         firstValue = table.getValueByColumnInFirstRow(header).getValue();
         lastValue = table.getValueByColumnInRow(table.getRows().size() - 1, header).getValue();
-        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) < 0);
+        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) < 0 || lastValue.equals(firstValue));
     }
 
     @Step("Проверка сортировки по дате по столбцу '{header}'")
