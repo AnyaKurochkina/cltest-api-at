@@ -26,15 +26,15 @@ public class ActionPage {
     private final SelenideElement locationInOrderTab = $x("//*[text()= 'Расположение в заказе']");
     private final SelenideElement graphTab = $x("//*[text() = 'Граф']");
     private final SelenideElement graphInputField = $x("//*[@id = 'selectValueWrapper']/input");
-    private final SelenideElement graphVersionField = $x("(//*[@id= 'selectValueWrapper'])[2]");
+    private final DropDown graphVersionDropDown = DropDown.byLabel("Значение");
     private final SelenideElement dataConfigPath = $x("//input[@name = 'data_config_path']");
     private final SelenideElement dataConfigKey = $x("//input[@name = 'data_config_key']");
     private final SelenideElement data = $x("//*[@placeholder = 'Введите данные через запятую']");
     private final SelenideElement saveButton = $x("//button/div[text() = 'Сохранить']");
     private final SelenideElement cancelButton = $x("//button/div[text() = 'Отмена']");
-    private final SelenideElement inputGraphTitle = $x("//*[@id='selectValueWrapper']");
+    private final Input graphInput = Input.byLabelV2("Граф");
     private final SelenideElement deleteButton = $x("//div[text() ='Удалить']");
-    private final SelenideElement currentVersionInput = $x("//label[starts-with(.,'Выберите версию')]/parent::*//input");
+    private final SelenideElement currentVersionInput = $x("//label[text()='Выберите версию']/following::div[@id='selectValueWrapper']/div");
     private final SelenideElement deleteIconSvG = $x("(//div/*[local-name()='svg']/*[local-name()='svg']/*[local-name()='path'])[3]");
     private final SelenideElement addIcon = $x("//label[@for = 'attachment-input']");
 
@@ -52,6 +52,7 @@ public class ActionPage {
 
     @Step("Возврат на страницу списка Действий через ссылку Список дейтвий ")
     public ActionsListPage reTurnToActionsListPageByLink() {
+        TestUtils.scrollToTheTop();
         actionsListLink.click();
         return new ActionsListPage();
     }
@@ -65,9 +66,7 @@ public class ActionPage {
     @Step("Изменение версии графа")
     public ActionPage changeGraphVersion(String value) {
         graphTab.click();
-        $x("//*[@id=\"root\"]").scrollIntoView(true);
-        graphVersionField.scrollTo();
-        new DropDown(graphVersionField).selectByTitle(value);
+        graphVersionDropDown.selectByTitle(value);
         return this;
     }
 
@@ -101,7 +100,7 @@ public class ActionPage {
 
     @Step("Проверка текущей версии")
     public void checkVersion(String version) {
-        String currentVersion = currentVersionInput.getValue();
+        String currentVersion = currentVersionInput.getText();
         assertEquals(version, currentVersion);
     }
 
@@ -114,9 +113,9 @@ public class ActionPage {
 
     @Step("Сравнение значений полей")
     public ActionPage compareFields(String name, String title, String version) {
+        currentVersionInput.shouldHave(Condition.exactText(version));
         inputNameField.shouldHave(Condition.exactValue(name));
         inputTitleField.shouldHave(Condition.exactValue(title));
-        currentVersionInput.shouldHave(Condition.exactValue(version));
         return this;
     }
 
@@ -185,7 +184,7 @@ public class ActionPage {
         dataConfigKey.setValue(configKey);
         data.setValue(valueOfData);
         graphTab.click();
-        inputGraphTitle.click();
+        graphInput.click();
         graphInputField.setValue(graphTitle);
         TestUtils.wait(1000);
         $x("//div[contains(@title, '" + graphTitle + "')]").click();

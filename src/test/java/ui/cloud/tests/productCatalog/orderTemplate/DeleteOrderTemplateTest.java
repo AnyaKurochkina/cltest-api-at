@@ -5,6 +5,7 @@ import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 
 @Feature("Удаление шаблона отображения")
@@ -26,7 +27,7 @@ public class DeleteOrderTemplateTest extends OrderTemplateBaseTest {
         new IndexPage().goToOrderTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .deleteTemplate();
-        new TemplatesListPage()
+        new OrderTemplatesListPage()
                 .checkTemplateNotFound(NAME);
     }
 }
