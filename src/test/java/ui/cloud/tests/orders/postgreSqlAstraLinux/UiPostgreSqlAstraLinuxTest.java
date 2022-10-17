@@ -90,7 +90,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
 
     @Test
-    @TmsLink("1139488")
+    @TmsLink("1236733")
     @Order(2)
     @DisplayName("UI PostgreSQLAstra. Проверка полей заказа")
     void checkHeaderHistoryTable() {

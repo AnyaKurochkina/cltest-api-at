@@ -43,7 +43,7 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1235642")
     @DisplayName("UI RedisAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

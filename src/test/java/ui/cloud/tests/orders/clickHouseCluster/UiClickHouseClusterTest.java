@@ -100,7 +100,7 @@ public class UiClickHouseClusterTest extends Tests {
 
 
     @Test
-    @TmsLink("1177391")
+    @TmsLink("1236734")
     @Order(2)
     @DisplayName("UI ClickHouse Cluster. Проверка полей заказа")
     void

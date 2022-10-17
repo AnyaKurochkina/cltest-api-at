@@ -86,7 +86,7 @@ public class UiRedislAstraTest extends Tests {
 
 
     @Test
-    @TmsLink("1235642")
+    @TmsLink("1236732")
     @Order(2)
     @DisplayName("UI RedisAstra. Проверка полей заказа")
     void checkHeaderHistoryTable() {

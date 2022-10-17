@@ -95,7 +95,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
 
 
     @Test
-    @TmsLink("1151310")
+    @TmsLink("1236731")
     @Order(2)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверка полей заказа")
     void checkHeaderHistoryTable() {

@@ -87,7 +87,7 @@ public class UiScyllaDbTest extends Tests {
 
 
     @Test
-    @TmsLink("1190976")
+    @TmsLink("1236730")
     @Order(2)
     @DisplayName("UI ScyllaDB. Проверка полей заказа")
     void checkHeaderHistoryTable() {
