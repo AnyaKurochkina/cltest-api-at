@@ -191,15 +191,7 @@ public class RedisAstraPage extends IProductPage {
         Assertions.assertEquals(value, getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
-        String value2 = String.valueOf(Integer.parseInt(firstSizeDisk) +
-                Integer.parseInt(size)+Integer.parseInt(getTableByHeader("Дополнительные точки монтирования")
-                .getRowByColumnValue("", "/app/redis/logs").getValueByColumn(HEADER_DISK_SIZE)));
-        Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
-                value2));
     }
-
-
-
 
     public void resetPasswordUserDb(String nameUserDB) {
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();

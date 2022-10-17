@@ -36,8 +36,8 @@ public class UiRedislAstraTest extends Tests {
 
     public UiRedislAstraTest() {
         if (Configure.ENV.equals("prod"))
-          //  product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-           product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/60df24d2-9ab4-4631-99d4-08a8e706b2d5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+         // product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+            product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/3eba6325-c957-43cb-8ef8-a2ec3694e04a/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = Redis.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -51,7 +51,7 @@ public class UiRedislAstraTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("796925")
     @Order(1)
     @DisplayName("UI RedisAstra. Заказ")
     void orderPostgreSQL() {
@@ -89,7 +89,7 @@ public class UiRedislAstraTest extends Tests {
 
 
     @Test
-    @TmsLink("")
+    @TmsLink("1235642")
     @Order(2)
     @DisplayName("UI RedisAstra. Проверка полей заказа")
     void checkHeaderHistoryTable() {
@@ -102,7 +102,7 @@ public class UiRedislAstraTest extends Tests {
 
     @Test
     @Order(5)
-    @TmsLink("")
+    @TmsLink("796986")
     @DisplayName("UI RedisAstra. Перезагрузить по питанию")
     void restart() {
         RedisAstraPage pSqlPage = new RedisAstraPage(product);
@@ -111,7 +111,7 @@ public class UiRedislAstraTest extends Tests {
 
     @Test
     @Order(9)
-    @TmsLink("")
+    @TmsLink("796991")
     @DisplayName("UI RedisAstra. Расширить диск")
     void expandDisk() {
         RedisAstraPage pSqlPage = new RedisAstraPage(product);
@@ -121,7 +121,7 @@ public class UiRedislAstraTest extends Tests {
 
     @Test
     @Order(10)
-    @TmsLink("")
+    @TmsLink("797003")
     @DisplayName("UI RedisAstra. Изменить конфигурацию")
     void changeConfiguration() {
         RedisAstraPage pSqlPage = new RedisAstraPage(product);
@@ -130,7 +130,7 @@ public class UiRedislAstraTest extends Tests {
 
     @Test
     @Order(11)
-    @TmsLink("")
+    @TmsLink("797006")
     @DisplayName("UI RedisAstra. Проверить конфигурацию")
     void vmActCheckConfig() {
         RedisAstraPage pSqlPage = new RedisAstraPage(product);
@@ -139,7 +139,7 @@ public class UiRedislAstraTest extends Tests {
 
     @Test
     @Order(19)
-    @TmsLink("")
+    @TmsLink("796997")
     @DisplayName("UI RedisAstra. Сбросить пароль")
     void resetPassword () {
         RedisAstraPage pSqlPage = new RedisAstraPage(product);
@@ -149,7 +149,7 @@ public class UiRedislAstraTest extends Tests {
 
     @Test
     @Order(20)
-    @TmsLinks({@TmsLink(""), @TmsLink("")})
+    @TmsLinks({@TmsLink("796982"), @TmsLink("797001")})
     @DisplayName("UI RedisAstra. Выключить принудительно / Включить")
     void stopHard() {
         RedisAstraPage pSqlPage = new RedisAstraPage(product);
@@ -159,7 +159,7 @@ public class UiRedislAstraTest extends Tests {
 
     @Test
     @Order(21)
-    @TmsLink("")
+    @TmsLink("796981")
     @DisplayName("UI RedisAstra. Выключить")
     void stopSoft() {
         RedisAstraPage pSqlPage = new RedisAstraPage(product);
@@ -168,7 +168,7 @@ public class UiRedislAstraTest extends Tests {
 
     @Test
     @Order(100)
-    @TmsLink("")
+    @TmsLink("796989")
     @DisplayName("UI RedisAstra. Удаление продукта")
     void delete() {
         RedisAstraPage pSqlPage = new RedisAstraPage(product);
