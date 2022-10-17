@@ -97,6 +97,9 @@ public class GetProductResponse implements GetImpl {
 	@JsonProperty("category")
 	private String category;
 
+	@JsonProperty("context_restrictions")
+	private Object contextRestrictions;
+
 	@JsonProperty("category_v2")
 	private String categoryV2;
 

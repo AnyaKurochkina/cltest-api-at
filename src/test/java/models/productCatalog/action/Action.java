@@ -45,6 +45,8 @@ public class Action extends Entity {
     private Boolean skipOnPrebilling;
     @JsonProperty("item_restriction")
     private Object itemRestriction;
+    @JsonProperty("config_restriction")
+    private String configRestriction;
     @JsonProperty("auto_removing_if_failed")
     private Boolean autoRemovingIfFailed;
     private String title;
@@ -66,14 +68,12 @@ public class Action extends Entity {
     @JsonProperty("event_provider")
     private List<Object> eventProvider;
     @JsonProperty("restricted_groups")
-    private List<Object> restrictedGroups;
+    private List<String> restrictedGroups;
     @JsonProperty("graph_id")
     private String graphId;
     private String version;
     @JsonProperty("last_version")
     private String lastVersion;
-    @JsonProperty("config_restriction")
-    private String configRestriction;
     @JsonProperty("data_config_key")
     private String dataConfigKey;
     @JsonProperty("name")
@@ -88,9 +88,9 @@ public class Action extends Entity {
     @JsonProperty("required_order_statuses")
     private List<Object> requiredOrderStatuses;
     @JsonProperty("version_create_dt")
-    private String version_create_dt;
+    private String versionCreateDt;
     @JsonProperty("version_changed_by_user")
-    private String version_changed_by_user;
+    private String versionChangedByUser;
     @JsonProperty("multiple")
     private boolean isMultiple;
     @JsonProperty("create_dt")
@@ -100,9 +100,9 @@ public class Action extends Entity {
     @JsonProperty("extra_data")
     private Map<String, String> extraData;
     @JsonProperty("allowed_developers")
-    private List<String> allowed_developers;
+    private List<String> allowedDevelopers;
     @JsonProperty("restricted_developers")
-    private List<String> restricted_developers;
+    private List<String> restrictedDevelopers;
     @JsonProperty("version_diff")
     private VersionDiff versionDiff;
     @JsonProperty("active")
@@ -139,6 +139,7 @@ public class Action extends Entity {
                 .set("$.extra_data", extraData)
                 .set("$.location_restriction", locationRestriction)
                 .set("$.context_restrictions", contextRestrictions)
+                .set("$.config_restriction", configRestriction)
                 .setIfNullRemove("$.number", number)
                 .build();
     }

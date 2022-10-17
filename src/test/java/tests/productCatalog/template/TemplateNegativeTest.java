@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.TemplateSteps.createTemplate;
 
@@ -92,22 +91,34 @@ public class TemplateNegativeTest extends Tests {
     @TmsLink("643607")
     @Test
     public void createTemplateWithInvalidCharacters() {
-        assertAll("Шаблон создался с недопустимым именем",
-                () -> steps.createProductObject(steps
-                        .createJsonObject("NameWithUppercase")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("nameWithUppercaseInMiddle")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("имя")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("Имя")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("a&b&c")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("")).assertStatus(400),
-                () -> steps.createProductObject(steps
-                        .createJsonObject(" ")).assertStatus(400)
-        );
+        Template.builder()
+                .templateName("NameWithUppercase")
+                .build()
+                .negativeCreateRequest(500);
+        Template.builder()
+                .templateName("nameWithUppercaseInMiddle")
+                .build()
+                .negativeCreateRequest(500);
+        Template.builder()
+                .templateName("имя")
+                .build()
+                .negativeCreateRequest(500);
+        Template.builder()
+                .templateName("Имя")
+                .build()
+                .negativeCreateRequest(500);
+        Template.builder()
+                .templateName("a&b&c")
+                .build()
+                .negativeCreateRequest(500);
+        Template.builder()
+                .templateName("")
+                .build()
+                .negativeCreateRequest(400);
+        Template.builder()
+                .templateName(" ")
+                .build()
+                .negativeCreateRequest(400);
     }
 
     @DisplayName("Негативный тест на удаление шаблона без токена")

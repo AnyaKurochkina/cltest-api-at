@@ -59,6 +59,9 @@ public class ListItem implements ItemImpl {
     @JsonProperty("restricted_developers")
     private List<String> restricted_developers;
 
+    @JsonProperty("context_restrictions")
+    private List<String> context_restrictions;
+
     @JsonProperty("restricted_groups")
     private List<Object> restrictedGroups;
 
