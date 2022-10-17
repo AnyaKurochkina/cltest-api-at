@@ -41,8 +41,8 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
 
     public UiPostgreSqlClusterAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
-         // product = PostgresSQLCluster.builder().env("DEV").productName("PostgreSQL Cluster Astra Linux").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-        product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/4ae82e4a-50fd-4786-afc5-cc4ff8f0bab5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+          product = PostgresSQLCluster.builder().env("DEV").productName("PostgreSQL Cluster Astra Linux").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+//        product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/4ae82e4a-50fd-4786-afc5-cc4ff8f0bab5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgresSQLCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
