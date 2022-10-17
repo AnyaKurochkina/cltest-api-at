@@ -44,7 +44,7 @@ class UiScyllaDBCheckUntilOrderTest extends Tests {
 
     @Test
     @TmsLink("1139488")
-    @DisplayName("UI PostgreSQLAstra. Проверка полей при заказе продукта")
+    @DisplayName("UI ScyllaDb. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
                 .clickOrderMore()
