@@ -98,4 +98,16 @@ public class EditTemplateTest extends TemplateBaseTest {
                 .saveWithManualVersion("999.999.999")
                 .checkVersionLimit();
     }
+
+    @Test
+    @TmsLink("1186452")
+    @DisplayName("Баннер при возврате с формы с несохраненными данными (Отмена)")
+    public void checkUnsavedChangesAlertAndCancel() {
+        new IndexPage().goToTemplatesPage()
+                .findAndOpenTemplatePage(NAME)
+                .setRunQueue("test1")
+                .backAndDismissAlert()
+                .goToTemplatesListAndDismissAlert()
+                .cancelAndDismissAlert();
+    }
 }

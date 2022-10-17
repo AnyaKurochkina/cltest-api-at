@@ -14,14 +14,14 @@ import ru.testit.annotations.Title;
 import tests.Tests;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
-import ui.cloud.pages.PostgreSQLAstraOrderPage;
+import ui.cloud.pages.PostgreSqlAstraOrderPage;
 import ui.cloud.pages.Product;
 import ui.uiExtesions.ConfigExtension;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Tags({@Tag("ui_postgreSQL_Astra")})
+@Tags({@Tag("ui_postgre_sql_astra")})
 class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
 
     PostgreSQL product;
@@ -34,6 +34,7 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
         else
             product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
+
     }
 
     @BeforeEach
@@ -50,7 +51,7 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
-        PostgreSQLAstraOrderPage orderPage = new PostgreSQLAstraOrderPage();
+        PostgreSqlAstraOrderPage orderPage = new PostgreSqlAstraOrderPage();
 
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.getOrderBtn().shouldBe(Condition.disabled);
@@ -68,7 +69,7 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
         orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
-        new PostgreSQLAstraOrderPage().checkOrderDetails();
+        new PostgreSqlAstraOrderPage().checkOrderDetails();
     }
 
 }

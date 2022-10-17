@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,10 +144,11 @@ public class ClickHouseCluster extends IProduct {
     }
 
     public void checkConnectDb(int node) {
+        Assertions.assertThrows(ConnectException.class, () ->
         checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", chCustomerAdmin, chCustomerAdminPassword,
                 ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL + "[" + node + "]"))
                         .replaceFirst("/play", "")
-                        .replaceFirst("https:", "clickhouse:"));
+                        .replaceFirst("https:", "clickhouse:")), "UNKNOWN_DATABASE");
     }
 
     public void createUserAccount(String user, String password) {

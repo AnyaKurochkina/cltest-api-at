@@ -3,9 +3,6 @@ package tests.productCatalog.action;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
-import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.action.getAction.response.GetActionResponse;
-import httpModels.productCatalog.action.getActionList.response.GetActionsListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -241,15 +238,14 @@ public class ActionsTest extends Tests {
     @TmsLink("737375")
     @Test
     public void orderingByCreateData() {
-        List<ItemImpl> list = steps
-                .orderingByCreateData(GetActionsListResponse.class).getItemsList();
+        List<Action> list = orderingActionByCreateData();
         if (list.size() > 1) {
             for (int i = 0; i < list.size() - 1; i++) {
-                ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
-                ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+                ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateDt());
+                ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateDt());
                 assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
                         String.format("Даты создания действий с именами %s и %s не соответсвуют условию сортировки."
-                                , list.get(i).getName(), list.get(i + 1).getName()));
+                                , list.get(i).getActionName(), list.get(i + 1).getActionName()));
             }
         }
     }
@@ -258,15 +254,14 @@ public class ActionsTest extends Tests {
     @TmsLink("737383")
     @Test
     public void orderingByUpDateData() {
-        List<ItemImpl> list = steps
-                .orderingByUpDateData(GetActionsListResponse.class).getItemsList();
+        List<Action> list = orderingActionByUpDateData();
         if (list.size() > 1) {
             for (int i = 0; i < list.size() - 1; i++) {
-                ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
-                ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+                ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpdateDt());
+                ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpdateDt());
                 assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
                         String.format("Даты обновлений действий с именами %s и %s не соответсвуют условию сортировки."
-                                , list.get(i).getName(), list.get(i + 1).getName()));
+                                , list.get(i).getActionName(), list.get(i + 1).getActionName()));
             }
         }
     }
@@ -320,9 +315,9 @@ public class ActionsTest extends Tests {
         String id = action.getActionId();
         List<String> list = Collections.singletonList("restricted");
         partialUpdateAction(action.getActionId(), new JSONObject().put("restricted_groups", list));
-        List<String> restricted_groups = steps.getJsonPath(id).get("restricted_groups");
-        String newVersion = steps.getById(id, GetActionResponse.class).getVersion();
-        assertEquals(list, restricted_groups, "Доступные группы не соврадают");
+        List<String> restrictedGroups = getActionById(id).getRestrictedGroups();
+        String newVersion = getActionById(id).getVersion();
+        assertEquals(list, restrictedGroups, "Доступные группы не соврадают");
         assertEquals(version, newVersion, "Версии не совпадают");
     }
 
@@ -337,12 +332,12 @@ public class ActionsTest extends Tests {
                 .build()
                 .createObject();
         partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 1));
-        String currentVersion = steps.getById(actionTest.getActionId(), GetActionResponse.class).getVersion();
+        String currentVersion = getActionById(actionTest.getActionId()).getVersion();
         Assertions.assertEquals("1.1.0", currentVersion);
         partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 2)
                 .put("version", "1.999.999"));
         partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 3));
-        currentVersion = steps.getById(actionTest.getActionId(), GetActionResponse.class).getVersion();
+        currentVersion = getActionById(actionTest.getActionId()).getVersion();
         Assertions.assertEquals("2.0.0", currentVersion);
         partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 4)
                 .put("version", "999.999.999"));
@@ -358,12 +353,11 @@ public class ActionsTest extends Tests {
         Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
+                .priority(0)
                 .build()
                 .createObject();
-        String version = steps
-                .patchObject(GetActionResponse.class, actionName, action.getGraphId(), action.getActionId())
-                .getVersion();
-        assertEquals("1.0.1", version, "Версии не совпадают");
+        partialUpdateAction(action.getActionId(), new JSONObject().put("priority", 1));
+        assertEquals("1.0.1", getActionById(action.getActionId()).getVersion(), "Версии не совпадают");
     }
 
     @DisplayName("Получение ключа graph_version_calculated в ответе на GET запрос в действиях")
@@ -376,7 +370,7 @@ public class ActionsTest extends Tests {
                 .title(actionName)
                 .build()
                 .createObject();
-        String graphVersionCalculated = steps.getById(action.getActionId(), GetActionResponse.class)
+        String graphVersionCalculated = getActionById(action.getActionId())
                 .getGraphVersionCalculated();
         Assertions.assertNotNull(graphVersionCalculated);
     }
@@ -391,7 +385,7 @@ public class ActionsTest extends Tests {
                 .title(actionName)
                 .build()
                 .createObject();
-        action.deleteObject();
+        deleteActionById(action.getActionId());
     }
 
     @Test
@@ -405,7 +399,7 @@ public class ActionsTest extends Tests {
                 .build()
                 .createObject();
         partialUpdateAction(action.getActionId(), new JSONObject().put("current_version", "1.0.0"));
-        GetActionResponse getAction = (GetActionResponse) steps.getById(action.getActionId(), GetActionResponse.class);
+        Action getAction = getActionById(action.getActionId());
         assertEquals("1.0.0", getAction.getCurrentVersion());
     }
 
@@ -424,7 +418,7 @@ public class ActionsTest extends Tests {
         String actionId = action.getActionId();
         partialUpdateAction(actionId, new JSONObject().put("priority", 1));
         partialUpdateAction(actionId, new JSONObject().put("current_version", "1.0.1"));
-        GetActionResponse getAction = (GetActionResponse) steps.getById(actionId, GetActionResponse.class);
+        Action getAction = getActionById(actionId);
         assertEquals("1.0.1", getAction.getCurrentVersion());
         assertTrue(getAction.getVersionList().contains(getAction.getCurrentVersion()));
     }
@@ -444,7 +438,7 @@ public class ActionsTest extends Tests {
         String actionId = action.getActionId();
         partialUpdateAction(actionId, new JSONObject().put("priority", 2));
         partialUpdateAction(actionId, new JSONObject().put("current_version", "1.0.0"));
-        GetActionResponse getAction = (GetActionResponse) steps.getById(actionId, GetActionResponse.class);
+        Action getAction = getActionById(actionId);
         assertEquals("1.0.0", getAction.getCurrentVersion());
         assertEquals(action.getPriority(), getAction.getPriority());
     }
@@ -465,8 +459,7 @@ public class ActionsTest extends Tests {
                 }})
                 .build()
                 .createObject();
-        GetActionResponse getActionById = (GetActionResponse) steps.getById(action.getActionId(),
-                GetActionResponse.class);
+        Action getActionById = getActionById(action.getActionId());
         Map<String, String> extraData = getActionById.getExtraData();
         assertEquals(extraData.get(key), value);
     }
@@ -483,7 +476,7 @@ public class ActionsTest extends Tests {
                 .build()
                 .createObject();
         String tag = "action_" + actionName + "_" + action.getVersion();
-        Response response = steps.dumpToBitbucket(action.getActionId());
+        Response response = dumpActionToGit(action.getActionId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         assertEquals(tag, response.jsonPath().get("tag"));
     }
@@ -499,29 +492,29 @@ public class ActionsTest extends Tests {
                 .version("1.0.0")
                 .build()
                 .createObject();
-        Response response = steps.dumpToBitbucket(action.getActionId());
+        Response response = dumpActionToGit(action.getActionId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
-        steps.deleteByName(actionName, GetActionsListResponse.class);
+        deleteActionById(action.getActionId());
         String path = "action_" + actionName + "_" + action.getVersion();
-        steps.loadFromBitbucket(new JSONObject().put("path", path));
+        loadActionFromGit(new JSONObject().put("path", path));
         assertTrue(isActionExists(actionName));
-        steps.deleteByName(actionName, GetActionsListResponse.class);
+        deleteActionByName(actionName);
         assertFalse(isActionExists(actionName));
     }
 
     @Test
     @DisplayName("Сравнение версий действия")
     @TmsLink("1063081")
-    public void compareActionVersions() {
+    public void compareActionVersionsTest() {
         String actionName = "compare_action_versions_test_api";
         Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
-        steps.partialUpdateObject(action.getActionId(), new JSONObject().put("priority", 1)
+        partialUpdateAction(action.getActionId(), new JSONObject().put("priority", 1)
                 .put("available_without_money", true));
-        GetActionResponse getActionResponse = steps.compareVersions(action.getActionId(), "1.0.0", "1.0.1");
+        Action getActionResponse = compareActionVersions(action.getActionId(), "1.0.0", "1.0.1");
         VersionDiff versionDiff = getActionResponse.getVersionDiff();
         assertEquals(versionDiff.getDiff().get("priority"), 0);
         assertEquals(versionDiff.getDiff().get("available_without_money"), false);

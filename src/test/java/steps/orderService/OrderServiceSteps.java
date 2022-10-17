@@ -25,6 +25,8 @@ import steps.stateService.StateServiceSteps;
 import steps.tarifficator.CostSteps;
 
 import java.lang.reflect.Type;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -146,7 +148,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Отправка action {action}")
     public static Response sendAction(String action, IProduct product, JSONObject jsonData, String projectId, String filter) {
-        Item item = getItemIdByOrderIdAndActionTitle(action, product, "");
+        Item item = getItemIdByOrderIdAndActionTitle(action, product, filter);
         return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.getId())
                 .set("$.order.attrs", jsonData)
@@ -204,7 +206,8 @@ public class OrderServiceSteps extends Steps {
     @Step("Выполнение action \"{action}\"")
     public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId, String filter) {
         //Получение item'ов для экшена
-        Item item = getItemIdByOrderIdAndActionTitle(action, product, "");
+        waitStatus(Duration.ofMinutes(10), product);
+        Item item = getItemIdByOrderIdAndActionTitle(action, product, filter);
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
         //TODO: Возможно стоит сделать более детальную проверку на значение
 
@@ -317,6 +320,16 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
+    private static void waitStatus(Duration timeout, IProduct product){
+        Instant startTime = Instant.now();
+        String status;
+        do {
+            Waiting.sleep(20000);
+            status = getStatus(product);
+        } while (status.equals("pending") || status.equals("changing")
+                && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
+    }
+
     @Step("Получение домена для сегмента сети {netSegment}")
     public static String getDomainBySegment(IProduct product, String netSegment) {
         return new Http(OrderServiceURL)
@@ -372,7 +385,7 @@ public class OrderServiceSteps extends Steps {
 
         Item item = new Item();
         if(!filter.equals(""))
-            filter = "it.data.config." + filter + " &&";
+            filter = "it.data.config." + filter + " && ";
         //Получаем все item ID по name, например: "expand_mount_point"
         item.setId(jsonPath.get(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action)));
         //Получаем все item name

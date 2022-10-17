@@ -38,8 +38,8 @@ public class UiWindowsTest extends Tests {
     //TODO: пока так :)
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod"))
-            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/e2e84906-c272-487a-bf03-dedbf825642b/main?context=proj-ln4zg69jek&type=project&org=vtb").build().buildFromLink();
+          product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+         //   product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/324778e8-f38e-47bc-a136-8ba5b9f5988a/main?context=proj-ln4zg69jek&type=project&org=vtb").build().buildFromLink();
         else
             product = Windows.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -73,6 +73,7 @@ public class UiWindowsTest extends Tests {
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
+            new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")
@@ -131,14 +132,17 @@ public class UiWindowsTest extends Tests {
     void checkProtectOrder() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.switchProtectOrder("Защита от удаления включена");
-        winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
-        {
-            Dialog dlgActions = new Dialog("Удаление");
-            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
-        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
-        TypifiedElement.refresh();
-        winPage.switchProtectOrder("Защита от удаления выключена");
+        try {
+            winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
+            {
+                Dialog dlgActions = new Dialog("Удаление");
+                dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
+            }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
+            new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
+            TypifiedElement.refresh();
+        } finally {
+            winPage.switchProtectOrder("Защита от удаления выключена");
+        }
     }
 
     @Test

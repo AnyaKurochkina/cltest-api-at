@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Input;
 import ui.elements.InputFile;
 import ui.elements.TypifiedElement;
@@ -49,12 +50,14 @@ public class OrgDirectionsListPage {
         descriptionColumn.shouldBe(Condition.visible);
         return new OrgDirectionsListPage();
     }
+
     @Step("Переход на страницу редактирования направления с именем {name}")
     public OrgDirectionPage openOrgDirectionPage(String name) {
         inputSearch.setValue(name);
         $x("//td[@value = '" + name + "']").shouldBe(Condition.visible).click();
         return new OrgDirectionPage();
     }
+
     @Step("Выбор действия 'удаление'")
     public OrgDirectionsListPage deleteActionMenu(String dirName) {
         $x("//td[text() = '" + dirName + "']//ancestor::tr//*[@id = 'actions-menu-button']").click();
@@ -68,6 +71,7 @@ public class OrgDirectionsListPage {
         copyAction.click();
         return new OrgDirectionPage();
     }
+
     @Step("Ввод валидного id и удаление")
     public OrgDirectionsListPage fillIdAndDelete() {
         new Input(inputId).setValue(id.getText());
@@ -93,6 +97,7 @@ public class OrgDirectionsListPage {
     @Step("Проверка существования направления")
     public boolean isOrgDirectionExist(String dirName) {
         new Input(inputSearch).setValue(dirName);
+        TestUtils.wait(500);
         return !noData.exists();
     }
 }

@@ -40,4 +40,10 @@ public class DeleteDialog extends Dialog {
         deleteButton.shouldBe(Condition.enabled).click();
         new Alert().checkText(alertText).checkColor(Alert.Color.GREEN);
     }
+
+    @Step("Подтверждение удаления объекта")
+    public void submitAndDelete(String alertText) {
+        deleteButton.shouldBe(Condition.enabled).click();
+        new Alert().checkText(alertText).checkColor(Alert.Color.GREEN);
+    }
 }

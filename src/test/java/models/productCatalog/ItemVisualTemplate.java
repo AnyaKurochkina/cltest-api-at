@@ -10,6 +10,7 @@ import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualT
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
@@ -24,13 +25,14 @@ import static core.helper.Configure.ProductCatalogURL;
 @Log4j2
 @Builder
 @Getter
-public class ItemVisualTemplates extends Entity {
+public class ItemVisualTemplate extends Entity {
 
     private List<String> eventType;
     private CompactTemplate compactTemplate;
     private Boolean isActive;
     private FullTemplate fullTemplate;
     private List<String> eventProvider;
+    @Setter
     private String name;
     private LinkedHashMap<String, Object> defaultItem;
     private String description;

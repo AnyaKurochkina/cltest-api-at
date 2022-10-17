@@ -97,10 +97,7 @@ public class PostgreSqlAstraPage extends IProductPage {
 
     public void changeMaxConnections(String value) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(BLOCK_APP, "Изменить max_connections", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Изменить max_connections");
-            dlg.setInputValue("max_connections", value);
-        });
+        runActionWithoutParameters(BLOCK_APP, "Максимизировать max_connections");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         Assertions.assertEquals(value, max_connections.getText(), "Максимальное количество подключений " +
                 "не соответствует установленному значению ");
@@ -125,7 +122,7 @@ public class PostgreSqlAstraPage extends IProductPage {
     }
 
     public void createDb(String name) {
-        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+       new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_LIMIT_CONNECT).isColumnValueContains("", name))) {
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -157,6 +154,23 @@ public class PostgreSqlAstraPage extends IProductPage {
             Assertions.assertTrue(new Table(HEADER_NAME_DB).isColumnValueContains("", nameDb + "_" + nameUserDb), "Пользователь не существует");
             Assertions.assertEquals(nameDb, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, nameDb).getValueByColumn(HEADER_NAME_DB), "БД не принадлежит пользователю");
         }
+    }
+    public void updateExtensions(String name) {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
+            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            runActionWithoutParameters(name, "Актуализировать extensions");
+            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        }
+    }
+    public void changeExtensions(String name) {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
+            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            runActionWithParameters(name, "Изменить extensions", "Подтвердить", () -> DropDown.byXpath("//input[@spellcheck='false']/..").select("citext"));
+          }
     }
 
     public void removeDb(String name) {

@@ -13,7 +13,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.ItemVisualTemplates;
+import models.productCatalog.ItemVisualTemplate;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -46,7 +46,7 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void createVisualTemplate() {
         String name = "item_visual_template_test_api-:2022.";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -65,7 +65,7 @@ public class VisualTemplateTest extends Tests {
     public void deleteIsActiveTemplate() {
         String errorText = "Deletion not allowed (is_active=True)";
         String name = "delete_with_active_true_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("gitlab"))
                 .eventType(Collections.singletonList("vm"))
@@ -85,7 +85,7 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void checkVisualTemplateExists() {
         String name = "exist_item_visual_template_test_api";
-        ItemVisualTemplates.builder()
+        ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -129,7 +129,7 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void checkAccessWithPublicToken() {
         String name = "check_access_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -165,7 +165,7 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void getVisualTemplateById() {
         String name = "get_by_id_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -183,7 +183,7 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void copyVisualTemplateById() {
         String name = "copy_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("gitlab"))
                 .eventType(Collections.singletonList("app"))
@@ -206,7 +206,7 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("643667")
     @Test
     public void exportVisualTemplateById() {
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name("export_item_visual_template_test_api")
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -223,7 +223,7 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void partialUpdateVisualTemplate() {
         String name = "partial_update_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -245,7 +245,7 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void updateDefaultItemVisualTemplate() {
         String name = "update_default_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -262,7 +262,7 @@ public class VisualTemplateTest extends Tests {
             put("default_key2", "value_key2");
         }};
 
-        JSONObject json = ItemVisualTemplates.builder()
+        JSONObject json = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -282,7 +282,7 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void getVisualTemplateByProviderAndType() {
         String name = "get_by_provider_type_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -326,7 +326,7 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("742494")
     @Test
     public void fullTemplateFields() {
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name("check_full_template_item_visual_template_test_api")
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -343,7 +343,7 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("742495")
     @Test
     public void compactTemplateFields() {
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name("check_compact_template_item_visual_template_test_api")
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -361,7 +361,7 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("643674")
     @Test
     public void deleteTemplate() {
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name("delete_item_visual_template_test_api")
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -378,7 +378,7 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("975416")
     public void dumpToGitlabVisualTemplate() {
         String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
-        ItemVisualTemplates visualTemplate = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplate = ItemVisualTemplate.builder()
                 .name(visualTemplateName)
                 .title(visualTemplateName)
                 .eventProvider(Collections.singletonList("docker"))
@@ -399,7 +399,7 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("1029469")
     public void loadFromGitlabVisualTemplate() {
         String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
-        JSONObject jsonObject = ItemVisualTemplates.builder()
+        JSONObject jsonObject = ItemVisualTemplate.builder()
                 .name(visualTemplateName)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -424,7 +424,7 @@ public class VisualTemplateTest extends Tests {
     @Test
     public void getVisualTemplateByProviderAndTypeAndCheckDefaultItemIsNull() {
         String name = "get_by_provider_type_item_visual_template_and_check_default_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))

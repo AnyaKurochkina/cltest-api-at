@@ -49,7 +49,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @TmsLink("847103")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить сертификаты {0}")
+    @ParameterizedTest(name = "Обновить кластерный сертификат {0}")
     void updateCerts(ApacheKafkaCluster product) {
         product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
@@ -143,7 +143,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @TmsLink("883502")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновление инсталяции Kafka {0}")
+    @ParameterizedTest(name = "Обновление дистрибутива ВТБ-Kafka {0}")
     void update(ApacheKafkaCluster product) {
         product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
@@ -226,14 +226,14 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     void changeName(ApacheKafkaCluster product) {
         product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.changeName("new_name");
+            kafka.changeName("new-name");
         }
     }
 
     @TmsLink("1095198")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновление версии до Kafka 2.8.1 {0}")
+    @ParameterizedTest(name = "Обновление ядра Kafka до версии 2.8.1 {0}")
     void upgrade281(ApacheKafkaCluster product) {
         product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
@@ -244,7 +244,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @TmsLink("1095239")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию кластера {0}")
+    @ParameterizedTest(name = "Вертикальное масштабирование {0}")
     void resize(ApacheKafkaCluster product) {
         product.setProductName(productName);
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {

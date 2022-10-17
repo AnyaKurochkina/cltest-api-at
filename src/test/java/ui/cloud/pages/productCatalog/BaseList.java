@@ -16,7 +16,8 @@ public class BaseList {
 
     private static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
-    private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
+    private static final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
+    private static final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
@@ -28,13 +29,13 @@ public class BaseList {
         arrowIcon.shouldBe(Condition.visible);
         String firstValue = table.getValueByColumnInFirstRow(header).getValue();
         String lastValue = table.getValueByColumnInRow(table.getRows().size() - 1, header).getValue();
-        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) > 0);
+        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) > 0 || lastValue.equals(firstValue));
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
         firstValue = table.getValueByColumnInFirstRow(header).getValue();
         lastValue = table.getValueByColumnInRow(table.getRows().size() - 1, header).getValue();
-        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) < 0);
+        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) < 0 || lastValue.equals(firstValue));
     }
 
     @Step("Проверка сортировки по дате по столбцу '{header}'")
@@ -80,17 +81,24 @@ public class BaseList {
         TestUtils.wait(500);
     }
 
-    @Step("Выполнение действия копирования для строки, содержащей в столбце 'columnName' значение 'value'")
-    public void copy(String columnName, String value) {
-        new Table(columnName).getRowElementByColumnValue(columnName, value).$x(".//button[@id = 'actions-menu-button']")
-                .click();
-        copyAction.click();
-    }
-
     @Step("Проверка, что строка, содержащая в столбце 'columnName' значение 'value', подсвечена как ранее выбранная")
     public static void checkRowIsHighlighted(String columnName, String value) {
         Table table = new Table(columnName);
         Assertions.assertTrue(table.getRowElementByColumnValue(columnName, value)
                 .getCssValue("color").contains("196, 202, 212"));
+    }
+
+    @Step("Выполнение действия копирования для строки, содержащей в столбце 'columnName' значение 'value'")
+    public static void copy(String columnName, String value) {
+        new Table(columnName).getRowElementByColumnValue(columnName, value).$x(".//button[@id = 'actions-menu-button']")
+                .click();
+        copyAction.click();
+    }
+
+    @Step("Выполнение действия удаления для строки, содержащей в столбце 'columnName' значение 'value'")
+    public static void delete(String columnName, String value) {
+        new Table(columnName).getRowElementByColumnValue(columnName, value).$x(".//button[@id = 'actions-menu-button']")
+                .click();
+        deleteAction.click();
     }
 }

@@ -8,7 +8,6 @@ import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
-import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import httpModels.productCatalog.product.getProducts.getProductsExportList.ExportItem;
@@ -269,14 +268,6 @@ public class ProductCatalogSteps {
                 .getJsonTemplate(templatePath)
                 .set("$.name", name)
                 .build();
-    }
-
-    @Step("Сравнение версий объекта")
-    public GetActionResponse compareVersions(String id, String version1, String version2) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + id + "/?version={}&compare_with_version={}", version1, version2)
-                .extractAs(GetActionResponse.class);
     }
 
     @Step("Частичное обновление продукта")

@@ -16,6 +16,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.BaseTest;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("product_catalog_ui")
@@ -75,7 +76,7 @@ public class OrgDirectionTest extends BaseTest {
         if (steps.isExists(name)) {
             steps.deleteByName(name, GetOrgDirectionListResponse.class);
         }
-        assertTrue(new IndexPage()
+        assertFalse(new IndexPage()
                 .goToOrgDirectionsPage()
                 .createDirection()
                 .fillAndSave(title, name, description)
@@ -96,7 +97,7 @@ public class OrgDirectionTest extends BaseTest {
         if (steps.isExists(name)) {
             steps.deleteByName(name, GetOrgDirectionListResponse.class);
         }
-        assertTrue(new IndexPage()
+        assertFalse(new IndexPage()
                 .goToOrgDirectionsPage()
                 .createDirection()
                 .fillAndSave(title, name, description)

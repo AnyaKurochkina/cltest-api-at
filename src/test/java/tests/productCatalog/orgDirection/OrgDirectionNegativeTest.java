@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Направления")
@@ -77,22 +75,34 @@ public class OrgDirectionNegativeTest extends Tests {
     @TmsLink("643340")
     @Test
     public void createActionWithInvalidCharacters() {
-        assertAll("Направление создалось с недопустимым именем",
-                () -> steps.createProductObject(steps.createJsonObject("NameWithUppercase"))
-                        .assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("nameWithUppercaseInMiddle"))
-                        .assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("название"))
-                        .assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("Название"))
-                        .assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("a&b&c"))
-                        .assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject(""))
-                        .assertStatus(400),
-                () -> steps.createProductObject(steps.createJsonObject(" "))
-                        .assertStatus(400)
-        );
+        OrgDirection.builder()
+                .orgDirectionName("NameWithUppercase")
+                .build()
+                .negativeCreateRequest(500);
+        OrgDirection.builder()
+                .orgDirectionName("nameWithUppercaseInMiddle")
+                .build()
+                .negativeCreateRequest(500);
+        OrgDirection.builder()
+                .orgDirectionName("имя")
+                .build()
+                .negativeCreateRequest(500);
+        OrgDirection.builder()
+                .orgDirectionName("Имя")
+                .build()
+                .negativeCreateRequest(500);
+        OrgDirection.builder()
+                .orgDirectionName("a&b&c")
+                .build()
+                .negativeCreateRequest(500);
+        OrgDirection.builder()
+                .orgDirectionName("")
+                .build()
+                .negativeCreateRequest(400);
+        OrgDirection.builder()
+                .orgDirectionName(" ")
+                .build()
+                .negativeCreateRequest(400);
     }
 
     @DisplayName("Негативный тест на удаление направления без токена")

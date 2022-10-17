@@ -80,9 +80,6 @@
               "type": "array",
               "items": {}
             },
-            "icon": {
-              "type": "string"
-            },
             "icon_url": {
               "type": "string"
             },
@@ -108,7 +105,6 @@
             "allowed_developers",
             "restricted_developers",
             "start_btn_label",
-            "icon",
             "icon_url",
             "icon_store_id"
           ]

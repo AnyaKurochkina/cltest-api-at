@@ -98,9 +98,6 @@ public class GetActionResponse implements GetImpl {
     @JsonProperty("last_version")
     private String lastVersion;
 
-    @JsonProperty("config_restriction")
-    private String configRestriction;
-
     @JsonProperty("data_config_key")
     private String dataConfigKey;
 

@@ -52,6 +52,9 @@ public class ExportItem implements ItemImpl {
 	@JsonProperty("title")
 	private String title;
 
+	@JsonProperty("context_restrictions")
+	private Object contextRestrictions;
+
 	@JsonProperty("number")
 	private Integer number;
 

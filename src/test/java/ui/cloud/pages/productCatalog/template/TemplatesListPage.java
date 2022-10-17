@@ -3,9 +3,9 @@ package ui.cloud.pages.productCatalog.template;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 import ui.uiModels.Template;
@@ -14,7 +14,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TemplatesListPage {
-    private static final String templateNameColumn = "Код шаблона";
+    private static final String columnName = "Код шаблона";
     private final SelenideElement pageTitle = $x("//div[text() = 'Шаблоны узлов']");
     private final SelenideElement createTemplateButton = $x("//div[@data-testid = 'add-button']//button");
     private final Input nameInput = Input.byLabel("Код шаблона");
@@ -24,7 +24,6 @@ public class TemplatesListPage {
     private final Input rollbackQueueInput = Input.byLabel("Название очереди для отката");
     private final DropDown typeDropDown = DropDown.byLabel("Тип");
     private final Input searchInput = Input.byPlaceholder("Поиск");
-    private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
     private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
     private final SelenideElement templateNameValidationHint = $x("//p[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
@@ -55,25 +54,25 @@ public class TemplatesListPage {
         runQueueInput.setValue(template.getRunQueue());
         rollbackQueueInput.setValue(template.getRollbackQueue());
         typeDropDown.select(template.getType());
+        new TemplatePage().goToParamsTab();
         input.setValue(template.getInput());
         output.setValue(template.getOutput());
         printedOutput.setValue(template.getPrintedOutput());
         saveButton.shouldBe(Condition.enabled).click();
-        new SaveDialog().saveWithNextPatchVersion();
+        new Alert().checkText("Шаблон успешно создан").checkColor(Alert.Color.GREEN).close();
         TestUtils.wait(2000);
         return new TemplatePage();
     }
 
     @Step("Проверка, что шаблон '{template.name}' найден при поиске по значению '{value}'")
     public TemplatesListPage findTemplateByValue(String value, Template template) {
-        searchInput.setValue(value);
-        TestUtils.wait(1000);
-        new Table(templateNameColumn).isColumnValueEquals(templateNameColumn, template.getName());
+        search(value);
+        Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, template.getName()));
         return this;
     }
 
     @Step("Поиск шаблона по значению 'value'")
-    public TemplatesListPage search(String value) {
+    private TemplatesListPage search(String value) {
         searchInput.setValue(value);
         TestUtils.wait(1000);
         return this;
@@ -81,8 +80,7 @@ public class TemplatesListPage {
 
     @Step("Проверка, что шаблоны не найдены при поиске по '{value}'")
     public TemplatesListPage checkTemplateNotFound(String value) {
-        searchInput.setValue(value);
-        TestUtils.wait(1000);
+        search(value);
         noDataFound.shouldBe(Condition.visible);
         return this;
     }
@@ -90,17 +88,16 @@ public class TemplatesListPage {
     @Step("Удаление шаблона '{name}'")
     public TemplatesListPage deleteTemplate(String name) {
         search(name);
-        BaseList.openActionMenu(templateNameColumn, name);
-        deleteAction.click();
+        BaseList.delete(columnName, name);
         new DeleteDialog().inputValidIdAndDelete();
         return this;
     }
 
     @Step("Проверка заголовков списка графов")
-    public TemplatesListPage checkTemplatesListHeaders() {
-        Table templatesList = new Table(templateNameColumn);
+    public TemplatesListPage checkHeaders() {
+        Table templatesList = new Table(columnName);
         assertEquals(0, templatesList.getHeaderIndex("Наименование"));
-        assertEquals(1, templatesList.getHeaderIndex(templateNameColumn));
+        assertEquals(1, templatesList.getHeaderIndex(columnName));
         assertEquals(2, templatesList.getHeaderIndex("Дата создания"));
         assertEquals(3, templatesList.getHeaderIndex("Описание"));
         return this;
@@ -108,6 +105,7 @@ public class TemplatesListPage {
 
     @Step("Проверка валидации некорректных параметров при создании шаблона")
     public TemplatesListPage checkCreateTemplateDisabled(Template template) {
+        TestUtils.scrollToTheTop();
         createTemplateButton.click();
         titleInput.setValue(template.getTitle());
         nameInput.setValue(template.getName());
@@ -130,7 +128,7 @@ public class TemplatesListPage {
         return this;
     }
 
-    @Step("Проверка валидации неуникального имени шаблона узла 'template.name'")
+    @Step("Проверка валидации неуникального имени шаблона узла '{template.name}'")
     public TemplatesListPage checkNonUniqueNameValidation(Template template) {
         createTemplateButton.click();
         nameInput.setValue(template.getName());
@@ -143,7 +141,7 @@ public class TemplatesListPage {
 
     @Step("Открытие страницы шаблона '{name}'")
     public TemplatePage openTemplatePage(String name) {
-        new Table(templateNameColumn).getRowElementByColumnValue(templateNameColumn, name).click();
+        new Table(columnName).getRowElementByColumnValue(columnName, name).click();
         return new TemplatePage();
     }
 
@@ -152,8 +150,9 @@ public class TemplatesListPage {
         createTemplateButton.shouldBe(Condition.visible).click();
         for (String name : names) {
             nameInput.setValue(name);
-            TestUtils.wait(600);
+            TestUtils.wait(500);
             if (!templateNameValidationHint.exists()) {
+                TestUtils.wait(500);
                 nameInput.getInput().sendKeys("t");
             }
             templateNameValidationHint.shouldBe(Condition.visible);
@@ -170,7 +169,7 @@ public class TemplatesListPage {
 
     @Step("Проверка сортировки по коду шаблона")
     public TemplatesListPage checkSortingByName() {
-        BaseList.checkSortingByStringField(templateNameColumn);
+        BaseList.checkSortingByStringField(columnName);
         return this;
     }
 
@@ -194,21 +193,20 @@ public class TemplatesListPage {
 
     @Step("Проверка, что подсвечен шаблон 'name'")
     public void checkTemplateIsHighlighted(String name) {
-        BaseList.checkRowIsHighlighted(templateNameColumn, name);
+        BaseList.checkRowIsHighlighted(columnName, name);
     }
 
     @Step("Поиск и открытие страницы шаблона '{name}'")
     public TemplatePage findAndOpenTemplatePage(String name) {
-        searchInput.setValue(name);
-        TestUtils.wait(500);
-        new Table(templateNameColumn).getRowElementByColumnValue(templateNameColumn, name).click();
+        search(name);
+        new Table(columnName).getRowElementByColumnValue(columnName, name).click();
         TestUtils.wait(600);
         return new TemplatePage();
     }
 
     @Step("Копирование шаблона '{name}'")
     public TemplatesListPage copyTemplate(String name) {
-        new BaseList().copy(templateNameColumn, name);
+        new BaseList().copy(columnName, name);
         new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();
         cancelButton.shouldBe(Condition.enabled).click();
         return this;

@@ -13,7 +13,7 @@ import ui.uiModels.Graph;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class GraphPage {
-    private static final String saveGraphAlertText = "Граф успешно сохранен";
+    protected static final String saveGraphAlertText = "Граф успешно сохранен";
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
     private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
@@ -113,7 +113,7 @@ public class GraphPage {
     @Step("Переход на вкладку 'Узлы'")
     public GraphNodesPage goToNodesTab() {
         nodesTab.click();
-        TestUtils.wait(500);
+        TestUtils.wait(600);
         return new GraphNodesPage();
     }
 

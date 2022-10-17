@@ -7,18 +7,18 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Alert;
 import ui.elements.DropDown;
 import ui.elements.Input;
 import ui.elements.TextArea;
 import ui.uiModels.Template;
 
-import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TemplatePage {
     private static final String saveTemplateAlertText = "Шаблон успешно изменен";
     private final SelenideElement templatesListLink = $x("//a[text() = 'Список шаблонов узлов']");
-    private final SelenideElement templateVersion = $x("//div[@aria-labelledby='version']");
+    private final SelenideElement templateVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
     private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final Input nameInput = Input.byLabel("Код шаблона");
     private final Input titleInput = Input.byLabel("Наименование");
@@ -27,6 +27,8 @@ public class TemplatePage {
     private final Input rollbackQueueInput = Input.byLabel("Название очереди для отката");
     private final DropDown typeDropDown = DropDown.byLabel("Тип");
     private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
+    private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
+    private final SelenideElement paramsTab = $x("//span[text()='Параметры']//parent::button");
 
     public TemplatePage() {
         templatesListLink.shouldBe(Condition.visible);
@@ -34,7 +36,7 @@ public class TemplatePage {
 
     @Step("Проверка, что отображаемая версия шаблона равна '{version}'")
     public TemplatePage checkTemplateVersion(String version) {
-        templateVersion.shouldBe(Condition.visible).shouldHave(Condition.exactText(version));
+        templateVersion.getValue();
         return new TemplatePage();
     }
 
@@ -75,7 +77,6 @@ public class TemplatePage {
 
     @Step("Удаление шаблона")
     public void deleteTemplate() {
-        new Alert().closeAll();
         deleteButton.click();
         new DeleteDialog().inputValidIdAndDelete();
     }
@@ -126,6 +127,42 @@ public class TemplatePage {
     public TemplatePage checkNextVersionAndSave(String nextVersion) {
         saveButton.shouldBe(Condition.enabled).click();
         new SaveDialog().checkNextVersionAndSave(nextVersion, saveTemplateAlertText);
+        return new TemplatePage();
+    }
+
+    @Step("Назад в браузере и отмена в баннере о несохранённых изменениях")
+    public TemplatePage backAndDismissAlert() {
+        back();
+        dismissBrowserAlert();
+        return this;
+    }
+
+    @Step("Возврат в список шаблонов и отмена в баннере о несохранённых изменениях")
+    public TemplatePage goToTemplatesListAndDismissAlert() {
+        TestUtils.scrollToTheTop();
+        templatesListLink.click();
+        dismissBrowserAlert();
+        return this;
+    }
+
+    @Step("Нажатие кнопки Отмена и отмена в баннере о несохранённых изменениях")
+    public TemplatePage cancelAndDismissAlert() {
+        cancelButton.click();
+        dismissBrowserAlert();
+        return this;
+    }
+
+    @Step("Отмена в баннере о несохранённых изменениях")
+    public void dismissBrowserAlert() {
+        assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", switchTo().alert().getText());
+        dismiss();
+        TestUtils.wait(500);
+    }
+
+    @Step("Переход на вкладку 'Параметры'")
+    public TemplatePage goToParamsTab() {
+        paramsTab.click();
+        TestUtils.wait(500);
         return new TemplatePage();
     }
 }
