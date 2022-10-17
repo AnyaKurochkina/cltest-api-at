@@ -30,9 +30,6 @@ import java.time.Duration;
 public class UiRedislAstraTest extends Tests {
 
     Redis product;
-    String nameDb = "at_db";
-    String shortNameUserDB = "at_user";
-    String fullNameUserDB = "at_db_at_user";
 
     public UiRedislAstraTest() {
         if (Configure.ENV.equals("prod"))
