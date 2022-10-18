@@ -42,7 +42,7 @@ class UiClickHouseClusterCheckUntilOrderTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1177391")
     @DisplayName("UI ClickHouse Cluster. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
