@@ -89,9 +89,8 @@ public class UiClickHouseTest extends Tests {
         Assertions.assertEquals(preBillingProductPrice, clickHousePage.getCostOrder(), 0.01);
     }
 
-
     @Test
-    @TmsLink("1162624")
+    @TmsLink("1236735")
     @Order(2)
     @DisplayName("UI ClickHouse. Проверка полей заказа")
     void
