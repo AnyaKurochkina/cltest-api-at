@@ -52,7 +52,7 @@ public class S3Ceph extends IProduct {
         createProduct();
     }
 
-    private String getPrefix(){
+    public String getBucketName(String name){
         JsonPath path = ResourceManagerSteps.getProjectPath(projectId);
         return path.getString("data.environment_prefix.name") + "-" +
                 path.getString("data.information_system.code")  + "-";
@@ -107,18 +107,14 @@ public class S3Ceph extends IProduct {
 
     @Data
     @Builder
-    public class BucketAttrs {
+    public static class BucketAttrs {
         BucketAttrs.Versioning versioning;
         int maxSizeGb;
         String name;
 
-        public void setName(String name){
-            this.name = getPrefix() + name;
-        }
-
         @Data
         @Builder
-        public class Versioning {
+        public static class Versioning {
             boolean prune;
             boolean enabled;
             @Builder.Default

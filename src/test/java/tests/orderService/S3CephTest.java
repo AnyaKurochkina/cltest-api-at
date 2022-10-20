@@ -42,7 +42,7 @@ public class S3CephTest extends Tests {
                             .pruneDays(2)
                             .build())
                     .maxSizeGb(10)
-                    .name(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random())
+                    .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();
             s3Ceph.addBucket(attrs);
             s3Ceph.deleteBucket(attrs.getName());
@@ -62,7 +62,7 @@ public class S3CephTest extends Tests {
                             .pruneDays(2)
                             .build())
                     .maxSizeGb(10)
-                    .name(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random())
+                    .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();
             s3Ceph.addBucket(attrs);
             try {
@@ -104,7 +104,7 @@ public class S3CephTest extends Tests {
                             .prune(false)
                             .build())
                     .maxSizeGb(10)
-                    .name(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random())
+                    .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();
             s3Ceph.addBucket(bucketAttrs);
             try {
@@ -142,7 +142,7 @@ public class S3CephTest extends Tests {
                             .prune(false)
                             .build())
                     .maxSizeGb(10)
-                    .name(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random())
+                    .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();
             s3Ceph.addBucket(bucketAttrs);
             try {
