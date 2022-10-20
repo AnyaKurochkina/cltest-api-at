@@ -36,11 +36,7 @@ public class S3CephTest extends Tests {
     void addBucket(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs attrs = S3Ceph.BucketAttrs.builder()
-                    .versioning(S3Ceph.BucketAttrs.Versioning.builder()
-                            .enabled(true)
-                            .prune(true)
-                            .pruneDays(2)
-                            .build())
+                    .versioning(true)
                     .maxSizeGb(10)
                     .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();
@@ -56,21 +52,14 @@ public class S3CephTest extends Tests {
     void updateBucket(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs attrs = S3Ceph.BucketAttrs.builder()
-                    .versioning(S3Ceph.BucketAttrs.Versioning.builder()
-                            .enabled(true)
-                            .prune(true)
-                            .pruneDays(2)
-                            .build())
+                    .versioning(true)
                     .maxSizeGb(10)
                     .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();
             s3Ceph.addBucket(attrs);
             try {
                 attrs.setMaxSizeGb(11);
-                attrs.setVersioning(S3Ceph.BucketAttrs.Versioning.builder()
-                        .enabled(false)
-                        .prune(false)
-                        .build());
+                attrs.setVersioning(false);
                 s3Ceph.updateBucket(attrs);
             } finally {
                 s3Ceph.deleteBucket(attrs.getName());
@@ -99,10 +88,7 @@ public class S3CephTest extends Tests {
     void addPolicy(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs bucketAttrs = S3Ceph.BucketAttrs.builder()
-                    .versioning(S3Ceph.BucketAttrs.Versioning.builder()
-                            .enabled(true)
-                            .prune(false)
-                            .build())
+                    .versioning(true)
                     .maxSizeGb(10)
                     .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();
@@ -137,10 +123,7 @@ public class S3CephTest extends Tests {
     void updatePolicy(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs bucketAttrs = S3Ceph.BucketAttrs.builder()
-                    .versioning(S3Ceph.BucketAttrs.Versioning.builder()
-                            .enabled(true)
-                            .prune(false)
-                            .build())
+                    .versioning(true)
                     .maxSizeGb(10)
                     .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();

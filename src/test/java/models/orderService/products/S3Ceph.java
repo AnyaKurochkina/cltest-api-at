@@ -108,18 +108,19 @@ public class S3Ceph extends IProduct {
     @Data
     @Builder
     public static class BucketAttrs {
-        BucketAttrs.Versioning versioning;
+//        BucketAttrs.Versioning versioning;
         int maxSizeGb;
         String name;
+        boolean versioning;
 
-        @Data
-        @Builder
-        public static class Versioning {
-            boolean prune;
-            boolean enabled;
-            @Builder.Default
-            int pruneDays = 1;
-        }
+//        @Data
+//        @Builder
+//        public static class Versioning {
+//            boolean prune;
+//            boolean enabled;
+//            @Builder.Default
+//            int pruneDays = 1;
+//        }
     }
 
     @Data
