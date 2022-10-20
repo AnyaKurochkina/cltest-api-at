@@ -18,6 +18,8 @@ import tests.Tests;
 @Feature("S3 CEPH Tenant")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("s3_ceph"), @Tag("prod")})
 public class S3CephTest extends Tests {
+    final static String regexAccessKey = "[A-Z0-9]{20,30}";
+    final static String regexSecretKey = "[a-zA-Z0-9]{40,50}";
 
     @TmsLink("974377")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -84,8 +86,8 @@ public class S3CephTest extends Tests {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             String userName = new Generex("[a-z]{1}[a-z0-9-]{1,18}[a-z]{1}").random();
             s3Ceph.addUser(userName,
-                    new Generex("[A-Z]{20,30}").random(),
-                    new Generex("[a-Z0-9]{40,50}").random());
+                    new Generex(regexAccessKey).random(),
+                    new Generex(regexSecretKey).random());
             s3Ceph.deleteUser(userName);
         }
     }
@@ -108,8 +110,8 @@ public class S3CephTest extends Tests {
             try {
                 String userName = new Generex("[a-z]{1}[a-z0-9-]{1,18}[a-z]{1}").random();
                 s3Ceph.addUser(userName,
-                        new Generex("[A-Z]{20,30}").random(),
-                        new Generex("[a-Z0-9]{40,50}").random());
+                        new Generex(regexAccessKey).random(),
+                        new Generex(regexSecretKey).random());
 
                 S3Ceph.PolicyAttrs policyAttrs = S3Ceph.PolicyAttrs.builder()
                         .policy(S3Ceph.PolicyAttrs.Policy.builder()
@@ -146,8 +148,8 @@ public class S3CephTest extends Tests {
             try {
                 String userName = new Generex("[a-z]{1}[a-z0-9-]{1,18}[a-z]{1}").random();
                 s3Ceph.addUser(userName,
-                        new Generex("[A-Z]{20,30}").random(),
-                        new Generex("[a-Z0-9]{40,50}").random());
+                        new Generex(regexAccessKey).random(),
+                        new Generex(regexSecretKey).random());
 
                 S3Ceph.PolicyAttrs policyAttrs = S3Ceph.PolicyAttrs.builder()
                         .policy(S3Ceph.PolicyAttrs.Policy.builder()
