@@ -2,6 +2,7 @@ package models.orderService.products;
 
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
+import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
@@ -10,6 +11,7 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
+import steps.resourceManager.ResourceManagerSteps;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -50,6 +52,11 @@ public class S3Ceph extends IProduct {
         createProduct();
     }
 
+    private String getPrefix(){
+        JsonPath path = ResourceManagerSteps.getProjectPath(projectId);
+        return path.getString("data.environment_prefix.name") + "-" +
+                path.getString("data.information_system.code")  + "-";
+    }
 
     @Step("Удалить бакет")
     public void deleteBucket(String name) {
@@ -100,14 +107,18 @@ public class S3Ceph extends IProduct {
 
     @Data
     @Builder
-    public static class BucketAttrs {
+    public class BucketAttrs {
         BucketAttrs.Versioning versioning;
         int maxSizeGb;
         String name;
 
+        public void setName(String name){
+            this.name = getPrefix() + name;
+        }
+
         @Data
         @Builder
-        public static class Versioning {
+        public class Versioning {
             boolean prune;
             boolean enabled;
             @Builder.Default
