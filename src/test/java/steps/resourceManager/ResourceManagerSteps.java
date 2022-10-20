@@ -20,7 +20,7 @@ public class ResourceManagerSteps extends Steps {
     public static JsonPath getProjectPath(String id) {
         return new Http(ResourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
-                .get("/api/v1/projects/{}?include=information_system,project_environment,environment_prefix,availability", id)
+                .get("/v1/projects/{}?include=information_system,project_environment,environment_prefix,availability", id)
                 .assertStatus(200)
                 .jsonPath();
     }
