@@ -99,6 +99,21 @@ public class S3Ceph extends IProduct {
         OrderServiceSteps.executeAction("s3_ceph_policy_delete", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
     }
 
+    @Step("Изменить правило жизненного цикла")
+    public void updateRule(RoleAttrs attrs) {
+        OrderServiceSteps.executeAction("s3_ceph_bucket_lr_update", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+    }
+
+    @Step("Добавить правило жизненного цикла")
+    public void addRule(RoleAttrs attrs) {
+        OrderServiceSteps.executeAction("s3_ceph_bucket_lr_create", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+    }
+
+    @Step("далить правило жизненного цикла")
+    public void deleteRule(RoleAttrs attrs) {
+        OrderServiceSteps.executeAction("s3_ceph_bucket_lr_delete", this, new JSONObject().put("name", attrs.getName()), this.getProjectId());
+    }
+
     @Step("Удалить тенант")
     @Override
     protected void delete() {
@@ -138,6 +153,24 @@ public class S3Ceph extends IProduct {
         public enum PolicyId{
             READ_WRITE,
             READ
+        }
+    }
+
+    @Data
+    @Builder
+    public static class RoleAttrs {
+        RoleAttrs.Filter filter;
+        String condition;
+        int days;
+        String name;
+        String type;
+        boolean versioning;
+
+        @Builder
+        public static class Filter {
+            @Builder.Default
+            String type = "Prefix";
+            String value;
         }
     }
 }

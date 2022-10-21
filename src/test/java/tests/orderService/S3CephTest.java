@@ -116,6 +116,37 @@ public class S3CephTest extends Tests {
         }
     }
 
+    @TmsLinks({@TmsLink("1248910"), @TmsLink("1248914"), @TmsLink("1248915")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавить/Изменить/Удалить правило жизненного цикла {0}")
+    void addRule(S3Ceph product) {
+        try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
+            S3Ceph.BucketAttrs bucketAttrs = S3Ceph.BucketAttrs.builder()
+                    .versioning(true)
+                    .maxSizeGb(10)
+                    .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
+                    .build();
+            s3Ceph.addBucket(bucketAttrs);
+            try {
+            S3Ceph.RoleAttrs roleAttrs = S3Ceph.RoleAttrs.builder()
+                    .condition("days")
+                    .type("Expiration")
+                    .filter(S3Ceph.RoleAttrs.Filter.builder().build())
+                    .name("rule")
+                    .days(10)
+                    .build();
+                s3Ceph.addRule(roleAttrs);
+                roleAttrs.setDays(11);
+                roleAttrs.setFilter(S3Ceph.RoleAttrs.Filter.builder().value("prefix").build());
+                s3Ceph.updateRule(roleAttrs);
+                s3Ceph.deleteRule(roleAttrs);
+            } finally {
+                s3Ceph.deleteBucket(bucketAttrs.getName());
+            }
+        }
+    }
+
     @TmsLink("974392")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
