@@ -57,7 +57,7 @@ public class PostgresSQLCluster extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/postgressql_cluster.json";
         if (productName == null)
-            productName = "PostgreSQL Cluster";
+            productName = "PostgreSQL Cluster Astra Linux";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
@@ -121,6 +121,10 @@ public class PostgresSQLCluster extends IProduct {
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
+    }
+
+    public void resize(Flavor flavor) {
+        resize("resize_postgresql_cluster", flavor);
     }
 
     public void createDbmsUser(String username, String dbRole, String dbName) {
