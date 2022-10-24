@@ -20,7 +20,7 @@ public class DeleteServiceTest extends ServiceBaseTest {
     }
 
     @Test
-    @TmsLink("504830")
+    @TmsLink("508545")
     @DisplayName("Удаление со страницы сервиса")
     public void deleteTemplateFromPage() {
         new IndexPage().goToServicesListPagePC()
