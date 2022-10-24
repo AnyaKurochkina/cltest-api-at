@@ -10,6 +10,7 @@ import httpModels.productCatalog.service.getServiceList.response.GetServiceListR
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.productCatalog.graph.Graph;
@@ -24,9 +25,13 @@ import static core.helper.Configure.ProductCatalogURL;
 @Log4j2
 @Builder
 @Getter
+@Setter
+public class Service extends Entity {
 
-public class Services extends Entity {
-
+    private final String productName = "/api/v1/services/";
+    @Builder.Default
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/services/",
+            "productCatalog/services/createServices.json");
     private Boolean turnOffInventory;
     private List<String> versionList;
     private Boolean isPublished;
@@ -61,11 +66,6 @@ public class Services extends Entity {
     private String jsonTemplate;
     private String currentVersion;
     private Boolean autoOpenResults;
-    @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/services/",
-            "productCatalog/services/createServices.json");
-
-    private final String productName = "/api/v1/services/";
 
     @Override
     public Entity init() {
@@ -101,6 +101,7 @@ public class Services extends Entity {
                 .set("$.icon_url", iconUrl)
                 .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .setIfNullRemove("$.start_btn_label", startBtnLabel)
+                .set("$.description", description)
                 .build();
     }
 

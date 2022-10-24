@@ -15,7 +15,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.action.Action;
 import models.productCatalog.Env;
-import models.productCatalog.Services;
+import models.productCatalog.Service;
 import models.productCatalog.graph.Graph;
 import models.productCatalog.graph.Modification;
 import models.productCatalog.graph.RootPath;
@@ -264,7 +264,7 @@ public class GraphTest extends Tests {
                 .graphId(mainGraphId)
                 .build().createObject();
 
-        Services.builder()
+        Service.builder()
                 .serviceName("service_for_graph_test_api")
                 .graphId(mainGraphId)
                 .build().createObject();
