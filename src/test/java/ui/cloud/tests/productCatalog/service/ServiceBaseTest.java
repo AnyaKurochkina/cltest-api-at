@@ -20,8 +20,6 @@ public class ServiceBaseTest extends BaseTest {
     final static String DESCRIPTION = "Description";
     private static final ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/services/",
             "/productCatalog/services/createServices.json");
-    private static final ProductCatalogSteps orgDirectionSteps = new ProductCatalogSteps("/api/v1/org_direction/",
-            "productCatalog/orgDirection/orgDirection.json");
     final String NAME = UUID.randomUUID().toString();
     OrgDirection orgDirection;
     Service service;
@@ -29,12 +27,6 @@ public class ServiceBaseTest extends BaseTest {
     @BeforeEach
     public void setUp() {
         createService(NAME);
-    }
-
-    @AfterEach
-    public void tearDown() {
-        deleteService(service.getServiceName());
-        deleteOrgDirection(orgDirection.getOrgDirectionName());
     }
 
     private void createService(String name) {
@@ -56,9 +48,5 @@ public class ServiceBaseTest extends BaseTest {
 
     void deleteService(String name) {
         steps.deleteByName(name, GetServiceListResponse.class);
-    }
-
-    void deleteOrgDirection(String name) {
-        orgDirectionSteps.deleteByName(name, GetOrgDirectionListResponse.class);
     }
 }
