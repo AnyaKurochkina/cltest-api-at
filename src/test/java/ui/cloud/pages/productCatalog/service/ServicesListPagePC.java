@@ -41,12 +41,12 @@ public class ServicesListPagePC {
 
     @Step("Проверка заголовков списка графов")
     public ServicesListPagePC checkHeaders() {
-        Table templatesList = new Table(columnName);
-        assertEquals(0, templatesList.getHeaderIndex("Наименование"));
-        assertEquals(1, templatesList.getHeaderIndex(columnName));
-        assertEquals(2, templatesList.getHeaderIndex("Дата создания"));
-        assertEquals(3, templatesList.getHeaderIndex("Описание"));
-        assertEquals(4, templatesList.getHeaderIndex("Статус"));
+        Table servicesList = new Table(columnName);
+        assertEquals(0, servicesList.getHeaderIndex("Наименование"));
+        assertEquals(1, servicesList.getHeaderIndex(columnName));
+        assertEquals(2, servicesList.getHeaderIndex("Дата создания"));
+        assertEquals(3, servicesList.getHeaderIndex("Описание"));
+        assertEquals(4, servicesList.getHeaderIndex("Статус"));
         return this;
     }
 
@@ -56,7 +56,7 @@ public class ServicesListPagePC {
         return this;
     }
 
-    @Step("Проверка сортировки по коду шаблона")
+    @Step("Проверка сортировки по коду сервиса")
     public ServicesListPagePC checkSortingByName() {
         BaseList.checkSortingByStringField(columnName);
         return this;
@@ -99,7 +99,7 @@ public class ServicesListPagePC {
         return new ServicePage();
     }
 
-    @Step("Проверка валидации обязательных параметров при создании шаблона")
+    @Step("Проверка валидации обязательных параметров при создании сервиса")
     public ServicesListPagePC checkCreateServiceDisabled(Service service) {
         TestUtils.scrollToTheTop();
         createServiceButton.click();
@@ -117,7 +117,7 @@ public class ServicesListPagePC {
         return this;
     }
 
-    @Step("Проверка валидации неуникального имени сервиса '{template.name}'")
+    @Step("Проверка валидации неуникального имени сервиса '{service.serviceName}'")
     public ServicesListPagePC checkNonUniqueNameValidation(Service service) {
         TestUtils.scrollToTheTop();
         createServiceButton.click();
@@ -175,7 +175,7 @@ public class ServicesListPagePC {
         return new ServicePage();
     }
 
-    @Step("Проверка, что шаблон '{template.name}' найден при поиске по значению '{value}'")
+    @Step("Проверка, что сервис '{service.serviceName}' найден при поиске по значению '{value}'")
     public ServicesListPagePC findServiceByValue(String value, Service service) {
         search(value);
         Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, service.getServiceName()));
