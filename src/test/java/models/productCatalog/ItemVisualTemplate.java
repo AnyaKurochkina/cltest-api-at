@@ -25,6 +25,7 @@ import static core.helper.Configure.ProductCatalogURL;
 @Log4j2
 @Builder
 @Getter
+@Setter
 public class ItemVisualTemplate extends Entity {
 
     private List<String> eventType;
@@ -32,7 +33,6 @@ public class ItemVisualTemplate extends Entity {
     private Boolean isActive;
     private FullTemplate fullTemplate;
     private List<String> eventProvider;
-    @Setter
     private String name;
     private LinkedHashMap<String, Object> defaultItem;
     private String description;

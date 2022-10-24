@@ -48,6 +48,14 @@ public class DropDown implements TypifiedElement {
                 .click();
     }
 
+    @Step("Выбрать в select элемент с текстом '{value}'")
+    public void selectByDivText(String value) {
+        element.shouldBe(clickableCnd).click();
+        $x("//li/div[text()='{}']", value)
+                .shouldBe(Condition.enabled)
+                .click();
+    }
+
     @Step("Выбрать в select элемент со значением '{value}'")
     public void selectByValue(String value) {
         click();
