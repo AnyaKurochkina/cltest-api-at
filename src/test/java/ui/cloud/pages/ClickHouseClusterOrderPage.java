@@ -41,13 +41,12 @@ public class ClickHouseClusterOrderPage extends Product {
     }
 
     public void checkOrderDetails(){
-        if(getCalculationDetails().shouldBe(Condition.visible).exists())
+        if(getCalculationDetails().exists())
         {
             getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         }
         getProcessor().shouldBe(Condition.visible);
         getHardDrive().shouldBe(Condition.visible);
         getOpMemory().shouldBe(Condition.visible);
-        getLinuxOS().shouldBe(Condition.visible);
     }
 }

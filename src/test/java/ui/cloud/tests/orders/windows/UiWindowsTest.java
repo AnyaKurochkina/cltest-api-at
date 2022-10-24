@@ -38,8 +38,8 @@ public class UiWindowsTest extends Tests {
     //TODO: пока так :)
     public UiWindowsTest() {
         if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-          product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-         //   product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/324778e8-f38e-47bc-a136-8ba5b9f5988a/main?context=proj-ln4zg69jek&type=project&org=vtb").build().buildFromLink();
+          //product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+           product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb").build().buildFromLink();
         else
             product = Windows.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -52,43 +52,43 @@ public class UiWindowsTest extends Tests {
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
-    @Test
-    @TmsLink("872651")
-    @Order(1)
-    @DisplayName("UI Windows. Заказ")
-    void orderWindows() {
-        double preBillingProductPrice;
-        try {
-            new IndexPage()
-                    .clickOrderMore()
-                    .selectProduct(product.getProductName());
-            WindowsOrderPage orderPage = new WindowsOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getRoleServer().selectByValue(product.getRole());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
-            orderPage.orderClick();
-            new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
-            new OrdersPage()
-                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-                    .getElementByColumn("Продукт")
-                    .hover()
-                    .click();
-            WindowsPage winPages = new WindowsPage(product);
-            winPages.waitChangeStatus(Duration.ofMinutes(25));
-            winPages.checkLastAction("Развертывание");
-        } catch (Throwable e) {
-            product.setError(e.toString());
-            throw e;
-        }
-        WindowsPage winPage = new WindowsPage(product);
-        Assertions.assertEquals(preBillingProductPrice, winPage.getCostOrder(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
-    }
+//    @Test
+//    @TmsLink("872651")
+//    @Order(1)
+//    @DisplayName("UI Windows. Заказ")
+//    void orderWindows() {
+//        double preBillingProductPrice;
+//        try {
+//            new IndexPage()
+//                    .clickOrderMore()
+//                    .selectProduct(product.getProductName());
+//            WindowsOrderPage orderPage = new WindowsOrderPage();
+//            orderPage.getOsVersion().select(product.getOsVersion());
+//            orderPage.getSegment().selectByValue(product.getSegment());
+//            orderPage.getPlatform().selectByValue(product.getPlatform());
+//            orderPage.getRoleServer().selectByValue(product.getRole());
+//            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+//            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+//            orderPage.getGroup().select(accessGroup.getPrefixName());
+//            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
+//            preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+//            orderPage.orderClick();
+//            new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
+//            new OrdersPage()
+//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+//                    .getElementByColumn("Продукт")
+//                    .hover()
+//                    .click();
+//            WindowsPage winPages = new WindowsPage(product);
+//            winPages.waitChangeStatus(Duration.ofMinutes(25));
+//            winPages.checkLastAction("Развертывание");
+//        } catch (Throwable e) {
+//            product.setError(e.toString());
+//            throw e;
+//        }
+//        WindowsPage winPage = new WindowsPage(product);
+//        Assertions.assertEquals(preBillingProductPrice, winPage.getCostOrder(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
+//    }
 
     @Test
     @TmsLink("976726")
@@ -166,7 +166,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(9)
+    @Order(17)
     @TmsLink("14510")
     @DisplayName("UI Windows. Изменить конфигурацию")
     void changeConfiguration() {

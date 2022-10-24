@@ -27,7 +27,7 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
     //TODO: пока так :)
     public UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest() {
         if (Configure.ENV.equals("prod"))
-            product = PostgresSQLCluster.builder().productName("PostgreSQL (Astra Linux)").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+            product = PostgresSQLCluster.builder().env("DEV").productName("PostgreSQL Cluster Astra Linux").platform("OpenStack").segment("dev-srv-app").build();
             //product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/41ccc48d-5dd0-4892-ae5e-3f1f360885ac/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgresSQLCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
@@ -55,10 +55,10 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
         orderPage.getOrderBtn().shouldBe(Condition.disabled);
 
         //Проверка поля Кол-во
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "1");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "1");
+//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
+//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
+//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "1");
+//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "1");
 
         //Проверка Детали заказа
         orderPage.getOsVersion().select(product.getOsVersion());
@@ -69,5 +69,4 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
         orderPage.getGroup().select(accessGroup.getPrefixName());
         new PostgreSqlClusterAstraOrderPage().checkOrderDetails();
     }
-
 }
