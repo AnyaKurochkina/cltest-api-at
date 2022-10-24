@@ -272,9 +272,15 @@ public class OrgDirectionTest extends Tests {
     @TmsLink("1172114")
     @Test
     public void deleteOrgDirectionUsedInService() {
+        OrgDirection orgDirection = OrgDirection.builder()
+                .orgDirectionName("delete_org_direction_used_in_service")
+                .title("delete_org_direction_used_in_service")
+                .build()
+                .createObject();
         Services service = Services.builder()
                 .serviceName("service_for_delete_org_direction_test_api")
                 .title("service_for_delete_org_direction_test_api")
+                .directionId(orgDirection.getOrgDirectionId())
                 .build()
                 .createObject();
         String errorMessage = steps.getDeleteObjectResponse(service.getDirectionId())

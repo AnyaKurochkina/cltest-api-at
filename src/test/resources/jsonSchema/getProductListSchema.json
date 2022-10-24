@@ -90,9 +90,6 @@
               "type": "array",
               "items": {}
             },
-            "icon": {
-              "type": "string"
-            },
             "icon_url": {
               "type": "string"
             },
@@ -120,7 +117,6 @@
             "restricted_groups",
             "allowed_developers",
             "restricted_developers",
-            "icon",
             "icon_url",
             "icon_store_id"
           ]

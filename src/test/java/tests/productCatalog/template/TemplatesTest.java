@@ -169,6 +169,9 @@ public class TemplatesTest extends Tests {
     public void importTemplate() {
         String data = JsonHelper.getStringFromFile("/productCatalog/templates/importTemplate.json");
         String templateName = new JsonPath(data).get("Template.name");
+        if(steps.isExists(templateName)) {
+            steps.deleteByName(templateName, GetTemplateListResponse.class);
+        }
         String versionArr = new JsonPath(data).get("Template.version_arr").toString();
         Assertions.assertEquals("[1, 0, 0]", versionArr);
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplate.json");

@@ -100,7 +100,7 @@ public class GraphListTest extends Tests {
             if (!graph.getGraph().isEmpty()) {
                 List<GraphItem> graphItemList = graph.getGraph();
                 for (GraphItem graphItem : graphItemList) {
-                    assertNotNull(graphItem.getIcon());
+                    assertNotNull(graphItem.getIcon(), String.format("У ноды графа %s поле icon is null", graph.getName()));
                 }
             }
         }

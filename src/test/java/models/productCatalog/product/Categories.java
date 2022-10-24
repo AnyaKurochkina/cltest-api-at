@@ -19,6 +19,9 @@ public enum Categories {
     SECRET_MANAGER("secret_manager"),
     STREAMING("streaming"),
     WEB("web"),
+    SAAS("saas"),
+    QA_TEST("qa_test"),
+    OMNI_SERVICES("omni_services"),
     DEFAULT_VALUE(null);
     private final String value;
 
