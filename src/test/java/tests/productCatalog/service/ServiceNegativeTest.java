@@ -3,7 +3,7 @@ package tests.productCatalog.service;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Services;
+import models.productCatalog.Service;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,7 @@ public class ServiceNegativeTest extends Tests {
     @Test
     public void createServiceWithSameName() {
         String name = "create_service_with_same_name_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -42,7 +42,7 @@ public class ServiceNegativeTest extends Tests {
     @Test
     public void getServiceByIdWithOutToken() {
         String name = "get_service_without_token_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -55,7 +55,7 @@ public class ServiceNegativeTest extends Tests {
     @TmsLink("643507")
     @Test
     public void copyServiceWithOutToken() {
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName("copy_service_with_out_token_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -68,7 +68,7 @@ public class ServiceNegativeTest extends Tests {
     @TmsLink("643515")
     @Test
     public void updateServiceByIdWithOutToken() {
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName("update_service_with_out_token_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -82,24 +82,24 @@ public class ServiceNegativeTest extends Tests {
     @TmsLink("643518")
     @Test
     public void createServiceWithInvalidCharacters() {
-        Services.builder().serviceName("NameWithUppercase").build().negativeCreateRequest(500);
-        Services.builder().serviceName("nameWithUppercaseInMiddle").build().negativeCreateRequest(500);
-        Services.builder().serviceName("имя").build().negativeCreateRequest(500);
-        Services.builder().serviceName("Имя").build().negativeCreateRequest(500);
-        Services.builder().serviceName("a&b&c").build().negativeCreateRequest(500);
-        Services.builder().serviceName("").build().negativeCreateRequest(400);
-        Services.builder().serviceName(" ").build().negativeCreateRequest(400);
+        Service.builder().serviceName("NameWithUppercase").build().negativeCreateRequest(500);
+        Service.builder().serviceName("nameWithUppercaseInMiddle").build().negativeCreateRequest(500);
+        Service.builder().serviceName("имя").build().negativeCreateRequest(500);
+        Service.builder().serviceName("Имя").build().negativeCreateRequest(500);
+        Service.builder().serviceName("a&b&c").build().negativeCreateRequest(500);
+        Service.builder().serviceName("").build().negativeCreateRequest(400);
+        Service.builder().serviceName(" ").build().negativeCreateRequest(400);
     }
 
     @DisplayName("Негативный тест на создание сервиса с недопустимыми graph_id")
     @TmsLink("643522")
     @Test
     public void createServiceWithInvalidGraphId() {
-        Services.builder().serviceName("create_service_with_not_exist_graph_id")
+        Service.builder().serviceName("create_service_with_not_exist_graph_id")
                 .graphId("dgdh-4565-dfgdf")
                 .build()
                 .negativeCreateRequest(400);
-        Services.builder().serviceName("create_service_with_not_exist_graph_id")
+        Service.builder().serviceName("create_service_with_not_exist_graph_id")
                 .graphId("create_service2_with_not_exist_graph_id")
                 .build()
                 .negativeCreateRequest(400);
@@ -109,7 +109,7 @@ public class ServiceNegativeTest extends Tests {
     @TmsLink("643526")
     @Test
     public void deleteServiceWithOutToken() {
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName("delete_service_with_out_token_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -123,7 +123,7 @@ public class ServiceNegativeTest extends Tests {
     @TmsLink("822050")
     public void setInvalidCurrentVersionService() {
         String name = "invalid_current_version_service_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(name)
                 .title(name)
                 .version("1.0.0")
@@ -136,7 +136,7 @@ public class ServiceNegativeTest extends Tests {
     @TmsLink("1095548")
     @Test
     public void createServiceWithOutStartBtnLabel() {
-        JSONObject json = Services.builder()
+        JSONObject json = Service.builder()
                 .serviceName("delete_service_with_out_token_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")

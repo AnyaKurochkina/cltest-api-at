@@ -6,15 +6,14 @@ import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import models.productCatalog.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.WebElement;
 import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.DropDown;
 import ui.elements.Input;
 import ui.elements.Table;
-import ui.uiModels.Template;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,6 +39,11 @@ public class OrderTemplatesListPage {
     private final SelenideElement createButton = $x("//div[text()='Создать']/parent::button");
     private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
     private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
+    private final DropDown typeDropDown = DropDown.byLabel("Тип");
+    private final DropDown providerDropDown = DropDown.byLabel("Провайдер");
+    private final DropDown stateDropDown = DropDown.byLabel("Состояние");
+    private final WebElement applyFiltersButton = $x("//button[div[text()='Применить']]");
+    private final WebElement clearFiltersButton = $x("//button[text()='Сбросить фильтры']");
 
     @Step("Проверка заголовков списка графов")
     public OrderTemplatesListPage checkHeaders() {
@@ -194,6 +198,57 @@ public class OrderTemplatesListPage {
     public OrderTemplatesListPage findTemplateByValue(String value, ItemVisualTemplate template) {
         search(value);
         Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, template.getName()));
+        return this;
+    }
+
+    @Step("Выбор в фильтре по типу значения '{value}'")
+    public OrderTemplatesListPage setTypeFilter(String value) {
+        typeDropDown.selectByDivText(value);
+        return this;
+    }
+
+    @Step("Выбор в фильтре по провайдеру значения '{value}'")
+    public OrderTemplatesListPage setProviderFilter(String value) {
+        providerDropDown.selectByDivText(value);
+        return this;
+    }
+
+    @Step("Выбор в фильтре по состоянию значения '{value}'")
+    public OrderTemplatesListPage setStateFilter(String value) {
+        stateDropDown.selectByDivText(value);
+        return this;
+    }
+
+    @Step("Применение фильтров")
+    public OrderTemplatesListPage applyFilters() {
+        applyFiltersButton.click();
+        TestUtils.wait(500);
+        return this;
+    }
+
+    @Step("Удаление заданного значения фильтра '{value}'")
+    public OrderTemplatesListPage removeFilterTag(String value) {
+        StringUtils.$x("//span[text()='{}']/following-sibling::*[name()='svg']", value).click();
+        TestUtils.wait(500);
+        return this;
+    }
+
+    @Step("Сброс фильтров")
+    public OrderTemplatesListPage clearFilters() {
+        clearFiltersButton.click();
+        TestUtils.wait(500);
+        return this;
+    }
+
+    @Step("Проверка, что шаблон '{template.name}' отображается в списке")
+    public OrderTemplatesListPage checkTemplateIsDisplayed(ItemVisualTemplate template) {
+        Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, template.getName()));
+        return this;
+    }
+
+    @Step("Проверка, что шаблон '{template.name}' не отображается в списке")
+    public OrderTemplatesListPage checkTemplateIsNotDisplayed(ItemVisualTemplate template) {
+        Assertions.assertFalse(new Table(columnName).isColumnValueEquals(columnName, template.getName()));
         return this;
     }
 }

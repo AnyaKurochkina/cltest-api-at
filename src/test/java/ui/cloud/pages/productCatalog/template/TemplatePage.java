@@ -36,8 +36,8 @@ public class TemplatePage {
 
     @Step("Проверка, что отображаемая версия шаблона равна '{version}'")
     public TemplatePage checkTemplateVersion(String version) {
-        templateVersion.getValue();
-        return new TemplatePage();
+        templateVersion.shouldHave(Condition.exactText(version));
+        return this;
     }
 
     @Step("Проверка атрибутов шаблона '{template.name}'")
