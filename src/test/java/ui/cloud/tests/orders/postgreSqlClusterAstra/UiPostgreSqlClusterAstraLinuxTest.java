@@ -172,7 +172,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
 
 
     @Test
-    @Order(19)
+    @Order(13)
     @TmsLink("1171491")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Актуализировать extensions")
     void updateExtensions() {
@@ -182,7 +182,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
     }
 
     @Test
-    @Order(20)
+    @Order(14)
     @TmsLink("1171492")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить extensions")
     void changeExtensions() {

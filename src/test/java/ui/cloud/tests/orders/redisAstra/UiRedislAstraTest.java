@@ -33,8 +33,8 @@ public class UiRedislAstraTest extends Tests {
 
     public UiRedislAstraTest() {
         if (Configure.ENV.equals("prod"))
-         // product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/3eba6325-c957-43cb-8ef8-a2ec3694e04a/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+         product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+           // product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/375eb3af-8e16-4971-b538-b7b6e980a763/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = Redis.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();

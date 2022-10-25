@@ -7,6 +7,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.PostgreSQL;
+import models.orderService.products.PostgresSQLCluster;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,8 +37,8 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
 
     public UiPostgreSqlAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
-           product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-           //product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/c24c4e41-5ead-47e1-beab-2d0d1425b742/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            product = PostgreSQL.builder().env("DEV").productName("PostgreSQL (Astra Linux)").platform("OpenStack").segment("dev-srv-app").build();
+            // product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/ec7fe6a7-bc5c-4bb0-bdf8-ea776f9b2639/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
