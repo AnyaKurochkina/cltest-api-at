@@ -31,4 +31,23 @@ public class OrderTemplatesListTests extends OrderTemplateBaseTest {
                 .findTemplateByValue(NAME.substring(1).toUpperCase(), orderTemplate)
                 .findTemplateByValue(TITLE.substring(1).toUpperCase(), orderTemplate);
     }
+
+    @Test
+    @TmsLink("770483")
+    @DisplayName("Фильтрация списка шаблонов")
+    public void filterOrderTemplatesTest() {
+        new IndexPage().goToOrderTemplatesPage()
+                .setTypeFilter("vm")
+                .setProviderFilter("vsphere")
+                .setStateFilter("Выключено")
+                .applyFilters()
+                .checkTemplateIsDisplayed(orderTemplate)
+                .removeFilterTag("vsphere")
+                .checkTemplateIsDisplayed(orderTemplate)
+                .setStateFilter("Включено")
+                .applyFilters()
+                .checkTemplateIsNotDisplayed(orderTemplate)
+                .clearFilters()
+                .checkTemplateIsDisplayed(orderTemplate);
+    }
 }
