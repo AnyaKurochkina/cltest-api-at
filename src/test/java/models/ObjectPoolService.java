@@ -85,6 +85,7 @@ public class ObjectPoolService {
             } catch (Throwable throwable) {
                 if (throwable instanceof CalculateException) {
                     objectPoolEntity.setStatus(ObjectStatus.CREATED);
+                    createdEntities.add(Objects.requireNonNull(e.uuid));
                 } else {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED);
                     objectPoolEntity.setError(throwable);
