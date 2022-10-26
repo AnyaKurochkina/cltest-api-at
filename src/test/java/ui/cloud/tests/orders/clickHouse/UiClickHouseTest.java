@@ -35,7 +35,7 @@ public class UiClickHouseTest extends Tests {
     public UiClickHouseTest() {
         if (Configure.ENV.equals("prod"))
             product = ClickHouse.builder().productName("ClickHouse").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/aa9f092f-dd38-4333-a7f0-a8ec35203f9e/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/7080926c-4670-4857-ba74-464d2e50caf1/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = ClickHouse.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -63,7 +63,7 @@ public class UiClickHouseTest extends Tests {
             orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-            orderPage.getNameDB().setValue("at_db");
+           // orderPage.getNameDB().setValue("at_db");
             orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
@@ -89,9 +89,8 @@ public class UiClickHouseTest extends Tests {
         Assertions.assertEquals(preBillingProductPrice, clickHousePage.getCostOrder(), 0.01);
     }
 
-
     @Test
-    @TmsLink("1162624")
+    @TmsLink("1236735")
     @Order(2)
     @DisplayName("UI ClickHouse. Проверка полей заказа")
     void

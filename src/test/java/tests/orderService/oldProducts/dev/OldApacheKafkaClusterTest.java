@@ -34,7 +34,7 @@ public class OldApacheKafkaClusterTest extends Tests {
     final ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
             .projectId("proj-1oob0zjo5h")
             .productId("0c36e61d-687c-4a23-914d-7421779301e4")
-            .orderId("3c2fd8aa-b0dd-4aff-9d2e-332a22f681e8")
+            .orderId("153f1adf-687d-42f5-b511-808098b29574")
             .productName("Apache Kafka Cluster")
             .build();
 
@@ -228,16 +228,16 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.deleteTopics(Collections.singletonList("PacketTopicNameForEdit"));
     }
 
-    @Order(15)
-    @TmsLink("883533")
-    @Test
-    @DisplayName("Обновление инсталяции Kafka Cluster OLD")
-    void update() {
-        if (kafka.productStatusIs(STOPPED)) {
-            kafka.start();
-        }
-        kafka.upgradeVersion();
-    }
+//    @Order(15)
+//    @TmsLink("883533")
+//    @Test
+//    @DisplayName("Обновление инсталяции Kafka Cluster OLD")
+//    void update() {
+//        if (kafka.productStatusIs(STOPPED)) {
+//            kafka.start();
+//        }
+//        kafka.upgradeVersion();
+//    }
 
     @Order(16)
     @TmsLink("841721")

@@ -43,7 +43,7 @@ public class Table implements TypifiedElement {
         $x("//table[contains(.,'Идет обработка данных')]").shouldNot(Condition.exist);
 
         headersCollection = table.$$x("thead/tr/th");
-        rows = table.$$x("tbody/tr");
+        rows = table.$$x("tbody/tr[td]");
         headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));
         headers = headersCollection.shouldBe(CollectionCondition.allMatch("", WebElement::isDisplayed)).texts();
     }

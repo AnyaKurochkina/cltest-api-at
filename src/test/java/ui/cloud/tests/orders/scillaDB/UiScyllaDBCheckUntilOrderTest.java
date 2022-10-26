@@ -7,6 +7,7 @@ import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.PostgreSQL;
+import models.orderService.products.PostgresSQLCluster;
 import models.orderService.products.ScyllaDb;
 import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
@@ -27,7 +28,7 @@ class UiScyllaDBCheckUntilOrderTest extends Tests {
     //TODO: пока так :)
     public UiScyllaDBCheckUntilOrderTest() {
         if (Configure.ENV.equals("prod"))
-            product = ScyllaDb.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+            product = ScyllaDb.builder().env("DEV").productName("ScyllaDB").platform("OpenStack").segment("dev-srv-app").build();
             //product = ScyllaDb.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/41ccc48d-5dd0-4892-ae5e-3f1f360885ac/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = ScyllaDb.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
@@ -43,8 +44,8 @@ class UiScyllaDBCheckUntilOrderTest extends Tests {
     }
 
     @Test
-    @TmsLink("1139488")
-    @DisplayName("UI PostgreSQLAstra. Проверка полей при заказе продукта")
+    @TmsLink("1190976")
+    @DisplayName("UI ScyllaDb. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
                 .clickOrderMore()

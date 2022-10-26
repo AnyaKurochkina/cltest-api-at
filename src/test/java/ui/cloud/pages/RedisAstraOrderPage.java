@@ -2,6 +2,7 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.helper.StringUtils;
 import lombok.Getter;
 import ui.elements.DropDown;
 import ui.elements.Input;
@@ -11,7 +12,7 @@ import java.util.UUID;
 import static com.codeborne.selenide.Selenide.$x;
 
 @Getter
-public class PostgreSqlAstraOrderPage extends Product {
+public class RedisAstraOrderPage extends Product {
 
     SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
     SelenideElement hardDrive2 = $x("(//div[contains(text(),'Жесткий диск')])[2]");
@@ -25,10 +26,10 @@ public class PostgreSqlAstraOrderPage extends Product {
     DropDown configure = DropDown.byLabel("Конфигурация Core/RAM");
     Input countVm = Input.byLabel("Количество");
     Input label = Input.byLabel("Метка");
-
+    SelenideElement generatePassButton = StringUtils.$x("//button[@aria-label='generate']");
     String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
-    public PostgreSqlAstraOrderPage() {
+    public RedisAstraOrderPage() {
         label.setValue(labelValue);
         platform.getElement().shouldBe(Condition.enabled);
     }

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
-import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 
 @Feature("Удаление шаблона отображения")
 public class DeleteOrderTemplateTest extends OrderTemplateBaseTest {

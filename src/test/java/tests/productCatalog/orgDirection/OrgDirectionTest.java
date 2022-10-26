@@ -12,7 +12,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
-import models.productCatalog.Services;
+import models.productCatalog.Service;
 import models.productCatalog.icon.Icon;
 import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
@@ -277,7 +277,7 @@ public class OrgDirectionTest extends Tests {
                 .title("delete_org_direction_used_in_service")
                 .build()
                 .createObject();
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName("service_for_delete_org_direction_test_api")
                 .title("service_for_delete_org_direction_test_api")
                 .directionId(orgDirection.getOrgDirectionId())
