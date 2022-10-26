@@ -90,6 +90,9 @@
             "icon_url": {
               "type": "string"
             },
+            "is_safe": {
+              "type": "boolean"
+            },
             "icon_store_id": {
               "type": ["string", "null"]
             },
@@ -117,6 +120,7 @@
             "allowed_developers",
             "restricted_developers",
             "icon_url",
+            "is_safe",
             "icon_store_id",
             "context_restrictions"
           ]

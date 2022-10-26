@@ -10,7 +10,10 @@ import models.Entity;
 import org.json.JSONObject;
 import steps.feedService.FeedServiceSteps;
 
+import java.util.Objects;
+
 import static core.helper.Configure.FeedServiceURL;
+import static steps.feedService.FeedServiceSteps.*;
 
 @Log4j2
 @Getter
@@ -54,9 +57,8 @@ public class FeedTag extends Entity {
 	@Override
 	@Step("Создание Tag")
 	protected void create() {
-		FeedTag feedByName = FeedServiceSteps.getFeedTagByName(title);
-		if (feedByName != null) {
-			FeedServiceSteps.deleteTag(feedByName.getId());
+		if (isFeedTagExist(key)) {
+			FeedServiceSteps.deleteTag(Objects.requireNonNull(getFeedTagByKey(key)).getId());
 		}
 		id = new Http(FeedServiceURL)
 				.setRole(Role.PRODUCT_CATALOG_ADMIN)
