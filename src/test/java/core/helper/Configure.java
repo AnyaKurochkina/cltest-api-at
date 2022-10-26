@@ -59,7 +59,7 @@ public class Configure {
             ResourceManagerURL = kongURL + "resource-manager/api";
             FeedServiceURL = kongURL + "feed-service";
             Day2ServiceURL = kongURL + "day2-core";
-            ImageService = "https://dev-cloud-images.service.t1-cloud.ru";
+            ImageService = "https://d2-cloud-images.apps.cloud.k8s.dev.01.vmw.t1.loc";
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -62,7 +62,7 @@ public class OrderServiceSteps extends Steps {
                 e.printStackTrace();
                 log.error("Ошибка в GetErrorFromStateService " + e);
             }
-            if(Objects.isNull(error))
+            if (Objects.isNull(error))
                 error = "Отсутствует информация о заказе в state service";
             if (error.equals("null"))
                 error = "Продукт не развернулся по таймауту";
@@ -167,6 +167,14 @@ public class OrderServiceSteps extends Steps {
                 .send(OrderServiceURL)
                 .setRole(Role.ORDER_SERVICE_ADMIN)
                 .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
+    }
+
+    @Step("Добавление действия {actionName} заказа и регистрация его в авторайзере")
+    public static void registrationAction(String actionName) {
+        new Http(OrderServiceURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("action_name", actionName))
+                .post("/v1/orders/actions");
     }
 
     public static Response changeProjectForOrderRequest(IProduct product, Project target) {
@@ -320,7 +328,7 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    private static void waitStatus(Duration timeout, IProduct product){
+    private static void waitStatus(Duration timeout, IProduct product) {
         Instant startTime = Instant.now();
         String status;
         do {
@@ -384,7 +392,7 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath();
 
         Item item = new Item();
-        if(!filter.equals(""))
+        if (!filter.equals(""))
             filter = "it.data.config." + filter + " && ";
         //Получаем все item ID по name, например: "expand_mount_point"
         item.setId(jsonPath.get(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action)));
@@ -494,7 +502,7 @@ public class OrderServiceSteps extends Steps {
             }
         }
 
-        if(Configure.ENV.equalsIgnoreCase("IFT")) {
+        if (Configure.ENV.equalsIgnoreCase("IFT")) {
             orders = new Http(OrderServiceURL)
                     .setProjectId(project.id)
                     .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=failure&f[status][]=pending", project.id)

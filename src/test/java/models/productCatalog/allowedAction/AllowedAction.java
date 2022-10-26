@@ -2,6 +2,7 @@ package models.productCatalog.allowedAction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -10,14 +11,16 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import static steps.productCatalog.AllowedActionSteps.isAllowedActionExists;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static steps.productCatalog.AllowedActionSteps.*;
 
 @Log4j2
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = "active", callSuper = false)
+@EqualsAndHashCode(callSuper = false)
 public class AllowedAction extends Entity {
     @JsonProperty("event_provider")
     private List<String> eventProvider;
@@ -34,22 +37,18 @@ public class AllowedAction extends Entity {
     @JsonProperty("update_dt")
     private String updateDt;
     private String name;
+    @JsonProperty("context_restrictions")
+    private List<String> contextRestriction;
     @JsonProperty("create_dt")
     private String createDt;
     @JsonProperty("action")
     private String actionId;
     @JsonProperty("id")
     private Integer id;
-    @JsonProperty("is_all_levels")
-    private Boolean isAllLevels;
-    @JsonProperty("direction")
-    private String direction;
-    private String jsonTemplate;
-    private String productName;
+
+
     @Override
     public Entity init() {
-        jsonTemplate = "productCatalog/allowedAction/createAllowedAction.json";
-        productName = "/api/v1/allowed_actions/";
         if (actionId == null) {
             Action action = Action.builder().actionName("action_for_allowed_action_api_test").build().createObject();
             actionId = action.getActionId();
@@ -59,7 +58,7 @@ public class AllowedAction extends Entity {
 
     @Override
     public JSONObject toJson() {
-        return JsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate("productCatalog/allowedAction/createAllowedAction.json")
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.description", description)
@@ -68,22 +67,26 @@ public class AllowedAction extends Entity {
                 .set("$.item_restriction", itemRestriction)
                 .set("$.event_type", eventType)
                 .set("$.config_restriction", configRestriction)
-                .set("$.is_all_levels", isAllLevels)
-                .set("$.direction", direction)
                 .set("$.environment_type_restriction", environmentTypeRestriction)
+                .set("$.context_restrictions", contextRestriction)
                 .build();
     }
 
     @Override
     protected void create() {
         if (isAllowedActionExists(name)) {
-
+            deleteAllowedActionById(id);
         }
-
+        AllowedAction createAllowedAction = createAllowedAction(toJson())
+                .assertStatus(201)
+                .extractAs(AllowedAction.class);
+        StringUtils.copyAvailableFields(createAllowedAction, this);
+        assertNotNull(actionId, "Действие с именем: " + name + ", не создался");
     }
 
     @Override
     protected void delete() {
-
+        deleteAllowedActionById(id);
+        assertFalse(isAllowedActionExists(name));
     }
 }

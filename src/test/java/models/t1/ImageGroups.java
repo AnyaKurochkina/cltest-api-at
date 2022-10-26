@@ -11,8 +11,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static steps.t1.imageService.ImageServiceSteps.createImageGroup;
-import static steps.t1.imageService.ImageServiceSteps.deleteImageGroupById;
+import static steps.t1.imageService.ImageServiceSteps.*;
 
 
 @Log4j2
@@ -33,17 +32,15 @@ public class ImageGroups extends Entity {
     private String logo;
     @JsonProperty("synced_at")
     private String syncedAt;
-    private String jsonTemplate;
 
     @Override
     public Entity init() {
-        jsonTemplate = "t1/createImageGroup.json";
         return this;
     }
 
     @Override
     public JSONObject toJson() {
-        return JsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate("t1/createImageGroup.json")
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.images", images)
@@ -55,6 +52,9 @@ public class ImageGroups extends Entity {
 
     @Override
     protected void create() {
+        if(isImageGroupExist(name, false)) {
+            deleteImageGroupById(id);
+        }
         ImageGroups imageGroup = createImageGroup(toJson());
         StringUtils.copyAvailableFields(imageGroup, this);
         assertNotNull(id, "ImageGroup с именем: " + name + ", не создался");

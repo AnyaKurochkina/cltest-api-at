@@ -533,5 +533,37 @@ public class ActionsTest extends Tests {
         Action actualAction = getActionById(action.getActionId());
         assertEquals(50, actualAction.getNumber());
     }
+
+    @DisplayName("Создание действия с флагом is_safe = true и false")
+    @TmsLink("")
+    @Test
+    public void createActionWithIsSafe() {
+        String actionName = "create_action_with_is_safe_true";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .isSafe(true)
+                .version("1.0.1")
+                .build()
+                .createObject();
+        Action actualAction = getActionById(action.getActionId());
+        assertTrue(actualAction.getIsSafe(), "Значение флага is_safe не соответсвует ожидаемому");
+        partialUpdateAction(action.getActionId(), new JSONObject().put("is_safe", false));
+        Action updatedAction = getActionById(action.getActionId());
+        assertFalse(updatedAction.getIsSafe(), "Значение флага is_safe не соответсвует ожидаемому");
+    }
+
+    @DisplayName("Создание действия без передачи поля is_safe")
+    @TmsLink("")
+    @Test
+    public void createActionWithoutIsSafe() {
+        String actionName = "create_action_without_is_safe_true";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .version("1.0.1")
+                .build()
+                .createObject();
+        Action actualAction = getActionById(action.getActionId());
+        assertFalse(actualAction.getIsSafe(), "Значение флага is_safe не соответсвует ожидаемому");
+    }
 }
 

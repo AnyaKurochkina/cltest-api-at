@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "create_dt": {
+      "type": "string"
+    },
+    "update_dt": {
+      "type": "string"
+    },
+    "context_restrictions": {
+      "type": "array"
+    },
+    "name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "event_type": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "event_provider": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "config_restriction": {
+      "type": "string"
+    },
+    "item_restriction": {
+      "type": "string"
+    },
+    "environment_type_restriction": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "action": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "create_dt",
+    "update_dt",
+    "context_restrictions",
+    "name",
+    "title",
+    "description",
+    "event_type",
+    "event_provider",
+    "config_restriction",
+    "item_restriction",
+    "environment_type_restriction",
+    "action"
+  ]
+}
