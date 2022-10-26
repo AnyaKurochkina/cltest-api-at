@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 
 import static core.helper.Configure.OrderServiceURL;
 import static org.hamcrest.Matchers.emptyOrNullString;
+import static steps.productCatalog.ProductSteps.getProductById;
 
 
 @SuperBuilder
@@ -100,6 +101,8 @@ public abstract class IProduct extends Entity {
     protected String env;
     @Getter
     protected String productId;
+    @Getter
+    protected String productCatalogName;
 
     public void setStatus(ProductStatus status) {
         this.status = status;
@@ -349,6 +352,9 @@ public abstract class IProduct extends Entity {
             productId = new ProductCatalogSteps("/api/v1/products/").
                     getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(Objects.requireNonNull(getProductName()),
                             "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()));
+        }
+        if (productCatalogName == null) {
+            productCatalogName = getProductById(productId).getName();
         }
     }
 
