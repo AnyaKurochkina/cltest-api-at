@@ -323,7 +323,8 @@ public abstract class IProduct extends Entity {
     public Flavor getMaxFlavor() {
         List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
         Assertions.assertFalse(list.size() < 2, "Действие недоступно, либо кол-во flavor's < 2");
-        return list.get(list.size() - 1);
+//        return list.get(list.size() - 1);
+        return list.get(1);
     }
 
     public Flavor getMinFlavor() {
