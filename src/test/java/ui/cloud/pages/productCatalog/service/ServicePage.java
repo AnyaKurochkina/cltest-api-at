@@ -57,7 +57,7 @@ public class ServicePage {
         return this;
     }
 
-    @Step("Сохранение шаблона со следующей патч-версией")
+    @Step("Сохранение сервиса со следующей патч-версией")
     public ServicePage saveWithPatchVersion() {
         saveButton.shouldBe(Condition.enabled).click();
         new SaveDialog().saveWithNextPatchVersion(saveServiceAlertText);

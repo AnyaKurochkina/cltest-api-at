@@ -9,10 +9,8 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
-import ui.uiModels.Template;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
