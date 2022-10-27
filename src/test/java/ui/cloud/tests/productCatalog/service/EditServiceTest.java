@@ -13,6 +13,7 @@ public class EditServiceTest extends ServiceBaseTest {
     @DisplayName("Редактирование сервиса")
     public void editServiceTest() {
         service.setDescription("new description");
+        service.setGraphVersion("Последняя");
         new IndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(service.getServiceName())
                 .setAttributes(service)
