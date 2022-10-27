@@ -167,6 +167,7 @@ public class GraphPage {
 
     @Step("Возврат в список графов")
     public GraphsListPage returnToGraphsList() {
+        TestUtils.scrollToTheTop();
         graphsList.click();
         return new GraphsListPage();
     }

@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
+import ui.uiModels.Template;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -219,6 +221,13 @@ public class ServicesListPagePC {
     @Step("Проверка, что сервис '{service.serviceName}' не отображается в списке")
     public ServicesListPagePC checkServiceIsNotDisplayed(Service service) {
         Assertions.assertFalse(new Table(columnName).isColumnValueEquals(columnName, service.getServiceName()));
+        return this;
+    }
+
+    @Step("Копирование сервиса '{service.serviceName}'")
+    public ServicesListPagePC copyService(Service service) {
+        new BaseList().copy(columnName, service.getServiceName());
+        new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();
         return this;
     }
 }
