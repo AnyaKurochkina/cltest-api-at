@@ -221,4 +221,11 @@ public class ServicesListPagePC {
         Assertions.assertFalse(new Table(columnName).isColumnValueEquals(columnName, service.getServiceName()));
         return this;
     }
+
+    @Step("Копирование сервиса '{service.serviceName}'")
+    public ServicesListPagePC copyService(Service service) {
+        new BaseList().copy(columnName, service.getServiceName());
+        new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();
+        return this;
+    }
 }

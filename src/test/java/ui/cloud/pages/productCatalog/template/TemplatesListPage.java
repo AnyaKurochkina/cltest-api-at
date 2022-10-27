@@ -30,9 +30,7 @@ public class TemplatesListPage {
     private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::p[text()='Поле обязательно для заполнения']");
     private final SelenideElement nameRequiredFieldHint = $x("//input[@name='name']/parent::div/following-sibling::p[text()='Поле обязательно для заполнения']");
     private final SelenideElement runQueueRequiredFieldHint =
-            $x("//input[@name='run']/parent::div/following-sibling::p[text()='Должно быть заполнено поле \"Название очереди для старта задачи\" и/или \"Название очереди для отката\"']");
-    private final SelenideElement rollbackQueueRequiredFieldHint =
-            $x("//input[@name='rollback']/parent::div/following-sibling::p[text()='Должно быть заполнено поле \"Название очереди для старта задачи\" и/или \"Название очереди для отката\"']");
+            $x("//input[@name='run']/parent::div/following-sibling::p[text()='Поле обязательно для заполнения']");
     private final SelenideElement nonuniqueNameValidationHint = $x("//input[@name='name']/parent::div/following-sibling::p[text()='Шаблон с таким именем уже существует']");
     private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
     private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
@@ -119,9 +117,8 @@ public class TemplatesListPage {
         if (template.getName().isEmpty()) {
             nameRequiredFieldHint.shouldBe(Condition.visible);
         }
-        if (template.getRunQueue().isEmpty() && template.getRollbackQueue().isEmpty()) {
+        if (template.getRunQueue().isEmpty()) {
             runQueueRequiredFieldHint.shouldBe(Condition.visible);
-            rollbackQueueRequiredFieldHint.shouldBe(Condition.visible);
         }
         saveButton.shouldBe(Condition.disabled);
         cancelButton.click();

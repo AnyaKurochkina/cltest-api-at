@@ -54,7 +54,7 @@ public class NodesListTest extends GraphBaseTest {
                 .goToNodesTab()
                 .addNodeAndSave(node)
                 .findNode(node.getInputKey(), node)
-                .findNode(node.getOutputKey(), node)
+                .findNode(node.getOutputKey().toUpperCase(), node)
                 .findNode(node.getInputValue(), node)
                 .checkNodeNotFound("incorrect_param", node);
     }

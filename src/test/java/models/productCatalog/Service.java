@@ -90,6 +90,7 @@ public class Service extends Entity {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", serviceName)
                 .set("$.graph_id", graphId)
+                .set("$.graph_version", graphVersion)
                 .set("$.version", version)
                 .set("$.is_published", isPublished)
                 .set("$.title", title)
