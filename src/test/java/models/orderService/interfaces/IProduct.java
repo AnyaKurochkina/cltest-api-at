@@ -395,7 +395,7 @@ public abstract class IProduct extends Entity {
         return envType().contains("test");
     }
 
-    protected String envType() {
+    public String envType() {
         Project project = Project.builder().id(projectId).build().createObject();
         return project.getProjectEnvironmentPrefix().getEnvType().toLowerCase();
     }
