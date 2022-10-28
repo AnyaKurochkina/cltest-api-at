@@ -51,8 +51,6 @@ public class Action extends Entity {
     private Boolean autoRemovingIfFailed;
     private String title;
     private String type;
-    @JsonProperty("event_type")
-    private List<Object> eventType;
     @JsonProperty("required_item_statuses")
     private List<Object> requiredItemStatuses;
     @JsonProperty("data_config_path")
@@ -65,8 +63,6 @@ public class Action extends Entity {
     private String actionId;
     @JsonProperty("allowed_paths")
     private List<Object> allowedPaths;
-    @JsonProperty("event_provider")
-    private List<Object> eventProvider;
     @JsonProperty("restricted_groups")
     private List<String> restrictedGroups;
     @JsonProperty("graph_id")
@@ -107,6 +103,8 @@ public class Action extends Entity {
     private VersionDiff versionDiff;
     @JsonProperty("active")
     private Boolean active;
+    @JsonProperty("event_type_provider")
+    private List<EventTypeProvider> eventTypeProvider;
     @JsonProperty("context_restrictions")
     private Object contextRestrictions;
     @JsonProperty("is_safe")
@@ -140,6 +138,7 @@ public class Action extends Entity {
                 .set("$.location_restriction", locationRestriction)
                 .set("$.context_restrictions", contextRestrictions)
                 .set("$.config_restriction", configRestriction)
+                .set("$.event_type_provider", eventTypeProvider)
                 .setIfNullRemove("$.is_safe", isSafe)
                 .setIfNullRemove("$.number", number)
                 .build();

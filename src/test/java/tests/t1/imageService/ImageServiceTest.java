@@ -31,7 +31,7 @@ public class ImageServiceTest extends Tests {
         ImageGroups imageGroup = ImageGroups.builder()
                 .name("get_image_groups_test_api")
                 .tags(Collections.singletonList("type:os"))
-                .distro("ubuntu")
+                .distro("altsisyphus")
                 .build()
                 .createObject();
         Waiting.sleep(15000);

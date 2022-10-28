@@ -7,12 +7,15 @@ import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.productCatalog.action.Action;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static steps.productCatalog.ActionSteps.deleteActionByName;
+import static steps.productCatalog.ActionSteps.isActionExists;
 import static steps.productCatalog.AllowedActionSteps.*;
 
 @Log4j2
@@ -50,7 +53,9 @@ public class AllowedAction extends Entity {
     @Override
     public Entity init() {
         if (actionId == null) {
-            Action action = Action.builder().actionName("action_for_allowed_action_api_test").build().createObject();
+            String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_allowed_action_api_test";
+            deleteActionIfExist(actionName);
+            Action action = Action.builder().actionName(actionName).build().createObject();
             actionId = action.getActionId();
         }
         return this;
@@ -74,9 +79,7 @@ public class AllowedAction extends Entity {
 
     @Override
     protected void create() {
-        if (isAllowedActionExists(name)) {
-            deleteAllowedActionById(id);
-        }
+        deleteAllowedActionIfExist();
         AllowedAction createAllowedAction = createAllowedAction(toJson())
                 .assertStatus(201)
                 .extractAs(AllowedAction.class);
@@ -88,5 +91,17 @@ public class AllowedAction extends Entity {
     protected void delete() {
         deleteAllowedActionById(id);
         assertFalse(isAllowedActionExists(name));
+    }
+
+    private void deleteActionIfExist(String actionName) {
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
+        }
+    }
+
+    private void deleteAllowedActionIfExist() {
+        if (isAllowedActionExists(name)) {
+            deleteAllowedActionByName(name);
+        }
     }
 }

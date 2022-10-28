@@ -372,7 +372,7 @@ public class ActionsTest extends Tests {
                 .createObject();
         String graphVersionCalculated = getActionById(action.getActionId())
                 .getGraphVersionCalculated();
-        Assertions.assertNotNull(graphVersionCalculated);
+        assertEquals("1.0.0", graphVersionCalculated);
     }
 
     @Test
@@ -386,6 +386,7 @@ public class ActionsTest extends Tests {
                 .build()
                 .createObject();
         deleteActionById(action.getActionId());
+        assertFalse(isActionExists(actionName));
     }
 
     @Test
@@ -535,7 +536,7 @@ public class ActionsTest extends Tests {
     }
 
     @DisplayName("Создание действия с флагом is_safe = true и false")
-    @TmsLink("")
+    @TmsLink("1267102")
     @Test
     public void createActionWithIsSafe() {
         String actionName = "create_action_with_is_safe_true";
@@ -553,7 +554,7 @@ public class ActionsTest extends Tests {
     }
 
     @DisplayName("Создание действия без передачи поля is_safe")
-    @TmsLink("")
+    @TmsLink("1267104")
     @Test
     public void createActionWithoutIsSafe() {
         String actionName = "create_action_without_is_safe_true";

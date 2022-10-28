@@ -5,6 +5,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.orderService.products.Astra;
 import models.productCatalog.action.Action;
+import models.productCatalog.action.EventTypeProvider;
 import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.ProductArgumentsProvider;
@@ -32,8 +33,7 @@ public class ContextRestrictionIntegrationTests extends Tests {
         Action action = Action.builder()
                 .actionName(actionName )
                 .title(actionName )
-                .eventType(Collections.singletonList("vm"))
-                .eventProvider(Collections.singletonList("vsphere"))
+                .eventTypeProvider(Collections.singletonList(new EventTypeProvider("vm", "vsphere")))
                 .requiredItemStatuses(Collections.singletonList("on"))
                 .requiredOrderStatuses(Collections.singletonList("success"))
                 .build()

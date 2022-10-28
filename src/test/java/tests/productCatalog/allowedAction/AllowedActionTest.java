@@ -8,6 +8,7 @@ import models.productCatalog.allowedAction.AllowedAction;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,8 @@ public class AllowedActionTest extends Tests {
     }
 
     @DisplayName("Проверка существования разрешенного действия")
-    @TmsLink("1243008")
+    @Disabled
+    @TmsLink("")
     @Test
     public void checkAllowedAction() {
         String actionName = "check_allowed_action_exist_test_api";

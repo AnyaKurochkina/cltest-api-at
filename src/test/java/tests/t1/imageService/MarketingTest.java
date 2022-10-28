@@ -12,8 +12,7 @@ import tests.Tests;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static steps.t1.imageService.ImageServiceSteps.*;
 
 @Tag("image_service")
@@ -29,6 +28,19 @@ public class MarketingTest extends Tests {
                 .name("marketing_create_api_test")
                 .build()
                 .createObject();
+        assertTrue(isMarketingExist(marketing.getName()));
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Получение marketing по id")
+    public void getMarketingByIdTest() {
+        Marketing marketing = Marketing.builder()
+                .name("get_marketing_by_id_api_test")
+                .build()
+                .createObject();
+        Marketing marketingById = getMarketingById(marketing.getId());
+        assertEquals(marketing, marketingById);
     }
 
     @Test
@@ -53,6 +65,19 @@ public class MarketingTest extends Tests {
                 .build()
                 .createObject();
         partialUpdateMarketingById(marketing.getId(), new JSONObject().put("description", "test"));
+        Marketing marketingById = getMarketingById(marketing.getId());
+        assertEquals("test", marketingById.getDescription());
+    }
 
+    @Test
+    @TmsLink("")
+    @DisplayName("Удаление marketing по id")
+    public void deleteMarketingTest() {
+        Marketing marketing = Marketing.builder()
+                .name("delete_marketing_api_test")
+                .build()
+                .createObject();
+        deleteMarketingById(marketing.getId());
+        assertFalse(isMarketingExist(marketing.getName()));
     }
 }

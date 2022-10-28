@@ -64,6 +64,26 @@ public class ImageServiceSteps extends Steps {
                 .extractAs(ImageGroups.class);
     }
 
+    @Step("Получение marketing по id {id}")
+    public static Marketing getMarketingById(String id) {
+        return new Http(ImageService)
+                .setRole(T1_ADMIN)
+                .get("/marketing/{}", id)
+                .assertStatus(200)
+                .extractAs(Marketing.class);
+    }
+
+    @Step("Получение marketing по name {name}")
+    public static Marketing getMarketingByName(String name) {
+        List<Marketing> marketingList = getMarketingList();
+        for (Marketing marketing : marketingList) {
+            if (marketing.getName().equals(name)) {
+                return marketing;
+            }
+        }
+        return null;
+    }
+
     @Step("Получение image по id {id}")
     public static Image getImageById(String id) {
         return new Http(ImageService)
@@ -73,11 +93,30 @@ public class ImageServiceSteps extends Steps {
                 .extractAs(Image.class);
     }
 
+    @Step("Получение image по name {name}")
+    public static Image getImageByName(String name) {
+        List<Image> imageList = getImageList();
+        for (Image image : imageList) {
+            if (image.getName().equals(name)) {
+                return image;
+            }
+        }
+        return null;
+    }
+
     @Step("Удаление image groups по id {id}")
     public static void deleteImageGroupById(String id) {
         new Http(ImageService)
                 .setRole(T1_ADMIN)
                 .delete("/image_groups/{}", id)
+                .assertStatus(200);
+    }
+
+    @Step("Удаление marketing по id {id}")
+    public static void deleteMarketingById(String id) {
+        new Http(ImageService)
+                .setRole(T1_ADMIN)
+                .delete("/marketing/{}", id)
                 .assertStatus(200);
     }
 
@@ -92,6 +131,18 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Частичное обновление marketing по id {id}")
     public static void partialUpdateMarketingById(String id, JSONObject body) {
+        new Http(ImageService)
+                .setRole(T1_ADMIN)
+                .body(body)
+                .patch("/marketing/{}", id)
+                .assertStatus(200);
+    }
+    @Step("Частичное обновление Image по id {id}")
+    /*
+      Метод patch для Image должен работать только на обновление информации о marketing
+      в body метода передается json в формате : {"marketing_id" : "id"}
+     */
+    public static void partialUpdateImageById(String id, JSONObject body) {
         new Http(ImageService)
                 .setRole(T1_ADMIN)
                 .body(body)

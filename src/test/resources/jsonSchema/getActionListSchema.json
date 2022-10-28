@@ -55,11 +55,7 @@
             "type": {
               "type": "string"
             },
-            "event_type": {
-              "type": "array",
-              "items": {}
-            },
-            "event_provider": {
+            "event_type_provider": {
               "type": "array",
               "items": {}
             },
@@ -111,8 +107,7 @@
             "title",
             "description",
             "type",
-            "event_type",
-            "event_provider",
+            "event_type_provider",
             "allowed_groups",
             "restricted_groups",
             "required_order_statuses",
