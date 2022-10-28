@@ -5,6 +5,8 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.action.Action;
 import models.productCatalog.graph.Graph;
+import models.productCatalog.icon.Icon;
+import models.productCatalog.icon.IconStorage;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -159,12 +161,17 @@ public class ActionTest extends BaseTest {
     @TmsLink("631141")
     @DisplayName("Удаление иконки")
     public void deleteIcon() {
+        Icon icon = Icon.builder()
+                .name("icon_for_api_test")
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
         String name = "delete_icon_action_test_ui";
         Action.builder()
                 .actionName(name)
                 .title(name)
                 .number(0)
-                //.icon(IconStorage.ICON_FOR_AT_TEST)
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         assertFalse(new IndexPage().goToActionsPage()

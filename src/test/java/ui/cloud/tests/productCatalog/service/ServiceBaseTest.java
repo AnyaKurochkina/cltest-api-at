@@ -1,12 +1,10 @@
 package ui.cloud.tests.productCatalog.service;
 
-import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Epic;
 import models.productCatalog.OrgDirection;
 import models.productCatalog.Service;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.tests.productCatalog.BaseTest;
@@ -42,6 +40,7 @@ public class ServiceBaseTest extends BaseTest {
                 .title(TITLE)
                 .description(DESCRIPTION)
                 .version("1.0.0")
+                .graphVersion("1.0.0")
                 .build()
                 .createObject();
     }

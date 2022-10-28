@@ -38,7 +38,7 @@ public class CreateTemplateTest extends TemplateBaseTest {
         new IndexPage().goToTemplatesPage()
                 .checkCreateTemplateDisabled(new Template("", TITLE, QUEUE_NAME, QUEUE_NAME, TYPE))
                 .checkCreateTemplateDisabled(new Template(name, "", QUEUE_NAME, QUEUE_NAME, TYPE))
-                .checkCreateTemplateDisabled(new Template(name, TITLE, "", "", TYPE));
+                .checkCreateTemplateDisabled(new Template(name, TITLE, "", QUEUE_NAME, TYPE));
     }
 
     @Step("Создание шаблона с неуникальным кодом графа")

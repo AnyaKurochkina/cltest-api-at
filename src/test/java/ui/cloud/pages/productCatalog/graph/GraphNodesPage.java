@@ -70,6 +70,7 @@ public class GraphNodesPage extends GraphPage {
         if (node instanceof SubgraphNode) {
             showSubgraphsButton.click();
             subgraphInput.setValue(((SubgraphNode) node).getSubgraphName());
+            TestUtils.wait(500);
             $x("//div[contains(@title,'" + ((SubgraphNode) node).getSubgraphName() + "')]").shouldBe(Condition.enabled).click();
             paramsTab.click();
             inputJSONField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
@@ -102,7 +103,7 @@ public class GraphNodesPage extends GraphPage {
     @Step("Редактирование узла '{node.name}' с подграфом")
     public GraphNodesPage editSubgraphNode(SubgraphNode node, String version, String description) {
         TestUtils.scrollToTheBottom();
-        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        selectNodeInGraph(node);
         TestUtils.scrollToTheTop();
         editNodeButton.click();
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
@@ -120,7 +121,7 @@ public class GraphNodesPage extends GraphPage {
     @Step("Редактирование узла '{node.name}' с шаблоном")
     public GraphNodesPage editTemplateNode(TemplateNode node, String version, String description) {
         TestUtils.scrollToTheBottom();
-        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        selectNodeInGraph(node);
         TestUtils.scrollToTheTop();
         editNodeButton.click();
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
@@ -139,7 +140,7 @@ public class GraphNodesPage extends GraphPage {
     public GraphNodesPage copyNodeAndSave(Node node) {
         String cloneName = node.getName() + "_clone";
         TestUtils.scrollToTheBottom();
-        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        selectNodeInGraph(node);
         TestUtils.scrollToTheTop();
         actions().pause(1000)
                 .moveToElement($x("//div[@class='g6-grid-container']/following-sibling::canvas"))
@@ -205,7 +206,7 @@ public class GraphNodesPage extends GraphPage {
             node.setNumber("1");
         }
         TestUtils.scrollToTheBottom();
-        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        selectNodeInGraph(node);
         TestUtils.scrollToTheTop();
         editNodeButton.click();
         TestUtils.wait(500);
@@ -238,8 +239,12 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Проверка, что узел '{node.name}' найден при поиске '{text}'")
     public GraphNodesPage findNode(String text, Node node) {
+        if (node.getNumber().equals("")) {
+            node.setNumber("1");
+        }
         searchNodesInput.setValue(text);
-        $x("//div[text()='" + node.getDescription() + "']/ancestor::div[2]//span[contains(text(),'" + text + "')]")
+        TestUtils.wait(500);
+        $x("//div[text()='" + node.getNumber() + ". " + node.getDescription() + "']")
                 .shouldBe(Condition.visible);
         return this;
     }
@@ -247,14 +252,15 @@ public class GraphNodesPage extends GraphPage {
     @Step("Проверка, что узел '{node.name}' не найден при поиске '{text}'")
     public GraphNodesPage checkNodeNotFound(String text, Node node) {
         searchNodesInput.setValue(text);
-        Assertions.assertFalse($x("//div[text()='" + node.getDescription() + "']").exists());
+        Assertions.assertFalse($x("//div[text()='" + node.getNumber() + ". " + node.getDescription() + "']")
+                .exists());
         return this;
     }
 
     @Step("Удаление узла '{node.name}' и сохранение графа")
     public GraphNodesPage deleteNodeAndSave(Node node) {
         TestUtils.scrollToTheBottom();
-        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        selectNodeInGraph(node);
         TestUtils.scrollToTheTop();
         deleteNodesButton.click();
         saveGraphWithPatchVersion();
@@ -267,5 +273,13 @@ public class GraphNodesPage extends GraphPage {
         staticData.setValue(value);
         saveGraphWithPatchVersion();
         return this;
+    }
+
+    private void selectNodeInGraph(Node node) {
+        if (node.getNumber().equals("")) {
+            node.setNumber("1");
+        }
+        $x("//div[text()='" + node.getNumber() + ". " + node.getDescription() + "']/..//*[name()='svg' and @class]")
+                .click();
     }
 }

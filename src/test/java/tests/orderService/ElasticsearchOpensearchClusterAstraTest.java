@@ -74,6 +74,17 @@ public class ElasticsearchOpensearchClusterAstraTest extends Tests {
         }
     }
 
+    @TmsLink("1265630")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавить выделенную ноду Kibana {0}")
+    void addKibana(ElasticsearchOpensearchCluster product) {
+        product.setProductName(productName);
+        try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
+            elastic.addKibana();
+        }
+    }
+
     @TmsLink("796247")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")

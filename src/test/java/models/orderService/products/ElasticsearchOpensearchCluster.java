@@ -31,6 +31,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     @ToString.Include
     String elasticsearchVersion;
     String domain;
+    String kibanaPassword;
     Flavor flavorData;
     Flavor flavorMaster;
 
@@ -44,6 +45,8 @@ public class ElasticsearchOpensearchCluster extends IProduct {
             osVersion = getRandomOsVersion();
         if(elasticsearchVersion == null)
             elasticsearchVersion = getRandomProductVersionByPathEnum("elasticsearch_version.enum");
+        if(kibanaPassword == null)
+            kibanaPassword = "RnXLM4Ms3XQi";
         if(dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
@@ -61,7 +64,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
                 .set("$.order.attrs.domain", domain)
                 .set("$.order.attrs.flavor_data", new JSONObject(flavorData.toString()))
                 .set("$.order.attrs.flavor_master", new JSONObject(flavorMaster.toString()))
-//                .set("$.order.attrs.flavor_kibana", new JSONObject(flavorKibana.toString()))
+                .set("$.order.attrs.kibana_password", kibanaPassword)
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform",  getPlatform())
@@ -80,6 +83,19 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     protected void create() {
         domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
+    }
+
+    public void addKibana(){
+        Flavor flavorKibana = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_kibana:DEV").get(0);
+        AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
+        JSONObject object = JsonHelper.getJsonTemplate("/orders/elastic_open_search_add_kibana.json")
+                .set("$.default_nic.net_segment", segment)
+                .set("$.flavor_kibana", new JSONObject(flavorKibana.toString()))
+                .set("$.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.data_center", dataCentre)
+                .set("$.kibana_password", kibanaPassword)
+                .build();
+        OrderServiceSteps.executeAction("add_dedicated_kibana_node", this, object, this.getProjectId());
     }
 
     //Проверить конфигурацию
