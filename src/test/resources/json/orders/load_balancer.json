@@ -1,0 +1,45 @@
+{
+  "order": {
+    "project_name": "proj-pkvckn08w9",
+    "product_id": "37c150ee-e822-4bf6-a25c-068601f9ddf1",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "password": "W1clvyliiSCyE0gs",
+      "platform": "vSphere",
+      "boot_disk": {
+        "size": 30
+      },
+      "on_support": true,
+      "os_version": "8.4",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "extra_mounts": [
+        {
+          "path": "/app",
+          "size": 30,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_integration": true,
+      "balancer_node_number": 1,
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-plux-group-at"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "Load Balancer"
+  }
+}
