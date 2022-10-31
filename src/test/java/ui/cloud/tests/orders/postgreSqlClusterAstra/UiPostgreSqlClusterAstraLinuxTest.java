@@ -248,6 +248,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
     @Test
     @Order(20)
     @TmsLinks({@TmsLink("851703"), @TmsLink("851698")})
+    @Disabled
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Выключить принудительно / Включить")
     void stopHard() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
@@ -258,6 +259,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
     @Test
     @Order(21)
     @TmsLink("851702")
+    @Disabled
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Выключить")
     void stopSoft() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);

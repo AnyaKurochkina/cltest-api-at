@@ -69,7 +69,6 @@ public class UiClickHouseClusterTest extends Tests {
             orderPage.getNameCluster().setValue("cluster");
             orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-           // orderPage.getNameDB().setValue("at_db");
             orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
@@ -224,6 +223,7 @@ public class UiClickHouseClusterTest extends Tests {
     @Test
     @Order(16)
     @TmsLinks({@TmsLink("1138086"), @TmsLink("1138091")})
+    @Disabled
     @DisplayName("UI ClickHouse Cluster. Выключить принудительно / Включить")
     void stopHard() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
@@ -234,6 +234,7 @@ public class UiClickHouseClusterTest extends Tests {
     @Test
     @Order(17)
     @TmsLink("1138092")
+    @Disabled
     @DisplayName("UI ClickHouse Cluster. Выключить")
     void stopSoft() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);

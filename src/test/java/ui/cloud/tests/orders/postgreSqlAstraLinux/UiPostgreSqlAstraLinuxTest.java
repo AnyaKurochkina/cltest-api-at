@@ -252,6 +252,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     @Test
     @Order(22)
     @TmsLinks({@TmsLink("993397"), @TmsLink("993401")})
+    @Disabled
     @DisplayName("UI PostgreSQLAstra. Выключить принудительно / Включить")
     void stopHard() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -262,6 +263,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     @Test
     @Order(23)
     @TmsLink("993390")
+    @Disabled
     @DisplayName("UI PostgreSQLAstra. Выключить")
     void stopSoft() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);

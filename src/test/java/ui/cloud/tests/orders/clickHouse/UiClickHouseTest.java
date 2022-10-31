@@ -151,6 +151,7 @@ public class UiClickHouseTest extends Tests {
     @Test
     @Order(20)
     @TmsLinks({@TmsLink("330325"), @TmsLink("330330")})
+    @Disabled
     @DisplayName("UI ClickHouse. Выключить принудительно / Включить")
     void stopHard() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -161,6 +162,7 @@ public class UiClickHouseTest extends Tests {
     @Test
     @Order(21)
     @TmsLink("330324")
+    @Disabled
     @DisplayName("UI ClickHouse. Выключить")
     void stopSoft() {
         ClickHousePage clickHousePage = new ClickHousePage(product);

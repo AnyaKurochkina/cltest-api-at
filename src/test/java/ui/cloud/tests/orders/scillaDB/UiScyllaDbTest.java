@@ -180,6 +180,7 @@ public class UiScyllaDbTest extends Tests {
     @Test
     @Order(20)
     @TmsLinks({@TmsLink("464218"), @TmsLink("464284")})
+    @Disabled
     @DisplayName("UI ScyllaDB. Выключить принудительно / Включить")
     void stopHard() {
         ScyllaPage scyllaPage = new ScyllaPage(product);
@@ -190,6 +191,7 @@ public class UiScyllaDbTest extends Tests {
     @Test
     @Order(21)
     @TmsLink("464202")
+    @Disabled
     @DisplayName("UI ScyllaDB. Выключить")
     void stopSoft() {
         ScyllaPage scyllaPage = new ScyllaPage(product);

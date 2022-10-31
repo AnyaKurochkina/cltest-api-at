@@ -147,6 +147,7 @@ public class UiRedislAstraTest extends Tests {
     @Test
     @Order(20)
     @TmsLinks({@TmsLink("796982"), @TmsLink("797001")})
+    @Disabled
     @DisplayName("UI RedisAstra. Выключить принудительно / Включить")
     void stopHard() {
         RedisAstraPage pSqlPage = new RedisAstraPage(product);
@@ -157,6 +158,7 @@ public class UiRedislAstraTest extends Tests {
     @Test
     @Order(21)
     @TmsLink("796981")
+    @Disabled
     @DisplayName("UI RedisAstra. Выключить")
     void stopSoft() {
         RedisAstraPage pSqlPage = new RedisAstraPage(product);
