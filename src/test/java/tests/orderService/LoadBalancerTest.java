@@ -89,7 +89,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.addBackend();
             balancer.addFrontend();
-            System.out.println(1);
+            balancer.checkStats();
         }
     }
 

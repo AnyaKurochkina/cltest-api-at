@@ -1,7 +1,10 @@
 package models.orderService.products;
 
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
+import io.restassured.RestAssured;
+import io.restassured.specification.RequestSpecification;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,7 +17,11 @@ import models.orderService.interfaces.IProduct;
 import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+
+import java.util.List;
+import java.util.Objects;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -84,6 +91,18 @@ public class LoadBalancer extends IProduct {
     public void addBackend(){
         OrderServiceSteps.executeAction("balancer_release_create_backend", this,
                 JsonHelper.getJsonTemplate("/orders/load_balancer_add_backend.json").build(), this.getProjectId());
+    }
+
+    public void checkStats(){
+        String url = (String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('console_urls')}.data.config.console_urls[0]");
+        RequestSpecification specification = RestAssured.given()
+                .config(RestAssured.config().sslConfig(Http.sslConfig));
+        List<String> list = RestAssured.given().spec(specification).auth().preemptive().basic("stats", "W1clvyliiSCyE0gs")
+                .post(url)
+                .then()
+                .statusCode(200)
+                .extract().response().htmlPath().getList("**.findAll{it.@class == 'active_up'}.td.a.@name");
+        Assertions.assertEquals(2, list.stream().filter(Objects::nonNull).filter(e -> e.contains("bakend_tcp/")).count());
     }
 
     public void addFrontend(){
