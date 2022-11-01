@@ -40,11 +40,10 @@ public class Input implements TypifiedElement {
         return input.getValue();
     }
 
-    public String setValue(String value) {
+    public void setValue(String value) {
         input.shouldBe(Condition.visible).shouldBe(Condition.enabled);
         clear();
         input.setValue(value);
-        return value;
     }
 
     public void clear() {

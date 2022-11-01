@@ -25,11 +25,10 @@ public class TextArea implements TypifiedElement {
         return new TextArea($x("//textarea[@name='{}']", name));
     }
 
-    public TextArea setValue(String value) {
+    public void setValue(String value) {
         textArea.shouldBe(Condition.visible).shouldBe(Condition.enabled);
         clear();
         textArea.setValue(value);
-        return this;
     }
 
     public TextArea click() {

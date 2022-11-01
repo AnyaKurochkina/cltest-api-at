@@ -1,25 +1,17 @@
 package ui.cloud.tests.orders.moon;
 
-import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.Moon;
-import models.orderService.products.Windows;
-import models.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import tests.Tests;
 import ui.cloud.pages.*;
-import ui.cloud.tests.ActionParameters;
-import ui.elements.Alert;
-import ui.elements.Dialog;
 import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
 
@@ -63,16 +55,9 @@ public class UiMoonTest extends Tests {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             MoonOrderPage orderPage = new MoonOrderPage();
-            //orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getDataCentre().selectByValue(product.getDataCentre());
             orderPage.getProjectName().setValue(new Generex("moon-[a-z]{5,15}").random());
-
-            //orderPage.getPlatform().selectByValue(product.getPlatform());
-            //orderPage.getRoleServer().selectByValue(product.getRole());
-            //orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
-            //AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            //orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
