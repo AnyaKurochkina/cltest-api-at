@@ -1,14 +1,13 @@
 package tests.productCatalog.graph;
 
 import core.helper.http.Response;
-import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.productCatalog.Service;
 import models.productCatalog.action.Action;
-import models.productCatalog.Services;
 import models.productCatalog.graph.Graph;
 import models.productCatalog.product.Product;
 import org.json.JSONObject;
@@ -21,6 +20,7 @@ import tests.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.ActionSteps.getActionById;
 import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.ProductSteps.getProductById;
 import static steps.productCatalog.ProductSteps.partialUpdateProduct;
@@ -47,7 +47,7 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Services createServiceResponse = Services.builder()
+        Service createServiceResponse = Service.builder()
                 .serviceName("service_for_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
@@ -85,7 +85,7 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Services.builder()
+        Service.builder()
                 .serviceName("service_for_type_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
@@ -132,7 +132,7 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Services.builder()
+        Service.builder()
                 .serviceName("service_for_last_object_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
@@ -140,7 +140,7 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Services lastService = Services.builder()
+        Service lastService = Service.builder()
                 .serviceName("last_service_for_last_object_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
@@ -186,7 +186,7 @@ public class GraphUsedListTest extends Tests {
         String productVersion = getProductById(product.getProductId()).getVersion();
 
 
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName("service_for_last_object_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
@@ -209,7 +209,7 @@ public class GraphUsedListTest extends Tests {
                 "productCatalog/actions/createAction.json");
         actionSteps.partialUpdateObject(action.getActionId(), new JSONObject()
                 .put("priority", 1));
-        String actionVersion = actionSteps.getById(action.getActionId(), GetActionResponse.class).getVersion();
+        String actionVersion = getActionById(action.getActionId()).getVersion();
 
         Response response = getLastVersionUsedGraph(usedGraphId);
         assertEquals(actionVersion, response.jsonPath().getString("version[1]"));

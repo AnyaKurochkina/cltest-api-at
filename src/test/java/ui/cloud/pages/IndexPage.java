@@ -8,7 +8,9 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
+import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
+import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.pages.services.ServicesListPage;
 
@@ -25,6 +27,8 @@ public class IndexPage {
     private final SelenideElement directions = $x("//*[@href='/meccano/org_direction']");
     private final SelenideElement actions = $x("//*[@href='/meccano/actions']");
     private final SelenideElement templates = $x("//a[@href='/meccano/templates']");
+    private final SelenideElement orderTemplates = $x("//a[@href='/meccano/order-templates']");
+    private final SelenideElement servicesLink = $x("//a[@href='/meccano/services']");
 
     public ProductsPage clickOrderMore() {
         orderMoreBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover().click();
@@ -61,5 +65,17 @@ public class IndexPage {
     public TemplatesListPage goToTemplatesPage() {
         templates.click();
         return new TemplatesListPage();
+    }
+
+    @Step("Переход на страницу Конструктор.Шаблоны отображения")
+    public OrderTemplatesListPage goToOrderTemplatesPage() {
+        orderTemplates.click();
+        return new OrderTemplatesListPage();
+    }
+
+    @Step("Переход на страницу Конструктор.Сервисы")
+    public ServicesListPagePC goToServicesListPagePC() {
+        servicesLink.click();
+        return new ServicesListPagePC();
     }
 }

@@ -4,7 +4,6 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
@@ -23,13 +22,13 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement deleteNodesButton = $x("//button[@aria-label = 'delete items']");
     private final SelenideElement nodeName = $x("//form//input[@name = 'name']");
     private final SelenideElement nodeDescription = $x("//form//input[@name = 'description']");
-    private final SelenideElement subgraphInput = $x("//label[text() = 'Подграф']/..//input");
-    private final SelenideElement templateInput = $x("//label[text() = 'Шаблон']/..//input");
-    private final SelenideElement formAddNodeButton = $x("//form//span[text() = 'Добавить']//ancestor::button");
-    private final SelenideElement formSaveNodeButton = $x("//form//span[text() = 'Сохранить']//ancestor::button");
-    private final SelenideElement formCancelButton = $x("//form//span[text() = 'Отмена']//ancestor::button");
-    private final SelenideElement showSubgraphsButton = $x("(//label[text() = 'Подграф']/..//*[name()='svg'])[2]");
-    private final SelenideElement showTemplatesButton = $x("(//label[text() = 'Шаблон']/..//*[name()='svg'])[2]");
+    private final SelenideElement subgraphInput = $x("//label[text() = 'Подграф']/following::input[1]");
+    private final SelenideElement templateInput = $x("//label[text() = 'Шаблон']/following::input[1]");
+    private final SelenideElement formAddNodeButton = $x("//form//div[text() = 'Добавить']//parent::button");
+    private final SelenideElement formSaveNodeButton = $x("//form//div[text() = 'Сохранить']//parent::button");
+    private final SelenideElement formCancelButton = $x("//form//div[text() = 'Отмена']//ancestor::button");
+    private final SelenideElement showSubgraphsButton = $x("//label[text() = 'Подграф']/following::*[name()='svg'][2]");
+    private final SelenideElement showTemplatesButton = $x("//label[text() = 'Шаблон']/following::*[name()='svg'][2]");
     private final SelenideElement inputJSONField = $x("//label[text()='Input']/../..//textarea");
     private final SelenideElement outputJSONField = $x("//label[text()='Output']/../..//textarea");
     private final SelenideElement printedOutputJSONField = $x("//label[text()='Printed output']/../..//textarea");
@@ -43,21 +42,21 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement holdToggle = $x("//input[@name='hold']");
     private final SelenideElement isSequentialToggle = $x("//input[@name='is_sequential']");
     private final SelenideElement damageOrderOnErrorToggle = $x("//form//input[@name='damage_order_on_error']");
-    private final SelenideElement loggingLevelSelect = $x("//div[text()='Уровень логирования']/ancestor::label/..//select");
-    private final SelenideElement nameRequiredFieldHint = $x("//label[contains(text(),'Название')]/parent::div//div[text()='Поле обязательно для заполнения']");
-    private final SelenideElement descriptionRequiredFieldHint = $x("//label[contains(text(),'Описание')]/parent::div//div[text()='Поле обязательно для заполнения']");
-    private final SelenideElement incorrectNumberHint = $x("//label[text()='Номер']/parent::div//div[text()='Введите корректное значение']");
-    private final SelenideElement incorrectTimeoutHint = $x("//label[text()='Время ожидания, сек']/parent::div//div[text()='Введите корректное значение']");
+    private final SelenideElement loggingLevelSelect = $x("//div[text()='Уровень логирования']/following::select[1]");
+    private final SelenideElement nameRequiredFieldHint = $x("//label[contains(text(),'Название')]/ancestor::div[2]//div[text()='Поле обязательно для заполнения']");
+    private final SelenideElement descriptionRequiredFieldHint = $x("//label[contains(text(),'Описание')]/ancestor::div[2]//div[text()='Поле обязательно для заполнения']");
+    private final SelenideElement incorrectNumberHint = $x("//label[text()='Номер']/ancestor::div[2]//div[text()='Введите корректное значение']");
+    private final SelenideElement incorrectTimeoutHint = $x("//label[text()='Время ожидания, сек']/ancestor::div[2]//div[text()='Введите корректное значение']");
     private final SelenideElement nameNonUniqueHint = $x("//div[text()='Узел с данным названием уже существует']");
     private final SelenideElement onPrebillingToggleOn = $x("//p[text()='Запуск узла на предбиллинге']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement runOnRollbackToggleOn = $x("//p[text()='Запуск узла при откате']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement holdToggleOn = $x("//p[text()='Постановка узла на паузу']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement isSequentialToggleOn = $x("//p[text()='Последовательное выполнение итераций']/parent::div//span[contains(@class,'checked')]");
     private final SelenideElement damageOrderOnErrorToggleOn = $x("//p[text()='Переводить заказ в статус \"Ошибка\"']/ancestor::div[2]//span[contains(@class,'checked')]");
-    private final SelenideElement showTemplateVersions = $x("(//label[text()='Версия']/parent::div//*[name()='svg'])[1]");
-    private final SelenideElement showSubgraphVersions = $x("(//label[text()='Версия']/parent::div//*[name()='svg'])[2]");
-    private final SelenideElement templateVersion = $x("(//label[text()='Версия']/parent::div//div[@id='selectValueWrapper']/div)[1]");
-    private final SelenideElement subgraphVersion = $x("(//label[text()='Версия']/parent::div//div[@id='selectValueWrapper']/div)[2]");
+    private final SelenideElement showTemplateVersions = $x("(//label[text()='Версия'])[1]/following::*[name()='svg'][1]");
+    private final SelenideElement showSubgraphVersions = $x("(//label[text()='Версия'])[2]/following::*[name()='svg'][1]");
+    private final SelenideElement templateVersion = $x("(//label[text()='Версия'])[1]/following::div[@id='selectValueWrapper']");
+    private final SelenideElement subgraphVersion = $x("(//label[text()='Версия'])[2]/following::div[@id='selectValueWrapper']");
     private final SelenideElement additionalTab = $x("//button[text()='Дополнительное']");
     private final SelenideElement paramsTab = $x("//button[text()='Параметры']");
     private final SelenideElement staticData = $x("//label[text()='Static data']/parent::div//textarea");
@@ -71,6 +70,7 @@ public class GraphNodesPage extends GraphPage {
         if (node instanceof SubgraphNode) {
             showSubgraphsButton.click();
             subgraphInput.setValue(((SubgraphNode) node).getSubgraphName());
+            TestUtils.wait(500);
             $x("//div[contains(@title,'" + ((SubgraphNode) node).getSubgraphName() + "')]").shouldBe(Condition.enabled).click();
             paramsTab.click();
             inputJSONField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
@@ -103,7 +103,7 @@ public class GraphNodesPage extends GraphPage {
     @Step("Редактирование узла '{node.name}' с подграфом")
     public GraphNodesPage editSubgraphNode(SubgraphNode node, String version, String description) {
         TestUtils.scrollToTheBottom();
-        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        selectNodeInGraph(node);
         TestUtils.scrollToTheTop();
         editNodeButton.click();
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
@@ -121,7 +121,7 @@ public class GraphNodesPage extends GraphPage {
     @Step("Редактирование узла '{node.name}' с шаблоном")
     public GraphNodesPage editTemplateNode(TemplateNode node, String version, String description) {
         TestUtils.scrollToTheBottom();
-        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        selectNodeInGraph(node);
         TestUtils.scrollToTheTop();
         editNodeButton.click();
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
@@ -140,7 +140,7 @@ public class GraphNodesPage extends GraphPage {
     public GraphNodesPage copyNodeAndSave(Node node) {
         String cloneName = node.getName() + "_clone";
         TestUtils.scrollToTheBottom();
-        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        selectNodeInGraph(node);
         TestUtils.scrollToTheTop();
         actions().pause(1000)
                 .moveToElement($x("//div[@class='g6-grid-container']/following-sibling::canvas"))
@@ -206,7 +206,7 @@ public class GraphNodesPage extends GraphPage {
             node.setNumber("1");
         }
         TestUtils.scrollToTheBottom();
-        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        selectNodeInGraph(node);
         TestUtils.scrollToTheTop();
         editNodeButton.click();
         TestUtils.wait(500);
@@ -239,8 +239,12 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Проверка, что узел '{node.name}' найден при поиске '{text}'")
     public GraphNodesPage findNode(String text, Node node) {
+        if (node.getNumber().equals("")) {
+            node.setNumber("1");
+        }
         searchNodesInput.setValue(text);
-        $x("//div[text()='" + node.getDescription() + "']/ancestor::div[2]//span[contains(text(),'" + text + "')]")
+        TestUtils.wait(500);
+        $x("//div[text()='" + node.getNumber() + ". " + node.getDescription() + "']")
                 .shouldBe(Condition.visible);
         return this;
     }
@@ -248,14 +252,15 @@ public class GraphNodesPage extends GraphPage {
     @Step("Проверка, что узел '{node.name}' не найден при поиске '{text}'")
     public GraphNodesPage checkNodeNotFound(String text, Node node) {
         searchNodesInput.setValue(text);
-        Assertions.assertFalse($x("//div[text()='" + node.getDescription() + "']").exists());
+        Assertions.assertFalse($x("//div[text()='" + node.getNumber() + ". " + node.getDescription() + "']")
+                .exists());
         return this;
     }
 
     @Step("Удаление узла '{node.name}' и сохранение графа")
     public GraphNodesPage deleteNodeAndSave(Node node) {
         TestUtils.scrollToTheBottom();
-        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").click();
+        selectNodeInGraph(node);
         TestUtils.scrollToTheTop();
         deleteNodesButton.click();
         saveGraphWithPatchVersion();
@@ -268,5 +273,13 @@ public class GraphNodesPage extends GraphPage {
         staticData.setValue(value);
         saveGraphWithPatchVersion();
         return this;
+    }
+
+    private void selectNodeInGraph(Node node) {
+        if (node.getNumber().equals("")) {
+            node.setNumber("1");
+        }
+        $x("//div[text()='" + node.getNumber() + ". " + node.getDescription() + "']/..//*[name()='svg' and @class]")
+                .click();
     }
 }

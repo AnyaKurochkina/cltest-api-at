@@ -1,0 +1,234 @@
+[
+  {
+    "objectClassName": "models.authorizer.Folder",
+    "kind": "department",
+    "informationSystemIds": ["3c9e2600-36b9-453b-83d5-f836b5e241be"],
+    "name": "fold-yfy2k4t4nz",
+    "title": "VTB-VTB.Cloud-QA-AT-DEV",
+    "parentId": "fold-ofh97pgj5u"
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "secret": "5f842673cc3bb9a36e7fc04b7bec25e6",
+    "id": "sa_proj-bhbyhmik3a-vn",
+    "projectId": "proj-bhbyhmik3a",
+    "role": "order-service.admin"
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "secret": "ff8eb0eb2e52028a2d33b9eaf7e28691",
+    "id": "sa_proj-rddf0uwi0q-vl",
+    "projectId": "proj-rddf0uwi0q",
+    "role": "order-service.admin"
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "secret": "dea19ebbb05306392f63bcc0d0915f9a",
+    "id": "sa_proj-iv550odo9a-29",
+    "projectId": "proj-iv550odo9a",
+    "role": "order-service.admin"
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "secret": "d5a36cccb751467863c49e7a41440950",
+    "id": "sa_proj-zoz17np8rb-vo",
+    "projectId": "proj-zoz17np8rb",
+    "role": "order-service.admin"
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "secret": "4e7b97a47c34d90c39c7ca8404ce250f",
+    "id": "sa_proj-114wetem0c-vp",
+    "projectId": "proj-114wetem0c",
+    "role": "order-service.admin"
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "secret": "8560d7979af0859280c4318be68e078c",
+    "id": "sa_proj-6wpfrbes0g-vq",
+    "projectId": "proj-6wpfrbes0g",
+    "role": "order-service.admin"
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "secret": "872806dfbc0a878b94040f79c41b3cf0",
+    "id": "sa_proj-aei4kz2yu4-vr",
+    "projectId": "proj-aei4kz2yu4",
+    "role": "order-service.admin"
+  },
+  {
+    "objectClassName": "models.authorizer.ServiceAccount",
+    "secret": "4c92b1ad2e60f763376e13607ace3bbb",
+    "id": "sa_proj-1oob0zjo5h-vs",
+    "projectId": "proj-1oob0zjo5h"
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
+    "id": "proj-iv550odo9a",
+    "projectName": "DEV",
+    "projectEnvironmentPrefix": {
+      "env": "DEV",
+      "id": "a924e195-ad97-4fc9-876a-6464dd81250f",
+      "projectEnvironmentId": "ce11798a-e5f6-4e54-9582-78770f15b52a",
+      "envType": "DEV"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
+    "id": "proj-bhbyhmik3a",
+    "projectName": "EDU",
+    "projectEnvironmentPrefix": {
+      "env": "EDU",
+      "id": "4eee3a36-5d68-4aae-8665-e42c59a67ad5",
+      "projectEnvironmentId": "feff8762-5f69-41a2-9054-3d03530945f8",
+      "envType": "TEST"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
+    "id": "proj-zoz17np8rb",
+    "projectName": "HOTFIX",
+    "projectEnvironmentPrefix": {
+      "env": "HOTFIX",
+      "id": "024e96e5-3b83-4b88-8018-14ac680b85aa",
+      "projectEnvironmentId": "3aee543c-8867-4c0f-a1be-7681bd249d56",
+      "envType": "TEST"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
+    "id": "proj-6wpfrbes0g",
+    "projectName": "MIGR",
+    "projectEnvironmentPrefix": {
+      "env": "MIGR",
+      "id": "2b7939ac-4e77-4607-8a87-835ab6838e2c",
+      "projectEnvironmentId": "77a53624-787d-42ac-b478-cd3119560ed0",
+      "envType": "TEST"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
+    "id": "proj-aei4kz2yu4",
+    "projectName": "PREPROD",
+    "projectEnvironmentPrefix": {
+      "env": "PREPROD",
+      "id": "73a7ce4b-27a2-4e1f-91a2-d0c78667aba2",
+      "projectEnvironmentId": "df4d904e-f0b1-4c74-877e-fec4576666f3",
+      "envType": "TEST"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
+    "id": "proj-rddf0uwi0q",
+    "projectName": "ST",
+    "projectEnvironmentPrefix": {
+      "env": "ST",
+      "id": "185d7749-f43c-403e-88ac-2812cc8a372c",
+      "projectEnvironmentId": "057a6be5-9677-4433-b0fd-3fe2f8b38aca",
+      "envType": "DEV"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
+    "id": "proj-1oob0zjo5h",
+    "projectName": "LT",
+    "projectEnvironmentPrefix": {
+      "env": "LT",
+      "id": "4488b474-356a-43df-80da-4e43c6620253",
+      "projectEnvironmentId": "eeb890b0-e769-48a1-ba49-904821dbc2a2",
+      "envType": "TEST"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.authorizer.Project",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
+    "id": "proj-114wetem0c",
+    "projectName": "IFT",
+    "projectEnvironmentPrefix": {
+      "env": "IFT",
+      "id": "39b1400a-2b2b-4c5c-bc7a-6e1c17d751bb",
+      "projectEnvironmentId": "3fd0e51e-bf33-45c1-afa6-8dcb2a4ee7bc",
+      "envType": "TEST"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.portalBack.AccessGroup",
+    "prefixName": "cloud-zorg-edu-group",
+    "users": [],
+    "isDeleted": false,
+    "projectName": "proj-bhbyhmik3a"
+  },
+  {
+    "objectClassName": "models.portalBack.AccessGroup",
+    "prefixName": "cloud-zorg-hotfix-group",
+    "users": [],
+    "isDeleted": false,
+    "projectName": "proj-zoz17np8rb"
+  },
+  {
+    "objectClassName": "models.portalBack.AccessGroup",
+    "prefixName": "cloud-zorg-migr-group",
+    "users": [],
+    "isDeleted": false,
+    "projectName": "proj-6wpfrbes0g"
+  },
+  {
+    "objectClassName": "models.portalBack.AccessGroup",
+    "prefixName": "cloud-zorg-preprod-group",
+    "users": [],
+    "isDeleted": false,
+    "projectName": "proj-aei4kz2yu4"
+  },
+  {
+    "objectClassName": "models.portalBack.AccessGroup",
+    "prefixName": "cloud-zorg-st-group",
+    "users": [],
+    "isDeleted": false,
+    "projectName": "proj-rddf0uwi0q"
+  },
+  {
+    "objectClassName": "models.portalBack.AccessGroup",
+    "prefixName": "cloud-zorg-ift-group",
+    "users": [
+      "check_admin"
+    ],
+    "isDeleted": false,
+    "projectName": "proj-114wetem0c"
+  },
+  {
+    "objectClassName": "models.portalBack.AccessGroup",
+    "prefixName": "cloud-soub-blue",
+    "users": [
+      "vtb4043675"
+    ],
+    "isDeleted": false,
+    "projectName": "proj-iv550odo9a"
+  },
+  {
+    "objectClassName": "models.portalBack.AccessGroup",
+    "prefixName": "cloud-zorg-lt-group",
+    "users": [],
+    "isDeleted": false,
+    "projectName": "proj-1oob0zjo5h"
+  },
+  {
+    "objectClassName": "models.authorizer.InformationSystem",
+    "id": "3c9e2600-36b9-453b-83d5-f836b5e241be",
+    "isForOrders": true
+  }
+]

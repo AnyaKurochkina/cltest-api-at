@@ -28,7 +28,6 @@ public class Template extends Entity {
 
     private Boolean additionalInput;
     private String color;
-    private String icon;
     private String iconUrl;
     private String iconStoreId;
     private String description;
@@ -78,9 +77,8 @@ public class Template extends Entity {
                 .set("$.input", input)
                 .set("$.output", output)
                 .set("$.timeout", timeout)
-                .set("$.icon", icon)
                 .set("$.icon_url", iconUrl)
-                .set("$.icon_store_id", iconStoreId)
+                .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .set("$.description", description)
                 .build();
     }

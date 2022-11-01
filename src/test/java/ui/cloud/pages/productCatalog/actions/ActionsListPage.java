@@ -17,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ActionsListPage extends BaseList {
     private static final String NAME_COLUMN = "Код действия";
+    private static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private final SelenideElement createButton = $x("//*[@title= 'Создать']");
     private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
-    private static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private final SelenideElement importActionButton = $x("//button[@title='Импортировать действие']");
 
     public ActionsListPage() {
@@ -30,7 +30,7 @@ public class ActionsListPage extends BaseList {
 
     @Step("Создание действия")
     public ActionPage createAction() {
-        createButton.click();
+        createButton.scrollIntoView(TypifiedElement.scrollCenter).click();
         return new ActionPage();
     }
 
@@ -84,6 +84,7 @@ public class ActionsListPage extends BaseList {
 
     @Step("Импорт действия из файла")
     public ActionsListPage importAction(String path) {
+        importActionButton.scrollIntoView(TypifiedElement.scrollCenter);
         importActionButton.click();
         new InputFile(path).importFile();
         new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();

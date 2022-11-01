@@ -27,18 +27,16 @@ public class TemplateBaseTest extends BaseTest {
             "productCatalog/templates/createTemplate.json");
 
     @BeforeEach
-    @DisplayName("Создание графов через API")
     public void setUp() {
         createTemplate(NAME);
     }
 
     @AfterEach
-    @DisplayName("Удаление графов, созданных в сетапе")
     public void tearDown() {
         deleteTemplate(NAME);
     }
 
-    public void createTemplate(String name) {
+    private void createTemplate(String name) {
         Map<String, String> value = new LinkedHashMap<>();
         Map<String, Map<String, String>> input = new LinkedHashMap<>();
         Map<String, Map<String, String>> output = new LinkedHashMap<>();
@@ -58,7 +56,7 @@ public class TemplateBaseTest extends BaseTest {
                 .createObject();
     }
 
-    public void deleteTemplate(String name) {
+    void deleteTemplate(String name) {
         ProductCatalogSteps steps = new ProductCatalogSteps(Template.productName);
         steps.getDeleteObjectResponse(steps
                 .getProductObjectIdByNameWithMultiSearch(name, GetTemplateListResponse.class)).assertStatus(204);

@@ -8,10 +8,12 @@ import java.util.List;
 public class CalculateAttrs{
 	Integer amount;
 	private String provider;
-	private List<String> providerPath;
-	private List<String> environmentTypePath;
 	private String environmentType;
 	private List<String> calculationEntityFieldNamePath;
 	private List<String> osPath;
 	private String osType;
+	private List<String> environment;
+	private List<String> environmentPath;
+	private List<String> providerPath;
+	private List<String> environmentTypePath;
 }

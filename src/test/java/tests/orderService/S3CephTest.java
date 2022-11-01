@@ -18,6 +18,8 @@ import tests.Tests;
 @Feature("S3 CEPH Tenant")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("s3_ceph"), @Tag("prod")})
 public class S3CephTest extends Tests {
+    final static String regexAccessKey = "[A-Z0-9]{20,30}";
+    final static String regexSecretKey = "[a-zA-Z0-9]{40,50}";
 
     @TmsLink("974377")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -34,13 +36,9 @@ public class S3CephTest extends Tests {
     void addBucket(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs attrs = S3Ceph.BucketAttrs.builder()
-                    .versioning(S3Ceph.BucketAttrs.Versioning.builder()
-                            .enabled(true)
-                            .prune(true)
-                            .pruneDays(2)
-                            .build())
+                    .versioning(true)
                     .maxSizeGb(10)
-                    .name(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random())
+                    .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();
             s3Ceph.addBucket(attrs);
             s3Ceph.deleteBucket(attrs.getName());
@@ -54,21 +52,14 @@ public class S3CephTest extends Tests {
     void updateBucket(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs attrs = S3Ceph.BucketAttrs.builder()
-                    .versioning(S3Ceph.BucketAttrs.Versioning.builder()
-                            .enabled(true)
-                            .prune(true)
-                            .pruneDays(2)
-                            .build())
+                    .versioning(true)
                     .maxSizeGb(10)
-                    .name(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random())
+                    .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();
             s3Ceph.addBucket(attrs);
             try {
                 attrs.setMaxSizeGb(11);
-                attrs.setVersioning(S3Ceph.BucketAttrs.Versioning.builder()
-                        .enabled(false)
-                        .prune(false)
-                        .build());
+                attrs.setVersioning(false);
                 s3Ceph.updateBucket(attrs);
             } finally {
                 s3Ceph.deleteBucket(attrs.getName());
@@ -84,8 +75,8 @@ public class S3CephTest extends Tests {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             String userName = new Generex("[a-z]{1}[a-z0-9-]{1,18}[a-z]{1}").random();
             s3Ceph.addUser(userName,
-                    new Generex("[A-Z]{20,30}").random(),
-                    new Generex("[a-Z0-9]{40,50}").random());
+                    new Generex(regexAccessKey).random(),
+                    new Generex(regexSecretKey).random());
             s3Ceph.deleteUser(userName);
         }
     }
@@ -97,19 +88,16 @@ public class S3CephTest extends Tests {
     void addPolicy(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs bucketAttrs = S3Ceph.BucketAttrs.builder()
-                    .versioning(S3Ceph.BucketAttrs.Versioning.builder()
-                            .enabled(true)
-                            .prune(false)
-                            .build())
+                    .versioning(true)
                     .maxSizeGb(10)
-                    .name(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random())
+                    .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();
             s3Ceph.addBucket(bucketAttrs);
             try {
                 String userName = new Generex("[a-z]{1}[a-z0-9-]{1,18}[a-z]{1}").random();
                 s3Ceph.addUser(userName,
-                        new Generex("[A-Z]{20,30}").random(),
-                        new Generex("[a-Z0-9]{40,50}").random());
+                        new Generex(regexAccessKey).random(),
+                        new Generex(regexSecretKey).random());
 
                 S3Ceph.PolicyAttrs policyAttrs = S3Ceph.PolicyAttrs.builder()
                         .policy(S3Ceph.PolicyAttrs.Policy.builder()
@@ -128,6 +116,37 @@ public class S3CephTest extends Tests {
         }
     }
 
+    @TmsLinks({@TmsLink("1248910"), @TmsLink("1248914"), @TmsLink("1248915")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавить/Изменить/Удалить правило жизненного цикла {0}")
+    void addRule(S3Ceph product) {
+        try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
+            S3Ceph.BucketAttrs bucketAttrs = S3Ceph.BucketAttrs.builder()
+                    .versioning(true)
+                    .maxSizeGb(10)
+                    .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
+                    .build();
+            s3Ceph.addBucket(bucketAttrs);
+            try {
+            S3Ceph.RoleAttrs roleAttrs = S3Ceph.RoleAttrs.builder()
+                    .condition("days")
+                    .type("Expiration")
+                    .filter(S3Ceph.RoleAttrs.Filter.builder().build())
+                    .name("rule")
+                    .days(10)
+                    .build();
+                s3Ceph.addRule(roleAttrs);
+                roleAttrs.setDays(11);
+                roleAttrs.setFilter(S3Ceph.RoleAttrs.Filter.builder().value("prefix").build());
+                s3Ceph.updateRule(roleAttrs);
+                s3Ceph.deleteRule(roleAttrs);
+            } finally {
+                s3Ceph.deleteBucket(bucketAttrs.getName());
+            }
+        }
+    }
+
     @TmsLink("974392")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -135,19 +154,16 @@ public class S3CephTest extends Tests {
     void updatePolicy(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs bucketAttrs = S3Ceph.BucketAttrs.builder()
-                    .versioning(S3Ceph.BucketAttrs.Versioning.builder()
-                            .enabled(true)
-                            .prune(false)
-                            .build())
+                    .versioning(true)
                     .maxSizeGb(10)
-                    .name(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random())
+                    .name(s3Ceph.getBucketName(new Generex("[a-z]{1}[a-z0-9-]{3,60}[a-z]{1}").random()))
                     .build();
             s3Ceph.addBucket(bucketAttrs);
             try {
                 String userName = new Generex("[a-z]{1}[a-z0-9-]{1,18}[a-z]{1}").random();
                 s3Ceph.addUser(userName,
-                        new Generex("[A-Z]{20,30}").random(),
-                        new Generex("[a-Z0-9]{40,50}").random());
+                        new Generex(regexAccessKey).random(),
+                        new Generex(regexSecretKey).random());
 
                 S3Ceph.PolicyAttrs policyAttrs = S3Ceph.PolicyAttrs.builder()
                         .policy(S3Ceph.PolicyAttrs.Policy.builder()

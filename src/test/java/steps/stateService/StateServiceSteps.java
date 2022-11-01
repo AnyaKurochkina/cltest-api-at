@@ -60,6 +60,16 @@ public class StateServiceSteps extends Steps {
                 .getList();
     }
 
+    @Step("Получение списка items with actions по контексту и по фильтру {filter}")
+    public static List<Item> getItemsWithActionsByFilter(String projectId, String filter, String value) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/projects/{}/items/?with_actions=true&{}={}", projectId, filter, value)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
     @Step("Получение списка items по значению ключа {key} в data.config")
     public static List<Item> getItemsByDataConfigKey(String key, String value) {
         List<Item> result = new Http(StateServiceURL)
@@ -83,7 +93,7 @@ public class StateServiceSteps extends Steps {
     @Step("Создаем Event")
     public static Response createEventStateService(JSONObject body) {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .withServiceToken()
                 .body(body)
                 .post("/api/v1/events/")
                 .assertStatus(201);
@@ -97,5 +107,35 @@ public class StateServiceSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .getString("status");
+    }
+
+    @Step("Получение списка items с параметром with_parent_item=true")
+    public static List<Item> getItemsWithParentItem() {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/?with_parent_item=true")
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
+    @Step("Получение item по id = {itemId} с параметром with_parent_item=true")
+    public static List<Item> getItemByItemIdWithParentItem(String itemId) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/{}/?with_parent_item=true", itemId)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("", Item.class);
+    }
+
+    @Step("Получение списка items")
+    public static List<Item> getItemsList() {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/")
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
     }
 }

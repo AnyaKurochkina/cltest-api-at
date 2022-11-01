@@ -25,7 +25,14 @@ public class DropDown implements TypifiedElement {
     }
 
     public static DropDown byLabel(String name) {
-        return new DropDown($x("//div[label[text()='{}']]/div", name));
+        return new DropDown($x("//label[text()='{}']/following::div[1]", name));
+    }
+    public static DropDown byXpath(String xpath) {
+        return new DropDown($x(xpath));
+    }
+
+    public static DropDown byInputName(String name) {
+        return new DropDown($x("//div[input[@name='{}']]", name));
     }
 
     @Step("Выбрать в select элемент с названием '{value}'")
@@ -37,6 +44,14 @@ public class DropDown implements TypifiedElement {
             return;
         element.shouldBe(clickableCnd).click();
         $x("//li[text()='{}']", value)
+                .shouldBe(Condition.enabled)
+                .click();
+    }
+
+    @Step("Выбрать в select элемент с текстом '{value}'")
+    public void selectByDivText(String value) {
+        element.shouldBe(clickableCnd).click();
+        $x("//li/div[text()='{}']", value)
                 .shouldBe(Condition.enabled)
                 .click();
     }

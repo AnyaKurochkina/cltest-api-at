@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.TemplateSteps.createTemplate;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны")
@@ -71,26 +72,53 @@ public class TemplateNegativeTest extends Tests {
         steps.createProductObject(steps.createJsonObject(templateName)).assertStatus(400);
     }
 
+    @DisplayName("Негативный тест на создание шаблона с пустым полем run")
+    @TmsLink("1202400")
+    @Test
+    public void createTemplateWithEmptyFieldRun() {
+        String templateName = "create_template_with_empty_name_run_test_api";
+        JSONObject json = Template.builder()
+                .templateName(templateName)
+                .run("")
+                .build()
+                .init()
+                .toJson();
+        String errorMessage = createTemplate(json).assertStatus(400).jsonPath().getList("run", String.class).get(0);
+        assertEquals("Это поле не может быть пустым.", errorMessage);
+    }
+
     @DisplayName("Негативный тест на создание шаблона с недопустимыми символами в имени")
     @TmsLink("643607")
     @Test
     public void createTemplateWithInvalidCharacters() {
-        assertAll("Шаблон создался с недопустимым именем",
-                () -> steps.createProductObject(steps
-                        .createJsonObject("NameWithUppercase")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("nameWithUppercaseInMiddle")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("имя")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("Имя")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("a&b&c")).assertStatus(500),
-                () -> steps.createProductObject(steps
-                        .createJsonObject("")).assertStatus(400),
-                () -> steps.createProductObject(steps
-                        .createJsonObject(" ")).assertStatus(400)
-        );
+        Template.builder()
+                .templateName("NameWithUppercase")
+                .build()
+                .negativeCreateRequest(500);
+        Template.builder()
+                .templateName("nameWithUppercaseInMiddle")
+                .build()
+                .negativeCreateRequest(500);
+        Template.builder()
+                .templateName("имя")
+                .build()
+                .negativeCreateRequest(500);
+        Template.builder()
+                .templateName("Имя")
+                .build()
+                .negativeCreateRequest(500);
+        Template.builder()
+                .templateName("a&b&c")
+                .build()
+                .negativeCreateRequest(500);
+        Template.builder()
+                .templateName("")
+                .build()
+                .negativeCreateRequest(400);
+        Template.builder()
+                .templateName(" ")
+                .build()
+                .negativeCreateRequest(400);
     }
 
     @DisplayName("Негативный тест на удаление шаблона без токена")

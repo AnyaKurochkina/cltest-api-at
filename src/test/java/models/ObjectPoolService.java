@@ -79,12 +79,13 @@ public class ObjectPoolService {
                 e.init();
                 e.create();
                 e.save();
-                createdEntities.add(e.uuid);
+                createdEntities.add(Objects.requireNonNull(e.uuid));
                 if (!deleteClassesName.contains(e.getClass().getName()))
                     deleteClassesName.add(0, e.getClass().getName());
             } catch (Throwable throwable) {
                 if (throwable instanceof CalculateException) {
                     objectPoolEntity.setStatus(ObjectStatus.CREATED);
+                    createdEntities.add(Objects.requireNonNull(e.uuid));
                 } else {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED);
                     objectPoolEntity.setError(throwable);

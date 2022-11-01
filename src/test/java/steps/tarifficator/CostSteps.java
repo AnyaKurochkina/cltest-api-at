@@ -112,7 +112,8 @@ public class CostSteps extends Steps {
             template = JsonHelper.getJsonTemplate("/tarifficator/costItems.json").build();
             JSONObject vm = new JSONObject((Map) OrderServiceSteps.getProductsField(product, "", Map.class));
             template.put("tariff_plan_id", vm.query("/attrs/tariff_plan_id"));
-
+            template.put("environment_type", product.envType());
+            template.put("environment", product.getEnv());
             JSONArray items = (JSONArray) vm.query("/data");
             for (Object itemObj : items) {
                 JSONObject item = (JSONObject) itemObj;

@@ -268,6 +268,28 @@ public class FeedServiceSteps {
         return null;
     }
 
+    @Step("Получение Tag по имени")
+    public static FeedTag getFeedTagByKey(String key) {
+        List<FeedTag> feedTagList = getTagList().getList();
+        for (FeedTag feedTag : feedTagList) {
+            if (feedTag.getKey().equals(key)) {
+                return feedTag;
+            }
+        }
+        return null;
+    }
+
+    @Step("Проверка существования Tag по ключу")
+    public static boolean isFeedTagExist(String key) {
+        List<FeedTag> feedTagList = getTagList().getList();
+        for (FeedTag feedTag : feedTagList) {
+            if (feedTag.getKey().equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Step("Получение Event по имени")
     public static Event getEventName(String title) {
         List<Event> eventList = getEventList().getList();

@@ -1,9 +1,8 @@
 {
-  "id": "",
   "name": "api_test",
   "title": "api_test",
   "description": "desc",
-  "icon": "",
+  "icon_store_id": "",
   "priority": 0,
   "current_version": "",
   "location_restriction": "",
@@ -29,5 +28,6 @@
   "version_list": [],
   "last_version": "",
   "extra_data": {},
-  "version": ""
+  "version": "",
+  "is_safe": null
 }

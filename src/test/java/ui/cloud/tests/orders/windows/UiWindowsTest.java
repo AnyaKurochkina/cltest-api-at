@@ -37,9 +37,9 @@ public class UiWindowsTest extends Tests {
 
     //TODO: пока так :)
     public UiWindowsTest() {
-        if (Configure.ENV.equals("prod"))
-            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-//            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/87e70133-31fa-4c41-a320-2151dcd6a820/main?context=proj-rddf0uwi0q&type=project&org=vtb").build().buildFromLink();
+        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
+           product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+          // product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb").build().buildFromLink();
         else
             product = Windows.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -73,9 +73,10 @@ public class UiWindowsTest extends Tests {
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
+            new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
             new OrdersPage()
-                    .getRowElementByColumnValue("Продукт",
-                            orderPage.getLabelValue())
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
                     .hover()
                     .click();
             WindowsPage winPages = new WindowsPage(product);
@@ -131,14 +132,17 @@ public class UiWindowsTest extends Tests {
     void checkProtectOrder() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.switchProtectOrder("Защита от удаления включена");
-        winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
-        {
-            Dialog dlgActions = new Dialog("Удаление");
-            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-        }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
-        new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
-        TypifiedElement.refresh();
-        winPage.switchProtectOrder("Защита от удаления выключена");
+        try {
+            winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
+            {
+                Dialog dlgActions = new Dialog("Удаление");
+                dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
+            }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
+            new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
+            TypifiedElement.refresh();
+        } finally {
+            winPage.switchProtectOrder("Защита от удаления выключена");
+        }
     }
 
     @Test
@@ -162,7 +166,7 @@ public class UiWindowsTest extends Tests {
     }
 
     @Test
-    @Order(9)
+    @Order(17)
     @TmsLink("14510")
     @DisplayName("UI Windows. Изменить конфигурацию")
     void changeConfiguration() {

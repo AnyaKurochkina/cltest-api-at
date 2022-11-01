@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import models.productCatalog.graph.GraphItem;
 import models.productCatalog.graph.Modification;
 
 import java.util.List;

@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SaveDialog extends Dialog {
     private final SelenideElement saveAsNextVersionCheckBox = $x("//input[@name = 'saveAsNextVersion']");
-    private final SelenideElement saveButton = $x("//div[@role='dialog']//span[text() = 'Сохранить']/parent::button");
-    private final SelenideElement cancelButton = $x("//div[@role='dialog']//span[text() = 'Отмена']/parent::button");
+    private final SelenideElement saveButton = $x("//div[@role='dialog']//div[text() = 'Сохранить']/parent::button");
+    private final SelenideElement cancelButton = $x("//div[@role='dialog']//div[text() = 'Отмена']/parent::button");
     private final Input newVersionInput = Input.byName("newVersion");
 
     public SaveDialog() {

@@ -16,7 +16,7 @@ import static tests.Tests.clickableCnd;
 public class Product {
     private final SelenideElement orderBtn = $x("//button[.='Заказать']");
     private final SelenideElement loadOrderPricePerDay = $x("//*[@data-testid='new-order-details-price' and contains(.,',')]");
-    private final SelenideElement calculationDetails = $x("//*[text()='детализация расчета']/*");
+    private final SelenideElement calculationDetails = $x("//*[text()='Детали заказа']");////*[text()='детализация расчета']/*
 
     private final SelenideElement opMemory = $x("//div[contains(text(),'Оперативная память')]");
     private final SelenideElement hardDrive = $x("//div[contains(text(),'Жесткий диск')]");

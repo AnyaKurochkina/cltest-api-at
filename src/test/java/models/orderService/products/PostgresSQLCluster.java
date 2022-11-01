@@ -57,7 +57,7 @@ public class PostgresSQLCluster extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/postgressql_cluster.json";
         if (productName == null)
-            productName = "PostgreSQL Cluster";
+            productName = "PostgreSQL Cluster Astra Linux";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
@@ -90,9 +90,14 @@ public class PostgresSQLCluster extends IProduct {
                 .build();
     }
 
-    //Расширить
+    //Расширить pg_data
     public void expandMountPoint() {
-        expandMountPoint("expand_mount_point_postgresql_pgdata", "/pg_data", 11);
+        int size = 11;
+        String mount = "/pg_data";
+        Float sizeBefore = (Float) OrderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount, mount));
+        OrderServiceSteps.executeAction("expand_mount_point_postgresql_pgdata", this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}"), this.getProjectId());
+        float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
+        Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }
 
     public void createDb(String dbName) {
@@ -116,6 +121,10 @@ public class PostgresSQLCluster extends IProduct {
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
+    }
+
+    public void resize(Flavor flavor) {
+        resize("resize_postgresql_cluster", flavor);
     }
 
     public void createDbmsUser(String username, String dbRole, String dbName) {

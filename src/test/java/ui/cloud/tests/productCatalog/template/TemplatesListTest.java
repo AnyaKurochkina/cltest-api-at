@@ -17,16 +17,16 @@ public class TemplatesListTest extends TemplateBaseTest {
     @Test
     @TmsLink("486731")
     @DisplayName("Проверка заголовков списка, сортировка")
-    public void checkGraphsListSorting() {
+    public void checkHeadersAndSorting() {
         new IndexPage().goToTemplatesPage()
-                .checkTemplatesListHeaders()
+                .checkHeaders()
                 .checkSortingByTitle()
                 .checkSortingByName()
                 .checkSortingByCreateDate();
     }
 
-    @TmsLink("1116098")
     @Test
+    @TmsLink("1116098")
     @DisplayName("Поиск в списке шаблонов")
     public void searchGraphTest() {
         Template template = new Template(NAME);

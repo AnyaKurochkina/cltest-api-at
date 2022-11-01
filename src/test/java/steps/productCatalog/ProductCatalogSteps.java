@@ -8,7 +8,6 @@ import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
-import httpModels.productCatalog.action.getAction.response.GetActionResponse;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
 import httpModels.productCatalog.product.getProducts.getProductsExportList.ExportItem;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static core.helper.Configure.ProductCatalogURL;
-import static io.restassured.RestAssured.given;
 
 @Data
 @AllArgsConstructor
@@ -272,14 +270,6 @@ public class ProductCatalogSteps {
                 .build();
     }
 
-    @Step("Сравнение версий объекта")
-    public GetActionResponse compareVersions(String id, String version1, String version2) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + id + "/?version={}&compare_with_version={}", version1, version2)
-                .extractAs(GetActionResponse.class);
-    }
-
     @Step("Частичное обновление продукта")
     public Response partialUpdateObject(String id, JSONObject object) {
         return new Http(ProductCatalogURL)
@@ -297,15 +287,6 @@ public class ProductCatalogSteps {
                 .patch(productName + id + "/")
                 .assertStatus(401);
     }
-
-    @Step("Получение времени отклика на запрос")
-    public long getTime(String url) {
-        io.restassured.response.Response response = given()
-                .get(url);
-        return response.getTime();
-    }
-
-
 
     public Response getDeleteObjectResponse(String id) {
         return new Http(ProductCatalogURL)

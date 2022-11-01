@@ -39,6 +39,8 @@ public class ForbiddenAction extends Entity {
     private List<String> environmentTypeRestriction;
     @JsonProperty("config_restriction")
     private Object configRestriction;
+    @JsonProperty("context_restrictions")
+    private Object contextRestrictions;
     @JsonProperty("update_dt")
     private String updateDt;
     private String name;
@@ -77,6 +79,7 @@ public class ForbiddenAction extends Entity {
                 .set("$.item_restriction", itemRestriction)
                 .set("$.event_type", eventType)
                 .set("$.config_restriction", configRestriction)
+                .set("$.context_restriction", contextRestrictions)
                 .set("$.is_all_levels", isAllLevels)
                 .set("$.direction", direction)
                 .build();
@@ -95,7 +98,7 @@ public class ForbiddenAction extends Entity {
                 .assertStatus(201)
                 .extractAs(ForbiddenAction.class);
         StringUtils.copyAvailableFields(forbiddenAction, this);
-        Assertions.assertNotNull(id, "Пример с именем: " + name + ", не создался");
+        Assertions.assertNotNull(id, "Запрещенное действие с именем: " + name + ", не создался");
 
     }
 

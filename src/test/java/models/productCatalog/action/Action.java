@@ -22,7 +22,7 @@ import static steps.productCatalog.ActionSteps.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(exclude = "active", callSuper = false)
 public class Action extends Entity {
 
     @JsonProperty("available_without_money")
@@ -32,7 +32,6 @@ public class Action extends Entity {
     @JsonProperty("current_version")
     private String currentVersion;
     private Integer priority;
-    private String icon;
     @JsonProperty("icon_store_id")
     private String iconStoreId;
     @JsonProperty("icon_url")
@@ -46,6 +45,8 @@ public class Action extends Entity {
     private Boolean skipOnPrebilling;
     @JsonProperty("item_restriction")
     private Object itemRestriction;
+    @JsonProperty("config_restriction")
+    private String configRestriction;
     @JsonProperty("auto_removing_if_failed")
     private Boolean autoRemovingIfFailed;
     private String title;
@@ -67,14 +68,12 @@ public class Action extends Entity {
     @JsonProperty("event_provider")
     private List<Object> eventProvider;
     @JsonProperty("restricted_groups")
-    private List<Object> restrictedGroups;
+    private List<String> restrictedGroups;
     @JsonProperty("graph_id")
     private String graphId;
     private String version;
     @JsonProperty("last_version")
     private String lastVersion;
-    @JsonProperty("config_restriction")
-    private String configRestriction;
     @JsonProperty("data_config_key")
     private String dataConfigKey;
     @JsonProperty("name")
@@ -89,9 +88,9 @@ public class Action extends Entity {
     @JsonProperty("required_order_statuses")
     private List<Object> requiredOrderStatuses;
     @JsonProperty("version_create_dt")
-    private String version_create_dt;
+    private String versionCreateDt;
     @JsonProperty("version_changed_by_user")
-    private String version_changed_by_user;
+    private String versionChangedByUser;
     @JsonProperty("multiple")
     private boolean isMultiple;
     @JsonProperty("create_dt")
@@ -101,16 +100,20 @@ public class Action extends Entity {
     @JsonProperty("extra_data")
     private Map<String, String> extraData;
     @JsonProperty("allowed_developers")
-    private List<String> allowed_developers;
+    private List<String> allowedDevelopers;
     @JsonProperty("restricted_developers")
-    private List<String> restricted_developers;
+    private List<String> restrictedDevelopers;
     @JsonProperty("version_diff")
     private VersionDiff versionDiff;
-    private String jsonTemplate;
+    @JsonProperty("active")
+    private Boolean active;
+    @JsonProperty("context_restrictions")
+    private Object contextRestrictions;
+    @JsonProperty("is_safe")
+    private Boolean isSafe;
 
     @Override
     public Entity init() {
-        jsonTemplate = "productCatalog/actions/createAction.json";
         if (graphId == null) {
             Graph graph = Graph.builder().name("graph_for_action_api_test").build().createObject();
             graphId = graph.getGraphId();
@@ -120,10 +123,9 @@ public class Action extends Entity {
 
     @Override
     public JSONObject toJson() {
-        return JsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.icon", icon)
+        return JsonHelper.getJsonTemplate("productCatalog/actions/createAction.json")
                 .set("$.icon_url", iconUrl)
-                .set("$.icon_store_id", iconStoreId)
+                .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .set("$.name", actionName)
                 .set("$.title", title)
                 .set("$.type", type)
@@ -136,6 +138,9 @@ public class Action extends Entity {
                 .set("$.priority", priority)
                 .set("$.extra_data", extraData)
                 .set("$.location_restriction", locationRestriction)
+                .set("$.context_restrictions", contextRestrictions)
+                .set("$.config_restriction", configRestriction)
+                .setIfNullRemove("$.is_safe", isSafe)
                 .setIfNullRemove("$.number", number)
                 .build();
     }

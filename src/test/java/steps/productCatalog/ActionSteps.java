@@ -234,4 +234,50 @@ public class ActionSteps extends Steps {
                 .assertStatus(401)
                 .jsonPath().getString("error.message");
     }
+
+    @Step("Загрузка действия в Gitlab")
+    public static Response dumpActionToGit(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(actionUrl + id + "/dump_to_bitbucket/")
+                .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
+                .assertStatus(201);
+    }
+
+    @Step("Выгрузка действия из Gitlab")
+    public static Response loadActionFromGit(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post(actionUrl + "load_from_bitbucket/")
+                .assertStatus(200);
+    }
+
+    @Step("Сравнение версий действия")
+    public static Action compareActionVersions(String id, String version1, String version2) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(actionUrl + id + "/?version={}&compare_with_version={}", version1, version2)
+                .extractAs(Action.class);
+    }
+
+    @Step("Сортировка действий по дате создания")
+    public static List<Action> orderingActionByCreateData() {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(actionUrl + "?ordering=create_dt")
+                .assertStatus(200)
+                .extractAs(GetActionList.class)
+                .getList();
+    }
+
+    @Step("Сортировка действий по дате обновления")
+    public static List<Action> orderingActionByUpDateData() {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(actionUrl + "?ordering=update_dt")
+                .assertStatus(200)
+                .extractAs(GetActionList.class)
+                .getList();
+    }
 }

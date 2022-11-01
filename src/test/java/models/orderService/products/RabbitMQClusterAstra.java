@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -70,6 +71,7 @@ public class RabbitMQClusterAstra extends IProduct {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
                 .set("$.order.attrs.platform",  getPlatform())
@@ -79,7 +81,7 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", /*isTest()*/getSupport())
                 .set("$.order.attrs.layout", getIdGeoDistribution("rabbitmq", "rabbitmq-2"))
                 .set("$.order.label", getLabel())
                 .build();

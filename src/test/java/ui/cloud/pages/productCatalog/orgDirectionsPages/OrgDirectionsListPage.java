@@ -3,8 +3,10 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Input;
 import ui.elements.InputFile;
+import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -30,6 +32,7 @@ public class OrgDirectionsListPage {
     }
 
     public OrgDirectionPage createDirection() {
+        createButton.scrollIntoView(TypifiedElement.scrollCenter);
         createButton.click();
         return new OrgDirectionPage();
     }
@@ -47,12 +50,14 @@ public class OrgDirectionsListPage {
         descriptionColumn.shouldBe(Condition.visible);
         return new OrgDirectionsListPage();
     }
+
     @Step("Переход на страницу редактирования направления с именем {name}")
     public OrgDirectionPage openOrgDirectionPage(String name) {
         inputSearch.setValue(name);
         $x("//td[@value = '" + name + "']").shouldBe(Condition.visible).click();
         return new OrgDirectionPage();
     }
+
     @Step("Выбор действия 'удаление'")
     public OrgDirectionsListPage deleteActionMenu(String dirName) {
         $x("//td[text() = '" + dirName + "']//ancestor::tr//*[@id = 'actions-menu-button']").click();
@@ -66,6 +71,7 @@ public class OrgDirectionsListPage {
         copyAction.click();
         return new OrgDirectionPage();
     }
+
     @Step("Ввод валидного id и удаление")
     public OrgDirectionsListPage fillIdAndDelete() {
         new Input(inputId).setValue(id.getText());
@@ -83,14 +89,15 @@ public class OrgDirectionsListPage {
 
     @Step("Выбор и импорт файла")
     public OrgDirectionsListPage uploadFile(String path) {
-        importDirection.click();
+        importDirection.scrollIntoView(TypifiedElement.scrollCenter).click();
         new InputFile(path).importFile();
         return this;
     }
 
     @Step("Проверка существования направления")
-    public boolean isNotExist(String dirName) {
+    public boolean isOrgDirectionExist(String dirName) {
         new Input(inputSearch).setValue(dirName);
-        return noData.exists();
+        TestUtils.wait(500);
+        return !noData.exists();
     }
 }

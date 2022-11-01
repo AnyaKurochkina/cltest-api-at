@@ -20,6 +20,7 @@ import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 import static core.helper.Configure.StateServiceURL;
 import static org.hamcrest.Matchers.equalTo;
@@ -53,7 +54,7 @@ public class Artemis extends IProduct {
             setProjectId(project.getId());
         }
         if (productName == null)
-            productName = "VTB Apache ActiveMQ Artemis RHEL";
+            productName = "VTB Apache ActiveMQ Artemis Astra";
         initProduct();
         if (domain == null)
             domain = OrderServiceSteps.getDomainBySegment(this, segment);
@@ -79,6 +80,7 @@ public class Artemis extends IProduct {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
@@ -87,7 +89,7 @@ public class Artemis extends IProduct {
                 .set("$.order.attrs.artemis_version", artemisVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", getProjectId())
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.attrs.layout", getIdGeoDistribution("artemis", "artemis-1:artemis-1"))
                 .set("$.order.label", getLabel())
                 .build();

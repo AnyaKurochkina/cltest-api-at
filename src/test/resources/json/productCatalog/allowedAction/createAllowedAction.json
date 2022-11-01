@@ -1,0 +1,16 @@
+{
+  "name": "string",
+  "title": "string",
+  "description": "api_at_test",
+  "event_type": [
+    "vm"
+  ],
+  "event_provider": [
+    "kafka"
+  ],
+  "config_restriction": "",
+  "item_restriction": "",
+  "environment_type_restriction": [
+  ],
+  "action": null
+}

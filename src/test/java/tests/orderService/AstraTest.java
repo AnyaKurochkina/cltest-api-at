@@ -8,6 +8,7 @@ import models.orderService.products.Astra;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +25,8 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(Astra product) {
         //noinspection EmptyTryBlock
-        try (Astra astra = product.createObjectExclusiveAccess()) {}
+        try (Astra astra = product.createObjectExclusiveAccess()) {
+        }
     }
 
     @TmsLink("391705")
@@ -47,6 +49,7 @@ public class AstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("391702")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -64,16 +67,12 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
-            astra.stopHard();
-            try {
-                astra.resize(astra.getMaxFlavor());
-            } finally {
-                astra.start();
-            }
+            astra.resize(astra.getMaxFlavor());
         }
     }
 
-    @TmsLinks({@TmsLink("391700"),@TmsLink("391701")})
+    @Disabled
+    @TmsLinks({@TmsLink("391700"), @TmsLink("391701")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")

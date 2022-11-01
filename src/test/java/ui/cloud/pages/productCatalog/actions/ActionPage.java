@@ -11,6 +11,7 @@ import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
+import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,21 +19,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ActionPage {
     private static final String saveActionAlertText = "Действие успешно изменено";
     private final SelenideElement actionsListLink = $x("//a[text() = 'Список действий']");
-    private final SelenideElement inputNameField = $x("//*[@name ='name']");
-    private final SelenideElement inputTitleField = $x("//*[@name ='title']");
+    private final SelenideElement inputNameField = $x("//*[@name = 'name']");
+    private final SelenideElement inputTitleField = $x("//*[@name = 'title']");
     private final SelenideElement info = $x("//div[@role = 'status']");
     private final SelenideElement inputDescriptionField = $x("//textarea[@name ='description']");
     private final SelenideElement locationInOrderTab = $x("//*[text()= 'Расположение в заказе']");
-    private final SelenideElement graphTab = $x("//*[text()= 'Граф']");
+    private final SelenideElement graphTab = $x("//*[text() = 'Граф']");
+    private final SelenideElement graphInputField = $x("//*[@id = 'selectValueWrapper']/input");
+    private final DropDown graphVersionDropDown = DropDown.byLabel("Значение");
     private final SelenideElement dataConfigPath = $x("//input[@name = 'data_config_path']");
     private final SelenideElement dataConfigKey = $x("//input[@name = 'data_config_key']");
     private final SelenideElement data = $x("//*[@placeholder = 'Введите данные через запятую']");
-    private final SelenideElement saveButton = $x("//button/span[text() = 'Сохранить']");
-    private final SelenideElement cancelButton = $x("//button/span[text() = 'Отмена']");
-    private final SelenideElement inputGraphTitle = $x("//*[@id='selectValueWrapper']");
-    private final SelenideElement deleteButton = $x("//span[text() ='Удалить']");
-    private final SelenideElement currentVersionInput = $x("//label[starts-with(.,'Выберите версию')]/parent::*//input");
-    private final SelenideElement deleteIconSvG = $x("(//div/*[local-name()='svg']/*[local-name()='svg']/*[local-name()='path'])[6]");
+    private final SelenideElement saveButton = $x("//button/div[text() = 'Сохранить']");
+    private final SelenideElement cancelButton = $x("//button/div[text() = 'Отмена']");
+    private final Input graphInput = Input.byLabelV2("Граф");
+    private final SelenideElement deleteButton = $x("//div[text() ='Удалить']");
+    private final SelenideElement currentVersionInput = $x("//label[text()='Выберите версию']/following::div[@id='selectValueWrapper']/div");
+    private final SelenideElement deleteIconSvG = $x("(//div/*[local-name()='svg']/*[local-name()='svg']/*[local-name()='path'])[3]");
     private final SelenideElement addIcon = $x("//label[@for = 'attachment-input']");
 
 
@@ -49,6 +52,7 @@ public class ActionPage {
 
     @Step("Возврат на страницу списка Действий через ссылку Список дейтвий ")
     public ActionsListPage reTurnToActionsListPageByLink() {
+        TestUtils.scrollToTheTop();
         actionsListLink.click();
         return new ActionsListPage();
     }
@@ -62,7 +66,7 @@ public class ActionPage {
     @Step("Изменение версии графа")
     public ActionPage changeGraphVersion(String value) {
         graphTab.click();
-        DropDown.byLabel("Значение").selectByTitle(value);
+        graphVersionDropDown.selectByTitle(value);
         return this;
     }
 
@@ -96,7 +100,7 @@ public class ActionPage {
 
     @Step("Проверка текущей версии")
     public void checkVersion(String version) {
-        String currentVersion = currentVersionInput.getValue();
+        String currentVersion = currentVersionInput.getText();
         assertEquals(version, currentVersion);
     }
 
@@ -109,9 +113,9 @@ public class ActionPage {
 
     @Step("Сравнение значений полей")
     public ActionPage compareFields(String name, String title, String version) {
+        currentVersionInput.shouldHave(Condition.exactText(version));
         inputNameField.shouldHave(Condition.exactValue(name));
         inputTitleField.shouldHave(Condition.exactValue(title));
-        currentVersionInput.shouldHave(Condition.exactValue(version));
         return this;
     }
 
@@ -143,6 +147,7 @@ public class ActionPage {
 
     @Step("Переход на список действий и отмена оповещения о несохранненных данных")
     public ActionPage backByActionsLinkAndAlertCancel() {
+        actionsListLink.scrollIntoView(TypifiedElement.scrollCenter);
         actionsListLink.click();
         String alertMsg = switchTo().alert().getText();
         assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", alertMsg);
@@ -179,8 +184,8 @@ public class ActionPage {
         dataConfigKey.setValue(configKey);
         data.setValue(valueOfData);
         graphTab.click();
-        inputGraphTitle.click();
-        Input.byLabel("Граф").setValue(graphTitle);
+        graphInput.click();
+        graphInputField.setValue(graphTitle);
         TestUtils.wait(1000);
         $x("//div[contains(@title, '" + graphTitle + "')]").click();
         TestUtils.scrollToTheBottom();

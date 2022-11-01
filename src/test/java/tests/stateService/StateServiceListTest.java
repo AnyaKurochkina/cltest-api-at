@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.stateService.StateServiceSteps.getItemsByDataConfigKey;
-import static steps.stateService.StateServiceSteps.getItemsWithParentExist;
+import static steps.stateService.StateServiceSteps.*;
 
 @Tag("state_service")
 @Epic("State Service")
@@ -40,6 +39,25 @@ public class StateServiceListTest extends Tests {
         List<String> ordersIdItems = StateServiceSteps.getOrdersIdList(project.getId());
         List<String> ids = ordersIdItems.stream().distinct().collect(Collectors.toList());
         assertTrue(ordersId.containsAll(ids));
+    }
+
+    @Test
+    @DisplayName("Получение списка items with actions по контексту и фильтру")
+    @TmsLink("")
+    public void getItemListWithActions() {
+        // TODO: 26.09.2022 разобраться с проектом.
+        Project project = Project.builder().isForOrders(true)
+                .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
+                .build()
+                .createObject();
+        List<Item> itemsTypeList = getItemsWithActionsByFilter("proj-42pomp56tw", "type", "vm");
+        for (Item item : itemsTypeList) {
+            assertEquals("vm", item.getType());
+        }
+        List<Item> itemsProviderList = getItemsWithActionsByFilter("proj-42pomp56tw", "provider", "vsphere");
+        for (Item item : itemsProviderList) {
+            assertEquals("vsphere", item.getProvider() );
+        }
     }
 
     @Test
@@ -73,6 +91,21 @@ public class StateServiceListTest extends Tests {
             Object config = item.getData().get("config");
             LinkedHashMap<String, Object> configMap = (LinkedHashMap) config;
             assertEquals(value, configMap.get(key));
+        }
+    }
+
+    @Test
+    @DisplayName("Получение списка items с параметром with_parent_items=true")
+    @TmsLink("1241198")
+    public void getItemListWithParentsItemsTrue() {
+        List<Item> list = getItemsWithParentItem();
+        for (Item item : list) {
+           if (item.getData().get("parent") != null) {
+               LinkedHashMap<String, Object> parent_item = (LinkedHashMap) item.getData().get("parent_item");
+               assertNotNull(parent_item.get("item_id"));
+               assertNotNull(parent_item.get("type"));
+               assertNotNull(parent_item.get("data"));
+           };
         }
     }
 }

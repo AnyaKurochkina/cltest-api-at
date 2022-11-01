@@ -8,6 +8,8 @@ import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import models.productCatalog.graph.Graph;
+import org.json.JSONObject;
 import steps.Steps;
 
 import java.util.List;
@@ -16,11 +18,13 @@ import static core.helper.Configure.ProductCatalogURL;
 
 public class GraphSteps extends Steps {
 
+    private static final String graphUrl = "/api/v1/graphs/";
+
     @Step("Получение списка Графов продуктового каталога")
     public static List<ItemImpl> getGraphList() {
         return ((GetListImpl) new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/graphs/")
+                .get(graphUrl)
                 .compareWithJsonSchema("jsonSchema/getGraphListSchema.json")
                 .assertStatus(200)
                 .extractAs(GetGraphsListResponse.class)).getItemsList();
@@ -30,7 +34,7 @@ public class GraphSteps extends Steps {
     public static JsonPath getObjectArrayUsedGraph(String id) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("graphs/" + id + "/used/")
+                .get(graphUrl + id + "/used/")
                 .compareWithJsonSchema("jsonSchema/usedGraphListSchema.json")
                 .assertStatus(200).jsonPath();
     }
@@ -40,7 +44,7 @@ public class GraphSteps extends Steps {
         String types = String.join(",", objType);
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("graphs/" + id + "/used/?obj_type=" + types)
+                .get(graphUrl + id + "/used/?obj_type=" + types)
                 .compareWithJsonSchema("jsonSchema/usedGraphListSchema.json")
                 .assertStatus(200);
     }
@@ -49,7 +53,7 @@ public class GraphSteps extends Steps {
     public static Response getLastObjectUsedGraph(String id) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("graphs/" + id + "/used/?last_object=true")
+                .get(graphUrl + id + "/used/?last_object=true")
                 .compareWithJsonSchema("jsonSchema/usedGraphListSchema.json")
                 .assertStatus(200);
     }
@@ -58,8 +62,42 @@ public class GraphSteps extends Steps {
     public static Response getLastVersionUsedGraph(String id) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("graphs/" + id + "/used/?last_version=true")
+                .get(graphUrl + id + "/used/?last_version=true")
                 .compareWithJsonSchema("jsonSchema/usedGraphListSchema.json")
                 .assertStatus(200);
+    }
+
+    @Step("Частичное обновление графа")
+    public static Response partialUpdateGraph(String id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .patch(graphUrl + id + "/");
+    }
+
+    @Step("Создание графа")
+    public static Graph createGraph(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post(graphUrl)
+                .assertStatus(201)
+                .extractAs(Graph.class);
+    }
+
+    @Step("Получение графа по Id")
+    public static Graph getGraphById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .get(graphUrl + objectId + "/")
+                .extractAs(Graph.class);
+    }
+
+    @Step("Проверка существования графа по имени")
+    public static boolean isGraphExists(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + "exists/?name=" + name)
+                .assertStatus(200).jsonPath().get("exists");
     }
 }

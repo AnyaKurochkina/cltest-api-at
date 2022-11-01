@@ -25,6 +25,8 @@ import steps.stateService.StateServiceSteps;
 import steps.tarifficator.CostSteps;
 
 import java.lang.reflect.Type;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -60,6 +62,8 @@ public class OrderServiceSteps extends Steps {
                 e.printStackTrace();
                 log.error("Ошибка в GetErrorFromStateService " + e);
             }
+            if (Objects.isNull(error))
+                error = "Отсутствует информация о заказе в state service";
             if (error.equals("null"))
                 error = "Продукт не развернулся по таймауту";
             Assertions.fail(String.format("Ошибка заказа продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product, orderStatus, error));
@@ -144,7 +148,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Отправка action {action}")
     public static Response sendAction(String action, IProduct product, JSONObject jsonData, String projectId, String filter) {
-        Item item = getItemIdByOrderIdAndActionTitle(action, product, "");
+        Item item = getItemIdByOrderIdAndActionTitle(action, product, filter);
         return JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", item.getId())
                 .set("$.order.attrs", jsonData)
@@ -163,6 +167,14 @@ public class OrderServiceSteps extends Steps {
                 .send(OrderServiceURL)
                 .setRole(Role.ORDER_SERVICE_ADMIN)
                 .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
+    }
+
+    @Step("Добавление действия {actionName} заказа и регистрация его в авторайзере")
+    public static void registrationAction(String actionName) {
+        new Http(OrderServiceURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("action_name", actionName))
+                .post("/v1/orders/actions");
     }
 
     public static Response changeProjectForOrderRequest(IProduct product, Project target) {
@@ -202,7 +214,8 @@ public class OrderServiceSteps extends Steps {
     @Step("Выполнение action \"{action}\"")
     public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId, String filter) {
         //Получение item'ов для экшена
-        Item item = getItemIdByOrderIdAndActionTitle(action, product, "");
+        waitStatus(Duration.ofMinutes(10), product);
+        Item item = getItemIdByOrderIdAndActionTitle(action, product, filter);
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
         //TODO: Возможно стоит сделать более детальную проверку на значение
 
@@ -290,7 +303,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Ожидание успешного выполнения action")
     public static void checkActionStatusMethod(String exp_status, IProduct product, String action_id) {
         String actionStatus = "";
-        int counter = 30;
+        int counter = 45;
         log.info("Проверка статуса выполнения действия");
         while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.equals("")) && counter > 0) {
             Waiting.sleep(20000);
@@ -313,6 +326,16 @@ public class OrderServiceSteps extends Steps {
                 error = "Действие не выполнено по таймауту";
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product, actionStatus, error));
         }
+    }
+
+    private static void waitStatus(Duration timeout, IProduct product) {
+        Instant startTime = Instant.now();
+        String status;
+        do {
+            Waiting.sleep(20000);
+            status = getStatus(product);
+        } while (status.equals("pending") || status.equals("changing")
+                && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
     }
 
     @Step("Получение домена для сегмента сети {netSegment}")
@@ -369,8 +392,8 @@ public class OrderServiceSteps extends Steps {
                 .jsonPath();
 
         Item item = new Item();
-        if(!filter.equals(""))
-            filter = "it.data.config." + filter + " &&";
+        if (!filter.equals(""))
+            filter = "it.data.config." + filter + " && ";
         //Получаем все item ID по name, например: "expand_mount_point"
         item.setId(jsonPath.get(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action)));
         //Получаем все item name
@@ -479,7 +502,7 @@ public class OrderServiceSteps extends Steps {
             }
         }
 
-        if(Configure.ENV.equalsIgnoreCase("IFT")) {
+        if (Configure.ENV.equalsIgnoreCase("IFT")) {
             orders = new Http(OrderServiceURL)
                     .setProjectId(project.id)
                     .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=failure&f[status][]=pending", project.id)

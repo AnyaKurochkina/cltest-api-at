@@ -2,6 +2,7 @@ package models.orderService.products;
 
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
+import io.restassured.path.json.JsonPath;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
@@ -10,6 +11,7 @@ import models.authorizer.Project;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
+import steps.resourceManager.ResourceManagerSteps;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -50,6 +52,11 @@ public class S3Ceph extends IProduct {
         createProduct();
     }
 
+    public String getBucketName(String name){
+        JsonPath path = ResourceManagerSteps.getProjectPath(projectId);
+        return path.getString("data.environment_prefix.name") + "-" +
+                path.getString("data.information_system.code")  + "-" + name;
+    }
 
     @Step("Удалить бакет")
     public void deleteBucket(String name) {
@@ -92,6 +99,21 @@ public class S3Ceph extends IProduct {
         OrderServiceSteps.executeAction("s3_ceph_policy_delete", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
     }
 
+    @Step("Изменить правило жизненного цикла")
+    public void updateRule(RoleAttrs attrs) {
+        OrderServiceSteps.executeAction("s3_ceph_bucket_lr_update", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+    }
+
+    @Step("Добавить правило жизненного цикла")
+    public void addRule(RoleAttrs attrs) {
+        OrderServiceSteps.executeAction("s3_ceph_bucket_lr_create", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+    }
+
+    @Step("далить правило жизненного цикла")
+    public void deleteRule(RoleAttrs attrs) {
+        OrderServiceSteps.executeAction("s3_ceph_bucket_lr_delete", this, new JSONObject().put("name", attrs.getName()), this.getProjectId());
+    }
+
     @Step("Удалить тенант")
     @Override
     protected void delete() {
@@ -101,18 +123,19 @@ public class S3Ceph extends IProduct {
     @Data
     @Builder
     public static class BucketAttrs {
-        BucketAttrs.Versioning versioning;
+//        BucketAttrs.Versioning versioning;
         int maxSizeGb;
         String name;
+        boolean versioning;
 
-        @Data
-        @Builder
-        public static class Versioning {
-            boolean prune;
-            boolean enabled;
-            @Builder.Default
-            int pruneDays = 1;
-        }
+//        @Data
+//        @Builder
+//        public static class Versioning {
+//            boolean prune;
+//            boolean enabled;
+//            @Builder.Default
+//            int pruneDays = 1;
+//        }
     }
 
     @Data
@@ -130,6 +153,24 @@ public class S3Ceph extends IProduct {
         public enum PolicyId{
             READ_WRITE,
             READ
+        }
+    }
+
+    @Data
+    @Builder
+    public static class RoleAttrs {
+        RoleAttrs.Filter filter;
+        String condition;
+        int days;
+        String name;
+        String type;
+        boolean versioning;
+
+        @Builder
+        public static class Filter {
+            @Builder.Default
+            String type = "Prefix";
+            String value;
         }
     }
 }

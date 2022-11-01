@@ -76,7 +76,7 @@ public class OrgDirectionTest extends BaseTest {
         if (steps.isExists(name)) {
             steps.deleteByName(name, GetOrgDirectionListResponse.class);
         }
-        assertTrue(new IndexPage()
+        assertFalse(new IndexPage()
                 .goToOrgDirectionsPage()
                 .createDirection()
                 .fillAndSave(title, name, description)
@@ -84,7 +84,7 @@ public class OrgDirectionTest extends BaseTest {
                 .deleteActionMenu(name)
                 .inputInvalidId("invalid-id45")
                 .fillIdAndDelete()
-                .isNotExist(name), "Направление существует.");
+                .isOrgDirectionExist(name), "Направление существует.");
     }
 
     @Test
@@ -105,7 +105,7 @@ public class OrgDirectionTest extends BaseTest {
                 .deleteDirection()
                 .inputInvalidId("invalid-id45")
                 .fillIdAndDelete()
-                .isNotExist(name), "Направление существует.");
+                .isOrgDirectionExist(name), "Направление существует.");
     }
 
     @Test

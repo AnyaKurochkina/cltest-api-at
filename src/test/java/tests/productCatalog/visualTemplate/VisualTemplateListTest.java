@@ -7,7 +7,7 @@ import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.ItemVisualTemplates;
+import models.productCatalog.ItemVisualTemplate;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -59,7 +59,7 @@ public class VisualTemplateListTest extends Tests {
     @Test
     public void getVisualTemplateListByProvider() {
         String name = "get_list_by_event_provider_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -82,7 +82,7 @@ public class VisualTemplateListTest extends Tests {
     @Test
     public void getVisualTemplateListByType() {
         String name = "get_list_by_event_type_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -104,7 +104,7 @@ public class VisualTemplateListTest extends Tests {
     @TmsLink("823845")
     @Test
     public void getVisualTemplateListByIsActive() {
-        ItemVisualTemplates.builder().name("get_visual_template_list_by_is_active")
+        ItemVisualTemplate.builder().name("get_visual_template_list_by_is_active")
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
                 .compactTemplate(compactTemplate)
@@ -124,7 +124,7 @@ public class VisualTemplateListTest extends Tests {
     @TmsLink("823850")
     @Test
     public void getVisualTemplateListByEventProvider() {
-        ItemVisualTemplates.builder().name("get_visual_template_list_by_provider")
+        ItemVisualTemplate.builder().name("get_visual_template_list_by_provider")
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
                 .compactTemplate(compactTemplate)
@@ -144,7 +144,7 @@ public class VisualTemplateListTest extends Tests {
     @Test
     public void getVisualTemplateListByEventType() {
         List<String> eventType = Collections.singletonList("app");
-        ItemVisualTemplates.builder().name("get_visual_template_list_by_type")
+        ItemVisualTemplate.builder().name("get_visual_template_list_by_type")
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(eventType)
                 .compactTemplate(compactTemplate)
@@ -164,7 +164,7 @@ public class VisualTemplateListTest extends Tests {
     @Test
     public void getVisualTemplateListByProviderAndType() {
         String name = "get_list_by_type_and_provider_item_visual_template_test_api";
-        ItemVisualTemplates visualTemplates = ItemVisualTemplates.builder()
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
