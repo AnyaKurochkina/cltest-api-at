@@ -17,6 +17,7 @@ import java.util.List;
 public class Item {
     private String id;
     private LinkedHashMap<String, Object> data;
+    private LinkedHashMap<String, Object> parent_item;
     @JsonProperty("action_id")
     private String actionId;
     private String subtype;

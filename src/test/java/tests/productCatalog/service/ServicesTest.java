@@ -14,7 +14,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.productCatalog.OrgDirection;
-import models.productCatalog.Services;
+import models.productCatalog.Service;
 import models.productCatalog.icon.Icon;
 import models.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
@@ -46,7 +46,7 @@ public class ServicesTest extends Tests {
     @Test
     public void createService() {
         String name = "create_service_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -66,7 +66,7 @@ public class ServicesTest extends Tests {
                 .build()
                 .createObject();
         String serviceName = "create_service_with_icon_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(serviceName)
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
@@ -87,14 +87,14 @@ public class ServicesTest extends Tests {
                 .build()
                 .createObject();
         String serviceName = "create_first_service_with_same_icon_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(serviceName)
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
 
-        Services secondService = Services.builder()
+        Service secondService = Service.builder()
                 .serviceName("create_second_service_with_same_icon_test_api")
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
@@ -111,7 +111,7 @@ public class ServicesTest extends Tests {
     @Test
     public void checkServiceExists() {
         String name = "exist_service_test_api";
-        Services.builder()
+        Service.builder()
                 .serviceName(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -160,7 +160,7 @@ public class ServicesTest extends Tests {
     @Test
     public void getServiceById() {
         String name = "get_service_by_id_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -203,7 +203,7 @@ public class ServicesTest extends Tests {
     @Test
     public void checkAccessWithPublicToken() {
         String name = "check_access_with_public_token_service_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -224,7 +224,7 @@ public class ServicesTest extends Tests {
     @Test
     public void deleteIsPublishedService() {
         String errorText = "Deletion not allowed (is_published=True)";
-        Services serviceIsPublished = Services.builder()
+        Service serviceIsPublished = Service.builder()
                 .serviceName("create_service_is_published_test_api")
                 .isPublished(true)
                 .build()
@@ -239,7 +239,7 @@ public class ServicesTest extends Tests {
     @TmsLink("738686")
     @Test
     public void checkVersionWhenIndependentParamUpdated() {
-        Services serv = Services.builder()
+        Service serv = Service.builder()
                 .serviceName("services_api_test")
                 .version("1.0.0")
                 .isPublished(true)
@@ -256,7 +256,7 @@ public class ServicesTest extends Tests {
     @Test
     public void copyService() {
         String name = "copy_service_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -273,7 +273,7 @@ public class ServicesTest extends Tests {
     @TmsLink("643510")
     @Test
     public void updateServiceDescription() {
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName("update_service_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -290,7 +290,7 @@ public class ServicesTest extends Tests {
     @TmsLink("643516")
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName("get_graph_version_calculated_service_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")
@@ -320,7 +320,7 @@ public class ServicesTest extends Tests {
     @TmsLink("643521")
     @Test
     public void updateServiceAndGetVersion() {
-        Services services = Services.builder().
+        Service services = Service.builder().
                 serviceName("service_version_test_api")
                 .version("1.0.999")
                 .serviceInfo("test service info")
@@ -368,7 +368,7 @@ public class ServicesTest extends Tests {
     @TmsLink("643543")
     @Test
     public void deleteService() {
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName("delete_service_test_api")
                 .title("title_service_test_api")
                 .description("at_tests")
@@ -382,7 +382,7 @@ public class ServicesTest extends Tests {
     @TmsLink("856539")
     public void setCurrentVersionService() {
         String serviceName = "set_current_version_service_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
@@ -402,7 +402,7 @@ public class ServicesTest extends Tests {
     @TmsLink("856540")
     public void getCurrentVersionService() {
         String serviceName = "create_current_version_service_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
@@ -422,7 +422,7 @@ public class ServicesTest extends Tests {
     @TmsLink("856542")
     public void getAutoOpenResultService() {
         String serviceName = "get_auto_open_result_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
@@ -448,7 +448,7 @@ public class ServicesTest extends Tests {
                 .build()
                 .createObject();
         String serviceName = "get_direction_title_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
@@ -465,7 +465,7 @@ public class ServicesTest extends Tests {
     @TmsLink("975412")
     public void dumpToGitlabService() {
         String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
@@ -482,7 +482,7 @@ public class ServicesTest extends Tests {
     @TmsLink("1029279")
     public void loadFromGitlabService() {
         String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
-        JSONObject jsonObject = Services.builder()
+        JSONObject jsonObject = Service.builder()
                 .serviceName(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
@@ -504,7 +504,7 @@ public class ServicesTest extends Tests {
     @Test
     public void createServiceWithStartBtnNull() {
         String name = "create_service_with_start_btn_null";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")

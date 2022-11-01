@@ -2,7 +2,7 @@
   {
     "objectClassName": "models.authorizer.Folder",
     "kind": "department",
-    "informationSystemIds": ["8e33baf8-e181-457b-9d60-e5dc470fe8fa"],
+    "informationSystemIds": ["3c9e2600-36b9-453b-83d5-f836b5e241be"],
     "name": "fold-yfy2k4t4nz",
     "title": "VTB-VTB.Cloud-QA-AT-DEV",
     "parentId": "fold-ofh97pgj5u"
@@ -23,9 +23,9 @@
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
-    "secret": "463a744999142bd71bb6ce17c8a33faa",
-    "id": "sa_proj-ln4zg69jek-vk",
-    "projectId": "proj-ln4zg69jek",
+    "secret": "dea19ebbb05306392f63bcc0d0915f9a",
+    "id": "sa_proj-iv550odo9a-29",
+    "projectId": "proj-iv550odo9a",
     "role": "order-service.admin"
   },
   {
@@ -64,12 +64,12 @@
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
-    "id": "proj-ln4zg69jek",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
+    "id": "proj-iv550odo9a",
     "projectName": "DEV",
     "projectEnvironmentPrefix": {
       "env": "DEV",
-      "id": "02eb9857-693b-476c-952a-b77ca5d8c365",
+      "id": "a924e195-ad97-4fc9-876a-6464dd81250f",
       "projectEnvironmentId": "ce11798a-e5f6-4e54-9582-78770f15b52a",
       "envType": "DEV"
     },
@@ -77,7 +77,7 @@
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
     "id": "proj-bhbyhmik3a",
     "projectName": "EDU",
     "projectEnvironmentPrefix": {
@@ -90,7 +90,7 @@
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
     "id": "proj-zoz17np8rb",
     "projectName": "HOTFIX",
     "projectEnvironmentPrefix": {
@@ -103,7 +103,7 @@
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
     "id": "proj-6wpfrbes0g",
     "projectName": "MIGR",
     "projectEnvironmentPrefix": {
@@ -116,7 +116,7 @@
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
     "id": "proj-aei4kz2yu4",
     "projectName": "PREPROD",
     "projectEnvironmentPrefix": {
@@ -129,7 +129,7 @@
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
     "id": "proj-rddf0uwi0q",
     "projectName": "ST",
     "projectEnvironmentPrefix": {
@@ -142,7 +142,7 @@
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
     "id": "proj-1oob0zjo5h",
     "projectName": "LT",
     "projectEnvironmentPrefix": {
@@ -155,7 +155,7 @@
   },
   {
     "objectClassName": "models.authorizer.Project",
-    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
     "id": "proj-114wetem0c",
     "projectName": "IFT",
     "projectEnvironmentPrefix": {
@@ -212,12 +212,12 @@
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
-    "prefixName": "cloud-zorg-dev-group",
+    "prefixName": "cloud-soub-blue",
     "users": [
-      "check_admin"
+      "vtb4043675"
     ],
     "isDeleted": false,
-    "projectName": "proj-ln4zg69jek"
+    "projectName": "proj-iv550odo9a"
   },
   {
     "objectClassName": "models.portalBack.AccessGroup",
@@ -228,7 +228,7 @@
   },
   {
     "objectClassName": "models.authorizer.InformationSystem",
-    "id": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+    "id": "3c9e2600-36b9-453b-83d5-f836b5e241be",
     "isForOrders": true
   }
 ]

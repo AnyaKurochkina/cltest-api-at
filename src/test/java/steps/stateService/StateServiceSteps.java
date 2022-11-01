@@ -108,4 +108,34 @@ public class StateServiceSteps extends Steps {
                 .jsonPath()
                 .getString("status");
     }
+
+    @Step("Получение списка items с параметром with_parent_item=true")
+    public static List<Item> getItemsWithParentItem() {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/?with_parent_item=true")
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
+    @Step("Получение item по id = {itemId} с параметром with_parent_item=true")
+    public static List<Item> getItemByItemIdWithParentItem(String itemId) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/{}/?with_parent_item=true", itemId)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("", Item.class);
+    }
+
+    @Step("Получение списка items")
+    public static List<Item> getItemsList() {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/")
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
 }

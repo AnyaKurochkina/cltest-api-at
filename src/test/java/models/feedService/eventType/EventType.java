@@ -7,10 +7,16 @@ import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.feedService.event.Event;
 import org.json.JSONObject;
 import steps.feedService.FeedServiceSteps;
 
+import java.util.List;
+import java.util.Objects;
+
 import static core.helper.Configure.FeedServiceURL;
+import static steps.feedService.FeedServiceSteps.deleteEvent;
+import static steps.feedService.FeedServiceSteps.getEventList;
 
 @Log4j2
 @Getter
@@ -53,6 +59,14 @@ public class EventType extends Entity {
     protected void create() {
         EventType eventTypeByName = FeedServiceSteps.getEventTypeByName(title);
         if (eventTypeByName != null) {
+            List<Event> eventList = getEventList().getList();
+            for (Event event : eventList) {
+                if (!Objects.isNull(event.getEventTypeInfo())) {
+                    if (title.equals(event.getEventTypeInfo().getTitle())) {
+                        deleteEvent(event.getId());
+                    }
+                }
+            }
             FeedServiceSteps.deleteEventType(eventTypeByName.getId());
         }
         id = new Http(FeedServiceURL)

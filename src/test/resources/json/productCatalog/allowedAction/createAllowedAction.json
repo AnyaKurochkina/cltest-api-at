@@ -1,16 +1,16 @@
 {
   "name": "string",
   "title": "string",
-  "description": "string",
+  "description": "api_at_test",
   "event_type": [
     "vm"
   ],
   "event_provider": [
-    "openstack"
+    "kafka"
   ],
-  "direction": "parent_to_child",
-  "is_all_levels": true,
-  "config_restriction": "string",
-  "item_restriction": "string",
+  "config_restriction": "",
+  "item_restriction": "",
+  "environment_type_restriction": [
+  ],
   "action": null
 }

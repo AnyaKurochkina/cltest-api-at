@@ -34,7 +34,7 @@ public class UiScyllaDbTest extends Tests {
 
     public UiScyllaDbTest() {
         if (Configure.ENV.equals("prod"))
-        product = ScyllaDb.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+            product = ScyllaDb.builder().env("DEV").productName("ScyllaDB").platform("OpenStack").segment("dev-srv-app").build();
         //product = ScyllaDb.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/01828278-e513-4685-8cdd-f0c87840ff62/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = ScyllaDb.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
@@ -87,7 +87,7 @@ public class UiScyllaDbTest extends Tests {
 
 
     @Test
-    @TmsLink("1190976")
+    @TmsLink("1236730")
     @Order(2)
     @DisplayName("UI ScyllaDB. Проверка полей заказа")
     void checkHeaderHistoryTable() {

@@ -8,6 +8,7 @@ import models.orderService.products.Ubuntu;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +24,8 @@ public class UbuntuTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(Ubuntu product) {
         //noinspection EmptyTryBlock
-        try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {}
+        try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
+        }
     }
 
     @TmsLink("391706")
@@ -46,6 +48,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("391695")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -63,12 +66,7 @@ public class UbuntuTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
-            ubuntu.stopHard();
-            try {
-                ubuntu.resize(ubuntu.getMaxFlavor());
-            } finally {
-                ubuntu.start();
-            }
+            ubuntu.resize(ubuntu.getMaxFlavor());
         }
     }
 
@@ -82,7 +80,8 @@ public class UbuntuTest extends Tests {
         }
     }
 
-    @TmsLinks({@TmsLink("391693"),@TmsLink("391694")})
+    @Disabled
+    @TmsLinks({@TmsLink("391693"), @TmsLink("391694")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")

@@ -27,8 +27,6 @@ public class GraphItem {
     private String color;
     @JsonProperty("subgraph_version")
     private String subgraphVersion;
-    @JsonProperty("icon")
-    private String icon;
     @JsonProperty("icon_url")
     private String iconUrl;
     @JsonProperty("subgraph_version_pattern")
@@ -97,7 +95,6 @@ public class GraphItem {
                 .set("$.template_version", templateVersion)
                 .set("$.color", color)
                 .set("$.subgraphVersion", subgraphVersion)
-                .set("$.icon", icon)
                 .set("$.icon_url", iconUrl)
                 .set("$.subgraph_version_pattern", subgraphVersionPattern)
                 .set("$.for_each", forEach)

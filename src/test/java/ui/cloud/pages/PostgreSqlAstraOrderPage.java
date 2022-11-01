@@ -42,6 +42,5 @@ public class PostgreSqlAstraOrderPage extends Product {
         getHardDrive1().shouldBe(Condition.visible);
         getHardDrive2().shouldBe(Condition.visible);
         getOpMemory().shouldBe(Condition.visible);
-        getLinuxOS().shouldBe(Condition.visible);
     }
 }

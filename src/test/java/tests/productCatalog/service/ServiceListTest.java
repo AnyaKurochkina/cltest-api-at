@@ -7,7 +7,7 @@ import httpModels.productCatalog.service.getServiceList.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Services;
+import models.productCatalog.Service;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +56,7 @@ public class ServiceListTest extends Tests {
     @Test
     public void getServiceListByTitle() {
         String serviceTitle = "get_service_list_by_id_title_test_api";
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName("get_service_list_by_id_test_api")
                 .title(serviceTitle)
                 .description("ServiceForAT")
@@ -73,7 +73,7 @@ public class ServiceListTest extends Tests {
     @TmsLink("811060")
     @Test
     public void getServiceListByPublished() {
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName("service_is_published_test_api")
                 .title("title_service_is_published_test_api")
                 .description("service_is_published_test_api")

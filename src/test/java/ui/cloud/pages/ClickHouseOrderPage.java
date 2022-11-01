@@ -42,6 +42,5 @@ public class ClickHouseOrderPage extends Product {
         getProcessor().shouldBe(Condition.visible);
         getHardDrive().shouldBe(Condition.visible);
         getOpMemory().shouldBe(Condition.visible);
-        getLinuxOS().shouldBe(Condition.visible);
     }
 }

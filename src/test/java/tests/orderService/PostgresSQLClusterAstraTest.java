@@ -9,6 +9,7 @@ import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,15 +19,12 @@ import tests.Tests;
 @Feature("PostgresSQL Cluster Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresSqlClusterAstra"), @Tag("prod")})
 public class PostgresSQLClusterAstraTest extends Tests {
-//    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
-    static final String productName = "PostgreSQL Cluster Astra Linux";
     static final String dbName = "db_name";
 
     @TmsLink("810039")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(PostgresSQLCluster product) {
-        product.setProductName(productName);
         //noinspection EmptyTryBlock
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
         }
@@ -37,7 +35,6 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
     void expandMountPoint(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.expandMountPoint();
         }
@@ -48,7 +45,6 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb(dbName);
         }
@@ -59,7 +55,6 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверить подключение к БД PostgresSQLCluster {0}")
     void checkBdConnection(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb(dbName);
             postgres.checkConnection(dbName);
@@ -71,7 +66,6 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb(dbName);
             postgres.createDbmsUser("testchelik1", "user", dbName);
@@ -83,7 +77,6 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль пользователя {0}")
     void resetPassword(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb(dbName);
             postgres.createDbmsUser("chelikforreset1", "user", dbName);
@@ -96,7 +89,6 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb(dbName);
             postgres.createDbmsUser("chelikforremove2", "user", dbName);
@@ -110,7 +102,6 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb(dbName);
             postgres.resetDbOwnerPassword(dbName);
@@ -122,7 +113,6 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb(dbName);
             postgres.removeDb(dbName);
@@ -134,18 +124,27 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезагрузить {0}")
     void restart(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.restart();
         }
     }
 
+    @TmsLink("1256575")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Изменить конфигурацию нод СУБД {0}")
+    void resize(PostgresSQLCluster product) {
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.resize(postgres.getMaxFlavor());
+        }
+    }
+
+    @Disabled
     @TmsLink("810038")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить {0}")
     void stopSoft(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.stopSoft();
             postgres.start();
@@ -158,19 +157,18 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Назначить предел подключений {0}")
     void setConnLimit(PostgresSQLCluster product) {
         Assumptions.assumeTrue("LT".equalsIgnoreCase(product.getEnv()), "Тест включен только для среды LT");
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.createDb(dbName);
             postgres.setConnLimit(dbName, 30);
         }
     }
 
+    @Disabled
     @TmsLinks({@TmsLink("810036"),@TmsLink("810037")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
     void stopHard(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.stopHard();
             postgres.start();
@@ -182,7 +180,6 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
     void delete(PostgresSQLCluster product) {
-        product.setProductName(productName);
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.deleteObject();
         }

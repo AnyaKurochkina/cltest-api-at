@@ -37,7 +37,7 @@ public class Podman extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/podman.json";
         if(productName == null)
-            productName = "Podman";
+            productName = "Podman (Astra)";
         initProduct();
         if(flavor == null)
             flavor = getMinFlavor();

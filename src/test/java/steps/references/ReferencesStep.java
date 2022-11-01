@@ -36,7 +36,7 @@ public class ReferencesStep extends Steps {
         String jsonArray = new Http(ReferencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .setProjectId(Objects.requireNonNull(product.getProjectId()))
-                .get("/api/v1/pages/?directory__name=flavors&tags={}", product.getProductId())
+                .get("/api/v1/pages/?directory__name=flavors&tags={}", product.getProductCatalogName())
                 .assertStatus(200)
                 .toString();
 

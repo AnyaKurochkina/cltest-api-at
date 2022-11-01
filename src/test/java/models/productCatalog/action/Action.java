@@ -107,13 +107,13 @@ public class Action extends Entity {
     private VersionDiff versionDiff;
     @JsonProperty("active")
     private Boolean active;
-    private String jsonTemplate;
     @JsonProperty("context_restrictions")
     private Object contextRestrictions;
+    @JsonProperty("is_safe")
+    private Boolean isSafe;
 
     @Override
     public Entity init() {
-        jsonTemplate = "productCatalog/actions/createAction.json";
         if (graphId == null) {
             Graph graph = Graph.builder().name("graph_for_action_api_test").build().createObject();
             graphId = graph.getGraphId();
@@ -123,7 +123,7 @@ public class Action extends Entity {
 
     @Override
     public JSONObject toJson() {
-        return JsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate("productCatalog/actions/createAction.json")
                 .set("$.icon_url", iconUrl)
                 .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .set("$.name", actionName)
@@ -140,6 +140,7 @@ public class Action extends Entity {
                 .set("$.location_restriction", locationRestriction)
                 .set("$.context_restrictions", contextRestrictions)
                 .set("$.config_restriction", configRestriction)
+                .setIfNullRemove("$.is_safe", isSafe)
                 .setIfNullRemove("$.number", number)
                 .build();
     }

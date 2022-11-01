@@ -54,17 +54,10 @@ class UiClickHouseCheckUntilOrderTest extends Tests {
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.getOrderBtn().shouldBe(Condition.disabled);
 
-//        //Проверка поля Кол-во
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "1");
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "1");
-
         //Проверка Детали заказа
         orderPage.getOsVersion().select(product.getOsVersion());
         orderPage.getNameUser().setValue("at_user");
         orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-        orderPage.getNameDB().setValue("at_db");
         orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());

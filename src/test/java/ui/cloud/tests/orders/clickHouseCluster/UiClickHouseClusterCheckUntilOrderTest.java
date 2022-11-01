@@ -42,7 +42,7 @@ class UiClickHouseClusterCheckUntilOrderTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1177391")
     @DisplayName("UI ClickHouse Cluster. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
@@ -61,10 +61,9 @@ class UiClickHouseClusterCheckUntilOrderTest extends Tests {
 
         //Проверка Детали заказа
         orderPage.getOsVersion().select(product.getOsVersion());
-        orderPage.getNameCluster().setValue("0001");
+        orderPage.getNameCluster().setValue("cluster");
         orderPage.getNameUser().setValue("at_user");
         orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-        orderPage.getNameDB().setValue("at_db");
         orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());

@@ -93,4 +93,19 @@ public class StateServiceListTest extends Tests {
             assertEquals(value, configMap.get(key));
         }
     }
+
+    @Test
+    @DisplayName("Получение списка items с параметром with_parent_items=true")
+    @TmsLink("1241198")
+    public void getItemListWithParentsItemsTrue() {
+        List<Item> list = getItemsWithParentItem();
+        for (Item item : list) {
+           if (item.getData().get("parent") != null) {
+               LinkedHashMap<String, Object> parent_item = (LinkedHashMap) item.getData().get("parent_item");
+               assertNotNull(parent_item.get("item_id"));
+               assertNotNull(parent_item.get("type"));
+               assertNotNull(parent_item.get("data"));
+           };
+        }
+    }
 }

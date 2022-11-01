@@ -90,7 +90,7 @@ public class GraphListTest extends Tests {
         assertEquals(versionList, actualVersionList);
     }
 
-    @DisplayName("Проверка присутствия поля icon для всех нод")
+    @DisplayName("Проверка присутствия поля icon_url для всех нод")
     @TmsLink("1027309")
     @Test
     public void getIcon() {
@@ -100,7 +100,10 @@ public class GraphListTest extends Tests {
             if (!graph.getGraph().isEmpty()) {
                 List<GraphItem> graphItemList = graph.getGraph();
                 for (GraphItem graphItem : graphItemList) {
-                    assertNotNull(graphItem.getIcon(), String.format("У ноды графа %s поле icon is null", graph.getName()));
+                    assertNotNull(graphItem.getIconUrl(), String.format("У ноды графа %s поле icon_url is null", graph.getName()));
+                    if (graphItem.getIconUrl().isEmpty()) {
+                        assertNull(graphItem.getIconStoreId(), "icon_store_id должен быть null");
+                    }
                 }
             }
         }

@@ -6,7 +6,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.Services;
+import models.productCatalog.Service;
 import models.productCatalog.action.Action;
 import models.productCatalog.graph.Graph;
 import models.productCatalog.product.Product;
@@ -47,7 +47,7 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Services createServiceResponse = Services.builder()
+        Service createServiceResponse = Service.builder()
                 .serviceName("service_for_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
@@ -85,7 +85,7 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Services.builder()
+        Service.builder()
                 .serviceName("service_for_type_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
@@ -132,7 +132,7 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Services.builder()
+        Service.builder()
                 .serviceName("service_for_last_object_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
@@ -140,7 +140,7 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Services lastService = Services.builder()
+        Service lastService = Service.builder()
                 .serviceName("last_service_for_last_object_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
@@ -186,7 +186,7 @@ public class GraphUsedListTest extends Tests {
         String productVersion = getProductById(product.getProductId()).getVersion();
 
 
-        Services service = Services.builder()
+        Service service = Service.builder()
                 .serviceName("service_for_last_object_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
