@@ -44,7 +44,7 @@ public class Redis extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/redis.json";
         if (productName == null)
-            productName = "Redis";
+            productName = "Redis (Astra)";
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();

@@ -58,7 +58,7 @@ public class ApacheKafkaCluster extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/apache_kafka_cluster.json";
         if (productName == null) {
-            productName = "Apache Kafka Cluster RHEL";
+            productName = "Apache Kafka Cluster Astra";
         }
         initProduct();
         if (flavor == null)

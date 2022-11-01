@@ -44,7 +44,7 @@ public class WildFly extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/wildfly.json";
         if (productName == null) {
-            productName = "WildFly RHEL";
+            productName = "WildFly Astra";
         }
         initProduct();
         if (flavor == null)

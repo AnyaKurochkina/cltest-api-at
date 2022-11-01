@@ -8,6 +8,7 @@ import models.orderService.products.Windows;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -92,6 +93,7 @@ public class WindowsTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("377720")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -109,12 +111,12 @@ public class WindowsTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Windows product) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
-            windows.stopHard();
-            try {
+//            windows.stopHard();
+//            try {
                 windows.resize(windows.getMaxFlavor());
-            } finally {
-                windows.start();
-            }
+//            } finally {
+//                windows.start();
+//            }
         }
     }
 
@@ -128,6 +130,7 @@ public class WindowsTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLinks({@TmsLink("377718"),@TmsLink("377719")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

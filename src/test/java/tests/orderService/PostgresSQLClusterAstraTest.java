@@ -9,6 +9,7 @@ import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -138,6 +139,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("810038")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -161,6 +163,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLinks({@TmsLink("810036"),@TmsLink("810037")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

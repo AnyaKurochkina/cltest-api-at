@@ -9,6 +9,7 @@ import models.orderService.products.RabbitMQClusterAstra;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -65,6 +66,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("377644")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -122,6 +124,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLinks({@TmsLink("377642"),@TmsLink("377643")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

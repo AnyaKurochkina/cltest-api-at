@@ -8,6 +8,7 @@ import models.orderService.products.ScyllaDb;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -152,6 +153,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("622621")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -163,6 +165,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLinks({@TmsLink("622625"),@TmsLink("622624")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
