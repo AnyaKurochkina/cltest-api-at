@@ -6,6 +6,7 @@ import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.productCatalog.Meta;
 import models.productCatalog.action.Action;
+import models.productCatalog.action.EventTypeProvider;
 import models.productCatalog.action.GetActionList;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ProductCatalogSteps.delNoDigOrLet;
 
 public class ActionSteps extends Steps {
@@ -245,8 +247,8 @@ public class ActionSteps extends Steps {
     }
 
     @Step("Выгрузка действия из Gitlab")
-    public static Response loadActionFromGit(JSONObject body) {
-        return new Http(ProductCatalogURL)
+    public static void loadActionFromGit(JSONObject body) {
+        new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(actionUrl + "load_from_bitbucket/")
@@ -279,5 +281,35 @@ public class ActionSteps extends Steps {
                 .assertStatus(200)
                 .extractAs(GetActionList.class)
                 .getList();
+    }
+
+    @Step("Получение списка действий по списку type_provider")
+    public static List<Action> getActionListByTypeProvider(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .get(actionUrl)
+                .assertStatus(200)
+                .extractAs(GetActionList.class)
+                .getList();
+    }
+
+    public static void checkEventProvider(List<Action> actionList, String eventType, String eventProvider) {
+        for (Action action : actionList) {
+            List<EventTypeProvider> eventTypeProviderList = action.getEventTypeProvider();
+            assertTrue(isTypeProviderContains(eventType, eventProvider, eventTypeProviderList),
+                    String.format("%s не содержит eventType %s и %s eventProvider", action.getActionName(), eventType, eventProvider));
+        }
+    }
+
+    public static boolean isTypeProviderContains(String eventType, String eventProvider, List<EventTypeProvider> eventTypeProviderList) {
+        if (!eventTypeProviderList.isEmpty()) {
+            for (EventTypeProvider eventTypeProvider : eventTypeProviderList) {
+                if (eventTypeProvider.getEventType().equals(eventType) & eventTypeProvider.getEventProvider().equals(eventProvider)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

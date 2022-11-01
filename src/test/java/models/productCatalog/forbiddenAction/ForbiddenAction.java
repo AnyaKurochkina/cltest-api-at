@@ -10,6 +10,7 @@ import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.productCatalog.action.Action;
+import models.productCatalog.action.EventTypeProvider;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
@@ -27,14 +28,12 @@ import static steps.productCatalog.ForbiddenActionSteps.*;
 @ToString(exclude = {"jsonTemplate", "productName"})
 public class ForbiddenAction extends Entity {
 
-    @JsonProperty("event_provider")
-    private List<String> eventProvider;
+    @JsonProperty("event_type_provider")
+    private List<EventTypeProvider> eventTypeProvider;
     private String description;
     @JsonProperty("item_restriction")
     private Object itemRestriction;
     private String title;
-    @JsonProperty("event_type")
-    private List<String> eventType;
     @JsonProperty("environment_type_restriction")
     private List<String> environmentTypeRestriction;
     @JsonProperty("config_restriction")
@@ -74,10 +73,9 @@ public class ForbiddenAction extends Entity {
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.description", description)
-                .set("$.event_provider", eventProvider)
                 .set("$.action", actionId)
                 .set("$.item_restriction", itemRestriction)
-                .set("$.event_type", eventType)
+                .set("$.event_type_provider", eventTypeProvider)
                 .set("$.config_restriction", configRestriction)
                 .set("$.context_restriction", contextRestrictions)
                 .set("$.is_all_levels", isAllLevels)

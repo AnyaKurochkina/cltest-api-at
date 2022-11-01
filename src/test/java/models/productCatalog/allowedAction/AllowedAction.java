@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.productCatalog.action.Action;
+import models.productCatalog.action.EventTypeProvider;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 
@@ -25,14 +26,12 @@ import static steps.productCatalog.AllowedActionSteps.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class AllowedAction extends Entity {
-    @JsonProperty("event_provider")
-    private List<String> eventProvider;
     private String description;
     @JsonProperty("item_restriction")
     private Object itemRestriction;
     private String title;
-    @JsonProperty("event_type")
-    private List<String> eventType;
+    @JsonProperty("event_type_provider")
+    private List<EventTypeProvider> eventTypeProvider;
     @JsonProperty("environment_type_restriction")
     private List<String> environmentTypeRestriction;
     @JsonProperty("config_restriction")
@@ -67,10 +66,9 @@ public class AllowedAction extends Entity {
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.description", description)
-                .set("$.event_provider", eventProvider)
                 .set("$.action", actionId)
                 .set("$.item_restriction", itemRestriction)
-                .set("$.event_type", eventType)
+                .set("$.event_type_provider", eventTypeProvider)
                 .set("$.config_restriction", configRestriction)
                 .set("$.environment_type_restriction", environmentTypeRestriction)
                 .set("$.context_restrictions", contextRestriction)
@@ -81,7 +79,6 @@ public class AllowedAction extends Entity {
     protected void create() {
         deleteAllowedActionIfExist();
         AllowedAction createAllowedAction = createAllowedAction(toJson())
-                .assertStatus(201)
                 .extractAs(AllowedAction.class);
         StringUtils.copyAvailableFields(createAllowedAction, this);
         assertNotNull(actionId, "Действие с именем: " + name + ", не создался");

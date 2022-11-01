@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.productCatalog.action.EventTypeProvider;
 import models.productCatalog.allowedAction.AllowedAction;
 import models.productCatalog.allowedAction.GetAllowedActionList;
 import org.json.JSONObject;
@@ -12,6 +13,8 @@ import steps.Steps;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.ActionSteps.isTypeProviderContains;
 
 public class AllowedActionSteps extends Steps {
     private static final String allowedUrl = "/api/v1/allowed_actions/";
@@ -67,6 +70,7 @@ public class AllowedActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(allowedUrl)
+                .assertStatus(201)
                 .compareWithJsonSchema("jsonSchema/allowedAction/postAllowedAction.json");
     }
 
@@ -126,4 +130,23 @@ public class AllowedActionSteps extends Steps {
                 .post(allowedUrl + "load_from_bitbucket/")
                 .assertStatus(200);
     }
+
+    @Step("Получение списка действий по списку type_provider")
+    public static List<AllowedAction> getAllowedActionListByTypeProvider(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .get(allowedUrl)
+                .assertStatus(200)
+                .extractAs(GetAllowedActionList.class)
+                .getList();
+    }
+    public static void checkEventProviderAllowedList(List<AllowedAction> actionList, String eventType, String eventProvider) {
+        for (AllowedAction action : actionList) {
+            List<EventTypeProvider> eventTypeProviderList = action.getEventTypeProvider();
+            assertTrue(isTypeProviderContains(eventType, eventProvider, eventTypeProviderList),
+                    String.format("%s не содержит eventType %s и %s eventProvider", action.getName(), eventType, eventProvider));
+        }
+    }
+
 }
