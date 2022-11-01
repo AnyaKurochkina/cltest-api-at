@@ -43,7 +43,7 @@ public class Nginx extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/nginx.json";
         if(productName == null)
-            productName = "Nginx";
+            productName = "Nginx Astra";
         initProduct();
         if(flavor == null)
             flavor = getMinFlavor();

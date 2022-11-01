@@ -8,6 +8,7 @@ import models.orderService.products.Astra;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -48,6 +49,7 @@ public class AstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("391702")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -69,6 +71,7 @@ public class AstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLinks({@TmsLink("391700"), @TmsLink("391701")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
