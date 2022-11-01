@@ -1,9 +1,11 @@
 package ui.cloud.tests.orders.astraLinux;
 
 import com.codeborne.selenide.Condition;
+import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
 import models.orderService.products.Astra;
 import models.portalBack.AccessGroup;
@@ -18,6 +20,8 @@ import ui.uiExtesions.ConfigExtension;
 import ui.uiExtesions.InterceptTestExtension;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
 
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(InterceptTestExtension.class)
@@ -28,12 +32,11 @@ import java.time.Duration;
 public class UiAstraLinuxTest extends Tests {
 
     Astra product;
-    String nameGroup = "cloud-zorg-winxtkhxxdw";
 
     public UiAstraLinuxTest() {
         if (Configure.ENV.equals("prod"))
-             product = Astra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = Astra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/82ac226f-c72d-43b4-a8fa-8998eb6d77fe/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+            product = Astra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
+            //product = Astra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/7f5a1f6b-5478-4a2c-b0d1-33f3460d8429/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = Astra.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();
@@ -133,11 +136,14 @@ public class UiAstraLinuxTest extends Tests {
 
     @Test
     @Order(8)
-    @TmsLink("1090926")
+    @TmsLinks({@TmsLink("1090926"), @TmsLink("1090863")})
     @DisplayName("UI AstraLinux. Добавить группу доступа")
     void addGroup() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS,() -> astraLinuxPage.addGroup(nameGroup));
+        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.deleteGroup("user"));
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.addGroup("user", Collections.singletonList(accessGroup.getPrefixName())));
+
     }
 
     @Test
@@ -146,17 +152,12 @@ public class UiAstraLinuxTest extends Tests {
     @DisplayName("UI AstraLinux. Изменить состав группы")
     void changeGroup() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS,() -> astraLinuxPage.changeGroup(nameGroup));
+        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
+        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.updateGroup("user",
+                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
 
-    @Test
-    @Order(10)
-    @TmsLink("1090863")
-    @DisplayName("UI AstraLinux. Удалить группу доступа")
-    void deleteGroup() {
-        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS,astraLinuxPage::deleteGroup);
-    }
 
     @Test
     @Order(11)

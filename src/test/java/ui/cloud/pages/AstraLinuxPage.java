@@ -2,26 +2,29 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import models.orderService.products.Astra;
 import models.portalBack.AccessGroup;
 import models.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.NotFoundException;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.DropDown;
 import ui.elements.Table;
 
+import java.util.List;
+
 import static core.helper.StringUtils.$x;
+import static tests.Tests.activeCnd;
+import static tests.Tests.clickableCnd;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class AstraLinuxPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
-    private static final String BLOCK_ROLE = "Роли";
     private static final String HEADER_NAME_DB = "Имя базы данных";
-    private static final String HEADER_USERS_ROLE = "user";
     private static final String POWER = "Питание";
-    private static final String HEADER_GROUP = "Группы";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
     SelenideElement cpu = $x("(//h5)[1]");
@@ -62,6 +65,7 @@ public class AstraLinuxPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
+
     public void delete() {
         runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
         {
@@ -77,34 +81,37 @@ public class AstraLinuxPage extends IProductPage {
         new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-  public void stopHard() {
+    public void stopHard() {
         checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
         checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
-
-    public void addGroup(String nameGroup) {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-            runActionWithParameters(BLOCK_ROLE, "Добавить группу доступа", "Подтвердить", () -> {
-                Dialog dlg = new Dialog("Добавить группу доступа");
-                dlg.setDropDownValue("Группы", nameGroup);
-            });
-    }
-
-    public void changeGroup(String nameGroup) {
-        runActionWithParameters(HEADER_USERS_ROLE, "Изменить состав группы", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Изменить состав группы");
-            dlg.setDropDownValue("Группы", nameGroup);
+    @Step("Добавить новые группы {group} с ролью {role}")
+    public void addGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
+            DropDown.byLabel("Роль").selectByValue(role);
+            groups.forEach(group -> DropDown.byLabel("Группы").select(group));
         });
-        btnGeneralInfo.scrollIntoView(scrollCenter).click();
-        Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(HEADER_GROUP, nameGroup), "Ошибка изменения состава группы");
+        groups.forEach(group -> Assertions.assertTrue(new AstraLinuxPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
-    public void deleteGroup() {
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(HEADER_USERS_ROLE, "Удалить группу доступа");
-        btnGeneralInfo.scrollIntoView(scrollCenter).click();
-        Assertions.assertFalse(getBtnAction(HEADER_USERS_ROLE).exists(), "Ошиюка удаления группы");
+
+    @Step("Изменить состав групп у роли {role} на {groups}")
+    public void updateGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithParameters(new AstraLinuxPage.RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
+            DropDown groupsElement = DropDown.byLabel("Группы").clear();
+            groups.forEach(groupsElement::select);
+        });
+        groups.forEach(group -> Assertions.assertTrue(new AstraLinuxPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+    }
+
+    @Step("Удалить группу доступа с ролью {role}")
+    public void deleteGroup(String role) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithoutParameters(new AstraLinuxPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
+        Assertions.assertThrows(NotFoundException.class, () -> new AstraLinuxPage.RoleTable().getRoleRow(role));
     }
 
     public void issueClientCertificate(String nameCertificate) {
@@ -120,9 +127,10 @@ public class AstraLinuxPage extends IProductPage {
         new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
             runActionWithoutParameters(name, "Удалить БД");
-        Assertions.assertFalse(new Table("").isColumnValueEquals("", name), "БД существует");
+            Assertions.assertFalse(new Table("").isColumnValueEquals("", name), "БД существует");
         }
     }
+
     public void enlargeDisk(String name, String size, SelenideElement node) {
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
@@ -149,5 +157,29 @@ public class AstraLinuxPage extends IProductPage {
             return getPowerStatus(POWER);
         }
 
+    }
+
+    //Таблица ролей
+    public class RoleTable extends Table {
+        @Override
+        protected void open() {
+            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        }
+
+        public RoleTable() {
+            super("Группы");
+        }
+
+        private SelenideElement getRoleMenuElement(String name) {
+            return getRoleRow(name).$("button");
+        }
+
+        private SelenideElement getRoleRow(String name) {
+            return getRowElementByColumnValue("", name);
+        }
+
+        private String getGroupsRole(String name) {
+            return getRowByColumnValue("", name).getValueByColumn("Группы");
+        }
     }
 }
