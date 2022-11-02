@@ -22,6 +22,7 @@ import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -44,13 +45,13 @@ public class LoadBalancer extends IProduct {
         jsonTemplate = "/orders/load_balancer.json";
         productName = "Load Balancer";
         initProduct();
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(password == null)
+        if (password == null)
             password = "W1clvyliiSCyE0gs";
-        if(dataCentre == null)
+        if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
     }
@@ -72,7 +73,7 @@ public class LoadBalancer extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", segment)
                 .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.platform",  getPlatform())
+                .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.password", password)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
@@ -84,28 +85,39 @@ public class LoadBalancer extends IProduct {
                 .build();
     }
 
-    public void sync(){
+    public void sync() {
         OrderServiceSteps.executeAction("balancer_release_sync_info", this, null, this.getProjectId());
     }
 
-    public void addBackend(){
+    public void addBackend() {
         OrderServiceSteps.executeAction("balancer_release_create_backend", this,
                 JsonHelper.getJsonTemplate("/orders/load_balancer_add_backend.json").build(), this.getProjectId());
     }
 
-    public void checkStats(){
+    public void checkStats() {
+        Assertions.assertEquals(2, stateStream().filter(e -> e.contains("bakend_tcp/")).count());
+    }
+
+    public void checkStats2() {
+        Assertions.assertEquals(2, stateStream().filter(e -> e.contains("bakend_tcp/")).count());
+        Assertions.assertEquals(2, stateStream().filter(e -> e.contains("bakend_tcp_check/")).count());
+    }
+
+    public Stream<String> stateStream() {
         String url = (String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('console_urls')}.data.config.console_urls[0]");
         RequestSpecification specification = RestAssured.given()
                 .config(RestAssured.config().sslConfig(Http.sslConfig));
-        List<String> list = RestAssured.given().spec(specification).auth().preemptive().basic("stats", "W1clvyliiSCyE0gs")
+        return RestAssured.given().spec(specification).auth().preemptive().basic("stats", password)
                 .post(url)
                 .then()
                 .statusCode(200)
-                .extract().response().htmlPath().getList("**.findAll{it.@class == 'active_up'}.td.a.@name");
-        Assertions.assertEquals(2, list.stream().filter(Objects::nonNull).filter(e -> e.contains("bakend_tcp/")).count());
+                .extract().response().htmlPath()
+                .getList("**.findAll{it.@class == 'active_up'}.td.a.@name", String.class)
+                .stream()
+                .filter(Objects::nonNull);
     }
 
-    public void addFrontend(){
+    public void addFrontend() {
         OrderServiceSteps.executeAction("balancer_release_create_frontend", this,
                 JsonHelper.getJsonTemplate("/orders/load_balancer_add_frontend.json").build(), this.getProjectId());
     }
@@ -126,7 +138,7 @@ public class LoadBalancer extends IProduct {
         restart("reset_vm");
     }
 
-    public void expandMountPoint(){
+    public void expandMountPoint() {
         expandMountPoint("expand_mount_point_new", "/app", 10);
     }
 
