@@ -11,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.orderService.interfaces.IProduct;
 import org.json.JSONObject;
-import ui.t1.steps.AuthSteps;
 import ui.t1.steps.MainSteps;
 import ui.t1.steps.OrgStructureSteps;
 import ui.t1.steps.OrganizationSteps;

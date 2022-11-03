@@ -1,8 +1,12 @@
 package ui.t1.tests;
 
+import core.enums.Role;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import ru.testit.annotations.Title;
+import ui.cloud.pages.LoginPage;
 import ui.t1.steps.*;
 import ui.uiExtesions.ConfigExtension;
 
@@ -14,13 +18,20 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 @ExtendWith(ConfigExtension.class)
 public class DataCenterTests {
 
+    @BeforeEach
+    @Title("Авторизация на портале")
+    void beforeEach() {
+//        new LoginPage(project.getId())
+//                .signIn(Role.DAY2_SERVICE_MANAGER);
+    }
+
     @DisplayName("Создание и удаление Дата центра")
     @Test
     public void createAndDeleteDataCenter() {
         //Открываем сайт
         open("/");
-        AuthSteps authSteps = new AuthSteps();
-        authSteps.signIn();
+//        AuthSteps authSteps = new AuthSteps();
+//        authSteps.signIn();
         //Выбираем организацию
         MainSteps mainSteps = new MainSteps();
         mainSteps.goToOrgStructure();
@@ -47,8 +58,8 @@ public class DataCenterTests {
     public void reserveIpAddress() {
         //Открываем сайт
         open("/");
-        AuthSteps authSteps = new AuthSteps();
-        authSteps.signIn();
+//        AuthSteps authSteps = new AuthSteps();
+//        authSteps.signIn();
         //Выбираем организацию
         MainSteps mainSteps = new MainSteps();
         mainSteps.goToOrgStructure();
