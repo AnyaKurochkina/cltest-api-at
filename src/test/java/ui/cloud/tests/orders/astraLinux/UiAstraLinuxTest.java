@@ -34,7 +34,7 @@ public class UiAstraLinuxTest extends Tests {
     Astra product;
 
     public UiAstraLinuxTest() {
-        if (Configure.ENV.equals("prod"))
+        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
             product = Astra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
             //product = Astra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/7f5a1f6b-5478-4a2c-b0d1-33f3460d8429/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else

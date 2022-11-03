@@ -39,7 +39,7 @@ public class UiClickHouseClusterTest extends Tests {
     String nameGroup ="cloud-zorg-winxtkhxxdw";
     SelenideElement node = $x("(//td[.='clickhouse'])[1]");
     public UiClickHouseClusterTest() {
-        if (Configure.ENV.equals("prod"))
+        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
            product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
           //  product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/cffa192c-aab5-4826-9c11-a8a87b3d6684/user?context=proj-pkvckn08w9&type=project&org=vtb").build();
         else

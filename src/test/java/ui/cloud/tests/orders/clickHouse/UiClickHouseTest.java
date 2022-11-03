@@ -33,7 +33,7 @@ public class UiClickHouseTest extends Tests {
     ClickHouse product;
 
     public UiClickHouseTest() {
-        if (Configure.ENV.equals("prod"))
+        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
             product = ClickHouse.builder().productName("ClickHouse").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
             //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/7080926c-4670-4857-ba74-464d2e50caf1/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
@@ -63,7 +63,6 @@ public class UiClickHouseTest extends Tests {
             orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-           // orderPage.getNameDB().setValue("at_db");
             orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
