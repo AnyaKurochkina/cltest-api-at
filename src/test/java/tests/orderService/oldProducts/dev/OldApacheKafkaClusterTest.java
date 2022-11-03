@@ -171,6 +171,7 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.deleteAclTransaction("*");
     }
 
+    @Disabled
     @Order(10)
     @TmsLink("841720")
     @DisplayName("Включить Apache Kafka Cluster OLD")
@@ -239,6 +240,7 @@ public class OldApacheKafkaClusterTest extends Tests {
 //        kafka.upgradeVersion();
 //    }
 
+    @Disabled
     @Order(16)
     @TmsLink("841721")
     @DisplayName("Выключить Apache Kafka Cluster OLD")

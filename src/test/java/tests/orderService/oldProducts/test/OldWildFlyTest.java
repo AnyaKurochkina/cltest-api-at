@@ -52,9 +52,9 @@ public class OldWildFlyTest extends Tests {
     @DisplayName("Изменить конфигурацию WildFly Astra OLD")
     @Test
     void resize() {
-        if (wildFly.productStatusIs(STARTED)) {
-            wildFly.stopHard();
-        }
+//        if (wildFly.productStatusIs(STARTED)) {
+//            wildFly.stopHard();
+//        }
         wildFly.resize(wildFly.getMaxFlavor());
         wildFly.resize(wildFly.getMinFlavor());
     }
@@ -70,6 +70,7 @@ public class OldWildFlyTest extends Tests {
         wildFly.refreshVmConfig();
     }
 
+    @Disabled
     @Order(5)
     @TmsLink("841693")
     @DisplayName("Включить WildFly Astra OLD")
@@ -92,6 +93,7 @@ public class OldWildFlyTest extends Tests {
         wildFly.updateCerts();
     }
 
+    @Disabled
     @Order(7)
     @TmsLink("841697")
     @DisplayName("Выключить принудительно WildFly Astra OLD")
@@ -103,6 +105,7 @@ public class OldWildFlyTest extends Tests {
         wildFly.stopHard();
     }
 
+    @Disabled
     @Order(8)
     @TmsLink("841696")
     @DisplayName("Выключить WildFly Astra OLD")

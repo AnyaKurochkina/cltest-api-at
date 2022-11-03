@@ -93,6 +93,18 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
+    //    @TmsLinks({@TmsLink("391700"), @TmsLink("391701")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "TCP публикация с проверкой доступности по http ссылке {0}")
+    void tcp2(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            balancer.addBackend();
+            balancer.addFrontend();
+            balancer.checkStats2();
+        }
+    }
+
 //    @TmsLink("391698")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
