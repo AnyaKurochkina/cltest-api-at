@@ -8,7 +8,7 @@ import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
-import ui.uiModels.Graph;
+import ui.models.Graph;
 
 import static com.codeborne.selenide.Selenide.$x;
 

@@ -5,7 +5,7 @@ import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
-import models.accountManager.Account;
+import models.cloud.accountManager.Account;
 import steps.Steps;
 
 import java.util.Objects;

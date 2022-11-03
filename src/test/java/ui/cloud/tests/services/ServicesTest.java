@@ -5,17 +5,17 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
-import models.authorizer.Project;
-import models.authorizer.ProjectEnvironmentPrefix;
+import models.cloud.authorizer.Project;
+import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import tests.Tests;
+import api.Tests;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.services.SmokeLinearTestPage;
 import ui.cloud.pages.services.SmokeTestPage;
-import ui.uiExtesions.ConfigExtension;
+import ui.extesions.ConfigExtension;
 
 @ExtendWith(ConfigExtension.class)
 @Epic("Сервисы")

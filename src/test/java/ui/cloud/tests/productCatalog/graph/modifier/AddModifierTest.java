@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphModifiersPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
-import ui.uiModels.GraphModifier;
+import ui.models.GraphModifier;
 
 @Epic("Графы")
 @Feature("Добавление модификатора")

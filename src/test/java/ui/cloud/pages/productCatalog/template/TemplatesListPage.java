@@ -8,7 +8,7 @@ import ui.cloud.pages.productCatalog.BaseList;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
-import ui.uiModels.Template;
+import ui.models.Template;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;

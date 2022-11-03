@@ -8,12 +8,12 @@ import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import models.authorizer.Project;
-import models.orderService.interfaces.IProduct;
-import models.references.Directories;
-import models.references.PageFilter;
-import models.references.Pages;
-import models.subModels.Flavor;
+import models.cloud.authorizer.Project;
+import models.cloud.orderService.interfaces.IProduct;
+import models.cloud.references.Directories;
+import models.cloud.references.PageFilter;
+import models.cloud.references.Pages;
+import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.Steps;
 

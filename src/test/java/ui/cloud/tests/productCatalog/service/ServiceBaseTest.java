@@ -2,8 +2,8 @@ package ui.cloud.tests.productCatalog.service;
 
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Epic;
-import models.productCatalog.OrgDirection;
-import models.productCatalog.Service;
+import models.cloud.productCatalog.OrgDirection;
+import models.cloud.productCatalog.Service;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ProductCatalogSteps;

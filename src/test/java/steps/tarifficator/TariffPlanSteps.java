@@ -8,8 +8,8 @@ import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.tarifficator.TariffClass;
-import models.tarifficator.TariffPlan;
+import models.cloud.tarifficator.TariffClass;
+import models.cloud.tarifficator.TariffPlan;
 import steps.Steps;
 
 import java.util.ArrayList;

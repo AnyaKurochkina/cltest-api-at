@@ -10,7 +10,7 @@ import steps.Steps;
 
 import java.util.List;
 
-import static core.enums.Role.T1_ADMIN;
+import static core.enums.Role.CLOUD_ADMIN;
 import static core.helper.Configure.ImageService;
 
 public class ImageServiceSteps extends Steps {
@@ -18,7 +18,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Полуение списка image groups")
     public static List<ImageGroups> getImageGroupsList(boolean isNeedAll) {
         return new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .get("/image_groups?need_all={}", isNeedAll)
                 .assertStatus(200)
                 .jsonPath()
@@ -28,7 +28,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Полуение списка marketing")
     public static List<Marketing> getMarketingList() {
         return new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .get("/marketing")
                 .assertStatus(200)
                 .jsonPath()
@@ -38,7 +38,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Полуение списка image")
     public static List<Image> getImageList() {
         return new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .get("/images")
                 .assertStatus(200)
                 .jsonPath()
@@ -48,7 +48,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Полуение списка image groups по region {region}")
     public static List<ImageGroups> getImageGroupsListByRegion(String region) {
         return new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .get("/image_groups?availability_zone={}", region)
                 .assertStatus(200)
                 .jsonPath()
@@ -58,7 +58,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Получение image groups по id {id}")
     public static ImageGroups getImageGroup(String id) {
         return new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .get("/image_groups/{}", id)
                 .assertStatus(200)
                 .extractAs(ImageGroups.class);
@@ -67,7 +67,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Получение image по id {id}")
     public static Image getImageById(String id) {
         return new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .get("/images/{}", id)
                 .assertStatus(200)
                 .extractAs(Image.class);
@@ -76,7 +76,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Удаление image groups по id {id}")
     public static void deleteImageGroupById(String id) {
         new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .delete("/image_groups/{}", id)
                 .assertStatus(200);
     }
@@ -84,7 +84,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Частичное обновление image groups по id {id}")
     public static void partialUpdateImageGroupById(String id, JSONObject body) {
         new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .body(body)
                 .patch("/image_groups/{}", id)
                 .assertStatus(200);
@@ -93,7 +93,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Частичное обновление marketing по id {id}")
     public static void partialUpdateMarketingById(String id, JSONObject body) {
         new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .body(body)
                 .patch("/marketing/{}", id)
                 .assertStatus(200);
@@ -102,7 +102,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Создание image groups")
     public static ImageGroups createImageGroup(JSONObject object) {
         return new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .body(object)
                 .post("/image_groups")
                 .assertStatus(200)
@@ -112,7 +112,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Создание marketing")
     public static Marketing createMarketing(JSONObject object) {
         return new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .body(object)
                 .post("/marketing")
                 .assertStatus(200)

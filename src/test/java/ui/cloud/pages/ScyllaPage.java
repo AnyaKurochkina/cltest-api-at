@@ -2,17 +2,13 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import models.orderService.products.ScyllaDb;
-import models.subModels.Flavor;
+import models.cloud.orderService.products.ScyllaDb;
 import org.junit.jupiter.api.Assertions;
 import ui.elements.Alert;
 import ui.elements.Dialog;
-import ui.elements.DropDown;
 import ui.elements.Table;
 
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class ScyllaPage extends IProductPage {

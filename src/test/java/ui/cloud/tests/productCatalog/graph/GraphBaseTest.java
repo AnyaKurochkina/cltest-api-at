@@ -2,15 +2,15 @@ package ui.cloud.tests.productCatalog.graph;
 
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
-import models.productCatalog.Template;
-import models.productCatalog.graph.Graph;
+import models.cloud.productCatalog.Template;
+import models.cloud.productCatalog.graph.Graph;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.tests.productCatalog.BaseTest;
-import ui.uiModels.Node;
+import ui.models.Node;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

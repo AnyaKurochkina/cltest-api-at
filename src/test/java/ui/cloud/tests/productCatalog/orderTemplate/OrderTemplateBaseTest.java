@@ -3,7 +3,7 @@ package ui.cloud.tests.productCatalog.orderTemplate;
 import httpModels.productCatalog.itemVisualItem.createVisualTemplate.*;
 import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
 import io.qameta.allure.Epic;
-import models.productCatalog.ItemVisualTemplate;
+import models.cloud.productCatalog.ItemVisualTemplate;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ProductCatalogSteps;

@@ -6,21 +6,14 @@ import io.qameta.allure.TmsLink;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.products.Windows;
+import models.cloud.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import tests.Tests;
+import api.Tests;
 import ui.cloud.pages.LoginPage;
-import ui.elements.Graph;
-import ui.elements.Table;
-import ui.uiExtesions.ConfigExtension;
+import ui.extesions.ConfigExtension;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.codeborne.selenide.Selenide.executeJavaScript;
 
 @Log4j2
 //@ExtendWith(CustomBeforeAllAndAfterAll.class)

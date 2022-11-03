@@ -1,14 +1,18 @@
 package ui.t1.tests;
 
 import core.enums.Role;
+import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.LoginPage;
-import ui.t1.steps.*;
-import ui.uiExtesions.ConfigExtension;
+import ui.extesions.ConfigExtension;
+import ui.t1.steps.DataCenterSteps;
+import ui.t1.steps.MainSteps;
+import ui.t1.steps.OrgStructureSteps;
+import ui.t1.steps.OrganizationSteps;
 
 import java.util.Locale;
 
@@ -17,12 +21,13 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 @ExtendWith(ConfigExtension.class)
 public class DataCenterTests {
+    Project project = Project.builder().isForOrders(true).build().createObject();
 
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-//        new LoginPage(project.getId())
-//                .signIn(Role.DAY2_SERVICE_MANAGER);
+        new LoginPage(project.getId())
+                .signIn(Role.CLOUD_ADMIN);
     }
 
     @DisplayName("Создание и удаление Дата центра")

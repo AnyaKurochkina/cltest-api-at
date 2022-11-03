@@ -15,8 +15,8 @@ import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.pages.services.ServicesListPage;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 
 @Getter
 public class IndexPage {

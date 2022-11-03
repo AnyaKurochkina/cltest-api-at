@@ -3,8 +3,8 @@ package steps.productCatalog;
 import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
-import models.productCatalog.forbiddenAction.ForbiddenAction;
-import models.productCatalog.forbiddenAction.GetForbiddenActionList;
+import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
+import models.cloud.productCatalog.forbiddenAction.GetForbiddenActionList;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 

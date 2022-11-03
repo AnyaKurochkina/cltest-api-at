@@ -7,7 +7,7 @@ import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
-import ui.uiModels.Template;
+import ui.models.Template;
 
 @Epic("Шаблоны узлов")
 @Feature("Создание шаблона")

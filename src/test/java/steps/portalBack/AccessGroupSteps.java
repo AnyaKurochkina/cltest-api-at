@@ -6,7 +6,7 @@ import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.portalBack.AccessGroup;
+import models.cloud.portalBack.AccessGroup;
 import steps.Steps;
 
 import java.net.URLEncoder;

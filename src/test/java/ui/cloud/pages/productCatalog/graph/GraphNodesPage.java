@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
-import ui.uiModels.Node;
-import ui.uiModels.SubgraphNode;
-import ui.uiModels.TemplateNode;
+import ui.models.Node;
+import ui.models.SubgraphNode;
+import ui.models.TemplateNode;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.actions;

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ui.t1.steps.MainSteps;
 import ui.t1.steps.OrgStructureSteps;
 import ui.t1.steps.OrganizationSteps;
-import ui.uiExtesions.ConfigExtension;
+import ui.extesions.ConfigExtension;
 
 import static com.codeborne.selenide.Selenide.open;
 
@@ -19,8 +19,8 @@ public class VmWareOrganizationsTests {
         //Открываем сайт
         open("/");
         //Логинимся
-        AuthSteps authSteps = new AuthSteps();
-        authSteps.signIn();
+//        AuthSteps authSteps = new AuthSteps();
+//        authSteps.signIn();
         //Выбираем организацию
         MainSteps mainSteps = new MainSteps();
         mainSteps.goToOrgStructure();

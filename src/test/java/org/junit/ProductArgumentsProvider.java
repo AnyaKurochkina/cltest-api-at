@@ -9,7 +9,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.ObjectPoolService;
-import models.orderService.interfaces.IProduct;
+import models.cloud.orderService.interfaces.IProduct;
 import org.json.JSONObject;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
@@ -21,7 +21,6 @@ import steps.Steps;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -132,7 +131,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         final ObjectMapper objectMapper = new ObjectMapper();
         for (Map.Entry<String, List<Map>> e : products.entrySet()) {
             try {
-                Class<?> c = Class.forName("models.orderService.products." + e.getKey());
+                Class<?> c = Class.forName("models.cloud.orderService.products." + e.getKey());
                 List listProduct = findListInMapByKey("options", e.getValue());
                 if (listProduct == null)
                     continue;

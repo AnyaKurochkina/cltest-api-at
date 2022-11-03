@@ -4,9 +4,9 @@ import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
-import models.authorizer.Folder;
-import models.authorizer.Project;
-import models.authorizer.ProjectEnvironmentPrefix;
+import models.cloud.authorizer.Folder;
+import models.cloud.authorizer.Project;
+import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import steps.Steps;
 
 import java.util.List;

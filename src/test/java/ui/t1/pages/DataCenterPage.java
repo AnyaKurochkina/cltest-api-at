@@ -3,11 +3,10 @@ package ui.t1.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import ui.uiInterfaces.Loadable;
 
 import static com.codeborne.selenide.Selenide.*;
 
-public class DataCenterPage implements Loadable {
+public class DataCenterPage {
 
     private final SelenideElement titleOfDataCenterPage = $x("//div[@type='large']");
     private final SelenideElement actionsBtn = $x("//button[@id='actions-menu-button']//div[text()='Действия']");
@@ -29,7 +28,6 @@ public class DataCenterPage implements Loadable {
         checkPage(nameOfDataCentre);
     }
 
-    @Override
     public void checkPage() {
         titleOfDataCenterPage.shouldBe(Condition.visible);
     }

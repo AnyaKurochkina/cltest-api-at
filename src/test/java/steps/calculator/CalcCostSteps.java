@@ -4,7 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.interfaces.IProduct;
+import models.cloud.orderService.interfaces.IProduct;
 import steps.Steps;
 
 import static core.helper.Configure.CalculatorURL;

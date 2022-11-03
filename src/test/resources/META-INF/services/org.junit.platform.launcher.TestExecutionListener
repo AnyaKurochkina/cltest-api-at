@@ -1,2 +1,2 @@
 org.junit.TestsExecutionListener
-ui.uiExtesions.InterceptTestExtension
+ui.extesions.InterceptTestExtension

@@ -1,16 +1,15 @@
 package ui.cloud.pages;
 
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Data;
-import models.subModels.Flavor;
+import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import ui.elements.Input;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 
 @Data
 public class Product {

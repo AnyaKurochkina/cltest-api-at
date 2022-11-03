@@ -4,12 +4,11 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import ui.uiInterfaces.Loadable;
 
 import static com.codeborne.selenide.Selenide.$;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
-public class VmWareDataCentreCreationPage implements Loadable {
+public class VmWareDataCentreCreationPage {
 
     SelenideElement nameInput = $(By.xpath("//input[@id='root_name']"));
     SelenideElement pageTitle = $(By.xpath("//*[text()='Создание виртуального дата-центра VMware']"));
@@ -24,7 +23,6 @@ public class VmWareDataCentreCreationPage implements Loadable {
         checkPage();
     }
 
-    @Override
     public void checkPage() {
         pageTitle.shouldBe(Condition.visible);
     }

@@ -1,2 +1,8 @@
 [
+  {
+    "objectClassName": "models.cloud.authorizer.Project",
+    "id": "proj-l5c48al6qz",
+    "projectName": "AT",
+    "isForOrders": true
+  }
 ]
