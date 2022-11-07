@@ -5,6 +5,7 @@ import core.helper.http.Http;
 import core.helper.http.Response;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
+import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Step;
 import org.json.JSONObject;
@@ -34,5 +35,19 @@ public class ServiceSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(serviceUrl);
+    }
+
+    @Step("Получение сервиса по Id")
+    public static GetServiceResponse getServiceById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .get(serviceUrl + objectId + "/")
+                .extractAs(GetServiceResponse.class);
+    }
+    @Step("Получение сервиса по Id под ролью Viewer")
+    public static Response getServiceViewerById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+                .get(serviceUrl + objectId + "/");
     }
 }

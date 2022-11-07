@@ -8,9 +8,7 @@ import httpModels.productCatalog.service.createService.response.DataSource;
 import httpModels.productCatalog.service.createService.response.ExtraData;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Step;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.productCatalog.graph.Graph;
@@ -25,6 +23,8 @@ import static core.helper.Configure.ProductCatalogURL;
 @Log4j2
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Setter
 public class Service extends Entity {
 
@@ -103,6 +103,8 @@ public class Service extends Entity {
                 .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .setIfNullRemove("$.start_btn_label", startBtnLabel)
                 .set("$.description", description)
+                .set("$.restricted_groups", restrictedGroups)
+                .set("$.allowed_groups", allowedGroups)
                 .build();
     }
 

@@ -49,4 +49,16 @@ public class ForbiddenActionTest extends Tests {
         deleteForbiddenActionByName(forbiddenActionName);
         assertFalse(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие существует");
     }
+
+    @DisplayName("Создание запрещенного действия c запретом самому себе")
+    @TmsLink("1277044")
+    @Test
+    public void createForbiddenActionWithParentToSelf() {
+        ForbiddenAction.builder()
+                .name("create_forbidden_action_with_parent_to_self_test_api")
+                .title("create_forbidden_action_with_parent_to_self_test_api")
+                .direction("parent_to_self")
+                .build()
+                .negativeCreateRequest(500);
+    }
 }

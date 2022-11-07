@@ -111,9 +111,16 @@ public class ActionSteps extends Steps {
     @Step("Получение действия по Id")
     public static Action getActionById(String objectId) {
         return new Http(ProductCatalogURL)
-                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(actionUrl + objectId + "/")
                 .extractAs(Action.class);
+    }
+
+    @Step("Получение действия по Id под ролью Viewer")
+    public static Response getActionViewerById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+                .get(actionUrl + objectId + "/");
     }
 
     @Step("Импорт действия продуктового каталога")

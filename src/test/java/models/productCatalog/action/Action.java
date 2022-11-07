@@ -109,6 +109,8 @@ public class Action extends Entity {
     private Object contextRestrictions;
     @JsonProperty("is_safe")
     private Boolean isSafe;
+    @JsonProperty("version_fields")
+    private List<String> versionFields;
 
     @Override
     public Entity init() {
@@ -135,6 +137,8 @@ public class Action extends Entity {
                 .set("$.update_dt", updateDt)
                 .set("$.priority", priority)
                 .set("$.extra_data", extraData)
+                .set("$.restricted_groups", restrictedGroups)
+                .set("$.allowed_groups", allowedGroups)
                 .set("$.location_restriction", locationRestriction)
                 .set("$.context_restrictions", contextRestrictions)
                 .set("$.config_restriction", configRestriction)

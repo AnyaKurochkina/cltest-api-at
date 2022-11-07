@@ -57,6 +57,13 @@ public class ProductSteps extends Steps {
                 .extractAs(Product.class);
     }
 
+    @Step("Получение продукта по Id под ролью Viewer")
+    public static Response getProductViewerById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+                .get(productUrl + objectId + "/");
+    }
+
     @Step("Проверка существования продукта по имени")
     public static boolean isProductExists(String name) {
         return new Http(ProductCatalogURL)

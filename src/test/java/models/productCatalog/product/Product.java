@@ -127,6 +127,8 @@ public class Product extends Entity {
                 .set("$.payment", payment)
                 .setIfNullRemove("$.category_v2", categor)
                 .setIfNullRemove("$.number", number)
+                .set("$.allowed_groups", allowedGroups)
+                .set("$.restricted_groups", restrictedGroups)
                 .build();
     }
 
