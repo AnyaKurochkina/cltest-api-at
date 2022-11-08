@@ -233,6 +233,7 @@ public class UiWindowsTest extends Tests {
     @Test
     @Order(15)
     @TmsLinks({@TmsLink("14485"), @TmsLink("247978")})
+    @Disabled
     @DisplayName("UI Windows. Выключить принудительно / Включить")
     void stopHard() {
         WindowsPage winPage = new WindowsPage(product);
@@ -244,6 +245,7 @@ public class UiWindowsTest extends Tests {
     @Test
     @Order(16)
     @TmsLink("872682")
+    @Disabled
     @DisplayName("UI Windows. Выключить")
     void stopSoft() {
         WindowsPage winPage = new WindowsPage(product);
