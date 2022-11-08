@@ -1,7 +1,6 @@
 package ui.cloud.tests.productCatalog.graph;
 
 import com.codeborne.selenide.Selenide;
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +9,6 @@ import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.uiModels.Graph;
 
-@Epic("Графы")
 @Feature("Просмотр списка графов")
 public class GraphsListTest extends GraphBaseTest {
 

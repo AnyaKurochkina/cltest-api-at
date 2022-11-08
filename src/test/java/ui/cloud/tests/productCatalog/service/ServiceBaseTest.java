@@ -11,7 +11,7 @@ import ui.cloud.tests.productCatalog.BaseTest;
 
 import java.util.UUID;
 
-@Epic("Сервисы")
+@Epic("Конструктор.Сервисы")
 @DisabledIfEnv("prod")
 public class ServiceBaseTest extends BaseTest {
     final static String TITLE = "AT UI Service";

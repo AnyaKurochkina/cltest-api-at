@@ -4,8 +4,8 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
@@ -15,7 +15,7 @@ import ui.uiModels.Template;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TemplatePage {
+public class TemplatePage extends BasePage {
     private static final String saveTemplateAlertText = "Шаблон успешно изменен";
     private final SelenideElement templatesListLink = $x("//a[text() = 'Список шаблонов узлов']");
     private final SelenideElement templateVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
@@ -90,29 +90,25 @@ public class TemplatePage {
 
     @Step("Сохранение шаблона со следующей патч-версией")
     public TemplatePage saveWithPatchVersion() {
-        saveButton.shouldBe(Condition.enabled).click();
-        new SaveDialog().saveWithNextPatchVersion(saveTemplateAlertText);
+        super.saveWithPatchVersion(saveTemplateAlertText);
         return new TemplatePage();
     }
 
     @Step("Сохранение шаблона с указанием версии")
     public TemplatePage saveWithManualVersion(String newVersion) {
-        saveButton.shouldBe(Condition.enabled).click();
-        new SaveDialog().saveWithVersion(newVersion, saveTemplateAlertText);
+        super.saveWithManualVersion(newVersion, saveTemplateAlertText);
         return new TemplatePage();
     }
 
     @Step("Проверка сохранения шаблона с некорректно указанной версией '{newVersion}'")
     public TemplatePage checkSaveWithInvalidVersion(String newVersion, String currentVersion) {
-        saveButton.shouldBe(Condition.enabled).click();
-        new SaveDialog().checkSaveWithInvalidVersion(newVersion, currentVersion);
+        super.checkSaveWithInvalidVersion(newVersion, currentVersion);
         return new TemplatePage();
     }
 
     @Step("Проверка сохранения шаблона с указанной версией некорректного формата '{newVersion}'")
     public TemplatePage checkSaveWithInvalidVersionFormat(String newVersion) {
-        saveButton.shouldBe(Condition.enabled).click();
-        new SaveDialog().checkSaveWithInvalidVersionFormat(newVersion);
+        super.checkSaveWithInvalidVersionFormat(newVersion);
         return new TemplatePage();
     }
 
@@ -123,11 +119,10 @@ public class TemplatePage {
         return new TemplatePage();
     }
 
-    @Step("Проверка, что следующая предлагаемая версия для сохранения равна '{version}'")
+    @Step("Проверка, что следующая предлагаемая версия для сохранения равна '{nextVersion}' и сохранение")
     public TemplatePage checkNextVersionAndSave(String nextVersion) {
-        saveButton.shouldBe(Condition.enabled).click();
-        new SaveDialog().checkNextVersionAndSave(nextVersion, saveTemplateAlertText);
-        return new TemplatePage();
+        super.checkNextVersionAndSave(nextVersion, saveTemplateAlertText);
+        return this;
     }
 
     @Step("Назад в браузере и отмена в баннере о несохранённых изменениях")

@@ -6,13 +6,11 @@ import io.qameta.allure.Step;
 import models.productCatalog.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.template.TemplatePage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
 
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Selenide.dismiss;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrderTemplatePage {

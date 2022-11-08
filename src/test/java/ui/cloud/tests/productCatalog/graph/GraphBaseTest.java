@@ -2,6 +2,7 @@ package ui.cloud.tests.productCatalog.graph;
 
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
+import io.qameta.allure.Epic;
 import models.productCatalog.Template;
 import models.productCatalog.graph.Graph;
 import org.junit.DisabledIfEnv;
@@ -16,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Epic("Конструктор.Графы")
 @DisabledIfEnv("prod")
 public class GraphBaseTest extends BaseTest {
 

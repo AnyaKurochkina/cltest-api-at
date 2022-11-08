@@ -1,7 +1,6 @@
 package ui.cloud.tests.productCatalog.graph;
 
 import core.helper.JsonHelper;
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
@@ -12,7 +11,6 @@ import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.BaseTest;
 import ui.uiModels.Graph;
 
-@Epic("Графы")
 @Feature("Импорт графа")
 @DisabledIfEnv("prod")
 public class ImportGraphTest extends BaseTest {

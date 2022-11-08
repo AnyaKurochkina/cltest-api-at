@@ -66,6 +66,7 @@ public class ActionPage {
     @Step("Изменение версии графа")
     public ActionPage changeGraphVersion(String value) {
         graphTab.click();
+        TestUtils.wait(2000);
         graphVersionDropDown.selectByTitle(value);
         return this;
     }

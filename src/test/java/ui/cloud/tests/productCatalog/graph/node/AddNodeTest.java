@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.graph.node;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
@@ -13,7 +12,6 @@ import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.uiModels.SubgraphNode;
 import ui.uiModels.TemplateNode;
 
-@Epic("Графы")
 @Feature("Добавление узла графа")
 public class AddNodeTest extends GraphBaseTest {
 

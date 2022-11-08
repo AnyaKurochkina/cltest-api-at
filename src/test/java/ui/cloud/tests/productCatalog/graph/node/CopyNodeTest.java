@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.graph.node;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.AfterEach;
@@ -12,7 +11,6 @@ import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.uiModels.SubgraphNode;
 import ui.uiModels.TemplateNode;
 
-@Epic("Графы")
 @Feature("Копирование узла графа")
 public class CopyNodeTest extends GraphBaseTest {
 

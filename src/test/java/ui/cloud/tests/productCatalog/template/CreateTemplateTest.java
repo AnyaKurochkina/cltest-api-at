@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.template;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.uiModels.Template;
 
-@Epic("Шаблоны узлов")
 @Feature("Создание шаблона")
 public class CreateTemplateTest extends TemplateBaseTest {
     private static final String name = "at_ui_create_template_test";

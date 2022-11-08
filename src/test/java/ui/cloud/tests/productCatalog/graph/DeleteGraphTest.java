@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.graph;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.AfterEach;
@@ -10,7 +9,6 @@ import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.uiModels.Graph;
 
-@Epic("Графы")
 @Feature("Удаление графа")
 public class DeleteGraphTest extends GraphBaseTest {
 
