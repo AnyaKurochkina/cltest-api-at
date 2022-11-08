@@ -6,6 +6,8 @@ import lombok.Getter;
 import org.openqa.selenium.Keys;
 
 import static core.helper.StringUtils.$x;
+import static tests.Tests.activeCnd;
+import static tests.Tests.clickableCnd;
 
 public class TextArea implements TypifiedElement {
     @Getter
@@ -27,6 +29,12 @@ public class TextArea implements TypifiedElement {
         textArea.shouldBe(Condition.visible).shouldBe(Condition.enabled);
         clear();
         textArea.setValue(value);
+    }
+
+    public TextArea click() {
+        textArea.scrollIntoView(scrollCenter);
+        textArea.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
+        return this;
     }
 
     public void clear() {
