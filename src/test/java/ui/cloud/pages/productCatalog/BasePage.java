@@ -3,11 +3,16 @@ package ui.cloud.pages.productCatalog;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import org.openqa.selenium.WebElement;
+import ui.elements.DropDown;
 
 import static com.codeborne.selenide.Selenide.$x;
 
 public class BasePage {
 
+    protected final DropDown versionDropDown = DropDown.byLabel("Выберите версию");
+    protected final WebElement versionComparisonTab = $x("//button[span[text()='Сравнение версий']]");
+    protected final SelenideElement selectedVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
     protected final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
 
     @Step("Сохранение объекта со следующей патч-версией")

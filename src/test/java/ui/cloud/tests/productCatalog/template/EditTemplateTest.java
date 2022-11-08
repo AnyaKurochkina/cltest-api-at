@@ -6,7 +6,6 @@ import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.productCatalog.template.TemplatePage;
 import ui.uiModels.Template;
 
 import java.util.UUID;

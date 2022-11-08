@@ -6,6 +6,7 @@ import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.service.ServicePage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
@@ -159,5 +160,12 @@ public class TemplatePage extends BasePage {
         paramsTab.click();
         TestUtils.wait(500);
         return new TemplatePage();
+    }
+
+    @Step("Переход на вкладку 'Сравнение версий'")
+    public TemplatePage goToVersionComparisonTab() {
+        TestUtils.scrollToTheTop();
+        versionComparisonTab.click();
+        return this;
     }
 }

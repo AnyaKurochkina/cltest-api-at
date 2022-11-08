@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.AuditPage;
+import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -12,7 +13,7 @@ import ui.uiModels.Graph;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class GraphPage {
+public class GraphPage extends BasePage {
     protected static final String saveGraphAlertText = "Граф успешно сохранен";
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
@@ -26,7 +27,6 @@ public class GraphPage {
     private final SelenideElement nodesTab = $x("//span[text()='Узлы']//parent::button");
     private final SelenideElement modifiersTab = $x("//span[text()='Модификаторы']//parent::button");
     private final SelenideElement orderParamsTab = $x("//span[text()='Параметры заказа']//parent::button");
-    private final SelenideElement versionComparisonTab = $x("//span[text()='Сравнение версий']//parent::button");
     private final SelenideElement auditTab = $x("//span[text()='История изменений']//parent::button");
     private final SelenideElement graphNameInput = $x("//input[@name='name']");
     private final SelenideElement graphTitleInput = $x("//input[@name='title']");
@@ -132,10 +132,10 @@ public class GraphPage {
     }
 
     @Step("Переход на вкладку 'Сравнение версий'")
-    public VersionComparisonPage goToVersionComparisonTab() {
+    public GraphPage goToVersionComparisonTab() {
         TestUtils.scrollToTheTop();
         versionComparisonTab.click();
-        return new VersionComparisonPage();
+        return this;
     }
 
     @Step("Переход на вкладку 'История изменений'")

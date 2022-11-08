@@ -7,6 +7,7 @@ import models.productCatalog.Service;
 import org.openqa.selenium.WebElement;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.DiffPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
@@ -21,7 +22,6 @@ public class ServicePage extends BasePage {
     private final Input nameInput = Input.byName("name");
     private final TextArea descriptionInput = TextArea.byName("description");
     private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
-    private final SelenideElement version = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
     private final String saveServiceAlertText = "Сервис успешно изменен";
     private final WebElement mainTab = $x("//button[span[text()='Основное']]");
     private final WebElement paramsTab = $x("//button[span[text()='Параметры данных']]");
@@ -40,10 +40,12 @@ public class ServicePage extends BasePage {
         nameInput.getInput().shouldHave(Condition.exactValue(service.getServiceName()));
         titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
         descriptionInput.getTextArea().shouldHave(Condition.exactValue(service.getDescription()));
-        graphTab.click();
-        TestUtils.wait(2000);
-        graphVersionDropDown.getElement().$x(".//div[@id='selectValueWrapper']")
-                .shouldHave(Condition.exactText(service.getGraphVersion()));
+        if (service.getGraphId() != null) {
+            graphTab.click();
+            TestUtils.wait(2000);
+            graphVersionDropDown.getElement().$x(".//div[@id='selectValueWrapper']")
+                    .shouldHave(Condition.exactText(service.getGraphVersion()));
+        }
         return this;
     }
 
@@ -108,7 +110,7 @@ public class ServicePage extends BasePage {
     @Step("Проверка, что отображаемая версия равна '{version}'")
     public ServicePage checkVersion(String version) {
         TestUtils.scrollToTheTop();
-        this.version.shouldHave(Condition.exactText(version));
+        this.selectedVersion.shouldHave(Condition.exactText(version));
         return this;
     }
 
@@ -121,6 +123,13 @@ public class ServicePage extends BasePage {
     @Step("Проверка сохранения сервиса с версией некорректного формата '{newVersion}'")
     public ServicePage checkSaveWithInvalidVersionFormat(String newVersion) {
         super.checkSaveWithInvalidVersionFormat(newVersion);
+        return this;
+    }
+
+    @Step("Переход на вкладку 'Сравнение версий'")
+    public ServicePage goToVersionComparisonTab() {
+        TestUtils.scrollToTheTop();
+        versionComparisonTab.click();
         return this;
     }
 }
