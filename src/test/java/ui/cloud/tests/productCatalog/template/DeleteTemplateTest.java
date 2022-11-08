@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.template;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.AfterEach;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 
-@Epic("Шаблоны узлов")
 @Feature("Удаление шаблона")
 public class DeleteTemplateTest extends TemplateBaseTest {
 
