@@ -5,12 +5,15 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
+import models.productCatalog.enums.EventProvider;
+import models.productCatalog.enums.EventType;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
+import ui.elements.Table;
 import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.*;
@@ -25,6 +28,7 @@ public class ActionPage {
     private final SelenideElement inputDescriptionField = $x("//textarea[@name ='description']");
     private final SelenideElement locationInOrderTab = $x("//*[text()= 'Расположение в заказе']");
     private final SelenideElement graphTab = $x("//*[text() = 'Граф']");
+    private final SelenideElement paramsTab = $x("//button[span[text()='Параметры']]");
     private final SelenideElement graphInputField = $x("//*[@id = 'selectValueWrapper']/input");
     private final DropDown graphVersionDropDown = DropDown.byLabel("Значение");
     private final SelenideElement dataConfigPath = $x("//input[@name = 'data_config_path']");
@@ -37,6 +41,7 @@ public class ActionPage {
     private final SelenideElement currentVersionInput = $x("//label[text()='Выберите версию']/following::div[@id='selectValueWrapper']/div");
     private final SelenideElement deleteIconSvG = $x("(//div/*[local-name()='svg']/*[local-name()='svg']/*[local-name()='path'])[3]");
     private final SelenideElement addIcon = $x("//label[@for = 'attachment-input']");
+    private final SelenideElement addTypeAndProviderButton = $x("//button[div[text()='Добавить']]");
 
 
     public ActionPage() {
@@ -171,7 +176,7 @@ public class ActionPage {
 
     @Step("Запонение полей для создания действия и сохранение")
     public ActionsListPage fillAndSave(String name, String title, String description, ItemStatus status, OrderStatus orderStatus, ActionType actionType,
-                                       String configPath, String configKey, String valueOfData, String graphTitle) {
+                                       String configPath, String configKey, String valueOfData, String graphTitle, EventType eventType, EventProvider eventProvider) {
         inputNameField.setValue(name);
         inputTitleField.setValue(title);
         inputDescriptionField.setValue(description);
@@ -180,6 +185,20 @@ public class ActionPage {
         DropDown.byLabel("Обязательные статусы заказа").select(orderStatus.getValue());
         DropDown.byLabel("Тип").select(actionType.getValue());
         TestUtils.scrollToTheTop();
+        paramsTab.click();
+        addTypeAndProviderButton.click();
+        Table table = new Table("Тип");
+        DropDown eventTypeDropDown = new DropDown(table.getRowByIndex(0).$x("(.//div[select])[1]"));
+        DropDown eventProviderDropDown = new DropDown(table.getRowByIndex(0).$x("(.//div[select])[2]"));
+        eventTypeDropDown.click();
+        //TODO
+        while (!$x("//div[@title = '" + eventType.getValue() + "']").isDisplayed()) {
+            eventTypeDropDown.getElement().$x(".//*[name()='svg']").click();
+            TestUtils.wait(1000);
+        }
+        $x("//div[@title = '" + eventType.getValue() + "']").click();
+        eventProviderDropDown.selectByTitle(eventProvider.getValue());
+        table.getRowByIndex(0).$x(".//button[.//*[text() = 'Сохранить']]").click();
         locationInOrderTab.click();
         dataConfigPath.setValue(configPath);
         dataConfigKey.setValue(configKey);

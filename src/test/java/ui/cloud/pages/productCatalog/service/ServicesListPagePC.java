@@ -15,11 +15,10 @@ import ui.elements.*;
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ServicesListPagePC {
+public class ServicesListPagePC extends BaseList {
 
     private static final String columnName = "Код сервиса";
     private final Input searchInput = Input.byPlaceholder("Поиск");
-    private final SelenideElement createServiceButton = $x("//div[@data-testid = 'add-button']//button");
     private final DropDown directionDropDown = DropDown.byLabel("Направление");
     private final Input titleInput = Input.byName("title");
     private final Input nameInput = Input.byName("name");
@@ -89,7 +88,7 @@ public class ServicesListPagePC {
 
     @Step("Создание сервиса '{service.serviceName}'")
     public ServicePage createService(Service service) {
-        createServiceButton.click();
+        addNewObjectButton.click();
         directionDropDown.selectByTitle(service.getDirectionName());
         titleInput.setValue(service.getTitle());
         nameInput.setValue(service.getServiceName());
@@ -102,7 +101,7 @@ public class ServicesListPagePC {
     @Step("Проверка валидации обязательных параметров при создании сервиса")
     public ServicesListPagePC checkCreateServiceDisabled(Service service) {
         TestUtils.scrollToTheTop();
-        createServiceButton.click();
+        addNewObjectButton.click();
         nameInput.setValue(service.getServiceName());
         titleInput.setValue(service.getTitle());
         descriptionInput.setValue(service.getDescription());
@@ -120,7 +119,7 @@ public class ServicesListPagePC {
     @Step("Проверка валидации неуникального имени сервиса '{service.serviceName}'")
     public ServicesListPagePC checkNonUniqueNameValidation(Service service) {
         TestUtils.scrollToTheTop();
-        createServiceButton.click();
+        addNewObjectButton.click();
         nameInput.setValue(service.getServiceName());
         titleInput.setValue(service.getTitle());
         nonUniqueNameValidationHint.shouldBe(Condition.visible);
@@ -131,7 +130,7 @@ public class ServicesListPagePC {
 
     @Step("Проверка валидации недопустимых значений в коде сервиса")
     public ServicesListPagePC checkNameValidation(String[] names) {
-        createServiceButton.shouldBe(Condition.visible).click();
+        addNewObjectButton.shouldBe(Condition.visible).click();
         for (String name : names) {
             nameInput.setValue(name);
             TestUtils.wait(500);

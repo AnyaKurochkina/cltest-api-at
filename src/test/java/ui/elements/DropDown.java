@@ -16,9 +16,9 @@ import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 
 public class DropDown implements TypifiedElement {
+    private final ElementsCollection options = $$x("//ul[@role='listbox']/li");
     @Getter
     protected SelenideElement element;
-    private final ElementsCollection options = $$x("//ul[@role='listbox']/li");
 
     public DropDown(SelenideElement element) {
         this.element = element;
@@ -27,6 +27,7 @@ public class DropDown implements TypifiedElement {
     public static DropDown byLabel(String name) {
         return new DropDown($x("//label[text()='{}']/following::div[1]", name));
     }
+
     public static DropDown byXpath(String xpath) {
         return new DropDown($x(xpath));
     }
