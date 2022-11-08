@@ -100,10 +100,13 @@ public class Http {
 
     public Response get(String path, Object... args) {
         this.method = "GET";
-        for (Object arg : args)
+        for (Object arg : args) {
+            if(arg == null)
+                System.out.println(1);
             path = path.replaceFirst("\\{}", Objects.requireNonNull(arg).toString()
                     .replaceAll("#", "%23")
                     .replaceAll(" ", "%20"));
+        }
         this.path = StringUtils.format(path, args);
         return request();
     }

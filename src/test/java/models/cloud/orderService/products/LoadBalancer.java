@@ -5,10 +5,7 @@ import core.helper.http.Http;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -16,10 +13,15 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
+import models.cloud.subModels.loadBalancer.Backend;
+import models.cloud.subModels.loadBalancer.Frontend;
+import models.cloud.subModels.loadBalancer.Gslb;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -38,6 +40,15 @@ public class LoadBalancer extends IProduct {
     String domain;
     Flavor flavor;
     String password;
+    @Builder.Default
+    List<Backend> backends = new ArrayList<>();
+    @Builder.Default
+    List<Frontend> frontends = new ArrayList<>();
+    @Builder.Default
+    List<Gslb> gslbs = new ArrayList<>();
+    private final String FRONTEND_PATH = "data.find{it.type=='cluster'}.data.config.frontends.find{it.frontend_name == '%s'}";
+    private final String BACKEND_PATH = "data.find{it.type=='cluster'}.data.config.backends.find{it.backend_name == '%s'}";
+    private final String GSLIB_PATH = "data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}";
 
     @Override
     public Entity init() {
@@ -88,21 +99,77 @@ public class LoadBalancer extends IProduct {
         OrderServiceSteps.executeAction("balancer_release_sync_info", this, null, this.getProjectId());
     }
 
-    public void addBackend() {
-        OrderServiceSteps.executeAction("balancer_release_create_backend", this,
-                JsonHelper.getJsonTemplate("/orders/load_balancer_add_backend.json").build(), this.getProjectId());
+    public void gslbSync() {
+        OrderServiceSteps.executeAction("balancer_gslb_release_sync_info", this, null, this.getProjectId());
     }
 
-    public void checkStats() {
-        Assertions.assertEquals(2, stateStream().filter(e -> e.contains("bakend_tcp/")).count());
+    public void deleteAllGslb() {
+        OrderServiceSteps.executeAction("balancer_gslb_release_delete_publications_by_orderid", this, null, this.getProjectId());
     }
 
-    public void checkStats2() {
-        Assertions.assertEquals(2, stateStream().filter(e -> e.contains("bakend_tcp/")).count());
-        Assertions.assertEquals(2, stateStream().filter(e -> e.contains("bakend_tcp_check/")).count());
+    public void addBackend(Backend backend) {
+        if(backends.contains(backend))
+            return;
+        OrderServiceSteps.executeAction("balancer_release_create_backend", this, new JSONObject(JsonHelper.toJson(backend)), this.getProjectId());
+        Assertions.assertNotNull(OrderServiceSteps.getProductsField(this,
+                String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не создался");
+        backends.add(backend);
+        save();
+        Assertions.assertTrue(isStateContains(backend.getBackendName()));
     }
 
-    public Stream<String> stateStream() {
+    public void addFrontend(Frontend frontend) {
+        if(frontends.contains(frontend))
+            return;
+        OrderServiceSteps.executeAction("balancer_release_create_frontend", this, new JSONObject(JsonHelper.toJson(frontend)), this.getProjectId());
+        Assertions.assertNotNull(OrderServiceSteps.getProductsField(this,
+                String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не создался");
+        frontends.add(frontend);
+        save();
+        Assertions.assertTrue(isStateContains(frontend.getFrontendName()));
+    }
+
+    public void addGslb(Gslb gslb) {
+        if(gslbs.contains(gslb))
+            return;
+        OrderServiceSteps.executeAction("balancer_gslb_release_create_publication", this, new JSONObject(JsonHelper.toJson(gslb)), this.getProjectId());
+        Assertions.assertNotNull(OrderServiceSteps.getProductsField(this,
+                String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не создался");
+        gslbs.add(gslb);
+        save();
+    }
+
+    public void deleteBackend(Backend backend) {
+        OrderServiceSteps.executeAction("balancer_release_delete_backend", this,
+                new JSONObject().put("backend_name", backend.getBackendName()), this.getProjectId());
+        Assertions.assertNull(OrderServiceSteps.getProductsField(this,
+                String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не удален");
+        backends.remove(backend);
+        save();
+        Assertions.assertFalse(isStateContains(backend.getBackendName()));
+    }
+
+    public void deleteFrontend(Frontend frontend) {
+        OrderServiceSteps.executeAction("balancer_release_delete_frontend", this,
+                new JSONObject().put("frontend_name", frontend.getFrontendName()), this.getProjectId());
+        Assertions.assertNull(OrderServiceSteps.getProductsField(this,
+                String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не удален");
+        frontends.remove(frontend);
+        save();
+        Assertions.assertFalse(isStateContains(frontend.getFrontendName()));
+    }
+
+    public void deleteGslb(Gslb gslb) {
+        String globalName = Objects.requireNonNull((String) OrderServiceSteps.getProductsField(this, String.format(GSLIB_PATH, gslb.getGlobalname())));
+        OrderServiceSteps.executeAction("balancer_gslb_release_delete_publication", this,
+                new JSONObject().put("globalname", globalName), this.getProjectId());
+        Assertions.assertNull(OrderServiceSteps.getProductsField(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не удален");
+        gslbs.remove(gslb);
+        save();
+    }
+
+
+    public Boolean isStateContains(String name) {
         String url = (String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('console_urls')}.data.config.console_urls[0]");
         RequestSpecification specification = RestAssured.given()
                 .config(RestAssured.config().sslConfig(Http.sslConfig));
@@ -111,14 +178,7 @@ public class LoadBalancer extends IProduct {
                 .then()
                 .statusCode(200)
                 .extract().response().htmlPath()
-                .getList("**.findAll{it.@class == 'active_up'}.td.a.@name", String.class)
-                .stream()
-                .filter(Objects::nonNull);
-    }
-
-    public void addFrontend() {
-        OrderServiceSteps.executeAction("balancer_release_create_frontend", this,
-                JsonHelper.getJsonTemplate("/orders/load_balancer_add_frontend.json").build(), this.getProjectId());
+                .getBoolean(String.format("**.find{it.@name == '%s'}.size()", name));
     }
 
     public void stopHard() {
