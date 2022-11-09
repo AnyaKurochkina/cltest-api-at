@@ -8,7 +8,7 @@ import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Step;
-import models.productCatalog.Service;
+import models.cloud.productCatalog.Service;
 import org.json.JSONObject;
 import steps.Steps;
 

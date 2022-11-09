@@ -1,11 +1,11 @@
-package tests.productCatalog;
+package api.cloud.productCatalog;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.orderService.products.Astra;
-import models.productCatalog.action.Action;
-import models.productCatalog.action.EventTypeProvider;
+import models.cloud.orderService.products.Astra;
+import models.cloud.productCatalog.action.Action;
+import models.cloud.feedService.action.EventTypeProvider;
 import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.ProductArgumentsProvider;
@@ -13,7 +13,7 @@ import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
-import tests.Tests;
+import api.Tests;
 
 import java.util.Collections;
 

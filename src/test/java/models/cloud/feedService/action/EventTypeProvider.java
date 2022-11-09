@@ -1,4 +1,4 @@
-package models.productCatalog.action;
+package models.cloud.feedService.action;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

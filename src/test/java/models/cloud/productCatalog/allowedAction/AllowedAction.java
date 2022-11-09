@@ -1,4 +1,4 @@
-package models.productCatalog.allowedAction;
+package models.cloud.productCatalog.allowedAction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
@@ -6,8 +6,8 @@ import core.helper.StringUtils;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.productCatalog.action.Action;
-import models.productCatalog.action.EventTypeProvider;
+import models.cloud.feedService.action.EventTypeProvider;
+import models.cloud.productCatalog.action.Action;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 

@@ -67,7 +67,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Получение marketing по id {id}")
     public static Marketing getMarketingById(String id) {
         return new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .get("/marketing/{}", id)
                 .assertStatus(200)
                 .extractAs(Marketing.class);
@@ -115,7 +115,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Удаление marketing по id {id}")
     public static void deleteMarketingById(String id) {
         new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .delete("/marketing/{}", id)
                 .assertStatus(200);
     }
@@ -144,7 +144,7 @@ public class ImageServiceSteps extends Steps {
      */
     public static void partialUpdateImageById(String id, JSONObject body) {
         new Http(ImageService)
-                .setRole(T1_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .body(body)
                 .patch("/marketing/{}", id)
                 .assertStatus(200);

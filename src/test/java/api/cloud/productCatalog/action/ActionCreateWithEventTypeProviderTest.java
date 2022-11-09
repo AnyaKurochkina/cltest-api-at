@@ -1,15 +1,15 @@
-package tests.productCatalog.action;
+package api.cloud.productCatalog.action;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.action.Action;
-import models.productCatalog.action.EventTypeProvider;
+import models.cloud.productCatalog.action.Action;
+import models.cloud.feedService.action.EventTypeProvider;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import tests.Tests;
+import api.Tests;
 
 import java.util.Collections;
 import java.util.List;

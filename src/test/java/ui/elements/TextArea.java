@@ -6,8 +6,8 @@ import lombok.Getter;
 import org.openqa.selenium.Keys;
 
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 
 public class TextArea implements TypifiedElement {
     @Getter

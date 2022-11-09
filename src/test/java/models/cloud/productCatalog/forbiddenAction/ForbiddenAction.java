@@ -1,4 +1,4 @@
-package models.productCatalog.forbiddenAction;
+package models.cloud.productCatalog.forbiddenAction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
@@ -9,8 +9,8 @@ import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.productCatalog.action.Action;
-import models.productCatalog.action.EventTypeProvider;
+import models.cloud.productCatalog.action.Action;
+import models.cloud.feedService.action.EventTypeProvider;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
