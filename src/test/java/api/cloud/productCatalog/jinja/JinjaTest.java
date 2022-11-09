@@ -180,6 +180,9 @@ public class JinjaTest extends Tests {
         String updateName = "update_name";
         String updateTitle = "update_title";
         String updateDescription = "update_desc";
+        if(steps.isExists(updateName)) {
+            steps.deleteByName(updateName, GetJinjaListResponse.class);
+        }
         Jinja2 jinjaObject = Jinja2.builder()
                 .name("test_object")
                 .build()
