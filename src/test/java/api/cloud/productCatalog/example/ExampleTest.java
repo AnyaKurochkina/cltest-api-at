@@ -50,19 +50,6 @@ public class ExampleTest extends Tests {
         assertEquals(expectedExample, actualExample);
     }
 
-    @DisplayName("Получение Example по фильтру with_version_fields=true")
-    @TmsLink("")
-    @Test
-    public void getExampleByIdWithVersionFieldsTest() {
-        Example expectedExample = Example.builder()
-                .name("get_example_by_id_test_api")
-                .title("title_get_example_by_id_test_api")
-                .description("desc_get_example_by_id_test_api")
-                .build()
-                .createObject();
-        Example actualExample = getExampleByIdAndFilter(expectedExample.getId(), "with_version_fields=true");
-    }
-
     @DisplayName("Поиск Example по имени, с использованием multiSearch")
     @TmsLink("822384")
     @Test
@@ -93,6 +80,9 @@ public class ExampleTest extends Tests {
         String updatedName = "updated_example_test_api";
         String updatedTitle = "updated_title_example_test_api";
         String updatedDesc = "updated_desc_example_test_api";
+        if (isExampleExists(updatedName)) {
+            deleteExampleByName(updatedName);
+        }
         Example updatedExample = Example.builder()
                 .name(updatedName)
                 .title(updatedTitle)

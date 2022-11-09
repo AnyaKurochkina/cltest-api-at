@@ -1,123 +1,125 @@
 {
   "model_name": "ForbiddenAction",
   "ForbiddenAction": {
-    "id": 55,
+    "id": 133,
+    "context_restrictions": [],
+    "event_type_provider": [
+      {
+        "event_type": "bm",
+        "event_provider": "s3"
+      }
+    ],
     "name": "import_forbidden_action_test_api",
     "title": "import_forbidden_action_test_api",
     "description": "",
-    "event_type": [],
-    "event_provider": [],
-    "direction": "parent_to_child",
-    "is_all_levels": false,
-    "environment_type_restriction": [
-
-    ],
     "config_restriction": null,
     "item_restriction": null,
-    "action_id": "e4ea7f99-cd33-4612-a193-c7379477f327"
+    "environment_type_restriction": [],
+    "direction": "parent_to_child",
+    "action_id": "6c37de87-69ad-45d8-91e3-2530da25a9ac",
+    "action": "6c37de87-69ad-45d8-91e3-2530da25a9ac",
+    "event_type": [
+      "bm"
+    ],
+    "event_provider": [
+      "s3"
+    ]
   },
   "rel_foreign_models": {
     "action": {
       "model_name": "Action",
       "Action": {
-        "graph_id": "a7e0a0f7-7c13-417b-b4a0-201e63ac091a",
+        "id": "6c37de87-69ad-45d8-91e3-2530da25a9ac",
+        "name": "qa_action_del_gmv",
+        "type": "",
+        "title": "delete",
+        "graph_id": "b3340224-3580-4bc2-aa75-5a50b1b258ca",
         "multiple": false,
         "priority": 0,
-        "extra_data": {},
-        "graph_version": "",
-        "data_config_key": "db_name",
-        "data_config_path": "data.config.dbs",
-        "item_restriction": null,
-        "config_restriction": "len(dbs) > 0",
-        "data_config_fields": [
-          "db_name",
-          "conn_limit"
+        "event_type": [
+          "vm",
+          "vm",
+          "vm"
         ],
-        "skip_on_prebilling": true,
+        "extra_data": {},
+        "description": "",
+        "allowed_paths": [],
+        "graph_version": "",
+        "event_provider": [
+          "vcloud",
+          "nutanix",
+          "openstack"
+        ],
+        "data_config_key": null,
+        "data_config_path": null,
+        "item_restriction": null,
+        "restricted_paths": [],
+        "allowed_developers": [],
+        "config_restriction": null,
+        "data_config_fields": [],
+        "skip_on_prebilling": false,
         "location_restriction": "",
         "graph_version_pattern": "",
-        "auto_removing_if_failed": false,
-        "available_without_money": true,
-        "current_version": "",
-        "name": "set_conn_limit",
-        "title": "\u041d\u0430\u0437\u043d\u0430\u0447\u0438\u0442\u044c \u043f\u0440\u0435\u0434\u0435\u043b \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439",
-        "description": "",
-        "type": "",
-        "event_type": [
-          "app"
-        ],
-        "event_provider": [
-          "postgrespro",
-          "postgresql_v001"
-        ],
-        "allowed_groups": [],
-        "restricted_groups": [],
-        "allowed_paths": [],
-        "restricted_paths": [],
-        "required_order_statuses": [
-          "success"
-        ],
+        "restricted_developers": [],
         "required_item_statuses": [
           "on"
         ],
-        "allowed_developers": [],
-        "restricted_developers": [],
+        "auto_removing_if_failed": false,
+        "available_without_money": false,
+        "required_order_statuses": [
+          "success"
+        ],
+        "current_version": "",
+        "context_restrictions": [],
+        "event_type_provider": [
+          {
+            "event_type": "vm",
+            "event_provider": "vcloud"
+          },
+          {
+            "event_type": "vm",
+            "event_provider": "nutanix"
+          },
+          {
+            "event_type": "vm",
+            "event_provider": "openstack"
+          }
+        ],
+        "number": 50,
+        "is_safe": false,
+        "allowed_groups": [],
+        "restricted_groups": [],
         "version_arr": [
           1,
           0,
-          1
+          23
         ],
-        "icon_store_id": null
+        "icon_store_id": null,
+        "icon_store": null
       },
       "rel_foreign_models": {
         "graph": {
           "model_name": "Graph",
           "Graph": {
-            "author": "Kiseolar Paul",
+            "author": "Dmitriy Pyryakov",
             "output": {},
-            "ui_schema": {
-              "db_name": {
-                "ui:readonly": true
-              },
-              "ui:order": [
-                "db_name",
-                "conn_limit"
-              ]
-            },
-            "json_schema": {
-              "type": "object",
-              "required": [
-                "db_name",
-                "conn_limit"
-              ],
-              "properties": {
-                "db_name": {
-                  "type": "string",
-                  "title": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445",
-                  "description": "\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044c, \u0447\u0442\u043e \u0443\u0434\u0430\u043b\u044f\u0435\u0442\u0435 \u0436\u0435\u043b\u0430\u0435\u043c\u0443\u044e \u0431\u0430\u0437\u0443 \u0434\u0430\u043d\u043d\u044b\u0445!"
-                },
-                "conn_limit": {
-                  "type": "number",
-                  "title": "\u041f\u0440\u0435\u0434\u0435\u043b \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439",
-                  "default": 20,
-                  "maximum": 50,
-                  "minimum": 10
-                }
-              }
-            },
+            "ui_schema": null,
+            "json_schema": null,
             "static_data": {
-              "credential": "VTB.Cloud-DEV",
-              "job_template": "postgresql_set_conn_limit",
-              "data_template": "{% set inventory = {'all': {'hosts': {}, 'vars': {}}} %}{% set machines = items.values() | selectattr('type', 'equalto', 'vm') | list %}{% for machine in machines %}{% do inventory.all.hosts.update({machine.data.config.hostname + '.' + machine.data.config.domain: {'ansible_host': machine.data.config.default_v4_address}}) %}{% endfor %}{% do inventory.all.vars.update({'db_name': db_name,'conn_limit':conn_limit, 'config': config}) %}{{ {'inventory': inventory, 'net_segment': (machines | first).data.config.default_nic.net_segment} | tojson(indent=4) }}",
-              "resolved_items": true
+              "rrtype": [
+                "A",
+                "PTR"
+              ],
+              "product_type": "vm",
+              "resolved_item": true
             },
             "modifications": [],
             "printed_output": {},
             "lock_order_on_error": false,
             "damage_order_on_error": false,
             "current_version": "",
-            "name": "set_conn_limit",
-            "title": "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u043f\u0440\u0435\u0434\u0435\u043b \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439 \u0434\u043b\u044f  \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL",
+            "name": "qa_graph_del_gmv",
+            "title": "delete",
             "description": "",
             "type": "action",
             "allowed_developers": [],
@@ -125,7 +127,7 @@
             "version_arr": [
               1,
               0,
-              2
+              11
             ]
           },
           "rel_foreign_models": {},
@@ -135,33 +137,112 @@
                 "model_name": "Node",
                 "Node": {
                   "hold": false,
-                  "name": "gen_action_data",
+                  "name": "turn_off_monitoring",
                   "color": "",
                   "count": null,
                   "input": {
-                    "items": "resolved_items",
-                    "config": "resolved_items[item_id]['data']['config']",
-                    "db_name": "data['db_name']",
-                    "template": "data_template",
-                    "from_json": "True",
-                    "conn_limit": "data['conn_limit']"
+                    "domain": "resolved_item['data']['config']['domain']",
+                    "os_type": "resolved_item['data']['config']['image']['os']['type']",
+                    "hostname": "resolved_item['data']['config']['hostname']"
+                  },
+                  "number": 5,
+                  "output": {},
+                  "depends": [],
+                  "timeout": 60,
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "for_each": "",
+                  "priority": null,
+                  "condition": "resolved_item['data']['config']['image']['os']['distribution'] != 'rhcos'",
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "\u0443\u0434\u0430\u043b\u044f\u0435\u043c \u0412\u041c \u0438\u0437 \u043c\u043e\u043d\u0438\u0442\u043e\u0440\u0438\u043d\u0433\u0430",
+                  "subgraph_id": null,
+                  "template_id": 70,
+                  "icon_store_id": null,
+                  "is_sequential": true,
+                  "on_prebilling": false,
+                  "printed_output": {},
+                  "run_on_rollback": false,
+                  "subgraph_version": "",
+                  "template_version": "",
+                  "lock_order_on_error": false,
+                  "not_damage_on_error": false,
+                  "damage_order_on_error": false,
+                  "subgraph_version_pattern": "",
+                  "template_version_pattern": "",
+                  "subgraph_version_calculated": "",
+                  "template_version_calculated": "1.0.0"
+                },
+                "rel_foreign_models": {
+                  "template": {
+                    "model_name": "Template",
+                    "Template": {
+                      "id": 70,
+                      "run": "monitoring:cmd",
+                      "name": "delete_host",
+                      "type": "monitoring",
+                      "color": "",
+                      "input": {},
+                      "title": "delete_host",
+                      "output": {},
+                      "timeout": 30,
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "priority": 0,
+                      "rollback": null,
+                      "log_level": null,
+                      "extra_data": null,
+                      "description": "",
+                      "allowed_groups": [],
+                      "printed_output": {},
+                      "additional_input": true,
+                      "additional_output": true,
+                      "restricted_groups": [],
+                      "log_can_be_overridden": false,
+                      "priority_can_be_overridden": false,
+                      "printed_output_can_be_overridden": false,
+                      "current_version": "",
+                      "version_arr": [
+                        1,
+                        0,
+                        0
+                      ],
+                      "icon_store_id": null,
+                      "icon_store": null
+                    },
+                    "rel_foreign_models": {}
+                  }
+                }
+              },
+              {
+                "model_name": "Node",
+                "Node": {
+                  "hold": false,
+                  "name": "delete_vm",
+                  "color": "",
+                  "count": null,
+                  "input": {
+                    "tenant": "resolved_item['data']['config']['tenant']",
+                    "item_id": "item_id",
+                    "resource_pool": "resolved_item['data']['config']['resource_pool']"
                   },
                   "number": 10,
-                  "output": {
-                    "formatted": "action_data"
-                  },
-                  "depends": [],
-                  "timeout": 10,
-                  "coords_x": 140.0,
-                  "coords_y": 68.0,
+                  "output": {},
+                  "depends": [
+                    "turn_off_monitoring"
+                  ],
+                  "timeout": 600,
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
                   "for_each": "",
                   "priority": null,
                   "condition": "",
-                  "log_level": "full",
+                  "log_level": null,
                   "extra_data": null,
-                  "description": "\u0444\u043e\u0440\u043c\u0438\u0440\u0443\u0435\u043c  \u0434\u0430\u043d\u043d\u044b\u0435",
+                  "description": "\u0443\u0434\u0430\u043b\u044f\u0435\u043c \u0412\u041c",
                   "subgraph_id": null,
-                  "template_id": 40,
+                  "template_id": 54,
                   "icon_store_id": null,
                   "is_sequential": false,
                   "on_prebilling": false,
@@ -175,183 +256,48 @@
                   "subgraph_version_pattern": "",
                   "template_version_pattern": "",
                   "subgraph_version_calculated": "",
-                  "template_version_calculated": "1.0.2"
+                  "template_version_calculated": "1.0.0"
                 },
                 "rel_foreign_models": {
                   "template": {
                     "model_name": "Template",
                     "Template": {
-                      "id": 40,
-                      "run": "internal",
-                      "icon": "",
-                      "name": "jinja2_format",
-                      "type": "system_nodes",
+                      "id": 54,
+                      "run": "platform:cmd",
+                      "name": "delete_vm",
+                      "type": "virtualization_platform",
                       "color": "",
                       "input": {
-                        "domain": {},
-                        "mounts": {},
-                        "feature": {},
-                        "machine": {},
-                        "hostname": {},
-                        "os_users": {},
-                        "template": {
-                          "required": true
-                        },
-                        "from_json": {},
-                        "prime_user": {},
-                        "default_nic": {},
-                        "kafka_version": {},
-                        "postgresql_db": {},
-                        "redis_version": {},
-                        "ad_integration": {},
-                        "os_local_users": {},
-                        "redis_password": {},
-                        "ad_logon_grants": {},
-                        "postgresql_user": {},
-                        "postgresql_version": {},
-                        "prime_user_init_passwd": {}
+                        "tenant": {},
+                        "item_id": {},
+                        "resource_pool": {}
                       },
-                      "title": "jinja2_format",
-                      "output": {
-                        "formatted": {}
-                      },
-                      "timeout": 10,
-                      "coords_x": 0.0,
-                      "coords_y": 0.0,
-                      "priority": 0,
-                      "rollback": null,
-                      "log_level": "full",
-                      "extra_data": null,
-                      "description": "\u0444\u043e\u0440\u043c\u0430\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0434\u0430\u043d\u043d\u044b\u0445 \u0441 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435\u043c jinja2 \u0448\u0430\u0431\u043b\u043e\u043d\u0430",
-                      "allowed_groups": [],
-                      "printed_output": [
-                        {
-                          "type": "text",
-                          "data_path": "data",
-                          "node_state": "completed"
-                        },
-                        {
-                          "type": "text",
-                          "data_path": "data.formatted",
-                          "node_state": "completed"
-                        }
-                      ],
-                      "additional_input": true,
-                      "additional_output": false,
-                      "restricted_groups": [],
-                      "log_can_be_overridden": true,
-                      "priority_can_be_overridden": false,
-                      "printed_output_can_be_overridden": true,
-                      "current_version": "",
-                      "version_arr": [
-                        1,
-                        0,
-                        2
-                      ],
-                      "icon_store_id": null
-                    },
-                    "rel_foreign_models": {}
-                  }
-                }
-              },
-              {
-                "model_name": "Node",
-                "Node": {
-                  "hold": false,
-                  "name": "remove_db",
-                  "color": "",
-                  "count": null,
-                  "input": {
-                    "inventory": "action_data['inventory']",
-                    "credentials": "[credential]",
-                    "net_segment": "action_data['net_segment']",
-                    "job_template": "job_template",
-                    "environment_type": "environment_type"
-                  },
-                  "number": 20,
-                  "output": {
-                    "config": "updated_config"
-                  },
-                  "depends": [
-                    "gen_action_data"
-                  ],
-                  "timeout": 900,
-                  "coords_x": 140.0,
-                  "coords_y": 254.0,
-                  "for_each": "",
-                  "priority": null,
-                  "condition": "",
-                  "log_level": null,
-                  "extra_data": null,
-                  "description": "\u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u043f\u0440\u0435\u0434\u0435\u043b \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439 \u0411\u0414",
-                  "subgraph_id": null,
-                  "template_id": 43,
-                  "icon_store_id": null,
-                  "is_sequential": false,
-                  "on_prebilling": false,
-                  "printed_output": [
-                    {
-                      "type": "text",
-                      "data_path": "data.error",
-                      "node_state": "error"
-                    }
-                  ],
-                  "run_on_rollback": false,
-                  "subgraph_version": "",
-                  "template_version": "",
-                  "lock_order_on_error": false,
-                  "not_damage_on_error": false,
-                  "damage_order_on_error": false,
-                  "subgraph_version_pattern": "",
-                  "template_version_pattern": "",
-                  "subgraph_version_calculated": "",
-                  "template_version_calculated": "1.0.1"
-                },
-                "rel_foreign_models": {
-                  "template": {
-                    "model_name": "Template",
-                    "Template": {
-                      "id": 43,
-                      "run": "awx:cmd",
-                      "icon": "",
-                      "name": "ansible_awx",
-                      "type": "rpc",
-                      "color": "",
-                      "input": {
-                        "inventory": {},
-                        "credential": {},
-                        "extra_vars": {},
-                        "net_segment": {},
-                        "job_template": {}
-                      },
-                      "title": "ansible_awx",
-                      "output": {
-                        "config": {},
-                        "item_id": {}
-                      },
-                      "timeout": 900,
+                      "title": "delete_vm",
+                      "output": {},
+                      "timeout": 600,
                       "coords_x": 0.0,
                       "coords_y": 0.0,
                       "priority": 0,
                       "rollback": null,
                       "log_level": null,
                       "extra_data": null,
-                      "description": "\u0437\u0430\u043f\u0443\u0441\u043a job_template \u0432 Ansible AWX",
+                      "description": "\u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u0412\u041c",
                       "allowed_groups": [],
                       "printed_output": {},
-                      "additional_input": true,
-                      "additional_output": true,
+                      "additional_input": false,
+                      "additional_output": false,
                       "restricted_groups": [],
                       "log_can_be_overridden": false,
                       "priority_can_be_overridden": false,
-                      "printed_output_can_be_overridden": true,
+                      "printed_output_can_be_overridden": false,
                       "current_version": "",
                       "version_arr": [
                         1,
                         0,
-                        1
+                        0
                       ],
-                      "icon_store_id": null
+                      "icon_store_id": null,
+                      "icon_store": null
                     },
                     "rel_foreign_models": {}
                   }
@@ -361,29 +307,29 @@
                 "model_name": "Node",
                 "Node": {
                   "hold": false,
-                  "name": "update_postgresql_config",
+                  "name": "mark_vm_deleted",
                   "color": "",
                   "count": null,
                   "input": {
-                    "data": "{**resolved_items[item_id]['data']['config'], **updated_config}",
-                    "type": "enums.EventType.APP.value",
+                    "type": "enums.EventType.VM.value",
+                    "status": "enums.EventState.DELETED.value",
                     "item_id": "item_id",
-                    "subtype": "enums.EventSubType.CONFIG.value"
+                    "subtype": "enums.EventSubType.STATE.value"
                   },
-                  "number": 30,
+                  "number": 20,
                   "output": {},
                   "depends": [
-                    "remove_db"
+                    "delete_vm"
                   ],
                   "timeout": 30,
-                  "coords_x": 140.0,
-                  "coords_y": 440.0,
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
                   "for_each": "",
                   "priority": null,
                   "condition": "",
                   "log_level": null,
                   "extra_data": null,
-                  "description": "\u043e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044e \u0432 \u0441\u0435\u0440\u0432\u0438\u0441\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0439",
+                  "description": "\u043f\u043e\u043c\u0435\u0447\u0430\u0435\u043c \u0412\u041c \u0443\u0434\u0430\u043b\u0435\u043d\u043d\u043e\u0439 \u0432 \u0441\u0435\u0440\u0432\u0438\u0441 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0439",
                   "subgraph_id": null,
                   "template_id": 45,
                   "icon_store_id": null,
@@ -407,7 +353,6 @@
                     "Template": {
                       "id": 45,
                       "run": "internal",
-                      "icon": "",
                       "name": "add_event",
                       "type": "system_nodes",
                       "color": "",
@@ -444,7 +389,360 @@
                         0,
                         1
                       ],
-                      "icon_store_id": null
+                      "icon_store_id": null,
+                      "icon_store": null
+                    },
+                    "rel_foreign_models": {}
+                  }
+                }
+              },
+              {
+                "model_name": "Node",
+                "Node": {
+                  "hold": false,
+                  "name": "unreg_dns",
+                  "color": "",
+                  "count": null,
+                  "input": {
+                    "ip": "resolved_item['data']['config']['default_v4_address']",
+                    "force": "resolved_item['data']['config']['default_nic']['address_assignment'] == 'DHCP'",
+                    "domain": "resolved_item['data']['config']['domain']",
+                    "rrtype": "rrtype",
+                    "hostname": "resolved_item['data']['config']['hostname']"
+                  },
+                  "number": 30,
+                  "output": {},
+                  "depends": [
+                    "delete_vm"
+                  ],
+                  "timeout": 30,
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "for_each": "",
+                  "priority": null,
+                  "condition": "",
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "\u0443\u0434\u0430\u043b\u044f\u0435\u043c DNS \u0437\u0430\u043f\u0438\u0441\u044c \u0412\u041c",
+                  "subgraph_id": null,
+                  "template_id": 53,
+                  "icon_store_id": null,
+                  "is_sequential": false,
+                  "on_prebilling": false,
+                  "printed_output": {},
+                  "run_on_rollback": false,
+                  "subgraph_version": "",
+                  "template_version": "",
+                  "lock_order_on_error": false,
+                  "not_damage_on_error": false,
+                  "damage_order_on_error": false,
+                  "subgraph_version_pattern": "",
+                  "template_version_pattern": "",
+                  "subgraph_version_calculated": "",
+                  "template_version_calculated": "1.0.0"
+                },
+                "rel_foreign_models": {
+                  "template": {
+                    "model_name": "Template",
+                    "Template": {
+                      "id": 53,
+                      "run": "dns:cmd",
+                      "name": "delete_dns",
+                      "type": "rpc",
+                      "color": "",
+                      "input": {
+                        "ip": {},
+                        "force": {},
+                        "domain": {},
+                        "rrtype": {},
+                        "hostname": {}
+                      },
+                      "title": "delete_dns",
+                      "output": {},
+                      "timeout": 30,
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "priority": 0,
+                      "rollback": null,
+                      "log_level": null,
+                      "extra_data": null,
+                      "description": "\u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 DNS \u0437\u0430\u043f\u0438\u0441\u0438",
+                      "allowed_groups": [],
+                      "printed_output": {},
+                      "additional_input": false,
+                      "additional_output": false,
+                      "restricted_groups": [],
+                      "log_can_be_overridden": false,
+                      "priority_can_be_overridden": false,
+                      "printed_output_can_be_overridden": false,
+                      "current_version": "",
+                      "version_arr": [
+                        1,
+                        0,
+                        0
+                      ],
+                      "icon_store_id": null,
+                      "icon_store": null
+                    },
+                    "rel_foreign_models": {}
+                  }
+                }
+              },
+              {
+                "model_name": "Node",
+                "Node": {
+                  "hold": false,
+                  "name": "delete_computer_from_ad",
+                  "color": "",
+                  "count": null,
+                  "input": {
+                    "domain": "resolved_item['data']['config']['domain']",
+                    "hostname": "resolved_item['data']['config']['hostname']"
+                  },
+                  "number": 40,
+                  "output": {},
+                  "depends": [
+                    "delete_vm"
+                  ],
+                  "timeout": 60,
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "for_each": "",
+                  "priority": null,
+                  "condition": "resolved_item['data']['config']['ad_integration'] is True",
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "\u0443\u0434\u0430\u043b\u044f\u0435\u043c \u0412\u041c \u0438\u0437 LDAP \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0430",
+                  "subgraph_id": null,
+                  "template_id": 56,
+                  "icon_store_id": null,
+                  "is_sequential": false,
+                  "on_prebilling": false,
+                  "printed_output": {},
+                  "run_on_rollback": false,
+                  "subgraph_version": "",
+                  "template_version": "",
+                  "lock_order_on_error": false,
+                  "not_damage_on_error": false,
+                  "damage_order_on_error": false,
+                  "subgraph_version_pattern": "",
+                  "template_version_pattern": "",
+                  "subgraph_version_calculated": "",
+                  "template_version_calculated": "1.0.0"
+                },
+                "rel_foreign_models": {
+                  "template": {
+                    "model_name": "Template",
+                    "Template": {
+                      "id": 56,
+                      "run": "ldap:cmd",
+                      "name": "delete_computer",
+                      "type": "rpc",
+                      "color": "",
+                      "input": {
+                        "domain": {},
+                        "hostname": {},
+                        "net_segment": {}
+                      },
+                      "title": "delete_computer",
+                      "output": {},
+                      "timeout": 60,
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "priority": 0,
+                      "rollback": null,
+                      "log_level": null,
+                      "extra_data": null,
+                      "description": "\u0443\u043f\u0440\u0430\u043b\u0435\u043d\u0438\u0435 LDAP \u0437\u0430\u043f\u0438\u0441\u0438 Computer",
+                      "allowed_groups": [],
+                      "printed_output": {},
+                      "additional_input": true,
+                      "additional_output": true,
+                      "restricted_groups": [],
+                      "log_can_be_overridden": false,
+                      "priority_can_be_overridden": false,
+                      "printed_output_can_be_overridden": false,
+                      "current_version": "",
+                      "version_arr": [
+                        1,
+                        0,
+                        0
+                      ],
+                      "icon_store_id": null,
+                      "icon_store": null
+                    },
+                    "rel_foreign_models": {}
+                  }
+                }
+              },
+              {
+                "model_name": "Node",
+                "Node": {
+                  "hold": false,
+                  "name": "delete_ipam",
+                  "color": "",
+                  "count": null,
+                  "input": {
+                    "config": "resolved_item['data']['config']"
+                  },
+                  "number": 50,
+                  "output": {},
+                  "depends": [
+                    "unreg_dns"
+                  ],
+                  "timeout": 60,
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "for_each": "",
+                  "priority": null,
+                  "condition": "",
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "\u0443\u0434\u0430\u043b\u044f\u0435\u043c \u0430\u0434\u0440\u0435\u0441\u0430",
+                  "subgraph_id": null,
+                  "template_id": 57,
+                  "icon_store_id": null,
+                  "is_sequential": false,
+                  "on_prebilling": false,
+                  "printed_output": {},
+                  "run_on_rollback": false,
+                  "subgraph_version": "",
+                  "template_version": "",
+                  "lock_order_on_error": false,
+                  "not_damage_on_error": false,
+                  "damage_order_on_error": false,
+                  "subgraph_version_pattern": "",
+                  "template_version_pattern": "",
+                  "subgraph_version_calculated": "",
+                  "template_version_calculated": "1.0.0"
+                },
+                "rel_foreign_models": {
+                  "template": {
+                    "model_name": "Template",
+                    "Template": {
+                      "run": "ipam:cmd",
+                      "input": {
+                        "config": {}
+                      },
+                      "output": {},
+                      "timeout": 60,
+                      "priority": 0,
+                      "rollback": null,
+                      "log_level": null,
+                      "printed_output": {},
+                      "additional_input": true,
+                      "additional_output": true,
+                      "log_can_be_overridden": false,
+                      "priority_can_be_overridden": false,
+                      "printed_output_can_be_overridden": false,
+                      "id": 57,
+                      "current_version": "",
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "extra_data": null,
+                      "color": "",
+                      "name": "delete_ipam",
+                      "title": "delete_ipam",
+                      "description": "\u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u0430\u0434\u0440\u0435\u0441\u043e\u0432 \u0438\u0437 \u0441\u0435\u0440\u0432\u0438\u0441\u0430 IPAM",
+                      "type": "rpc",
+                      "allowed_groups": [],
+                      "restricted_groups": [],
+                      "version_arr": [
+                        1,
+                        0,
+                        1
+                      ],
+                      "icon_store_id": null,
+                      "icon_store": null
+                    },
+                    "rel_foreign_models": {}
+                  }
+                }
+              },
+              {
+                "model_name": "Node",
+                "Node": {
+                  "hold": false,
+                  "name": "release_hostname",
+                  "color": "",
+                  "count": null,
+                  "input": {
+                    "hostname": "resolved_item['data']['config']['hostname']",
+                    "product_type": "product_type"
+                  },
+                  "number": 60,
+                  "output": {},
+                  "depends": [
+                    "delete_computer_from_ad",
+                    "delete_ipam"
+                  ],
+                  "timeout": 30,
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "for_each": "",
+                  "priority": null,
+                  "condition": "",
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "\u043e\u0441\u0432\u043e\u0431\u043e\u0436\u0434\u0430\u0435\u043c \u0438\u043c\u044f \u0412\u041c",
+                  "subgraph_id": null,
+                  "template_id": 55,
+                  "icon_store_id": null,
+                  "is_sequential": false,
+                  "on_prebilling": false,
+                  "printed_output": {},
+                  "run_on_rollback": false,
+                  "subgraph_version": "",
+                  "template_version": "",
+                  "lock_order_on_error": false,
+                  "not_damage_on_error": false,
+                  "damage_order_on_error": false,
+                  "subgraph_version_pattern": "",
+                  "template_version_pattern": "",
+                  "subgraph_version_calculated": "",
+                  "template_version_calculated": "1.0.0"
+                },
+                "rel_foreign_models": {
+                  "template": {
+                    "model_name": "Template",
+                    "Template": {
+                      "id": 55,
+                      "run": "hostname.cmd",
+                      "name": "delete_name",
+                      "type": "rpc",
+                      "color": "",
+                      "input": {
+                        "hostname": {},
+                        "cluster_name": {},
+                        "product_type": {},
+                        "project_name": {}
+                      },
+                      "title": "delete_name",
+                      "output": {},
+                      "timeout": 30,
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "priority": 0,
+                      "rollback": null,
+                      "log_level": null,
+                      "extra_data": null,
+                      "description": "\u043e\u0441\u0432\u043e\u0431\u043e\u0436\u0434\u0435\u043d\u0438\u0435 \u0438\u043c\u0435\u043d\u0438 \u0432 \u0441\u0435\u0440\u0432\u0438\u0441\u0435 \u0438\u043c\u0435\u043d",
+                      "allowed_groups": [],
+                      "printed_output": {},
+                      "additional_input": false,
+                      "additional_output": false,
+                      "restricted_groups": [],
+                      "log_can_be_overridden": false,
+                      "priority_can_be_overridden": false,
+                      "printed_output_can_be_overridden": true,
+                      "current_version": "",
+                      "version_arr": [
+                        1,
+                        0,
+                        0
+                      ],
+                      "icon_store_id": null,
+                      "icon_store": null
                     },
                     "rel_foreign_models": {}
                   }
@@ -457,6 +755,6 @@
     }
   },
   "dump_version": 5.0,
-  "dump_date": "2022-08-01 10:09:53",
+  "dump_date": "2022-11-07 15:25:13",
   "is_pinned_versions": false
 }
