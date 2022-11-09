@@ -14,7 +14,8 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class BaseList {
 
-    private static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
+    protected static final SelenideElement addNewObjectButton = $x("//div[@data-testid = 'add-button']//button");
+    protected static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
     private static final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private static final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");

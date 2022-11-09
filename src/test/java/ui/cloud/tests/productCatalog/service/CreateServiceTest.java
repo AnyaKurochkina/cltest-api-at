@@ -45,6 +45,7 @@ public class CreateServiceTest extends ServiceBaseTest {
     @Step("Создание сервиса")
     public void createService() {
         service.setServiceName(UUID.randomUUID().toString());
+        service.setGraphId(null);
         new IndexPage().goToServicesListPagePC()
                 .createService(service)
                 .checkAttributes(service);

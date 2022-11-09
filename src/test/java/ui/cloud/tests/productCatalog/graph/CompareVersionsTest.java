@@ -1,15 +1,15 @@
 package ui.cloud.tests.productCatalog.graph;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.productCatalog.DiffPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
+import ui.cloud.pages.productCatalog.graph.GraphPage;
 import ui.models.Graph;
 
-@Epic("Графы")
 @Feature("Сравнение версий графа")
 public class CompareVersionsTest extends GraphBaseTest {
 
@@ -21,13 +21,12 @@ public class CompareVersionsTest extends GraphBaseTest {
                 .findAndOpenGraphPage(NAME)
                 .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.0.0", "", "QA-1"))
                 .saveGraphWithPatchVersion()
-                .goToVersionComparisonTab()
-                .checkCurrentVersion("1.0.1")
-                .compareToVersion("1.0.0")
-                .selectGraphVersion("1.0.0")
-                .goToVersionComparisonTab()
-                .checkCurrentVersion("1.0.0")
-                .compareToVersion("1.0.0")
-                .compareToVersion("1.0.1");
+                .goToVersionComparisonTab();
+        new DiffPage().checkCurrentVersionInDiff("1.0.1")
+                .compareWithVersion("1.0.0");
+        new GraphPage().selectGraphVersion("1.0.0");
+        new DiffPage().checkCurrentVersionInDiff("1.0.0")
+                .compareWithVersion("1.0.0")
+                .compareWithVersion("1.0.1");
     }
 }

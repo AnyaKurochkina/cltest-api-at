@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.graph.modifier;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +9,6 @@ import ui.cloud.pages.productCatalog.graph.GraphModifiersPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.models.GraphModifier;
 
-@Epic("Графы")
 @Feature("Добавление модификатора")
 public class AddModifierTest extends GraphBaseTest {
 
