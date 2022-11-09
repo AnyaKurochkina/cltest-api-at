@@ -32,6 +32,7 @@ public class AllowedActionCreateWithEventTypeProviderTest extends Tests {
         String actionName = "create_allowed_action_with_event_provider_test_api";
         AllowedAction action = AllowedAction.builder()
                 .name(actionName)
+                .title(actionName)
                 .eventTypeProvider(expectedEventTypeProviderList)
                 .build()
                 .createObject();

@@ -199,11 +199,11 @@ public class ActionSteps extends Steps {
                 .getList();
     }
 
-    @Step("Получение действия по фильтру")
-    public static Action getActionByFilter(String id, String filter, Object value) {
+    @Step("Получение действия по фильтру = {filter}")
+    public static Action getActionByFilter(String id, String filter) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(actionUrl + "{}/?{}={}", id, filter, value)
+                .get(actionUrl + "{}/?{}", id, filter)
                 .assertStatus(200)
                 .extractAs(Action.class);
 
@@ -312,7 +312,7 @@ public class ActionSteps extends Steps {
     public static boolean isTypeProviderContains(String eventType, String eventProvider, List<EventTypeProvider> eventTypeProviderList) {
         if (!eventTypeProviderList.isEmpty()) {
             for (EventTypeProvider eventTypeProvider : eventTypeProviderList) {
-                if (eventTypeProvider.getEventType().equals(eventType) & eventTypeProvider.getEventProvider().equals(eventProvider)) {
+                if (eventTypeProvider.getEvent_type().equals(eventType) & eventTypeProvider.getEvent_provider().equals(eventProvider)) {
                     return true;
                 }
             }

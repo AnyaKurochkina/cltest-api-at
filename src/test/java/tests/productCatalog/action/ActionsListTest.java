@@ -143,7 +143,7 @@ public class ActionsListTest extends Tests {
     }
 
     @DisplayName("Получение списка действий по type_provider_list")
-    @TmsLink("")
+    @TmsLink("1284714")
     @Test
     public void getActionListByTypeProviderTest() {
         JSONObject obj = JsonHelper.getJsonTemplate("/productCatalog/typeProvider.json")

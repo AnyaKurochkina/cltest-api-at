@@ -22,10 +22,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import tests.Tests;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
@@ -195,6 +192,23 @@ public class ActionsTest extends Tests {
         assertEquals(action, getAction);
     }
 
+    @DisplayName("Получение действия по Id c параметром with_version_fields=true")
+    @TmsLink("1284073")
+    @Test
+    public void getActionByIdWithVersionFieldTest() {
+        String actionName = "get_action_by_id_with_version_fields_test_api";
+        Action action = Action.builder()
+                .actionName(actionName)
+                .title(actionName)
+                .build()
+                .createObject();
+        Action getAction = getActionByFilter(action.getActionId(), "with_version_fields=true");
+        List<String> versionFields = Arrays.asList("graph_id", "graph_version", "graph_version_pattern", "priority", "data_config_path", "data_config_key",
+                "data_config_fields", "config_restriction", "item_restriction", "available_without_money",
+                "auto_removing_if_failed", "skip_on_prebilling", "multiple", "location_restriction", "extra_data");
+        assertEquals(versionFields, getAction.getVersionFields());
+    }
+
     @DisplayName("Копирование действия по Id")
     @TmsLink("642489")
     @Test
@@ -227,7 +241,7 @@ public class ActionsTest extends Tests {
         String cloneId = cloneAction.getActionId();
         Action updatedCloneAction = partialUpdateAction(cloneId, new JSONObject().put("priority", 1))
                 .extractAs(Action.class);
-        Action actualAction = getActionByFilter(updatedCloneAction.getActionId(), "version", updatedCloneAction.getVersion());
+        Action actualAction = getActionByFilter(updatedCloneAction.getActionId(), "version=" + updatedCloneAction.getVersion());
         assertEquals(updatedCloneAction, actualAction);
         assertTrue(isActionExists(cloneName));
         deleteActionByName(cloneName);

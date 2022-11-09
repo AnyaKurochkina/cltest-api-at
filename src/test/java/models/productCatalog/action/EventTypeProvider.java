@@ -14,7 +14,7 @@ import lombok.extern.log4j.Log4j2;
 @NoArgsConstructor
 public class EventTypeProvider {
     @JsonProperty("event_type")
-    private String eventType;
+    private String event_type;
     @JsonProperty("event_provider")
-    private String eventProvider;
+    private String event_provider;
 }

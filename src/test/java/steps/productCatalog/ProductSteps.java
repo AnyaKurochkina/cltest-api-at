@@ -57,6 +57,14 @@ public class ProductSteps extends Steps {
                 .extractAs(Product.class);
     }
 
+    @Step("Получение продукта по Id и фильтру {filter}")
+    public static Product getProductByIdAndFilter(String objectId, String filter) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get(productUrl + objectId + "/?{}", filter)
+                .extractAs(Product.class);
+    }
+
     @Step("Получение продукта по Id под ролью Viewer")
     public static Response getProductViewerById(String objectId) {
         return new Http(ProductCatalogURL)

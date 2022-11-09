@@ -13,7 +13,7 @@ public class ResourceManagerSteps extends Steps {
     public static Response getProjectById(String id, String include) {
         return new Http(ResourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
-                .get("/v1/projects/{}?include={}", id, include)
+                .get("/v1/projects/{}/?include={}", id, include)
                 .assertStatus(200);
     }
 

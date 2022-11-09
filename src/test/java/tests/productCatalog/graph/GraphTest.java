@@ -38,8 +38,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.productCatalog.GraphSteps.getGraphById;
-import static steps.productCatalog.GraphSteps.isGraphExists;
+import static steps.productCatalog.GraphSteps.*;
 
 @Tag("product_catalog")
 @Tag("Graphs")
@@ -101,7 +100,19 @@ public class GraphTest extends Tests {
                 .build()
                 .createObject();
         GetImpl getImpl = steps.getById(graph.getGraphId(), GetGraphResponse.class);
-        Assertions.assertEquals(graph.getName(), getImpl.getName());
+        assertEquals(graph.getName(), getImpl.getName());
+    }
+
+    @DisplayName("Получение графа по Id и с параметром with_version_fields=true")
+    @TmsLink("1284435")
+    @Test
+    public void getGraphByIdAndVersionFieldsTest() {
+        Graph graph = Graph.builder()
+                .name("graph_get_by_id_and_version_fields_test_api")
+                .build()
+                .createObject();
+        Graph getGraph = getGraphByIdAndFilter(graph.getGraphId(), "with_version_fields=true");
+        assertFalse(getGraph.getVersionFields().isEmpty());
     }
 
     @DisplayName("Получение значения поля lock_order_on_error и проверка версии при изменении")

@@ -8,6 +8,7 @@ import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Step;
+import models.productCatalog.Service;
 import org.json.JSONObject;
 import steps.Steps;
 
@@ -40,10 +41,19 @@ public class ServiceSteps extends Steps {
     @Step("Получение сервиса по Id")
     public static GetServiceResponse getServiceById(String objectId) {
         return new Http(ProductCatalogURL)
-                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(serviceUrl + objectId + "/")
                 .extractAs(GetServiceResponse.class);
     }
+
+    @Step("Получение сервиса по Id и фильтру {filter}")
+    public static Service getServiceByIdAndFilter(String objectId, String filter) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(serviceUrl + objectId + "/?{}", filter)
+                .extractAs(Service.class);
+    }
+
     @Step("Получение сервиса по Id под ролью Viewer")
     public static Response getServiceViewerById(String objectId) {
         return new Http(ProductCatalogURL)

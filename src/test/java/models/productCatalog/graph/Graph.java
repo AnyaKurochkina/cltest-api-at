@@ -80,6 +80,8 @@ public class Graph extends Entity {
     private Boolean isSequential;
     @JsonProperty("allowed_developers")
     private List<String> allowedDevelopers;
+    @JsonProperty("version_fields")
+    private List<String> versionFields;
     @JsonProperty("restricted_developers")
     private List<String> restrictedDevelopers;
     @JsonProperty("current_version")

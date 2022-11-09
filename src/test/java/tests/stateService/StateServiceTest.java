@@ -57,4 +57,12 @@ public class StateServiceTest extends Tests {
     public void healthTest() {
         assertEquals("ok", getHealthStateService());
     }
+
+    @Test
+    @DisplayName("Получение item с параметром with_folder=true")
+    @TmsLink("1283840")
+    public void getItemWithFolderTrueTest() {
+        String id = getItemsList().get(0).getItemId();
+        assertFalse(getItemByIdAndFilter(id, "with_folder=true").getFolder().isEmpty(), "Значение поля folder пустое");
+    }
 }

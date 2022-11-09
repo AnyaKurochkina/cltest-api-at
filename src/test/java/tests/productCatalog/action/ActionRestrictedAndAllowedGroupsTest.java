@@ -39,6 +39,22 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
         assertEquals("Страница не найдена.", msg);
     }
 
+    @DisplayName("Создание действия с ограничением allowed_group на уровне realm")
+    @TmsLink("1282682")
+    @Test
+    public void actionAllowedGroupRealmLevelTest() {
+        Action action = Action.builder()
+                .actionName("action_for_allowed_group_realm_api_test")
+                .version("1.0.1")
+                .allowedGroups(Collections.singletonList("superadmin"))
+                .build()
+                .createObject();
+        Action actionById = getActionById(action.getActionId());
+        assertNotNull(actionById);
+        String msg = getActionViewerById(action.getActionId()).assertStatus(404).jsonPath().getString("detail");
+        assertEquals("Страница не найдена.", msg);
+    }
+
     @DisplayName("Создание действия с ограничением restricted_group на уровне realm и ограничением allowed_group на уровне account")
     @TmsLink("1279003")
     @Test
@@ -56,6 +72,23 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
         assertEquals("Страница не найдена.", msg);
     }
 
+    @DisplayName("Создание действия с ограничением allowed_group на уровне realm и ограничением restricted_group на уровне account")
+    @TmsLink("1282689")
+    @Test
+    public void actionAllowedGroupRealmLevelAndRestrictedGroupAccountTest() {
+        Action action = Action.builder()
+                .actionName("action_for_restricted_group_account_lvl_and_allowed_group_realm_lvl_api_test")
+                .version("1.0.1")
+                .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
+                .allowedGroups(Collections.singletonList("superadmin"))
+                .build()
+                .createObject();
+        Action actionById = getActionById(action.getActionId());
+        assertNotNull(actionById);
+        String msg = getActionViewerById(action.getActionId()).assertStatus(404).jsonPath().getString("detail");
+        assertEquals("Страница не найдена.", msg);
+    }
+
     @DisplayName("Создание действия с ограничением allowed_group на уровне account")
     @TmsLink("1279058")
     @Test
@@ -64,6 +97,22 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
                 .actionName("action_for_allowed_group_api_test")
                 .version("1.0.1")
                 .allowedGroups(Collections.singletonList("account:role_api_tests"))
+                .build()
+                .createObject();
+        Action actionById = getActionById(action.getActionId());
+        assertNotNull(actionById);
+        String msg = getActionViewerById(action.getActionId()).assertStatus(404).jsonPath().getString("detail");
+        assertEquals("Страница не найдена.", msg);
+    }
+
+    @DisplayName("Создание действия с ограничением restricted_group на уровне account")
+    @TmsLink("1282697")
+    @Test
+    public void actionRestrictedGroupAccountTest() {
+        Action action = Action.builder()
+                .actionName("action_for_restricted_group_api_test")
+                .version("1.0.1")
+                .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
                 .build()
                 .createObject();
         Action actionById = getActionById(action.getActionId());

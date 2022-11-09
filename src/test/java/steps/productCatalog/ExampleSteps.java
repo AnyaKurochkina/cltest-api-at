@@ -29,6 +29,14 @@ public class ExampleSteps extends Steps {
                 .extractAs(Example.class);
     }
 
+    @Step("Получение Примера продуктового каталога по Id и фильтру = {filter}")
+    public static Example getExampleByIdAndFilter(String exampleId, String filter) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(endPoint + exampleId + "/{}", filter)
+                .extractAs(Example.class);
+    }
+
     @Step("Поиск ID Примера продуктового каталога по имени с использованием multiSearch")
     public static String getExampleIdByNameWithMultiSearch(String name) {
         String objectId = null;

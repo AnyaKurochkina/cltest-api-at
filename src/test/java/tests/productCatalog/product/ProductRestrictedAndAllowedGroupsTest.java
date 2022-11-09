@@ -39,8 +39,24 @@ public class ProductRestrictedAndAllowedGroupsTest extends Tests {
         assertEquals("Страница не найдена.", msg);
     }
 
+    @DisplayName("Создание продукта с ограничением allowed_group на уровне realm")
+    @TmsLink("1282722")
+    @Test
+    public void productAllowedGroupRealmLevelTest() {
+        Product product = Product.builder()
+                .name("product_for_allowed_group_realm_lvl_api_test")
+                .version("1.0.1")
+                .allowedGroups(Collections.singletonList("superadmin"))
+                .build()
+                .createObject();
+        Product productById = getProductById(product.getProductId());
+        assertNotNull(productById);
+        String msg = getProductViewerById(product.getProductId()).assertStatus(404).jsonPath().getString("detail");
+        assertEquals("Страница не найдена.", msg);
+    }
+
     @DisplayName("Создание продукта с ограничением restricted_group на уровне realm и ограничением allowed_group на уровне account")
-    @TmsLink("")
+    @TmsLink("1282744")
     @Test
     public void productRestrictedGroupRealmLevelAndAllowedGroupAccountTest() {
         Product product = Product.builder()
@@ -56,14 +72,47 @@ public class ProductRestrictedAndAllowedGroupsTest extends Tests {
         assertEquals("Страница не найдена.", msg);
     }
 
+    @DisplayName("Создание продукта с ограничением allowed_group на уровне realm и ограничением restricted_group на уровне account")
+    @TmsLink("1282745")
+    @Test
+    public void productAllowedGroupRealmLevelAndRestrictedGroupAccountTest() {
+        Product product = Product.builder()
+                .name("product_for_allowed_group_realm_and_restricted_group_account_api_test")
+                .version("1.0.1")
+                .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
+                .allowedGroups(Collections.singletonList("superadmin"))
+                .build()
+                .createObject();
+        Product productById = getProductById(product.getProductId());
+        assertNotNull(productById);
+        String msg = getProductViewerById(product.getProductId()).assertStatus(404).jsonPath().getString("detail");
+        assertEquals("Страница не найдена.", msg);
+    }
+
     @DisplayName("Создание продукта с ограничением allowed_group на уровне account")
-    @TmsLink("")
+    @TmsLink("1282755")
     @Test
     public void actionAllowedGroupAccountTest() {
         Product product = Product.builder()
-                .name("product_for_allowed_group_api_test")
+                .name("product_for_allowed_group_account_lvl_api_test")
                 .version("1.0.1")
                 .allowedGroups(Collections.singletonList("account:role_api_tests"))
+                .build()
+                .createObject();
+        Product productById = getProductById(product.getProductId());
+        assertNotNull(productById);
+        String msg = getProductViewerById(product.getProductId()).assertStatus(404).jsonPath().getString("detail");
+        assertEquals("Страница не найдена.", msg);
+    }
+
+    @DisplayName("Создание продукта с ограничением restricted_group на уровне account")
+    @TmsLink("1282775")
+    @Test
+    public void actionRestrictedGroupAccountTest() {
+        Product product = Product.builder()
+                .name("product_for_restricted_group_account_lvl_api_test")
+                .version("1.0.1")
+                .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
                 .build()
                 .createObject();
         Product productById = getProductById(product.getProductId());

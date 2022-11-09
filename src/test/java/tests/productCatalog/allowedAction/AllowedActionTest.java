@@ -50,6 +50,20 @@ public class AllowedActionTest extends Tests {
         assertTrue(isAllowedActionExists(actionName));
     }
 
+    @DisplayName("Получение разрешенного действия по фильтру with_version_fields=true")
+    @TmsLink("")
+    @Test
+    public void getAllowedActionWithVersionFieldsTest() {
+        String actionName = "get_allowed_action_with_version_fields_test_api";
+        AllowedAction allowedAction = AllowedAction.builder()
+                .name(actionName)
+                .title(actionName)
+                .build()
+                .createObject();
+        AllowedAction actionWithFields = getAllowedActionByFilter(allowedAction.getId(), "with_version_fields=true");
+//        assertFalse(actionWithFields.getVe);
+    }
+
     @DisplayName("Частичное обновление разрешенного действия")
     @TmsLink("1243254")
     @Test

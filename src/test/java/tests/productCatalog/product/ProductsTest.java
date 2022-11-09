@@ -267,6 +267,22 @@ public class ProductsTest extends Tests {
         assertEquals(expectedProduct, actualProduct);
     }
 
+    @DisplayName("Получение продукта по Id и фильтру with_version_fields=true")
+    @TmsLink("1284598")
+    @Test
+    public void getProductByIdWithVersionFieldsTest() {
+        Product expectedProduct = Product.builder()
+                .name("get_by_id_with_version_field_product_test_api")
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
+                .info(info)
+                .build()
+                .createObject();
+        Product actualProduct = getProductByIdAndFilter(expectedProduct.getProductId(), "with_version_fields=true");
+        assertFalse(actualProduct.getVersionFields().isEmpty());
+    }
+
     @DisplayName("Частичное обновление продукта")
     @TmsLink("643402")
     @Test

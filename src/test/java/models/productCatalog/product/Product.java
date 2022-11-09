@@ -93,6 +93,8 @@ public class Product extends Entity {
     private String payment;
     @JsonProperty("context_restrictions")
     private Object contextRestrictions;
+    @JsonProperty("version_fields")
+    private List<String> versionFields;
 
     @Override
     public Entity init() {

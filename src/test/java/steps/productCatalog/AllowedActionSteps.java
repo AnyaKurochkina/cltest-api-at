@@ -37,6 +37,15 @@ public class AllowedActionSteps extends Steps {
                 .getList().get(0);
     }
 
+    @Step("Получение разрешенного действия по фильтру {filter}")
+    public static AllowedAction getAllowedActionByFilter(Integer id, String filter) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(allowedUrl + "{}/?{}", id, filter)
+                .assertStatus(200)
+                .extractAs(AllowedAction.class);
+    }
+
     @Step("Получение разрешенного действия по id {id}")
     public static AllowedAction getAllowedActionById(Integer id) {
         return new Http(ProductCatalogURL)
@@ -48,7 +57,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Удаление разрешенного действия по id {id}")
     public static void deleteAllowedActionById(Integer id) {
-         new Http(ProductCatalogURL)
+        new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(allowedUrl + "{}/", id)
                 .assertStatus(204);
@@ -87,7 +96,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Проверка доступности у allowedAction event_type {} и event_provider {}")
     public static void checkAllowedActionEvents(Integer actionId, String eventType, String eventProvider) {
-         new Http(ProductCatalogURL)
+        new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(allowedUrl + "check_action/?action={}&event_type={}&event_provider={}", actionId, eventType, eventProvider)
                 .assertStatus(200);
@@ -124,7 +133,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Выгрузка разрешенного действия из Gitlab")
     public static void loadAllowedActionFromGit(JSONObject body) {
-         new Http(ProductCatalogURL)
+        new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(allowedUrl + "load_from_bitbucket/")
@@ -141,6 +150,7 @@ public class AllowedActionSteps extends Steps {
                 .extractAs(GetAllowedActionList.class)
                 .getList();
     }
+
     public static void checkEventProviderAllowedList(List<AllowedAction> actionList, String eventType, String eventProvider) {
         for (AllowedAction action : actionList) {
             List<EventTypeProvider> eventTypeProviderList = action.getEventTypeProvider();

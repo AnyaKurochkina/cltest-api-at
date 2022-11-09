@@ -25,7 +25,7 @@ import static steps.productCatalog.ServiceSteps.getServiceViewerById;
 public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
 
     @DisplayName("Создание сервиса с ограничением restricted group на уровне realm")
-    @TmsLink("")
+    @TmsLink("1281845")
     @Test
     public void serviceRestrictedGroupRealmLevelTest() {
         Service service = Service.builder()
@@ -40,8 +40,24 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
         assertEquals("Страница не найдена.", msg);
     }
 
+    @DisplayName("Создание сервиса с ограничением allowed_group на уровне realm")
+    @TmsLink("1282617")
+    @Test
+    public void serviceAllowedGroupRealmLevelTest() {
+        Service service = Service.builder()
+                .serviceName("service_for_allowed_group_api_test")
+                .version("1.0.1")
+                .allowedGroups(Collections.singletonList("superadmin"))
+                .build()
+                .createObject();
+        GetServiceResponse serviceById = getServiceById(service.getServiceId());
+        assertNotNull(serviceById);
+        String msg = getServiceViewerById(service.getServiceId()).assertStatus(404).jsonPath().getString("detail");
+        assertEquals("Страница не найдена.", msg);
+    }
+
     @DisplayName("Создание сервиса с ограничением restricted_group на уровне realm и ограничением allowed_group на уровне account")
-    @TmsLink("")
+    @TmsLink("1281847")
     @Test
     public void serviceRestrictedGroupRealmLevelAndAllowedGroupAccountTest() {
         Service service = Service.builder()
@@ -57,14 +73,47 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
         assertEquals("Страница не найдена.", msg);
     }
 
+    @DisplayName("Создание сервиса с ограничением restricted_group на уровне account и ограничением allowed_group на уровне realm")
+    @TmsLink("1282632")
+    @Test
+    public void serviceRestrictedGroupAccountLevelAndAllowedGroupRealmTest() {
+        Service service = Service.builder()
+                .serviceName("service_for_restricted_group_acc_lvl_and_allowed_group_realm_api_test")
+                .version("1.0.1")
+                .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
+                .allowedGroups(Collections.singletonList("superadmin"))
+                .build()
+                .createObject();
+        GetServiceResponse serviceById = getServiceById(service.getServiceId());
+        assertNotNull(serviceById);
+        String msg = getServiceViewerById(service.getServiceId()).assertStatus(404).jsonPath().getString("detail");
+        assertEquals("Страница не найдена.", msg);
+    }
+
     @DisplayName("Создание сервиса с ограничением allowed_group на уровне account")
-    @TmsLink("")
+    @TmsLink("1281848")
     @Test
     public void serviceAllowedGroupAccountTest() {
         Service service = Service.builder()
                 .serviceName("service_for_allowed_group_api_test")
                 .version("1.0.1")
                 .allowedGroups(Collections.singletonList("account:role_api_tests"))
+                .build()
+                .createObject();
+        GetServiceResponse serviceById = getServiceById(service.getServiceId());
+        assertNotNull(serviceById);
+        String msg = getServiceViewerById(service.getServiceId()).assertStatus(404).jsonPath().getString("detail");
+        assertEquals("Страница не найдена.", msg);
+    }
+
+    @DisplayName("Создание сервиса с ограничением restricted_group на уровне account")
+    @TmsLink("1282603")
+    @Test
+    public void serviceRestrictedGroupAccountTest() {
+        Service service = Service.builder()
+                .serviceName("service_for_restricted_group_account_lvl_api_test")
+                .version("1.0.1")
+                .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
                 .build()
                 .createObject();
         GetServiceResponse serviceById = getServiceById(service.getServiceId());
