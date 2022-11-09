@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
+import ui.elements.TextArea;
 import ui.models.Node;
 import ui.models.SubgraphNode;
 import ui.models.TemplateNode;
@@ -29,9 +30,8 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement formCancelButton = $x("//form//div[text() = 'Отмена']//ancestor::button");
     private final SelenideElement showSubgraphsButton = $x("//label[text() = 'Подграф']/following::*[name()='svg'][2]");
     private final SelenideElement showTemplatesButton = $x("//label[text() = 'Шаблон']/following::*[name()='svg'][2]");
-    private final SelenideElement inputJSONField = $x("//label[text()='Input']/../..//textarea");
-    private final SelenideElement outputJSONField = $x("//label[text()='Output']/../..//textarea");
-    private final SelenideElement printedOutputJSONField = $x("//label[text()='Printed output']/../..//textarea");
+    private final TextArea inputTextArea = TextArea.byLabel("Input");
+    private final TextArea outputTextArea = TextArea.byLabel("Output");
     private final SelenideElement numberInput = $x("//input[@name='number']");
     private final SelenideElement timeoutInput = $x("//input[@name='timeout']");
     private final SelenideElement countInput = $x("//input[@name='count']");
@@ -65,18 +65,16 @@ public class GraphNodesPage extends GraphPage {
     @Step("Добавление узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage addNodeAndSave(Node node) {
         addNodeButton.click();
+        TestUtils.wait(1000);
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
         if (node instanceof SubgraphNode) {
             showSubgraphsButton.click();
             subgraphInput.setValue(((SubgraphNode) node).getSubgraphName());
-            TestUtils.wait(500);
             $x("//div[contains(@title,'" + ((SubgraphNode) node).getSubgraphName() + "')]").shouldBe(Condition.enabled).click();
             paramsTab.click();
-            inputJSONField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
-            inputJSONField.setValue(node.getInput());
-            outputJSONField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
-            outputJSONField.setValue(node.getOutput());
+            inputTextArea.setValue(node.getInput());
+            outputTextArea.setValue(node.getOutput());
             additionalTab.click();
             numberInput.setValue(String.valueOf(node.getNumber()));
             timeoutInput.setValue(String.valueOf(node.getTimeout()));
