@@ -34,6 +34,7 @@ public class Configure {
             RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
             properties.setProperty("testIt", "false");
+            properties.setProperty("webdriver.remote.url", System.getProperty("moon"));
             loadProperties(RESOURCE_PATH + "/config/kafka.config.properties");
             loadProperties(RESOURCE_PATH + "/config/application.properties");
             if (System.getProperty("env") == null) {
