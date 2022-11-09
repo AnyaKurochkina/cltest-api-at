@@ -13,11 +13,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import api.Tests;
 
-import java.util.Collections;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.productCatalog.ActionSteps.*;
+import static steps.productCatalog.ActionSteps.isActionExists;
 import static steps.productCatalog.AllowedActionSteps.*;
 
 @Tag("product_catalog")
@@ -53,17 +50,18 @@ public class AllowedActionTest extends Tests {
         assertTrue(isAllowedActionExists(actionName));
     }
 
-    @DisplayName("Проверка существования разрешенного действия")
-    @TmsLink("1243008")
+    @DisplayName("Получение разрешенного действия по фильтру with_version_fields=true")
+    @TmsLink("")
     @Test
-    public void checkAllowedAction() {
-        String actionName = "check_allowed_action_exist_test_api";
-        AllowedAction action = AllowedAction.builder()
+    public void getAllowedActionWithVersionFieldsTest() {
+        String actionName = "get_allowed_action_with_version_fields_test_api";
+        AllowedAction allowedAction = AllowedAction.builder()
                 .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
-        checkAllowedActionEvents(action.getId(), action.getEventType().get(0), action.getEventProvider().get(0));
+        AllowedAction actionWithFields = getAllowedActionByFilter(allowedAction.getId(), "with_version_fields=true");
+//        assertFalse(actionWithFields.getVe);
     }
 
     @DisplayName("Частичное обновление разрешенного действия")
@@ -76,9 +74,9 @@ public class AllowedActionTest extends Tests {
                 .title(actionName)
                 .build()
                 .createObject();
-        List<String> expectedEventType = Collections.singletonList("bm");
-        AllowedAction updatedAction = partialUpdateAllowedAction(action.getId(), new JSONObject().put("event_type", expectedEventType));
-        assertEquals(updatedAction.getEventType(), expectedEventType);
+        String description = "update";
+        AllowedAction updatedAction = partialUpdateAllowedAction(action.getId(), new JSONObject().put("description", description));
+        assertEquals(description, updatedAction.getDescription());
     }
 
     @DisplayName("Обновление разрешенного действия")

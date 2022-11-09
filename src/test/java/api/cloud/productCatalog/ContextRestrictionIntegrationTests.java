@@ -1,10 +1,11 @@
-package api.cloud.productCatalog;
+package tests.productCatalog;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.Astra;
-import models.cloud.productCatalog.action.Action;
+import models.orderService.products.Astra;
+import models.productCatalog.action.Action;
+import models.productCatalog.action.EventTypeProvider;
 import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.ProductArgumentsProvider;
@@ -12,7 +13,7 @@ import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
-import api.Tests;
+import tests.Tests;
 
 import java.util.Collections;
 
@@ -32,8 +33,7 @@ public class ContextRestrictionIntegrationTests extends Tests {
         Action action = Action.builder()
                 .actionName(actionName )
                 .title(actionName )
-                .eventType(Collections.singletonList("vm"))
-                .eventProvider(Collections.singletonList("vsphere"))
+                .eventTypeProvider(Collections.singletonList(new EventTypeProvider("vm", "vsphere")))
                 .requiredItemStatuses(Collections.singletonList("on"))
                 .requiredOrderStatuses(Collections.singletonList("success"))
                 .build()

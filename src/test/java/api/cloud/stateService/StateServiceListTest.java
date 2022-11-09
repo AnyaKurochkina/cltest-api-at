@@ -46,7 +46,7 @@ public class StateServiceListTest extends Tests {
     @TmsLink("")
     public void getItemListWithActions() {
         // TODO: 26.09.2022 разобраться с проектом.
-        Project project = Project.builder().isForOrders(true)
+        Project.builder().isForOrders(true)
                 .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
                 .build()
                 .createObject();
@@ -105,7 +105,16 @@ public class StateServiceListTest extends Tests {
                assertNotNull(parent_item.get("item_id"));
                assertNotNull(parent_item.get("type"));
                assertNotNull(parent_item.get("data"));
-           };
+           }
+        }
+    }
+    @Test
+    @DisplayName("Получение списка items с параметром with_folder=true")
+    @TmsLink("1283814")
+    public void getItemListWithFolderTrueTest() {
+        List<Item> list = getItemsListByFilter("with_folder=true");
+        for (Item item : list) {
+            assertFalse(item.getFolder().isEmpty());
         }
     }
 }

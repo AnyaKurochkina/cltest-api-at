@@ -35,7 +35,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     String fullNameUserDB = "at_db_at_user";
 
     public UiPostgreSqlAstraLinuxTest() {
-        if (Configure.ENV.equals("prod"))
+        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
             product = PostgreSQL.builder().env("DEV").productName("PostgreSQL (Astra Linux)").platform("OpenStack").segment("dev-srv-app").build();
             // product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/ec7fe6a7-bc5c-4bb0-bdf8-ea776f9b2639/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
@@ -251,6 +251,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     @Test
     @Order(22)
     @TmsLinks({@TmsLink("993397"), @TmsLink("993401")})
+    @Disabled
     @DisplayName("UI PostgreSQLAstra. Выключить принудительно / Включить")
     void stopHard() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -261,6 +262,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     @Test
     @Order(23)
     @TmsLink("993390")
+    @Disabled
     @DisplayName("UI PostgreSQLAstra. Выключить")
     void stopSoft() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);

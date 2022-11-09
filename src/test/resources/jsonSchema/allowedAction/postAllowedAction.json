@@ -23,21 +23,9 @@
     "description": {
       "type": "string"
     },
-    "event_type": {
+    "event_type_provider": {
       "type": "array",
-      "items": [
-        {
-          "type": "string"
-        }
-      ]
-    },
-    "event_provider": {
-      "type": "array",
-      "items": [
-        {
-          "type": "string"
-        }
-      ]
+      "items":{}
     },
     "config_restriction": {
       "type": "string"
@@ -66,8 +54,7 @@
     "name",
     "title",
     "description",
-    "event_type",
-    "event_provider",
+    "event_type_provider",
     "config_restriction",
     "item_restriction",
     "environment_type_restriction",

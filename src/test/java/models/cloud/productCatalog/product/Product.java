@@ -93,6 +93,8 @@ public class Product extends Entity {
     private String payment;
     @JsonProperty("context_restrictions")
     private Object contextRestrictions;
+    @JsonProperty("version_fields")
+    private List<String> versionFields;
 
     @Override
     public Entity init() {
@@ -127,6 +129,8 @@ public class Product extends Entity {
                 .set("$.payment", payment)
                 .setIfNullRemove("$.category_v2", categor)
                 .setIfNullRemove("$.number", number)
+                .set("$.allowed_groups", allowedGroups)
+                .set("$.restricted_groups", restrictedGroups)
                 .build();
     }
 

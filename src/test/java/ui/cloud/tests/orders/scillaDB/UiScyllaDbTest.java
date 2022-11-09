@@ -33,7 +33,7 @@ public class UiScyllaDbTest extends Tests {
     String shortNameUserDB = "at_user";
 
     public UiScyllaDbTest() {
-        if (Configure.ENV.equals("prod"))
+        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
             product = ScyllaDb.builder().env("DEV").productName("ScyllaDB").platform("OpenStack").segment("dev-srv-app").build();
         //product = ScyllaDb.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/01828278-e513-4685-8cdd-f0c87840ff62/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
@@ -180,6 +180,7 @@ public class UiScyllaDbTest extends Tests {
     @Test
     @Order(20)
     @TmsLinks({@TmsLink("464218"), @TmsLink("464284")})
+    @Disabled
     @DisplayName("UI ScyllaDB. Выключить принудительно / Включить")
     void stopHard() {
         ScyllaPage scyllaPage = new ScyllaPage(product);
@@ -190,6 +191,7 @@ public class UiScyllaDbTest extends Tests {
     @Test
     @Order(21)
     @TmsLink("464202")
+    @Disabled
     @DisplayName("UI ScyllaDB. Выключить")
     void stopSoft() {
         ScyllaPage scyllaPage = new ScyllaPage(product);

@@ -31,6 +31,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ServiceSteps.getServiceByIdAndFilter;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -168,6 +169,21 @@ public class ServicesTest extends Tests {
                 .createObject();
         GetImpl serviceResponse = steps.getById(service.getServiceId(), GetServiceResponse.class);
         Assertions.assertEquals(name, serviceResponse.getName());
+    }
+
+    @DisplayName("Получение сервиса по Id и фильтру with_version_fields=true")
+    @TmsLink("1284668")
+    @Test
+    public void getServiceByIdAndVersionFieldsTest() {
+        String name = "get_service_by_id_and_version_fields_test_api";
+        Service service = Service.builder()
+                .serviceName(name)
+                .title("title_service_test_api")
+                .description("ServiceForAT")
+                .build()
+                .createObject();
+        Service serviceWithFields = getServiceByIdAndFilter(service.getServiceId(), "with_version_fields=true");
+        assertFalse(serviceWithFields.getVersionFields().isEmpty());
     }
 
     @DisplayName("Проверка сортировки по дате создания в сервисах")

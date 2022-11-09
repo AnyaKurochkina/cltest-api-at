@@ -1,6 +1,5 @@
 package api.cloud.productCatalog.orgDirection;
 
-import core.helper.Configure;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Epic;
@@ -15,6 +14,7 @@ import api.Tests;
 
 import java.util.List;
 
+import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("product_catalog")
@@ -37,11 +37,17 @@ public class OrgDirectionListTest extends Tests {
     @TmsLink("679060")
     @Test
     public void getMeta() {
-        String str = steps.getMeta(GetOrgDirectionListResponse.class).getNext();
-        String env = Configure.ENV;
-        if (!(str == null)) {
-            assertTrue(str.startsWith("http://" + env + "-kong-service.apps.d0-oscp.corp.dev.vtb/"),
-                    "Значение поля next несоответсвует ожидаемому");
+        String nextPage = steps.getMeta(GetOrgDirectionListResponse.class).getNext();
+        String url = getAppProp("url.kong");
+        if (!(nextPage == null)) {
+            assertTrue(nextPage.startsWith(url), "Значение поля next несоответсвует ожидаемому");
         }
+    }
+
+    @DisplayName("Получение списка сервисов использующих направление")
+    @TmsLink("")
+    @Test
+    public void getServiceListUserOrgDirectionTest() {
+
     }
 }

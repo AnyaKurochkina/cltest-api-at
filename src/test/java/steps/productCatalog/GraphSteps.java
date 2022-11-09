@@ -88,8 +88,16 @@ public class GraphSteps extends Steps {
     @Step("Получение графа по Id")
     public static Graph getGraphById(String objectId) {
         return new Http(ProductCatalogURL)
-                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(graphUrl + objectId + "/")
+                .extractAs(Graph.class);
+    }
+
+    @Step("Получение графа по Id и фильтру {filter}")
+    public static Graph getGraphByIdAndFilter(String objectId, String filter) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + objectId + "/?{}", filter)
                 .extractAs(Graph.class);
     }
 

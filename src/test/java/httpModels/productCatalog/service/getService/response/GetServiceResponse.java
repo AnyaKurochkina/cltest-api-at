@@ -101,6 +101,9 @@ public class GetServiceResponse implements GetImpl {
 	@JsonProperty("allowed_groups")
 	private List<String> allowedGroups;
 
+	@JsonProperty("version_fields")
+	private List<String> versionFields;
+
 	@JsonProperty("graph_version_calculated")
 	private String graphVersionCalculated;
 
