@@ -4,6 +4,8 @@ import com.codeborne.selenide.SelenideElement;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.Duration;
+
 @Builder
 @Data
 public class ActionParameters {
@@ -15,5 +17,6 @@ public class ActionParameters {
     boolean checkAlert = true;
     @Builder.Default
     boolean waitChangeStatus = true;
+    Duration timeOut;
     SelenideElement node;
 }
