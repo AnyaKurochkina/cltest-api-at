@@ -2,7 +2,6 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import models.orderService.products.PostgreSQL;
 import models.orderService.products.Redis;
 import models.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
@@ -24,10 +23,10 @@ public class RedisAstraPage extends IProductPage {
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
     private static final String HEADER_NAME_DB = "Имя базы данных";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
-    private static final String POWER = "Питание";
+    private static final String STATUS = "Роли узла";
     private static final String HEADER_PATH = "Файловая система";
     private static final String HEADER_SORT = "Сортировка";
-    private static final String HEADER_DISK_SIZE = "Размер, Гб";
+    private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_COMMENTS = "Комментарий";
 
 
@@ -37,6 +36,8 @@ public class RedisAstraPage extends IProductPage {
     SelenideElement ram = $x("(//h5)[2]");
     SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
     SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
+    SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
+
 
     public RedisAstraPage(Redis product) {
         super(product);
@@ -44,7 +45,7 @@ public class RedisAstraPage extends IProductPage {
 
     @Override
     void checkPowerStatus(String expectedStatus) {
-        new RedisAstraPage.VirtualMachineTable(POWER).checkPowerStatus(expectedStatus);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(expectedStatus);
     }
 
     public void start() {
@@ -61,12 +62,14 @@ public class RedisAstraPage extends IProductPage {
 
     public void checkConfiguration() {
         checkPowerStatus(ScyllaPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        new Table("Роли узла").getRowByIndex(0).scrollIntoView(scrollCenter).click();
+        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
     }
 
     public void resetPassword() {
         checkPowerStatus(ScyllaPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(BLOCK_APP, "Сбросить пароль","Подтвердить",  () ->
+        runActionWithParameters("default", "Сбросить пароль","Подтвердить",  () ->
         {
             Dialog dlgActions = new Dialog("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -84,19 +87,19 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void restart() {
-        new RedisAstraPage.VirtualMachineTable(POWER).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Перезагрузить");
-        new RedisAstraPage.VirtualMachineTable(POWER).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void getActualConfiguration() {
-        new RedisAstraPage.VirtualMachineTable(POWER).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Получить актуальную конфигурацию");
-        new RedisAstraPage.VirtualMachineTable(POWER).checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void changeTransactionIsolation(String value) {
-        new RedisAstraPage.VirtualMachineTable(POWER).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить default_transaction_isolation", "Подтвердить", () -> {
             DropDown.byLabel("default_transaction_isolation").select(value);
         });
@@ -106,7 +109,7 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void changeMaxConnections(String value) {
-        new RedisAstraPage.VirtualMachineTable(POWER).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить max_connections", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Изменить max_connections");
             dlg.setInputValue("max_connections", value);
@@ -123,19 +126,19 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void changeConfiguration() {
-        new RedisAstraPage.VirtualMachineTable(POWER).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-//        Table table = new Table("Роли узла");
-//        table.getRowByIndex(0).click();
+        Table table = new Table("Роли узла");
+        table.getRowByIndex(0).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
 
     public void createDb(String name) {
-        new RedisAstraPage.VirtualMachineTable(POWER).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_LIMIT_CONNECT).isColumnValueContains("", name))) {
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -151,7 +154,7 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void addUserDb(String nameDb, String nameUserDb, String comment) {
-        new RedisAstraPage.VirtualMachineTable(POWER).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_NAME_DB).isColumnValueContains("", nameDb + "_" + nameUserDb))) {
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -170,7 +173,7 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void removeDb(String name) {
-        new RedisAstraPage.VirtualMachineTable(POWER).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -180,11 +183,14 @@ public class RedisAstraPage extends IProductPage {
         }
     }
     public void enlargeDisk(String name, String size, SelenideElement node) {
+
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
         expandDisk(name, size, node);
         btnGeneralInfo.shouldBe(Condition.enabled).click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
                 Integer.parseInt(size));
@@ -221,7 +227,7 @@ public class RedisAstraPage extends IProductPage {
 
         @Override
         public String getPowerStatus() {
-            return getPowerStatus(POWER);
+            return getPowerStatus("Статус");
         }
 
     }

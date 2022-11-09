@@ -144,6 +144,10 @@ PostgresPro:
       - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app" }
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
 
+LoadBalancer:
+  - options:
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+
 PostgresSQLCluster:
   - options:
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }

@@ -35,6 +35,7 @@ public class OldWindowsTest extends Tests {
         windows.restart();
     }
 
+    @Disabled
     @Order(2)
     @TmsLink("841705")
     @DisplayName("Выключить Windows OLD")
@@ -51,13 +52,14 @@ public class OldWindowsTest extends Tests {
     @DisplayName("Изменить конфигурацию Windows OLD")
     @Test
     void resize() {
-        if (windows.productStatusIs(STARTED)) {
-            windows.stopHard();
-        }
+//        if (windows.productStatusIs(STARTED)) {
+//            windows.stopHard();
+//        }
         windows.resize(windows.getMaxFlavor());
         windows.resize(windows.getMinFlavor());
     }
 
+    @Disabled
     @Order(4)
     @TmsLink("841704")
     @DisplayName("Включить Windows OLD")
@@ -146,6 +148,7 @@ public class OldWindowsTest extends Tests {
 //       windows.expandMountPoint("K");
 //    }
 
+    @Disabled
     @Order(11)
     @TmsLink("841703")
     @DisplayName("Выключить принудительно Windows OLD")

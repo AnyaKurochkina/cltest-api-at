@@ -39,7 +39,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/elasticsearch_opensearch_cluster.json";
         if(productName == null)
-            productName = "Elasticsearch Opensearch cluster";
+            productName = "Elasticsearch Opensearch cluster (Astra)";
         initProduct();
         if(osVersion == null)
             osVersion = getRandomOsVersion();

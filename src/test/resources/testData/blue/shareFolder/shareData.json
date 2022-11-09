@@ -23,8 +23,8 @@
   },
   {
     "objectClassName": "models.authorizer.ServiceAccount",
-    "secret": "ae5629baa6d74df85f997d0457ce8209",
-    "id": "sa_proj-iv550odo9a-22",
+    "secret": "dea19ebbb05306392f63bcc0d0915f9a",
+    "id": "sa_proj-iv550odo9a-29",
     "projectId": "proj-iv550odo9a",
     "role": "order-service.admin"
   },

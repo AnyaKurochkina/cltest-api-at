@@ -10,6 +10,7 @@ import models.portalBack.AccessGroup;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -115,6 +116,7 @@ public class ClickHouseClusterTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("1161954")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -126,6 +128,7 @@ public class ClickHouseClusterTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLinks({@TmsLink("1161964"),@TmsLink("1161952")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

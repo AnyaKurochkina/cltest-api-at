@@ -171,12 +171,12 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Изменить конфигурацию")
     void changeConfiguration() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopHard);
-        try {
+//        winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopHard);
+//        try {
             winPage.runActionWithCheckCost(CompareType.MORE, winPage::changeConfiguration);
-        } finally {
-            winPage.runActionWithCheckCost(CompareType.MORE, winPage::start);
-        }
+//        } finally {
+//            winPage.runActionWithCheckCost(CompareType.MORE, winPage::start);
+//        }
     }
 
     @Test
@@ -229,6 +229,7 @@ public class UiWindowsTest extends Tests {
         winPage.runActionWithCheckCost(CompareType.EQUALS, winPage::checkConfiguration);
     }
 
+    @Disabled
     @Test
     @Order(15)
     @TmsLinks({@TmsLink("14485"), @TmsLink("247978")})
@@ -239,6 +240,7 @@ public class UiWindowsTest extends Tests {
         winPage.runActionWithCheckCost(CompareType.MORE, winPage::start);
     }
 
+    @Disabled
     @Test
     @Order(16)
     @TmsLink("872682")

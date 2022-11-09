@@ -1,0 +1,25 @@
+{
+  "mode": "tcp",
+  "servers": [
+    {
+      "port": 443,
+      "name": "d5soul-ngc004lk.corp.dev.vtb",
+      "address": "10.226.48.194"
+    },
+    {
+      "port": 443,
+      "name": "d5soul-ngc005lk.corp.dev.vtb",
+      "address": "10.226.99.132"
+    }
+  ],
+  "advanced_check": false,
+  "balancing_algorithm": "leastconn",
+  "adv_check": "httpchk",
+  "check_fall": 3,
+  "check_port": 80,
+  "check_rise": 3,
+  "check_interval": 5000,
+  "check_uri": "/",
+  "check_method": "GET",
+  "backend_name": "bakend_tcp"
+}

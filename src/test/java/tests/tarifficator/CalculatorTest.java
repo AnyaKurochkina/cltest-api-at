@@ -15,10 +15,7 @@ import models.orderService.products.Astra;
 import models.orderService.products.NT;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.accountManager.AccountSteps;
 import steps.authorizer.AuthorizerSteps;
@@ -154,6 +151,7 @@ public class CalculatorTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("649012")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Сравнение стоимости продукта в статусе OFF с ценой предбиллинга")

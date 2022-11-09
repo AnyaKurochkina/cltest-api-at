@@ -8,6 +8,7 @@ import models.orderService.products.ClickHouse;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -76,6 +77,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("377798")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -87,6 +89,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLinks({@TmsLink("377796"),@TmsLink("377797")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
