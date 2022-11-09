@@ -191,10 +191,11 @@ public class ActionPage {
         DropDown eventTypeDropDown = new DropDown(table.getRowByIndex(0).$x("(.//div[select])[1]"));
         DropDown eventProviderDropDown = new DropDown(table.getRowByIndex(0).$x("(.//div[select])[2]"));
         eventTypeDropDown.click();
-        //TODO
-        while (!$x("//div[@title = '" + eventType.getValue() + "']").isDisplayed()) {
+        //TODO DropDown не сразу раскрывается
+        for (int i = 0; i < 10; i++) {
             eventTypeDropDown.getElement().$x(".//*[name()='svg']").click();
-            TestUtils.wait(1000);
+            TestUtils.wait(1500);
+            if ($x("//div[@title = '" + eventType.getValue() + "']").isDisplayed()) break;
         }
         $x("//div[@title = '" + eventType.getValue() + "']").click();
         eventProviderDropDown.selectByTitle(eventProvider.getValue());
