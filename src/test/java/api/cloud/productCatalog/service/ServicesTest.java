@@ -459,7 +459,7 @@ public class ServicesTest extends Tests {
     public void getDirectionTitleService() {
         String directionTitle = "direction_title_test_api";
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("direction_title_test_api")
+                .name("direction_title_test_api")
                 .title(directionTitle)
                 .build()
                 .createObject();
@@ -468,7 +468,7 @@ public class ServicesTest extends Tests {
                 .serviceName(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
-                .directionId(orgDirection.getOrgDirectionId())
+                .directionId(orgDirection.getId())
                 .build()
                 .createObject();
         String serviceId = service.getServiceId();

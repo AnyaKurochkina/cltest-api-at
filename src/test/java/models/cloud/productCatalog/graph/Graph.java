@@ -114,6 +114,7 @@ public class Graph extends Entity {
                 .set("$.description", description)
                 .set("$.type", type)
                 .set("$.author", author)
+                .set("$.graph", graph)
                 .set("$.version", version)
                 .set("$.create_dt", createDt)
                 .set("$.update_dt", updateDt)

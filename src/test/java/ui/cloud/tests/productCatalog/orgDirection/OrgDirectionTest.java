@@ -54,7 +54,7 @@ public class OrgDirectionTest extends BaseTest {
         String description = "at_ui_edit_direction_description";
         String updName = "upd_name";
         OrgDirection.builder()
-                .orgDirectionName(name)
+                .name(name)
                 .title(title)
                 .description(description)
                 .build()
@@ -116,7 +116,7 @@ public class OrgDirectionTest extends BaseTest {
         String title = "at_ui_copy_direction_title";
         String description = "at_ui_copy_direction_description";
         OrgDirection.builder()
-                .orgDirectionName(name)
+                .name(name)
                 .title(title)
                 .description(description)
                 .build()

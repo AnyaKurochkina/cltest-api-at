@@ -20,4 +20,13 @@ public class TemplateSteps extends Steps  {
                 .body(body)
                 .post(templateUrl);
     }
+
+    @Step("Полуение списка узлов использующих шаблон")
+    public static Response getNodeListUsedTemplate(Integer id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(templateUrl + "{}/used/", id)
+                .compareWithJsonSchema("jsonSchema/template/getNodesUsedTemplateSchema.json")
+                .assertStatus(200);
+    }
 }

@@ -16,6 +16,7 @@ public class OrgDirectionSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(orgDirUrl + "{}/used/", id)
+                .compareWithJsonSchema("jsonSchema/orgDirection/getUsedServiceListSchema.json")
                 .assertStatus(200);
     }
 }

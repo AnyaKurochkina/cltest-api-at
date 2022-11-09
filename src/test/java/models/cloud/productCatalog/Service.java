@@ -118,11 +118,11 @@ public class Service extends Entity {
         }
         if (directionId == null) {
             OrgDirection orgDirection = OrgDirection.builder()
-                    .orgDirectionName("direction_for_services_api_test")
+                    .name("direction_for_services_api_test")
                     .title("test_api")
                     .build()
                     .createObject();
-            directionId = orgDirection.getOrgDirectionId();
+            directionId = orgDirection.getId();
         }
         return this;
     }

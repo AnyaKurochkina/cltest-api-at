@@ -29,13 +29,13 @@ public class ServiceBaseTest extends BaseTest {
 
     private void createService(String name) {
         orgDirection = OrgDirection.builder()
-                .orgDirectionName(UUID.randomUUID().toString())
+                .name(UUID.randomUUID().toString())
                 .title("AT UI Direction")
                 .build()
                 .createObject();
 
         service = Service.builder()
-                .directionId(orgDirection.getOrgDirectionId())
+                .directionId(orgDirection.getId())
                 .serviceName(name)
                 .title(TITLE)
                 .description(DESCRIPTION)

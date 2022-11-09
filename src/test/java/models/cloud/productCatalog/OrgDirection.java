@@ -1,14 +1,14 @@
 package models.cloud.productCatalog;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import core.helper.http.Http;
-import httpModels.productCatalog.orgDirection.createOrgDirection.response.CreateOrgDirectionResponse;
-import httpModels.productCatalog.orgDirection.createOrgDirection.response.ExtraData;
+import httpModels.productCatalog.orgDirection.getOrgDirection.response.ExtraData;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Step;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
@@ -20,15 +20,26 @@ import static core.helper.Configure.ProductCatalogURL;
 @Log4j2
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class OrgDirection extends Entity {
+    @JsonProperty("extra_data")
     private ExtraData extraData;
-    private String orgDirectionName;
+    private String icon;
+    @JsonProperty("icon_url")
     private String iconUrl;
+    @JsonProperty("icon_store_id")
     private String iconStoreId;
+    private String name;
     private String description;
-    private String orgDirectionId;
-    private String jsonTemplate;
+    private String id;
     private String title;
+    @JsonProperty("create_dt")
+    private String createDt;
+    @JsonProperty("update_dt")
+    private String updateDt;
+    private String jsonTemplate;
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/org_direction/",
             "productCatalog/orgDirection/orgDirection.json");
@@ -44,7 +55,7 @@ public class OrgDirection extends Entity {
     @Override
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.name", orgDirectionName)
+                .set("$.name", name)
                 .set("$.title", title)
                 .set("$.description", description)
                 .set("$.icon_store_id", iconStoreId)
@@ -56,17 +67,17 @@ public class OrgDirection extends Entity {
     @Override
     @Step("Создание направления")
     protected void create() {
-        if (productCatalogSteps.isExists(orgDirectionName)) {
-            productCatalogSteps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
+        if (productCatalogSteps.isExists(name)) {
+            productCatalogSteps.deleteByName(name, GetOrgDirectionListResponse.class);
         }
-        CreateOrgDirectionResponse createOrgDirectionResponse = new Http(ProductCatalogURL)
+        OrgDirection createOrgDirection = new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
-                .extractAs(CreateOrgDirectionResponse.class);
-        orgDirectionId = createOrgDirectionResponse.getId();
-        Assertions.assertNotNull(orgDirectionId, "Направление с именем: " + orgDirectionName + ", не создался");
+                .extractAs(OrgDirection.class);
+        StringUtils.copyAvailableFields(createOrgDirection, this);
+        Assertions.assertNotNull(id, "Направление с именем: " + name + ", не создался");
     }
 
     @Override
@@ -74,9 +85,9 @@ public class OrgDirection extends Entity {
     protected void delete() {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(productName + orgDirectionId + "/")
+                .delete(productName + id + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(orgDirectionName));
+        Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 }

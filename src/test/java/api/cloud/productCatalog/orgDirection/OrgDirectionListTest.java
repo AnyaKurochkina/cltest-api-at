@@ -1,21 +1,25 @@
 package api.cloud.productCatalog.orgDirection;
 
+import api.Tests;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.OrgDirection;
+import models.cloud.productCatalog.Service;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.util.List;
 
 import static core.helper.Configure.getAppProp;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.OrgDirectionSteps.getServiceUsedOrgDirection;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -45,9 +49,23 @@ public class OrgDirectionListTest extends Tests {
     }
 
     @DisplayName("Получение списка сервисов использующих направление")
-    @TmsLink("")
+    @TmsLink("1287089")
     @Test
     public void getServiceListUserOrgDirectionTest() {
-
+        OrgDirection orgDirection = OrgDirection.builder()
+                .name("org_direction_used_in_service_test_api")
+                .title("title_org_direction_at_test-:2022.")
+                .build()
+                .createObject();
+        String name = "create_service_used_direction_test_api";
+        Service.builder()
+                .serviceName(name)
+                .title("title_service_test_api")
+                .description("ServiceForAT")
+                .directionId(orgDirection.getId())
+                .build()
+                .createObject();
+        String serviceName = getServiceUsedOrgDirection(orgDirection.getId()).jsonPath().getString("[0].name");
+        assertEquals(name, serviceName);
     }
 }
