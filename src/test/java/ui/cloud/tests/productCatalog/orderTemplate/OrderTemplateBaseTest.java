@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
-@Epic("Шаблоны отображения")
+@Epic("Конструктор.Шаблоны отображения")
 @DisabledIfEnv("prod")
 public class OrderTemplateBaseTest extends BaseTest {
     final static String TITLE = "AT UI Template";

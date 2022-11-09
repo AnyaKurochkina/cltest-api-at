@@ -1,4 +1,4 @@
-package models.productCatalog.enums;
+package models.cloud.productCatalog.enums;
 
 public enum EventProvider {
     S3("s3"),
