@@ -10,7 +10,7 @@ import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
 import ui.elements.TextArea;
-import ui.uiModels.Template;
+import ui.models.Template;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -12,7 +12,7 @@ import ui.elements.Alert;
 import ui.elements.Input;
 import ui.elements.InputFile;
 import ui.elements.Table;
-import ui.uiModels.Graph;
+import ui.models.Graph;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;

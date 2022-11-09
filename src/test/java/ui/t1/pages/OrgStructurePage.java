@@ -5,12 +5,11 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import lombok.extern.log4j.Log4j2;
-import ui.uiInterfaces.Loadable;
 
 import static com.codeborne.selenide.Selenide.*;
 import static core.helper.Configure.getAppProp;
 @Log4j2
-public class OrgStructurePage implements Loadable {
+public class OrgStructurePage {
     private static final String defaultProject = getAppProp("default.project");
     private static final String defaultGlobalOrganization = getAppProp("default.global.organization");
 
@@ -79,7 +78,6 @@ public class OrgStructurePage implements Loadable {
         }
     }
 
-    @Override
     public void checkPage() {
         orgStructureTitle.shouldBe(Condition.visible);
     }

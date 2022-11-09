@@ -1,18 +1,16 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import models.orderService.products.PostgreSQL;
-import models.orderService.products.Windows;
-import models.subModels.Flavor;
+import models.cloud.orderService.products.PostgreSQL;
+import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class PostgreSqlAstraPage extends IProductPage {

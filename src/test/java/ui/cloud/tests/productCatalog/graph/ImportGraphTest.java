@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.BaseTest;
-import ui.uiModels.Graph;
+import ui.models.Graph;
 
 @Epic("Графы")
 @Feature("Импорт графа")

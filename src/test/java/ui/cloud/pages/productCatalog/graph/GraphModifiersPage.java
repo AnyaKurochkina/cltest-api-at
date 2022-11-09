@@ -9,7 +9,7 @@ import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.Input;
-import ui.uiModels.GraphModifier;
+import ui.models.GraphModifier;
 
 import static com.codeborne.selenide.Selenide.$x;
 

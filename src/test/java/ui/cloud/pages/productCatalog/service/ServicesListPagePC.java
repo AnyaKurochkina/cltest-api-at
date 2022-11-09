@@ -4,7 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
-import models.productCatalog.Service;
+import models.cloud.productCatalog.Service;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import ui.cloud.pages.productCatalog.BaseList;

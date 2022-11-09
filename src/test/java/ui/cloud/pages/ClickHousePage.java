@@ -2,18 +2,13 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import models.orderService.products.ClickHouse;
-import models.orderService.products.PostgresSQLCluster;
-import models.subModels.Flavor;
+import models.cloud.orderService.products.ClickHouse;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
-import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
-import static ui.elements.TypifiedElement.scrollCenter;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 
 public class ClickHousePage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";

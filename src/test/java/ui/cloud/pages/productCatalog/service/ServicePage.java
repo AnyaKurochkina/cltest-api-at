@@ -3,7 +3,7 @@ package ui.cloud.pages.productCatalog.service;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.productCatalog.Service;
+import models.cloud.productCatalog.Service;
 import org.openqa.selenium.WebElement;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;

@@ -8,7 +8,7 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.interfaces.IProduct;
+import models.cloud.orderService.interfaces.IProduct;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.NotFoundException;
@@ -24,8 +24,8 @@ import java.util.Objects;
 import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Log4j2

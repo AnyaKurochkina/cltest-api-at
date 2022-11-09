@@ -134,7 +134,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
             e.printStackTrace();
         }
 //        if (testDescriptor instanceof MethodBasedTestDescriptor) {
-//            String match = StringUtils.findByRegex(":\\w+\\(models.orderService.products.(\\w+)\\)]", testDescriptor.getUniqueId().toString());
+//            String match = StringUtils.findByRegex(":\\w+\\(models.cloud.orderService.products.(\\w+)\\)]", testDescriptor.getUniqueId().toString());
 //            if (match != null) {
 //                Map<String, List<Map>> products = ProductArgumentsProvider.getProductListMap();
 //                for (Map.Entry<String, List<Map>> e : products.entrySet()) {
@@ -151,7 +151,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 //                }
 //                skipTests.add(testDescriptor);
 //            }
-//            Matcher matchProduct = Pattern.compile(":\\w+\\(models.orderService.interfaces.IProduct\\)]").matcher(testDescriptor.getUniqueId().toString());
+//            Matcher matchProduct = Pattern.compile(":\\w+\\(models.cloud.orderService.interfaces.IProduct\\)]").matcher(testDescriptor.getUniqueId().toString());
 //            if (matchProduct.find()) {
 //                if(ProductArgumentsProvider.getProductListMap().size() == 0)
 //                    skipTests.add(testDescriptor);

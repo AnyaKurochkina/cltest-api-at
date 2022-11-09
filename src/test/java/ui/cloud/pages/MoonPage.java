@@ -1,7 +1,7 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.SelenideElement;
-import models.orderService.products.Moon;
+import models.cloud.orderService.products.Moon;
 import ui.elements.Dialog;
 
 import static core.helper.StringUtils.$x;

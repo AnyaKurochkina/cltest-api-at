@@ -8,7 +8,7 @@ import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.graph.Graph;
+import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import steps.Steps;
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
-import ui.uiModels.SubgraphNode;
+import ui.models.SubgraphNode;
 
 @Epic("Графы")
 @Feature("Удаление узла графа")

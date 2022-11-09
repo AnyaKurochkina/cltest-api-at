@@ -4,9 +4,9 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
-import models.productCatalog.action.EventTypeProvider;
-import models.productCatalog.allowedAction.AllowedAction;
-import models.productCatalog.allowedAction.GetAllowedActionList;
+import models.cloud.feedService.action.EventTypeProvider;
+import models.cloud.productCatalog.allowedAction.AllowedAction;
+import models.cloud.productCatalog.allowedAction.GetAllowedActionList;
 import org.json.JSONObject;
 import steps.Steps;
 

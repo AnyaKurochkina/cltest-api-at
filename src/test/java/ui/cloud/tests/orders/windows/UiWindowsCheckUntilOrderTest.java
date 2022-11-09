@@ -6,17 +6,17 @@ import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.products.Windows;
-import models.portalBack.AccessGroup;
+import models.cloud.orderService.products.Windows;
+import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import tests.Tests;
+import api.Tests;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.Product;
 import ui.cloud.pages.WindowsOrderPage;
-import ui.uiExtesions.ConfigExtension;
+import ui.extesions.ConfigExtension;
 
 import static com.codeborne.selenide.Selenide.$;
 

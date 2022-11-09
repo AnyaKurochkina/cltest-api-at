@@ -6,7 +6,7 @@ import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
-import ui.uiModels.Graph;
+import ui.models.Graph;
 
 @Epic("Графы")
 @Feature("Копирование графа")

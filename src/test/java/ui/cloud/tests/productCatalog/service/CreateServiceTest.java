@@ -3,7 +3,7 @@ package ui.cloud.tests.productCatalog.service;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Service;
+import models.cloud.productCatalog.Service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;

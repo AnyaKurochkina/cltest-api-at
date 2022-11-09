@@ -1,7 +1,7 @@
 package httpModels.productCatalog.graphs.createGraph.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import models.productCatalog.graph.GraphItem;
+import models.cloud.productCatalog.graph.GraphItem;
 import httpModels.productCatalog.graphs.getGraph.response.PrintedOutput;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

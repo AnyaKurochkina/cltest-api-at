@@ -6,19 +6,18 @@ import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.products.PostgreSQL;
-import models.orderService.products.PostgresSQLCluster;
-import models.portalBack.AccessGroup;
+import models.cloud.orderService.products.PostgreSQL;
+import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import tests.Tests;
+import api.Tests;
 import ui.cloud.pages.*;
 import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
-import ui.uiExtesions.ConfigExtension;
-import ui.uiExtesions.InterceptTestExtension;
+import ui.extesions.ConfigExtension;
+import ui.extesions.InterceptTestExtension;
 
 import java.time.Duration;
 

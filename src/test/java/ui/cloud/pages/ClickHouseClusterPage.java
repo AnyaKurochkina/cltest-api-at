@@ -2,18 +2,17 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import models.orderService.products.ClickHouseCluster;
-import models.portalBack.AccessGroup;
+import models.cloud.orderService.products.ClickHouseCluster;
+import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
-import ui.elements.DropDown;
 import ui.elements.Table;
 
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class ClickHouseClusterPage extends IProductPage {

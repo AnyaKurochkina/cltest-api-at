@@ -12,8 +12,8 @@ import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$$x;
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 
 public class DropDown implements TypifiedElement {
     @Getter

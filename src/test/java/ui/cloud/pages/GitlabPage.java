@@ -1,7 +1,7 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.SelenideElement;
-import models.orderService.products.GitLab;
+import models.cloud.orderService.products.GitLab;
 import ui.elements.Dialog;
 
 import static core.helper.StringUtils.$x;

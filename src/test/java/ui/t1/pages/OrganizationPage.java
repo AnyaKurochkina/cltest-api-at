@@ -6,14 +6,13 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.DataCentreStatus;
 import org.openqa.selenium.By;
-import ui.uiInterfaces.Loadable;
 
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class OrganizationPage implements Loadable {
+public class OrganizationPage {
 
     private final SelenideElement titleOfOneOrganization = $x("//div[@type='large']");
     private final SelenideElement createVirtualDataCentreBtn = $x("//*[text()='Создать Виртуальный дата-центр']");
@@ -44,7 +43,6 @@ public class OrganizationPage implements Loadable {
         createVirtualDataCentreBtn.shouldBe(Condition.enabled).click();
     }
 
-    @Override
     public void checkPage() {
         titleOfOneOrganization.shouldBe(Condition.visible);
     }

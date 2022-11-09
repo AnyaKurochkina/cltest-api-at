@@ -3,8 +3,8 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.orderService.products.Windows;
-import models.subModels.Flavor;
+import models.cloud.orderService.products.Windows;
+import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import ui.elements.Dialog;
@@ -15,8 +15,8 @@ import ui.elements.Table;
 import java.util.List;
 
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 
 public class WindowsPage extends IProductPage {
     private static final String BLOCK_VM = "Виртуальная машина";

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
-import ui.uiModels.Template;
+import ui.models.Template;
 
 @Epic("Шаблоны узлов")
 @Feature("Просмотр списка шаблонов узлов")

@@ -9,8 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
-import ui.uiModels.SubgraphNode;
-import ui.uiModels.TemplateNode;
+import ui.models.SubgraphNode;
+import ui.models.TemplateNode;
 
 @Epic("Графы")
 @Feature("Добавление узла графа")

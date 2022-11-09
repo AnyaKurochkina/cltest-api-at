@@ -5,12 +5,10 @@ import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.authorizer.Organization;
-import models.authorizer.Project;
-import models.authorizer.UserItem;
+import models.cloud.authorizer.Organization;
+import models.cloud.authorizer.UserItem;
 import steps.Steps;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
