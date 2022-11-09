@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.template;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
@@ -8,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.models.Template;
 
-@Epic("Шаблоны узлов")
 @Feature("Копирование шаблона")
 public class CopyTemplateTest extends TemplateBaseTest {
 
