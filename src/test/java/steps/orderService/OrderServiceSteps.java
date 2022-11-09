@@ -27,10 +27,7 @@ import steps.tarifficator.CostSteps;
 import java.lang.reflect.Type;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static core.helper.Configure.OrderServiceURL;
@@ -450,9 +447,12 @@ public class OrderServiceSteps extends Steps {
         return (Comparable<T>) getProductsField(product, path, null);
     }
 
+    public static Object getProductsField(IProduct product, String path, Class<?> clazz) {
+        return getProductsField(product,path,clazz, true);
+    }
 
     @Step("Получение значения по пути {path}")
-    public static Object getProductsField(IProduct product, String path, Class<?> clazz) {
+    public static Object getProductsField(IProduct product, String path, Class<?> clazz, boolean assertion) {
         Object s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(OrderServiceURL)
@@ -464,9 +464,17 @@ public class OrderServiceSteps extends Steps {
             s = jsonPath.getObject(path, clazz);
         else
             s = jsonPath.get(path);
-        log.info(String.format("getFiledProduct return: %s", s));
-        Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
+        if(assertion) {
+            log.info(String.format("getFiledProduct return: %s", s));
+            Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
+        }
         return s;
+    }
+
+    @Step("Получение объекта класса по пути {path}")
+    public static Object getObjectClass(IProduct product, String path, Class<?> clazz) {
+        String object = new Gson().toJson(getProductsField(product, path, Map.class, false));
+        return JsonHelper.deserialize(object, clazz);
     }
 
     @Step("Удаление всех заказов")

@@ -1,13 +1,15 @@
 package models.cloud.subModels.loadBalancer;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
 import java.util.List;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Backend {
     @Builder.Default
@@ -33,4 +35,5 @@ public class Backend {
     String check_method = "GET";
     @EqualsAndHashCode.Include
     String backendName;
+    String versionAndHeaders;
 }

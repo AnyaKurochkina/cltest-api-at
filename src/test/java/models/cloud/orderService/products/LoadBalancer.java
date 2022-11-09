@@ -111,7 +111,7 @@ public class LoadBalancer extends IProduct {
         if(backends.contains(backend))
             return;
         OrderServiceSteps.executeAction("balancer_release_create_backend", this, new JSONObject(JsonHelper.toJson(backend)), this.getProjectId());
-        Assertions.assertNotNull(OrderServiceSteps.getProductsField(this,
+        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
                 String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не создался");
         backends.add(backend);
         save();
@@ -122,7 +122,7 @@ public class LoadBalancer extends IProduct {
         if(frontends.contains(frontend))
             return;
         OrderServiceSteps.executeAction("balancer_release_create_frontend", this, new JSONObject(JsonHelper.toJson(frontend)), this.getProjectId());
-        Assertions.assertNotNull(OrderServiceSteps.getProductsField(this,
+        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
                 String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не создался");
         frontends.add(frontend);
         save();
@@ -133,7 +133,7 @@ public class LoadBalancer extends IProduct {
         if(gslbs.contains(gslb))
             return;
         OrderServiceSteps.executeAction("balancer_gslb_release_create_publication", this, new JSONObject(JsonHelper.toJson(gslb)), this.getProjectId());
-        Assertions.assertNotNull(OrderServiceSteps.getProductsField(this,
+        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
                 String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не создался");
         gslbs.add(gslb);
         save();
@@ -142,7 +142,7 @@ public class LoadBalancer extends IProduct {
     public void deleteBackend(Backend backend) {
         OrderServiceSteps.executeAction("balancer_release_delete_backend", this,
                 new JSONObject().put("backend_name", backend.getBackendName()), this.getProjectId());
-        Assertions.assertNull(OrderServiceSteps.getProductsField(this,
+        Assertions.assertNull(OrderServiceSteps.getObjectClass(this,
                 String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не удален");
         backends.remove(backend);
         save();
@@ -152,7 +152,7 @@ public class LoadBalancer extends IProduct {
     public void deleteFrontend(Frontend frontend) {
         OrderServiceSteps.executeAction("balancer_release_delete_frontend", this,
                 new JSONObject().put("frontend_name", frontend.getFrontendName()), this.getProjectId());
-        Assertions.assertNull(OrderServiceSteps.getProductsField(this,
+        Assertions.assertNull(OrderServiceSteps.getObjectClass(this,
                 String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не удален");
         frontends.remove(frontend);
         save();
@@ -160,11 +160,11 @@ public class LoadBalancer extends IProduct {
     }
 
     public void deleteGslb(Gslb gslb) {
-        String globalName = Objects.requireNonNull((String) OrderServiceSteps.getProductsField(this, String.format(GSLIB_PATH, gslb.getGlobalname())));
-        OrderServiceSteps.executeAction("balancer_gslb_release_delete_publication", this,
-                new JSONObject().put("globalname", globalName), this.getProjectId());
-        Assertions.assertNull(OrderServiceSteps.getProductsField(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не удален");
         gslbs.remove(gslb);
+        gslb = (Gslb) OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class);
+        OrderServiceSteps.executeAction("balancer_gslb_release_delete_publication", this,
+                new JSONObject().put("globalname", gslb.getGlobalname()), this.getProjectId());
+        Assertions.assertNull(OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не удален");
         save();
     }
 
@@ -178,7 +178,7 @@ public class LoadBalancer extends IProduct {
                 .then()
                 .statusCode(200)
                 .extract().response().htmlPath()
-                .getBoolean(String.format("**.find{it.@name == '%s'}.size()", name));
+                .getBoolean(String.format("**.any{it.@name == '%s'}", name));
     }
 
     public void stopHard() {
