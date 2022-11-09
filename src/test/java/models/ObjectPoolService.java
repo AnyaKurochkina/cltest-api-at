@@ -51,6 +51,7 @@ public class ObjectPoolService {
         ObjectPoolEntity objectPoolEntity;
         synchronized (ObjectPoolService.class) {
             objectPoolEntity = createObjectPoolEntity(e);
+            System.out.println(e.uuid + " - " + e.objectClassName);
             objectPoolEntity.setPublic(isPublic);
         }
 
