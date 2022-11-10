@@ -3,47 +3,28 @@ package ui.cloud.tests.orders.windows;
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
-import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Windows;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.*;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.Graph;
 import ui.elements.TypifiedElement;
-import ui.extesions.ConfigExtension;
-import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
-@ExtendWith(ConfigExtension.class)
-@ExtendWith(InterceptTestExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_windows")})
-@Log4j2
-public class UiWindowsTest extends Tests {
+@Tags({@Tag("ui"), @Tag("ui_windows")})
+public class UiWindowsTest extends UiProductTest {
     Windows product;
-
-    //TODO: пока так :)
-    public UiWindowsTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-           product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-          // product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb").build().buildFromLink();
-        else
-            product = Windows.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-    }
+    // product = Windows.builder().platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb").build().buildFromLink()
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -171,12 +152,7 @@ public class UiWindowsTest extends Tests {
     @DisplayName("UI Windows. Изменить конфигурацию")
     void changeConfiguration() {
         WindowsPage winPage = new WindowsPage(product);
-//        winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopHard);
-//        try {
-            winPage.runActionWithCheckCost(CompareType.MORE, winPage::changeConfiguration);
-//        } finally {
-//            winPage.runActionWithCheckCost(CompareType.MORE, winPage::start);
-//        }
+        winPage.runActionWithCheckCost(CompareType.MORE, winPage::changeConfiguration);
     }
 
     @Test

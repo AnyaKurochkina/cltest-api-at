@@ -29,6 +29,8 @@ public class S3Ceph extends IProduct {
         jsonTemplate = "/orders/s3.json";
         productName = "S3 CEPH Tenant";
         initProduct();
+        if(segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;

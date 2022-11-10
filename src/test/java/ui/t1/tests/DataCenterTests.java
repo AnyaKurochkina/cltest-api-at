@@ -33,10 +33,7 @@ public class DataCenterTests {
     @DisplayName("Создание и удаление Дата центра")
     @Test
     public void createAndDeleteDataCenter() {
-        //Открываем сайт
         open("/");
-//        AuthSteps authSteps = new AuthSteps();
-//        authSteps.signIn();
         //Выбираем организацию
         MainSteps mainSteps = new MainSteps();
         mainSteps.goToOrgStructure();

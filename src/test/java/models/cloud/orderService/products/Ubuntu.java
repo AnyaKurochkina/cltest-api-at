@@ -40,6 +40,8 @@ public class Ubuntu extends IProduct {
             flavor = getMinFlavor();
         if(osVersion == null)
             osVersion = getRandomOsVersion();
+        if(segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if(dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;

@@ -52,6 +52,8 @@ public class Redis extends IProduct {
             osVersion = getRandomOsVersion();
         if (appUserPassword == null)
             appUserPassword = "8AEv023pMDHVw1w4zZZE23HjPAKmVDvdtpK8Qddme94VJBHKhgy";
+        if(segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         if (redisVersion == null)

@@ -56,6 +56,8 @@ public class ClickHouseCluster extends IProduct {
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
+        if(segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         if (chCustomerAdmin == null)
