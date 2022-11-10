@@ -8,6 +8,7 @@ import core.utils.Encrypt;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.ObjectPoolService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -77,7 +78,8 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     public static void isRemote() {
         if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
-            log.info("Ui Тесты стартовали на selenoid сервере: " + getAppProp("webdriver.remote.url"));
+            Assertions.assertNotNull(getAppProp("webdriver.remote.url"), "Не указан webdriver.remote.url");
+            log.info("Ui Тесты стартовали на selenoid сервере");
             Configuration.remote = getAppProp("webdriver.remote.url");
             Map<String, String> capabilitiesProp = getAppPropStartWidth("webdriver.capabilities.");
             DesiredCapabilities capabilities = new DesiredCapabilities();

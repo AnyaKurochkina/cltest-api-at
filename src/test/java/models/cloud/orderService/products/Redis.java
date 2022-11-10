@@ -29,7 +29,8 @@ public class Redis extends IProduct {
     String domain;
     @ToString.Include
     String osVersion;
-    String redisPassword;
+    String appUserPassword;
+    String appUser;
     String redisVersion;
 
     @Override
@@ -44,11 +45,13 @@ public class Redis extends IProduct {
         jsonTemplate = "/orders/redis.json";
         if (productName == null)
             productName = "Redis (Astra)";
+        if (appUser == null)
+            appUser = "app_user";
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if (redisPassword == null)
-            redisPassword = "8AEv023pMDHVw1w4zZZE23HjPAKmVDvdtpK8Qddme94VJBHKhgy";
+        if (appUserPassword == null)
+            appUserPassword = "8AEv023pMDHVw1w4zZZE23HjPAKmVDvdtpK8Qddme94VJBHKhgy";
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         if (redisVersion == null)
@@ -70,7 +73,8 @@ public class Redis extends IProduct {
                 .set("$.order.project_name", projectId)
                 .set("$.order.attrs.on_support", isTest())
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.redis_password", redisPassword)
+                .set("$.order.attrs.app_user_password", appUserPassword)
+                .set("$.order.attrs.app_user", appUser)
                 .set("$.order.label", getLabel())
                 .build();
     }
@@ -90,7 +94,7 @@ public class Redis extends IProduct {
         try {
             url = (String) OrderServiceSteps.getProductsField(this, CONNECTION_URL);
             Jedis jedis = new Jedis(url);
-            jedis.auth(redisPassword);
+            jedis.auth(appUserPassword);
             jedis.close();
         } catch (Exception e) {
             connectVmException("Ошибка подключения к Redis по url " + url + " : " + e);
@@ -105,8 +109,9 @@ public class Redis extends IProduct {
 
     public void resetPassword() {
         String password = "UEijLKcQJN2pZ0Iqvxh1EXCuZ86pPGiEpdxwLRLWL4QnIOG2KPlGrw5jkLEScQZ9";
-        OrderServiceSteps.executeAction("reset_redis_user_password", this, new JSONObject(String.format("{redis_password: \"%s\"}", password)), this.getProjectId());
-        redisPassword = password;
+        OrderServiceSteps.executeAction("reset_redis_user_password", this,
+                new JSONObject().put("redis_password", password).put("user_name", appUser), this.getProjectId());
+        appUserPassword = password;
         save();
     }
 

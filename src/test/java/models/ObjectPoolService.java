@@ -53,7 +53,6 @@ public class ObjectPoolService {
             objectPoolEntity = createObjectPoolEntity(e);
             objectPoolEntity.setPublic(isPublic);
         }
-
         if (isNeedLock(objectPoolEntity, exclusiveAccess)) {
             objectPoolEntity.lock();
             if(!exclusiveAccess && objectPoolEntity.getStatus().equals(ObjectStatus.CREATED))
@@ -78,6 +77,7 @@ public class ObjectPoolService {
             try {
                 e.init();
                 e.create();
+                e.uuid = objectPoolEntity.get().uuid;
                 e.save();
                 createdEntities.add(Objects.requireNonNull(e.uuid));
                 if (!deleteClassesName.contains(e.getClass().getName()))

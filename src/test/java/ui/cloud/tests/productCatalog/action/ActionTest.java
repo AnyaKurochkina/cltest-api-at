@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ActionSteps;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.IndexPage;
+import models.cloud.productCatalog.enums.EventProvider;
+import models.cloud.productCatalog.enums.EventType;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
@@ -47,7 +49,7 @@ public class ActionTest extends BaseTest {
                 .createAction()
                 .fillAndSave(name, "create_action_test_ui", "test",
                         ItemStatus.ON, OrderStatus.DAMAGED, ActionType.ON, "configPath", "configKey",
-                        "valueOfData", graph.getTitle())
+                        "valueOfData", graph.getTitle(), EventType.VM, EventProvider.VSPHERE)
                 .isActionExist(name), "Созданное действие не найдено в списке действий.");
         deleteActionByName(name);
     }
