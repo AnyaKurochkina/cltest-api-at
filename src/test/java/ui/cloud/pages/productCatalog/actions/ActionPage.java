@@ -190,7 +190,6 @@ public class ActionPage {
         Table table = new Table("Тип");
         DropDown eventTypeDropDown = new DropDown(table.getRowByIndex(0).$x("(.//div[select])[1]"));
         DropDown eventProviderDropDown = new DropDown(table.getRowByIndex(0).$x("(.//div[select])[2]"));
-        eventTypeDropDown.click();
         //TODO DropDown не сразу раскрывается
         for (int i = 0; i < 10; i++) {
             eventTypeDropDown.getElement().$x(".//*[name()='svg']").click();

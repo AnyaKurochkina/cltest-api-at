@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Input;
 import ui.elements.InputFile;
@@ -10,8 +11,8 @@ import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class OrgDirectionsListPage {
-    private final SelenideElement createButton = $x("//*[@title= 'Создать']");
+public class OrgDirectionsListPage extends BaseListPage {
+
     private final SelenideElement inputSearch = $x("//input[@placeholder = 'Поиск']");
     private final SelenideElement titleColumn = $x("//th[text()='Наименование']");
     private final SelenideElement nameColumn = $x("//th[text()='Код направления']");
@@ -23,8 +24,6 @@ public class OrgDirectionsListPage {
     private final SelenideElement inputId = $x("//input[@name = 'id']");
     private final SelenideElement deleteButton = $x("//button[@type ='submit']");
     private final SelenideElement noData = $x("//*[text() = 'Нет данных для отображения']");
-    private final SelenideElement importDirection = $x("//*[@title = 'Импортировать направление']");
-
 
     public OrgDirectionsListPage() {
         SelenideElement directionPageTitle = $x("//div[text() = 'Направления']");
@@ -32,8 +31,7 @@ public class OrgDirectionsListPage {
     }
 
     public OrgDirectionPage createDirection() {
-        createButton.scrollIntoView(TypifiedElement.scrollCenter);
-        createButton.click();
+        addNewObjectButton.scrollIntoView(TypifiedElement.scrollCenter).click();
         return new OrgDirectionPage();
     }
 
@@ -89,7 +87,7 @@ public class OrgDirectionsListPage {
 
     @Step("Выбор и импорт файла")
     public OrgDirectionsListPage uploadFile(String path) {
-        importDirection.scrollIntoView(TypifiedElement.scrollCenter).click();
+        importButton.scrollIntoView(TypifiedElement.scrollCenter).click();
         new InputFile(path).importFile();
         return this;
     }

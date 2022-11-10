@@ -145,7 +145,7 @@ public class GraphPage extends BasePage {
         return new AuditPage();
     }
 
-    @Step("Проверка атрибутов графа '{name}'")
+    @Step("Проверка атрибутов графа '{graph.name}'")
     public GraphPage checkGraphAttributes(Graph graph) {
         graphNameInput.shouldHave(Condition.exactValue(graph.getName()));
         graphTitleInput.shouldHave(Condition.exactValue(graph.getTitle()));

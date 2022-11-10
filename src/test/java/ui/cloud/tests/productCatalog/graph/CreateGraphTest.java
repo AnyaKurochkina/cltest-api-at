@@ -9,9 +9,11 @@ import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.models.Graph;
 
+import java.util.UUID;
+
 @Feature("Создание графа")
 public class CreateGraphTest extends GraphBaseTest {
-    private static final String name = "at_ui_create_graph_test";
+    private static final String name = UUID.randomUUID().toString();
 
     @Test
     @TmsLink("486578")
@@ -28,7 +30,7 @@ public class CreateGraphTest extends GraphBaseTest {
         Graph graph = new Graph(name, TITLE, GraphType.ACTION, "1.0.0", DESCRIPTION, AUTHOR);
         new IndexPage().goToGraphsPage()
                 .createGraph(graph)
-                .findGraphByValue(name, graph);
+                .checkGraphAttributes(graph);
         deleteGraph(name);
     }
 

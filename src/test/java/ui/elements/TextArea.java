@@ -18,7 +18,7 @@ public class TextArea implements TypifiedElement {
     }
 
     public static TextArea byLabel(String label) {
-        return new TextArea($x("//label[text()='{}']/../following::textarea[1]", label));
+        return new TextArea($x("//label[text()='{}']/following::textarea[1]", label));
     }
 
     public static TextArea byName(String name) {
