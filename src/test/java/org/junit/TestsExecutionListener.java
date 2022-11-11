@@ -44,12 +44,12 @@ public class TestsExecutionListener implements TestExecutionListener {
     }
 
     @SneakyThrows
-    public static void initDriver(){
+    public static void initDriver() {
         //###Config for Ui###
         if (getAppProp("webdriver.path") != null) {
             String DRIVER_PATH = new File(getAppProp("webdriver.path")).getAbsolutePath();
             System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
-            System.setProperty("chromeoptions.args","\"--disable-notifications\",\"--disable-web-security\",\"--allow-external-pages\",\"--disable-gpu\",\"--no-sandbox\",\"--disable-browser-side-navigation\"");
+            System.setProperty("chromeoptions.args", "\"--disable-notifications\",\"--disable-web-security\",\"--allow-external-pages\",\"--disable-gpu\",\"--no-sandbox\",\"--disable-browser-side-navigation\"");
         }
 
         baseUrl = URL;
@@ -72,7 +72,9 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--disable-browser-side-navigation");
         options.addArguments("--start-maximized");
         Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
-        WebDriverRunner.setWebDriver(new RemoteWebDriver(new java.net.URL(Configuration.remote), Configuration.browserCapabilities));
+
+        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true")))
+            WebDriverRunner.setWebDriver(new RemoteWebDriver(new java.net.URL(Configuration.remote), Configuration.browserCapabilities));
     }
 
     public void loadSecretJson() {
