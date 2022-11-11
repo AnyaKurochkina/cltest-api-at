@@ -210,14 +210,14 @@ public abstract class IProductPage {
         }
 
         public String lastActionStatus() {
-            return getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
+            return getValueByColumnInFirstRow("Статус").$$x("descendant::*[name()='svg']")
                     .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                     .stream()
-                    .map(e -> e.getAttribute("title"))
-                    .filter(Objects::nonNull)
+                    .map(ProductStatus::new)
                     .filter(ProductStatus::isStatus)
                     .findFirst()
-                    .orElseThrow(NotFoundException::new);
+                    .orElseThrow(NotFoundException::new)
+                    .getStatus();
         }
     }
 
@@ -262,7 +262,7 @@ public abstract class IProductPage {
         }
 
         public String getPowerStatus(String header) {
-            return getValueByColumnInFirstRow(header).$x("descendant::*[@title]").getAttribute("title");
+            return new ProductStatus(getValueByColumnInFirstRow(header).$x("descendant::*[name()='svg']")).getStatus();
         }
 
         public void checkPowerStatus(String status) {

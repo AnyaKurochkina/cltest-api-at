@@ -55,8 +55,8 @@ public class IServicePage {
             super("Дата запуска");
         }
 
-        public String getStatus() {
-            return getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[@title]").getAttribute("title");
+        public ProductStatus getStatus() {
+            return new ProductStatus(getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[name()='svg']"));
         }
     }
 
