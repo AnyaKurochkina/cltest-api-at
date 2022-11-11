@@ -3,6 +3,8 @@ package ui.cloud.tests.orders.windows;
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Windows;
@@ -21,6 +23,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
+@Epic("UI Продукты")
+@Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
     Windows product;
