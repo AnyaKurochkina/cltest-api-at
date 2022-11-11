@@ -34,7 +34,7 @@ public class UiWindowsTest extends UiProductTest {
     @Title("Авторизация на портале")
     void beforeEach() {
         new LoginPage(product.getProjectId())
-                .signIn(Role.ORDER_SERVICE_ADMIN);
+                .signIn(Role.CLOUD_ADMIN);
     }
 
     @Test

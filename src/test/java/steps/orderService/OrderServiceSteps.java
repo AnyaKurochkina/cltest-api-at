@@ -493,7 +493,7 @@ public class OrderServiceSteps extends Steps {
         Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(Objects.requireNonNull(env)))
                 .isForOrders(true).build().createObject();
         List<String> orders = new Http(OrderServiceURL)
-                .setProjectId(project.id)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success", project.id)
                 .assertStatus(200)
                 .jsonPath()
@@ -503,7 +503,7 @@ public class OrderServiceSteps extends Steps {
             try {
                 JsonPath jsonPath = new Http(OrderServiceURL)
 //                        .setProjectId(project.id)
-                        .setRole(Role.ORDER_SERVICE_ADMIN)
+                        .setRole(Role.CLOUD_ADMIN)
                         .get("/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
                 String itemId = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.item_id");
@@ -514,7 +514,7 @@ public class OrderServiceSteps extends Steps {
                 JsonHelper.getJsonTemplate("/actions/template.json")
                         .set("$.item_id", itemId)
                         .send(OrderServiceURL)
-                        .setProjectId(project.id)
+                        .setRole(Role.CLOUD_ADMIN)
                         .patch("/v1/projects/{}/orders/{}/actions/{}", project.id, order, action)
                         .assertStatus(200);
             } catch (Throwable e) {
@@ -524,7 +524,7 @@ public class OrderServiceSteps extends Steps {
 
         if (Configure.ENV.equalsIgnoreCase("IFT")) {
             orders = new Http(OrderServiceURL)
-                    .setProjectId(project.id)
+                    .setRole(Role.CLOUD_ADMIN)
                     .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=failure&f[status][]=pending", project.id)
                     .assertStatus(200)
                     .jsonPath()
