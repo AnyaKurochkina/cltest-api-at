@@ -3,6 +3,7 @@ package ui.cloud.tests.productCatalog.action;
 import core.helper.JsonHelper;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.icon.Icon;
@@ -21,6 +22,7 @@ import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.BaseTest;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -127,6 +129,10 @@ public class ActionTest extends BaseTest {
                 .actionName(name)
                 .title(name)
                 .number(0)
+                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                        .event_type(EventType.VM.getValue())
+                        .event_provider(EventProvider.VSPHERE.getValue())
+                        .build()))
                 .build()
                 .createObject();
         partialUpdateAction(action.getActionId(), new JSONObject().put("priority", 1));
@@ -150,6 +156,10 @@ public class ActionTest extends BaseTest {
                 .actionName(name)
                 .title(name)
                 .number(0)
+                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                        .event_type(EventType.VM.getValue())
+                        .event_provider(EventProvider.VSPHERE.getValue())
+                        .build()))
                 .build()
                 .createObject();
         new IndexPage().goToActionsPage()
@@ -173,6 +183,10 @@ public class ActionTest extends BaseTest {
                 .actionName(name)
                 .title(name)
                 .number(0)
+                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                        .event_type(EventType.VM.getValue())
+                        .event_provider(EventProvider.VSPHERE.getValue())
+                        .build()))
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();

@@ -78,6 +78,8 @@ public class OrderTemplatesListPage {
 
     @Step("Проверка сортировки по состоянию")
     public OrderTemplatesListPage checkSortingByState() {
+        String onStateColor = "#4caf50";
+        String offStateColor = "#e0e0e0";
         String header = "Состояние";
         Table table = new Table(columnName);
         SelenideElement columnHeader = StringUtils.$x("//div[text()='{}']/parent::div", header);
@@ -85,15 +87,15 @@ public class OrderTemplatesListPage {
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        String firstElementState = table.getValueByColumnInFirstRow(header).$x(".//*[name()='svg']/parent::div")
-                .getAttribute("Title");
-        Assertions.assertEquals("Выключено", firstElementState);
+        String firstElementState = table.getValueByColumnInFirstRow(header).$x(".//*[name()='svg']")
+                .getAttribute("color");
+        Assertions.assertEquals(offStateColor, firstElementState);
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        firstElementState = table.getValueByColumnInFirstRow(header).$x(".//*[name()='svg']/parent::div")
-                .getAttribute("Title");
-        Assertions.assertEquals("Включено", firstElementState);
+        firstElementState = table.getValueByColumnInFirstRow(header).$x(".//*[name()='svg']")
+                .getAttribute("color");
+        Assertions.assertEquals(onStateColor, firstElementState);
         return this;
     }
 
