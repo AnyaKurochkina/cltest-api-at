@@ -2,6 +2,7 @@ package org.junit;
 
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.WebDriverRunner;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.utils.Encrypt;
@@ -13,6 +14,7 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import ru.testit.junit5.RunningHandler;
 
 import java.io.File;
@@ -32,6 +34,17 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
+        //####Config for Ui###
+        Files.deleteIfExists(Paths.get(responseTimeLog));
+
+        String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
+        if (Files.exists(Paths.get(fileSecret)))
+            ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
+        loadSecretJson();
+    }
+
+    @SneakyThrows
+    public static void initDriver(){
         //###Config for Ui###
         if (getAppProp("webdriver.path") != null) {
             String DRIVER_PATH = new File(getAppProp("webdriver.path")).getAbsolutePath();
@@ -41,7 +54,7 @@ public class TestsExecutionListener implements TestExecutionListener {
 
         baseUrl = URL;
         isRemote();
-        Configuration.browserSize = "1530x870";
+//        Configuration.browserSize = "1530x870";
         Configuration.browserPosition = "2x2";
         Configuration.timeout = 40000;
         Configuration.driverManagerEnabled = false;
@@ -53,17 +66,13 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--allow-external-pages");
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-site-isolation-trials");
+        options.addArguments("--ignore-certificate-errors");
         options.addArguments("--disable-browser-side-navigation");
         options.addArguments("--start-maximized");
         Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
-
-        //####Config for Ui###
-        Files.deleteIfExists(Paths.get(responseTimeLog));
-
-        String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
-        if (Files.exists(Paths.get(fileSecret)))
-            ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
-        loadSecretJson();
+        WebDriverRunner.setWebDriver(new RemoteWebDriver(new java.net.URL(Configuration.remote), Configuration.browserCapabilities));
     }
 
     public void loadSecretJson() {

@@ -33,10 +33,12 @@ public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, In
         try {
             invocation.proceed();
         } catch (Throwable e) {
-            AttachUtils.attachRequests();
-//            if (Objects.nonNull(e.getMessage()))
-//                if (!e.getMessage().contains("Screenshot: file:/"))
-                    AttachUtils.attachFiles();
+            try {
+                AttachUtils.attachRequests();
+                AttachUtils.attachFiles();
+            } catch (Throwable ex) {
+                e.addSuppressed(ex);
+            }
             throw e;
         }
     }

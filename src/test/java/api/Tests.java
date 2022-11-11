@@ -13,6 +13,8 @@ import ru.testit.annotations.Title;
 import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.utils.UniqueTest;
 
+import static org.junit.TestsExecutionListener.initDriver;
+
 @ExtendWith(TmsLinkExtension.class)
 @ExtendWith(EnvironmentCondition.class)
 @ExtendWith(JUnit5EventListener.class)
@@ -29,6 +31,7 @@ public class Tests {
 //        String methodName = testInfo.getTestMethod().orElseThrow(Exception::new).getName();
 //        Allure.tms(className + "#" + methodName, "");
         UniqueTest.clearStepLog();
+        initDriver();
     }
 
     public static void putAttachLog(String text) {
