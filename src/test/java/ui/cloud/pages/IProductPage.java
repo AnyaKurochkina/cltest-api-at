@@ -176,7 +176,7 @@ public abstract class IProductPage {
     }
 
     @Step("Проверка статуса заказа")
-    public void checkErrorByStatus(String status) {
+    public void checkErrorByStatus(ProductStatus status) {
         if (status.equals(ProductStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
                     product, status, StateServiceSteps.getErrorFromStateService(product.getOrderId())));
@@ -209,15 +209,14 @@ public abstract class IProductPage {
             return getValueByColumnInFirstRow("Наименование").getText();
         }
 
-        public String lastActionStatus() {
+        public ProductStatus lastActionStatus() {
             return getValueByColumnInFirstRow("Статус").$$x("descendant::*[name()='svg']")
                     .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                     .stream()
                     .map(ProductStatus::new)
                     .filter(ProductStatus::isStatus)
                     .findFirst()
-                    .orElseThrow(NotFoundException::new)
-                    .getStatus();
+                    .orElseThrow(NotFoundException::new);
         }
     }
 
