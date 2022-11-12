@@ -267,7 +267,7 @@ public abstract class IProductPage {
         }
 
         public String getPowerStatus(String header) {
-            return new ProductStatus(getValueByColumnInFirstRow(header).$x("descendant::*[name()='svg']")).getStatus();
+            return new ProductStatus(getValueByColumnInFirstRow(header).$x("descendant::*[name()='svg']").scrollIntoView(scrollCenter)).getStatus();
         }
 
         public void checkPowerStatus(String status) {
