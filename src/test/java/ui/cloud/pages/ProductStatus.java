@@ -25,6 +25,7 @@ public class ProductStatus {
     final public static ProductStatus SUCCESS = new ProductStatus("В порядке");
     final public static ProductStatus DELETING = new ProductStatus("Удаляется");
     final public static ProductStatus ERROR = new ProductStatus("Ошибка");
+    final public static ProductStatus BLOCKED = new ProductStatus("Заблокирован");
 
     ProductStatus(String status) {
         this.status = status;

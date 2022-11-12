@@ -181,6 +181,9 @@ public abstract class IProductPage {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
                     product, status, StateServiceSteps.getErrorFromStateService(product.getOrderId())));
         }
+        else if(status.equals(ProductStatus.BLOCKED)) {
+            Assertions.fail("Продукт в статусе заблокирован");
+        }
     }
 
     @Step("Проверка на содержание необходимых столбцов на вкладке История действий")
