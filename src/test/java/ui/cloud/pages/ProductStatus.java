@@ -47,8 +47,6 @@ public class ProductStatus {
         this.status = new Tooltip().toString();
     }
 
-
-
     public boolean isNeedWaiting() {
         return CREATING.equals(this) || PENDING.equals(this) || DELETING.equals(this);
     }

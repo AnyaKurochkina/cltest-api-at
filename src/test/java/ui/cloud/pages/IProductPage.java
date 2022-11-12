@@ -184,6 +184,7 @@ public abstract class IProductPage {
         else if(status.equals(ProductStatus.BLOCKED)) {
             Assertions.fail("Продукт в статусе заблокирован");
         }
+        else log.info("Статус действия {}", status);
     }
 
     @Step("Проверка на содержание необходимых столбцов на вкладке История действий")
