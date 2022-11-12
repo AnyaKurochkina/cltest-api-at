@@ -14,7 +14,6 @@ import ui.elements.Tooltip;
 
 import java.time.Duration;
 
-@ToString(includeFieldNames = false)
 @EqualsAndHashCode
 public class ProductStatus {
     @Getter
@@ -37,6 +36,11 @@ public class ProductStatus {
 
     ProductStatus(WebElement e) {
         init(e);
+    }
+
+    @Override
+    public String toString() {
+        return status;
     }
 
     private void init(WebElement e){
