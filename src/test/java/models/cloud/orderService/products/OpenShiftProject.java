@@ -45,6 +45,8 @@ public class OpenShiftProject extends IProduct {
             AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
             roles = Collections.singletonList(new Role("edit", accessGroup.getPrefixName()));
         }
+        if(segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if(dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;

@@ -14,32 +14,18 @@ import api.Tests;
 import ui.cloud.pages.*;
 import ui.extesions.ConfigExtension;
 import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 
-@ExtendWith(InterceptTestExtension.class)
-@ExtendWith(ConfigExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags({@Tag("ui_moon")})
 @Log4j2
-public class UiMoonTest extends Tests {
+public class UiMoonTest extends UiProductTest {
     Moon product;
-
-    //TODO: пока так :)
-    public UiMoonTest() {
-        if (Configure.ENV.equals("prod"))
-            product = Moon.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-//            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = Moon.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-    }
 
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        //Configuration.browserSize = "1366x768";
         new LoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }

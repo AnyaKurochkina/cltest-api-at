@@ -66,9 +66,11 @@ public abstract class IProductPage {
 
     @Step("Переключение 'Защита от удаления' в состояние '{expectValue}'")
     public void switchProtectOrder(String expectValue) {
+        ProductStatus status = new ProductStatus(expectValue);
         runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить",
                 () -> Input.byLabel("Включить защиту от удаления").click(), ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
-        new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$("*").shouldBe(Condition.attribute("title", expectValue));
+        new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$x("descendant::*[name()='svg']")
+                .shouldBe(Condition.match("", e -> new ProductStatus(e).equals(status)), Duration.ofSeconds(10));
     }
 
     public SelenideElement getBtnAction(String header) {
@@ -186,11 +188,15 @@ public abstract class IProductPage {
     }
 
     @Step("Проверка статуса заказа")
-    public void checkErrorByStatus(String status) {
+    public void checkErrorByStatus(ProductStatus status) {
         if (status.equals(ProductStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
                     product, status, StateServiceSteps.getErrorFromStateService(product.getOrderId())));
         }
+        else if(status.equals(ProductStatus.BLOCKED)) {
+            Assertions.fail("Продукт в статусе заблокирован");
+        }
+        else log.info("Статус действия {}", status);
     }
 
     @Step("Проверка на содержание необходимых столбцов на вкладке История действий")
@@ -219,12 +225,11 @@ public abstract class IProductPage {
             return getValueByColumnInFirstRow("Наименование").getText();
         }
 
-        public String lastActionStatus() {
-            return getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
+        public ProductStatus lastActionStatus() {
+            return getValueByColumnInFirstRow("Статус").$$x("descendant::*[name()='svg']")
                     .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                     .stream()
-                    .map(e -> e.getAttribute("title"))
-                    .filter(Objects::nonNull)
+                    .map(ProductStatus::new)
                     .filter(ProductStatus::isStatus)
                     .findFirst()
                     .orElseThrow(NotFoundException::new);
@@ -272,7 +277,7 @@ public abstract class IProductPage {
         }
 
         public String getPowerStatus(String header) {
-            return getValueByColumnInFirstRow(header).$x("descendant::*[@title]").getAttribute("title");
+            return new ProductStatus(getValueByColumnInFirstRow(header).$x("descendant::*[name()='svg']")).getStatus();
         }
 
         public void checkPowerStatus(String status) {

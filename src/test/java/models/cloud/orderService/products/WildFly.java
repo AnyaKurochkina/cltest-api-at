@@ -53,6 +53,8 @@ public class WildFly extends IProduct {
             osVersion = getRandomOsVersion();
         if (wildFlyVersion == null)
             wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
+        if(segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;

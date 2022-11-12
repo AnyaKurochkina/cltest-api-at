@@ -17,7 +17,7 @@ import java.awt.*;
 
 @Log4j2
 //@ExtendWith(CustomBeforeAllAndAfterAll.class)
-@ExtendWith(ConfigExtension.class)
+//@ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UiTest extends Tests {
@@ -34,10 +34,10 @@ public class UiTest extends Tests {
 
     @Test
     void name() {
+        new LoginPage().signIn(Role.CLOUD_ADMIN);
 //        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
-        Selenide.open("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/?context=proj-pkvckn08w9&type=project&org=vtb");
+        Selenide.open("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/438cbed2-a271-4c51-a8b4-0d851ba6cacc/main?context=proj-pkvckn08w9&type=project&org=vtb");
 //        Table.getTableByColumnName("Дата запуска");
-new LoginPage().signIn(Role.ORDER_SERVICE_ADMIN);
         System.out.println(1);
 
 //        Selenide.$x("//canvas");
@@ -73,17 +73,6 @@ new LoginPage().signIn(Role.ORDER_SERVICE_ADMIN);
 
     }
 
-    @BeforeEach
-    void setUp() {
-//        int f = 1/0;
-        log.info("BeforeEach");
-    }
-
-    @AfterEach
-    void tearDown() {
-//        int f = 1/0;
-        log.info("AfterEach");
-    }
 
     @Test
 //    @Tag("test")

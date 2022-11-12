@@ -61,6 +61,8 @@ public class LoadBalancer extends IProduct {
             osVersion = getRandomOsVersion();
         if (password == null)
             password = "W1clvyliiSCyE0gs";
+        if(segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;

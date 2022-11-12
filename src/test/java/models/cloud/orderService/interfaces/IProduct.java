@@ -75,6 +75,7 @@ public abstract class IProduct extends Entity {
 
     @ToString.Include
     @Getter
+    @Setter
     String platform;
 
     protected String jsonTemplate;
@@ -97,6 +98,7 @@ public abstract class IProduct extends Entity {
     @Setter
     protected String productName;
     @Getter
+    @Setter
     @ToString.Include
     protected String env;
     @Getter
