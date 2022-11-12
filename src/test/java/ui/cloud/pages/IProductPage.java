@@ -66,9 +66,11 @@ public abstract class IProductPage {
 
     @Step("Переключение 'Защита от удаления' в состояние '{expectValue}'")
     public void switchProtectOrder(String expectValue) {
+        ProductStatus status = new ProductStatus(expectValue);
         runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить",
                 () -> Input.byLabel("Включить защиту от удаления").click(), ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
-        new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$("*").shouldBe(Condition.attribute("title", expectValue));
+        new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$x("descendant::*[name()='svg']")
+                .shouldBe(Condition.match("", e -> new ProductStatus(e).equals(status)), Duration.ofSeconds(10));
     }
 
     public SelenideElement getBtnAction(String header) {

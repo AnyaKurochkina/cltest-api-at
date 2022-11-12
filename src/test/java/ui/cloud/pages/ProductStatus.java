@@ -32,11 +32,14 @@ public class ProductStatus {
     }
 
     public ProductStatus(SelenideElement e) {
-        e.hover();
-        this.status = new Tooltip().toString();
+        init(e.getWrappedElement());
     }
 
     ProductStatus(WebElement e) {
+        init(e);
+    }
+
+    private void init(WebElement e){
         WebDriver webDriver = WebDriverRunner.getWebDriver();
         WebDriverWait wait = new WebDriverWait(webDriver,20);
         Actions builder = new Actions(webDriver);
