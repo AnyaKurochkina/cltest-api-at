@@ -135,7 +135,7 @@ public abstract class IProductPage {
         runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
-        Waiting.sleep(2000);
+        Waiting.sleep(3000);
         if(Objects.nonNull(params.getNode())){
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
