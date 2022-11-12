@@ -70,7 +70,7 @@ public abstract class IProductPage {
         runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить",
                 () -> Input.byLabel("Включить защиту от удаления").click(), ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
         new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$x("descendant::*[name()='svg']")
-                .shouldBe(Condition.match("", e -> new ProductStatus(e).equals(status)), Duration.ofSeconds(10));
+                .shouldBe(Condition.match(expectValue, e -> new ProductStatus(e).equals(status)), Duration.ofSeconds(10));
     }
 
     public SelenideElement getBtnAction(String header) {
