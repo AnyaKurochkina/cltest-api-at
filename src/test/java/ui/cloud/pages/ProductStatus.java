@@ -4,6 +4,7 @@ import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -13,6 +14,7 @@ import ui.elements.Tooltip;
 
 import java.time.Duration;
 
+@ToString(includeFieldNames = false)
 @EqualsAndHashCode
 public class ProductStatus {
     @Getter
