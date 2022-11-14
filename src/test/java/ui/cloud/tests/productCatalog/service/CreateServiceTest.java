@@ -50,4 +50,16 @@ public class CreateServiceTest extends ServiceBaseTest {
                 .checkAttributes(service);
         deleteService(service.getName());
     }
+
+    @Test
+    @TmsLink("504746")
+    @DisplayName("Создание сервиса c графом")
+    public void createServiceWithGraphTest() {
+        service.setServiceName(UUID.randomUUID().toString());
+        service.setGraphVersion("Последняя");
+        new IndexPage().goToServicesListPagePC()
+                .createService(service)
+                .checkAttributes(service)
+                .deleteService();
+    }
 }

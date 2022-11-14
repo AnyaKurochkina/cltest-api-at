@@ -64,20 +64,6 @@ public class BaseListPage {
         Assertions.assertTrue(lastDate.isBefore(firstDate) || lastDate.isEqual(firstDate));
     }
 
-    @Step("Переход на следующую страницу списка")
-    public BaseListPage nextPage() {
-        TestUtils.scrollToTheBottom();
-        nextPageButton.click();
-        return this;
-    }
-
-    @Step("Переход на последнюю страницу списка")
-    public BaseListPage lastPage() {
-        TestUtils.scrollToTheBottom();
-        lastPageButton.click();
-        return this;
-    }
-
     @Step("Раскрытие меню действий для строки, содержащей в столбце 'columnName' значение 'value'")
     public static void openActionMenu(String columnName, String value) {
         new Table(columnName).getRowElementByColumnValue(columnName, value).$x(".//button[@id = 'actions-menu-button']")
@@ -104,5 +90,19 @@ public class BaseListPage {
         new Table(columnName).getRowElementByColumnValue(columnName, value).$x(".//button[@id = 'actions-menu-button']")
                 .click();
         deleteAction.click();
+    }
+
+    @Step("Переход на следующую страницу списка")
+    public BaseListPage nextPage() {
+        TestUtils.scrollToTheBottom();
+        nextPageButton.click();
+        return this;
+    }
+
+    @Step("Переход на последнюю страницу списка")
+    public BaseListPage lastPage() {
+        TestUtils.scrollToTheBottom();
+        lastPageButton.click();
+        return this;
     }
 }

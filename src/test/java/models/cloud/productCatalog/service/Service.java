@@ -110,6 +110,7 @@ public class Service extends Entity implements IProductCatalog {
     private List<String> restrictedDevelopers;
     @JsonProperty("direction_name")
     private String directionName;
+    private Graph graph;
 
     @Override
     public Entity init() {

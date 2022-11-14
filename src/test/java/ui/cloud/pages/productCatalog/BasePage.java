@@ -57,4 +57,13 @@ public class BasePage {
         saveButton.shouldBe(Condition.disabled);
         return this;
     }
+
+    @Step("Переход на вкладку '{title}'")
+    public void goToTab(String title) {
+        SelenideElement tab = $x("//button[span[text()='" + title + "']]");
+        if (tab.getAttribute("aria-selected").equals("false")) {
+            tab.scrollIntoView(true).click();
+        }
+    }
+
 }
