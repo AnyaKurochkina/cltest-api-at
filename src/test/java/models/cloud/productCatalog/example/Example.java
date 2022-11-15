@@ -1,5 +1,6 @@
 package models.cloud.productCatalog.example;
 
+import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.JsonHelper;
@@ -25,7 +26,7 @@ import static core.helper.Configure.ProductCatalogURL;
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = {"jsonTemplate", "productName"}, callSuper = false)
 @ToString(exclude = {"jsonTemplate", "productName"})
-public class Example extends Entity {
+public class Example extends Entity implements IProductCatalog {
     @Builder.Default
     @JsonProperty("context_data")
     private LinkedHashMap<Object, Object> contextData = new LinkedHashMap<>();

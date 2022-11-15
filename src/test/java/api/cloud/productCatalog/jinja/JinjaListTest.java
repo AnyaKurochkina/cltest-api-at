@@ -1,21 +1,23 @@
 package api.cloud.productCatalog.jinja;
 
+import api.Tests;
 import core.helper.Configure;
-import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.jinja2.getJinjaListResponse.GetJinjaListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.jinja2.Jinja2;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.Jinja2Steps.getJinja2List;
+import static steps.productCatalog.ProductCatalogSteps.isSorted;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -30,8 +32,8 @@ public class JinjaListTest extends Tests {
     @TmsLink("660061")
     @Test
     public void getJinjaList() {
-        List<ItemImpl> list = steps.getProductObjectList(GetJinjaListResponse.class);
-        assertTrue(steps.isSorted(list), "Список не отсортирован.");
+        List<Jinja2> list = getJinja2List();
+        assertTrue(isSorted(list), "Список не отсортирован.");
     }
 
     @DisplayName("Проверка значения next в запросе на получение списка jinja")

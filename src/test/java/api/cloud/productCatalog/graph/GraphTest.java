@@ -1,21 +1,19 @@
 package api.cloud.productCatalog.graph;
 
+import api.Tests;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.http.Response;
-import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.graphs.deleteGraph.response.DeleteGraphResponse;
 import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.Env;
 import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.Modification;
 import models.cloud.productCatalog.graph.RootPath;
@@ -29,7 +27,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -78,17 +75,16 @@ public class GraphTest extends Tests {
     @DisplayName("Импорт графа")
     @TmsLink("642628")
     @Test
-    public void importGraph() {
+    public void importGraphTest() {
         String data = JsonHelper.getStringFromFile("/productCatalog/graphs/importGraph.json");
         String graphName = new JsonPath(data).get("Graph.name");
-        if (steps.isExists(graphName)) {
-            steps.deleteByName(graphName, GetGraphsListResponse.class);
+        if (isGraphExists(graphName)) {
+            deleteGraphById(getGraphByName(graphName).getGraphId());
         }
-        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json");
-        Assertions.assertTrue(steps.isExists(graphName));
-        steps.getDeleteObjectResponse(steps
-                .getProductObjectIdByNameWithMultiSearch(graphName, GetGraphsListResponse.class)).assertStatus(204);
-        Assertions.assertFalse(steps.isExists(graphName));
+        importGraph(Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json");
+        assertTrue(isGraphExists(graphName));
+        deleteGraphById(getGraphByName(graphName).getGraphId());
+        assertFalse(isGraphExists(graphName));
     }
 
     @DisplayName("Получение графа по Id")
@@ -99,8 +95,8 @@ public class GraphTest extends Tests {
                 .name("graph_get_by_id_test_api")
                 .build()
                 .createObject();
-        GetImpl getImpl = steps.getById(graph.getGraphId(), GetGraphResponse.class);
-        assertEquals(graph.getName(), getImpl.getName());
+        Graph getGraph = getGraphById(graph.getGraphId());
+        assertEquals(graph.getName(), getGraph.getName());
     }
 
     @DisplayName("Получение графа по Id и с параметром with_version_fields=true")
@@ -125,10 +121,10 @@ public class GraphTest extends Tests {
                 .build()
                 .createObject();
         String id = graph.getGraphId();
-        GetGraphResponse getGraph = (GetGraphResponse) steps.getById(id, GetGraphResponse.class);
+        Graph getGraph = getGraphById(id);
         assertFalse(getGraph.getLockOrderOnError());
-        steps.partialUpdateObject(id, new JSONObject().put("lock_order_on_error", true));
-        GetGraphResponse getUpdatedGraph = (GetGraphResponse) steps.getById(id, GetGraphResponse.class);
+        partialUpdateGraph(id, new JSONObject().put("lock_order_on_error", true));
+        Graph getUpdatedGraph = getGraphById(id);
         assertTrue(getUpdatedGraph.getLockOrderOnError());
         String newVersion = getUpdatedGraph.getVersion();
         assertEquals("1.0.1", newVersion);
@@ -138,11 +134,10 @@ public class GraphTest extends Tests {
     @TmsLink("740080")
     @Test
     public void orderingByCreateData() {
-        List<ItemImpl> list = steps
-                .orderingByCreateData(GetGraphsListResponse.class).getItemsList();
+        List<Graph> list = getGraphListOrdering("create_dt");
         for (int i = 0; i < list.size() - 1; i++) {
-            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
-            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateDt());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateDt());
             assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
                     "Даты должны быть отсортированы по возрастанию");
         }
@@ -152,11 +147,10 @@ public class GraphTest extends Tests {
     @TmsLink("740082")
     @Test
     public void orderingByUpDateData() {
-        List<ItemImpl> list = steps
-                .orderingByUpDateData(GetGraphsListResponse.class).getItemsList();
+        List<Graph> list = getGraphListOrdering("update_dt");
         for (int i = 0; i < list.size() - 1; i++) {
-            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
-            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpdateDt());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpdateDt());
             assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
                     "Даты должны быть отсортированы по возрастанию");
         }
@@ -170,37 +164,35 @@ public class GraphTest extends Tests {
                 .name("graph_get_by_name_with_public_token_test_api")
                 .build()
                 .createObject();
-        steps.getObjectByNameWithPublicToken(graph.getName()).assertStatus(200);
-        steps.createProductObjectWithPublicToken(steps
+        getGraphByNameWithPublicToken(graph.getName());
+        createGraphWithPublicToken(steps
                 .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
-        steps.partialUpdateObjectWithPublicToken(graph.getGraphId(),
+        partialUpdateGraphWithPublicToken(graph.getGraphId(),
                 new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
-        steps.putObjectByIdWithPublicToken(graph.getGraphId(), steps
+        putGraphByIdWithPublicToken(graph.getGraphId(), steps
                 .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
-        steps.deleteObjectWithPublicToken(graph.getGraphId()).assertStatus(403);
+        deleteGraphWithPublicToken(graph.getGraphId()).assertStatus(403);
     }
 
     @DisplayName("Копирование графа по Id")
     @TmsLink("642640")
     @Test
-    public void copyGraphById() {
+    public void copyGraphByIdTest() {
         Graph graph = Graph.builder()
                 .name("graph_clone_test_api")
                 .build()
                 .createObject();
         String cloneName = graph.getName() + "-clone";
-        steps.copyById(graph.getGraphId());
-        Assertions.assertTrue(steps.isExists(cloneName));
-        steps.getDeleteObjectResponse(
-                        steps.getProductObjectIdByNameWithMultiSearch(cloneName, GetGraphsListResponse.class))
-                .assertStatus(204);
-        Assertions.assertFalse(steps.isExists(cloneName));
+        copyGraphById(graph.getGraphId());
+        assertTrue(isGraphExists(cloneName));
+        deleteGraphById(getGraphByName(cloneName).getGraphId());
+        assertFalse(isGraphExists(cloneName));
     }
 
     @DisplayName("Частичное обновление графа по Id")
     @TmsLink("642650")
     @Test
-    public void partialUpdateGraph() {
+    public void partialUpdateGraphTest() {
         Graph graph = Graph.builder()
                 .name("partial_update_graph_test_api")
                 .version("1.0.0")
@@ -208,13 +200,13 @@ public class GraphTest extends Tests {
                 .build()
                 .createObject();
         String oldGraphVersion = graph.getVersion();
-        steps.partialUpdateObject(graph.getGraphId(), new JSONObject()
+        partialUpdateGraph(graph.getGraphId(), new JSONObject()
                 .put("damage_order_on_error", true)).assertStatus(200);
-        GetGraphResponse getGraphResponse = (GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
+        Graph getGraphResponse = getGraphById(graph.getGraphId());
         Boolean damageOrderOnError = getGraphResponse.getDamageOrderOnError();
         String newGraphVersion = getGraphResponse.getVersion();
-        Assertions.assertEquals(true, damageOrderOnError);
-        Assertions.assertNotEquals(oldGraphVersion, newGraphVersion);
+        assertEquals(true, damageOrderOnError);
+        assertNotEquals(oldGraphVersion, newGraphVersion);
     }
 
 
@@ -227,21 +219,21 @@ public class GraphTest extends Tests {
                 .version("1.0.999")
                 .build()
                 .createObject();
-        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true));
-        String currentVersion = steps.getById(graphTest.getGraphId(), GetGraphResponse.class).getVersion();
+        partialUpdateGraph(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true));
+        String currentVersion = getGraphById(graphTest.getGraphId()).getVersion();
         assertEquals("1.1.0", currentVersion);
-        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", false)
+        partialUpdateGraph(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", false)
                 .put("version", "1.999.999"));
-        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true));
+        partialUpdateGraph(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true));
         currentVersion = steps.getById(graphTest.getGraphId(), GetGraphResponse.class).getVersion();
         assertEquals("2.0.0", currentVersion);
-        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", false)
+        partialUpdateGraph(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", false)
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true))
+        partialUpdateGraph(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true))
                 .assertStatus(500);
     }
 
-    @DisplayName("Проверка отсутсвия ' в значениях ключя template_id")
+    @DisplayName("Проверка отсутствия ' в значениях ключя template_id")
     @TmsLink("642683")
     @Test
     public void checkKeys() {
@@ -265,9 +257,9 @@ public class GraphTest extends Tests {
                 .build()
                 .createObject();
         String mainGraphId = mainGraph.getGraphId();
-        steps.partialUpdateObject(mainGraphId, new JSONObject().put("description", "updateVersion2.0")
+        partialUpdateGraph(mainGraphId, new JSONObject().put("description", "updateVersion2.0")
                 .put("version", "2.0.0"));
-        steps.partialUpdateObject(mainGraphId, new JSONObject().put("description", "updateVersion3.0")
+        partialUpdateGraph(mainGraphId, new JSONObject().put("description", "updateVersion3.0")
                 .put("version", "3.0.0"));
 
         Product.builder()
@@ -285,12 +277,12 @@ public class GraphTest extends Tests {
                 .graphId(mainGraphId)
                 .build().createObject();
 
-        String deleteResponse = steps.getDeleteObjectResponse(mainGraphId)
+        String deleteResponse = getDeleteResponse(mainGraphId)
                 .assertStatus(400)
-                .extractAs(DeleteGraphResponse.class)
-                .getErr();
+                .jsonPath()
+                .get("err");
         String version = StringUtils.findByRegex("version: ([0-9.]+)\\)", deleteResponse);
-        Assertions.assertEquals("1.0.0", version);
+        assertEquals("1.0.0", version);
     }
 
     @DisplayName("Удаление графа")
@@ -301,7 +293,7 @@ public class GraphTest extends Tests {
                 .name("delete_graph_test_api")
                 .build()
                 .createObject();
-        graph.deleteObject();
+        deleteGraphById(graph.getGraphId());
     }
 
     @Test
@@ -316,7 +308,7 @@ public class GraphTest extends Tests {
                 .build()
                 .createObject();
         String tag = "graph_" + graphName + "_" + graph.getVersion();
-        Response response = steps.dumpToBitbucket(graph.getGraphId());
+        Response response = dumpGraphToBitbucket(graph.getGraphId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         assertEquals(tag, response.jsonPath().get("tag"));
     }
@@ -326,21 +318,20 @@ public class GraphTest extends Tests {
     @TmsLink("1028898")
     public void loadFromGitlabGraph() {
         String graphName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
-        JSONObject jsonObject = Graph.builder()
+        Graph graph = Graph.builder()
                 .name(graphName)
                 .title(graphName)
                 .version("1.0.0")
                 .build()
-                .init().toJson();
-        GetGraphResponse graph = steps.createProductObject(jsonObject).extractAs(GetGraphResponse.class);
-        Response response = steps.dumpToBitbucket(graph.getId());
+                .createObject();
+        Response response = dumpGraphToBitbucket(graph.getGraphId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
-        steps.deleteByName(graphName, GetGraphsListResponse.class);
+        deleteGraphById(graph.getGraphId());
         String path = "graph_" + graphName + "_" + graph.getVersion();
-        steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(graphName));
-        steps.deleteByName(graphName, GetGraphsListResponse.class);
-        assertFalse(steps.isExists(graphName));
+        loadGraphFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(isGraphExists(graphName));
+        deleteGraphById(getGraphByName(graphName).getGraphId());
+        assertFalse(isGraphExists(graphName));
     }
 
     @DisplayName("Передача и получение значений allowed_developers")
@@ -353,7 +344,7 @@ public class GraphTest extends Tests {
                 .allowedDevelopers(allowedDevelopersList)
                 .build()
                 .createObject();
-        GetGraphResponse createdGraph = (GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
+        Graph createdGraph = getGraphById(graph.getGraphId());
         assertEquals(allowedDevelopersList, createdGraph.getAllowedDevelopers());
     }
 
@@ -367,7 +358,7 @@ public class GraphTest extends Tests {
                 .restrictedDevelopers(restrictedDevelopersList)
                 .build()
                 .createObject();
-        GetGraphResponse createdGraph = (GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
+        Graph createdGraph = getGraphById(graph.getGraphId());
         assertEquals(restrictedDevelopersList, createdGraph.getRestrictedDevelopers());
     }
 
@@ -392,7 +383,7 @@ public class GraphTest extends Tests {
                 .modifications(Collections.singletonList(mod))
                 .build()
                 .createObject();
-        GetGraphResponse actualGraph = (GetGraphResponse) steps.getById(graph.getGraphId(), GetGraphResponse.class);
+        Graph actualGraph = getGraphById(graph.getGraphId());
         assertEquals(UpdateType.DELETE, actualGraph.getModifications().get(0).getUpdateType());
     }
 
@@ -418,10 +409,10 @@ public class GraphTest extends Tests {
                 .modifications(Collections.singletonList(mod))
                 .build()
                 .createObject();
-        steps.copyById(graph.getGraphId());
-        String copyGraphId = steps.getProductObjectIdByNameWithMultiSearch(name + "-clone", GetGraphsListResponse.class);
-        GetGraphResponse copyGraph = (GetGraphResponse) steps.getById(copyGraphId, GetGraphResponse.class);
+        copyGraphById(graph.getGraphId());
+        String copyGraphId = getGraphByName(name + "-clone").getGraphId();
+        Graph copyGraph = getGraphById(copyGraphId);
         assertEquals(modName, copyGraph.getModifications().get(0).getName());
-        steps.deleteById(copyGraphId);
+        deleteGraphById(copyGraphId);
     }
 }

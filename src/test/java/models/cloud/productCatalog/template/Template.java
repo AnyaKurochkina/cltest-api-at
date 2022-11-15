@@ -1,11 +1,15 @@
-package models.cloud.productCatalog;
+package models.cloud.productCatalog.template;
 
+import api.cloud.productCatalog.IProductCatalog;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.template.createTemplate.response.CreateTemplateResponse;
-import httpModels.productCatalog.template.createTemplate.response.PrintedOutput;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
+import httpModels.productCatalog.template.getTemplate.response.Input;
+import httpModels.productCatalog.template.getTemplate.response.Output;
+import httpModels.productCatalog.template.getTemplate.response.PrintedOutput;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +20,6 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
-import java.util.Map;
 
 import static core.helper.Configure.ProductCatalogURL;
 
@@ -24,51 +27,79 @@ import static core.helper.Configure.ProductCatalogURL;
 @Builder
 @Getter
 
-public class Template extends Entity {
+public class Template extends Entity implements IProductCatalog {
 
+    @JsonProperty("additional_input")
     private Boolean additionalInput;
+    private String title;
     private String color;
+    @JsonProperty("version_list")
+    private List<String> versionList;
+    @JsonProperty("icon_url")
     private String iconUrl;
+    @JsonProperty("icon_store_id")
     private String iconStoreId;
+    private String type;
     private String description;
     private String run;
+    @JsonProperty("priority_can_be_overridden")
     private Boolean priorityCanBeOverridden;
+    @JsonProperty("log_can_be_overridden")
     private Boolean logCanBeOverridden;
     private Integer timeout;
-    private Double coordsX;
-    private Map<String,Map<String,String>> output;
+    private Output output;
+    @JsonProperty("coords_x")
+    private Integer coordsX;
+    @JsonProperty("printed_output")
     private PrintedOutput printedOutput;
+    @JsonProperty("printed_output_can_be_overridden")
     private Boolean printedOutputCanBeOverridden;
+    @JsonProperty("restricted_paths")
     private List<Object> restrictedPaths;
-    private Integer templateId;
-    private Double coordsY;
+    private Integer id;
+    @JsonProperty("coords_y")
+    private Integer coordsY;
     private Object rollback;
+    @JsonProperty("allowed_paths")
     private List<Object> allowedPaths;
-    private String logLevel;
+    @JsonProperty("log_level")
+    private Object logLevel;
+    @JsonProperty("version_create_dt")
+    private String versionCreateDt;
+    @JsonProperty("restricted_groups")
     private List<Object> restrictedGroups;
     private Integer priority;
-    private Map<String,Map<String,String>> input;
-    private Object extraData;
-    private String templateName;
-    private List<Object> allowedGroups;
-    private Boolean additionalOutput;
-    private String jsonTemplate;
     private String version;
-    private String type;
-    private String title;
+    private Input input;
+    @JsonProperty("extra_data")
+    private Object extraData;
+    @JsonProperty("version_changed_by_user")
+    private String versionChangedByUser;
+    private String name;
+    @JsonProperty("allowed_groups")
+    private List<Object> allowedGroups;
+    @JsonProperty("additional_output")
+    private Boolean additionalOutput;
+    @JsonProperty("last_version")
+    private String lastVersion;
+    @JsonProperty("create_dt")
+    private String createDt;
+    @JsonProperty("update_dt")
+    private String updateDt;
+    @JsonProperty("current_version")
+    private String currentVersion;
 
     public static final String productName = "/api/v1/templates/";
 
     @Override
     public Entity init() {
-        jsonTemplate = "productCatalog/templates/createTemplate.json";
         return this;
     }
 
     @Override
     public JSONObject toJson() {
-        return JsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.name", templateName)
+        return JsonHelper.getJsonTemplate("productCatalog/templates/createTemplate.json")
+                .set("$.name", name)
                 .set("$.version", version)
                 .set("$.type", type)
                 .set("$.title", title)
@@ -86,9 +117,9 @@ public class Template extends Entity {
     @Override
     @Step("Создание шаблона")
     protected void create() {
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        if (productCatalogSteps.isExists(templateName)) {
-            productCatalogSteps.deleteByName(templateName, GetTemplateListResponse.class);
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, name);
+        if (productCatalogSteps.isExists(name)) {
+            productCatalogSteps.deleteByName(name, GetTemplateListResponse.class);
         }
         CreateTemplateResponse createTemplateResponse = new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
@@ -96,17 +127,17 @@ public class Template extends Entity {
                 .post(productName)
                 .assertStatus(201)
                 .extractAs(CreateTemplateResponse.class);
-        templateId = createTemplateResponse.getId();
-        Assertions.assertNotNull(templateId, "Шаблон с именем: " + templateName + ", не создался");
+        id = createTemplateResponse.getId();
+        Assertions.assertNotNull(id, "Шаблон с именем: " + name + ", не создался");
     }
 
     @Override
     protected void delete() {
          new Http(ProductCatalogURL)
                  .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(productName + templateId + "/")
+                .delete(productName + id + "/")
                 .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(templateName));
+        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, "productCatalog/templates/createTemplate.json");
+        Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 }

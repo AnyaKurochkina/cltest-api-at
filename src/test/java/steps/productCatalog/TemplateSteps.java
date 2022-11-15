@@ -4,8 +4,12 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.template.GetTemplateList;
+import models.cloud.productCatalog.template.Template;
 import org.json.JSONObject;
 import steps.Steps;
+
+import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
 
@@ -28,5 +32,15 @@ public class TemplateSteps extends Steps  {
                 .get(templateUrl + "{}/used/", id)
                 .compareWithJsonSchema("jsonSchema/template/getNodesUsedTemplateSchema.json")
                 .assertStatus(200);
+    }
+
+    @Step("Получение списка шаблонов")
+    //todo сравнение с jsonShema
+    public static List<Template> getTemplateList() {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(templateUrl)
+                .assertStatus(200)
+                .extractAs(GetTemplateList.class).getList();
     }
 }

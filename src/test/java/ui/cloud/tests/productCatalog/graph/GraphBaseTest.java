@@ -1,8 +1,7 @@
 package ui.cloud.tests.productCatalog.graph;
 
-import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
-import models.cloud.productCatalog.Template;
+import models.cloud.productCatalog.template.Template;
 import models.cloud.productCatalog.graph.Graph;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +14,9 @@ import ui.models.Node;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static steps.productCatalog.GraphSteps.deleteGraphById;
+import static steps.productCatalog.GraphSteps.getGraphByName;
 
 @DisabledIfEnv("prod")
 public class GraphBaseTest extends BaseTest {
@@ -76,9 +78,7 @@ public class GraphBaseTest extends BaseTest {
     }
 
     public void deleteGraph(String name) {
-        ProductCatalogSteps steps = new ProductCatalogSteps(Graph.productName);
-        steps.getDeleteObjectResponse(steps
-                .getProductObjectIdByNameWithMultiSearch(name, GetGraphsListResponse.class)).assertStatus(204);
+        deleteGraphById(getGraphByName(name).getGraphId());
     }
 
     public void deleteTemplate(String name) {

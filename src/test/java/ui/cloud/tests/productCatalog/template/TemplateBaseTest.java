@@ -1,7 +1,7 @@
 package ui.cloud.tests.productCatalog.template;
 
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
-import models.cloud.productCatalog.Template;
+import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

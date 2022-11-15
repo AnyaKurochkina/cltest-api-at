@@ -1,5 +1,6 @@
 package steps.productCatalog;
 
+import api.cloud.productCatalog.IProductCatalog;
 import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -145,14 +146,6 @@ public class ProductCatalogSteps {
         return (GetImpl) new Http(ProductCatalogURL)
                 .setRole(Role.ORDER_SERVICE_ADMIN)
                 .get(productName + objectId + "/")
-                .extractAs(clazz);
-    }
-
-    @Step("Получение объекта продуктового каталога по Id и Env")
-    public GetImpl getByIdAndEnv(String objectId, String env, Class<?> clazz) {
-        return (GetImpl) new Http(ProductCatalogURL)
-                .setRole(Role.ORDER_SERVICE_ADMIN)
-                .get(productName + objectId + "/?env={}", env)
                 .extractAs(clazz);
     }
 
@@ -465,13 +458,13 @@ public class ProductCatalogSteps {
     }
 
     @Step("Проверка сортировки списка")
-    public boolean isSorted(List<ItemImpl> list) {
+    public static boolean isSorted(List<? extends IProductCatalog> list) {
         if (list.isEmpty() || list.size() == 1) {
             return true;
         }
         for (int i = 0; i < list.size() - 1; i++) {
-            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
-            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateDt());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateDt());
             String currentName = delNoDigOrLet(list.get(i).getName());
             String nextName = delNoDigOrLet(list.get(i + 1).getName());
             if (currentTime.isBefore(nextTime) || (currentTime.isEqual(nextTime) && currentName.compareToIgnoreCase(nextName) > 0)) {
