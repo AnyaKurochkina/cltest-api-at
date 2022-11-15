@@ -39,6 +39,7 @@ public abstract class IProductPage {
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
+    SelenideElement btnMonitoringOs = $x("//button[.='Мониторинг ОС']");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
     SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
 
@@ -85,6 +86,12 @@ public abstract class IProductPage {
     @Step("Получение label")
     public String getLabel() {
         return $x("//span[starts-with(text(),'AT-UI-')]").shouldBe(Condition.visible).getText();
+    }
+
+    @Step("Получение label")
+    public void checkMonitoringOs() {
+        btnMonitoringOs.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
+        new MonitoringOsPage().check();
     }
 
     @Step("Запуск действия '{action}'")
