@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Windows;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
@@ -228,6 +229,16 @@ public class UiWindowsTest extends UiProductTest {
     void stopSoft() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.LESS, winPage::stopSoft);
+    }
+
+    @Test
+    @Order(17)
+    @TmsLink("1171958")
+    @EnabledIfEnv("prod")
+    @DisplayName("UI Windows. Мониторинг ОС")
+    void monitoringOs() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.checkMonitoringOs();
     }
 
     @Test

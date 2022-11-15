@@ -88,7 +88,7 @@ public abstract class IProductPage {
         return $x("//span[starts-with(text(),'AT-UI-')]").shouldBe(Condition.visible).getText();
     }
 
-    @Step("Получение label")
+    @Step("Проверка вкладки Мониторинг")
     public void checkMonitoringOs() {
         btnMonitoringOs.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
         new MonitoringOsPage().check();
