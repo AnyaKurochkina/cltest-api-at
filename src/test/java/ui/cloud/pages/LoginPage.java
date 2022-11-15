@@ -24,9 +24,8 @@ public class LoginPage {
     }
 
     public LoginPage() {
-        open(getAppProp("url.control-panel"));
+        open("");
     }
-
 
     private IndexPage signIn(String user, String password){
         usernameInput.shouldBe(Condition.visible).val(user);

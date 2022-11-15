@@ -36,19 +36,21 @@ public class Project extends Entity {
 
 
     public Entity init() {
-        if (informationSystem == null) {
-            informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
-        }
-        if (projectEnvironmentPrefix == null) {
-            projectEnvironmentPrefix = PortalBackSteps.getProjectEnvironmentPrefix("DEV", informationSystem);
-        }
-        if (projectEnvironmentPrefix.getProjectEnvironmentId() == null) {
-            ProjectEnvironmentPrefix pe = PortalBackSteps.getProjectEnvironmentPrefixByEnv(projectEnvironmentPrefix.getEnv(), informationSystem);
-            projectEnvironmentPrefix.setProjectEnvironmentId(pe.getProjectEnvironmentId());
-            projectEnvironmentPrefix.setEnvType(pe.getEnvType());
-            projectEnvironmentPrefix.setRisName(pe.getRisName());
-            projectEnvironmentPrefix.setId(pe.getId());
-            projectEnvironmentPrefix.setDescription(pe.getDescription());
+        if (!Configure.isT1()) {
+            if (informationSystem == null) {
+                informationSystem = ((InformationSystem) InformationSystem.builder().build().createObject()).getId();
+            }
+            if (projectEnvironmentPrefix == null) {
+                projectEnvironmentPrefix = PortalBackSteps.getProjectEnvironmentPrefix("DEV", informationSystem);
+            }
+            if (projectEnvironmentPrefix.getProjectEnvironmentId() == null) {
+                ProjectEnvironmentPrefix pe = PortalBackSteps.getProjectEnvironmentPrefixByEnv(projectEnvironmentPrefix.getEnv(), informationSystem);
+                projectEnvironmentPrefix.setProjectEnvironmentId(pe.getProjectEnvironmentId());
+                projectEnvironmentPrefix.setEnvType(pe.getEnvType());
+                projectEnvironmentPrefix.setRisName(pe.getRisName());
+                projectEnvironmentPrefix.setId(pe.getId());
+                projectEnvironmentPrefix.setDescription(pe.getDescription());
+            }
         }
         if (folderName == null) {
             folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
@@ -60,6 +62,14 @@ public class Project extends Entity {
     }
 
     public JSONObject toJson() {
+        if (Configure.isT1())
+            return JsonHelper.getJsonTemplate("/structure/create_project.json")
+                    .set("$.project.title", projectName)
+                    .put("$.project", "environment_type", "prod")
+                    .remove("$.project.information_system_id")
+                    .remove("$.project.project_environment_id")
+                    .remove("$.project.environment_prefix_id")
+                    .build();
         return JsonHelper.getJsonTemplate("/structure/create_project.json")
                 .set("$.project.title", projectName)
                 .set("$.project.information_system_id", Objects.requireNonNull(informationSystem))

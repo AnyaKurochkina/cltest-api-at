@@ -17,7 +17,7 @@ import java.awt.*;
 
 @Log4j2
 //@ExtendWith(CustomBeforeAllAndAfterAll.class)
-//@ExtendWith(ConfigExtension.class)
+@ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UiTest extends Tests {
@@ -36,7 +36,7 @@ public class UiTest extends Tests {
     void name() {
         new LoginPage().signIn(Role.CLOUD_ADMIN);
 //        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
-        Selenide.open("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/438cbed2-a271-4c51-a8b4-0d851ba6cacc/main?context=proj-pkvckn08w9&type=project&org=vtb");
+        Selenide.open("https://d2-portal-front.apps.cloud.k8s.dev.01.vmw.t1.loc/vcloud/orgs?page=0&perPage=10&context=proj-rd5bbg9bhn&type=project&org=t1-cloud#");
 //        Table.getTableByColumnName("Дата запуска");
         System.out.println(1);
 
@@ -47,6 +47,24 @@ public class UiTest extends Tests {
         System.out.println(1);
 
     }
+
+    @Test
+    void nameT1() {
+        new LoginPage()
+                .signIn(Role.CLOUD_ADMIN);
+//        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
+        Selenide.open("https://d2-portal-front.apps.cloud.k8s.dev.01.vmw.t1.loc/vcloud/orgs?page=0&perPage=10&context=proj-rd5bbg9bhn&type=project&org=t1-cloud#");
+//        Table.getTableByColumnName("Дата запуска");
+        System.out.println(1);
+
+//        Selenide.$x("//canvas");
+//        new Graph().getNodeCoordinates();
+
+
+        System.out.println(1);
+
+    }
+
 
 
 //    boolean isIntersect(Node box1, Node box2) {
