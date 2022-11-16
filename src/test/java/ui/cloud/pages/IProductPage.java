@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.interfaces.IProduct;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
@@ -90,7 +91,8 @@ public abstract class IProductPage {
 
     @Step("Проверка вкладки Мониторинг")
     public void checkMonitoringOs() {
-        btnMonitoringOs.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
+        Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
+        btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         new MonitoringOsPage().check();
     }
 
@@ -98,7 +100,7 @@ public abstract class IProductPage {
     protected void runActionWithoutParameters(SelenideElement button, String action, ActionParameters params) {
         String productNameText = null;
         //btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
-        if(Objects.nonNull(params.getNode())){
+        if (Objects.nonNull(params.getNode())) {
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
         }
@@ -113,7 +115,7 @@ public abstract class IProductPage {
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(2000);
-        if(Objects.nonNull(params.getNode())){
+        if (Objects.nonNull(params.getNode())) {
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
         if (params.isWaitChangeStatus())
@@ -128,7 +130,7 @@ public abstract class IProductPage {
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         String productNameText = null;
         //btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
-        if(Objects.nonNull(params.getNode())){
+        if (Objects.nonNull(params.getNode())) {
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
         }
@@ -143,7 +145,7 @@ public abstract class IProductPage {
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(3000);
-        if(Objects.nonNull(params.getNode())){
+        if (Objects.nonNull(params.getNode())) {
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
         if (params.isWaitChangeStatus())
@@ -189,11 +191,9 @@ public abstract class IProductPage {
         if (status.equals(ProductStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
                     product, status, StateServiceSteps.getErrorFromStateService(product.getOrderId())));
-        }
-        else if(status.equals(ProductStatus.BLOCKED)) {
+        } else if (status.equals(ProductStatus.BLOCKED)) {
             Assertions.fail("Продукт в статусе заблокирован");
-        }
-        else log.info("Статус действия {}", status);
+        } else log.info("Статус действия {}", status);
     }
 
     @Step("Проверка на содержание необходимых столбцов на вкладке История действий")
@@ -240,7 +240,7 @@ public abstract class IProductPage {
         waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
-        if(preBillingCostAction == null)
+        if (preBillingCostAction == null)
             return;
         TypifiedElement.refresh();
         currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
