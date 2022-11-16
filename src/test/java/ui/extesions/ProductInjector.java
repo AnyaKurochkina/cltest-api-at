@@ -24,7 +24,8 @@ public class ProductInjector implements TestInstancePostProcessor {
                 product.setEnv("LT");
                 if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
                     product.setPlatform("OpenStack");
-                product.setPlatform("vSphere");
+                else
+                    product.setPlatform("vSphere");
                 product.init();
 
                 field.set(testInstance, product);
