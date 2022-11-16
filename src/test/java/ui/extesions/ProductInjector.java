@@ -21,7 +21,7 @@ public class ProductInjector implements TestInstancePostProcessor {
             if (IProduct.class.isAssignableFrom(clazz)) {
                 IProduct product = (IProduct) clazz.newInstance();
 
-                product.setEnv("DEV");
+                product.setEnv("LT");
                 if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
                     product.setPlatform("OpenStack");
                 product.setPlatform("vSphere");
