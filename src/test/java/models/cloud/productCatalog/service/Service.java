@@ -1,5 +1,6 @@
-package models.cloud.productCatalog;
+package models.cloud.productCatalog.service;
 
+import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.JsonHelper;
@@ -13,6 +14,7 @@ import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
@@ -27,7 +29,7 @@ import static core.helper.Configure.ProductCatalogURL;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-public class Service extends Entity {
+public class Service extends Entity implements IProductCatalog {
 
     private final String productName = "/api/v1/services/";
     @Builder.Default
@@ -63,7 +65,7 @@ public class Service extends Entity {
     @JsonProperty("hide_node_name_output")
     private Boolean hideNodeNameOutput;
     @JsonProperty("id")
-    private String serviceId;
+    private String id;
     @JsonProperty("start_btn_label")
     private String startBtnLabel;
     @JsonProperty("version_create_dt")
@@ -87,7 +89,7 @@ public class Service extends Entity {
     @JsonProperty("version_changed_by_user")
     private String versionChangedByUser;
     @JsonProperty("name")
-    private String serviceName;
+    private String name;
     @JsonProperty("allowed_groups")
     private List<String> allowedGroups;
     @JsonProperty("version_fields")
@@ -130,7 +132,7 @@ public class Service extends Entity {
     @Override
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.name", serviceName)
+                .set("$.name", name)
                 .set("$.graph_id", graphId)
                 .set("$.graph_version", graphVersion)
                 .set("$.version", version)
@@ -153,8 +155,8 @@ public class Service extends Entity {
     @Override
     @Step("Создание сервиса")
     protected void create() {
-        if (productCatalogSteps.isExists(serviceName)) {
-            productCatalogSteps.deleteByName(serviceName, GetServiceListResponse.class);
+        if (productCatalogSteps.isExists(name)) {
+            productCatalogSteps.deleteByName(name, GetServiceListResponse.class);
         }
         CreateServiceResponse createServiceResponse = new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
@@ -162,9 +164,9 @@ public class Service extends Entity {
                 .post(productName)
                 .assertStatus(201)
                 .extractAs(CreateServiceResponse.class);
-        serviceId = createServiceResponse.getId();
+        id = createServiceResponse.getId();
         directionName = createServiceResponse.getDirectionName();
-        Assertions.assertNotNull(serviceId, "Сервис с именем: " + serviceName + ", не создался");
+        Assertions.assertNotNull(id, "Сервис с именем: " + name + ", не создался");
     }
 
     @Override
@@ -172,9 +174,9 @@ public class Service extends Entity {
     protected void delete() {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(productName + serviceId + "/")
+                .delete(productName + id + "/")
                 .assertStatus(204);
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(serviceName));
+        Assertions.assertFalse(productCatalogSteps.isExists(name));
     }
 }

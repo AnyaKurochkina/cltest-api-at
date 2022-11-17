@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import core.helper.http.Http;
-import httpModels.productCatalog.jinja2.createJinja2.response.CreateJinjaResponse;
 import httpModels.productCatalog.jinja2.getJinjaListResponse.GetJinjaListResponse;
 import httpModels.productCatalog.jinja2.getJinjaResponse.Jinja2Data;
 import io.qameta.allure.Step;
@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
+import static steps.productCatalog.Jinja2Steps.isJinja2Exists;
+
 @Log4j2
 @Builder
 @Getter
@@ -28,11 +30,8 @@ public class Jinja2 extends Entity implements IProductCatalog {
     @JsonProperty("jinja2_data")
     private Jinja2Data jinja2Data;
     private String name;
-    @JsonProperty("description")
     private String description;
-    @JsonProperty("id")
     private String id;
-    @JsonProperty("title")
     private String title;
     @JsonProperty("create_dt")
     private String createDt;
@@ -59,16 +58,16 @@ public class Jinja2 extends Entity implements IProductCatalog {
     @Step("Создание jinja2")
     protected void create() {
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, "productCatalog/jinja2/createJinja.json");
-        if (productCatalogSteps.isExists(name)) {
+        if (isJinja2Exists(name)) {
             productCatalogSteps.deleteByName(name, GetJinjaListResponse.class);
         }
-        id = new Http(Configure.ProductCatalogURL)
+        Jinja2 jinja2 = new Http(Configure.ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
-                .extractAs(CreateJinjaResponse.class)
-                .getId();
+                .extractAs(Jinja2.class);
+        StringUtils.copyAvailableFields(jinja2, this);
         Assertions.assertNotNull(id, "Jinja с именем: " + name + ", не создался");
     }
 

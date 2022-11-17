@@ -1,21 +1,23 @@
-package httpModels.productCatalog.itemVisualItem.createVisualTemplate;
+package models.cloud.productCatalog.visualTeamplate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import models.cloud.productCatalog.Meta;
 
 import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FullTemplate{
+public class GetVisualTemplateList {
 
-	@JsonProperty("type")
-	private String type;
+	@JsonProperty("meta")
+	private Meta meta;
 
-	@JsonProperty("value")
-	private List<String> value;
+	@JsonProperty("list")
+	private List<ItemVisualTemplate> list;
 }

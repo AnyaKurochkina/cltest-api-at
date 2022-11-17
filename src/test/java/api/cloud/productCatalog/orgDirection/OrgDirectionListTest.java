@@ -1,13 +1,12 @@
 package api.cloud.productCatalog.orgDirection;
 
 import api.Tests;
-import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.OrgDirection;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.service.Service;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -19,7 +18,9 @@ import java.util.List;
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.OrgDirectionSteps.getOrgDirectionList;
 import static steps.productCatalog.OrgDirectionSteps.getServiceUsedOrgDirection;
+import static steps.productCatalog.ProductCatalogSteps.isSorted;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -32,9 +33,9 @@ public class OrgDirectionListTest extends Tests {
     @DisplayName("Получение списка направлений")
     @TmsLink("643305")
     @Test
-    public void getOrgDirectionList() {
-        List<ItemImpl> list = steps.getProductObjectList(GetOrgDirectionListResponse.class);
-        assertTrue(steps.isSorted(list), "Список не отсортирован.");
+    public void getOrgDirectionListTest() {
+        List<OrgDirection> list = getOrgDirectionList();
+        assertTrue(isSorted(list), "Список не отсортирован.");
     }
 
     @DisplayName("Проверка значения next в запросе на получение списка направлений")
@@ -59,7 +60,7 @@ public class OrgDirectionListTest extends Tests {
                 .createObject();
         String name = "create_service_used_direction_test_api";
         Service.builder()
-                .serviceName(name)
+                .name(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .directionId(orgDirection.getId())

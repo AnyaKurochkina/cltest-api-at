@@ -1,10 +1,11 @@
-package httpModels.productCatalog.itemVisualItem.getVisualTemplate;
+package models.cloud.productCatalog.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import models.cloud.productCatalog.Meta;
 
 import java.util.List;
 
@@ -12,11 +13,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FullTemplate{
-    @JsonProperty("type")
-    private String type;
+public class GetServiceList {
 
-    @JsonProperty("value")
-    private List<String> value;
+	@JsonProperty("meta")
+	private Meta meta;
 
+	@JsonProperty("list")
+	private List<Service> list;
 }

@@ -11,8 +11,8 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.OrgDirection;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
+import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
@@ -278,14 +278,14 @@ public class OrgDirectionTest extends Tests {
                 .build()
                 .createObject();
         Service service = Service.builder()
-                .serviceName("service_for_delete_org_direction_test_api")
+                .name("service_for_delete_org_direction_test_api")
                 .title("service_for_delete_org_direction_test_api")
                 .directionId(orgDirection.getId())
                 .build()
                 .createObject();
         String errorMessage = steps.getDeleteObjectResponse(service.getDirectionId())
                 .assertStatus(400).jsonPath().getString("error");
-        assertEquals(String.format("Нельзя удалить направление %s. Оно используется:\nService: (name: %s)", service.getDirectionName(), service.getServiceName()), errorMessage);
+        assertEquals(String.format("Нельзя удалить направление %s. Оно используется:\nService: (name: %s)", service.getDirectionName(), service.getName()), errorMessage);
     }
 
     @Test

@@ -1,5 +1,6 @@
-package models.cloud.productCatalog;
+package models.cloud.productCatalog.orgDirection;
 
+import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.JsonHelper;
@@ -23,7 +24,7 @@ import static core.helper.Configure.ProductCatalogURL;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class OrgDirection extends Entity {
+public class OrgDirection extends Entity implements IProductCatalog {
     @JsonProperty("extra_data")
     private ExtraData extraData;
     private String icon;

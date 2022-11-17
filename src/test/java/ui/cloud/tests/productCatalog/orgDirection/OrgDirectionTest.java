@@ -6,7 +6,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.OrgDirection;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

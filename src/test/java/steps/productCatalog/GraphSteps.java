@@ -85,7 +85,7 @@ public class GraphSteps extends Steps {
                 .extractAs(Graph.class);
     }
 
-    @Step("Получение графа по Id")
+    @Step("Получение графа по Id {objectId}")
     public static Graph getGraphById(String objectId) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
@@ -111,7 +111,7 @@ public class GraphSteps extends Steps {
         return graphList.get(0);
     }
 
-    @Step("Проверка существования графа по имени")
+    @Step("Проверка существования графа по имени {name}")
     public static boolean isGraphExists(String name) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)

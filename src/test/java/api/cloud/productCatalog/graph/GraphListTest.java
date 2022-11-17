@@ -23,6 +23,7 @@ import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.getGraphById;
 import static steps.productCatalog.GraphSteps.getGraphList;
+import static steps.productCatalog.ProductCatalogSteps.isSorted;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -56,7 +57,7 @@ public class GraphListTest extends Tests {
     @Test
     public void getGraphsListTest() {
         List<Graph> list = getGraphList();
-        assertTrue(steps.isSorted2(list), "Список не отсортирован.");
+        assertTrue(isSorted(list), "Список не отсортирован.");
     }
 
     @DisplayName("Проверка значения next в запросе на получение списка графа")

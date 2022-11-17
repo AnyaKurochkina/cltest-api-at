@@ -10,7 +10,7 @@ import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
-import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
+
 import httpModels.productCatalog.product.getProducts.getProductsExportList.ExportItem;
 import httpModels.productCatalog.product.getProducts.getProductsExportList.GetProductsExportList;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
@@ -381,15 +381,6 @@ public class ProductCatalogSteps {
                 .get(productName + "?type=" + type)
                 .assertStatus(200)
                 .extractAs(clazz);
-    }
-
-    @Step("Получение шаблона визуализации по event_type и event_provider")
-    public GetVisualTemplateResponse getItemVisualTemplate(String eventType, String eventProvider) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + "item_visual_template/" + eventType + "/" + eventProvider + "/")
-                .assertStatus(200)
-                .extractAs(GetVisualTemplateResponse.class);
     }
 
     @Step("Сортировка объектов по дате создания")

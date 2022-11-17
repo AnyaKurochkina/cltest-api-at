@@ -64,7 +64,7 @@ public class GraphBaseTest extends BaseTest {
         input.put(new Node().getInputKey(), value);
         output.put(new Node().getOutputKey(), value);
         Template.builder()
-                .templateName(name)
+                .name(name)
                 .title(TEMPLATE_TITLE)
                 .type("creating")
                 .description(DESCRIPTION)

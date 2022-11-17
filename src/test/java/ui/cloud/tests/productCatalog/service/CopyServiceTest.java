@@ -15,7 +15,7 @@ public class CopyServiceTest extends ServiceBaseTest {
         new IndexPage().goToServicesListPagePC()
                 .findServiceByValue(NAME, service)
                 .copyService(service);
-        service.setServiceName(copyName);
+        service.setName(copyName);
         new ServicePage()
                 .checkAttributes(service);
         deleteService(copyName);

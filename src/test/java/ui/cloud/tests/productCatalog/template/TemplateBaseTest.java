@@ -42,7 +42,7 @@ public class TemplateBaseTest extends BaseTest {
         input.put(new Node().getInputKey(), value);
         output.put(new Node().getOutputKey(), value);
         template = Template.builder()
-                .templateName(name)
+                .name(name)
                 .title(TITLE)
                 .description(DESCRIPTION)
                 .type(TYPE)

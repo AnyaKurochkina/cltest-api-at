@@ -7,8 +7,6 @@ import core.helper.JsonHelper;
 import core.helper.http.Http;
 import httpModels.productCatalog.template.createTemplate.response.CreateTemplateResponse;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
-import httpModels.productCatalog.template.getTemplate.response.Input;
-import httpModels.productCatalog.template.getTemplate.response.Output;
 import httpModels.productCatalog.template.getTemplate.response.PrintedOutput;
 import io.qameta.allure.Step;
 import lombok.Builder;
@@ -20,6 +18,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
+import java.util.Map;
 
 import static core.helper.Configure.ProductCatalogURL;
 
@@ -47,7 +46,7 @@ public class Template extends Entity implements IProductCatalog {
     @JsonProperty("log_can_be_overridden")
     private Boolean logCanBeOverridden;
     private Integer timeout;
-    private Output output;
+    private Map<String, Map<String, String>> output;
     @JsonProperty("coords_x")
     private Integer coordsX;
     @JsonProperty("printed_output")
@@ -70,7 +69,7 @@ public class Template extends Entity implements IProductCatalog {
     private List<Object> restrictedGroups;
     private Integer priority;
     private String version;
-    private Input input;
+    private Map<String, Map<String, String>> input;
     @JsonProperty("extra_data")
     private Object extraData;
     @JsonProperty("version_changed_by_user")

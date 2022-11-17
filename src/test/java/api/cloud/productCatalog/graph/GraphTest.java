@@ -12,7 +12,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.Env;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.Modification;
@@ -268,7 +268,7 @@ public class GraphTest extends Tests {
                 .build().createObject();
 
         Service.builder()
-                .serviceName("service_for_graph_test_api")
+                .name("service_for_graph_test_api")
                 .graphId(mainGraphId)
                 .build().createObject();
 

@@ -13,8 +13,8 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.OrgDirection;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
+import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
@@ -48,12 +48,12 @@ public class ServicesTest extends Tests {
     public void createService() {
         String name = "create_service_test_api";
         Service service = Service.builder()
-                .serviceName(name)
+                .name(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        GetImpl getService = steps.getById(service.getServiceId(), GetServiceResponse.class);
+        GetImpl getService = steps.getById(service.getId(), GetServiceResponse.class);
         assertEquals(name, getService.getName());
     }
 
@@ -68,12 +68,12 @@ public class ServicesTest extends Tests {
                 .createObject();
         String serviceName = "create_service_with_icon_test_api";
         Service service = Service.builder()
-                .serviceName(serviceName)
+                .name(serviceName)
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-        GetServiceResponse actualService = (GetServiceResponse) steps.getById(service.getServiceId(), GetServiceResponse.class);
+        GetServiceResponse actualService = (GetServiceResponse) steps.getById(service.getId(), GetServiceResponse.class);
         assertFalse(actualService.getIconStoreId().isEmpty());
         assertFalse(actualService.getIconUrl().isEmpty());
     }
@@ -89,20 +89,20 @@ public class ServicesTest extends Tests {
                 .createObject();
         String serviceName = "create_first_service_with_same_icon_test_api";
         Service service = Service.builder()
-                .serviceName(serviceName)
+                .name(serviceName)
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
 
         Service secondService = Service.builder()
-                .serviceName("create_second_service_with_same_icon_test_api")
+                .name("create_second_service_with_same_icon_test_api")
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-        GetServiceResponse actualFirstService = (GetServiceResponse) steps.getById(service.getServiceId(), GetServiceResponse.class);
-        GetServiceResponse actualSecondService = (GetServiceResponse) steps.getById(secondService.getServiceId(), GetServiceResponse.class);
+        GetServiceResponse actualFirstService = (GetServiceResponse) steps.getById(service.getId(), GetServiceResponse.class);
+        GetServiceResponse actualSecondService = (GetServiceResponse) steps.getById(secondService.getId(), GetServiceResponse.class);
         assertEquals(actualFirstService.getIconUrl(), actualSecondService.getIconUrl());
         assertEquals(actualFirstService.getIconStoreId(), actualSecondService.getIconStoreId());
     }
@@ -113,7 +113,7 @@ public class ServicesTest extends Tests {
     public void checkServiceExists() {
         String name = "exist_service_test_api";
         Service.builder()
-                .serviceName(name)
+                .name(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
@@ -162,12 +162,12 @@ public class ServicesTest extends Tests {
     public void getServiceById() {
         String name = "get_service_by_id_test_api";
         Service service = Service.builder()
-                .serviceName(name)
+                .name(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        GetImpl serviceResponse = steps.getById(service.getServiceId(), GetServiceResponse.class);
+        GetImpl serviceResponse = steps.getById(service.getId(), GetServiceResponse.class);
         Assertions.assertEquals(name, serviceResponse.getName());
     }
 
@@ -177,12 +177,12 @@ public class ServicesTest extends Tests {
     public void getServiceByIdAndVersionFieldsTest() {
         String name = "get_service_by_id_and_version_fields_test_api";
         Service service = Service.builder()
-                .serviceName(name)
+                .name(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        Service serviceWithFields = getServiceByIdAndFilter(service.getServiceId(), "with_version_fields=true");
+        Service serviceWithFields = getServiceByIdAndFilter(service.getId(), "with_version_fields=true");
         assertFalse(serviceWithFields.getVersionFields().isEmpty());
     }
 
@@ -220,19 +220,19 @@ public class ServicesTest extends Tests {
     public void checkAccessWithPublicToken() {
         String name = "check_access_with_public_token_service_test_api";
         Service service = Service.builder()
-                .serviceName(name)
+                .name(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        steps.getObjectByNameWithPublicToken(service.getServiceName()).assertStatus(200);
+        steps.getObjectByNameWithPublicToken(service.getName()).assertStatus(200);
         steps.createProductObjectWithPublicToken(steps
                 .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
-        steps.partialUpdateObjectWithPublicToken(service.getServiceId(),
+        steps.partialUpdateObjectWithPublicToken(service.getId(),
                 new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
-        steps.putObjectByIdWithPublicToken(service.getServiceId(), steps
+        steps.putObjectByIdWithPublicToken(service.getId(), steps
                 .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
-        steps.deleteObjectWithPublicToken(service.getServiceId()).assertStatus(403);
+        steps.deleteObjectWithPublicToken(service.getId()).assertStatus(403);
     }
 
     @DisplayName("Удаление сервиса со статусом is_published=true")
@@ -241,11 +241,11 @@ public class ServicesTest extends Tests {
     public void deleteIsPublishedService() {
         String errorText = "Deletion not allowed (is_published=True)";
         Service serviceIsPublished = Service.builder()
-                .serviceName("create_service_is_published_test_api")
+                .name("create_service_is_published_test_api")
                 .isPublished(true)
                 .build()
                 .createObject();
-        String serviceId = serviceIsPublished.getServiceId();
+        String serviceId = serviceIsPublished.getId();
         Response deleteResponse = steps.getDeleteObjectResponse(serviceId).assertStatus(403);
         steps.partialUpdateObject(serviceId, new JSONObject().put("is_published", false));
         assertEquals(errorText, deleteResponse.jsonPath().get("error"));
@@ -256,13 +256,13 @@ public class ServicesTest extends Tests {
     @Test
     public void checkVersionWhenIndependentParamUpdated() {
         Service serv = Service.builder()
-                .serviceName("services_api_test")
+                .name("services_api_test")
                 .version("1.0.0")
                 .isPublished(true)
                 .build()
                 .createObject();
         String version = serv.getVersion();
-        Response response = steps.partialUpdateObject(serv.getServiceId(), new JSONObject().put("is_published", false));
+        Response response = steps.partialUpdateObject(serv.getId(), new JSONObject().put("is_published", false));
         String newVersion = response.jsonPath().get("version");
         assertEquals(version, newVersion);
     }
@@ -273,13 +273,13 @@ public class ServicesTest extends Tests {
     public void copyService() {
         String name = "copy_service_test_api";
         Service service = Service.builder()
-                .serviceName(name)
+                .name(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
         String expectedName = name + "-clone";
-        steps.copyById(service.getServiceId());
+        steps.copyById(service.getId());
         Assertions.assertTrue(steps.isExists(expectedName));
         steps.deleteByName(expectedName, GetServiceListResponse.class);
         Assertions.assertFalse(steps.isExists(expectedName));
@@ -290,12 +290,12 @@ public class ServicesTest extends Tests {
     @Test
     public void updateServiceDescription() {
         Service service = Service.builder()
-                .serviceName("update_service_test_api")
+                .name("update_service_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        String serviceId = service.getServiceId();
+        String serviceId = service.getId();
         String expected = "Update description";
         steps.partialUpdateObject(serviceId, new JSONObject().put("description", expected));
         String actual = steps.getById(serviceId, GetServiceResponse.class).getDescription();
@@ -307,12 +307,12 @@ public class ServicesTest extends Tests {
     @Test
     public void getKeyGraphVersionCalculatedInResponse() {
         Service service = Service.builder()
-                .serviceName("get_graph_version_calculated_service_test_api")
+                .name("get_graph_version_calculated_service_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        GetImpl getServiceResponse = steps.getById(service.getServiceId(), GetServiceResponse.class);
+        GetImpl getServiceResponse = steps.getById(service.getId(), GetServiceResponse.class);
         Assertions.assertNotNull(getServiceResponse.getGraphVersionCalculated());
     }
 
@@ -337,22 +337,22 @@ public class ServicesTest extends Tests {
     @Test
     public void updateServiceAndGetVersion() {
         Service services = Service.builder().
-                serviceName("service_version_test_api")
+                name("service_version_test_api")
                 .version("1.0.999")
                 .serviceInfo("test service info")
                 .build()
                 .createObject();
-        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("service_info", "service_version_test_api2"));
-        String currentVersion = steps.getById(services.getServiceId(), GetServiceResponse.class).getVersion();
+        steps.partialUpdateObject(services.getId(), new JSONObject().put("service_info", "service_version_test_api2"));
+        String currentVersion = steps.getById(services.getId(), GetServiceResponse.class).getVersion();
         assertEquals("1.1.0", currentVersion);
-        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("service_info", "service_version_test_api3")
+        steps.partialUpdateObject(services.getId(), new JSONObject().put("service_info", "service_version_test_api3")
                 .put("version", "1.999.999"));
-        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("service_info", "service_version_test_api4"));
-        currentVersion = steps.getById(services.getServiceId(), GetServiceResponse.class).getVersion();
+        steps.partialUpdateObject(services.getId(), new JSONObject().put("service_info", "service_version_test_api4"));
+        currentVersion = steps.getById(services.getId(), GetServiceResponse.class).getVersion();
         assertEquals("2.0.0", currentVersion);
-        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("service_info", "service_version_test_api5")
+        steps.partialUpdateObject(services.getId(), new JSONObject().put("service_info", "service_version_test_api5")
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(services.getServiceId(), new JSONObject().put("service_info", "service_version_test_api6"))
+        steps.partialUpdateObject(services.getId(), new JSONObject().put("service_info", "service_version_test_api6"))
                 .assertStatus(500);
     }
 
@@ -385,7 +385,7 @@ public class ServicesTest extends Tests {
     @Test
     public void deleteService() {
         Service service = Service.builder()
-                .serviceName("delete_service_test_api")
+                .name("delete_service_test_api")
                 .title("title_service_test_api")
                 .description("at_tests")
                 .build()
@@ -399,13 +399,13 @@ public class ServicesTest extends Tests {
     public void setCurrentVersionService() {
         String serviceName = "set_current_version_service_test_api";
         Service service = Service.builder()
-                .serviceName(serviceName)
+                .name(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
                 .serviceInfo("test")
                 .build()
                 .createObject();
-        String serviceId = service.getServiceId();
+        String serviceId = service.getId();
         steps.partialUpdateObject(serviceId, new JSONObject().put("service_info", "update_service_info"));
         steps.partialUpdateObject(serviceId, new JSONObject().put("current_version", "1.0.1"));
         GetServiceResponse getService = (GetServiceResponse) steps.getById(serviceId, GetServiceResponse.class);
@@ -419,13 +419,13 @@ public class ServicesTest extends Tests {
     public void getCurrentVersionService() {
         String serviceName = "create_current_version_service_test_api";
         Service service = Service.builder()
-                .serviceName(serviceName)
+                .name(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
                 .serviceInfo("test")
                 .build()
                 .createObject();
-        String serviceId = service.getServiceId();
+        String serviceId = service.getId();
         steps.partialUpdateObject(serviceId, new JSONObject().put("service_info", "update_service_info"));
         steps.partialUpdateObject(serviceId, new JSONObject().put("current_version", "1.0.0"));
         GetServiceResponse getService = (GetServiceResponse) steps.getById(serviceId, GetServiceResponse.class);
@@ -439,13 +439,13 @@ public class ServicesTest extends Tests {
     public void getAutoOpenResultService() {
         String serviceName = "get_auto_open_result_test_api";
         Service service = Service.builder()
-                .serviceName(serviceName)
+                .name(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
                 .autoOpenResults(false)
                 .build()
                 .createObject();
-        String serviceId = service.getServiceId();
+        String serviceId = service.getId();
         GetServiceResponse getService = (GetServiceResponse) steps.getById(serviceId, GetServiceResponse.class);
         assertFalse(getService.getAutoOpenResults());
         steps.partialUpdateObject(serviceId, new JSONObject().put("auto_open_results", true));
@@ -465,13 +465,13 @@ public class ServicesTest extends Tests {
                 .createObject();
         String serviceName = "get_direction_title_test_api";
         Service service = Service.builder()
-                .serviceName(serviceName)
+                .name(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
                 .directionId(orgDirection.getId())
                 .build()
                 .createObject();
-        String serviceId = service.getServiceId();
+        String serviceId = service.getId();
         GetServiceResponse getService = (GetServiceResponse) steps.getById(serviceId, GetServiceResponse.class);
         assertEquals(directionTitle, getService.getDirectionTitle());
     }
@@ -482,13 +482,13 @@ public class ServicesTest extends Tests {
     public void dumpToGitlabService() {
         String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Service service = Service.builder()
-                .serviceName(serviceName)
+                .name(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
                 .build()
                 .createObject();
         String tag = "service_" + serviceName + "_" + service.getVersion();
-        Response response = steps.dumpToBitbucket(service.getServiceId());
+        Response response = steps.dumpToBitbucket(service.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         assertEquals(tag, response.jsonPath().get("tag"));
     }
@@ -499,7 +499,7 @@ public class ServicesTest extends Tests {
     public void loadFromGitlabService() {
         String serviceName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
         JSONObject jsonObject = Service.builder()
-                .serviceName(serviceName)
+                .name(serviceName)
                 .title(serviceName)
                 .version("1.0.0")
                 .build()
@@ -521,12 +521,12 @@ public class ServicesTest extends Tests {
     public void createServiceWithStartBtnNull() {
         String name = "create_service_with_start_btn_null";
         Service service = Service.builder()
-                .serviceName(name)
+                .name(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        GetServiceResponse getService = (GetServiceResponse) steps.getById(service.getServiceId(), GetServiceResponse.class);
+        GetServiceResponse getService = (GetServiceResponse) steps.getById(service.getId(), GetServiceResponse.class);
         assertEquals("Запуск", getService.getStartBtnLabel());
     }
 }

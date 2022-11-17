@@ -7,7 +7,7 @@ import httpModels.productCatalog.service.getServiceList.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +21,7 @@ import java.util.List;
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.ProductCatalogSteps.isSorted;
 import static steps.productCatalog.ServiceSteps.getServiceList;
 
 @Tag("product_catalog")
@@ -36,8 +37,8 @@ public class ServiceListTest extends Tests {
     @TmsLink("643450")
     @Test
     public void getServiceListTest() {
-        List<ItemImpl> list = getServiceList();
-        assertTrue(steps.isSorted(list), "Список не отсортирован.");
+        List<Service> list = getServiceList();
+        assertTrue(isSorted(list), "Список не отсортирован.");
     }
 
     @DisplayName("Проверка значения next в запросе на получение списка сервисов")
@@ -57,7 +58,7 @@ public class ServiceListTest extends Tests {
     public void getServiceListByTitle() {
         String serviceTitle = "get_service_list_by_id_title_test_api";
         Service service = Service.builder()
-                .serviceName("get_service_list_by_id_test_api")
+                .name("get_service_list_by_id_test_api")
                 .title(serviceTitle)
                 .description("ServiceForAT")
                 .build()
@@ -74,14 +75,14 @@ public class ServiceListTest extends Tests {
     @Test
     public void getServiceListByPublished() {
         Service service = Service.builder()
-                .serviceName("service_is_published_test_api")
+                .name("service_is_published_test_api")
                 .title("title_service_is_published_test_api")
                 .description("service_is_published_test_api")
                 .isPublished(true)
                 .build()
                 .createObject();
         List<ItemImpl> serviceList = steps.getProductObjectList(GetServiceListResponse.class, "?is_published=true");
-        steps.partialUpdateObject(service.getServiceId(), new JSONObject().put("is_published", false));
+        steps.partialUpdateObject(service.getId(), new JSONObject().put("is_published", false));
         for (ItemImpl item : serviceList) {
             ListItem listItem = (ListItem) item;
             assertTrue(listItem.getIsPublished());

@@ -1,8 +1,8 @@
 package api.cloud.productCatalog.jinja;
 
+import api.Tests;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
-import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.jinja2.getJinjaListResponse.GetJinjaListResponse;
 import httpModels.productCatalog.jinja2.getJinjaResponse.GetJinjaResponse;
@@ -18,12 +18,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.Jinja2Steps.getJinja2ById;
+import static steps.productCatalog.Jinja2Steps.isJinja2Exists;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -39,13 +40,12 @@ public class JinjaTest extends Tests {
     @TmsLink("660055")
     @Test
     public void createJinja() {
-        String jinjaName = "create_jinja_test_api";
         Jinja2 jinja2 = Jinja2.builder()
-                .name(jinjaName)
+                .name("create_jinja_test_api")
                 .build()
                 .createObject();
-        GetImpl jinjaById = steps.getById(jinja2.getJinjaId(), GetJinjaResponse.class);
-        assertEquals(jinjaName, jinjaById.getName());
+        Jinja2 jinjaById = getJinja2ById(jinja2.getId());
+        assertEquals(jinja2, jinjaById);
     }
 
     @DisplayName("Проверка сортировки по дате создания в шаблонах Jinja")
@@ -83,8 +83,8 @@ public class JinjaTest extends Tests {
                 .name(jinjaName)
                 .build()
                 .createObject();
-        assertTrue(steps.isExists(jinja2.getName()));
-        assertFalse(steps.isExists("not_exist_jinja_test_api"));
+        assertTrue(isJinja2Exists(jinja2.getName()));
+        assertFalse(isJinja2Exists("not_exist_jinja_test_api"));
     }
 
     //toDO тест по импорту.
@@ -101,11 +101,11 @@ public class JinjaTest extends Tests {
         steps.getObjectByNameWithPublicToken(jinjaName).assertStatus(200);
         steps.createProductObjectWithPublicToken(steps
                 .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
-        steps.partialUpdateObjectWithPublicToken(jinja2.getJinjaId(),
+        steps.partialUpdateObjectWithPublicToken(jinja2.getId(),
                 new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
-        steps.putObjectByIdWithPublicToken(jinja2.getJinjaId(), steps
+        steps.putObjectByIdWithPublicToken(jinja2.getId(), steps
                 .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
-        steps.deleteObjectWithPublicToken(jinja2.getJinjaId()).assertStatus(403);
+        steps.deleteObjectWithPublicToken(jinja2.getId()).assertStatus(403);
     }
 
     @DisplayName("Получение jinja по Id")
@@ -117,7 +117,7 @@ public class JinjaTest extends Tests {
                 .name(jinjaName)
                 .build()
                 .createObject();
-        GetJinjaResponse productCatalogGet = (GetJinjaResponse) steps.getById(jinja2.getJinjaId(), GetJinjaResponse.class);
+        GetJinjaResponse productCatalogGet = (GetJinjaResponse) steps.getById(jinja2.getId(), GetJinjaResponse.class);
         if (productCatalogGet.getError() != null) {
             fail("Ошибка: " + productCatalogGet.getError());
         } else {
@@ -135,7 +135,7 @@ public class JinjaTest extends Tests {
                 .build()
                 .createObject();
         String cloneName = jinja2.getName() + "-clone";
-        steps.copyById(jinja2.getJinjaId());
+        steps.copyById(jinja2.getId());
         assertTrue(steps.isExists(cloneName));
         steps.deleteByName(cloneName, GetJinjaListResponse.class);
         assertFalse(steps.isExists(cloneName));
@@ -149,7 +149,7 @@ public class JinjaTest extends Tests {
                 .name("copy_jinja_test_api")
                 .build()
                 .createObject();
-        steps.exportById(jinja2.getJinjaId());
+        steps.exportById(jinja2.getId());
     }
 
     @DisplayName("Частичное обновление jinja по Id")
@@ -162,9 +162,9 @@ public class JinjaTest extends Tests {
                 .build()
                 .createObject();
         String expectedDescription = "UpdateDescription";
-        steps.partialUpdateObject(jinja2.getJinjaId(), new JSONObject()
+        steps.partialUpdateObject(jinja2.getId(), new JSONObject()
                 .put("description", expectedDescription)).assertStatus(200);
-        GetJinjaResponse getResponse = (GetJinjaResponse) steps.getById(jinja2.getJinjaId(), GetJinjaResponse.class);
+        GetJinjaResponse getResponse = (GetJinjaResponse) steps.getById(jinja2.getId(), GetJinjaResponse.class);
         if (getResponse.getError() != null) {
             fail("Ошибка: " + getResponse.getError());
         } else {
@@ -187,12 +187,12 @@ public class JinjaTest extends Tests {
                 .name("test_object")
                 .build()
                 .createObject();
-        steps.putObjectById(jinjaObject.getJinjaId(), JsonHelper.getJsonTemplate(template)
+        steps.putObjectById(jinjaObject.getId(), JsonHelper.getJsonTemplate(template)
                 .set("name", updateName)
                 .set("title", updateTitle)
                 .set("description", updateDescription)
                 .build());
-        GetJinjaResponse updatedJinja = (GetJinjaResponse) steps.getById(jinjaObject.getJinjaId(), GetJinjaResponse.class);
+        GetJinjaResponse updatedJinja = (GetJinjaResponse) steps.getById(jinjaObject.getId(), GetJinjaResponse.class);
         if (updatedJinja.getError() != null) {
             fail("Ошибка: " + updatedJinja.getError());
         }
@@ -212,7 +212,7 @@ public class JinjaTest extends Tests {
                 .name(jinjaName)
                 .build()
                 .createObject();
-        steps.deleteById(jinja2.getJinjaId());
+        steps.deleteById(jinja2.getId());
     }
 
     @Test
@@ -226,7 +226,7 @@ public class JinjaTest extends Tests {
                 .build()
                 .createObject();
         String tag = "jinja2template_" + jinjaName;
-        Response response = steps.dumpToBitbucket(jinja.getJinjaId());
+        Response response = steps.dumpToBitbucket(jinja.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         assertEquals(tag, response.jsonPath().get("tag"));
     }

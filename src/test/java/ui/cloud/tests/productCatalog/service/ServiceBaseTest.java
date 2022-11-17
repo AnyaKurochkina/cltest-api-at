@@ -2,8 +2,8 @@ package ui.cloud.tests.productCatalog.service;
 
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Epic;
-import models.cloud.productCatalog.OrgDirection;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
+import models.cloud.productCatalog.service.Service;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ProductCatalogSteps;
@@ -36,7 +36,7 @@ public class ServiceBaseTest extends BaseTest {
 
         service = Service.builder()
                 .directionId(orgDirection.getId())
-                .serviceName(name)
+                .name(name)
                 .title(TITLE)
                 .description(DESCRIPTION)
                 .version("1.0.0")

@@ -4,7 +4,7 @@ import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.service.Service;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -29,14 +29,14 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void serviceRestrictedGroupRealmLevelTest() {
         Service service = Service.builder()
-                .serviceName("service_for_restricted_group_api_test")
+                .name("service_for_restricted_group_api_test")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("qa-admin"))
                 .build()
                 .createObject();
-        GetServiceResponse serviceById = getServiceById(service.getServiceId());
+        GetServiceResponse serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getServiceId()).assertStatus(404).jsonPath().getString("detail");
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
         assertEquals("Страница не найдена.", msg);
     }
 
@@ -45,14 +45,14 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void serviceAllowedGroupRealmLevelTest() {
         Service service = Service.builder()
-                .serviceName("service_for_allowed_group_api_test")
+                .name("service_for_allowed_group_api_test")
                 .version("1.0.1")
                 .allowedGroups(Collections.singletonList("superadmin"))
                 .build()
                 .createObject();
-        GetServiceResponse serviceById = getServiceById(service.getServiceId());
+        GetServiceResponse serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getServiceId()).assertStatus(404).jsonPath().getString("detail");
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
         assertEquals("Страница не найдена.", msg);
     }
 
@@ -61,15 +61,15 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void serviceRestrictedGroupRealmLevelAndAllowedGroupAccountTest() {
         Service service = Service.builder()
-                .serviceName("service_for_restricted_group_and_allowed_group_api_test")
+                .name("service_for_restricted_group_and_allowed_group_api_test")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("qa-admin"))
                 .allowedGroups(Collections.singletonList("account:test"))
                 .build()
                 .createObject();
-        GetServiceResponse serviceById = getServiceById(service.getServiceId());
+        GetServiceResponse serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getServiceId()).assertStatus(404).jsonPath().getString("detail");
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
         assertEquals("Страница не найдена.", msg);
     }
 
@@ -78,15 +78,15 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void serviceRestrictedGroupAccountLevelAndAllowedGroupRealmTest() {
         Service service = Service.builder()
-                .serviceName("service_for_restricted_group_acc_lvl_and_allowed_group_realm_api_test")
+                .name("service_for_restricted_group_acc_lvl_and_allowed_group_realm_api_test")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
                 .allowedGroups(Collections.singletonList("superadmin"))
                 .build()
                 .createObject();
-        GetServiceResponse serviceById = getServiceById(service.getServiceId());
+        GetServiceResponse serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getServiceId()).assertStatus(404).jsonPath().getString("detail");
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
         assertEquals("Страница не найдена.", msg);
     }
 
@@ -95,14 +95,14 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void serviceAllowedGroupAccountTest() {
         Service service = Service.builder()
-                .serviceName("service_for_allowed_group_api_test")
+                .name("service_for_allowed_group_api_test")
                 .version("1.0.1")
                 .allowedGroups(Collections.singletonList("account:role_api_tests"))
                 .build()
                 .createObject();
-        GetServiceResponse serviceById = getServiceById(service.getServiceId());
+        GetServiceResponse serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getServiceId()).assertStatus(404).jsonPath().getString("detail");
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
         assertEquals("Страница не найдена.", msg);
     }
 
@@ -111,14 +111,14 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void serviceRestrictedGroupAccountTest() {
         Service service = Service.builder()
-                .serviceName("service_for_restricted_group_account_lvl_api_test")
+                .name("service_for_restricted_group_account_lvl_api_test")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
                 .build()
                 .createObject();
-        GetServiceResponse serviceById = getServiceById(service.getServiceId());
+        GetServiceResponse serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getServiceId()).assertStatus(404).jsonPath().getString("detail");
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
         assertEquals("Страница не найдена.", msg);
     }
 }

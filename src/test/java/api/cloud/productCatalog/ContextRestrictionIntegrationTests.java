@@ -10,6 +10,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
@@ -28,6 +29,7 @@ public class ContextRestrictionIntegrationTests extends Tests {
     @EnabledIfEnv("ift")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Создание действия в продуктовом каталоге с ограничениями по context_restriction")
+    @Disabled
     public void checkActionWithContextRestriction(Astra product) {
         String actionName = "action_for_context_restriction_api_test";
         Action action = Action.builder()
