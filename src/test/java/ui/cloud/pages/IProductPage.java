@@ -93,7 +93,7 @@ public abstract class IProductPage {
     public void checkMonitoringOs() {
         Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
         btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        new MonitoringOsPage().check();
+        new MonitoringOsPage(product).check();
     }
 
     @Step("Запуск действия '{action}'")

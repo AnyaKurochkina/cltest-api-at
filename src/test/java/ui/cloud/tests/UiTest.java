@@ -36,7 +36,7 @@ public class UiTest extends Tests {
     void name() {
         new LoginPage().signIn(Role.CLOUD_ADMIN);
 //        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
-        Selenide.open("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/0611a831-bfd3-4630-b877-ae5fcb1fb467/monitoring?context=proj-pkvckn08w9&type=project&org=vtb");
+        Selenide.open("https://prod-portal-front.cloud.vtb.ru/compute/orders/85b89f80-e889-490a-8cea-e144e6fe664d/monitoring?context=proj-1oob0zjo5h&type=project&org=vtb");
 //        Table.getTableByColumnName("Дата запуска");
         System.out.println(1);
 
