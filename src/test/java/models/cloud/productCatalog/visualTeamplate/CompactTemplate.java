@@ -1,4 +1,4 @@
-package httpModels.productCatalog.itemVisualItem.createVisualTemplate;
+package models.cloud.productCatalog.visualTeamplate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CompactTemplate{
 
-	@JsonProperty("name")
-	private Name name;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("type")
-	private Type  type;
+    @JsonProperty("type")
+    private String  type;
 
-	@JsonProperty("status")
-	private Status status;
+    @JsonProperty("status")
+    private String status;
 }

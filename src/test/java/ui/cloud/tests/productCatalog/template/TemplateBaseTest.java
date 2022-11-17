@@ -1,8 +1,8 @@
 package ui.cloud.tests.productCatalog.template;
 
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
+import models.cloud.productCatalog.template.Template;
 import io.qameta.allure.Epic;
-import models.cloud.productCatalog.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,7 @@ public class TemplateBaseTest extends BaseTest {
         input.put(new Node().getInputKey(), value);
         output.put(new Node().getOutputKey(), value);
         template = Template.builder()
-                .templateName(name)
+                .name(name)
                 .title(TITLE)
                 .description(DESCRIPTION)
                 .type(TYPE)

@@ -3,7 +3,7 @@ package ui.cloud.pages.productCatalog.orderTemplate;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.cloud.productCatalog.ItemVisualTemplate;
+import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;

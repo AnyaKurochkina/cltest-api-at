@@ -5,7 +5,7 @@
   "current_version": "",
   "name": "create_service_test",
   "title": "create_service_test",
-  "description": "Перезагрузка операционной системы",
+  "description": "api_test",
   "data_source": {},
   "extra_data": {},
   "is_published": false,
