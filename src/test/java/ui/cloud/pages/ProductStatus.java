@@ -14,7 +14,6 @@ import ui.elements.Tooltip;
 
 import java.time.Duration;
 
-@ToString(includeFieldNames = false)
 @EqualsAndHashCode
 public class ProductStatus {
     @Getter
@@ -27,7 +26,7 @@ public class ProductStatus {
     final public static ProductStatus ERROR = new ProductStatus("Ошибка");
     final public static ProductStatus BLOCKED = new ProductStatus("Заблокирован");
 
-    ProductStatus(String status) {
+    public ProductStatus(String status) {
         this.status = status;
     }
 
@@ -35,8 +34,13 @@ public class ProductStatus {
         init(e.getWrappedElement());
     }
 
-    ProductStatus(WebElement e) {
+    public ProductStatus(WebElement e) {
         init(e);
+    }
+
+    @Override
+    public String toString() {
+        return status;
     }
 
     private void init(WebElement e){

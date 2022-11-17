@@ -3,6 +3,7 @@ package ui.elements;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.ex.ElementNotFound;
+import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
@@ -24,7 +25,8 @@ public class Alert implements TypifiedElement {
     }
 
     @Step("Проверка alert на вхождение текста {text}")
-    public Alert checkText(String text) {
+    public Alert checkText(String text, Object... args) {
+        text = StringUtils.format(text,args);
         String message = element.getText();
         Assertions.assertTrue(message.toLowerCase().contains(text.toLowerCase()), String.format("Alert с сообщением '%s' не содержит текст '%s'", message, text));
         return this;

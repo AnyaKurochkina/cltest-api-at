@@ -127,6 +127,8 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
     public void runEachMethod(final ExtensionContext extensionContext, Class<? extends Annotation> clazz) throws Throwable {
         if (clazz.equals(AfterEach.class))
             new ConfigExtension().afterEach(extensionContext);
+        if (clazz.equals(BeforeEach.class))
+            new ConfigExtension().beforeEach(extensionContext);
         List<Method> list = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods()).filter(method -> method.isAnnotationPresent(clazz)).collect(Collectors.toList());
         for (Method m : list) {
             try {

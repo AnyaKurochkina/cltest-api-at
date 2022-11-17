@@ -27,8 +27,7 @@ public class OldApacheKafkaClusterTest extends Tests {
     final ApacheKafkaCluster kafka = ApacheKafkaCluster.builder()
             .projectId("proj-1oob0zjo5h")
             .productId("0c36e61d-687c-4a23-914d-7421779301e4")
-            .orderId("153f1adf-687d-42f5-b511-808098b29574")
-            .productName("Apache Kafka Cluster")
+            .orderId("8a226df0-554e-4bcd-98a7-c72546fe88e8")
             .build();
 
 //    @Order(1)

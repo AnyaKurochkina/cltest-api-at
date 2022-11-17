@@ -56,6 +56,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("377641")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
