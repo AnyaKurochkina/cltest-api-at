@@ -22,6 +22,9 @@ public class MonitoringOsPage {
     SelenideElement btnResetFilter = $x("//button[.='Сбросить фильтры']");
     DropDown period = DropDown.byLabel("Период");
     SelenideElement btnApply = $x("//button[.='Применить']");
+    public static final String FIRST_FILTER = "Последние 14 дней";
+    public static final String SECOND_FILTER = "Последний час";
+
     final List<String> graphNames = new ArrayList<String>() {
         {
             add("CPU Util (%)");
@@ -47,11 +50,14 @@ public class MonitoringOsPage {
     public void check() {
         Assertions.assertFalse(noData.isDisplayed(), "Данные для графиков не были загружены");
         List<Graph> graphs = graphNames.stream().map(Graph::new).collect(Collectors.toList());
-        selectFilter("Последние 14 дней");
+        switchFilter();
         Assertions.assertTrue(graphs.stream().filter(Graph::isEqualsState).count() < graphs.size() / 2, "Информация на графиках не обновилась");
     }
 
-    public void selectFilter(String filter) {
+    public void switchFilter() {
+        String filter = FIRST_FILTER;
+        if(filter.equals(period.getValue()))
+            filter = SECOND_FILTER;
         period.select(filter);
         btnApply.click();
         $x("//span[.='{}']", filter.toLowerCase()).shouldBe(Condition.visible);
