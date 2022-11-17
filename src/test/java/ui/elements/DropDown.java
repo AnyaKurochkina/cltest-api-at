@@ -6,6 +6,7 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import org.intellij.lang.annotations.Language;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -16,9 +17,9 @@ import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 
 public class DropDown implements TypifiedElement {
+    private final ElementsCollection options = $$x("//ul[@role='listbox']/li");
     @Getter
     protected SelenideElement element;
-    private final ElementsCollection options = $$x("//ul[@role='listbox']/li");
 
     public DropDown(SelenideElement element) {
         this.element = element;
@@ -27,7 +28,8 @@ public class DropDown implements TypifiedElement {
     public static DropDown byLabel(String name) {
         return new DropDown($x("//label[text()='{}']/following::div[1]", name));
     }
-    public static DropDown byXpath(String xpath) {
+
+    public static DropDown byXpath(@Language("XPath") String xpath) {
         return new DropDown($x(xpath));
     }
 

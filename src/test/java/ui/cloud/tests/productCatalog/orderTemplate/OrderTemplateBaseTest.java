@@ -15,7 +15,7 @@ import java.util.UUID;
 
 import static steps.productCatalog.VisualTemplateSteps.deleteVisualTemplateByName;
 
-@Epic("Шаблоны отображения")
+@Epic("Конструктор.Шаблоны отображения")
 @DisabledIfEnv("prod")
 public class OrderTemplateBaseTest extends BaseTest {
     final static String TITLE = "AT UI Template";

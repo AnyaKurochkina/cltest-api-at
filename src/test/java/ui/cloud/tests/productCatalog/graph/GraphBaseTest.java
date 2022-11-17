@@ -1,8 +1,9 @@
 package ui.cloud.tests.productCatalog.graph;
 
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
-import models.cloud.productCatalog.template.Template;
+import io.qameta.allure.Epic;
 import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import static steps.productCatalog.GraphSteps.deleteGraphById;
 import static steps.productCatalog.GraphSteps.getGraphByName;
 
+@Epic("Конструктор.Графы")
 @DisabledIfEnv("prod")
 public class GraphBaseTest extends BaseTest {
 

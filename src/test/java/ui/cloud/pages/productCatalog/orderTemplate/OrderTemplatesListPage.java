@@ -7,7 +7,7 @@ import io.qameta.allure.Step;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
-import ui.cloud.pages.productCatalog.BaseList;
+import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
@@ -60,24 +60,26 @@ public class OrderTemplatesListPage {
 
     @Step("Проверка сортировки по наименованию")
     public OrderTemplatesListPage checkSortingByTitle() {
-        BaseList.checkSortingByStringField("Наименование");
+        BaseListPage.checkSortingByStringField("Наименование");
         return this;
     }
 
     @Step("Проверка сортировки по коду шаблона")
     public OrderTemplatesListPage checkSortingByName() {
-        BaseList.checkSortingByStringField(columnName);
+        BaseListPage.checkSortingByStringField(columnName);
         return this;
     }
 
     @Step("Проверка сортировки по дате создания")
     public OrderTemplatesListPage checkSortingByCreateDate() {
-        BaseList.checkSortingByDateField("Дата создания");
+        BaseListPage.checkSortingByDateField("Дата создания");
         return this;
     }
 
     @Step("Проверка сортировки по состоянию")
     public OrderTemplatesListPage checkSortingByState() {
+        String onStateColor = "#4caf50";
+        String offStateColor = "#e0e0e0";
         String header = "Состояние";
         Table table = new Table(columnName);
         SelenideElement columnHeader = StringUtils.$x("//div[text()='{}']/parent::div", header);
@@ -85,15 +87,15 @@ public class OrderTemplatesListPage {
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        String firstElementState = table.getValueByColumnInFirstRow(header).$x(".//*[name()='svg']/parent::div")
-                .getAttribute("Title");
-        Assertions.assertEquals("Выключено", firstElementState);
+        String firstElementState = table.getValueByColumnInFirstRow(header).$x(".//*[name()='svg']")
+                .getAttribute("color");
+        Assertions.assertEquals(offStateColor, firstElementState);
         columnHeader.click();
         TestUtils.wait(1000);
         arrowIcon.shouldBe(Condition.visible);
-        firstElementState = table.getValueByColumnInFirstRow(header).$x(".//*[name()='svg']/parent::div")
-                .getAttribute("Title");
-        Assertions.assertEquals("Включено", firstElementState);
+        firstElementState = table.getValueByColumnInFirstRow(header).$x(".//*[name()='svg']")
+                .getAttribute("color");
+        Assertions.assertEquals(onStateColor, firstElementState);
         return this;
     }
 
@@ -166,7 +168,7 @@ public class OrderTemplatesListPage {
     @Step("Удаление шаблона '{name}'")
     public OrderTemplatesListPage deleteTemplate(String name) {
         search(name);
-        BaseList.delete(columnName, name);
+        BaseListPage.delete(columnName, name);
         new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         return this;
     }
@@ -188,7 +190,7 @@ public class OrderTemplatesListPage {
 
     @Step("Копирование шаблона '{name}'")
     public OrderTemplatePage copyTemplate(String name) {
-        new BaseList().copy(columnName, name);
+        new BaseListPage().copy(columnName, name);
         new Alert().checkText("Шаблон скопирован").checkColor(Alert.Color.GREEN).close();
         TestUtils.wait(500);
         return new OrderTemplatePage();

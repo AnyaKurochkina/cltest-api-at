@@ -1,5 +1,6 @@
 package ui.elements;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 
@@ -18,12 +19,15 @@ public class Dialog implements TypifiedElement {
         new Input(element).clear();
         new Input(element).setValue(value);
     }
+
     public void setDropDownValue(String label,String value){
         SelenideElement element = dialog.$x(String.format("descendant::div[label[starts-with(.,'%s')]]/div/input", label));
         DropDown dropDown = new DropDown(element);
         dropDown.select(value);
     }
 
-
+    public void clickButton(String btn){
+        $x("//button[.='{}']", btn).shouldBe(Condition.enabled).click();
+    }
 
 }

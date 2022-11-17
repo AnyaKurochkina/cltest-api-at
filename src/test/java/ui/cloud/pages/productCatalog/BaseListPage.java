@@ -12,9 +12,11 @@ import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class BaseList {
+public class BaseListPage {
 
-    private static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
+    protected static final SelenideElement addNewObjectButton = $x("//div[@data-testid = 'add-button']//button");
+    protected static final SelenideElement importButton = $x("//input[@placeholder='Поиск']/following::button[1]");
+    protected static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
     private static final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private static final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
@@ -63,15 +65,17 @@ public class BaseList {
     }
 
     @Step("Переход на следующую страницу списка")
-    public static void nextPage() {
+    public BaseListPage nextPage() {
         TestUtils.scrollToTheBottom();
         nextPageButton.click();
+        return this;
     }
 
     @Step("Переход на последнюю страницу списка")
-    public static void lastPage() {
+    public BaseListPage lastPage() {
         TestUtils.scrollToTheBottom();
         lastPageButton.click();
+        return this;
     }
 
     @Step("Раскрытие меню действий для строки, содержащей в столбце 'columnName' значение 'value'")

@@ -11,7 +11,6 @@ import ui.elements.DropDown;
 import ui.elements.Input;
 
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Selenide.dismiss;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrderTemplatePage {

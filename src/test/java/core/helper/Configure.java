@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,8 @@ public class Configure {
             RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
             properties.setProperty("testIt", "false");
+            if(Objects.nonNull(System.getProperty("moon")))
+                properties.setProperty("webdriver.remote.url", System.getProperty("moon"));
             loadProperties(RESOURCE_PATH + "/config/kafka.config.properties");
             loadProperties(RESOURCE_PATH + "/config/application.properties");
             if (System.getProperty("env") == null) {
@@ -71,6 +74,10 @@ public class Configure {
         } catch (Exception e) {
             log.warn("Can't load environment properties file : " + e.getMessage());
         }
+    }
+
+    public static boolean isT1() {
+        return ENV.toLowerCase().startsWith("t1");
     }
 
     public static boolean isIntegrationTestIt() {

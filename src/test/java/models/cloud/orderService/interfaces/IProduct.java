@@ -75,6 +75,7 @@ public abstract class IProduct extends Entity {
 
     @ToString.Include
     @Getter
+    @Setter
     String platform;
 
     protected String jsonTemplate;
@@ -97,6 +98,7 @@ public abstract class IProduct extends Entity {
     @Setter
     protected String productName;
     @Getter
+    @Setter
     @ToString.Include
     protected String env;
     @Getter
@@ -130,7 +132,7 @@ public abstract class IProduct extends Entity {
             if (StepsAspects.getCurrentStep().get() != null) {
                 Organization org = Organization.builder().build().createObject();
                 StepsAspects.getCurrentStep().get().addLinkItem(
-                        new LinkItem("Product URL", String.format("%svm/orders/%s/main?context=%s&type=project&org=%s",
+                        new LinkItem("Product URL", String.format("%s/vm/orders/%s/main?context=%s&type=project&org=%s",
                                 Configure.getAppProp("base.url"), getOrderId(), getProjectId(), org.getName()), "", LinkType.RELATED));
             }
         }

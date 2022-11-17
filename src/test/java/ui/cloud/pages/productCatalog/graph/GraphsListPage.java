@@ -5,7 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
-import ui.cloud.pages.productCatalog.BaseList;
+import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
@@ -17,7 +17,8 @@ import ui.models.Graph;
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class GraphsListPage {
+public class GraphsListPage extends BaseListPage {
+
     private static final String graphNameColumn = "Код графа";
     private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы']");
     private final SelenideElement createNewGraphButton = $x("//div[@data-testid = 'graph-list-add-button']//button");
@@ -39,7 +40,6 @@ public class GraphsListPage {
     private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::p");
     private final SelenideElement nameRequiredFieldHint = $x("//input[@name='name']/parent::div/following-sibling::p");
     private final SelenideElement authorRequiredFieldHint = $x("//input[@name='author']/parent::div/following-sibling::p");
-    private final SelenideElement importGraphButton = $x("//button[@title='Импортировать граф']");
     private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
 
     public GraphsListPage() {
@@ -47,7 +47,7 @@ public class GraphsListPage {
     }
 
     @Step("Создание графа '{graph.name}'")
-    public GraphsListPage createGraph(Graph graph) {
+    public GraphPage createGraph(Graph graph) {
         createNewGraphButton.click();
         inputTitleField.setValue(graph.getTitle());
         inputNameField.setValue(graph.getName());
@@ -55,12 +55,12 @@ public class GraphsListPage {
         inputDescriptionField.setValue(graph.getDescription());
         inputAuthorField.setValue(graph.getAuthor());
         createGraphButton.click();
-        return this;
+        return new GraphPage();
     }
 
     @Step("Копирование графа '{name}'")
     public GraphsListPage copyGraph(String name) {
-        new BaseList().copy(graphNameColumn, name);
+        new BaseListPage().copy(graphNameColumn, name);
         new Alert().checkText("Граф успешно скопирован").checkColor(Alert.Color.GREEN).close();
         cancelButton.shouldBe(Condition.enabled).click();
         return this;
@@ -87,7 +87,7 @@ public class GraphsListPage {
 
     @Step("Удаление графа '{name}'")
     public GraphsListPage deleteGraph(String name) {
-        BaseList.openActionMenu(graphNameColumn, name);
+        BaseListPage.openActionMenu(graphNameColumn, name);
         deleteAction.click();
         new DeleteDialog().inputValidIdAndDelete();
         return this;
@@ -155,7 +155,7 @@ public class GraphsListPage {
         for (String name : names) {
             inputNameField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
             inputNameField.setValue(name);
-            TestUtils.wait(600);
+            TestUtils.wait(1000);
             if (!graphNameValidationHint.exists()) {
                 inputNameField.sendKeys("t");
             }
@@ -183,19 +183,19 @@ public class GraphsListPage {
 
     @Step("Проверка сортировки по наименованию")
     public GraphsListPage checkSortingByTitle() {
-        BaseList.checkSortingByStringField("Наименование");
+        BaseListPage.checkSortingByStringField("Наименование");
         return this;
     }
 
     @Step("Проверка сортировки по коду графа")
     public GraphsListPage checkSortingByName() {
-        BaseList.checkSortingByStringField("Код графа");
+        BaseListPage.checkSortingByStringField("Код графа");
         return this;
     }
 
     @Step("Проверка сортировки по дате создания")
     public GraphsListPage checkSortingByCreateDate() {
-        BaseList.checkSortingByDateField("Дата создания");
+        BaseListPage.checkSortingByDateField("Дата создания");
         return this;
     }
 
@@ -207,7 +207,7 @@ public class GraphsListPage {
 
     @Step("Импорт графа из файла")
     public GraphsListPage importGraph(String path) {
-        importGraphButton.click();
+        importButton.click();
         new InputFile(path).importFile();
         new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
         return this;
@@ -215,13 +215,13 @@ public class GraphsListPage {
 
     @Step("Переход на следующую страницу списка")
     public GraphsListPage nextPage() {
-        BaseList.nextPage();
+        super.nextPage();
         return this;
     }
 
     @Step("Переход на последнюю страницу списка")
     public GraphsListPage lastPage() {
-        BaseList.lastPage();
+        super.lastPage();
         return this;
     }
 

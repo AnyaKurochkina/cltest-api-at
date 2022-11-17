@@ -18,6 +18,12 @@ public class JsonTemplate {
         return this;
     }
 
+    public JsonTemplate put(@Language("JSONPath") String path, String s, Object o) {
+        if (o != null)
+            JsonPath.parse(template).put(path, s, o);
+        return this;
+    }
+
     public JsonTemplate setIfNullRemove(@Language("JSONPath") String s, Object o) {
         if (o == null) {
             JsonPath.parse(template).delete(s);
@@ -29,6 +35,11 @@ public class JsonTemplate {
 
     public JsonTemplate remove(@Language("JSONPath") String s, boolean is) {
         if (is) JsonPath.parse(template).delete(s);
+        return this;
+    }
+
+    public JsonTemplate remove(@Language("JSONPath") String s) {
+        JsonPath.parse(template).delete(s);
         return this;
     }
 

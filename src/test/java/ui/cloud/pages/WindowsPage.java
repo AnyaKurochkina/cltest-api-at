@@ -60,7 +60,7 @@ public class WindowsPage extends IProductPage {
     }
 
     public void changeConfiguration() {
-        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));

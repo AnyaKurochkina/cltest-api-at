@@ -2,6 +2,7 @@ package ui.cloud.tests.productCatalog.template;
 
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
 import models.cloud.productCatalog.template.Template;
+import io.qameta.allure.Epic;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Epic("Конструктор.Шаблоны узлов")
 @DisabledIfEnv("prod")
 public class TemplateBaseTest extends BaseTest {
 

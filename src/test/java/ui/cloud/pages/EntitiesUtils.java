@@ -17,14 +17,14 @@ public class EntitiesUtils {
 
     @Step("Ожидание выполнение действия с продуктом")
     public static void waitChangeStatus(Table table, Duration duration) {
-        table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[@title]")
+        table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
-                        ProductStatus.isNeedWaiting(e.getAttribute("title"))), duration);
+                        new ProductStatus(e).isNeedWaiting()), duration);
         Waiting.sleep(1000);
-        List<String> titles = table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[@title]")
+        List<String> titles = table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")
                 .shouldBe(CollectionCondition.sizeNotEqual(0))
                 .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
-                .stream().map(e -> e.getAttribute("title")).collect(Collectors.toList());
+                .stream().map(e -> new ProductStatus(e).getStatus()).collect(Collectors.toList());
         log.debug("Итоговый статус: {}", titles);
     }
 

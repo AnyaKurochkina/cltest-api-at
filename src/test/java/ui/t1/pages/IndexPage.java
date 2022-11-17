@@ -17,7 +17,8 @@ public class IndexPage {
     }
 
     @Step("Переход на страницу Cloud Director")
-    public void goToCloudDirector() {
+    public CloudDirectorPage goToCloudDirector() {
         linkCloudDirector.click();
+        return new CloudDirectorPage();
     }
 }

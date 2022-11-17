@@ -1,7 +1,6 @@
 package ui.cloud.tests.productCatalog.graph;
 
 import core.enums.Role;
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
@@ -16,7 +15,6 @@ import ui.models.Graph;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Epic("Графы")
 @Feature("Просмотр истории изменений")
 public class GraphAuditTest extends GraphBaseTest {
 

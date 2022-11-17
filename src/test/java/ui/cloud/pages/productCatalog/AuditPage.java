@@ -13,7 +13,6 @@ import ui.elements.Input;
 import ui.elements.Table;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.actions;
 
 public class AuditPage extends GraphPage {
 
@@ -25,12 +24,13 @@ public class AuditPage extends GraphPage {
     private final SelenideElement showResponse = $x("//input[@name='returnLogReplyBody']");
     private final SelenideElement paramsFullView = $x("//div[@role='dialog']//p");
     private final SelenideElement copyContextIdButton = $x("//tbody//button[@title='Скопировать данные']");
-    private final SelenideElement showFullView = $x("//span[text()='Ответ']//following::button[@title='Открыть в полном формате']");
+    private final SelenideElement showFullView = $x("//span[text()='Ответ']//following::button[1]");
     private final SelenideElement copyAddressButton = $x("//span[text()='Адрес']/following::button[@title='Скопировать'][1]");
     private final SelenideElement additionalFilters = $x("//div[text()='Дополнительные фильтры']");
     private final SelenideElement clearOperationTypeFilter = $x("//*[@id='searchSelectClearIcon']");
     private final SelenideElement applyAdditionalFiltersButton = $x("//label[text()='Учетная запись']//following::div[text()='Применить']/parent::button");
     private final SelenideElement applyFiltersByDateButton = $x("//label[text()='Учетная запись']//preceding::div[text()='Применить']/parent::button");
+    private final SelenideElement closeFullViewButton = $x("//button[@aria-label='close']");
 
     @Step("Проверка первой записи в таблице аудита")
     public AuditPage checkFirstRecord(String dateTime, String user, String operationType, String object, String statusCode, String status) {
@@ -112,11 +112,11 @@ public class AuditPage extends GraphPage {
     public AuditPage checkResponseFullViewContains(String value) {
         Table table = new Table("Учетная запись");
         table.getRowByIndex(0).click();
-        showFullView.scrollTo().click();
+        TestUtils.scrollToTheBottom();
+        showFullView.click();
         TestUtils.wait(500);
-        Assertions.assertTrue(paramsFullView.getText().contains(value));
-        paramsFullView.hover();
-        actions().moveByOffset(0, 300).click().perform();
+        Assertions.assertTrue($x("//span[text()='\"" + value + "\"']").isDisplayed());
+        closeFullViewButton.click();
         return this;
     }
 

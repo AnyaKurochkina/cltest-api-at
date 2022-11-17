@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.template;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -11,7 +10,6 @@ import ui.models.Template;
 
 import java.util.UUID;
 
-@Epic("Шаблоны узлов")
 @Feature("Редактирование шаблона")
 public class EditTemplateTest extends TemplateBaseTest {
 

@@ -61,6 +61,8 @@ public class LoadBalancer extends IProduct {
             osVersion = getRandomOsVersion();
         if (password == null)
             password = "W1clvyliiSCyE0gs";
+        if (segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
@@ -108,29 +110,31 @@ public class LoadBalancer extends IProduct {
     }
 
     public void addBackend(Backend backend) {
-        if(backends.contains(backend))
+        if (backends.contains(backend))
             return;
         OrderServiceSteps.executeAction("balancer_release_create_backend", this, new JSONObject(JsonHelper.toJson(backend)), this.getProjectId());
         Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
                 String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не создался");
         backends.add(backend);
         save();
-        Assertions.assertTrue(isStateContains(backend.getBackendName()));
+        if (!isTest())
+            Assertions.assertTrue(isStateContains(backend.getBackendName()));
     }
 
     public void addFrontend(Frontend frontend) {
-        if(frontends.contains(frontend))
+        if (frontends.contains(frontend))
             return;
         OrderServiceSteps.executeAction("balancer_release_create_frontend", this, new JSONObject(JsonHelper.toJson(frontend)), this.getProjectId());
         Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
                 String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не создался");
         frontends.add(frontend);
         save();
-        Assertions.assertTrue(isStateContains(frontend.getFrontendName()));
+        if (!isTest())
+            Assertions.assertTrue(isStateContains(frontend.getFrontendName()));
     }
 
     public void addGslb(Gslb gslb) {
-        if(gslbs.contains(gslb))
+        if (gslbs.contains(gslb))
             return;
         OrderServiceSteps.executeAction("balancer_gslb_release_create_publication", this, new JSONObject(JsonHelper.toJson(gslb)), this.getProjectId());
         Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
@@ -146,7 +150,8 @@ public class LoadBalancer extends IProduct {
                 String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не удален");
         backends.remove(backend);
         save();
-        Assertions.assertFalse(isStateContains(backend.getBackendName()));
+        if(!isTest())
+            Assertions.assertFalse(isStateContains(backend.getBackendName()));
     }
 
     public void deleteFrontend(Frontend frontend) {
@@ -156,7 +161,8 @@ public class LoadBalancer extends IProduct {
                 String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не удален");
         frontends.remove(frontend);
         save();
-        Assertions.assertFalse(isStateContains(frontend.getFrontendName()));
+        if(!isTest())
+            Assertions.assertFalse(isStateContains(frontend.getFrontendName()));
     }
 
     public void deleteGslb(Gslb gslb) {

@@ -47,6 +47,8 @@ public class ElasticsearchOpensearchCluster extends IProduct {
             elasticsearchVersion = getRandomProductVersionByPathEnum("elasticsearch_version.enum");
         if(kibanaPassword == null)
             kibanaPassword = "RnXLM4Ms3XQi";
+        if(segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if(dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;

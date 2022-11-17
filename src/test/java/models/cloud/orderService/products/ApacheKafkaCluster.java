@@ -66,6 +66,8 @@ public class ApacheKafkaCluster extends IProduct {
         if (kafkaVersion == null)
 //            kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
             kafkaVersion = "2.13-2.4.1";
+        if(segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;

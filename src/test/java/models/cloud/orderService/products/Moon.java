@@ -32,6 +32,8 @@ public class Moon extends IProduct {
         jsonTemplate = "/orders/moon.json";
         productName = "Moon";
         initProduct();
+        if(segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if(dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;

@@ -24,7 +24,7 @@ public class Tests {
     @BeforeEach
     @SneakyThrows
     @Title("Инициализация логирования")
-    public void beforeScenarios(TestInfo testInfo){
+    public void beforeScenarios(TestInfo testInfo) {
 //        String className = testInfo.getTestClass().orElseThrow(Exception::new).getSimpleName();
 //        String methodName = testInfo.getTestMethod().orElseThrow(Exception::new).getName();
 //        Allure.tms(className + "#" + methodName, "");

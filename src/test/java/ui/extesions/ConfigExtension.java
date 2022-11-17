@@ -12,8 +12,9 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static org.junit.TestsExecutionListener.initDriver;
 
-public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, InvocationInterceptor {
+public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, BeforeAllCallback, InvocationInterceptor {
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
 //        SelenideLogger.addListener("AllureSelenide",
@@ -28,15 +29,22 @@ public class ConfigExtension implements AfterEachCallback, BeforeAllCallback, In
         closeWebDriver();
     }
 
+    @Override
+    public void beforeEach(ExtensionContext extensionContext) {
+        initDriver();
+    }
+
     @SneakyThrows
     public void interceptTestMethod(final InvocationInterceptor.Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
         try {
             invocation.proceed();
         } catch (Throwable e) {
-            AttachUtils.attachRequests();
-//            if (Objects.nonNull(e.getMessage()))
-//                if (!e.getMessage().contains("Screenshot: file:/"))
-                    AttachUtils.attachFiles();
+            try {
+                AttachUtils.attachRequests();
+                AttachUtils.attachFiles();
+            } catch (Throwable ex) {
+                e.addSuppressed(ex);
+            }
             throw e;
         }
     }
