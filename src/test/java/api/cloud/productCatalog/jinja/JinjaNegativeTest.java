@@ -4,7 +4,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.action.Action;
-import models.cloud.productCatalog.Jinja2;
+import models.cloud.productCatalog.jinja2.Jinja2;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,7 @@ public class JinjaNegativeTest extends Tests {
                 .name(jinjaName)
                 .build()
                 .createObject();
-        steps.copyByIdWithOutToken(jinja2.getJinjaId());
+        steps.copyByIdWithOutToken(jinja2.getId());
     }
 
     @DisplayName("Негативный тест на получение jinja по Id без токена")
@@ -44,7 +44,7 @@ public class JinjaNegativeTest extends Tests {
                 .name(jinjaName)
                 .build()
                 .createObject();
-        steps.getByIdWithOutToken(jinja2.getJinjaId());
+        steps.getByIdWithOutToken(jinja2.getId());
     }
 
     @DisplayName("Негативный тест на обновление jinja по Id без токена")
@@ -56,7 +56,7 @@ public class JinjaNegativeTest extends Tests {
                 .name(jinjaName)
                 .build()
                 .createObject();
-        steps.partialUpdateObjectWithOutToken(jinja2.getJinjaId(),
+        steps.partialUpdateObjectWithOutToken(jinja2.getId(),
                 new JSONObject().put("description", "UpdateDescription"));
     }
 
@@ -115,6 +115,6 @@ public class JinjaNegativeTest extends Tests {
                 .name(jinjaName)
                 .build()
                 .createObject();
-        steps.deleteObjectByIdWithOutToken(jinja2.getJinjaId());
+        steps.deleteObjectByIdWithOutToken(jinja2.getId());
     }
 }

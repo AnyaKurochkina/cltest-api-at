@@ -3,7 +3,7 @@ package api.cloud.productCatalog.template;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.Template;
+import models.cloud.productCatalog.template.Template;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -29,10 +29,10 @@ public class TemplateNegativeTest extends Tests {
     public void getTemplateByIdWithOutToken() {
         String templateName = "get_by_id_with_out_token_template_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .build()
                 .createObject();
-        steps.getByIdWithOutToken(String.valueOf(template.getTemplateId()));
+        steps.getByIdWithOutToken(String.valueOf(template.getId()));
     }
 
     @DisplayName("Негатичный тест на копирование шаблона по Id без токена")
@@ -41,10 +41,10 @@ public class TemplateNegativeTest extends Tests {
     public void copyTemplateByIdWithOutToken() {
         String templateName = "copy_by_id_with_out_token_template_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .build()
                 .createObject();
-        steps.copyByIdWithOutToken(String.valueOf(template.getTemplateId()));
+        steps.copyByIdWithOutToken(String.valueOf(template.getId()));
     }
 
     @DisplayName("Негативный тест на частичное обновление шаблона по Id без токена")
@@ -53,10 +53,10 @@ public class TemplateNegativeTest extends Tests {
     public void partialUpdateTemplateByIdWithOutToken() {
         String templateName = "partial_update_with_out_token_template_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .build()
                 .createObject();
-        steps.partialUpdateObjectWithOutToken(String.valueOf(template.getTemplateId()), new JSONObject()
+        steps.partialUpdateObjectWithOutToken(String.valueOf(template.getId()), new JSONObject()
                 .put("description", "UpdateDescription"));
     }
 
@@ -66,7 +66,7 @@ public class TemplateNegativeTest extends Tests {
     public void createTemplateWithSameName() {
         String templateName = "create_template_with_same_name_test_api";
         Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .build()
                 .createObject();
         steps.createProductObject(steps.createJsonObject(templateName)).assertStatus(400);
@@ -78,7 +78,7 @@ public class TemplateNegativeTest extends Tests {
     public void createTemplateWithEmptyFieldRun() {
         String templateName = "create_template_with_empty_name_run_test_api";
         JSONObject json = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .run("")
                 .build()
                 .init()
@@ -92,31 +92,31 @@ public class TemplateNegativeTest extends Tests {
     @Test
     public void createTemplateWithInvalidCharacters() {
         Template.builder()
-                .templateName("NameWithUppercase")
+                .name("NameWithUppercase")
                 .build()
                 .negativeCreateRequest(500);
         Template.builder()
-                .templateName("nameWithUppercaseInMiddle")
+                .name("nameWithUppercaseInMiddle")
                 .build()
                 .negativeCreateRequest(500);
         Template.builder()
-                .templateName("имя")
+                .name("имя")
                 .build()
                 .negativeCreateRequest(500);
         Template.builder()
-                .templateName("Имя")
+                .name("Имя")
                 .build()
                 .negativeCreateRequest(500);
         Template.builder()
-                .templateName("a&b&c")
+                .name("a&b&c")
                 .build()
                 .negativeCreateRequest(500);
         Template.builder()
-                .templateName("")
+                .name("")
                 .build()
                 .negativeCreateRequest(400);
         Template.builder()
-                .templateName(" ")
+                .name(" ")
                 .build()
                 .negativeCreateRequest(400);
     }
@@ -127,9 +127,9 @@ public class TemplateNegativeTest extends Tests {
     public void deleteTemplateWithOutToken() {
         String templateName = "delete_with_out_token_template_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .build()
                 .createObject();
-        steps.deleteObjectByIdWithOutToken(String.valueOf(template.getTemplateId()));
+        steps.deleteObjectByIdWithOutToken(String.valueOf(template.getId()));
     }
 }

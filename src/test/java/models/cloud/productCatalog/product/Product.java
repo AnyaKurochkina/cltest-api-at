@@ -1,11 +1,8 @@
 package models.cloud.productCatalog.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
-import core.helper.http.Http;
-import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -17,7 +14,6 @@ import org.junit.jupiter.api.Assertions;
 import java.util.List;
 import java.util.Map;
 
-import static core.helper.Configure.ProductCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static steps.productCatalog.ProductSteps.*;
 
@@ -92,7 +88,7 @@ public class Product extends Entity {
     private List<String> restrictedDevelopers;
     private String payment;
     @JsonProperty("context_restrictions")
-    private Object contextRestrictions;
+    private List<Object> contextRestrictions;
     @JsonProperty("version_fields")
     private List<String> versionFields;
 
@@ -107,9 +103,9 @@ public class Product extends Entity {
 
     @Override
     public JSONObject toJson() {
-        String categor = null;
-        if (categoryV2 != null) {
-            categor = categoryV2.getValue();
+        String categoryV2 = null;
+        if (this.categoryV2 != null) {
+            categoryV2 = this.categoryV2.getValue();
         }
         return JsonHelper.getJsonTemplate("productCatalog/products/createProduct.json")
                 .set("$.name", name)
@@ -127,7 +123,7 @@ public class Product extends Entity {
                 .set("$.information_systems", informationSystems)
                 .set("$.in_general_list", inGeneralList)
                 .set("$.payment", payment)
-                .setIfNullRemove("$.category_v2", categor)
+                .setIfNullRemove("$.category_v2", categoryV2)
                 .setIfNullRemove("$.number", number)
                 .set("$.allowed_groups", allowedGroups)
                 .set("$.restricted_groups", restrictedGroups)
@@ -135,23 +131,16 @@ public class Product extends Entity {
     }
 
     @Override
-    @Step("Создание продукта")
     protected void create() {
         if (isProductExists(name)) {
             deleteProductByName(name);
         }
-        Product createProduct = new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(toJson())
-                .post("/api/v1/products/")
-                .assertStatus(201)
-                .extractAs(Product.class);
+        Product createProduct = createProduct(toJson());
         StringUtils.copyAvailableFields(createProduct, this);
         Assertions.assertNotNull(productId, "Продукт с именем: " + name + ", не создался");
     }
 
     @Override
-    @Step("Удаление продукта")
     protected void delete() {
         Product product = getProductById(productId);
         if (product.isOpen) {

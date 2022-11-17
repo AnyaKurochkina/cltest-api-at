@@ -1,19 +1,17 @@
 package api.cloud.productCatalog.visualTemplate;
 
-import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.itemVisualItem.createVisualTemplate.*;
-import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
-import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.ListItem;
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.ItemVisualTemplate;
+import models.cloud.productCatalog.visualTeamplate.CompactTemplate;
+import models.cloud.productCatalog.visualTeamplate.FullTemplate;
+import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +20,8 @@ import java.util.List;
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.ProductCatalogSteps.isSorted;
+import static steps.productCatalog.VisualTemplateSteps.*;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны отображения")
@@ -31,23 +31,26 @@ public class VisualTemplateListTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/item_visual_templates/",
             "productCatalog/itemVisualTemplate/createItemVisual.json");
-    CompactTemplate compactTemplate = CompactTemplate.builder().name(new Name("name"))
-            .type(new Type("type")).status(new Status("status")).build();
+    CompactTemplate compactTemplate = CompactTemplate.builder()
+            .name("name")
+            .type("type").
+            status("status")
+            .build();
     FullTemplate fullTemplate = FullTemplate.builder().type("type").value(Arrays.asList("value", "value2")).build();
 
     @DisplayName("Получение списка шаблонов визуализаций")
     @TmsLink("643632")
     @Test
-    public void getVisualTemplateList() {
-        List<ItemImpl> list = steps.getProductObjectList(GetVisualTemplateListResponse.class);
-        assertTrue(steps.isSorted(list), "Список не отсортирован.");
+    public void getVisualTemplateListTest() {
+        List<ItemVisualTemplate> list = getVisualTemplateList();
+        assertTrue(isSorted(list), "Список не отсортирован.");
     }
 
     @DisplayName("Проверка значения next в запросе на получение списка шаблонов визуализаций")
     @TmsLink("682862")
     @Test
     public void getMeta() {
-        String str = steps.getMeta(GetVisualTemplateListResponse.class).getNext();
+        String str = getMetaVisualTemplateList().getNext();
         String url = getAppProp("url.kong");
         if (!(str == null)) {
             assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
@@ -69,10 +72,9 @@ public class VisualTemplateListTest extends Tests {
                 .build()
                 .createObject();
         String providerFilter = visualTemplates.getEventProvider().get(0);
-        List<ItemImpl> providerList = steps.getProductObjectList(GetVisualTemplateListResponse.class,
-                "?event_provider=" + providerFilter);
+        List<ItemVisualTemplate> providerList = getVisualTemplateListByFilter("?event_provider=" + providerFilter);
         assertTrue(providerList.size() > 0);
-        for (ItemImpl impl : providerList) {
+        for (ItemVisualTemplate impl : providerList) {
             assertTrue(steps.getJsonPath(impl.getId()).getString("event_provider").contains(providerFilter));
         }
     }
@@ -92,10 +94,9 @@ public class VisualTemplateListTest extends Tests {
                 .build()
                 .createObject();
         String typeFilter = visualTemplates.getEventType().get(0);
-        List<ItemImpl> typeList = steps.getProductObjectList(GetVisualTemplateListResponse.class,
-                "?event_type=" + typeFilter);
+        List<ItemVisualTemplate> typeList = getVisualTemplateListByFilter("?event_type=" + typeFilter);
         assertTrue(typeList.size() > 0);
-        for (ItemImpl impl : typeList) {
+        for (ItemVisualTemplate impl : typeList) {
             assertTrue(steps.getJsonPath(impl.getId()).getString("event_type").contains(typeFilter));
         }
     }
@@ -112,11 +113,9 @@ public class VisualTemplateListTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        List<ItemImpl> list = steps.getProductObjectList(GetVisualTemplateListResponse.class,
-                "?is_active=false");
-        for (ItemImpl item : list) {
-            ListItem listItem = (ListItem) item;
-            assertFalse(listItem.getIsActive());
+        List<ItemVisualTemplate> list = getVisualTemplateListByFilter("?is_active=false");
+        for (ItemVisualTemplate item : list) {
+            assertFalse(item.getIsActive());
         }
     }
 
@@ -132,10 +131,9 @@ public class VisualTemplateListTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        List<ItemImpl> list = steps.getProductObjectList(GetVisualTemplateListResponse.class, "?event_provider=docker");
-        for (ItemImpl item : list) {
-            ListItem listItem = (ListItem) item;
-            assertTrue(listItem.getEventProvider().contains("docker"));
+        List<ItemVisualTemplate> list = getVisualTemplateListByFilter("?event_provider=docker");
+        for (ItemVisualTemplate item : list) {
+            assertTrue(item.getEventProvider().contains("docker"));
         }
     }
 
@@ -152,10 +150,9 @@ public class VisualTemplateListTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        List<ItemImpl> list = steps.getProductObjectList(GetVisualTemplateListResponse.class, "?event_type=app");
-        for (ItemImpl item : list) {
-            ListItem listItem = (ListItem) item;
-            assertTrue(listItem.getEventType().contains("app"));
+        List<ItemVisualTemplate> list = getVisualTemplateListByFilter("?event_type=app");
+        for (ItemVisualTemplate item : list) {
+            assertTrue(item.getEventType().contains("app"));
         }
     }
 
@@ -175,10 +172,9 @@ public class VisualTemplateListTest extends Tests {
                 .createObject();
         String providerFilter = visualTemplates.getEventProvider().get(0);
         String typeFilter = visualTemplates.getEventType().get(0);
-        List<ItemImpl> list = steps.getProductObjectList(GetVisualTemplateListResponse.class,
-                "?event_type=" + typeFilter + "&event_provider=" + providerFilter);
+        List<ItemVisualTemplate> list = getVisualTemplateListByFilter("?event_type=" + typeFilter + "&event_provider=" + providerFilter);
         assertTrue(list.size() > 0);
-        for (ItemImpl impl : list) {
+        for (ItemVisualTemplate impl : list) {
             assertTrue(steps.getJsonPath(impl.getId()).getString("event_provider").contains(providerFilter));
             assertTrue(steps.getJsonPath(impl.getId()).getString("event_type").contains(typeFilter));
         }

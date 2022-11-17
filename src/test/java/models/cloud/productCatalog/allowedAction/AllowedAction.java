@@ -40,7 +40,7 @@ public class AllowedAction extends Entity {
     private String updateDt;
     private String name;
     @JsonProperty("context_restrictions")
-    private List<String> contextRestriction;
+    private List<Object> contextRestriction;
     @JsonProperty("create_dt")
     private String createDt;
     @JsonProperty("action")

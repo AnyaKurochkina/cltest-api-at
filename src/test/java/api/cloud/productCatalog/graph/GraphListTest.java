@@ -21,7 +21,9 @@ import java.util.List;
 
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.GraphSteps.getGraphById;
 import static steps.productCatalog.GraphSteps.getGraphList;
+import static steps.productCatalog.ProductCatalogSteps.isSorted;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -54,8 +56,8 @@ public class GraphListTest extends Tests {
     @TmsLink("642539")
     @Test
     public void getGraphsListTest() {
-        List<ItemImpl> list = getGraphList();
-        assertTrue(steps.isSorted(list), "Список не отсортирован.");
+        List<Graph> list = getGraphList();
+        assertTrue(isSorted(list), "Список не отсортирован.");
     }
 
     @DisplayName("Проверка значения next в запросе на получение списка графа")
@@ -94,13 +96,13 @@ public class GraphListTest extends Tests {
     @TmsLink("1027309")
     @Test
     public void getIcon() {
-        List<ItemImpl> productObjectList = getGraphList();
-        for (ItemImpl item : productObjectList) {
-            GetGraphResponse graph = (GetGraphResponse) steps.getById(item.getId(), GetGraphResponse.class);
-            if (!graph.getGraph().isEmpty()) {
-                List<GraphItem> graphItemList = graph.getGraph();
+        List<Graph> productObjectList = getGraphList();
+        for (Graph graph : productObjectList) {
+            Graph getGraph = getGraphById(graph.getGraphId());
+            if (!getGraph.getGraph().isEmpty()) {
+                List<GraphItem> graphItemList = getGraph.getGraph();
                 for (GraphItem graphItem : graphItemList) {
-                    assertNotNull(graphItem.getIconUrl(), String.format("У ноды графа %s поле icon_url is null", graph.getName()));
+                    assertNotNull(graphItem.getIconUrl(), String.format("У ноды графа %s поле icon_url is null", getGraph.getName()));
                     if (graphItem.getIconUrl().isEmpty()) {
                         assertNull(graphItem.getIconStoreId(), "icon_store_id должен быть null");
                     }

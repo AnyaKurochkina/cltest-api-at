@@ -3,12 +3,10 @@ package steps.productCatalog;
 import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
-import httpModels.productCatalog.GetListImpl;
-import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
-import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Step;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.service.GetServiceList;
+import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
 import steps.Steps;
 
@@ -21,13 +19,13 @@ public class ServiceSteps extends Steps {
     private static String serviceUrl = "/api/v1/services/";
 
     @Step("Получение списка Сервисов продуктового каталога")
-    public static List<ItemImpl> getServiceList() {
-        return ((GetListImpl) new Http(ProductCatalogURL)
+    public static List<Service> getServiceList() {
+        return  new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(serviceUrl)
                 .compareWithJsonSchema("jsonSchema/getServiceListSchema.json")
                 .assertStatus(200)
-                .extractAs(GetServiceListResponse.class)).getItemsList();
+                .extractAs(GetServiceList.class).getList();
     }
 
     @Step("Создание сервиса")

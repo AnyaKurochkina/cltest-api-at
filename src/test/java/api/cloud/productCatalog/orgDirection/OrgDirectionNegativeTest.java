@@ -3,7 +3,7 @@ package api.cloud.productCatalog.orgDirection;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.OrgDirection;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -26,11 +26,11 @@ public class OrgDirectionNegativeTest extends Tests {
     @Test
     public void getOrgDirectionByIdWithOutToken() {
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("get_org_direction_by_id_without_token_test_api")
+                .name("get_org_direction_by_id_without_token_test_api")
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
-        steps.getByIdWithOutToken(orgDirection.getOrgDirectionId());
+        steps.getByIdWithOutToken(orgDirection.getId());
     }
 
     @DisplayName("Негативный тест на обновление направления по Id без токена")
@@ -38,11 +38,11 @@ public class OrgDirectionNegativeTest extends Tests {
     @Test
     public void updateOrgDirectionByIdWithOutToken() {
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("update_org_direction_by_id_without_token_test_api")
+                .name("update_org_direction_by_id_without_token_test_api")
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
-        steps.partialUpdateObjectWithOutToken(orgDirection.getOrgDirectionId(),
+        steps.partialUpdateObjectWithOutToken(orgDirection.getId(),
                 new JSONObject().put("description", "UpdateDescription"));
     }
 
@@ -51,11 +51,11 @@ public class OrgDirectionNegativeTest extends Tests {
     @Test
     public void copyOrgDirectionByIdWithOutToken() {
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("copy_org_direction_by_id_without_token_test_api")
+                .name("copy_org_direction_by_id_without_token_test_api")
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
-        steps.copyByIdWithOutToken(orgDirection.getOrgDirectionId());
+        steps.copyByIdWithOutToken(orgDirection.getId());
     }
 
     @DisplayName("Негативный тест на создание направления с неуникальным именем")
@@ -64,7 +64,7 @@ public class OrgDirectionNegativeTest extends Tests {
     public void createOrgDirectionWithNonUniqueName() {
         String orgName = "create_org_direction_with_same_name_test_api";
         OrgDirection.builder()
-                .orgDirectionName(orgName)
+                .name(orgName)
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
@@ -76,31 +76,31 @@ public class OrgDirectionNegativeTest extends Tests {
     @Test
     public void createActionWithInvalidCharacters() {
         OrgDirection.builder()
-                .orgDirectionName("NameWithUppercase")
+                .name("NameWithUppercase")
                 .build()
                 .negativeCreateRequest(500);
         OrgDirection.builder()
-                .orgDirectionName("nameWithUppercaseInMiddle")
+                .name("nameWithUppercaseInMiddle")
                 .build()
                 .negativeCreateRequest(500);
         OrgDirection.builder()
-                .orgDirectionName("имя")
+                .name("имя")
                 .build()
                 .negativeCreateRequest(500);
         OrgDirection.builder()
-                .orgDirectionName("Имя")
+                .name("Имя")
                 .build()
                 .negativeCreateRequest(500);
         OrgDirection.builder()
-                .orgDirectionName("a&b&c")
+                .name("a&b&c")
                 .build()
                 .negativeCreateRequest(500);
         OrgDirection.builder()
-                .orgDirectionName("")
+                .name("")
                 .build()
                 .negativeCreateRequest(400);
         OrgDirection.builder()
-                .orgDirectionName(" ")
+                .name(" ")
                 .build()
                 .negativeCreateRequest(400);
     }
@@ -110,10 +110,10 @@ public class OrgDirectionNegativeTest extends Tests {
     @Test
     public void deleteOrgDirectionWithOutToken() {
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("delete_org_direction_by_id_without_token_test_api")
+                .name("delete_org_direction_by_id_without_token_test_api")
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
-        steps.deleteObjectByIdWithOutToken(orgDirection.getOrgDirectionId());
+        steps.deleteObjectByIdWithOutToken(orgDirection.getId());
     }
 }

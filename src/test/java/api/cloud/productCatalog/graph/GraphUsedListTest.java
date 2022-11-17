@@ -6,7 +6,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
@@ -48,7 +48,7 @@ public class GraphUsedListTest extends Tests {
                 .createObject();
 
         Service createServiceResponse = Service.builder()
-                .serviceName("service_for_used_graph_test_api")
+                .name("service_for_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
                 .graphId(usedGraphId)
@@ -65,7 +65,7 @@ public class GraphUsedListTest extends Tests {
         assertAll(
                 () -> assertEquals(createProductResponse.getProductId(), jsonPath.getString("id[0]")),
                 () -> assertEquals(createActionResponse.getActionId(), jsonPath.getString("id[1]")),
-                () -> assertEquals(createServiceResponse.getServiceId(), jsonPath.getString("id[2]"))
+                () -> assertEquals(createServiceResponse.getId(), jsonPath.getString("id[2]"))
         );
     }
 
@@ -86,7 +86,7 @@ public class GraphUsedListTest extends Tests {
                 .createObject();
 
         Service.builder()
-                .serviceName("service_for_type_used_graph_test_api")
+                .name("service_for_type_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
                 .graphId(usedGraphId)
@@ -133,7 +133,7 @@ public class GraphUsedListTest extends Tests {
                 .createObject();
 
         Service.builder()
-                .serviceName("service_for_last_object_used_graph_test_api")
+                .name("service_for_last_object_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
                 .graphId(usedGraphId)
@@ -141,7 +141,7 @@ public class GraphUsedListTest extends Tests {
                 .createObject();
 
         Service lastService = Service.builder()
-                .serviceName("last_service_for_last_object_used_graph_test_api")
+                .name("last_service_for_last_object_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
                 .graphId(usedGraphId)
@@ -162,7 +162,7 @@ public class GraphUsedListTest extends Tests {
 
         Response response = getLastObjectUsedGraph(usedGraphId);
         assertEquals(lastAction.getActionName(), response.jsonPath().getString("name[1]"));
-        assertEquals(lastService.getServiceName(), response.jsonPath().getString("name[2]"));
+        assertEquals(lastService.getName(), response.jsonPath().getString("name[2]"));
         assertEquals(lastProduct.getName(), response.jsonPath().getString("name[0]"));
     }
 
@@ -187,7 +187,7 @@ public class GraphUsedListTest extends Tests {
 
 
         Service service = Service.builder()
-                .serviceName("service_for_last_object_used_graph_test_api")
+                .name("service_for_last_object_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
                 .graphId(usedGraphId)
@@ -195,9 +195,9 @@ public class GraphUsedListTest extends Tests {
                 .createObject();
         ProductCatalogSteps serviceSteps = new ProductCatalogSteps("/api/v1/services/",
                 "/productCatalog/services/createServices.json");
-        serviceSteps.partialUpdateObject(service.getServiceId(), new JSONObject()
+        serviceSteps.partialUpdateObject(service.getId(), new JSONObject()
                 .put("service_info", "updated_service_for_last_version_used_graph_test_api"));
-        String serviceVersion = serviceSteps.getById(service.getServiceId(), GetServiceResponse.class).getVersion();
+        String serviceVersion = serviceSteps.getById(service.getId(), GetServiceResponse.class).getVersion();
 
         Action action = Action.builder()
                 .actionName("action_for_last_object_used_graph_test_api")

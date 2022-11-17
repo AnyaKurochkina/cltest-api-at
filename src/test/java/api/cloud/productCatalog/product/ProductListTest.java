@@ -1,7 +1,7 @@
 package api.cloud.productCatalog.product;
 
+import api.Tests;
 import core.helper.http.Response;
-import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.product.getProducts.getProductsExportList.ExportItem;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import httpModels.productCatalog.product.getProducts.response.ListItem;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 import steps.resourceManager.ResourceManagerSteps;
-import api.Tests;
 
 import java.util.List;
 
@@ -67,11 +66,8 @@ public class ProductListTest extends Tests {
                 .title("AtTestApiProduct")
                 .build()
                 .createObject();
-        List<ItemImpl> productList = steps.getProductObjectList(GetProductsResponse.class, "?is_open=true");
-        for (ItemImpl item : productList) {
-            ListItem listItem = (ListItem) item;
-            assertTrue(listItem.getIsOpen());
-        }
+        List<Product> productList = getProductListByFilter("is_open=true");
+        productList.forEach(product -> assertTrue(product.getIsOpen()));
     }
 
     @DisplayName("Получение списка продуктов по фильтру category")
@@ -84,50 +80,41 @@ public class ProductListTest extends Tests {
                 .category("vm")
                 .build()
                 .createObject();
-        List<ItemImpl> productList = steps.getProductObjectList(GetProductsResponse.class, "?category=vm");
-        for (ItemImpl item : productList) {
-            ListItem listItem = (ListItem) item;
-            assertEquals("vm", listItem.getCategory());
-        }
+        List<Product> productList = getProductListByFilter("category=vm");
+        productList.forEach(product -> assertEquals("vm", product.getCategory()));
     }
 
     @DisplayName("Получение списка продуктов по фильтру in_general_list=true")
     @TmsLink("852654")
     @Test
     public void getProductListByInGeneralListTrue() {
-        String name = "get_products_by_in_general_list_true_test_api";
-        Product.builder()
-                .name(name)
+        Product product = Product.builder()
+                .name("get_products_by_in_general_list_true_test_api")
                 .title("AtTestApiProduct")
                 .inGeneralList(true)
                 .build()
                 .createObject();
-        List<ItemImpl> productList = steps.getProductObjectList(GetProductsResponse.class, "?in_general_list=true");
-        assertTrue(steps.isContains(productList, name));
-        for (ItemImpl item : productList) {
-            ListItem listItem = (ListItem) item;
-            assertTrue(listItem.getInGeneralList());
-        }
+        List<Product> productList = getProductListByFilter("in_general_list=true");
+        assertTrue(productList.stream().anyMatch(product1 -> product1.getName().equals(product.getName())));
+        productList.forEach(item -> assertTrue(item.getInGeneralList()));
     }
+
 
     @DisplayName("Получение списка продуктов по фильтру in_general_list=false")
     @TmsLink("852655")
     @Test
     public void getProductListByInGeneralListFalse() {
-        String name = "get_products_by_in_general_list_false_test_api";
-        Product.builder()
-                .name(name)
+        Product product = Product.builder()
+                .name("get_products_by_in_general_list_false_test_api")
                 .title("AtTestApiProduct")
                 .inGeneralList(false)
                 .build()
                 .createObject();
-        List<ItemImpl> productList = steps.getProductObjectList(GetProductsResponse.class, "?in_general_list=false");
-        assertTrue(steps.isContains(productList, name));
-        for (ItemImpl item : productList) {
-            ListItem listItem = (ListItem) item;
-            assertFalse(listItem.getInGeneralList());
-        }
+        List<Product> productList = getProductListByFilter("in_general_list=false");
+        assertTrue(productList.stream().anyMatch(product1 -> product1.getName().equals(product.getName())));
+        productList.forEach(item -> assertFalse(item.getInGeneralList()));
     }
+
     //todo Убрать хардкод проекта логику прохождения по списку убрать.
     @DisplayName("Получение списка продуктов по контексту id проекта")
     @TmsLink("1039087")
@@ -150,6 +137,7 @@ public class ProductListTest extends Tests {
             assertTrue(item.getEnvs().contains(envType));
         }
     }
+
     @DisplayName("Получение списка категорий доступных по контексту id проекта")
     @TmsLink("1039088")
     @Test
@@ -175,7 +163,7 @@ public class ProductListTest extends Tests {
     public void getProductExportList() {
         List<ExportItem> productsExportList = steps.getProductsExportList();
         for (ExportItem item : productsExportList) {
-          assertNotNull(item.getOrgInfoSystems());
+            assertNotNull(item.getOrgInfoSystems());
         }
     }
 

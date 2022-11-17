@@ -1,19 +1,20 @@
 package api.cloud.productCatalog.visualTemplate;
 
+import api.Tests;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
-import httpModels.productCatalog.itemVisualItem.createVisualTemplate.*;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.ItemVisualTemplate;
+import models.cloud.productCatalog.visualTeamplate.CompactTemplate;
+import models.cloud.productCatalog.visualTeamplate.FullTemplate;
+import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,8 +30,8 @@ public class VisualTemplateNegativeTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/item_visual_templates/",
             "productCatalog/itemVisualTemplate/createItemVisual.json");
-    CompactTemplate compactTemplate = CompactTemplate.builder().name(new Name("name"))
-            .type(new Type("type")).status(new Status("status")).build();
+    CompactTemplate compactTemplate = CompactTemplate.builder().name(("name"))
+            .type(("type")).status(("status")).build();
     FullTemplate fullTemplate = FullTemplate.builder().type("type").value(Arrays.asList("value", "value2")).build();
 
     @DisplayName("Негативный тест на создание шаблона визуализации с неуникальной связкой EventType-EventProvider")
@@ -53,9 +54,9 @@ public class VisualTemplateNegativeTest extends Tests {
                 .set("event_type", Collections.singletonList("app"))
                 .set("is_active", true).build();
         Response response = steps.createProductObject(jsonObject).assertStatus(422);
-        steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
+        steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
         assertEquals(name, response.jsonPath().get("name[0]").toString());
-        assertEquals(visualTemplates.getItemId(), response.jsonPath().get("id[0]").toString());
+        assertEquals(visualTemplates.getId(), response.jsonPath().get("id[0]").toString());
     }
 
     @DisplayName("Негативный тест на получение шаблона визуализации по Id без токена")
@@ -72,7 +73,7 @@ public class VisualTemplateNegativeTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        steps.getByIdWithOutToken(visualTemplates.getItemId());
+        steps.getByIdWithOutToken(visualTemplates.getId());
     }
 
     @DisplayName("Негативный тест на создание шаблона отображения с неуникальным именем")

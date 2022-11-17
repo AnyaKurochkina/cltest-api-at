@@ -11,8 +11,8 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.OrgDirection;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
+import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
@@ -47,11 +47,11 @@ public class OrgDirectionTest extends Tests {
     public void createOrgDirection() {
         String orgName = "org_direction_at_test-:2022.";
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName(orgName)
+                .name(orgName)
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
-        GetImpl getOrgDirection = steps.getById(orgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class);
+        GetImpl getOrgDirection = steps.getById(orgDirection.getId(), GetOrgDirectionResponse.class);
         assertEquals(orgName, getOrgDirection.getName());
     }
 
@@ -66,11 +66,11 @@ public class OrgDirectionTest extends Tests {
                 .createObject();
         String orgName = "create_org_direction_with_icon_test_api";
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName(orgName)
+                .name(orgName)
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-        GetOrgDirectionResponse actualOrgDirection = (GetOrgDirectionResponse) steps.getById(orgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class);
+        GetOrgDirectionResponse actualOrgDirection = (GetOrgDirectionResponse) steps.getById(orgDirection.getId(), GetOrgDirectionResponse.class);
         assertFalse(actualOrgDirection.getIconStoreId().isEmpty());
         assertFalse(actualOrgDirection.getIconUrl().isEmpty());
     }
@@ -86,18 +86,18 @@ public class OrgDirectionTest extends Tests {
                 .createObject();
         String orgName = "create_first_org_direction_with_same_icon_test_api";
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName(orgName)
+                .name(orgName)
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
 
         OrgDirection secondOrgDirection = OrgDirection.builder()
-                .orgDirectionName("create_second_org_direction_with_same_icon_test_api")
+                .name("create_second_org_direction_with_same_icon_test_api")
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-        GetOrgDirectionResponse actualFirstOrgDirection = (GetOrgDirectionResponse) steps.getById(orgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class);
-        GetOrgDirectionResponse actualSecondOrgDirection = (GetOrgDirectionResponse) steps.getById(secondOrgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class);
+        GetOrgDirectionResponse actualFirstOrgDirection = (GetOrgDirectionResponse) steps.getById(orgDirection.getId(), GetOrgDirectionResponse.class);
+        GetOrgDirectionResponse actualSecondOrgDirection = (GetOrgDirectionResponse) steps.getById(secondOrgDirection.getId(), GetOrgDirectionResponse.class);
         assertEquals(actualFirstOrgDirection.getIconUrl(), actualSecondOrgDirection.getIconUrl());
         assertEquals(actualFirstOrgDirection.getIconStoreId(), actualSecondOrgDirection.getIconStoreId());
     }
@@ -108,7 +108,7 @@ public class OrgDirectionTest extends Tests {
     public void checkOrgDirectionExists() {
         String orgName = "check_org_direction_is_exist_test_api";
         OrgDirection.builder()
-                .orgDirectionName(orgName)
+                .name(orgName)
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
@@ -153,11 +153,11 @@ public class OrgDirectionTest extends Tests {
     public void getOrgDirectionById() {
         String orgName = "get_by_id_org_direction_test_api";
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName(orgName)
+                .name(orgName)
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
-        GetImpl productCatalogGet = steps.getById(orgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class);
+        GetImpl productCatalogGet = steps.getById(orgDirection.getId(), GetOrgDirectionResponse.class);
         Assertions.assertEquals(productCatalogGet.getName(), orgName);
     }
 
@@ -167,13 +167,13 @@ public class OrgDirectionTest extends Tests {
     public void updateOrgDirection() {
         String orgName = "update_org_direction_test_api";
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName(orgName)
+                .name(orgName)
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
         String expected = "Update description";
-        steps.partialUpdateObject(orgDirection.getOrgDirectionId(), new JSONObject().put("description", expected));
-        String actual = steps.getById(orgDirection.getOrgDirectionId(), GetOrgDirectionResponse.class).getDescription();
+        steps.partialUpdateObject(orgDirection.getId(), new JSONObject().put("description", expected));
+        String actual = steps.getById(orgDirection.getId(), GetOrgDirectionResponse.class).getDescription();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -183,12 +183,12 @@ public class OrgDirectionTest extends Tests {
     public void copyOrgDirectionById() {
         String orgName = "copy_by_id_org_direction_test_api";
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName(orgName)
+                .name(orgName)
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
         String cloneName = orgName + "-clone";
-        steps.copyById(orgDirection.getOrgDirectionId());
+        steps.copyById(orgDirection.getId());
         Assertions.assertTrue(steps.isExists(cloneName));
         steps.deleteByName(cloneName, GetOrgDirectionListResponse.class);
         Assertions.assertFalse(steps.isExists(cloneName));
@@ -229,11 +229,11 @@ public class OrgDirectionTest extends Tests {
     public void checkAccessWithPublicToken() {
         String orgName = "check_access_with_public_token_org_direction_test_api";
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName(orgName)
+                .name(orgName)
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
-        String orgDirectionId = orgDirection.getOrgDirectionId();
+        String orgDirectionId = orgDirection.getId();
         steps.getObjectByNameWithPublicToken(orgName).assertStatus(200);
         steps.createProductObjectWithPublicToken(steps.createJsonObject("create_object_with_public_token_api"))
                 .assertStatus(403);
@@ -249,11 +249,11 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void exportOrgDirectionById() {
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("export_org_direction_test_api")
+                .name("export_org_direction_test_api")
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
-        steps.exportById(orgDirection.getOrgDirectionId());
+        steps.exportById(orgDirection.getId());
     }
 
     @DisplayName("Удаление направления")
@@ -261,7 +261,7 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void deleteOrgDirection() {
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("delete_org_direction_test_api")
+                .name("delete_org_direction_test_api")
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
@@ -273,19 +273,19 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void deleteOrgDirectionUsedInService() {
         OrgDirection orgDirection = OrgDirection.builder()
-                .orgDirectionName("delete_org_direction_used_in_service")
+                .name("delete_org_direction_used_in_service")
                 .title("delete_org_direction_used_in_service")
                 .build()
                 .createObject();
         Service service = Service.builder()
-                .serviceName("service_for_delete_org_direction_test_api")
+                .name("service_for_delete_org_direction_test_api")
                 .title("service_for_delete_org_direction_test_api")
-                .directionId(orgDirection.getOrgDirectionId())
+                .directionId(orgDirection.getId())
                 .build()
                 .createObject();
         String errorMessage = steps.getDeleteObjectResponse(service.getDirectionId())
                 .assertStatus(400).jsonPath().getString("error");
-        assertEquals(String.format("Нельзя удалить направление %s. Оно используется:\nService: (name: %s)", service.getDirectionName(), service.getServiceName()), errorMessage);
+        assertEquals(String.format("Нельзя удалить направление %s. Оно используется:\nService: (name: %s)", service.getDirectionName(), service.getName()), errorMessage);
     }
 
     @Test
@@ -294,12 +294,12 @@ public class OrgDirectionTest extends Tests {
     public void dumpToGitlabOrgDirection() {
         String orgDirectionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         OrgDirection jinja = OrgDirection.builder()
-                .orgDirectionName(orgDirectionName)
+                .name(orgDirectionName)
                 .title(orgDirectionName)
                 .build()
                 .createObject();
         String tag = "orgdirection_" + orgDirectionName;
-        Response response = steps.dumpToBitbucket(jinja.getOrgDirectionId());
+        Response response = steps.dumpToBitbucket(jinja.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         assertEquals(tag, response.jsonPath().get("tag"));
     }
@@ -310,7 +310,7 @@ public class OrgDirectionTest extends Tests {
     public void loadFromGitlabOrgDirection() {
         String orgDirectionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
         JSONObject jsonObject = OrgDirection.builder()
-                .orgDirectionName(orgDirectionName)
+                .name(orgDirectionName)
                 .title(orgDirectionName)
                 .build()
                 .init().toJson();

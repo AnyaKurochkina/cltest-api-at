@@ -1,19 +1,16 @@
 package api.cloud.productCatalog.visualTemplate;
 
+import api.Tests;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
-import httpModels.productCatalog.GetImpl;
-import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.itemVisualItem.createVisualTemplate.*;
-import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
-import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.GetVisualTemplateListResponse;
-import httpModels.productCatalog.itemVisualItem.getVisualTemplateList.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.ItemVisualTemplate;
+import models.cloud.productCatalog.visualTeamplate.CompactTemplate;
+import models.cloud.productCatalog.visualTeamplate.FullTemplate;
+import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -22,12 +19,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.VisualTemplateSteps.*;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны отображения")
@@ -37,9 +37,15 @@ public class VisualTemplateTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/item_visual_templates/",
             "productCatalog/itemVisualTemplate/createItemVisual.json");
-    CompactTemplate compactTemplate = CompactTemplate.builder().name(new Name("name"))
-            .type(new Type("type")).status(new Status("status")).build();
-    FullTemplate fullTemplate = FullTemplate.builder().type("type").value(Arrays.asList("value", "value2")).build();
+    CompactTemplate compactTemplate = CompactTemplate.builder()
+            .name("name")
+            .type("type")
+            .status("status")
+            .build();
+    FullTemplate fullTemplate = FullTemplate.builder()
+            .type("type")
+            .value(Arrays.asList("value", "value2"))
+            .build();
 
     @DisplayName("Создание шаблона визуализации в продуктовом каталоге")
     @TmsLink("643631")
@@ -55,8 +61,8 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        GetImpl getVisualTemplate = steps.getById(visualTemplates.getItemId(), CreateItemVisualResponse.class);
-        assertEquals(name, getVisualTemplate.getName());
+        ItemVisualTemplate getVisualTemplate = getVisualTemplateById(visualTemplates.getId());
+        assertEquals(visualTemplates, getVisualTemplate);
     }
 
     @DisplayName("Удаление шаблона визуализации со статусом is_active=true")
@@ -74,9 +80,9 @@ public class VisualTemplateTest extends Tests {
                 .isActive(true)
                 .build()
                 .createObject();
-        Response deleteResponse = steps.getDeleteObjectResponse(visualTemplates.getItemId())
+        Response deleteResponse = deleteVisualTemplateById(visualTemplates.getId())
                 .assertStatus(403);
-        steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
+        steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
         assertEquals(errorText, deleteResponse.jsonPath().get("error"));
     }
 
@@ -102,10 +108,10 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("742486")
     @Test
     public void orderingByCreateData() {
-        List<ItemImpl> list = steps.orderingByCreateData(GetVisualTemplateListResponse.class).getItemsList();
+        List<ItemVisualTemplate> list = getItemVisualTemplateListOrdering("create_dt");
         for (int i = 0; i < list.size() - 1; i++) {
-            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
-            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateDt());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateDt());
             assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
                     "Даты должны быть отсортированы по возрастанию");
         }
@@ -115,10 +121,10 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("742490")
     @Test
     public void orderingByUpDateData() {
-        List<ItemImpl> list = steps.orderingByUpDateData(GetVisualTemplateListResponse.class).getItemsList();
+        List<ItemVisualTemplate> list = getItemVisualTemplateListOrdering("update_dt");
         for (int i = 0; i < list.size() - 1; i++) {
-            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
-            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpdateDt());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpdateDt());
             assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
                     "Даты должны быть отсортированы по возрастанию");
         }
@@ -141,11 +147,11 @@ public class VisualTemplateTest extends Tests {
         steps.getObjectByNameWithPublicToken(name).assertStatus(200);
         steps.createProductObjectWithPublicToken(steps
                 .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
-        steps.partialUpdateObjectWithPublicToken(visualTemplates.getItemId(),
+        steps.partialUpdateObjectWithPublicToken(visualTemplates.getId(),
                 new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
-        steps.putObjectByIdWithPublicToken(visualTemplates.getItemId(), steps
+        steps.putObjectByIdWithPublicToken(visualTemplates.getId(), steps
                 .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
-        steps.deleteObjectWithPublicToken(visualTemplates.getItemId()).assertStatus(403);
+        steps.deleteObjectWithPublicToken(visualTemplates.getId()).assertStatus(403);
     }
 
     @DisplayName("Импорт шаблона визуализации")
@@ -156,14 +162,14 @@ public class VisualTemplateTest extends Tests {
         String importName = new JsonPath(data).get("ItemVisualisationTemplate.name");
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/itemVisualTemplate/visualTemplateImport.json");
         assertTrue(steps.isExists(importName));
-        steps.deleteByName(importName, GetVisualTemplateListResponse.class);
+        deleteVisualTemplateByName(importName);
         assertFalse(steps.isExists(importName));
     }
 
     @DisplayName("Получение шаблона визуализации по Id")
     @TmsLink("643644")
     @Test
-    public void getVisualTemplateById() {
+    public void getVisualTemplateByIdTest() {
         String name = "get_by_id_item_visual_template_test_api";
         ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
@@ -174,7 +180,7 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        GetImpl productCatalogGet = steps.getById(visualTemplates.getItemId(), GetVisualTemplateResponse.class);
+        ItemVisualTemplate productCatalogGet = getVisualTemplateById(visualTemplates.getId());
         assertEquals(name, productCatalogGet.getName());
     }
 
@@ -193,13 +199,13 @@ public class VisualTemplateTest extends Tests {
                 .build()
                 .createObject();
         String cloneName = visualTemplates.getName() + "-clone";
-        steps.copyById(visualTemplates.getItemId());
-        String cloneId = steps.getProductObjectIdByNameWithMultiSearch(cloneName, GetVisualTemplateListResponse.class);
+        steps.copyById(visualTemplates.getId());
+        String cloneId = getVisualTemplateByName(cloneName).getId();
         boolean isActive = steps.getJsonPath(cloneId).get("is_active");
         assertFalse(isActive);
-        steps.deleteByName(cloneName, GetVisualTemplateListResponse.class);
+        deleteVisualTemplateByName(cloneName);
         Assertions.assertFalse(steps.isExists(cloneName));
-        steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
+        steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
     }
 
     @DisplayName("Экспорт шаблона визуализации по Id")
@@ -215,7 +221,7 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        steps.exportById(visualTemplates.getItemId());
+        steps.exportById(visualTemplates.getId());
     }
 
     @DisplayName("Частичное обновление шаблона визуализации по Id")
@@ -233,9 +239,9 @@ public class VisualTemplateTest extends Tests {
                 .build()
                 .createObject();
         String expectedDescription = "UpdateDescription";
-        steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject()
+        steps.partialUpdateObject(visualTemplates.getId(), new JSONObject()
                 .put("description", expectedDescription)).assertStatus(200);
-        GetImpl getResponse = steps.getById(visualTemplates.getItemId(), GetVisualTemplateResponse.class);
+        ItemVisualTemplate getResponse = getVisualTemplateById(visualTemplates.getId());
         String actualDescription = getResponse.getDescription();
         assertEquals(expectedDescription, actualDescription);
     }
@@ -272,8 +278,8 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .init().toJson();
-        steps.partialUpdateObject(visualTemplates.getItemId(), json);
-        GetVisualTemplateResponse getResponse = (GetVisualTemplateResponse) steps.getById(visualTemplates.getItemId(), GetVisualTemplateResponse.class);
+        steps.partialUpdateObject(visualTemplates.getId(), json);
+        ItemVisualTemplate getResponse = getVisualTemplateById(visualTemplates.getId());
         assertEquals(defaultItem, getResponse.getDefaultItem());
     }
 
@@ -291,9 +297,8 @@ public class VisualTemplateTest extends Tests {
                 .isActive(true)
                 .build()
                 .createObject();
-        GetVisualTemplateResponse visualTemplate = steps
-                .getItemVisualTemplate(visualTemplates.getEventType().get(0), visualTemplates.getEventProvider().get(0));
-        steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
+        ItemVisualTemplate visualTemplate = getItemVisualTemplateByTypeProvider(visualTemplates.getEventType().get(0), visualTemplates.getEventProvider().get(0));
+        steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
         assertEquals(visualTemplate.getEventProvider(), visualTemplate.getEventProvider());
         assertEquals(visualTemplate.getEventType(), visualTemplate.getEventType());
     }
@@ -303,12 +308,12 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("1086581")
     @Test
     public void orderingByStatus() {
-        List<ItemImpl> list = steps.orderingByStatus(GetVisualTemplateListResponse.class).getItemsList();
+        List<ItemVisualTemplate> list = getItemVisualTemplateListOrdering("status");
         boolean result = false;
         int count = 0;
         for (int i = 0; i < list.size() - 1; i++) {
-            ListItem item = (ListItem) list.get(i);
-            ListItem nextItem = (ListItem) list.get(i + 1);
+            ItemVisualTemplate item = list.get(i);
+            ItemVisualTemplate nextItem = list.get(i + 1);
             if (item.getIsActive().equals(nextItem.getIsActive())) {
                 result = true;
             } else {
@@ -352,9 +357,9 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        assertEquals("name", visualTemplates.getCompactTemplate().getName().getValue());
-        assertEquals("status", visualTemplates.getCompactTemplate().getStatus().getValue());
-        assertEquals("type", visualTemplates.getCompactTemplate().getType().getValue());
+        assertEquals("name", visualTemplates.getCompactTemplate().getName());
+        assertEquals("status", visualTemplates.getCompactTemplate().getStatus());
+        assertEquals("type", visualTemplates.getCompactTemplate().getType());
     }
 
     @DisplayName("Удаление шаблона визуализации")
@@ -370,7 +375,7 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        steps.deleteById(visualTemplates.getItemId());
+        deleteVisualTemplateById(visualTemplates.getId());
     }
 
     @Test
@@ -389,7 +394,7 @@ public class VisualTemplateTest extends Tests {
                 .build()
                 .createObject();
         String tag = "itemvisualisationtemplate_" + visualTemplateName;
-        Response response = steps.dumpToBitbucket(visualTemplate.getItemId());
+        Response response = steps.dumpToBitbucket(visualTemplate.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         assertEquals(tag, response.jsonPath().get("tag"));
     }
@@ -399,7 +404,7 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("1029469")
     public void loadFromGitlabVisualTemplate() {
         String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
-        JSONObject jsonObject = ItemVisualTemplate.builder()
+        ItemVisualTemplate visualTemplate = ItemVisualTemplate.builder()
                 .name(visualTemplateName)
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
@@ -407,15 +412,14 @@ public class VisualTemplateTest extends Tests {
                 .fullTemplate(fullTemplate)
                 .isActive(false)
                 .build()
-                .init().toJson();
-        GetVisualTemplateResponse visualTemplate = steps.createProductObject(jsonObject).extractAs(GetVisualTemplateResponse.class);
+                .createObject();
         Response response = steps.dumpToBitbucket(visualTemplate.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
-        steps.deleteByName(visualTemplateName, GetVisualTemplateListResponse.class);
+        deleteVisualTemplateByName(visualTemplateName);
         String path = "itemvisualisationtemplate_" + visualTemplateName;
         steps.loadFromBitbucket(new JSONObject().put("path", path));
         assertTrue(steps.isExists(visualTemplateName));
-        steps.deleteByName(visualTemplateName, GetVisualTemplateListResponse.class);
+        deleteVisualTemplateByName(visualTemplateName);
         assertFalse(steps.isExists(visualTemplateName));
     }
 
@@ -433,9 +437,8 @@ public class VisualTemplateTest extends Tests {
                 .isActive(true)
                 .build()
                 .createObject();
-        GetVisualTemplateResponse visualTemplate = steps
-                .getItemVisualTemplate(visualTemplates.getEventType().get(0), visualTemplates.getEventProvider().get(0));
-        steps.partialUpdateObject(visualTemplates.getItemId(), new JSONObject().put("is_active", false));
+        ItemVisualTemplate visualTemplate = getItemVisualTemplateByTypeProvider(visualTemplates.getEventType().get(0), visualTemplates.getEventProvider().get(0));
+        steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
         assertNull(visualTemplate.getDefaultItem());
     }
 }
