@@ -16,10 +16,11 @@ public class Jinja2Steps extends Steps {
 
     @Step("Получение списка jinja2")
     public static List<Jinja2> getJinja2List() {
+        //Todo сравнение с jsonshema
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(jinjaUrl)
-                .compareWithJsonSchema("jsonSchema/getActionListSchema.json")
+               // .compareWithJsonSchema("jsonSchema/getActionListSchema.json")
                 .assertStatus(200)
                 .extractAs(GetJinja2List.class).getList();
     }

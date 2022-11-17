@@ -8,10 +8,8 @@ import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import httpModels.productCatalog.jinja2.getJinjaListResponse.GetJinjaListResponse;
-import httpModels.productCatalog.jinja2.getJinjaResponse.Jinja2Data;
 import io.qameta.allure.Step;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
@@ -23,12 +21,16 @@ import static steps.productCatalog.Jinja2Steps.isJinja2Exists;
 @Log4j2
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(exclude = "productName", callSuper = false)
+@ToString(exclude = "productName")
 public class Jinja2 extends Entity implements IProductCatalog {
 
     @JsonProperty("jinja2_template")
     private String jinja2Template;
     @JsonProperty("jinja2_data")
-    private Jinja2Data jinja2Data;
+    private Object jinja2Data;
     private String name;
     private String description;
     private String id;
