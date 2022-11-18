@@ -212,12 +212,12 @@ public class ProductsTest extends Tests {
                 .info(info)
                 .build()
                 .init().toJson();
-        steps.createProductObjectWithPublicToken(createProduct).assertStatus(403);
-        steps.partialUpdateObjectWithPublicToken(productId, new JSONObject().put("description", "UpdateDescription"))
+        createProductWithPublicToken(createProduct).assertStatus(403);
+        partialUpdateProductWithPublicToken(productId, new JSONObject().put("description", "UpdateDescription"))
                 .assertStatus(403);
-        steps.putObjectByIdWithPublicToken(productId, steps.createJsonObject("update_object_with_public_token_api"))
+        putProductByIdWithPublicToken(productId, steps.createJsonObject("update_object_with_public_token_api"))
                 .assertStatus(403);
-        steps.deleteObjectWithPublicToken(productId).assertStatus(403);
+        deleteProductWithPublicToken(productId).assertStatus(403);
     }
 
     @DisplayName("Импорт продукта")
@@ -238,8 +238,8 @@ public class ProductsTest extends Tests {
     public void importProductWithIcon() {
         String data = JsonHelper.getStringFromFile("/productCatalog/products/importProductWithIcon.json");
         String name = new JsonPath(data).get("Product.name");
-        if (steps.isExists(name)) {
-            steps.deleteByName(name, GetProductsResponse.class);
+        if (isProductExists(name)) {
+            deleteProductByName(name);
         }
         steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProductWithIcon.json");
         String id = steps.getProductObjectIdByNameWithMultiSearch(name, GetProductsResponse.class);
@@ -666,7 +666,7 @@ public class ProductsTest extends Tests {
                 .info(info)
                 .build()
                 .createObject();
-        GetProductResponse actualProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        Product actualProduct = getProductById(product.getProductId());
         assertEquals(50, actualProduct.getNumber());
     }
 }

@@ -239,4 +239,35 @@ public class ProductSteps extends Steps {
         }
         return true;
     }
+
+    @Step("Создание продукта с публичным токеном")
+    public static Response createProductWithPublicToken(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+                .body(body)
+                .post(productUrl);
+    }
+
+    @Step("Обновление продукта с публичным токеном")
+    public static Response partialUpdateProductWithPublicToken(String id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+                .body(object)
+                .patch(productUrl + id + "/");
+    }
+
+    @Step("Обновление продукта по Id с публичным токеном")
+    public static Response putProductByIdWithPublicToken(String objectId, JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+                .body(body)
+                .put(productUrl + objectId + "/");
+    }
+
+    @Step("Удаление продукта с публичным токеном")
+    public static Response deleteProductWithPublicToken(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+                .delete(productUrl + id + "/");
+    }
 }

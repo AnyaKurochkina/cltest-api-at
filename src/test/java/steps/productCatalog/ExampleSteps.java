@@ -90,7 +90,7 @@ public class ExampleSteps extends Steps {
                 .assertStatus(200);
     }
 
-    @Step("Создание Примера продуктового каталога")
+    @Step("Создание Примера")
     public static Example createExample(JSONObject body) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
@@ -100,7 +100,7 @@ public class ExampleSteps extends Steps {
                 .extractAs(Example.class);
     }
 
-    @Step("Удаление Примера продуктового каталога по id")
+    @Step("Удаление Примера по id")
     public static void deleteExampleById(String id) {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
@@ -108,7 +108,7 @@ public class ExampleSteps extends Steps {
                 .assertStatus(204);
     }
 
-    @Step("Удаление Примера продуктового каталога по имени")
+    @Step("Удаление Примера по имени")
     public static void deleteExampleByName(String name) {
         deleteExampleById(getExampleIdByNameWithMultiSearch(name));
     }

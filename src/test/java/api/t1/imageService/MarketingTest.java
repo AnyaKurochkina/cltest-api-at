@@ -32,7 +32,7 @@ public class MarketingTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1263334")
     @DisplayName("Получение marketing по id")
     public void getMarketingByIdTest() {
         Marketing marketing = Marketing.builder()
@@ -70,7 +70,7 @@ public class MarketingTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1263320")
     @DisplayName("Удаление marketing по id")
     public void deleteMarketingTest() {
         Marketing marketing = Marketing.builder()

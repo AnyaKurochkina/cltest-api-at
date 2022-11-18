@@ -7,9 +7,7 @@ import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
@@ -25,6 +23,9 @@ import static steps.productCatalog.VisualTemplateSteps.*;
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class ItemVisualTemplate extends Entity implements IProductCatalog {
 
     @JsonProperty("event_type")
