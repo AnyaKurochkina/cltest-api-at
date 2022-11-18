@@ -30,6 +30,24 @@ public class ProductSteps extends Steps {
                 .extractAs(GetProductList.class).getList();
     }
 
+    @Step("Получение списка продуктов по фильтру {filter}")
+    public static List<Product> getProductListByFilter(String filter) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get(productUrl + "?{}", filter)
+                .extractAs(GetProductList.class).getList();
+    }
+
+    @Step("Создание продукта")
+    public static Product createProduct(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post("/api/v1/products/")
+                .assertStatus(201)
+                .extractAs(Product.class);
+    }
+
     @Step("Проверка сортировки списка продуктов")
     public static boolean isProductListSorted(List<Product> list) {
         if (list.isEmpty() || list.size() == 1) {

@@ -17,7 +17,7 @@ public class EditServiceTest extends ServiceBaseTest {
         service.setDescription("new description");
         service.setGraphVersion("Последняя");
         new IndexPage().goToServicesListPagePC()
-                .findAndOpenServicePage(service.getServiceName())
+                .findAndOpenServicePage(service.getName())
                 .setAttributes(service)
                 .saveWithPatchVersion();
         service.setVersion("1.0.1");

@@ -85,11 +85,9 @@ public class GraphItem {
     private Boolean lockOrderOnError;
     @JsonProperty("icon_store_id")
     private Object iconStoreId;
-    private String jsonTemplate;
 
     public JSONObject toJson() {
-        jsonTemplate = "productCatalog/graphs/GraphItem.json";
-        return JsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate("productCatalog/graphs/GraphItem.json")
                 .set("$.is_sequential", isSequential)
                 .set("$.hold", hold)
                 .set("$.template_version", templateVersion)

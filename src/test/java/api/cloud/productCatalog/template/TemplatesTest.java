@@ -11,7 +11,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.Template;
+import models.cloud.productCatalog.template.Template;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.icon.Icon;
@@ -48,10 +48,10 @@ public class TemplatesTest extends Tests {
     public void createTemplate() {
         String templateName = "create_template_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .build()
                 .createObject();
-        GetImpl getTemplate = steps.getById(String.valueOf(template.getTemplateId()), GetTemplateResponse.class);
+        GetImpl getTemplate = steps.getById(String.valueOf(template.getId()), GetTemplateResponse.class);
         assertEquals(templateName, getTemplate.getName());
     }
 
@@ -66,12 +66,12 @@ public class TemplatesTest extends Tests {
                 .createObject();
         String templateName = "create_template_with_icon_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-        GetTemplateResponse actualTemplate =(GetTemplateResponse) steps.getById(String.valueOf(template.getTemplateId()), GetTemplateResponse.class);
+        GetTemplateResponse actualTemplate =(GetTemplateResponse) steps.getById(String.valueOf(template.getId()), GetTemplateResponse.class);
         assertFalse(actualTemplate.getIconStoreId().isEmpty());
         assertFalse(actualTemplate.getIconUrl().isEmpty());
     }
@@ -87,20 +87,20 @@ public class TemplatesTest extends Tests {
                 .createObject();
         String templateName = "create_first_template_with_same_icon_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
 
         Template secondTemplate = Template.builder()
-                .templateName("create_second_template_with_same_icon_test_api")
+                .name("create_second_template_with_same_icon_test_api")
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-        GetTemplateResponse actualFirstTemplate =(GetTemplateResponse) steps.getById(String.valueOf(template.getTemplateId()), GetTemplateResponse.class);
-        GetTemplateResponse actualSecondTemplate =(GetTemplateResponse) steps.getById(String.valueOf(secondTemplate.getTemplateId()), GetTemplateResponse.class);
+        GetTemplateResponse actualFirstTemplate =(GetTemplateResponse) steps.getById(String.valueOf(template.getId()), GetTemplateResponse.class);
+        GetTemplateResponse actualSecondTemplate =(GetTemplateResponse) steps.getById(String.valueOf(secondTemplate.getId()), GetTemplateResponse.class);
         assertEquals(actualFirstTemplate.getIconUrl(), actualSecondTemplate.getIconUrl());
         assertEquals(actualFirstTemplate.getIconStoreId(), actualSecondTemplate.getIconStoreId());
     }
@@ -111,10 +111,10 @@ public class TemplatesTest extends Tests {
     public void existTemplateByName() {
         String templateName = "create_template_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .build()
                 .createObject();
-        Assertions.assertTrue(steps.isExists(template.getTemplateName()));
+        Assertions.assertTrue(steps.isExists(template.getName()));
         Assertions.assertFalse(steps.isExists("no_exist_template"));
     }
 
@@ -124,10 +124,10 @@ public class TemplatesTest extends Tests {
     public void getTemplateById() {
         String templateName = "get_by_id_template_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .build()
                 .createObject();
-        steps.getById(String.valueOf(template.getTemplateId()), GetTemplateResponse.class);
+        steps.getById(String.valueOf(template.getId()), GetTemplateResponse.class);
     }
 
     @DisplayName("Копирование шаблона по Id и удаление этого клона")
@@ -136,13 +136,13 @@ public class TemplatesTest extends Tests {
     public void copyTemplateById() {
         String templateName = "copy_by_id_template_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .build()
                 .createObject();
-        String cloneName = template.getTemplateName() + "-clone";
-        steps.copyById(String.valueOf(template.getTemplateId()));
+        String cloneName = template.getName() + "-clone";
+        steps.copyById(String.valueOf(template.getId()));
         Assertions.assertTrue(steps.isExists(cloneName));
-        steps.deleteByName(template.getTemplateName() + "-clone", GetTemplateListResponse.class);
+        steps.deleteByName(template.getName() + "-clone", GetTemplateListResponse.class);
         Assertions.assertFalse(steps.isExists(cloneName));
     }
 
@@ -152,13 +152,13 @@ public class TemplatesTest extends Tests {
     public void partialUpdateTemplateById() {
         String templateName = "partial_update_template_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .build()
                 .createObject();
         String expectedValue = "UpdateDescription";
-        steps.partialUpdateObject(String.valueOf(template.getTemplateId()), new JSONObject()
+        steps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("description", expectedValue));
-        String actual = steps.getById(String.valueOf(template.getTemplateId()), GetTemplateResponse.class)
+        String actual = steps.getById(String.valueOf(template.getId()), GetTemplateResponse.class)
                 .getDescription();
         Assertions.assertEquals(expectedValue, actual);
     }
@@ -204,21 +204,21 @@ public class TemplatesTest extends Tests {
     @Test
     public void updateTemplateAndGetVersion() {
         Template templateTest = Template.builder()
-                .templateName("template_version_test_api")
+                .name("template_version_test_api")
                 .version("1.0.999")
                 .priority(0)
                 .build().createObject();
-        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("priority", 1));
-        String currentVersion = steps.getById(String.valueOf(templateTest.getTemplateId()), GetTemplateResponse.class).getVersion();
+        steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 1));
+        String currentVersion = steps.getById(String.valueOf(templateTest.getId()), GetTemplateResponse.class).getVersion();
         assertEquals("1.1.0", currentVersion);
-        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("priority", 2)
+        steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 2)
                 .put("version", "1.999.999"));
-        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("priority", 3));
-        currentVersion = steps.getById(String.valueOf(templateTest.getTemplateId()), GetTemplateResponse.class).getVersion();
+        steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 3));
+        currentVersion = steps.getById(String.valueOf(templateTest.getId()), GetTemplateResponse.class).getVersion();
         assertEquals("2.0.0", currentVersion);
-        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("priority", 4)
+        steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 4)
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(String.valueOf(templateTest.getTemplateId()), new JSONObject().put("priority", 5))
+        steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 5))
                 .assertStatus(500);
     }
 
@@ -256,17 +256,17 @@ public class TemplatesTest extends Tests {
     public void checkAccessWithPublicToken() {
         String templateName = "check_access_template_test_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .build()
                 .createObject();
         steps.getObjectByNameWithPublicToken(templateName).assertStatus(200);
         steps.createProductObjectWithPublicToken(steps.createJsonObject("create_object_with_public_token_api"))
                 .assertStatus(403);
-        steps.partialUpdateObjectWithPublicToken(String.valueOf(template.getTemplateId()), new JSONObject()
+        steps.partialUpdateObjectWithPublicToken(String.valueOf(template.getId()), new JSONObject()
                 .put("description", "UpdateDescription")).assertStatus(403);
-        steps.putObjectByIdWithPublicToken(String.valueOf(template.getTemplateId()), steps
+        steps.putObjectByIdWithPublicToken(String.valueOf(template.getId()), steps
                 .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
-        steps.deleteObjectWithPublicToken(String.valueOf(template.getTemplateId())).assertStatus(403);
+        steps.deleteObjectWithPublicToken(String.valueOf(template.getId())).assertStatus(403);
     }
 
     @DisplayName("Удаление шаблона")
@@ -274,10 +274,10 @@ public class TemplatesTest extends Tests {
     @Test
     public void deleteTemplate() {
         Template template = Template.builder()
-                .templateName("check_access_template_test_api")
+                .name("check_access_template_test_api")
                 .build()
                 .createObject();
-        steps.deleteById(String.valueOf(template.getTemplateId()));
+        steps.deleteById(String.valueOf(template.getId()));
     }
 
     @Test
@@ -286,13 +286,13 @@ public class TemplatesTest extends Tests {
     public void dumpToGitlabTemplate() {
         String templateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Template template = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .title(templateName)
                 .version("1.0.0")
                 .build()
                 .createObject();
         String tag = "template_" + templateName + "_" + template.getVersion();
-        Response response = steps.dumpToBitbucket(String.valueOf(template.getTemplateId()));
+        Response response = steps.dumpToBitbucket(String.valueOf(template.getId()));
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         assertEquals(tag, response.jsonPath().get("tag"));
     }
@@ -303,7 +303,7 @@ public class TemplatesTest extends Tests {
     public void loadFromGitlabTemplate() {
         String templateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
         JSONObject jsonObject = Template.builder()
-                .templateName(templateName)
+                .name(templateName)
                 .title(templateName)
                 .version("1.0.0")
                 .build()
@@ -324,12 +324,12 @@ public class TemplatesTest extends Tests {
     @Test
     public void deleteTemplateUsedInGraphNode() {
         Template template = Template.builder()
-                .templateName("delete_template_used_in_graph_node")
+                .name("delete_template_used_in_graph_node")
                 .build()
                 .createObject();
         JSONObject graphItem = GraphItem.builder()
                 .name("graph_node_test_api")
-                .templateId(template.getTemplateId())
+                .templateId(template.getId())
                 .build()
                 .toJson();
         Graph graph = Graph.builder()
@@ -341,10 +341,10 @@ public class TemplatesTest extends Tests {
         list.add(graphItem);
         JSONObject obj = new JSONObject().put("graph", list);
         partialUpdateGraph(graph.getGraphId(), obj);
-        String errMsg = steps.getDeleteObjectResponse(Integer.toString(template.getTemplateId())).assertStatus(400)
+        String errMsg = steps.getDeleteObjectResponse(Integer.toString(template.getId())).assertStatus(400)
                 .jsonPath().getString("err");
         String expectedErrorMessage = String.format("Нельзя удалить шаблон: %s. Он используется:\nGraph: (name: %s, version: %s)"
-        , template.getTemplateName(), graph.getName(), "1.0.1");
+        , template.getName(), graph.getName(), "1.0.1");
         assertEquals(expectedErrorMessage, errMsg);
     }
 }

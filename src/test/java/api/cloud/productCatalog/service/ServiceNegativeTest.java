@@ -3,7 +3,7 @@ package api.cloud.productCatalog.service;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -28,12 +28,12 @@ public class ServiceNegativeTest extends Tests {
     public void createServiceWithSameName() {
         String name = "create_service_with_same_name_test_api";
         Service service = Service.builder()
-                .serviceName(name)
+                .name(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        steps.createProductObject(steps.createJsonObject(service.getServiceName()))
+        steps.createProductObject(steps.createJsonObject(service.getName()))
                 .assertStatus(400);
     }
 
@@ -43,12 +43,12 @@ public class ServiceNegativeTest extends Tests {
     public void getServiceByIdWithOutToken() {
         String name = "get_service_without_token_test_api";
         Service service = Service.builder()
-                .serviceName(name)
+                .name(name)
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        steps.getByIdWithOutToken(service.getServiceId());
+        steps.getByIdWithOutToken(service.getId());
     }
 
     @DisplayName("Негативный тест на копирование сервиса по Id без токена")
@@ -56,12 +56,12 @@ public class ServiceNegativeTest extends Tests {
     @Test
     public void copyServiceWithOutToken() {
         Service service = Service.builder()
-                .serviceName("copy_service_with_out_token_test_api")
+                .name("copy_service_with_out_token_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        steps.copyByIdWithOutToken(service.getServiceId());
+        steps.copyByIdWithOutToken(service.getId());
     }
 
     @DisplayName("Негативный тест на обновление сервиса по Id без токена")
@@ -69,12 +69,12 @@ public class ServiceNegativeTest extends Tests {
     @Test
     public void updateServiceByIdWithOutToken() {
         Service service = Service.builder()
-                .serviceName("update_service_with_out_token_test_api")
+                .name("update_service_with_out_token_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        steps.partialUpdateObjectWithOutToken(String.valueOf(service.getServiceId()),
+        steps.partialUpdateObjectWithOutToken(String.valueOf(service.getId()),
                 new JSONObject().put("description", "UpdateDescription"));
     }
 
@@ -82,24 +82,24 @@ public class ServiceNegativeTest extends Tests {
     @TmsLink("643518")
     @Test
     public void createServiceWithInvalidCharacters() {
-        Service.builder().serviceName("NameWithUppercase").build().negativeCreateRequest(500);
-        Service.builder().serviceName("nameWithUppercaseInMiddle").build().negativeCreateRequest(500);
-        Service.builder().serviceName("имя").build().negativeCreateRequest(500);
-        Service.builder().serviceName("Имя").build().negativeCreateRequest(500);
-        Service.builder().serviceName("a&b&c").build().negativeCreateRequest(500);
-        Service.builder().serviceName("").build().negativeCreateRequest(400);
-        Service.builder().serviceName(" ").build().negativeCreateRequest(400);
+        Service.builder().name("NameWithUppercase").build().negativeCreateRequest(500);
+        Service.builder().name("nameWithUppercaseInMiddle").build().negativeCreateRequest(500);
+        Service.builder().name("имя").build().negativeCreateRequest(500);
+        Service.builder().name("Имя").build().negativeCreateRequest(500);
+        Service.builder().name("a&b&c").build().negativeCreateRequest(500);
+        Service.builder().name("").build().negativeCreateRequest(400);
+        Service.builder().name(" ").build().negativeCreateRequest(400);
     }
 
     @DisplayName("Негативный тест на создание сервиса с недопустимыми graph_id")
     @TmsLink("643522")
     @Test
     public void createServiceWithInvalidGraphId() {
-        Service.builder().serviceName("create_service_with_not_exist_graph_id")
+        Service.builder().name("create_service_with_not_exist_graph_id")
                 .graphId("dgdh-4565-dfgdf")
                 .build()
                 .negativeCreateRequest(400);
-        Service.builder().serviceName("create_service_with_not_exist_graph_id")
+        Service.builder().name("create_service_with_not_exist_graph_id")
                 .graphId("create_service2_with_not_exist_graph_id")
                 .build()
                 .negativeCreateRequest(400);
@@ -110,12 +110,12 @@ public class ServiceNegativeTest extends Tests {
     @Test
     public void deleteServiceWithOutToken() {
         Service service = Service.builder()
-                .serviceName("delete_service_with_out_token_test_api")
+                .name("delete_service_with_out_token_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        steps.deleteObjectByIdWithOutToken(String.valueOf(service.getServiceId()));
+        steps.deleteObjectByIdWithOutToken(String.valueOf(service.getId()));
     }
 
     @Test
@@ -124,11 +124,11 @@ public class ServiceNegativeTest extends Tests {
     public void setInvalidCurrentVersionService() {
         String name = "invalid_current_version_service_test_api";
         Service service = Service.builder()
-                .serviceName(name)
+                .name(name)
                 .title(name)
                 .version("1.0.0")
                 .build().createObject();
-        String serviceId = service.getServiceId();
+        String serviceId = service.getId();
         steps.partialUpdateObject(serviceId, new JSONObject().put("current_version", "2")).assertStatus(500);
     }
 
@@ -137,7 +137,7 @@ public class ServiceNegativeTest extends Tests {
     @Test
     public void createServiceWithOutStartBtnLabel() {
         JSONObject json = Service.builder()
-                .serviceName("delete_service_with_out_token_test_api")
+                .name("delete_service_with_out_token_test_api")
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .startBtnLabel("")

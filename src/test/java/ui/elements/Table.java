@@ -85,6 +85,10 @@ public class Table implements TypifiedElement {
         return false;
     }
 
+    public int rowSize() {
+        return rows.size();
+    }
+
     @Step("Проверка, что в колонке '{column}' есть значение, содержащее '{value}'")
     public boolean isColumnValueContains(String column, String value) {
         if(isEmpty())

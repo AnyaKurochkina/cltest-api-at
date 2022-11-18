@@ -45,7 +45,7 @@ public class DropDown implements TypifiedElement {
         if (element.getText().equals(value))
             return;
         element.shouldBe(clickableCnd).click();
-        $x("//li[text()='{}']", value)
+        $x("//li[.='{}']", value)
                 .shouldBe(Condition.enabled)
                 .click();
     }

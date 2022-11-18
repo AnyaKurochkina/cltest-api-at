@@ -1,5 +1,6 @@
 package steps.productCatalog;
 
+import api.cloud.productCatalog.IProductCatalog;
 import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -9,7 +10,7 @@ import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
-import httpModels.productCatalog.itemVisualItem.getVisualTemplate.GetVisualTemplateResponse;
+
 import httpModels.productCatalog.product.getProducts.getProductsExportList.ExportItem;
 import httpModels.productCatalog.product.getProducts.getProductsExportList.GetProductsExportList;
 import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
@@ -145,14 +146,6 @@ public class ProductCatalogSteps {
         return (GetImpl) new Http(ProductCatalogURL)
                 .setRole(Role.ORDER_SERVICE_ADMIN)
                 .get(productName + objectId + "/")
-                .extractAs(clazz);
-    }
-
-    @Step("Получение объекта продуктового каталога по Id и Env")
-    public GetImpl getByIdAndEnv(String objectId, String env, Class<?> clazz) {
-        return (GetImpl) new Http(ProductCatalogURL)
-                .setRole(Role.ORDER_SERVICE_ADMIN)
-                .get(productName + objectId + "/?env={}", env)
                 .extractAs(clazz);
     }
 
@@ -390,15 +383,6 @@ public class ProductCatalogSteps {
                 .extractAs(clazz);
     }
 
-    @Step("Получение шаблона визуализации по event_type и event_provider")
-    public GetVisualTemplateResponse getItemVisualTemplate(String eventType, String eventProvider) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + "item_visual_template/" + eventType + "/" + eventProvider + "/")
-                .assertStatus(200)
-                .extractAs(GetVisualTemplateResponse.class);
-    }
-
     @Step("Сортировка объектов по дате создания")
     public GetListImpl orderingByCreateData(Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
@@ -465,13 +449,13 @@ public class ProductCatalogSteps {
     }
 
     @Step("Проверка сортировки списка")
-    public boolean isSorted(List<ItemImpl> list) {
+    public static boolean isSorted(List<? extends IProductCatalog> list) {
         if (list.isEmpty() || list.size() == 1) {
             return true;
         }
         for (int i = 0; i < list.size() - 1; i++) {
-            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
-            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateDt());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateDt());
             String currentName = delNoDigOrLet(list.get(i).getName());
             String nextName = delNoDigOrLet(list.get(i + 1).getName());
             if (currentTime.isBefore(nextTime) || (currentTime.isEqual(nextTime) && currentName.compareToIgnoreCase(nextName) > 0)) {

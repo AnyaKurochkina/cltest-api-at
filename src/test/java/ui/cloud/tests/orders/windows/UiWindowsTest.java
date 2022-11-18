@@ -234,7 +234,6 @@ public class UiWindowsTest extends UiProductTest {
     @Test
     @Order(17)
     @TmsLink("1171958")
-    @EnabledIfEnv("prod")
     @DisplayName("UI Windows. Мониторинг ОС")
     void monitoringOs() {
         WindowsPage winPage = new WindowsPage(product);
