@@ -23,13 +23,13 @@ new SshKeysPage().deleteKey("superKey2");
 
     public void addKey(String nameKey, String login) {
         new KeysTable().clickAdd();
-        new Dialog("Добавление SSH-ключа")
+        Dialog.byTitle("Добавление SSH-ключа")
                 .setInputValue("Название ключа", nameKey)
                 .setInputValue("Логин пользователя", login)
                 .setTextarea(TextArea.byName("sshKeyData"), SSH_KEY)
                 .clickButton("Добавить");
         new Alert().checkText("SSH-ключ {} создан успешно", nameKey).checkColor(Alert.Color.GREEN);
-        new KeysTable().isColumnValueEquals(KeysTable.COLUMN_NAME, nameKey);
+        Assertions.assertTrue(new KeysTable().isColumnValueEquals(KeysTable.COLUMN_NAME, nameKey));
     }
 
     public void copyKey(String nameKey) {
@@ -40,23 +40,24 @@ new SshKeysPage().deleteKey("superKey2");
 
     public void deleteKey(String nameKey) {
         new Menu(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Удалить");
-        new Dialog("Подтверждение удаления").clickButton("Удалить");
+        Dialog.byTitle("Подтверждение удаления").clickButton("Удалить");
         new Alert().checkText("SSH-ключ {} удален успешно", nameKey).checkColor(Alert.Color.GREEN);
+        Assertions.assertFalse(new KeysTable().isColumnValueEquals(KeysTable.COLUMN_NAME, nameKey));
     }
 
     public void editKey(String nameKey, String newNameKey) {
         new Menu(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Редактировать");
-        new Dialog("Редактирование SSH-ключа")
+        Dialog.byTitle("Редактирование SSH-ключа")
                 .setInputValue("Название ключа", newNameKey)
                 .clickButton("Сохранить");
-        new KeysTable().isColumnValueEquals(KeysTable.COLUMN_NAME, newNameKey);
+        Assertions.assertTrue(new KeysTable().isColumnValueEquals(KeysTable.COLUMN_NAME, newNameKey));
     }
 
     private static class KeysTable extends DataTable {
         public static final String COLUMN_NAME = "Название";
 
         public KeysTable() {
-            super("Ключ");
+            super(COLUMN_NAME);
         }
     }
 }

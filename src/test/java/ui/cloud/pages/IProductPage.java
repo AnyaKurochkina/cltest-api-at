@@ -117,7 +117,7 @@ public abstract class IProductPage {
         button.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
         $$x("//li[.='{}']", action).shouldBe(CollectionCondition.anyMatch("Ожидание отображения пункта меню", WebElement::isDisplayed))
                 .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Dialog dlgActions = new Dialog(action);
+        Dialog dlgActions = Dialog.byTitle(action);
         if (params.isCheckPreBilling())
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")

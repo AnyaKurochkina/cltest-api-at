@@ -63,7 +63,7 @@ public class ScyllaPage extends IProductPage {
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
-            Dialog dlgActions = new Dialog("Удаление");
+            Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         new ScyllaPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaPage.VirtualMachineTable.POWER_STATUS_DELETED);
@@ -86,7 +86,7 @@ public class ScyllaPage extends IProductPage {
         new ScyllaPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaPage.VirtualMachineTable.POWER_STATUS_ON);
         if (noDataDb.exists() || !(new Table("").isColumnValueEquals(HEADER_NAME_DB, name))) {
             runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
-                Dialog dlg = new Dialog("Добавить БД");
+                Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя хранилища ключей", name);
             });
             btnGeneralInfo.shouldBe(Condition.enabled).click();
@@ -98,7 +98,7 @@ public class ScyllaPage extends IProductPage {
         new ScyllaPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaPage.VirtualMachineTable.POWER_STATUS_ON);
         if (!(new Table(HEADER_NAME_USER_DB).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb))) {
             runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
-                Dialog dlg = new Dialog("Добавить пользователя");
+                Dialog dlg = Dialog.byTitle("Добавить пользователя");
                 dlg.setInputValue("Имя пользователя", nameUserDb);
                 generatePassButton.shouldBe(Condition.enabled).click();
                 new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
@@ -133,7 +133,7 @@ public class ScyllaPage extends IProductPage {
 
     public void resetPasswordUserDb(String nameUserDB) {
         runActionWithParameters(nameUserDB, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });

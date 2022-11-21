@@ -10,8 +10,16 @@ import static core.helper.StringUtils.$x;
 public class Dialog implements TypifiedElement {
     SelenideElement dialog;
 
+    public Dialog(SelenideElement dialog) {
+        this.dialog = dialog;
+    }
+
     public Dialog(String title) {
-        dialog = $x("//h2[.='{}']/ancestor::div[@role='dialog']", title);
+        this.dialog = $x("//h2[.='{}']/ancestor::div[@role='dialog']", title);
+    }
+
+    public static Dialog byTitle(String title) {
+        return new Dialog(title);
     }
 
     public Dialog setInputValue(String label, String value){
@@ -29,6 +37,11 @@ public class Dialog implements TypifiedElement {
 
     public Dialog setTextarea(TextArea textarea, String text){
         textarea.setValue(text);
+        return this;
+    }
+
+    public Dialog setCheckBox(CheckBox checkBox, boolean checked){
+        checkBox.setChecked(checked);
         return this;
     }
 
