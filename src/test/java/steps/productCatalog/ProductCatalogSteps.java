@@ -10,11 +10,8 @@ import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
 import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
-
 import httpModels.productCatalog.product.getProducts.getProductsExportList.ExportItem;
 import httpModels.productCatalog.product.getProducts.getProductsExportList.GetProductsExportList;
-import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
-import httpModels.productCatalog.product.getProducts.response.ListItem;
 import httpModels.productCatalog.productOrgInfoSystem.createInfoSystem.CreateInfoSystemResponse;
 import httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.GetInfoSystemListResponse;
 import io.qameta.allure.Step;
@@ -509,13 +506,7 @@ public class ProductCatalogSteps {
         return false;
     }
 
-    public List<ListItem> getProductListByProjectContext(String projectId) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/projects/" + projectId + "/products/?is_open=true")
-                .assertStatus(200)
-                .extractAs(GetProductsResponse.class).getList();
-    }
+
 
     public Response getProductByContextProject(String projectId, String productId) {
         return new Http(ProductCatalogURL)
@@ -556,6 +547,7 @@ public class ProductCatalogSteps {
     }
 
     @Step("Получение файла экспорта списка продуктов")
+    // TODO: 21.11.2022 сравнение с jsonshema
     public List<ExportItem> getProductsExportList() {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)

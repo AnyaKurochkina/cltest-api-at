@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.graph;
 
-import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
 import io.qameta.allure.Epic;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.template.Template;
@@ -18,6 +17,8 @@ import java.util.UUID;
 
 import static steps.productCatalog.GraphSteps.deleteGraphById;
 import static steps.productCatalog.GraphSteps.getGraphByName;
+import static steps.productCatalog.TemplateSteps.deleteTemplateById;
+import static steps.productCatalog.TemplateSteps.getTemplateByName;
 
 @Epic("Конструктор.Графы")
 @DisabledIfEnv("prod")
@@ -84,8 +85,6 @@ public class GraphBaseTest extends BaseTest {
     }
 
     public void deleteTemplate(String name) {
-        ProductCatalogSteps steps = new ProductCatalogSteps(Template.productName);
-        steps.getDeleteObjectResponse(steps
-                .getProductObjectIdByNameWithMultiSearch(name, GetTemplateListResponse.class)).assertStatus(204);
+        deleteTemplateById(getTemplateByName(name).getId());
     }
 }
