@@ -2,18 +2,13 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import models.orderService.products.ClickHouse;
-import models.orderService.products.PostgresSQLCluster;
-import models.subModels.Flavor;
+import models.cloud.orderService.products.ClickHouse;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
-import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
-import static ui.elements.TypifiedElement.scrollCenter;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 
 public class ClickHousePage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
@@ -55,7 +50,7 @@ public class ClickHousePage extends IProductPage {
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
-            Dialog dlgActions = new Dialog("Удаление");
+            Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         new ClickHousePage.VirtualMachineTable("Питание").checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_DELETED);
@@ -101,7 +96,7 @@ public class ClickHousePage extends IProductPage {
         new ClickHousePage.VirtualMachineTable("Питание").checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_ON);
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_DB_OWNER, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
@@ -110,7 +105,7 @@ public class ClickHousePage extends IProductPage {
     public void resetPasswordUserDb() {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_DB_USERS, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });

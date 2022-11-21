@@ -11,12 +11,12 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
-import models.authorizer.Project;
-import models.authorizer.ProjectEnvironmentPrefix;
-import models.orderService.ResourcePool;
-import models.orderService.interfaces.IProduct;
-import models.orderService.interfaces.ProductStatus;
-import models.subModels.Item;
+import models.cloud.authorizer.Project;
+import models.cloud.authorizer.ProjectEnvironmentPrefix;
+import models.cloud.orderService.ResourcePool;
+import models.cloud.orderService.interfaces.IProduct;
+import models.cloud.orderService.interfaces.ProductStatus;
+import models.cloud.subModels.Item;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
@@ -27,10 +27,7 @@ import steps.tarifficator.CostSteps;
 import java.lang.reflect.Type;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static core.helper.Configure.OrderServiceURL;
@@ -450,9 +447,12 @@ public class OrderServiceSteps extends Steps {
         return (Comparable<T>) getProductsField(product, path, null);
     }
 
+    public static Object getProductsField(IProduct product, String path, Class<?> clazz) {
+        return getProductsField(product,path,clazz, true);
+    }
 
     @Step("Получение значения по пути {path}")
-    public static Object getProductsField(IProduct product, String path, Class<?> clazz) {
+    public static Object getProductsField(IProduct product, String path, Class<?> clazz, boolean assertion) {
         Object s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(OrderServiceURL)
@@ -464,9 +464,28 @@ public class OrderServiceSteps extends Steps {
             s = jsonPath.getObject(path, clazz);
         else
             s = jsonPath.get(path);
-        log.info(String.format("getFiledProduct return: %s", s));
-        Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
+        if(assertion) {
+            log.info(String.format("getFiledProduct return: %s", s));
+            Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
+        }
         return s;
+    }
+
+    @Step("Получение объекта класса по пути {path}")
+    public static Object getObjectClass(IProduct product, String path, Class<?> clazz) {
+        String object = new Gson().toJson(getProductsField(product, path, Map.class, false));
+        return JsonHelper.deserialize(object, clazz);
+    }
+
+    @Step("Получение сетевого сегмента для продукта {product}")
+    public static String getNetSegment(IProduct product) {
+        return Objects.requireNonNull(new Http(OrderServiceURL)
+                .setProjectId(product.getProjectId())
+                .get("/v1/net_segments?project_name={}&with_restrictions=true&product_name={}&page=1&per_page=25",
+                        Objects.requireNonNull(product).getProjectId(), product.getProductCatalogName())
+                .assertStatus(200)
+                .jsonPath()
+                .getString("list[0].code"), "Список сетевых сегментов пуст");
     }
 
     @Step("Удаление всех заказов")
@@ -474,7 +493,7 @@ public class OrderServiceSteps extends Steps {
         Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(Objects.requireNonNull(env)))
                 .isForOrders(true).build().createObject();
         List<String> orders = new Http(OrderServiceURL)
-                .setProjectId(project.id)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success", project.id)
                 .assertStatus(200)
                 .jsonPath()
@@ -483,7 +502,8 @@ public class OrderServiceSteps extends Steps {
         for (String order : orders) {
             try {
                 JsonPath jsonPath = new Http(OrderServiceURL)
-                        .setProjectId(project.id)
+//                        .setProjectId(project.id)
+                        .setRole(Role.CLOUD_ADMIN)
                         .get("/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
                 String itemId = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.item_id");
@@ -494,7 +514,7 @@ public class OrderServiceSteps extends Steps {
                 JsonHelper.getJsonTemplate("/actions/template.json")
                         .set("$.item_id", itemId)
                         .send(OrderServiceURL)
-                        .setProjectId(project.id)
+                        .setRole(Role.CLOUD_ADMIN)
                         .patch("/v1/projects/{}/orders/{}/actions/{}", project.id, order, action)
                         .assertStatus(200);
             } catch (Throwable e) {
@@ -504,7 +524,7 @@ public class OrderServiceSteps extends Steps {
 
         if (Configure.ENV.equalsIgnoreCase("IFT")) {
             orders = new Http(OrderServiceURL)
-                    .setProjectId(project.id)
+                    .setRole(Role.CLOUD_ADMIN)
                     .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=failure&f[status][]=pending", project.id)
                     .assertStatus(200)
                     .jsonPath()

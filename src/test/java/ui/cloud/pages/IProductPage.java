@@ -8,8 +8,9 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.interfaces.IProduct;
+import models.cloud.orderService.interfaces.IProduct;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
@@ -21,11 +22,10 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.codeborne.selenide.Selenide.open;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Log4j2
@@ -33,12 +33,13 @@ import static ui.elements.TypifiedElement.scrollCenter;
 public abstract class IProductPage {
     IProduct product;
     Double preBillingCostAction;
-    SelenideElement productName = $x("(//button[@title='Редактировать']/ancestor::*/span)[1]");
+    SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
 
     abstract void checkPowerStatus(String expectedStatus);
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
+    SelenideElement btnMonitoringOs = $x("//button[.='Мониторинг ОС']");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
     SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
 
@@ -66,9 +67,11 @@ public abstract class IProductPage {
 
     @Step("Переключение 'Защита от удаления' в состояние '{expectValue}'")
     public void switchProtectOrder(String expectValue) {
+        ProductStatus status = new ProductStatus(expectValue);
         runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить",
                 () -> Input.byLabel("Включить защиту от удаления").click(), ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
-        new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$("*").shouldBe(Condition.attribute("title", expectValue));
+        new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$x("descendant::*[name()='svg']")
+                .shouldBe(Condition.match(expectValue, e -> new ProductStatus(e).equals(status)), Duration.ofSeconds(10));
     }
 
     public SelenideElement getBtnAction(String header) {
@@ -85,18 +88,36 @@ public abstract class IProductPage {
         return $x("//span[starts-with(text(),'AT-UI-')]").shouldBe(Condition.visible).getText();
     }
 
+    @Step("Проверка вкладки Мониторинг")
+    public void checkMonitoringOs() {
+        Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
+        btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        new MonitoringOsPage(product).check();
+    }
+
+    @Step("Проверка вкладки Мониторинг кластера")
+    public void checkClusterMonitoringOs() {
+        String column = "Роли узла";
+        int size = new Table(column).rowSize();
+        for (int i = 0; i < size; i++) {
+            SelenideElement element = new Table(column).getRowByIndex(i);
+            element.shouldBe(Condition.visible).scrollIntoView(scrollCenter).click();
+            Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
+            btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+            new MonitoringOsPage(product).check();
+            goToCluster();
+        }
+    }
+
     @Step("Запуск действия '{action}'")
     protected void runActionWithoutParameters(SelenideElement button, String action, ActionParameters params) {
-        String productNameText = null;
-        //btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
-        if(Objects.nonNull(params.getNode())){
-            productNameText = productName.getText();
+        if (Objects.nonNull(params.getNode())) {
             params.getNode().scrollIntoView(scrollCenter).click();
         }
         button.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
         $$x("//li[.='{}']", action).shouldBe(CollectionCondition.anyMatch("Ожидание отображения пункта меню", WebElement::isDisplayed))
                 .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Dialog dlgActions = new Dialog(action);
+        Dialog dlgActions = Dialog.byTitle(action);
         if (params.isCheckPreBilling())
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
@@ -104,9 +125,8 @@ public abstract class IProductPage {
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(2000);
-        if(Objects.nonNull(params.getNode())){
-            $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        }
+        if (Objects.nonNull(params.getNode()))
+            goToCluster();
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
@@ -118,8 +138,7 @@ public abstract class IProductPage {
     @Step("Запуск действия '{action}' с параметрами и последующим нажатием на кнопку {textButton}")
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         String productNameText = null;
-        //btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
-        if(Objects.nonNull(params.getNode())){
+        if (Objects.nonNull(params.getNode())) {
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
         }
@@ -133,14 +152,18 @@ public abstract class IProductPage {
         runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
-        Waiting.sleep(2000);
-        if(Objects.nonNull(params.getNode())){
+        Waiting.sleep(3000);
+        if (Objects.nonNull(params.getNode())) {
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
             checkLastAction(action);
+    }
+
+    public void goToCluster(){
+        $x("//a[.='{}']", productName.getText()).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
 
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable) {
@@ -176,11 +199,13 @@ public abstract class IProductPage {
     }
 
     @Step("Проверка статуса заказа")
-    public void checkErrorByStatus(String status) {
+    public void checkErrorByStatus(ProductStatus status) {
         if (status.equals(ProductStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
                     product, status, StateServiceSteps.getErrorFromStateService(product.getOrderId())));
-        }
+        } else if (status.equals(ProductStatus.BLOCKED)) {
+            Assertions.fail("Продукт в статусе заблокирован");
+        } else log.info("Статус действия {}", status);
     }
 
     @Step("Проверка на содержание необходимых столбцов на вкладке История действий")
@@ -209,12 +234,11 @@ public abstract class IProductPage {
             return getValueByColumnInFirstRow("Наименование").getText();
         }
 
-        public String lastActionStatus() {
-            return getValueByColumnInFirstRow("Статус").$$x("descendant::*[@title]")
+        public ProductStatus lastActionStatus() {
+            return getValueByColumnInFirstRow("Статус").$$x("descendant::*[name()='svg']")
                     .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                     .stream()
-                    .map(e -> e.getAttribute("title"))
-                    .filter(Objects::nonNull)
+                    .map(ProductStatus::new)
                     .filter(ProductStatus::isStatus)
                     .findFirst()
                     .orElseThrow(NotFoundException::new);
@@ -228,7 +252,7 @@ public abstract class IProductPage {
         waitChangeStatus();
         double currentCost = getCostOrder();
         executable.execute();
-        if(preBillingCostAction == null)
+        if (preBillingCostAction == null)
             return;
         TypifiedElement.refresh();
         currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
@@ -262,7 +286,7 @@ public abstract class IProductPage {
         }
 
         public String getPowerStatus(String header) {
-            return getValueByColumnInFirstRow(header).$x("descendant::*[@title]").getAttribute("title");
+            return new ProductStatus(getValueByColumnInFirstRow(header).$x("descendant::*[name()='svg']").scrollIntoView(scrollCenter)).getStatus();
         }
 
         public void checkPowerStatus(String status) {

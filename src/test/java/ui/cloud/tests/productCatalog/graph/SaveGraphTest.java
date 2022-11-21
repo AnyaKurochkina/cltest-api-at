@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.graph;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -8,9 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
-import ui.uiModels.Graph;
+import ui.models.Graph;
 
-@Epic("Графы")
 @Feature("Сохранение графа")
 public class SaveGraphTest extends GraphBaseTest {
 

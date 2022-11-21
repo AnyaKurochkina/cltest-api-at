@@ -3,7 +3,7 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
-import models.authorizer.GlobalUser;
+import models.cloud.authorizer.GlobalUser;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;

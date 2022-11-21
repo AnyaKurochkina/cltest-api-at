@@ -1,12 +1,9 @@
 {
+  "context_restrictions": [],
   "name": "string",
   "title": "string",
   "description": "api_at_test",
-  "event_type": [
-    "vm"
-  ],
-  "event_provider": [
-    "kafka"
+  "event_type_provider": [
   ],
   "config_restriction": "",
   "item_restriction": "",

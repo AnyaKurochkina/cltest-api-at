@@ -26,7 +26,7 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.apache.logging.log4j.util.PropertiesUtil;
 import org.apache.logging.log4j.util.StackLocatorUtil;
 import org.apache.logging.log4j.util.Strings;
-import tests.Tests;
+import api.Tests;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -10,10 +10,7 @@ import org.intellij.lang.annotations.Language;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,11 +51,12 @@ public final class StringUtils {
     }
 
     public static String getStackTraceThrowable(Throwable e) {
-        List<String> regexList = Arrays.asList(".at.tests.*([\\w\\W]*)", ".at ui.cloud.tests.*\\n([\\w\\W]*)");
+        List<String> regexList = Collections.singletonList(".at (api|ui)\\..*\\n([\\w\\W]*)");
         String stackTrace = ExceptionUtils.getStackTrace(e);
         for (@Language("regexp") String regex : regexList) {
-            String post = findByRegex(regex, stackTrace);
-            if (Objects.nonNull(post)) {
+            Matcher matcher = Pattern.compile(regex).matcher(stackTrace);
+            if (matcher.find()) {
+                String post = matcher.group(2);
                 stackTrace = stackTrace.substring(0, stackTrace.indexOf(post));
             }
         }
@@ -70,7 +68,7 @@ public final class StringUtils {
         for (StackTraceElement s : trace) {
             String e = s.toString();
             stack.add(e);
-            if (e.startsWith("tests.") || e.startsWith("ui.cloud.tests."))
+            if (e.startsWith("api.") || e.startsWith("ui."))
                 break;
         }
         return stack.toString();

@@ -7,8 +7,8 @@ import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.extern.log4j.Log4j2;
-import models.stateService.GetItemList;
-import models.stateService.Item;
+import models.cloud.stateService.GetItemList;
+import models.cloud.stateService.Item;
 import org.json.JSONObject;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
@@ -137,5 +137,24 @@ public class StateServiceSteps extends Steps {
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
                 .getList();
+    }
+
+    @Step("Получение списка items по фильтру {filter}")
+    public static List<Item> getItemsListByFilter(String filter) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/?{}", filter)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
+    @Step("Получение item по id={id} и фильтру {filter}")
+    public static Item getItemByIdAndFilter(String id, String filter) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/{}/?{}", id, filter)
+                .assertStatus(200)
+                .extractAs(Item.class);
     }
 }

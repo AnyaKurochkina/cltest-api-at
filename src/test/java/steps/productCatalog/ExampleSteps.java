@@ -4,9 +4,9 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
-import models.productCatalog.Meta;
-import models.productCatalog.example.Example;
-import models.productCatalog.example.GetExampleList;
+import models.cloud.productCatalog.Meta;
+import models.cloud.productCatalog.example.Example;
+import models.cloud.productCatalog.example.GetExampleList;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
@@ -26,6 +26,14 @@ public class ExampleSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + exampleId + "/")
+                .extractAs(Example.class);
+    }
+
+    @Step("Получение Примера продуктового каталога по Id и фильтру = {filter}")
+    public static Example getExampleByIdAndFilter(String exampleId, String filter) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(endPoint + exampleId + "/{}", filter)
                 .extractAs(Example.class);
     }
 
@@ -82,7 +90,7 @@ public class ExampleSteps extends Steps {
                 .assertStatus(200);
     }
 
-    @Step("Создание Примера продуктового каталога")
+    @Step("Создание Примера")
     public static Example createExample(JSONObject body) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
@@ -92,7 +100,7 @@ public class ExampleSteps extends Steps {
                 .extractAs(Example.class);
     }
 
-    @Step("Удаление Примера продуктового каталога по id")
+    @Step("Удаление Примера по id")
     public static void deleteExampleById(String id) {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
@@ -100,7 +108,7 @@ public class ExampleSteps extends Steps {
                 .assertStatus(204);
     }
 
-    @Step("Удаление Примера продуктового каталога по имени")
+    @Step("Удаление Примера по имени")
     public static void deleteExampleByName(String name) {
         deleteExampleById(getExampleIdByNameWithMultiSearch(name));
     }

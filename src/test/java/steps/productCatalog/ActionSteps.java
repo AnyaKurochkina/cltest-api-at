@@ -4,9 +4,10 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
-import models.productCatalog.Meta;
-import models.productCatalog.action.Action;
-import models.productCatalog.action.GetActionList;
+import models.cloud.feedService.action.EventTypeProvider;
+import models.cloud.productCatalog.Meta;
+import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.action.GetActionList;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ProductCatalogSteps.delNoDigOrLet;
 
 public class ActionSteps extends Steps {
@@ -109,9 +111,16 @@ public class ActionSteps extends Steps {
     @Step("Получение действия по Id")
     public static Action getActionById(String objectId) {
         return new Http(ProductCatalogURL)
-                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(actionUrl + objectId + "/")
                 .extractAs(Action.class);
+    }
+
+    @Step("Получение действия по Id под ролью Viewer")
+    public static Response getActionViewerById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+                .get(actionUrl + objectId + "/");
     }
 
     @Step("Импорт действия продуктового каталога")
@@ -190,11 +199,11 @@ public class ActionSteps extends Steps {
                 .getList();
     }
 
-    @Step("Получение действия по фильтру")
-    public static Action getActionByFilter(String id, String filter, Object value) {
+    @Step("Получение действия по фильтру = {filter}")
+    public static Action getActionByFilter(String id, String filter) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(actionUrl + "{}/?{}={}", id, filter, value)
+                .get(actionUrl + "{}/?{}", id, filter)
                 .assertStatus(200)
                 .extractAs(Action.class);
 
@@ -245,8 +254,8 @@ public class ActionSteps extends Steps {
     }
 
     @Step("Выгрузка действия из Gitlab")
-    public static Response loadActionFromGit(JSONObject body) {
-        return new Http(ProductCatalogURL)
+    public static void loadActionFromGit(JSONObject body) {
+        new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(actionUrl + "load_from_bitbucket/")
@@ -279,5 +288,35 @@ public class ActionSteps extends Steps {
                 .assertStatus(200)
                 .extractAs(GetActionList.class)
                 .getList();
+    }
+
+    @Step("Получение списка действий по списку type_provider")
+    public static List<Action> getActionListByTypeProvider(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .get(actionUrl)
+                .assertStatus(200)
+                .extractAs(GetActionList.class)
+                .getList();
+    }
+
+    public static void checkEventProvider(List<Action> actionList, String eventType, String eventProvider) {
+        for (Action action : actionList) {
+            List<EventTypeProvider> eventTypeProviderList = action.getEventTypeProvider();
+            assertTrue(isTypeProviderContains(eventType, eventProvider, eventTypeProviderList),
+                    String.format("%s не содержит eventType %s и %s eventProvider", action.getActionName(), eventType, eventProvider));
+        }
+    }
+
+    public static boolean isTypeProviderContains(String eventType, String eventProvider, List<EventTypeProvider> eventTypeProviderList) {
+        if (!eventTypeProviderList.isEmpty()) {
+            for (EventTypeProvider eventTypeProvider : eventTypeProviderList) {
+                if (eventTypeProvider.getEvent_type().equals(eventType) & eventTypeProvider.getEvent_provider().equals(eventProvider)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -5,13 +5,12 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By;
-import ui.uiInterfaces.Loadable;
 
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.*;
 
-public class ListOfOrganizationsPage implements Loadable {
+public class ListOfOrganizationsPage {
 
     private final SelenideElement plusBtn = $(By.xpath("//div[@data-testid='vdc-org-list-add-button']"));
     private final SelenideElement orgNameInput = $(By.xpath("//input[@name='name']"));
@@ -75,7 +74,6 @@ public class ListOfOrganizationsPage implements Loadable {
         }
     }
 
-    @Override
     public void checkPage() {
         oneOrganization.shouldBe(Condition.visible);
     }

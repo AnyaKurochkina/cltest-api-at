@@ -3,10 +3,11 @@ package ui.cloud.tests.productCatalog.action;
 import core.helper.JsonHelper;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.action.Action;
-import models.productCatalog.graph.Graph;
-import models.productCatalog.icon.Icon;
-import models.productCatalog.icon.IconStorage;
+import models.cloud.feedService.action.EventTypeProvider;
+import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.icon.Icon;
+import models.cloud.productCatalog.icon.IconStorage;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -14,11 +15,14 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ActionSteps;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.IndexPage;
+import models.cloud.productCatalog.enums.EventProvider;
+import models.cloud.productCatalog.enums.EventType;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.BaseTest;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -47,7 +51,7 @@ public class ActionTest extends BaseTest {
                 .createAction()
                 .fillAndSave(name, "create_action_test_ui", "test",
                         ItemStatus.ON, OrderStatus.DAMAGED, ActionType.ON, "configPath", "configKey",
-                        "valueOfData", graph.getTitle())
+                        "valueOfData", graph.getTitle(), EventType.VM, EventProvider.VSPHERE)
                 .isActionExist(name), "Созданное действие не найдено в списке действий.");
         deleteActionByName(name);
     }
@@ -125,6 +129,10 @@ public class ActionTest extends BaseTest {
                 .actionName(name)
                 .title(name)
                 .number(0)
+                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                        .event_type(EventType.VM.getValue())
+                        .event_provider(EventProvider.VSPHERE.getValue())
+                        .build()))
                 .build()
                 .createObject();
         partialUpdateAction(action.getActionId(), new JSONObject().put("priority", 1));
@@ -148,6 +156,10 @@ public class ActionTest extends BaseTest {
                 .actionName(name)
                 .title(name)
                 .number(0)
+                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                        .event_type(EventType.VM.getValue())
+                        .event_provider(EventProvider.VSPHERE.getValue())
+                        .build()))
                 .build()
                 .createObject();
         new IndexPage().goToActionsPage()
@@ -171,6 +183,10 @@ public class ActionTest extends BaseTest {
                 .actionName(name)
                 .title(name)
                 .number(0)
+                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                        .event_type(EventType.VM.getValue())
+                        .event_provider(EventProvider.VSPHERE.getValue())
+                        .build()))
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();

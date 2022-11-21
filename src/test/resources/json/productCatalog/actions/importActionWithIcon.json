@@ -9,14 +9,13 @@
     "graph_id": "bc367f5c-de97-4342-b13d-ee9355cc45bd",
     "multiple": false,
     "priority": 0,
-    "event_type": [],
     "extra_data": {
       "test": "test"
     },
     "description": "test_api",
     "allowed_paths": [],
     "graph_version": "1.0.0",
-    "event_provider": [],
+    "event_type_provider": [],
     "data_config_key": null,
     "data_config_path": null,
     "item_restriction": null,

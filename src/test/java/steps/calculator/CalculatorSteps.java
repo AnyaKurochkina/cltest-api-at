@@ -4,7 +4,7 @@ import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
-import models.calculator.CostOrder;
+import models.cloud.calculator.CostOrder;
 import steps.Steps;
 
 import static core.helper.Configure.CalculatorURL;

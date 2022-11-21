@@ -4,7 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseList;
+import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
@@ -15,13 +15,10 @@ import ui.elements.TypifiedElement;
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class ActionsListPage extends BaseList {
+public class ActionsListPage extends BaseListPage {
     private static final String NAME_COLUMN = "Код действия";
-    private static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
-    private final SelenideElement createButton = $x("//*[@title= 'Создать']");
     private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
-    private final SelenideElement importActionButton = $x("//button[@title='Импортировать действие']");
 
     public ActionsListPage() {
         SelenideElement actionPageTitle = $x("//div[text() = 'Действия']");
@@ -30,7 +27,8 @@ public class ActionsListPage extends BaseList {
 
     @Step("Создание действия")
     public ActionPage createAction() {
-        createButton.scrollIntoView(TypifiedElement.scrollCenter).click();
+        TestUtils.scrollToTheTop();
+        addNewObjectButton.click();
         return new ActionPage();
     }
 
@@ -84,8 +82,7 @@ public class ActionsListPage extends BaseList {
 
     @Step("Импорт действия из файла")
     public ActionsListPage importAction(String path) {
-        importActionButton.scrollIntoView(TypifiedElement.scrollCenter);
-        importActionButton.click();
+        importButton.scrollIntoView(TypifiedElement.scrollCenter).click();
         new InputFile(path).importFile();
         new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
         return this;

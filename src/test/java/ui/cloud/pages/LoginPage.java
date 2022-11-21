@@ -3,8 +3,8 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
-import models.authorizer.GlobalUser;
-import models.authorizer.Organization;
+import models.cloud.authorizer.GlobalUser;
+import models.cloud.authorizer.Organization;
 import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -24,9 +24,8 @@ public class LoginPage {
     }
 
     public LoginPage() {
-        open(getAppProp("url.control-panel"));
+        open("");
     }
-
 
     private IndexPage signIn(String user, String password){
         usernameInput.shouldBe(Condition.visible).val(user);

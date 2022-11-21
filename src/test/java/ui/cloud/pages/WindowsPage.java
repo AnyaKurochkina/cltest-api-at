@@ -3,8 +3,8 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.orderService.products.Windows;
-import models.subModels.Flavor;
+import models.cloud.orderService.products.Windows;
+import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import ui.elements.Dialog;
@@ -15,8 +15,8 @@ import ui.elements.Table;
 import java.util.List;
 
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 
 public class WindowsPage extends IProductPage {
     private static final String BLOCK_VM = "Виртуальная машина";
@@ -41,7 +41,7 @@ public class WindowsPage extends IProductPage {
     public void delete() {
         runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
         {
-            Dialog dlgActions = new Dialog("Удаление");
+            Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         checkPowerStatus(VirtualMachineTable.POWER_STATUS_DELETED);
@@ -60,7 +60,7 @@ public class WindowsPage extends IProductPage {
     }
 
     public void changeConfiguration() {
-        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
@@ -122,7 +122,7 @@ public class WindowsPage extends IProductPage {
     public void addDisk(String name, String size) {
         checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("Дополнительные диски", "Добавить диск", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Добавить диск");
+            Dialog dlg = Dialog.byTitle("Добавить диск");
             dlg.setInputValue("Дополнительный объем дискового пространства", size);
             DropDown.byLabel("Буква").selectByValue(name);
             DropDown.byLabel("Файловая система").selectByValue("refs");

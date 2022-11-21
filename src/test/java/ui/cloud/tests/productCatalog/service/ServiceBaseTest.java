@@ -2,8 +2,8 @@ package ui.cloud.tests.productCatalog.service;
 
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Epic;
-import models.productCatalog.OrgDirection;
-import models.productCatalog.Service;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
+import models.cloud.productCatalog.service.Service;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ProductCatalogSteps;
@@ -11,7 +11,7 @@ import ui.cloud.tests.productCatalog.BaseTest;
 
 import java.util.UUID;
 
-@Epic("Сервисы")
+@Epic("Конструктор.Сервисы")
 @DisabledIfEnv("prod")
 public class ServiceBaseTest extends BaseTest {
     final static String TITLE = "AT UI Service";
@@ -29,14 +29,14 @@ public class ServiceBaseTest extends BaseTest {
 
     private void createService(String name) {
         orgDirection = OrgDirection.builder()
-                .orgDirectionName(UUID.randomUUID().toString())
+                .name(UUID.randomUUID().toString())
                 .title("AT UI Direction")
                 .build()
                 .createObject();
 
         service = Service.builder()
-                .directionId(orgDirection.getOrgDirectionId())
-                .serviceName(name)
+                .directionId(orgDirection.getId())
+                .name(name)
                 .title(TITLE)
                 .description(DESCRIPTION)
                 .version("1.0.0")

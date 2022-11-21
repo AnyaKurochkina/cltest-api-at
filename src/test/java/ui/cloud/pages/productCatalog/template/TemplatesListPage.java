@@ -4,16 +4,17 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseList;
+import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
-import ui.uiModels.Template;
+import ui.models.Template;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TemplatesListPage {
+public class TemplatesListPage extends BaseListPage {
+
     private static final String columnName = "Код шаблона";
     private final SelenideElement pageTitle = $x("//div[text() = 'Шаблоны узлов']");
     private final SelenideElement createTemplateButton = $x("//div[@data-testid = 'add-button']//button");
@@ -37,7 +38,6 @@ public class TemplatesListPage {
     private final TextArea input = TextArea.byLabel("Input");
     private final TextArea output = TextArea.byLabel("Output");
     private final TextArea printedOutput = TextArea.byLabel("Printed output");
-    private final SelenideElement importTemplateButton = $x("//button[@title='Импортировать шаблон']");
 
     public TemplatesListPage() {
         pageTitle.shouldBe(Condition.visible);
@@ -86,7 +86,7 @@ public class TemplatesListPage {
     @Step("Удаление шаблона '{name}'")
     public TemplatesListPage deleteTemplate(String name) {
         search(name);
-        BaseList.delete(columnName, name);
+        BaseListPage.delete(columnName, name);
         new DeleteDialog().inputValidIdAndDelete();
         return this;
     }
@@ -160,19 +160,19 @@ public class TemplatesListPage {
 
     @Step("Проверка сортировки по наименованию")
     public TemplatesListPage checkSortingByTitle() {
-        BaseList.checkSortingByStringField("Наименование");
+        BaseListPage.checkSortingByStringField("Наименование");
         return this;
     }
 
     @Step("Проверка сортировки по коду шаблона")
     public TemplatesListPage checkSortingByName() {
-        BaseList.checkSortingByStringField(columnName);
+        BaseListPage.checkSortingByStringField(columnName);
         return this;
     }
 
     @Step("Проверка сортировки по дате создания")
     public TemplatesListPage checkSortingByCreateDate() {
-        BaseList.checkSortingByDateField("Дата создания");
+        BaseListPage.checkSortingByDateField("Дата создания");
         return this;
     }
 
@@ -184,13 +184,13 @@ public class TemplatesListPage {
 
     @Step("Переход на последнюю страницу списка")
     public TemplatesListPage lastPage() {
-        BaseList.lastPage();
+        super.lastPage();
         return this;
     }
 
     @Step("Проверка, что подсвечен шаблон 'name'")
     public void checkTemplateIsHighlighted(String name) {
-        BaseList.checkRowIsHighlighted(columnName, name);
+        BaseListPage.checkRowIsHighlighted(columnName, name);
     }
 
     @Step("Поиск и открытие страницы шаблона '{name}'")
@@ -203,7 +203,7 @@ public class TemplatesListPage {
 
     @Step("Копирование шаблона '{name}'")
     public TemplatesListPage copyTemplate(String name) {
-        new BaseList().copy(columnName, name);
+        new BaseListPage().copy(columnName, name);
         new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();
         cancelButton.shouldBe(Condition.enabled).click();
         return this;
@@ -211,7 +211,7 @@ public class TemplatesListPage {
 
     @Step("Импорт шаблона из файла 'path'")
     public TemplatesListPage importTemplate(String path) {
-        importTemplateButton.click();
+        importButton.click();
         new InputFile(path).importFile();
         new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
         return this;

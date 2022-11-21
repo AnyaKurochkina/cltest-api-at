@@ -3,7 +3,7 @@ package ui.cloud.tests.productCatalog.service;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Service;
+import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
@@ -26,14 +26,14 @@ public class CreateServiceTest extends ServiceBaseTest {
     @Step("Создание сервиса без заполнения обязательных полей")
     public void createServiceWithoutRequiredParameters() {
         new IndexPage().goToServicesListPagePC()
-                .checkCreateServiceDisabled(Service.builder().serviceName("").title(TITLE).build())
-                .checkCreateServiceDisabled(Service.builder().serviceName(NAME).title("").build());
+                .checkCreateServiceDisabled(Service.builder().name("").title(TITLE).build())
+                .checkCreateServiceDisabled(Service.builder().name(NAME).title("").build());
     }
 
     @Step("Создание сервиса с неуникальным кодом")
     public void createServiceWithNonUniqueName() {
         new IndexPage().goToServicesListPagePC()
-                .checkNonUniqueNameValidation(Service.builder().serviceName(NAME).title(TITLE).build());
+                .checkNonUniqueNameValidation(Service.builder().name(NAME).title(TITLE).build());
     }
 
     @Step("Создание сервиса с недопустимым кодом")
@@ -44,10 +44,10 @@ public class CreateServiceTest extends ServiceBaseTest {
 
     @Step("Создание сервиса")
     public void createService() {
-        service.setServiceName(UUID.randomUUID().toString());
+        service.setName(UUID.randomUUID().toString());
         new IndexPage().goToServicesListPagePC()
                 .createService(service)
                 .checkAttributes(service);
-        deleteService(service.getServiceName());
+        deleteService(service.getName());
     }
 }

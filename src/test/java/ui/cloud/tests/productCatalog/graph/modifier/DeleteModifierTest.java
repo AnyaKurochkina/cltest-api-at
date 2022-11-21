@@ -1,10 +1,9 @@
 package ui.cloud.tests.productCatalog.graph.modifier;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.productCatalog.Env;
-import models.productCatalog.graph.*;
+import models.cloud.productCatalog.Env;
+import models.cloud.productCatalog.graph.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import java.util.Arrays;
 import java.util.Collections;
 
-@Epic("Графы")
 @Feature("Удаление модификатора")
 public class DeleteModifierTest extends GraphBaseTest {
     Modification modifier;

@@ -4,10 +4,10 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
-import models.productCatalog.Service;
+import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
-import ui.cloud.pages.productCatalog.BaseList;
+import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
@@ -15,11 +15,10 @@ import ui.elements.*;
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ServicesListPagePC {
+public class ServicesListPagePC extends BaseListPage {
 
     private static final String columnName = "Код сервиса";
     private final Input searchInput = Input.byPlaceholder("Поиск");
-    private final SelenideElement createServiceButton = $x("//div[@data-testid = 'add-button']//button");
     private final DropDown directionDropDown = DropDown.byLabel("Направление");
     private final Input titleInput = Input.byName("title");
     private final Input nameInput = Input.byName("name");
@@ -52,19 +51,19 @@ public class ServicesListPagePC {
 
     @Step("Проверка сортировки по наименованию")
     public ServicesListPagePC checkSortingByTitle() {
-        BaseList.checkSortingByStringField("Наименование");
+        BaseListPage.checkSortingByStringField("Наименование");
         return this;
     }
 
     @Step("Проверка сортировки по коду сервиса")
     public ServicesListPagePC checkSortingByName() {
-        BaseList.checkSortingByStringField(columnName);
+        BaseListPage.checkSortingByStringField(columnName);
         return this;
     }
 
     @Step("Проверка сортировки по дате создания")
     public ServicesListPagePC checkSortingByCreateDate() {
-        BaseList.checkSortingByDateField("Дата создания");
+        BaseListPage.checkSortingByDateField("Дата создания");
         return this;
     }
 
@@ -89,10 +88,10 @@ public class ServicesListPagePC {
 
     @Step("Создание сервиса '{service.serviceName}'")
     public ServicePage createService(Service service) {
-        createServiceButton.click();
+        addNewObjectButton.click();
         directionDropDown.selectByTitle(service.getDirectionName());
         titleInput.setValue(service.getTitle());
-        nameInput.setValue(service.getServiceName());
+        nameInput.setValue(service.getName());
         descriptionInput.setValue(service.getDescription());
         createButton.click();
         new Alert().checkText("Сервис успешно создан").checkColor(Alert.Color.GREEN).close();
@@ -102,14 +101,14 @@ public class ServicesListPagePC {
     @Step("Проверка валидации обязательных параметров при создании сервиса")
     public ServicesListPagePC checkCreateServiceDisabled(Service service) {
         TestUtils.scrollToTheTop();
-        createServiceButton.click();
-        nameInput.setValue(service.getServiceName());
+        addNewObjectButton.click();
+        nameInput.setValue(service.getName());
         titleInput.setValue(service.getTitle());
         descriptionInput.setValue(service.getDescription());
         if (service.getTitle().isEmpty()) {
             titleRequiredFieldHint.shouldBe(Condition.visible);
         }
-        if (service.getServiceName().isEmpty()) {
+        if (service.getName().isEmpty()) {
             nameRequiredFieldHint.shouldBe(Condition.visible);
         }
         createButton.shouldBe(Condition.disabled);
@@ -120,8 +119,8 @@ public class ServicesListPagePC {
     @Step("Проверка валидации неуникального имени сервиса '{service.serviceName}'")
     public ServicesListPagePC checkNonUniqueNameValidation(Service service) {
         TestUtils.scrollToTheTop();
-        createServiceButton.click();
-        nameInput.setValue(service.getServiceName());
+        addNewObjectButton.click();
+        nameInput.setValue(service.getName());
         titleInput.setValue(service.getTitle());
         nonUniqueNameValidationHint.shouldBe(Condition.visible);
         createButton.shouldBe(Condition.disabled);
@@ -131,7 +130,7 @@ public class ServicesListPagePC {
 
     @Step("Проверка валидации недопустимых значений в коде сервиса")
     public ServicesListPagePC checkNameValidation(String[] names) {
-        createServiceButton.shouldBe(Condition.visible).click();
+        addNewObjectButton.shouldBe(Condition.visible).click();
         for (String name : names) {
             nameInput.setValue(name);
             TestUtils.wait(500);
@@ -155,7 +154,7 @@ public class ServicesListPagePC {
     @Step("Удаление сервиса '{name}'")
     public ServicesListPagePC deleteService(String name) {
         search(name);
-        BaseList.delete(columnName, name);
+        BaseListPage.delete(columnName, name);
         new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
         return this;
     }
@@ -178,7 +177,7 @@ public class ServicesListPagePC {
     @Step("Проверка, что сервис '{service.serviceName}' найден при поиске по значению '{value}'")
     public ServicesListPagePC findServiceByValue(String value, Service service) {
         search(value);
-        Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, service.getServiceName()));
+        Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, service.getName()));
         return this;
     }
 
@@ -212,19 +211,19 @@ public class ServicesListPagePC {
 
     @Step("Проверка, что сервис '{service.serviceName}' отображается в списке")
     public ServicesListPagePC checkServiceIsDisplayed(Service service) {
-        Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, service.getServiceName()));
+        Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, service.getName()));
         return this;
     }
 
     @Step("Проверка, что сервис '{service.serviceName}' не отображается в списке")
     public ServicesListPagePC checkServiceIsNotDisplayed(Service service) {
-        Assertions.assertFalse(new Table(columnName).isColumnValueEquals(columnName, service.getServiceName()));
+        Assertions.assertFalse(new Table(columnName).isColumnValueEquals(columnName, service.getName()));
         return this;
     }
 
     @Step("Копирование сервиса '{service.serviceName}'")
     public ServicesListPagePC copyService(Service service) {
-        new BaseList().copy(columnName, service.getServiceName());
+        new BaseListPage().copy(columnName, service.getName());
         new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();
         return this;
     }

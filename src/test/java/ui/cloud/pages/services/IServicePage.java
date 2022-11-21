@@ -13,8 +13,8 @@ import ui.elements.Table;
 import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 
 @Getter
 public class IServicePage {
@@ -55,8 +55,8 @@ public class IServicePage {
             super("Дата запуска");
         }
 
-        public String getStatus() {
-            return getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[@title]").getAttribute("title");
+        public ProductStatus getStatus() {
+            return new ProductStatus(getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[name()='svg']"));
         }
     }
 

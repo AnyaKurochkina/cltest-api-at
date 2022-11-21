@@ -24,7 +24,7 @@ public class Image {
     private String availabilityZone;
 
     @JsonProperty("marketing")
-    private Object marketing;
+    private Marketing marketing;
 
     @JsonProperty("owner_specified.openstack.object")
     private String ownerSpecifiedOpenstackObject;

@@ -1,6 +1,6 @@
 [
   {
-    "objectClassName": "models.authorizer.Project",
+    "objectClassName": "models.cloud.authorizer.Project",
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "id": "proj-3d1jt57gm3",
     "projectName": "DSO_AUTOTEST",
@@ -13,20 +13,20 @@
     }
   },
   {
-    "objectClassName": "models.portalBack.AccessGroup",
+    "objectClassName": "models.cloud.portalBack.AccessGroup",
     "prefixName": "cloud-crux-proj-3d1jt57gm3",
     "users": [],
     "isDeleted": false,
     "projectName": "proj-3d1jt57gm3"
   },
   {
-    "objectClassName": "models.authorizer.ServiceAccount",
+    "objectClassName": "models.cloud.authorizer.ServiceAccount",
     "id": "sa_proj-3d1jt57gm3-ez",
     "secret": "c83a5f3a35ec9bb29c0a409414fde2bf",
     "projectId": "proj-3d1jt57gm3"
   },
   {
-    "objectClassName": "models.authorizer.InformationSystem",
+    "objectClassName": "models.cloud.authorizer.InformationSystem",
     "id": "c9fd31c7-25a5-45ca-863c-18425d1ae927",
     "isForOrders":true
   }

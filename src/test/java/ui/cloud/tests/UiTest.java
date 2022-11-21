@@ -6,21 +6,14 @@ import io.qameta.allure.TmsLink;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.products.Windows;
+import models.cloud.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import tests.Tests;
+import api.Tests;
 import ui.cloud.pages.LoginPage;
-import ui.elements.Graph;
-import ui.elements.Table;
-import ui.uiExtesions.ConfigExtension;
+import ui.extesions.ConfigExtension;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.codeborne.selenide.Selenide.executeJavaScript;
 
 @Log4j2
 //@ExtendWith(CustomBeforeAllAndAfterAll.class)
@@ -41,10 +34,10 @@ public class UiTest extends Tests {
 
     @Test
     void name() {
+        new LoginPage().signIn(Role.CLOUD_ADMIN);
 //        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
-        Selenide.open("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/?context=proj-pkvckn08w9&type=project&org=vtb");
+        Selenide.open("https://prod-portal-front.cloud.vtb.ru/compute/orders/85b89f80-e889-490a-8cea-e144e6fe664d/monitoring?context=proj-1oob0zjo5h&type=project&org=vtb");
 //        Table.getTableByColumnName("Дата запуска");
-new LoginPage().signIn(Role.ORDER_SERVICE_ADMIN);
         System.out.println(1);
 
 //        Selenide.$x("//canvas");
@@ -54,6 +47,24 @@ new LoginPage().signIn(Role.ORDER_SERVICE_ADMIN);
         System.out.println(1);
 
     }
+
+    @Test
+    void nameT1() {
+        new LoginPage()
+                .signIn(Role.CLOUD_ADMIN);
+//        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
+        Selenide.open("https://d2-portal-front.apps.cloud.k8s.dev.01.vmw.t1.loc/cloudcompute/ssh-keys?context=proj-6opt7sq1fg&type=project&org=t1-cloud");
+//        Table.getTableByColumnName("Дата запуска");
+        System.out.println(1);
+
+//        Selenide.$x("//canvas");
+//        new Graph().getNodeCoordinates();
+
+
+        System.out.println(1);
+
+    }
+
 
 
 //    boolean isIntersect(Node box1, Node box2) {
@@ -80,17 +91,6 @@ new LoginPage().signIn(Role.ORDER_SERVICE_ADMIN);
 
     }
 
-    @BeforeEach
-    void setUp() {
-//        int f = 1/0;
-        log.info("BeforeEach");
-    }
-
-    @AfterEach
-    void tearDown() {
-//        int f = 1/0;
-        log.info("AfterEach");
-    }
 
     @Test
 //    @Tag("test")

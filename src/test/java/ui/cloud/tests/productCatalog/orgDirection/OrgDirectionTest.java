@@ -6,7 +6,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.productCatalog.OrgDirection;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +54,7 @@ public class OrgDirectionTest extends BaseTest {
         String description = "at_ui_edit_direction_description";
         String updName = "upd_name";
         OrgDirection.builder()
-                .orgDirectionName(name)
+                .name(name)
                 .title(title)
                 .description(description)
                 .build()
@@ -116,7 +116,7 @@ public class OrgDirectionTest extends BaseTest {
         String title = "at_ui_copy_direction_title";
         String description = "at_ui_copy_direction_description";
         OrgDirection.builder()
-                .orgDirectionName(name)
+                .name(name)
                 .title(title)
                 .description(description)
                 .build()

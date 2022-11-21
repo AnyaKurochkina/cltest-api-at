@@ -2,11 +2,7 @@
   "name": "string",
   "title": "string",
   "description": "string",
-  "event_type": [
-    "vm"
-  ],
-  "event_provider": [
-    "openstack"
+  "event_type_provider": [
   ],
   "direction": "parent_to_child",
   "is_all_levels": true,

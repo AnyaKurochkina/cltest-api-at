@@ -1,19 +1,22 @@
 package ui.cloud.tests.productCatalog.template;
 
-import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
-import models.productCatalog.Template;
+import io.qameta.allure.Epic;
+import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.tests.productCatalog.BaseTest;
-import ui.uiModels.Node;
+import ui.models.Node;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static steps.productCatalog.TemplateSteps.deleteTemplateById;
+import static steps.productCatalog.TemplateSteps.getTemplateByName;
+
+@Epic("Конструктор.Шаблоны узлов")
 @DisabledIfEnv("prod")
 public class TemplateBaseTest extends BaseTest {
 
@@ -43,7 +46,7 @@ public class TemplateBaseTest extends BaseTest {
         input.put(new Node().getInputKey(), value);
         output.put(new Node().getOutputKey(), value);
         template = Template.builder()
-                .templateName(name)
+                .name(name)
                 .title(TITLE)
                 .description(DESCRIPTION)
                 .type(TYPE)
@@ -57,8 +60,6 @@ public class TemplateBaseTest extends BaseTest {
     }
 
     void deleteTemplate(String name) {
-        ProductCatalogSteps steps = new ProductCatalogSteps(Template.productName);
-        steps.getDeleteObjectResponse(steps
-                .getProductObjectIdByNameWithMultiSearch(name, GetTemplateListResponse.class)).assertStatus(204);
+        deleteTemplateById(getTemplateByName(name).getId());
     }
 }

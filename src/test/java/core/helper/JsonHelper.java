@@ -71,6 +71,11 @@ public class JsonHelper {
     }
 
     @SneakyThrows
+    public static <T> T deserialize(String object, Class<?> clazz) {
+        return (T) getCustomObjectMapper().readValue(object, clazz);
+    }
+
+    @SneakyThrows
     public static <T> T convertResponseOnClass(String rawJson, Class<T> clazz){
         JSONObject jsonObject = new JSONObject(rawJson);
         ObjectMapper objectMapper = new ObjectMapper();

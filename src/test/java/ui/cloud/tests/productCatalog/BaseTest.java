@@ -5,9 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import tests.Tests;
+import api.Tests;
 import ui.cloud.pages.LoginPageControlPanel;
-import ui.uiExtesions.ConfigExtension;
+import ui.extesions.ConfigExtension;
 
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

@@ -8,8 +8,8 @@ import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.tarifficator.TariffClass;
-import models.tarifficator.TariffPlan;
+import models.cloud.tarifficator.TariffClass;
+import models.cloud.tarifficator.TariffPlan;
 import steps.Steps;
 
 import java.util.ArrayList;
@@ -19,11 +19,6 @@ import static core.helper.Configure.TarifficatorURL;
 
 @Log4j2
 public class TariffPlanSteps extends Steps {
-
-    @SneakyThrows
-    public static <T> T deserialize(String object, Class<?> clazz) {
-        return (T) JsonHelper.getCustomObjectMapper().readValue(object, clazz);
-    }
 
     /**
      * Отправка запроса на создание ТП
@@ -39,7 +34,7 @@ public class TariffPlanSteps extends Steps {
                 .post("/v1/tariff_plans")
                 .assertStatus(201)
                 .toString();
-        return deserialize(object, TariffPlan.class);
+        return JsonHelper.deserialize(object, TariffPlan.class);
     }
 
     /**
@@ -81,7 +76,7 @@ public class TariffPlanSteps extends Steps {
                 .get("/v1/tariff_plans/{}?include=tariff_classes", tariffPlanId)
                 .assertStatus(200)
                 .toString();
-        return deserialize(object, TariffPlan.class);
+        return JsonHelper.deserialize(object, TariffPlan.class);
     }
 
     /**
@@ -99,7 +94,7 @@ public class TariffPlanSteps extends Steps {
                 .assertStatus(200)
                 .toString();
         tariffPlan.save();
-        return deserialize(object, TariffPlan.class);
+        return JsonHelper.deserialize(object, TariffPlan.class);
     }
 
     @SneakyThrows
@@ -112,7 +107,7 @@ public class TariffPlanSteps extends Steps {
                 .assertStatus(200)
                 .toString();
         tariffPlan.save();
-        return deserialize(object, TariffClass.class);
+        return JsonHelper.deserialize(object, TariffClass.class);
     }
 
 }

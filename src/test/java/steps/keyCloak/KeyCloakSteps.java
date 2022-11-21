@@ -5,9 +5,9 @@ import core.helper.Configure;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
-import models.authorizer.GlobalUser;
-import models.authorizer.ServiceAccount;
-import models.keyCloak.*;
+import models.cloud.authorizer.GlobalUser;
+import models.cloud.authorizer.ServiceAccount;
+import models.cloud.keyCloak.*;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.Objects;

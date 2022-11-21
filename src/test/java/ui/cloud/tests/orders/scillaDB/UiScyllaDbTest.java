@@ -6,17 +6,17 @@ import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.products.ScyllaDb;
-import models.portalBack.AccessGroup;
+import models.cloud.orderService.products.ScyllaDb;
+import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import tests.Tests;
+import api.Tests;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.elements.Table;
-import ui.uiExtesions.ConfigExtension;
-import ui.uiExtesions.InterceptTestExtension;
+import ui.extesions.ConfigExtension;
+import ui.extesions.InterceptTestExtension;
 
 import java.time.Duration;
 
@@ -33,7 +33,7 @@ public class UiScyllaDbTest extends Tests {
     String shortNameUserDB = "at_user";
 
     public UiScyllaDbTest() {
-        if (Configure.ENV.equals("prod"))
+        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
             product = ScyllaDb.builder().env("DEV").productName("ScyllaDB").platform("OpenStack").segment("dev-srv-app").build();
         //product = ScyllaDb.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/01828278-e513-4685-8cdd-f0c87840ff62/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
@@ -180,6 +180,7 @@ public class UiScyllaDbTest extends Tests {
     @Test
     @Order(20)
     @TmsLinks({@TmsLink("464218"), @TmsLink("464284")})
+    @Disabled
     @DisplayName("UI ScyllaDB. Выключить принудительно / Включить")
     void stopHard() {
         ScyllaPage scyllaPage = new ScyllaPage(product);
@@ -190,6 +191,7 @@ public class UiScyllaDbTest extends Tests {
     @Test
     @Order(21)
     @TmsLink("464202")
+    @Disabled
     @DisplayName("UI ScyllaDB. Выключить")
     void stopSoft() {
         ScyllaPage scyllaPage = new ScyllaPage(product);

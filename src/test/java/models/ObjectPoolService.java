@@ -16,11 +16,11 @@ import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.authorizer.ServiceAccount;
-import models.keyCloak.ServiceAccountToken;
-import models.keyCloak.Token;
-import models.keyCloak.UserToken;
-import models.orderService.interfaces.IProduct;
+import models.cloud.authorizer.ServiceAccount;
+import models.cloud.keyCloak.ServiceAccountToken;
+import models.cloud.keyCloak.Token;
+import models.cloud.keyCloak.UserToken;
+import models.cloud.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
@@ -40,7 +40,7 @@ import static io.qameta.allure.Allure.getLifecycle;
 public class ObjectPoolService {
     private static final Map<String, ObjectPoolEntity> entities = Collections.synchronizedMap(new LinkedHashMap<>());
     public static final List<String> deleteClassesName = Collections.synchronizedList(new ArrayList<>());
-    public static final List<String> createdEntities = Collections.synchronizedList(new ArrayList<>());
+    public static final ArrayDeque<String> createdEntities = new ArrayDeque<>();
 
     private static boolean isNeedLock(ObjectPoolEntity e, boolean exclusive){
         return e.getStatus() == ObjectStatus.NOT_CREATED || exclusive;
@@ -53,7 +53,6 @@ public class ObjectPoolService {
             objectPoolEntity = createObjectPoolEntity(e);
             objectPoolEntity.setPublic(isPublic);
         }
-
         if (isNeedLock(objectPoolEntity, exclusiveAccess)) {
             objectPoolEntity.lock();
             if(!exclusiveAccess && objectPoolEntity.getStatus().equals(ObjectStatus.CREATED))
@@ -78,14 +77,15 @@ public class ObjectPoolService {
             try {
                 e.init();
                 e.create();
+                e.uuid = objectPoolEntity.get().uuid;
                 e.save();
-                createdEntities.add(Objects.requireNonNull(e.uuid));
+                createdEntities.push(Objects.requireNonNull(e.uuid));
                 if (!deleteClassesName.contains(e.getClass().getName()))
                     deleteClassesName.add(0, e.getClass().getName());
             } catch (Throwable throwable) {
                 if (throwable instanceof CalculateException) {
                     objectPoolEntity.setStatus(ObjectStatus.CREATED);
-                    createdEntities.add(Objects.requireNonNull(e.uuid));
+                    createdEntities.push(Objects.requireNonNull(e.uuid));
                 } else {
                     objectPoolEntity.setStatus(ObjectStatus.FAILED);
                     objectPoolEntity.setError(throwable);
@@ -147,7 +147,7 @@ public class ObjectPoolService {
         log.debug("##### deleteAllResources start #####");
         boolean isTestItCreateAutotest = Configure.isTestItCreateAutotest;
         Configure.isTestItCreateAutotest = false;
-        Collections.reverse(createdEntities);
+
 
         List<ObjectPoolEntity> entityList = new ArrayList<>();
         for (String key : createdEntities) {
@@ -161,22 +161,25 @@ public class ObjectPoolService {
         }
         deleteAllVm(entityList);
 
-        for (String key : createdEntities) {
-            ObjectPoolEntity objectPoolEntity = entities.get(key);
-            if (objectPoolEntity.getClazz().isAssignableFrom(Token.class))
-                continue;
-            if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
-                continue;
-//            if (objectPoolEntity.isMock())
-//                continue;
-            Entity entity = objectPoolEntity.get();
-            try {
-                entity.deleteObject();
-            } catch (Throwable e) {
-                objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
-                objectPoolEntity.setError(e);
-                e.printStackTrace();
+        try {
+            while(createdEntities.peek()!=null){
+                String key = createdEntities.pop();
+                ObjectPoolEntity objectPoolEntity = entities.get(key);
+                if (objectPoolEntity.getClazz().isAssignableFrom(Token.class))
+                    continue;
+                if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
+                    continue;
+                Entity entity = objectPoolEntity.get();
+                try {
+                    entity.deleteObject();
+                } catch (Throwable e) {
+                    objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
+                    objectPoolEntity.setError(e);
+                    e.printStackTrace();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         Configure.isTestItCreateAutotest = isTestItCreateAutotest;
         log.debug("##### deleteAllResources end #####");

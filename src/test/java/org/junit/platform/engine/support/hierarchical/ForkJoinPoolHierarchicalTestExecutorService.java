@@ -7,12 +7,10 @@ package org.junit.platform.engine.support.hierarchical;
 
 
 import lombok.extern.log4j.Log4j2;
-import org.junit.MarkDelete;
 import models.ObjectPoolService;
-import core.helper.StringUtils;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
-import org.junit.ProductArgumentsProvider;
+import org.junit.MarkDelete;
 import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.platform.commons.JUnitException;
@@ -33,8 +31,6 @@ import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @API(
         status = Status.EXPERIMENTAL,
@@ -69,7 +65,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         ForkJoinWorkerThreadFactory threadFactory = new ForkJoinPoolHierarchicalTestExecutorService.WorkerThreadFactory();
         return Try.call(() -> {
             Constructor<ForkJoinPool> constructor = ForkJoinPool.class.getDeclaredConstructor(Integer.TYPE, ForkJoinWorkerThreadFactory.class, UncaughtExceptionHandler.class, Boolean.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE, Predicate.class, Long.TYPE, TimeUnit.class);
-            return (ForkJoinPool) constructor.newInstance(configuration.getParallelism(), threadFactory, null, false, configuration.getCorePoolSize(), configuration.getMaxPoolSize(), configuration.getMinimumRunnable(), null, configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
+            return constructor.newInstance(configuration.getParallelism(), threadFactory, null, false, configuration.getCorePoolSize(), configuration.getMaxPoolSize(), configuration.getMinimumRunnable(), null, configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
         }).orElseTry(() -> new ForkJoinPool(configuration.getParallelism(), threadFactory, (UncaughtExceptionHandler) null, false)).getOrThrow((cause) -> new JUnitException("Failed to create ForkJoinPool", cause));
     }
 
@@ -134,7 +130,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
             e.printStackTrace();
         }
 //        if (testDescriptor instanceof MethodBasedTestDescriptor) {
-//            String match = StringUtils.findByRegex(":\\w+\\(models.orderService.products.(\\w+)\\)]", testDescriptor.getUniqueId().toString());
+//            String match = StringUtils.findByRegex(":\\w+\\(models.cloud.orderService.products.(\\w+)\\)]", testDescriptor.getUniqueId().toString());
 //            if (match != null) {
 //                Map<String, List<Map>> products = ProductArgumentsProvider.getProductListMap();
 //                for (Map.Entry<String, List<Map>> e : products.entrySet()) {
@@ -151,7 +147,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 //                }
 //                skipTests.add(testDescriptor);
 //            }
-//            Matcher matchProduct = Pattern.compile(":\\w+\\(models.orderService.interfaces.IProduct\\)]").matcher(testDescriptor.getUniqueId().toString());
+//            Matcher matchProduct = Pattern.compile(":\\w+\\(models.cloud.orderService.interfaces.IProduct\\)]").matcher(testDescriptor.getUniqueId().toString());
 //            if (matchProduct.find()) {
 //                if(ProductArgumentsProvider.getProductListMap().size() == 0)
 //                    skipTests.add(testDescriptor);
@@ -457,8 +453,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
             if (testTask.getExecutionMode() == ExecutionMode.CONCURRENT) {
 
                 exclusiveTask.fork();
-                concurrentTasksInReverseOrder.addLast(exclusiveTask);
-//                concurrentTasksInReverseOrder.addFirst(exclusiveTask);
+//                concurrentTasksInReverseOrder.addLast(exclusiveTask);
+                concurrentTasksInReverseOrder.addFirst(exclusiveTask);
 
             } else {
                 nonConcurrentTasks.add(exclusiveTask);

@@ -1,21 +1,26 @@
 package ui.cloud.tests.productCatalog.graph;
 
-import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
-import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
-import models.productCatalog.Template;
-import models.productCatalog.graph.Graph;
+import io.qameta.allure.Epic;
+import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.tests.productCatalog.BaseTest;
-import ui.uiModels.Node;
+import ui.models.Node;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static steps.productCatalog.GraphSteps.deleteGraphById;
+import static steps.productCatalog.GraphSteps.getGraphByName;
+import static steps.productCatalog.TemplateSteps.deleteTemplateById;
+import static steps.productCatalog.TemplateSteps.getTemplateByName;
+
+@Epic("Конструктор.Графы")
 @DisabledIfEnv("prod")
 public class GraphBaseTest extends BaseTest {
 
@@ -62,7 +67,7 @@ public class GraphBaseTest extends BaseTest {
         input.put(new Node().getInputKey(), value);
         output.put(new Node().getOutputKey(), value);
         Template.builder()
-                .templateName(name)
+                .name(name)
                 .title(TEMPLATE_TITLE)
                 .type("creating")
                 .description(DESCRIPTION)
@@ -76,14 +81,10 @@ public class GraphBaseTest extends BaseTest {
     }
 
     public void deleteGraph(String name) {
-        ProductCatalogSteps steps = new ProductCatalogSteps(Graph.productName);
-        steps.getDeleteObjectResponse(steps
-                .getProductObjectIdByNameWithMultiSearch(name, GetGraphsListResponse.class)).assertStatus(204);
+        deleteGraphById(getGraphByName(name).getGraphId());
     }
 
     public void deleteTemplate(String name) {
-        ProductCatalogSteps steps = new ProductCatalogSteps(Template.productName);
-        steps.getDeleteObjectResponse(steps
-                .getProductObjectIdByNameWithMultiSearch(name, GetTemplateListResponse.class)).assertStatus(204);
+        deleteTemplateById(getTemplateByName(name).getId());
     }
 }

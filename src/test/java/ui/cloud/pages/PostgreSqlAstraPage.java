@@ -1,18 +1,16 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import models.orderService.products.PostgreSQL;
-import models.orderService.products.Windows;
-import models.subModels.Flavor;
+import models.cloud.orderService.products.PostgreSQL;
+import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
 import static core.helper.StringUtils.$x;
-import static tests.Tests.activeCnd;
-import static tests.Tests.clickableCnd;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class PostgreSqlAstraPage extends IProductPage {
@@ -67,7 +65,7 @@ public class PostgreSqlAstraPage extends IProductPage {
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
-            Dialog dlgActions = new Dialog("Удаление");
+            Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         new PostgreSqlAstraPage.VirtualMachineTable("Статус").checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
@@ -127,7 +125,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         if (!(new Table(HEADER_LIMIT_CONNECT).isColumnValueContains("", name))) {
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
-                Dialog dlg = new Dialog("Добавить БД");
+                Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя базы данных", name);
                 generatePassButton.shouldBe(Condition.enabled).click();
                 new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
@@ -143,7 +141,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         if (!(new Table(HEADER_NAME_DB).isColumnValueContains("", nameDb + "_" + nameUserDb))) {
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
-                Dialog dlg = new Dialog("Добавить пользователя");
+                Dialog dlg = Dialog.byTitle("Добавить пользователя");
                 dlg.setDropDownValue("Имя базы данных", nameDb);
                 dlg.setInputValue("Имя пользователя", nameUserDb);
                 dlg.setInputValue("Комментарий", comment);
@@ -204,7 +202,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_AT_DB_ADMIN, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
@@ -213,7 +211,7 @@ public class PostgreSqlAstraPage extends IProductPage {
     public void resetPasswordUserDb(String nameUserDB) {
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(nameUserDB, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });

@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.graph.node;
 
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
@@ -10,10 +9,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
-import ui.uiModels.SubgraphNode;
-import ui.uiModels.TemplateNode;
+import ui.models.SubgraphNode;
+import ui.models.TemplateNode;
 
-@Epic("Графы")
 @Feature("Добавление узла графа")
 public class AddNodeTest extends GraphBaseTest {
 

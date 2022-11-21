@@ -2,16 +2,19 @@ package org.junit;
 
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.WebDriverRunner;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.utils.Encrypt;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.ObjectPoolService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import ru.testit.junit5.RunningHandler;
 
 import java.io.File;
@@ -31,16 +34,27 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
+        //####Config for Ui###
+        Files.deleteIfExists(Paths.get(responseTimeLog));
+
+        String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
+        if (Files.exists(Paths.get(fileSecret)))
+            ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
+        loadSecretJson();
+    }
+
+    @SneakyThrows
+    public static void initDriver() {
         //###Config for Ui###
         if (getAppProp("webdriver.path") != null) {
             String DRIVER_PATH = new File(getAppProp("webdriver.path")).getAbsolutePath();
             System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
-            System.setProperty("chromeoptions.args","\"--disable-notifications\",\"--disable-web-security\",\"--allow-external-pages\",\"--disable-gpu\",\"--no-sandbox\",\"--disable-browser-side-navigation\"");
+            System.setProperty("chromeoptions.args", "\"--disable-notifications\",\"--disable-web-security\",\"--allow-external-pages\",\"--disable-gpu\",\"--no-sandbox\",\"--disable-browser-side-navigation\"");
         }
 
         baseUrl = URL;
         isRemote();
-        Configuration.browserSize = "1530x870";
+//        Configuration.browserSize = "1530x870";
         Configuration.browserPosition = "2x2";
         Configuration.timeout = 40000;
         Configuration.driverManagerEnabled = false;
@@ -52,17 +66,15 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--allow-external-pages");
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-site-isolation-trials");
+        options.addArguments("--ignore-certificate-errors");
         options.addArguments("--disable-browser-side-navigation");
         options.addArguments("--start-maximized");
         Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
-        //####Config for Ui###
-        Files.deleteIfExists(Paths.get(responseTimeLog));
-
-        String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
-        if (Files.exists(Paths.get(fileSecret)))
-            ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
-        loadSecretJson();
+        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true")))
+            WebDriverRunner.setWebDriver(new RemoteWebDriver(new java.net.URL(Configuration.remote), Configuration.browserCapabilities));
     }
 
     public void loadSecretJson() {
@@ -77,7 +89,8 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     public static void isRemote() {
         if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
-            log.info("Ui Тесты стартовали на selenoid сервере: " + getAppProp("webdriver.remote.url"));
+            Assertions.assertNotNull(getAppProp("webdriver.remote.url"), "Не указан webdriver.remote.url");
+            log.info("Ui Тесты стартовали на selenoid сервере");
             Configuration.remote = getAppProp("webdriver.remote.url");
             Map<String, String> capabilitiesProp = getAppPropStartWidth("webdriver.capabilities.");
             DesiredCapabilities capabilities = new DesiredCapabilities();

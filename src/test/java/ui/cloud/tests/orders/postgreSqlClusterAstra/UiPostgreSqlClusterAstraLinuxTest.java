@@ -7,19 +7,17 @@ import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.products.PostgreSQL;
-import models.orderService.products.PostgresSQLCluster;
-import models.portalBack.AccessGroup;
+import models.cloud.orderService.products.PostgresSQLCluster;
+import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import tests.Tests;
+import api.Tests;
 import ui.cloud.pages.*;
 import ui.elements.Alert;
 import ui.elements.Graph;
-import ui.elements.Table;
-import ui.uiExtesions.ConfigExtension;
-import ui.uiExtesions.InterceptTestExtension;
+import ui.extesions.ConfigExtension;
+import ui.extesions.InterceptTestExtension;
 
 import java.time.Duration;
 
@@ -40,7 +38,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
     SelenideElement node = $x("(//td[.='postgresql'])[1]");
 
     public UiPostgreSqlClusterAstraLinuxTest() {
-        if (Configure.ENV.equals("prod"))
+        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
           product = PostgresSQLCluster.builder().env("DEV").productName("PostgreSQL Cluster Astra Linux").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
 //        product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/4ae82e4a-50fd-4786-afc5-cc4ff8f0bab5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
@@ -248,6 +246,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
     @Test
     @Order(20)
     @TmsLinks({@TmsLink("851703"), @TmsLink("851698")})
+    @Disabled
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Выключить принудительно / Включить")
     void stopHard() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
@@ -258,6 +257,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
     @Test
     @Order(21)
     @TmsLink("851702")
+    @Disabled
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Выключить")
     void stopSoft() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);

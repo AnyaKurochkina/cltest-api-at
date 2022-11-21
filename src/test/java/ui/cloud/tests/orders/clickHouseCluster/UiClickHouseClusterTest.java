@@ -7,19 +7,17 @@ import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
-import models.orderService.products.ClickHouseCluster;
-import models.orderService.products.PostgreSQL;
-import models.portalBack.AccessGroup;
+import models.cloud.orderService.products.ClickHouseCluster;
+import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import tests.Tests;
+import api.Tests;
 import ui.cloud.pages.*;
 import ui.elements.Alert;
 import ui.elements.Graph;
-import ui.elements.Table;
-import ui.uiExtesions.ConfigExtension;
-import ui.uiExtesions.InterceptTestExtension;
+import ui.extesions.ConfigExtension;
+import ui.extesions.InterceptTestExtension;
 
 import java.time.Duration;
 
@@ -39,7 +37,7 @@ public class UiClickHouseClusterTest extends Tests {
     String nameGroup ="cloud-zorg-winxtkhxxdw";
     SelenideElement node = $x("(//td[.='clickhouse'])[1]");
     public UiClickHouseClusterTest() {
-        if (Configure.ENV.equals("prod"))
+        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
            product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
           //  product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/cffa192c-aab5-4826-9c11-a8a87b3d6684/user?context=proj-pkvckn08w9&type=project&org=vtb").build();
         else
@@ -69,7 +67,6 @@ public class UiClickHouseClusterTest extends Tests {
             orderPage.getNameCluster().setValue("cluster");
             orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-           // orderPage.getNameDB().setValue("at_db");
             orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
@@ -224,6 +221,7 @@ public class UiClickHouseClusterTest extends Tests {
     @Test
     @Order(16)
     @TmsLinks({@TmsLink("1138086"), @TmsLink("1138091")})
+    @Disabled
     @DisplayName("UI ClickHouse Cluster. Выключить принудительно / Включить")
     void stopHard() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
@@ -234,6 +232,7 @@ public class UiClickHouseClusterTest extends Tests {
     @Test
     @Order(17)
     @TmsLink("1138092")
+    @Disabled
     @DisplayName("UI ClickHouse Cluster. Выключить")
     void stopSoft() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
