@@ -6,7 +6,7 @@ import lombok.Getter;
 import ui.t1.pages.cloudCompute.CloudEnginePage;
 import ui.t1.pages.cloudCompute.SecurityGroupsPage;
 import ui.t1.pages.cloudCompute.SshKeysPage;
-import ui.t1.pages.cloudCompute.VirtualMachinePage;
+import ui.t1.pages.cloudCompute.VirtualMachinesPage;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -36,10 +36,10 @@ public class IndexPage {
         return new SshKeysPage();
     }
 
-    @Step("Переход на страницу SSH-ключи")
-    public VirtualMachinePage goToVirtualMachine() {
+    @Step("Переход на страницу Виртуальные машины")
+    public VirtualMachinesPage goToVirtualMachine() {
         linkVirtualMachines.click();
-        return new VirtualMachinePage();
+        return new VirtualMachinesPage();
     }
 
     @Step("Переход на страницу Группы безопасности")

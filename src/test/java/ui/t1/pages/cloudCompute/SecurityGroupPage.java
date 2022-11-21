@@ -1,7 +1,9 @@
 package ui.t1.pages.cloudCompute;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
+import org.junit.jupiter.api.Assertions;
 import ui.elements.CheckBox;
 import ui.elements.Dialog;
 import ui.elements.Table;
@@ -17,7 +19,13 @@ public class SecurityGroupPage {
     }
 
     public static class Rule {
-        Dialog dlg = Dialog.byTitle("Добавить правило");
+        Dialog dlg;
+        String description;
+
+        public Rule setDescription(String description) {
+            dlg.setInputValue("Описание", description);
+            return this;
+        }
 
         public Rule set(boolean checked) {
             dlg.setCheckBox(CheckBox.byLabel("Любой"), checked);
@@ -26,15 +34,18 @@ public class SecurityGroupPage {
 
         public void clickAdd() {
             dlg.clickButton("Добавить");
+            dlg.getDialog().shouldNotBe(Condition.visible);
+            Assertions.assertTrue(new SecurityGroupTable().isColumnValueEquals(SecurityGroupTable.COLUMN_DESC, description));
+            //TODO: нужна проверка стутуса
         }
     }
 
 
     private static class SecurityGroupTable extends Table {
-        public static final String COLUMN_NAME = "Наименование";
+        public static final String COLUMN_DESC = "Описание";
 
         public SecurityGroupTable() {
-            super(COLUMN_NAME);
+            super(COLUMN_DESC);
         }
     }
 }

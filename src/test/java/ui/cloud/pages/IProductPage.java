@@ -138,7 +138,6 @@ public abstract class IProductPage {
     @Step("Запуск действия '{action}' с параметрами и последующим нажатием на кнопку {textButton}")
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         String productNameText = null;
-        //btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
         if (Objects.nonNull(params.getNode())) {
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();

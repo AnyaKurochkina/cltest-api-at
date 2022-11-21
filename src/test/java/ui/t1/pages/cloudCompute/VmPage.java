@@ -3,8 +3,8 @@ package ui.t1.pages.cloudCompute;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import ui.elements.DataTable;
+import lombok.Getter;
+import ui.elements.Button;
 import ui.elements.DropDown;
 import ui.elements.Input;
 
@@ -16,61 +16,60 @@ import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
-public class VirtualMachinePage {
-    String name;
-    String description;
-    String availabilityZone;
-    Image image;
-    Integer bootSize;
-    String bootType;
-    Boolean deleteOnTermination;
-    String flavorName;
-    String flavor;
-    String subnet;
-    Boolean publicIp;
-    List<String> securityGroups = new ArrayList<>();
-    String sshKey;
+//new VirtualMachinePage().name("name").description("desc").addSecurityGroups("default").image(new Image("Ubuntu", "20.04")).sshKey("qw")
+@Getter
+public class VmPage {
+    private String name;
+    private String description;
+    private String availabilityZone;
+    private Image image;
+    private Integer bootSize;
+    private String bootType;
+    private Boolean deleteOnTermination;
+    private String flavorName;
+    private String flavor;
+    private String subnet;
+    private Boolean publicIp;
+    private final List<String> securityGroups = new ArrayList<>();
+    private String sshKey;
 
-    //new VirtualMachinePage().name("name").description("desc").addSecurityGroups("default").image(new VirtualMachinePage.Image("Ubuntu", "20.04")).sshKey("qw")
-
-    public VirtualMachinePage name(String name){
+    public VmPage setName(String name) {
         this.name = name;
         Input.byLabel("Имя виртуальной машины").setValue(name);
         return this;
     }
 
-    public VirtualMachinePage description(String description){
+    public VmPage setDescription(String description) {
         this.description = description;
         Input.byLabel("Описание").setValue(description);
         return this;
     }
 
-    public VirtualMachinePage addSecurityGroups(String securityGroups){
+    public VmPage addSecurityGroups(String securityGroups) {
         this.securityGroups.add(securityGroups);
         DropDown.byLabel("Группы безопасности сетевого интерфейса").select(securityGroups);
         return this;
     }
 
-    public VirtualMachinePage image(Image image){
+    public VmPage setImage(Image image) {
         this.image = image;
         SelectBox.byName(image);
         return this;
     }
 
-    public VirtualMachinePage sshKey(String sshKey){
+    public VmPage setSshKey(String sshKey) {
         this.sshKey = sshKey;
         DropDown.byLabel("Публичный SSH ключ").selectByTextContains(sshKey);
         return this;
     }
 
-    private static class VirtualMachineTable extends DataTable{
-        public VirtualMachineTable() {
-            super("Дата создания");
-        }
+    public VmPage clickOrder() {
+        Button.byText("Заказать").click();
+        return this;
     }
 
     @AllArgsConstructor
-    public static class Image{
+    public static class Image {
         String os;
         String version;
     }
@@ -83,12 +82,12 @@ public class VirtualMachinePage {
             this.select = element;
         }
 
-        public static void byName(Image image){
+        public static void byName(Image image) {
             SelectBox selectBox = new SelectBox($x("//*[.='{}']/parent::*//*[name()='svg']", image.os));
             selectBox.select(image.version);
         }
 
-        private void select(String text){
+        private void select(String text) {
             select.parent().parent().parent().click();
             select.click();
             $x("//*[@title = '{}']", text).shouldBe(activeCnd)
