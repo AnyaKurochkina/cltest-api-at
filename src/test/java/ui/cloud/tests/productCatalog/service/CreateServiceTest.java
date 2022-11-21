@@ -55,7 +55,7 @@ public class CreateServiceTest extends ServiceBaseTest {
     @TmsLink("504746")
     @DisplayName("Создание сервиса c графом")
     public void createServiceWithGraphTest() {
-        service.setServiceName(UUID.randomUUID().toString());
+        service.setName(UUID.randomUUID().toString());
         service.setGraphVersion("Последняя");
         new IndexPage().goToServicesListPagePC()
                 .createService(service)

@@ -189,7 +189,7 @@ public class TemplatesListPage extends BaseListPage {
 
     @Step("Проверка, что подсвечен шаблон 'name'")
     public void checkTemplateIsHighlighted(String name) {
-        super.checkRowIsHighlighted(columnName, name);
+        checkRowIsHighlighted(columnName, name);
     }
 
     @Step("Поиск и открытие страницы шаблона '{name}'")

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
-import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 
 @Feature("Действия со списком сервисов")
 public class ServicesListTest extends ServiceBaseTest {

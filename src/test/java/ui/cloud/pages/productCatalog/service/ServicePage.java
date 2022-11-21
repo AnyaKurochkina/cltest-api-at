@@ -3,11 +3,10 @@ package ui.cloud.pages.productCatalog.service;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.cloud.productCatalog.Service;
+import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
@@ -49,7 +48,7 @@ public class ServicePage extends BasePage {
     public ServicePage checkAttributes(Service service) {
         checkVersion(service.getVersion());
         goToVersionComparisonTab();
-        nameInput.getInput().shouldHave(Condition.exactValue(service.getServiceName()));
+        nameInput.getInput().shouldHave(Condition.exactValue(service.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
         descriptionInput.getTextArea().shouldHave(Condition.exactValue(service.getDescription()));
         if (service.getGraphId() != null) {
@@ -65,7 +64,7 @@ public class ServicePage extends BasePage {
 
     @Step("Редактирование атрибутов сервиса '{service.serviceName}'")
     public ServicePage setAttributes(Service service) {
-        nameInput.setValue(service.getServiceName());
+        nameInput.setValue(service.getName());
         titleInput.setValue(service.getTitle());
         descriptionInput.setValue(service.getDescription());
         goToGraphTab();
