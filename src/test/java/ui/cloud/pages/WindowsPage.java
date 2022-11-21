@@ -41,7 +41,7 @@ public class WindowsPage extends IProductPage {
     public void delete() {
         runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
         {
-            Dialog dlgActions = new Dialog("Удаление");
+            Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         checkPowerStatus(VirtualMachineTable.POWER_STATUS_DELETED);
@@ -122,7 +122,7 @@ public class WindowsPage extends IProductPage {
     public void addDisk(String name, String size) {
         checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("Дополнительные диски", "Добавить диск", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Добавить диск");
+            Dialog dlg = Dialog.byTitle("Добавить диск");
             dlg.setInputValue("Дополнительный объем дискового пространства", size);
             DropDown.byLabel("Буква").selectByValue(name);
             DropDown.byLabel("Файловая система").selectByValue("refs");

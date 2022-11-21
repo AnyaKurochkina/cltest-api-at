@@ -68,7 +68,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
-            Dialog dlgActions = new Dialog("Удаление");
+            Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         new PostgreSqlClusterAstraPage.VirtualMachineTable("Статус").checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
@@ -127,7 +127,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_LIMIT_CONNECT).isColumnValueContains("", name))) {
             runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
-                Dialog dlg = new Dialog("Добавить БД");
+                Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя базы данных", name);
                 generatePassButton.shouldBe(Condition.enabled).click();
                 new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
@@ -160,7 +160,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         if (!(new Table(HEADER_NAME_DB).isColumnValueContains("", nameDb + "_" + nameUserDb))) {
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
-                Dialog dlg = new Dialog("Добавить пользователя");
+                Dialog dlg = Dialog.byTitle("Добавить пользователя");
                 dlg.setDropDownValue("Имя базы данных", nameDb);
                 dlg.setInputValue("Имя пользователя", nameUserDb);
                 dlg.setInputValue("Комментарий", comment);
@@ -226,7 +226,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_AT_DB_ADMIN, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
@@ -235,7 +235,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void resetPasswordUserDb(String nameUserDB) {
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(nameUserDB, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });

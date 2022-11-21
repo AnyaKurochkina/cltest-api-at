@@ -22,11 +22,10 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.codeborne.selenide.Selenide.open;
-import static core.helper.StringUtils.$$x;
-import static core.helper.StringUtils.$x;
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
+import static core.helper.StringUtils.$$x;
+import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Log4j2
@@ -34,7 +33,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 public abstract class IProductPage {
     IProduct product;
     Double preBillingCostAction;
-    SelenideElement productName = $x("(//button[@title='Редактировать']/ancestor::*/span)[1]");
+    SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
 
     abstract void checkPowerStatus(String expectedStatus);
 
@@ -93,21 +92,32 @@ public abstract class IProductPage {
     public void checkMonitoringOs() {
         Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
         btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        new MonitoringOsPage().check();
+        new MonitoringOsPage(product).check();
+    }
+
+    @Step("Проверка вкладки Мониторинг кластера")
+    public void checkClusterMonitoringOs() {
+        String column = "Роли узла";
+        int size = new Table(column).rowSize();
+        for (int i = 0; i < size; i++) {
+            SelenideElement element = new Table(column).getRowByIndex(i);
+            element.shouldBe(Condition.visible).scrollIntoView(scrollCenter).click();
+            Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
+            btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+            new MonitoringOsPage(product).check();
+            goToCluster();
+        }
     }
 
     @Step("Запуск действия '{action}'")
     protected void runActionWithoutParameters(SelenideElement button, String action, ActionParameters params) {
-        String productNameText = null;
-        //btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
         if (Objects.nonNull(params.getNode())) {
-            productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
         }
         button.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
         $$x("//li[.='{}']", action).shouldBe(CollectionCondition.anyMatch("Ожидание отображения пункта меню", WebElement::isDisplayed))
                 .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Dialog dlgActions = new Dialog(action);
+        Dialog dlgActions = Dialog.byTitle(action);
         if (params.isCheckPreBilling())
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
@@ -115,9 +125,8 @@ public abstract class IProductPage {
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(2000);
-        if (Objects.nonNull(params.getNode())) {
-            $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        }
+        if (Objects.nonNull(params.getNode()))
+            goToCluster();
         if (params.isWaitChangeStatus())
             waitChangeStatus();
         if (params.isCheckLastAction())
@@ -129,7 +138,6 @@ public abstract class IProductPage {
     @Step("Запуск действия '{action}' с параметрами и последующим нажатием на кнопку {textButton}")
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         String productNameText = null;
-        //btnGeneralInfo.scrollIntoView(scrollCenter).shouldBe(Condition.enabled).click();
         if (Objects.nonNull(params.getNode())) {
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
@@ -152,6 +160,10 @@ public abstract class IProductPage {
             waitChangeStatus();
         if (params.isCheckLastAction())
             checkLastAction(action);
+    }
+
+    public void goToCluster(){
+        $x("//a[.='{}']", productName.getText()).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
 
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable) {

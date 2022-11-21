@@ -67,7 +67,7 @@ public class AstraLinuxPage extends IProductPage {
     public void delete() {
         runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
         {
-            Dialog dlgActions = new Dialog("Удаление");
+            Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_DELETED);
@@ -115,7 +115,7 @@ public class AstraLinuxPage extends IProductPage {
     public void issueClientCertificate(String nameCertificate) {
         new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_VM, "Выпустить клиентский сертификат", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Выпустить клиентский сертификат");
+            Dialog dlg = Dialog.byTitle("Выпустить клиентский сертификат");
             dlg.setInputValue("Клиентская часть имени сертификата", nameCertificate);
             generatePassButton.shouldBe(Condition.enabled).click();
         });

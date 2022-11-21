@@ -31,7 +31,7 @@ public class GitlabPage extends IProductPage {
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить группу Gitlab", "Удалить", () ->
         {
-            Dialog dlgActions = new Dialog("Удаление");
+            Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
     }

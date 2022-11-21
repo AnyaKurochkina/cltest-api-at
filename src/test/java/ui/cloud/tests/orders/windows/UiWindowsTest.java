@@ -121,7 +121,7 @@ public class UiWindowsTest extends UiProductTest {
         try {
             winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
             {
-                Dialog dlgActions = new Dialog("Удаление");
+                Dialog dlgActions = Dialog.byTitle("Удаление");
                 dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
             new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
@@ -234,7 +234,6 @@ public class UiWindowsTest extends UiProductTest {
     @Test
     @Order(17)
     @TmsLink("1171958")
-    @EnabledIfEnv("prod")
     @DisplayName("UI Windows. Мониторинг ОС")
     void monitoringOs() {
         WindowsPage winPage = new WindowsPage(product);
