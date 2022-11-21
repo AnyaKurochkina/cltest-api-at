@@ -4,8 +4,10 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.Service;
+import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
@@ -25,13 +27,19 @@ public class ServicePage extends BasePage {
     private final DropDown graphDropDown = DropDown.byLabel("Граф");
     private final DropDown graphVersionDropDown = DropDown.byLabel("Значение");
     private final TextArea extraData = TextArea.byLabel("Extra data");
-    private final SelenideElement addTagButton = $x("//div[text()='Теги']/following::button[@label='Добавить'][1]");
-    private final SelenideElement addExcludeTagButton = $x("//div[text()='Исключающие теги']/following::button[@label='Добавить'][1]");
+    private final String tagsTableTitle = "Теги";
+    private final String excludeTagsTableTitle = "Исключающие теги";
+    private final SelenideElement addTagButton = $x("//div[text()='" + tagsTableTitle + "']/following::button[@label='Добавить'][1]");
+    private final SelenideElement addExcludeTagButton = $x("//div[text()='" + excludeTagsTableTitle + "']/following::button[@label='Добавить'][1]");
     private final DropDown tagDropDown = DropDown.byLabel("Тег");
     private final Input tagValueInput = Input.byPlaceholder("Введите значение");
     private final SelenideElement addTagValueButton = $x("//div[@role='dialog']//input/..//button");
     private final SelenideElement addTagDialogSaveButton = $x("//div[@role='dialog']//button[div[text()='Сохранить']]");
+    private final SelenideElement editTagMenuAction = $x("//div[@role='list'][not(@aria-hidden)]//li[contains(text(),'Редактировать')]");
+    private final SelenideElement deleteTagMenuAction = $x("//div[@role='list'][not(@aria-hidden)]//li[contains(text(),'Удалить')]");
+    private final SelenideElement deleteTagSubmitButton = $x("//form//button[@type='submit']");
     private final String tagTitleColumn = "Наименование";
+    private final String noDataFound = "Нет данных для отображения";
 
     public ServicePage() {
         serviceListLink.shouldBe(Condition.visible);
@@ -161,10 +169,11 @@ public class ServicePage extends BasePage {
         return this;
     }
 
-    public ServicePage addTag(String tag, String[] values) {
+    @Step("Добавление тега {tagName} со значениями {values}")
+    public ServicePage addTag(String tagName, String[] values) {
         goToTagsTab();
         addTagButton.click();
-        tagDropDown.selectByTitle(tag);
+        tagDropDown.selectByTitle(tagName);
         for (String value : values) {
             tagValueInput.setValue(value);
             addTagValueButton.click();
@@ -174,10 +183,11 @@ public class ServicePage extends BasePage {
         return this;
     }
 
-    public ServicePage addExcludeTag(String tag, String[] values) {
+    @Step("Добавление исключающего тега {tagName} со значениями {values}")
+    public ServicePage addExcludeTag(String tagName, String[] values) {
         goToTagsTab();
         addExcludeTagButton.click();
-        tagDropDown.selectByTitle(tag);
+        tagDropDown.selectByTitle(tagName);
         for (String value : values) {
             tagValueInput.setValue(value);
             addTagValueButton.click();
@@ -187,33 +197,150 @@ public class ServicePage extends BasePage {
         return this;
     }
 
-    public ServicePage checkTagsTable(String tag, String[] values) {
-        Table table = new Table($x("//div[text()='Теги']/following::table[1]"));
-        table.isColumnValueEquals(tagTitleColumn, tag);
+    @Step("Редактирование исключающего тега {tagName} и задание значений {values}")
+    public ServicePage editExcludeTag(String tagName, String[] values) {
+        goToTagsTab();
+        Table table = new Table($x("//div[text()='" + excludeTagsTableTitle + "']/following::table[1]"));
+        table.getRowElementByColumnValue(tagTitleColumn, tagName)
+                .$x(".//button[@id='actions-menu-button']")
+                .scrollIntoView(true)
+                .click();
+        editTagMenuAction.click();
+        deleteAllTagValues();
         for (String value : values) {
-            table.getRowByIndex(0).$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
+            tagValueInput.setValue(value);
+            addTagValueButton.click();
+            $x("//span[text()='" + value + "']").shouldBe(Condition.visible);
+        }
+        addTagDialogSaveButton.click();
+        return this;
+    }
+
+    @Step("Редактирование тега {tagName} и задание значений {values}")
+    public ServicePage editTag(String tagName, String[] values) {
+        goToTagsTab();
+        Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
+        table.getRowElementByColumnValue(tagTitleColumn, tagName)
+                .$x(".//button[@id='actions-menu-button']")
+                .click();
+        editTagMenuAction.click();
+        deleteAllTagValues();
+        for (String value : values) {
+            tagValueInput.setValue(value);
+            addTagValueButton.click();
+            $x("//span[text()='" + value + "']").shouldBe(Condition.visible);
+        }
+        addTagDialogSaveButton.click();
+        return this;
+    }
+
+    @Step("Удаление тега {tagName}")
+    public ServicePage deleteTag(String tagName) {
+        goToTagsTab();
+        Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
+        table.getRowElementByColumnValue(tagTitleColumn, tagName)
+                .$x(".//button[@id='actions-menu-button']")
+                .click();
+        deleteTagMenuAction.click();
+        deleteTagSubmitButton.click();
+        return this;
+    }
+
+    @Step("Удаление исключающего тега {tagName}")
+    public ServicePage deleteExcludeTag(String tagName) {
+        goToTagsTab();
+        Table table = new Table($x("//div[text()='" + excludeTagsTableTitle + "']/following::table[1]"));
+        table.getRowElementByColumnValue(tagTitleColumn, tagName)
+                .$x(".//button[@id='actions-menu-button']")
+                .scrollIntoView(true)
+                .click();
+        deleteTagMenuAction.click();
+        deleteTagSubmitButton.click();
+        return this;
+    }
+
+    @Step("Проверка, что в таблице тегов отображается тег {tagName} со значениями {values}")
+    public ServicePage checkTagsTable(String tagName, String[] values) {
+        Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
+        table.isColumnValueEquals(tagTitleColumn, tagName);
+        for (String value : values) {
+            table.getRowElementByColumnValue(tagTitleColumn, tagName).$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
         }
         return this;
     }
 
-    public ServicePage checkExcludeTagsTable(String tag, String[] values) {
-        Table table = new Table($x("//div[text()='Исключающие теги']/following::table[1]"));
-        table.isColumnValueEquals(tagTitleColumn, tag);
+    @Step("Проверка, что таблица тегов пустая")
+    public ServicePage checkTagsTableIsEmpty() {
+        Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
+        Assertions.assertEquals(noDataFound, table.getRowByIndex(0).getText());
+        return this;
+    }
+
+    @Step("Проверка, что таблица исключающих тегов пустая")
+    public ServicePage checkExcludeTagsTableIsEmpty() {
+        Table table = new Table($x("//div[text()='" + excludeTagsTableTitle + "']/following::table[1]"));
+        Assertions.assertEquals(noDataFound, table.getRowByIndex(0).getText());
+        return this;
+    }
+
+    @Step("Проверка, что в таблице исключающих тегов отображается тег {tagName} со значениями {values}")
+    public ServicePage checkExcludeTagsTable(String tagName, String[] values) {
+        Table table = new Table($x("//div[text()='" + excludeTagsTableTitle + "']/following::table[1]"));
+        table.isColumnValueEquals(tagTitleColumn, tagName);
         for (String value : values) {
-            table.getRowByIndex(0).$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
+            table.getRowElementByColumnValue(tagTitleColumn, tagName).$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
         }
         return this;
     }
 
+    @Step("Проверка, что поле Extra data содержит значение {value}")
     public ServicePage checkDataSourceContainsValue(String value) {
         goToParamsTab();
         TestUtils.wait(1000);
-        while (!$x("//label[text()='Data source']/following::span[text()='\"" + value + "\"']").isDisplayed()) {
+        for (int i = 0; i < 5; i++) {
+            if ($x("//label[text()='Data source']/following::span[text()='\"" + value + "\"']").isDisplayed())
+                break;
             $x("//label[text()='Data source']/ancestor::div[2]//div[contains(@class,'view-line')][span][last()]")
                     .hover().scrollIntoView(true);
+            i++;
         }
         $x("//label[text()='Data source']/following::span[text()='\"" + value + "\"']")
                 .shouldBe(Condition.visible);
         return this;
+    }
+
+    @Step("Проверка, что поле Extra data не содержит значение {value}")
+    public ServicePage checkDataSourceDoesNotContainValue(String value) {
+        goToParamsTab();
+        TestUtils.wait(1000);
+        for (int i = 0; i < 5; i++) {
+            if ($x("//label[text()='Data source']/following::span[text()='\"" + value + "\"']").isDisplayed()) {
+                Assertions.fail("Отображается значение, которое должно отсутствовать: " + value);
+            }
+            $x("//label[text()='Data source']/ancestor::div[2]//div[contains(@class,'view-line')][span][last()]")
+                    .hover().scrollIntoView(true);
+            i++;
+        }
+        return this;
+    }
+
+    @Step("Удаление всех значений у тега")
+    private void deleteAllTagValues() {
+        while ($x("//span/following-sibling::*[name()='svg']").isDisplayed()) {
+            $x("//span/following-sibling::*[name()='svg']").click();
+        }
+    }
+
+    @Step("Возврат в список сервисов")
+    public ServicesListPagePC goToServicesList() {
+        TestUtils.scrollToTheTop();
+        serviceListLink.click();
+        return new ServicesListPagePC();
+    }
+
+    @Step("Отмена просмотра страницы сервиса")
+    public ServicesListPagePC cancel() {
+        cancelButton.click();
+        return new ServicesListPagePC();
     }
 }

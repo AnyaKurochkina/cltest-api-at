@@ -33,7 +33,6 @@ public class TemplatesListPage extends BaseListPage {
     private final SelenideElement runQueueRequiredFieldHint =
             $x("//input[@name='run']/parent::div/following-sibling::p[text()='Поле обязательно для заполнения']");
     private final SelenideElement nonuniqueNameValidationHint = $x("//input[@name='name']/parent::div/following-sibling::p[text()='Шаблон с таким именем уже существует']");
-    private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
     private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
     private final TextArea input = TextArea.byLabel("Input");
     private final TextArea output = TextArea.byLabel("Output");
@@ -190,7 +189,7 @@ public class TemplatesListPage extends BaseListPage {
 
     @Step("Проверка, что подсвечен шаблон 'name'")
     public void checkTemplateIsHighlighted(String name) {
-        BaseListPage.checkRowIsHighlighted(columnName, name);
+        super.checkRowIsHighlighted(columnName, name);
     }
 
     @Step("Поиск и открытие страницы шаблона '{name}'")

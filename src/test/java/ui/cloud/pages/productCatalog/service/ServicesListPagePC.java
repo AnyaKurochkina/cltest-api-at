@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.template.TemplatePage;
+import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
@@ -232,10 +234,34 @@ public class ServicesListPagePC extends BaseListPage {
         return this;
     }
 
+    @Step("Выбор графа {graphName}")
     private void selectGraphByName(String graphName) {
         graphInput.click();
         graphInput.setValue(graphName);
         TestUtils.wait(1000);
         $x("//div[contains(@title, '" + graphName + "')]").click();
+    }
+
+    @Step("Сортировка по дате создания")
+    public ServicesListPagePC sortByCreateDate() {
+        sortByCreateDate.click();
+        return this;
+    }
+
+    @Step("Переход на последнюю страницу списка")
+    public ServicesListPagePC lastPage() {
+        super.lastPage();
+        return this;
+    }
+
+    @Step("Открытие страницы сервиса {name}")
+    public ServicePage openServicePage(String name) {
+        new Table(columnName).getRowElementByColumnValue(columnName, name).click();
+        return new ServicePage();
+    }
+
+    @Step("Проверка, что подсвечен сервис 'name'")
+    public void checkServiceIsHighlighted(String name) {
+        super.checkRowIsHighlighted(columnName, name);
     }
 }
