@@ -6,18 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompactTemplate{
-
+public class CompactTemplate {
     @JsonProperty("name")
-    private String name;
-
+    private Name name;
     @JsonProperty("type")
-    private String  type;
-
+    private Type type;
     @JsonProperty("status")
-    private String status;
+    private Status status;
+    private List<Object> additional;
+    private Object params;
+    @JsonProperty("Endpoint")
+    private String endpoint;
 }

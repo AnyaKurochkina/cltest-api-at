@@ -6,9 +6,7 @@ import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.visualTeamplate.CompactTemplate;
-import models.cloud.productCatalog.visualTeamplate.FullTemplate;
-import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
+import models.cloud.productCatalog.visualTeamplate.*;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -30,8 +28,11 @@ public class VisualTemplateNegativeTest extends Tests {
 
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/item_visual_templates/",
             "productCatalog/itemVisualTemplate/createItemVisual.json");
-    CompactTemplate compactTemplate = CompactTemplate.builder().name(("name"))
-            .type(("type")).status(("status")).build();
+    CompactTemplate compactTemplate = CompactTemplate.builder()
+            .name(new Name("name"))
+            .type(new Type("type"))
+            .status(new Status("status"))
+            .build();
     FullTemplate fullTemplate = FullTemplate.builder().type("type").value(Arrays.asList("value", "value2")).build();
 
     @DisplayName("Негативный тест на создание шаблона визуализации с неуникальной связкой EventType-EventProvider")

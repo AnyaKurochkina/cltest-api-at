@@ -4,12 +4,15 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Input;
 import ui.elements.InputFile;
+import ui.elements.Table;
 import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OrgDirectionsListPage extends BaseListPage {
 
@@ -24,6 +27,8 @@ public class OrgDirectionsListPage extends BaseListPage {
     private final SelenideElement inputId = $x("//input[@name = 'id']");
     private final SelenideElement deleteButton = $x("//button[@type ='submit']");
     private final SelenideElement noData = $x("//*[text() = 'Нет данных для отображения']");
+    private final SelenideElement actionMenu = $x(".//button[@id = 'actions-menu-button'])");
+
 
     public OrgDirectionsListPage() {
         SelenideElement directionPageTitle = $x("//div[text() = 'Направления']");
@@ -37,8 +42,9 @@ public class OrgDirectionsListPage extends BaseListPage {
 
     @Step("Поиск направления по имени")
     public OrgDirectionsListPage findDirectionByName(String dirName) {
-        inputSearch.setValue(dirName);
-        $x("//td[@value = '" + dirName + "']").shouldBe(Condition.visible);
+        Input.byPlaceholder("Поиск").setValue(dirName);
+        TestUtils.wait(1000);
+        assertTrue(new Table("Код направления").isColumnValueEquals("Код направления", dirName));
         return new OrgDirectionsListPage();
     }
 
@@ -51,23 +57,21 @@ public class OrgDirectionsListPage extends BaseListPage {
 
     @Step("Переход на страницу редактирования направления с именем {name}")
     public OrgDirectionPage openOrgDirectionPage(String name) {
-        inputSearch.setValue(name);
-        $x("//td[@value = '" + name + "']").shouldBe(Condition.visible).click();
-        TestUtils.wait(500);
+        Input.byPlaceholder("Поиск").setValue(name);
+        TestUtils.wait(1000);
+        new Table("Код направления").getRowElementByColumnValue("Код направления", name).click();
         return new OrgDirectionPage();
     }
 
     @Step("Выбор действия 'удаление'")
-    public OrgDirectionsListPage deleteActionMenu(String dirName) {
-        $x("//td[text() = '" + dirName + "']//ancestor::tr//*[@id = 'actions-menu-button']").click();
-        deleteAction.click();
-        return this;
+    public DeleteDialog deleteActionMenu(String dirName) {
+        delete("Код направления", dirName);
+        return new DeleteDialog();
     }
 
     @Step("Выбор действия 'копирование'")
     public OrgDirectionPage copyActionMenu(String dirName) {
-        $x("//td[text() = '" + dirName + "']//ancestor::tr//*[@id = 'actions-menu-button']").click();
-        copyAction.click();
+        copy("Код направления", dirName);
         return new OrgDirectionPage();
     }
 
@@ -89,14 +93,14 @@ public class OrgDirectionsListPage extends BaseListPage {
     @Step("Выбор и импорт файла")
     public OrgDirectionsListPage uploadFile(String path) {
         importButton.scrollIntoView(TypifiedElement.scrollCenter).click();
-        new InputFile(path).importFile();
+        new InputFile(path).importFileAndSubmit();
         return this;
     }
 
     @Step("Проверка существования направления")
     public boolean isOrgDirectionExist(String dirName) {
-        new Input(inputSearch).setValue(dirName);
-        TestUtils.wait(500);
-        return !noData.exists();
+        Input.byPlaceholder("Поиск").setValue(dirName);
+        TestUtils.wait(1000);
+        return new Table("Код направления").isColumnValueEquals("Код направления", dirName);
     }
 }

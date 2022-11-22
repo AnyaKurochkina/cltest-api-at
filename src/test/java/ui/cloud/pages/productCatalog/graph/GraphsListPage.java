@@ -190,7 +190,7 @@ public class GraphsListPage extends BaseListPage {
     @Step("Импорт графа из файла")
     public GraphsListPage importGraph(String path) {
         importButton.click();
-        new InputFile(path).importFile();
+        new InputFile(path).importFileAndSubmit();
         new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
         return this;
     }

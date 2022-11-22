@@ -1,9 +1,7 @@
 package ui.cloud.tests.productCatalog.orderTemplate;
 
 import io.qameta.allure.Epic;
-import models.cloud.productCatalog.visualTeamplate.CompactTemplate;
-import models.cloud.productCatalog.visualTeamplate.FullTemplate;
-import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
+import models.cloud.productCatalog.visualTeamplate.*;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ProductCatalogSteps;
@@ -22,8 +20,11 @@ public class OrderTemplateBaseTest extends BaseTest {
     final static String DESCRIPTION = "Description";
     private static final ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/item_visual_templates/",
             "productCatalog/itemVisualTemplate/createItemVisual.json");
-    private static final CompactTemplate compactTemplate = CompactTemplate.builder().name("name")
-            .type("type").status("status").build();
+    private static final CompactTemplate compactTemplate = CompactTemplate.builder()
+            .name(new Name("name"))
+            .type(new Type("type"))
+            .status(new Status("status"))
+            .build();
     private static final FullTemplate fullTemplate = FullTemplate.builder().type("tab").value(Arrays.asList("testValue")).build();
     final String NAME = UUID.randomUUID().toString();
     ItemVisualTemplate orderTemplate;

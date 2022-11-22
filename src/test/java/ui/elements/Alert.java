@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import static core.helper.StringUtils.$x;
 
 public class Alert implements TypifiedElement {
-    SelenideElement element = $x("(//div[@role='alert' and descendant::button])[last()]");
+    SelenideElement element = $x("(//div[@role='alert'])[last()]");
 
     public Alert() {
         element.shouldBe(Condition.visible).shouldBe(Condition.matchText(".{1,}"));
