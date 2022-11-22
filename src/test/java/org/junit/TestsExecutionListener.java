@@ -12,8 +12,10 @@ import models.ObjectPoolService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import ru.testit.junit5.RunningHandler;
 
@@ -73,8 +75,10 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--start-maximized");
         Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
-        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true")))
-            WebDriverRunner.setWebDriver(new RemoteWebDriver(new java.net.URL(Configuration.remote), Configuration.browserCapabilities));
+        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
+            RemoteWebDriver driver = new RemoteWebDriver(new java.net.URL(Configuration.remote), Configuration.browserCapabilities);
+            driver.setFileDetector(new LocalFileDetector());
+        }
     }
 
     public void loadSecretJson() {
