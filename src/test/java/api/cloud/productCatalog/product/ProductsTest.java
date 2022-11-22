@@ -1,10 +1,9 @@
 package api.cloud.productCatalog.product;
 
+import api.Tests;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
-import httpModels.productCatalog.product.getProduct.response.GetProductResponse;
-import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -17,9 +16,11 @@ import models.cloud.productCatalog.product.Product;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -212,12 +213,12 @@ public class ProductsTest extends Tests {
                 .info(info)
                 .build()
                 .init().toJson();
-        steps.createProductObjectWithPublicToken(createProduct).assertStatus(403);
-        steps.partialUpdateObjectWithPublicToken(productId, new JSONObject().put("description", "UpdateDescription"))
+        createProductWithPublicToken(createProduct).assertStatus(403);
+        partialUpdateProductWithPublicToken(productId, new JSONObject().put("description", "UpdateDescription"))
                 .assertStatus(403);
-        steps.putObjectByIdWithPublicToken(productId, steps.createJsonObject("update_object_with_public_token_api"))
+        putProductByIdWithPublicToken(productId, steps.createJsonObject("update_object_with_public_token_api"))
                 .assertStatus(403);
-        steps.deleteObjectWithPublicToken(productId).assertStatus(403);
+        deleteProductWithPublicToken(productId).assertStatus(403);
     }
 
     @DisplayName("Импорт продукта")
@@ -238,17 +239,16 @@ public class ProductsTest extends Tests {
     public void importProductWithIcon() {
         String data = JsonHelper.getStringFromFile("/productCatalog/products/importProductWithIcon.json");
         String name = new JsonPath(data).get("Product.name");
-        if (steps.isExists(name)) {
-            steps.deleteByName(name, GetProductsResponse.class);
+        if (isProductExists(name)) {
+            deleteProductByName(name);
         }
-        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProductWithIcon.json");
-        String id = steps.getProductObjectIdByNameWithMultiSearch(name, GetProductsResponse.class);
-        GetProductResponse product = (GetProductResponse) steps.getById(id, GetProductResponse.class);
+        importProduct(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProductWithIcon.json");
+        Product product = getProductById(getProductByName(name).getProductId());
         assertFalse(product.getIconStoreId().isEmpty());
         assertFalse(product.getIconUrl().isEmpty());
-        assertTrue(steps.isExists(name), "Продукт не существует");
-        steps.deleteByName(name, GetProductsResponse.class);
-        assertFalse(steps.isExists(name), "Продукт существует");
+        assertTrue(isProductExists(name), "Продукт не существует");
+        deleteProductByName(name);
+        assertFalse(isProductExists(name), "Продукт существует");
     }
 
     @DisplayName("Получение продукта по Id")
@@ -512,8 +512,7 @@ public class ProductsTest extends Tests {
                 }})
                 .build()
                 .createObject();
-        GetProductResponse getProductById = (GetProductResponse) steps.getById(product.getProductId(),
-                GetProductResponse.class);
+        Product getProductById = getProductById(product.getProductId());
         Map<String, String> extraData = getProductById.getExtraData();
         assertEquals(extraData.get(key), value);
     }
@@ -530,7 +529,7 @@ public class ProductsTest extends Tests {
                 .inGeneralList(true)
                 .build()
                 .createObject();
-        GetProductResponse getProductById = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        Product getProductById = getProductById(product.getProductId());
         assertTrue(getProductById.getInGeneralList());
     }
 
@@ -546,7 +545,7 @@ public class ProductsTest extends Tests {
                 .build()
                 .createObject();
         String tag = "product_" + productName + "_" + product.getVersion();
-        Response response = steps.dumpToBitbucket(product.getProductId());
+        Response response = dumpProductToBitbucket(product.getProductId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         assertEquals(tag, response.jsonPath().get("tag"));
     }
@@ -556,21 +555,20 @@ public class ProductsTest extends Tests {
     @TmsLink("1028975")
     public void loadFromGitlabProduct() {
         String productName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
-        JSONObject jsonObject = Product.builder()
+        Product product = Product.builder()
                 .name(productName)
                 .title(productName)
                 .version("1.0.0")
                 .build()
-                .init().toJson();
-        GetProductResponse product = steps.createProductObject(jsonObject).extractAs(GetProductResponse.class);
-        Response response = steps.dumpToBitbucket(product.getId());
+                .createObject();
+        Response response = dumpProductToBitbucket(product.getProductId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
-        steps.deleteByName(productName, GetProductsResponse.class);
+        deleteProductById(product.getProductId());
         String path = "product_" + productName + "_" + product.getVersion();
-        steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(productName));
-        steps.deleteByName(productName, GetProductsResponse.class);
-        assertFalse(steps.isExists(productName));
+        loadProductFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(isProductExists(productName));
+        deleteProductByName(productName);
+        assertFalse(isProductExists(productName));
     }
 
     @DisplayName("Получение продукта по контексту id проекта без ограничений со стороны организации")
@@ -601,8 +599,8 @@ public class ProductsTest extends Tests {
                 .categoryV2(Categories.DEFAULT_VALUE)
                 .build()
                 .createObject();
-        GetProductResponse createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
-        assertEquals("compute", createdProduct.getCategoryV2());
+        Product createdProduct = getProductById(product.getProductId());
+        assertEquals(Categories.COMPUTE, createdProduct.getCategoryV2());
     }
 
     @Test
@@ -610,7 +608,7 @@ public class ProductsTest extends Tests {
     @TmsLink("978299")
     public void getValueCategoryV2() {
         String productName = "get_value_category_v2_product_test_api";
-        String categoryV2 = "web";
+        Categories categoryV2 = Categories.WEB;
         Product product = Product.builder()
                 .name(productName)
                 .title("AtTestApiProduct")
@@ -621,8 +619,8 @@ public class ProductsTest extends Tests {
                 .info(info)
                 .build()
                 .createObject();
-        steps.partialUpdateObject(product.getProductId(), new JSONObject().put("category_v2", categoryV2));
-        GetProductResponse createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        partialUpdateProduct(product.getProductId(), new JSONObject().put("category_v2", categoryV2.getValue()));
+        Product createdProduct = getProductById(product.getProductId());
         assertEquals(categoryV2, createdProduct.getCategoryV2());
         assertEquals(product.getVersion(), createdProduct.getVersion());
     }
@@ -631,10 +629,9 @@ public class ProductsTest extends Tests {
     @DisplayName("Получение значения поля payment в продуктах")
     @TmsLink("979091")
     public void getPaymentProduct() {
-        String productName = "get_payment_product_test_api";
         String paymentValue = "paid";
         Product product = Product.builder()
-                .name(productName)
+                .name("get_payment_product_test_api")
                 .title("AtTestApiProduct")
                 .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
@@ -643,14 +640,11 @@ public class ProductsTest extends Tests {
                 .build()
                 .createObject();
         String id = product.getProductId();
-        GetProductResponse createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
-        assertEquals(paymentValue, createdProduct.getPayment());
+        assertEquals(paymentValue, getProductById(id).getPayment());
         steps.partialUpdateObject(id, new JSONObject().put("payment", "free"));
-        createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
-        assertEquals("free", createdProduct.getPayment());
+        assertEquals("free", getProductById(id).getPayment());
         steps.partialUpdateObject(id, new JSONObject().put("payment", "partly_paid"));
-        createdProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
-        assertEquals("partly_paid", createdProduct.getPayment());
+        assertEquals("partly_paid", getProductById(id).getPayment());
     }
 
     @DisplayName("Создание продукта c дефолтным значением number")
@@ -666,7 +660,7 @@ public class ProductsTest extends Tests {
                 .info(info)
                 .build()
                 .createObject();
-        GetProductResponse actualProduct = (GetProductResponse) steps.getById(product.getProductId(), GetProductResponse.class);
+        Product actualProduct = getProductById(product.getProductId());
         assertEquals(50, actualProduct.getNumber());
     }
 }

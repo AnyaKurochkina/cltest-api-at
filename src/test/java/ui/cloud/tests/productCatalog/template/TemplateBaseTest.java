@@ -1,8 +1,7 @@
 package ui.cloud.tests.productCatalog.template;
 
-import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
-import models.cloud.productCatalog.template.Template;
 import io.qameta.allure.Epic;
+import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +12,9 @@ import ui.models.Node;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static steps.productCatalog.TemplateSteps.deleteTemplateById;
+import static steps.productCatalog.TemplateSteps.getTemplateByName;
 
 @Epic("Конструктор.Шаблоны узлов")
 @DisabledIfEnv("prod")
@@ -58,8 +60,6 @@ public class TemplateBaseTest extends BaseTest {
     }
 
     void deleteTemplate(String name) {
-        ProductCatalogSteps steps = new ProductCatalogSteps(Template.productName);
-        steps.getDeleteObjectResponse(steps
-                .getProductObjectIdByNameWithMultiSearch(name, GetTemplateListResponse.class)).assertStatus(204);
+        deleteTemplateById(getTemplateByName(name).getId());
     }
 }

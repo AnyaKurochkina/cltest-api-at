@@ -2,29 +2,28 @@ package models.cloud.productCatalog.template;
 
 import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import core.enums.Role;
 import core.helper.JsonHelper;
-import core.helper.http.Http;
-import httpModels.productCatalog.template.createTemplate.response.CreateTemplateResponse;
-import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
+import core.helper.StringUtils;
 import httpModels.productCatalog.template.getTemplate.response.PrintedOutput;
 import io.qameta.allure.Step;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
 import java.util.Map;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static steps.productCatalog.TemplateSteps.*;
 
 @Log4j2
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 
 public class Template extends Entity implements IProductCatalog {
 
@@ -88,8 +87,6 @@ public class Template extends Entity implements IProductCatalog {
     @JsonProperty("current_version")
     private String currentVersion;
 
-    public static final String productName = "/api/v1/templates/";
-
     @Override
     public Entity init() {
         return this;
@@ -116,27 +113,17 @@ public class Template extends Entity implements IProductCatalog {
     @Override
     @Step("Создание шаблона")
     protected void create() {
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, name);
-        if (productCatalogSteps.isExists(name)) {
-            productCatalogSteps.deleteByName(name, GetTemplateListResponse.class);
+        if (isTemplateExists(name)) {
+            deleteTemplateById(getTemplateByName(name).getId());
         }
-        CreateTemplateResponse createTemplateResponse = new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(toJson())
-                .post(productName)
-                .assertStatus(201)
-                .extractAs(CreateTemplateResponse.class);
-        id = createTemplateResponse.getId();
+        Template createTemplate = createTemplate(toJson()).assertStatus(201).extractAs(Template.class);
+        StringUtils.copyAvailableFields(createTemplate, this);
         Assertions.assertNotNull(id, "Шаблон с именем: " + name + ", не создался");
     }
 
     @Override
     protected void delete() {
-         new Http(ProductCatalogURL)
-                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(productName + id + "/")
-                .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, "productCatalog/templates/createTemplate.json");
-        Assertions.assertFalse(productCatalogSteps.isExists(name));
+        deleteTemplateById(id);
+        assertFalse(isTemplateExists(name));
     }
 }

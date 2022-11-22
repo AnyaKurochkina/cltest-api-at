@@ -1,9 +1,9 @@
 package api.cloud.productCatalog.template;
 
+import api.Tests;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
-import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
 import httpModels.productCatalog.template.getTemplate.response.GetTemplateResponse;
@@ -11,11 +11,11 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.template.Template;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
+import models.cloud.productCatalog.template.Template;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -24,7 +24,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
+import static steps.productCatalog.TemplateSteps.getTemplateById;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны")
@@ -51,8 +51,8 @@ public class TemplatesTest extends Tests {
                 .name(templateName)
                 .build()
                 .createObject();
-        GetImpl getTemplate = steps.getById(String.valueOf(template.getId()), GetTemplateResponse.class);
-        assertEquals(templateName, getTemplate.getName());
+        Template getTemplate = getTemplateById(template.getId());
+        assertEquals(template, getTemplate);
     }
 
     @DisplayName("Создание шаблона в продуктовом каталоге с иконкой")
@@ -121,7 +121,7 @@ public class TemplatesTest extends Tests {
     @DisplayName("Получение шаблона по Id")
     @TmsLink("643554")
     @Test
-    public void getTemplateById() {
+    public void getTemplateByIdTest() {
         String templateName = "get_by_id_template_test_api";
         Template template = Template.builder()
                 .name(templateName)
