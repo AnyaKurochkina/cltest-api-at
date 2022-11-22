@@ -4,9 +4,12 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
+import steps.productCatalog.GraphSteps;
+import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -37,6 +40,7 @@ public class ServicesListPagePC extends BaseListPage {
     private final DropDown statusDropDown = DropDown.byLabel("Статус");
     private final WebElement applyFiltersButton = $x("//button[div[text()='Применить']]");
     private final WebElement clearFiltersButton = $x("//button[text()='Сбросить фильтры']");
+    private final Input graphInput = Input.byLabelV2("Граф");
 
     @Step("Проверка заголовков списка графов")
     public ServicesListPagePC checkHeaders() {
@@ -86,12 +90,16 @@ public class ServicesListPagePC extends BaseListPage {
         return this;
     }
 
-    @Step("Создание сервиса '{service.serviceName}'")
+    @Step("Создание сервиса '{service.name}'")
     public ServicePage createService(Service service) {
         addNewObjectButton.click();
         directionDropDown.selectByTitle(service.getDirectionName());
         titleInput.setValue(service.getTitle());
         nameInput.setValue(service.getName());
+        if (service.getGraphId() != null) {
+            Graph graph = GraphSteps.getGraphById(service.getGraphId());
+            selectGraphByName(graph.getName());
+        }
         descriptionInput.setValue(service.getDescription());
         createButton.click();
         new Alert().checkText("Сервис успешно создан").checkColor(Alert.Color.GREEN).close();
@@ -116,7 +124,7 @@ public class ServicesListPagePC extends BaseListPage {
         return this;
     }
 
-    @Step("Проверка валидации неуникального имени сервиса '{service.serviceName}'")
+    @Step("Проверка валидации неуникального имени сервиса '{service.name}'")
     public ServicesListPagePC checkNonUniqueNameValidation(Service service) {
         TestUtils.scrollToTheTop();
         addNewObjectButton.click();
@@ -135,7 +143,7 @@ public class ServicesListPagePC extends BaseListPage {
             nameInput.setValue(name);
             TestUtils.wait(500);
             if (!nameValidationHint.exists()) {
-                TestUtils.wait(500);
+                TestUtils.wait(1000);
                 nameInput.getInput().sendKeys("t");
             }
             nameValidationHint.shouldBe(Condition.visible);
@@ -174,7 +182,7 @@ public class ServicesListPagePC extends BaseListPage {
         return new ServicePage();
     }
 
-    @Step("Проверка, что сервис '{service.serviceName}' найден при поиске по значению '{value}'")
+    @Step("Проверка, что сервис '{service.name}' найден при поиске по значению '{value}'")
     public ServicesListPagePC findServiceByValue(String value, Service service) {
         search(value);
         Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, service.getName()));
@@ -209,22 +217,53 @@ public class ServicesListPagePC extends BaseListPage {
         return this;
     }
 
-    @Step("Проверка, что сервис '{service.serviceName}' отображается в списке")
+    @Step("Проверка, что сервис '{service.name}' отображается в списке")
     public ServicesListPagePC checkServiceIsDisplayed(Service service) {
         Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, service.getName()));
         return this;
     }
 
-    @Step("Проверка, что сервис '{service.serviceName}' не отображается в списке")
+    @Step("Проверка, что сервис '{service.name}' не отображается в списке")
     public ServicesListPagePC checkServiceIsNotDisplayed(Service service) {
         Assertions.assertFalse(new Table(columnName).isColumnValueEquals(columnName, service.getName()));
         return this;
     }
 
-    @Step("Копирование сервиса '{service.serviceName}'")
+    @Step("Копирование сервиса '{service.name}'")
     public ServicesListPagePC copyService(Service service) {
         new BaseListPage().copy(columnName, service.getName());
         new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();
         return this;
+    }
+
+    @Step("Выбор графа {graphName}")
+    private void selectGraphByName(String graphName) {
+        graphInput.click();
+        graphInput.setValue(graphName);
+        TestUtils.wait(1000);
+        $x("//div[contains(@title, '" + graphName + "')]").click();
+    }
+
+    @Step("Сортировка по дате создания")
+    public ServicesListPagePC sortByCreateDate() {
+        sortByCreateDate.click();
+        return this;
+    }
+
+    @Step("Переход на последнюю страницу списка")
+    public ServicesListPagePC lastPage() {
+        super.lastPage();
+        return this;
+    }
+
+    @Step("Открытие страницы сервиса {name}")
+    public ServicePage openServicePage(String name) {
+        new Table(columnName).getRowElementByColumnValue(columnName, name).click();
+        return new ServicePage();
+    }
+
+    @Step("Проверка, что подсвечен сервис 'name'")
+    public void checkServiceIsHighlighted(String name) {
+        checkRowIsHighlighted(columnName, name);
     }
 }

@@ -13,7 +13,8 @@ public class BasePage {
     protected final DropDown versionDropDown = DropDown.byLabel("Выберите версию");
     protected final WebElement versionComparisonTab = $x("//button[span[text()='Сравнение версий']]");
     protected final SelenideElement selectedVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
-    protected final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
+    protected final SelenideElement saveButton = $x("//button[div[text()='Сохранить']]");
+    protected final SelenideElement cancelButton = $x("//button[div[text()='Отмена']]");
 
     @Step("Сохранение объекта со следующей патч-версией")
     public BasePage saveWithPatchVersion(String alertText) {
@@ -57,4 +58,13 @@ public class BasePage {
         saveButton.shouldBe(Condition.disabled);
         return this;
     }
+
+    @Step("Переход на вкладку '{title}'")
+    public void goToTab(String title) {
+        SelenideElement tab = $x("//button[span[text()='" + title + "']]");
+        if (tab.getAttribute("aria-selected").equals("false")) {
+            tab.scrollIntoView(false).click();
+        }
+    }
+
 }

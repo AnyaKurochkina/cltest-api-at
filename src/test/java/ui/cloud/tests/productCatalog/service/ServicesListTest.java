@@ -1,10 +1,12 @@
 package ui.cloud.tests.productCatalog.service;
 
+import com.codeborne.selenide.Selenide;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 
 @Feature("Действия со списком сервисов")
 public class ServicesListTest extends ServiceBaseTest {
@@ -48,5 +50,23 @@ public class ServicesListTest extends ServiceBaseTest {
                 .checkServiceIsDisplayed(service)
                 .clearFilters()
                 .checkServiceIsDisplayed(service);
+    }
+
+    @Test
+    @TmsLink("808412")
+    @DisplayName("Проверка подсветки ранее открытого сервиса")
+    public void returnToListFromServicePageTest() {
+        new IndexPage().goToServicesListPagePC()
+                .sortByCreateDate()
+                .lastPage()
+                .openServicePage(NAME)
+                .goToServicesList()
+                .checkServiceIsHighlighted(NAME);
+        new ServicesListPagePC().openServicePage(NAME);
+        Selenide.back();
+        new ServicesListPagePC().checkServiceIsHighlighted(NAME);
+        new ServicesListPagePC().openServicePage(NAME)
+                .cancel()
+                .checkServiceIsHighlighted(NAME);
     }
 }
