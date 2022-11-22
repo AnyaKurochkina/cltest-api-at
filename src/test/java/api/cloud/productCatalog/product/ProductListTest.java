@@ -3,8 +3,6 @@ package api.cloud.productCatalog.product;
 import api.Tests;
 import core.helper.http.Response;
 import httpModels.productCatalog.product.getProducts.getProductsExportList.ExportItem;
-import httpModels.productCatalog.product.getProducts.response.GetProductsResponse;
-import httpModels.productCatalog.product.getProducts.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -50,7 +48,7 @@ public class ProductListTest extends Tests {
     @TmsLink("679088")
     @Test
     public void getMeta() {
-        String str = steps.getMeta(GetProductsResponse.class).getNext();
+        String str = getMetaProductList().getNext();
         String url = getAppProp("url.kong");
         if (!(str == null)) {
             assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
@@ -125,10 +123,10 @@ public class ProductListTest extends Tests {
         String org = resp.jsonPath().getString("data.organization");
         String infSys = resp.jsonPath().getString("data.information_system_id");
         String envType = resp.jsonPath().getString("data.project_environment.environment_type").toLowerCase();
-        List<ListItem> list = steps.getProductListByProjectContext(project.getId());
-        for (ListItem item : list) {
+        List<Product> list = getProductListByProjectContext(project.getId());
+        for (Product item : list) {
             List<httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem> list1 = steps
-                    .getProductOrgInfoSystemById(item.getId()).getList();
+                    .getProductOrgInfoSystemById(item.getProductId()).getList();
             assertTrue(steps.isOrgContains(list1, org));
             for (httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem item1 : list1) {
                 List<String> informationSystems = item1.getInformationSystems();

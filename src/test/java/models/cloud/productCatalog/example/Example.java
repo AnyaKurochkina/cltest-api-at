@@ -2,30 +2,26 @@ package models.cloud.productCatalog.example;
 
 import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import core.enums.Role;
 import core.helper.JsonHelper;
-import core.helper.http.Http;
-import httpModels.productCatalog.example.createExample.CreateExampleResponse;
-import httpModels.productCatalog.example.getExampleList.GetExampleListResponse;
-import io.qameta.allure.Step;
+import core.helper.StringUtils;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.LinkedHashMap;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static steps.productCatalog.ExampleSteps.*;
 
 @Log4j2
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"jsonTemplate", "productName"}, callSuper = false)
-@ToString(exclude = {"jsonTemplate", "productName"})
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Example extends Entity implements IProductCatalog {
     @Builder.Default
     @JsonProperty("context_data")
@@ -47,19 +43,15 @@ public class Example extends Entity implements IProductCatalog {
     @Builder.Default
     @JsonProperty("ui_schema")
     private LinkedHashMap<Object, Object> uiSchema = new LinkedHashMap<>();
-    private String jsonTemplate;
-    private String productName;
 
     @Override
     public Entity init() {
-        jsonTemplate = "productCatalog/examples/createExample.json";
-        productName = "/api/v1/example/";
         return this;
     }
 
     @Override
     public JSONObject toJson() {
-        return JsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate("productCatalog/examples/createExample.json")
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.description", description)
@@ -73,31 +65,18 @@ public class Example extends Entity implements IProductCatalog {
     }
 
     @Override
-    @Step("Создание примера")
     protected void create() {
-        ProductCatalogSteps steps = new ProductCatalogSteps(productName, jsonTemplate);
-        if (steps.isExists(name)) {
-            steps.deleteByName(name, GetExampleListResponse.class);
+        if (isExampleExists(name)) {
+            deleteExampleByName(name);
         }
-        CreateExampleResponse example = new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(toJson())
-                .post(productName)
-                .assertStatus(201)
-                .extractAs(CreateExampleResponse.class);
-        id = example.getId();
-        updateDt = example.getUpdateDt();
-        createDt = example.getCreateDt();
+        Example example = createExample(toJson());
+        StringUtils.copyAvailableFields(example, this);
         Assertions.assertNotNull(id, "Пример с именем: " + name + ", не создался");
     }
 
     @Override
-    @Step("Удаление примера")
     protected void delete() {
-        new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(productName + id + "/")
-                .assertStatus(204);
+        deleteExampleById(id);
+        assertFalse(isExampleExists(name));
     }
-
 }
