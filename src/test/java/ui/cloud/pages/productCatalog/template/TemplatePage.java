@@ -94,6 +94,12 @@ public class TemplatePage extends BasePage {
         return new TemplatePage();
     }
 
+    @Step("Сохранение шаблона без патч-версией")
+    public TemplatePage saveWithoutPatchVersion() {
+        saveWithoutPatchVersion(saveTemplateAlertText);
+        return new TemplatePage();
+    }
+
     @Step("Сохранение шаблона с указанием версии")
     public TemplatePage saveWithManualVersion(String newVersion) {
         super.saveWithManualVersion(newVersion, saveTemplateAlertText);

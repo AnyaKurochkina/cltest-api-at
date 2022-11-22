@@ -26,7 +26,7 @@ public class EditTemplateTest extends TemplateBaseTest {
                 .goToTemplatesList()
                 .findAndOpenTemplatePage(template.getName())
                 .setTemplateAttributes(template2)
-                .saveWithPatchVersion()
+                .saveWithoutPatchVersion()
                 .checkTemplateAttributes(template2)
                 .goToTemplatesList()
                 .deleteTemplate(template2.getName());

@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
+import ui.elements.Alert;
 import ui.elements.DropDown;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -15,6 +16,13 @@ public class BasePage {
     protected final SelenideElement selectedVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
     protected final SelenideElement saveButton = $x("//button[div[text()='Сохранить']]");
     protected final SelenideElement cancelButton = $x("//button[div[text()='Отмена']]");
+
+    @Step("Сохранение объекта без изменения версии")
+    public BasePage saveWithoutPatchVersion(String alertText) {
+        saveButton.shouldBe(Condition.enabled).click();
+        new Alert().checkText(alertText).checkColor(Alert.Color.GREEN).close();
+        return this;
+    }
 
     @Step("Сохранение объекта со следующей патч-версией")
     public BasePage saveWithPatchVersion(String alertText) {
