@@ -5,11 +5,17 @@ import org.junit.jupiter.api.Assertions;
 import ui.elements.DataTable;
 import ui.elements.Table;
 
+import static core.helper.StringUtils.$x;
+
 public class VirtualMachinesPage {
 
-    public VmPage addVm(){
+    public VirtualMachinesPage() {
+        $x("//span[.='Виртуальные машины']").shouldBe(Condition.visible);
+    }
+
+    public VmCreatePage addVm(){
         new VirtualMachineTable().clickAdd();
-        VmPage vm = new VmPage();
+        VmCreatePage vm = new VmCreatePage();
         Table.Row vmRow = new VirtualMachineTable().getRowByColumnValue(VirtualMachineTable.COLUMN_NAME, vm.getName());
         Assertions.assertEquals("Включено", vmRow.getValueByColumn(VirtualMachineTable.COLUMN_STATUS));
         return vm;

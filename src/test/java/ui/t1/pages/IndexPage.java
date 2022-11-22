@@ -3,10 +3,7 @@ package ui.t1.pages;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
-import ui.t1.pages.cloudCompute.CloudEnginePage;
-import ui.t1.pages.cloudCompute.SecurityGroupsPage;
-import ui.t1.pages.cloudCompute.SshKeysPage;
-import ui.t1.pages.cloudCompute.VirtualMachinesPage;
+import ui.t1.pages.cloudCompute.*;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -14,6 +11,7 @@ import static com.codeborne.selenide.Selenide.$x;
 public class IndexPage {
     final SelenideElement linkCloudEngine = $x("//a[.='T1 Cloud Engine']");
     final SelenideElement linkCloudDirector = $x("//a[.='Cloud Director']");
+    final SelenideElement linkDisks = $x("//a[.='Диски']");
     final SelenideElement linkSshKeys = $x("//a[.='SSH-ключи']");
     final SelenideElement linkVirtualMachines = $x("//a[.='Виртуальные машины']");
     final SelenideElement linkSecurityGroups = $x("//a[.='Группы безопасности']");
@@ -46,5 +44,11 @@ public class IndexPage {
     public SecurityGroupsPage goToSecurityGroups() {
         linkSecurityGroups.click();
         return new SecurityGroupsPage();
+    }
+
+    @Step("Переход на страницу Диски")
+    public DisksPage goDisks() {
+        linkDisks.click();
+        return new DisksPage();
     }
 }

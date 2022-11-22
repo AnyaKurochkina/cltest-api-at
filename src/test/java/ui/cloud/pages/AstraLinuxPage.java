@@ -33,7 +33,7 @@ public class AstraLinuxPage extends IProductPage {
     }
 
     @Override
-    void checkPowerStatus(String expectedStatus) {
+    protected void checkPowerStatus(String expectedStatus) {
         new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(expectedStatus);
     }
 

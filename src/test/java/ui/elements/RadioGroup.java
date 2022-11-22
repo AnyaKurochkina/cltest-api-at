@@ -2,9 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import org.junit.jupiter.api.Assertions;
 
-import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 
 public class RadioGroup implements TypifiedElement{
@@ -15,7 +13,7 @@ public class RadioGroup implements TypifiedElement{
     }
 
     public static RadioGroup byLabel(String label){
-        return new RadioGroup($x("//*[.='{}']/..//*[@role='radiogroup' and @id='port']", label).shouldBe(Condition.visible));
+        return new RadioGroup($x("//*[.='{}']/..//*[@role='radiogroup']", label).shouldBe(Condition.visible));
     }
 
     public static RadioGroup bId(String id){
