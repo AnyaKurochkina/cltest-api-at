@@ -4,9 +4,7 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.visualTeamplate.CompactTemplate;
-import models.cloud.productCatalog.visualTeamplate.FullTemplate;
-import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
+import models.cloud.productCatalog.visualTeamplate.*;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -32,9 +30,9 @@ public class VisualTemplateListTest extends Tests {
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/item_visual_templates/",
             "productCatalog/itemVisualTemplate/createItemVisual.json");
     CompactTemplate compactTemplate = CompactTemplate.builder()
-            .name("name")
-            .type("type").
-            status("status")
+            .name(new Name("name"))
+            .type(new Type("type"))
+            .status(new Status("status"))
             .build();
     FullTemplate fullTemplate = FullTemplate.builder().type("type").value(Arrays.asList("value", "value2")).build();
 
@@ -105,7 +103,8 @@ public class VisualTemplateListTest extends Tests {
     @TmsLink("823845")
     @Test
     public void getVisualTemplateListByIsActive() {
-        ItemVisualTemplate.builder().name("get_visual_template_list_by_is_active")
+        ItemVisualTemplate.builder()
+                .name("get_visual_template_list_by_is_active")
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))
                 .compactTemplate(compactTemplate)
