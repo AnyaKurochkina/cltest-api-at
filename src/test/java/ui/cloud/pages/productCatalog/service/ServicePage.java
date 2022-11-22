@@ -46,15 +46,15 @@ public class ServicePage extends BasePage {
         serviceListLink.shouldBe(Condition.visible);
     }
 
-    @Step("Проверка атрибутов сервиса '{service.serviceName}'")
+    @Step("Проверка атрибутов сервиса '{service.name}'")
     public ServicePage checkAttributes(Service service) {
-        Graph graph = GraphSteps.getGraphById(service.getGraphId());
         checkVersion(service.getVersion());
-        goToVersionComparisonTab();
+        goToMainTab();
         nameInput.getInput().shouldHave(Condition.exactValue(service.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
         descriptionInput.getTextArea().shouldHave(Condition.exactValue(service.getDescription()));
         if (service.getGraphId() != null) {
+            Graph graph = GraphSteps.getGraphById(service.getGraphId());
             goToGraphTab();
             TestUtils.wait(2000);
             graphDropDown.getElement().$x(".//div[@id='selectValueWrapper']")
@@ -65,7 +65,7 @@ public class ServicePage extends BasePage {
         return this;
     }
 
-    @Step("Редактирование атрибутов сервиса '{service.serviceName}'")
+    @Step("Редактирование атрибутов сервиса '{service.name}'")
     public ServicePage setAttributes(Service service) {
         nameInput.setValue(service.getName());
         titleInput.setValue(service.getTitle());

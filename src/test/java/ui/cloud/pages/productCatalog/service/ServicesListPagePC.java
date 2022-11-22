@@ -90,14 +90,14 @@ public class ServicesListPagePC extends BaseListPage {
         return this;
     }
 
-    @Step("Создание сервиса '{service.serviceName}'")
+    @Step("Создание сервиса '{service.name}'")
     public ServicePage createService(Service service) {
-        Graph graph = GraphSteps.getGraphById(service.getGraphId());
         addNewObjectButton.click();
         directionDropDown.selectByTitle(service.getDirectionName());
         titleInput.setValue(service.getTitle());
         nameInput.setValue(service.getName());
         if (service.getGraphId() != null) {
+            Graph graph = GraphSteps.getGraphById(service.getGraphId());
             selectGraphByName(graph.getName());
         }
         descriptionInput.setValue(service.getDescription());
@@ -124,7 +124,7 @@ public class ServicesListPagePC extends BaseListPage {
         return this;
     }
 
-    @Step("Проверка валидации неуникального имени сервиса '{service.serviceName}'")
+    @Step("Проверка валидации неуникального имени сервиса '{service.name}'")
     public ServicesListPagePC checkNonUniqueNameValidation(Service service) {
         TestUtils.scrollToTheTop();
         addNewObjectButton.click();
@@ -143,7 +143,7 @@ public class ServicesListPagePC extends BaseListPage {
             nameInput.setValue(name);
             TestUtils.wait(500);
             if (!nameValidationHint.exists()) {
-                TestUtils.wait(500);
+                TestUtils.wait(1000);
                 nameInput.getInput().sendKeys("t");
             }
             nameValidationHint.shouldBe(Condition.visible);
@@ -182,7 +182,7 @@ public class ServicesListPagePC extends BaseListPage {
         return new ServicePage();
     }
 
-    @Step("Проверка, что сервис '{service.serviceName}' найден при поиске по значению '{value}'")
+    @Step("Проверка, что сервис '{service.name}' найден при поиске по значению '{value}'")
     public ServicesListPagePC findServiceByValue(String value, Service service) {
         search(value);
         Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, service.getName()));
@@ -217,19 +217,19 @@ public class ServicesListPagePC extends BaseListPage {
         return this;
     }
 
-    @Step("Проверка, что сервис '{service.serviceName}' отображается в списке")
+    @Step("Проверка, что сервис '{service.name}' отображается в списке")
     public ServicesListPagePC checkServiceIsDisplayed(Service service) {
         Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, service.getName()));
         return this;
     }
 
-    @Step("Проверка, что сервис '{service.serviceName}' не отображается в списке")
+    @Step("Проверка, что сервис '{service.name}' не отображается в списке")
     public ServicesListPagePC checkServiceIsNotDisplayed(Service service) {
         Assertions.assertFalse(new Table(columnName).isColumnValueEquals(columnName, service.getName()));
         return this;
     }
 
-    @Step("Копирование сервиса '{service.serviceName}'")
+    @Step("Копирование сервиса '{service.name}'")
     public ServicesListPagePC copyService(Service service) {
         new BaseListPage().copy(columnName, service.getName());
         new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();

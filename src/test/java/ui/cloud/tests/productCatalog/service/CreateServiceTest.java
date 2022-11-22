@@ -19,7 +19,7 @@ public class CreateServiceTest extends ServiceBaseTest {
     public void createServiceTest() {
         checkServiceNameValidation();
         createServiceWithoutRequiredParameters();
-        createService();
+        createServiceWithoutGraph();
         createServiceWithNonUniqueName();
     }
 
@@ -42,8 +42,9 @@ public class CreateServiceTest extends ServiceBaseTest {
                 .checkNameValidation(new String[]{"Test_name", "test name", "тест", "test_name$"});
     }
 
-    @Step("Создание сервиса")
-    public void createService() {
+    @Step("Создание сервиса без графа")
+    public void createServiceWithoutGraph() {
+        service.setGraphId(null);
         service.setName(UUID.randomUUID().toString());
         new IndexPage().goToServicesListPagePC()
                 .createService(service)
