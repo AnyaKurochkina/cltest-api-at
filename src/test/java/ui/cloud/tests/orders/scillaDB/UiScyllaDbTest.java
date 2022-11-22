@@ -3,6 +3,8 @@ package ui.cloud.tests.orders.scillaDB;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
@@ -17,30 +19,24 @@ import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.ConfigExtension;
 import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
+@Epic("UI Продукты")
+@Feature("ScyllaDB")
+@Tags({@Tag("ui"), @Tag("ui_scylla_db")})
 
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_scylla_db")})
 @Log4j2
-public class UiScyllaDbTest extends Tests {
+public class UiScyllaDbTest extends UiProductTest {
 
     ScyllaDb product;
+    //product = ScyllaDb.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/01828278-e513-4685-8cdd-f0c87840ff62/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
-
-    public UiScyllaDbTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-            product = ScyllaDb.builder().env("DEV").productName("ScyllaDB").platform("OpenStack").segment("dev-srv-app").build();
-        //product = ScyllaDb.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/01828278-e513-4685-8cdd-f0c87840ff62/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = ScyllaDb.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-
-    }
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -197,14 +193,14 @@ public class UiScyllaDbTest extends Tests {
         ScyllaPage scyllaPage = new ScyllaPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.LESS, scyllaPage::stopSoft);
     }
-
-    @Test
-    @Order(100)
-    @TmsLink("464240")
-    @DisplayName("UI ScyllaDB. Удаление продукта")
-    void delete() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
-        scyllaPage.delete();
-    }
+//
+//    @Test
+//    @Order(100)
+//    @TmsLink("464240")
+//    @DisplayName("UI ScyllaDB. Удаление продукта")
+//    void delete() {
+//        ScyllaPage scyllaPage = new ScyllaPage(product);
+//        scyllaPage.delete();
+//    }
 
 }

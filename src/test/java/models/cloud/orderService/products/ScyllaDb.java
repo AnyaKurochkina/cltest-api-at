@@ -48,14 +48,14 @@ public class ScyllaDb extends IProduct {
         if(productName == null)
             productName = "ScyllaDB";
         initProduct();
+        if(segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
         if (domain == null)
             domain = OrderServiceSteps.getDomainBySegment(this, segment);
         if(flavor == null)
             flavor = getMinFlavor();
         if(osVersion == null)
             osVersion = getRandomOsVersion();
-        if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
         if(dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         return this;
@@ -64,6 +64,7 @@ public class ScyllaDb extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
+
         createProduct();
     }
 

@@ -4,6 +4,8 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
 import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
@@ -18,32 +20,27 @@ import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.extesions.ConfigExtension;
 import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
-
+@Epic("UI Продукты")
+@Feature("ClickHouse Cluster")
+@Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_clickhouse_cluster")})
 @Log4j2
-public class UiClickHouseClusterTest extends Tests {
+public class UiClickHouseClusterTest extends UiProductTest {
 
     ClickHouseCluster product;
+    //  product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/cffa192c-aab5-4826-9c11-a8a87b3d6684/user?context=proj-pkvckn08w9&type=project&org=vtb").build();
     String nameAD= "at_ad_user";
     String nameLocalAD= "at_local_user";
     String nameGroup ="cloud-zorg-winxtkhxxdw";
     SelenideElement node = $x("(//td[.='clickhouse'])[1]");
-    public UiClickHouseClusterTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-           product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-          //  product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/cffa192c-aab5-4826-9c11-a8a87b3d6684/user?context=proj-pkvckn08w9&type=project&org=vtb").build();
-        else
-            product = ClickHouseCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-    }
 
     @BeforeEach
     @Title("Авторизация на портале")

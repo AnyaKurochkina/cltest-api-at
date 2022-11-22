@@ -4,6 +4,8 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
 import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
@@ -18,34 +20,27 @@ import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.extesions.ConfigExtension;
 import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
-
+@Epic("UI Продукты")
+@Feature("PostgreSQL Cluster Astra Linux")
+@Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_postgre_sql_cluster_astra")})
 @Log4j2
-public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
+public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
     PostgresSQLCluster product;
+    //product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/4ae82e4a-50fd-4786-afc5-cc4ff8f0bab5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
     SelenideElement node = $x("(//td[.='postgresql'])[1]");
-
-    public UiPostgreSqlClusterAstraLinuxTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-          product = PostgresSQLCluster.builder().env("DEV").productName("PostgreSQL Cluster Astra Linux").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-//        product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/4ae82e4a-50fd-4786-afc5-cc4ff8f0bab5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = PostgresSQLCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-
-    }
 
     @BeforeEach
     @Title("Авторизация на портале")

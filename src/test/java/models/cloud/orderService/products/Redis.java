@@ -48,12 +48,14 @@ public class Redis extends IProduct {
         if (appUser == null)
             appUser = "app_user";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
-        if (appUserPassword == null)
-            appUserPassword = "8AEv023pMDHVw1w4zZZE23HjPAKmVDvdtpK8Qddme94VJBHKhgy";
         if(segment == null)
             segment = OrderServiceSteps.getNetSegment(this);
+        if (osVersion == null) {
+            osVersion = getRandomOsVersion();
+        }
+        if (appUserPassword == null) {
+            appUserPassword = "8AEv023pMDHVw1w4zZZE23HjPAKmVDvdtpK8Qddme94VJBHKhgy";
+        }
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         if (redisVersion == null)

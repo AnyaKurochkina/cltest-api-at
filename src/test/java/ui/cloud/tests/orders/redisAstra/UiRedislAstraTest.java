@@ -3,6 +3,8 @@ package ui.cloud.tests.orders.redisAstra;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
@@ -17,27 +19,21 @@ import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.ConfigExtension;
 import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
-
+@Epic("UI Продукты")
+@Feature("Redis (Astra)")
+@Tags({@Tag("ui"), @Tag("ui_redis_astra")})
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_redis_astra")})
 @Log4j2
-public class UiRedislAstraTest extends Tests {
+public class UiRedislAstraTest extends UiProductTest {
 
     Redis product;
-
-    public UiRedislAstraTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-         product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-        // product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/30e55c55-2435-4db7-81c7-bcc0caac3260/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = Redis.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-    }
+    // product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/30e55c55-2435-4db7-81c7-bcc0caac3260/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
 
     @BeforeEach
     @Title("Авторизация на портале")

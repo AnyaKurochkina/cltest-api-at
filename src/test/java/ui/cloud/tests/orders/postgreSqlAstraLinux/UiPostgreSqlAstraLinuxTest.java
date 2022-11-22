@@ -3,6 +3,8 @@ package ui.cloud.tests.orders.postgreSqlAstraLinux;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
@@ -18,18 +20,22 @@ import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.ConfigExtension;
 import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
-
+@Epic("UI Продукты")
+@Feature("PostgreSQL (Astra Linux)")
+@Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_postgre_sql_astra")})
 @Log4j2
-public class UiPostgreSqlAstraLinuxTest extends Tests {
+public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
     PostgreSQL product;
+    //  roduct = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://console.blue.cloud.vtb.ru/db/orders/3519f257-1e11-4d65-a1b5-73690ce8e7f7/main?context=proj-iv550odo9a&type=project&org=vtb").build();
+
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
@@ -37,7 +43,6 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
     public UiPostgreSqlAstraLinuxTest() {
         if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
             product = PostgreSQL.builder().env("DEV").productName("PostgreSQL (Astra Linux)").platform("OpenStack").segment("dev-srv-app").build();
-            // product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/ec7fe6a7-bc5c-4bb0-bdf8-ea776f9b2639/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
         else
             product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
         product.init();

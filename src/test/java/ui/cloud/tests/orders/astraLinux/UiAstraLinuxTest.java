@@ -5,6 +5,8 @@ import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
@@ -18,29 +20,23 @@ import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.ConfigExtension;
 import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
-
+@Epic("UI Продукты")
+@Feature("Astra Linux")
+@Tags({@Tag("ui"), @Tag("ui_astra_linux")})
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_astra_linux")})
 @Log4j2
-public class UiAstraLinuxTest extends Tests {
+public class UiAstraLinuxTest extends UiProductTest {
 
     Astra product;
-
-    public UiAstraLinuxTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-            product = Astra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = Astra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/7f5a1f6b-5478-4a2c-b0d1-33f3460d8429/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = Astra.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-    }
+    //product = Astra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/7f5a1f6b-5478-4a2c-b0d1-33f3460d8429/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
 
     @BeforeEach
     @Title("Авторизация на портале")
