@@ -74,7 +74,7 @@ public class RedisAstraPage extends IProductPage {
         checkPowerStatus(ScyllaPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("default", "Сбросить пароль","Подтвердить",  () ->
         {
-            Dialog dlgActions = new Dialog("Сбросить пароль");
+            Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
@@ -83,7 +83,7 @@ public class RedisAstraPage extends IProductPage {
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
-            Dialog dlgActions = new Dialog("Удаление");
+            Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         new RedisAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
@@ -114,7 +114,7 @@ public class RedisAstraPage extends IProductPage {
     public void changeMaxConnections(String value) {
         new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить max_connections", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Изменить max_connections");
+            Dialog dlg = Dialog.byTitle("Изменить max_connections");
             dlg.setInputValue("max_connections", value);
         });
         btnGeneralInfo.shouldBe(Condition.enabled).click();
@@ -146,7 +146,7 @@ public class RedisAstraPage extends IProductPage {
         if (!(new Table(HEADER_LIMIT_CONNECT).isColumnValueContains("", name))) {
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
-                Dialog dlg = new Dialog("Добавить БД");
+                Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя базы данных", name);
                 generatePassButton.shouldBe(Condition.enabled).click();
                 new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
@@ -162,7 +162,7 @@ public class RedisAstraPage extends IProductPage {
         if (!(new Table(HEADER_NAME_DB).isColumnValueContains("", nameDb + "_" + nameUserDb))) {
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
-                Dialog dlg = new Dialog("Добавить пользователя");
+                Dialog dlg = Dialog.byTitle("Добавить пользователя");
                 dlg.setDropDownValue("Имя базы данных", nameDb);
                 dlg.setInputValue("Имя пользователя", nameUserDb);
                 dlg.setInputValue("Комментарий", comment);
@@ -205,7 +205,7 @@ public class RedisAstraPage extends IProductPage {
     public void resetPasswordUserDb(String nameUserDB) {
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(nameUserDB, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });

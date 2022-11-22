@@ -59,7 +59,7 @@ public class ClickHouseClusterPage extends IProductPage {
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
-            Dialog dlgActions = new Dialog("Удаление");
+            Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         new ClickHouseClusterPage.VirtualMachineTable("Статус").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_DELETED);
@@ -105,7 +105,7 @@ public class ClickHouseClusterPage extends IProductPage {
     public void createLocalAccount(String name) {
         btnUsers.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_USER_LOCAL, "Создать локальную УЗ", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Создать локальную УЗ");
+            Dialog dlg = Dialog.byTitle("Создать локальную УЗ");
             dlg.setInputValue("Имя пользователя", name);
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
@@ -117,7 +117,7 @@ public class ClickHouseClusterPage extends IProductPage {
     public void resetPasswordLA(String name) {
         btnUsers.shouldBe(Condition.enabled).click();
         runActionWithParameters(name, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
@@ -127,7 +127,7 @@ public class ClickHouseClusterPage extends IProductPage {
     public void deleteLocalAccount(String name) {
         btnUsers.shouldBe(Condition.enabled).click();
         runActionWithParameters(name, "Удалить локальную УЗ", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Удалить локальную УЗ");
+            Dialog dlg = Dialog.byTitle("Удалить локальную УЗ");
             dlg.setInputValue("Пользователь БД", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
@@ -137,7 +137,7 @@ public class ClickHouseClusterPage extends IProductPage {
     public void addAccountAD(String name) {
         btnUsers.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_USER_AD, "Добавить ТУЗ AD", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Добавить ТУЗ AD");
+            Dialog dlg = Dialog.byTitle("Добавить ТУЗ AD");
             dlg.setInputValue("Имя пользователя", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
@@ -147,7 +147,7 @@ public class ClickHouseClusterPage extends IProductPage {
     public void resetPasswordAD(String name) {
         btnUsers.shouldBe(Condition.enabled).click();
         runActionWithParameters(name, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
@@ -156,7 +156,7 @@ public class ClickHouseClusterPage extends IProductPage {
     public void deleteAccountAD(String name) {
         btnUsers.shouldBe(Condition.enabled).click();
         runActionWithParameters(name, "Удалить ТУЗ AD", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Удалить ТУЗ AD");
+            Dialog dlg = Dialog.byTitle("Удалить ТУЗ AD");
             dlg.setInputValue("Пользователь БД", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
@@ -166,7 +166,7 @@ public class ClickHouseClusterPage extends IProductPage {
     public void addGroupAD(String nameGroup) {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_GROUP_AD, "Добавить пользовательскую группу", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Добавить пользовательскую группу");
+            Dialog dlg = Dialog.byTitle("Добавить пользовательскую группу");
             dlg.setDropDownValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
@@ -175,7 +175,7 @@ public class ClickHouseClusterPage extends IProductPage {
     public void addGroupAdmin(String nameGroup) {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_GROUP_ADMIN, "Добавить группу администраторов", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Добавить группу администраторов");
+            Dialog dlg = Dialog.byTitle("Добавить группу администраторов");
             dlg.setDropDownValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
@@ -185,7 +185,7 @@ public class ClickHouseClusterPage extends IProductPage {
     public void deleteGroupAD(String nameGroup) {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithParameters(nameGroup, "Удалить пользовательскую группу", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Удалить пользовательскую группу");
+            Dialog dlg = Dialog.byTitle("Удалить пользовательскую группу");
             dlg.setInputValue("Название группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();

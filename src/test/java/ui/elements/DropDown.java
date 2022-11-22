@@ -39,13 +39,22 @@ public class DropDown implements TypifiedElement {
 
     @Step("Выбрать в select элемент с названием '{value}'")
     public void select(String value) {
-        click();
+        hover();
         if (element.$x(String.format("input[@value='%s']", value)).exists())
             return;
         if (element.getText().equals(value))
             return;
-        element.shouldBe(clickableCnd).click();
+        element.click();
         $x("//li[.='{}']", value)
+                .shouldBe(Condition.enabled)
+                .click();
+    }
+
+    @Step("Выбрать в select элемент с названием '{value}'")
+    public void selectByTextContains(String value) {
+        hover();
+        element.click();
+        $x("//li[contains(.,'{}')]", value)
                 .shouldBe(Condition.enabled)
                 .click();
     }
@@ -60,7 +69,7 @@ public class DropDown implements TypifiedElement {
 
     @Step("Выбрать в select элемент со значением '{value}'")
     public void selectByValue(String value) {
-        click();
+        hover();
         if (element.$x(String.format("input[@value='%s']", value)).exists())
             return;
         element.click();
@@ -72,7 +81,7 @@ public class DropDown implements TypifiedElement {
 
     @Step("Выбрать в select элемент с ID равным '{value}'")
     public void selectById(String value) {
-        click();
+        hover();
         if (element.$x(String.format("input[@value='%s']", value)).exists())
             return;
         element.click();
@@ -82,7 +91,7 @@ public class DropDown implements TypifiedElement {
                 .click();
     }
 
-    public DropDown click() {
+    public DropDown hover() {
         element.scrollIntoView(scrollCenter);
         element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
         return this;
@@ -96,7 +105,7 @@ public class DropDown implements TypifiedElement {
 
     @Step("Выбрать в select элемент с заголовком '{value}'")
     public void selectByTitle(String value) {
-        click();
+        hover();
         if (element.$x(String.format("input[@value='%s']", value)).exists())
             return;
         element.click();

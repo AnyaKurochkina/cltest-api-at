@@ -50,7 +50,7 @@ public class ClickHousePage extends IProductPage {
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
-            Dialog dlgActions = new Dialog("Удаление");
+            Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         new ClickHousePage.VirtualMachineTable("Питание").checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_DELETED);
@@ -96,7 +96,7 @@ public class ClickHousePage extends IProductPage {
         new ClickHousePage.VirtualMachineTable("Питание").checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_ON);
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_DB_OWNER, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });
@@ -105,7 +105,7 @@ public class ClickHousePage extends IProductPage {
     public void resetPasswordUserDb() {
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_DB_USERS, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = new Dialog("Сбросить пароль");
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
         });

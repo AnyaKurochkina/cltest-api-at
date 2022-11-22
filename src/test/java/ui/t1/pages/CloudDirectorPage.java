@@ -19,7 +19,7 @@ public class CloudDirectorPage {
     public String create(String name){
         btnCreateVmOrganization.click();
         String organizationName = PREFIX + name;
-        Dialog dialog = new Dialog("Создать VMware организацию");
+        Dialog dialog = Dialog.byTitle("Создать VMware организацию");
         dialog.setInputValue("Название", name);
         dialog.clickButton("Создать");
         dialog.getDialog().shouldNotBe(Condition.visible);
@@ -30,7 +30,7 @@ public class CloudDirectorPage {
 
     public void delete(String name){
         new VmWareOrganizationList().getRowByColumnValue(ORGANIZATION_NAME, name).getElementByColumn("").$x("descendant::*[name()='svg'][1]").click();
-        Dialog dialog = new Dialog("Удаление");
+        Dialog dialog = Dialog.byTitle("Удаление");
         dialog.setInputValue("Идентификатор", dialog.getDialog().find("b").innerText());
         dialog.clickButton("Удалить");
         new Alert().checkText("VMware организация {} удалена успешно", name).checkColor(Alert.Color.GREEN).close();
