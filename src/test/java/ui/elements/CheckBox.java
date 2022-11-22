@@ -15,12 +15,12 @@ public class CheckBox implements TypifiedElement{
     }
 
     public static CheckBox byLabel(String label){
-        return new CheckBox($x("//label[.='{}']//input[@type='checkbox']", label).shouldBe(Condition.visible));
+        return new CheckBox($x("//label[.='{}']//input[@type='checkbox']", label).parent().shouldBe(Condition.visible));
     }
 
     public void setChecked(boolean checked){
         if(getChecked() != checked)
-            input.shouldBe(clickableCnd).click();
+            input.parent().shouldBe(clickableCnd).click();
         Assertions.assertEquals(checked, getChecked());
     }
 

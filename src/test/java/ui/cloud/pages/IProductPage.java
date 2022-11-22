@@ -35,7 +35,7 @@ public abstract class IProductPage {
     Double preBillingCostAction;
     SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
 
-    abstract void checkPowerStatus(String expectedStatus);
+    protected abstract void checkPowerStatus(String expectedStatus);
 
     SelenideElement btnHistory = $x("//button[.='История действий']");
     SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
@@ -56,6 +56,9 @@ public abstract class IProductPage {
         product.addLinkProduct();
         this.product = product.buildFromLink();
     }
+
+    //Для т1
+    public IProductPage() {}
 
     public void waitChangeStatus() {
         EntitiesUtils.waitChangeStatus(new TopInfo(), Duration.ofMinutes(8));
@@ -274,7 +277,7 @@ public abstract class IProductPage {
         public static final String POWER_STATUS_ON = "Включено";
         public static final String POWER_STATUS_OFF = "Выключено";
 
-        abstract String getPowerStatus();
+        protected abstract String getPowerStatus();
 
         @Override
         protected void open() {

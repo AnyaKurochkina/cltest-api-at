@@ -39,7 +39,7 @@ public class ScyllaPage extends IProductPage {
     }
 
     @Override
-    void checkPowerStatus(String expectedStatus) {
+    protected void checkPowerStatus(String expectedStatus) {
         new ScyllaPage.VirtualMachineTable(POWER).checkPowerStatus(expectedStatus);
     }
 

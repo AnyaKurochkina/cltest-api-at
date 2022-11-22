@@ -26,7 +26,7 @@ public class ClickHousePage extends IProductPage {
     }
 
     @Override
-    void checkPowerStatus(String expectedStatus) {
+    protected void checkPowerStatus(String expectedStatus) {
         new ClickHousePage.VirtualMachineTable("Питание").checkPowerStatus(expectedStatus);
     }
 

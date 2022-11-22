@@ -47,7 +47,7 @@ public class RedisAstraPage extends IProductPage {
     }
 
     @Override
-    void checkPowerStatus(String expectedStatus) {
+    protected void checkPowerStatus(String expectedStatus) {
         new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(expectedStatus);
     }
 
