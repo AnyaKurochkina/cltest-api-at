@@ -4,9 +4,12 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
+import steps.productCatalog.GraphSteps;
+import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -89,12 +92,13 @@ public class ServicesListPagePC extends BaseListPage {
 
     @Step("Создание сервиса '{service.serviceName}'")
     public ServicePage createService(Service service) {
+        Graph graph = GraphSteps.getGraphById(service.getGraphId());
         addNewObjectButton.click();
         directionDropDown.selectByTitle(service.getDirectionName());
         titleInput.setValue(service.getTitle());
         nameInput.setValue(service.getName());
         if (service.getGraphId() != null) {
-            selectGraphByName(service.getGraph().getName());
+            selectGraphByName(graph.getName());
         }
         descriptionInput.setValue(service.getDescription());
         createButton.click();

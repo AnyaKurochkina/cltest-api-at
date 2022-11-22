@@ -3,8 +3,10 @@ package ui.cloud.pages.productCatalog.service;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
+import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -46,6 +48,7 @@ public class ServicePage extends BasePage {
 
     @Step("Проверка атрибутов сервиса '{service.serviceName}'")
     public ServicePage checkAttributes(Service service) {
+        Graph graph = GraphSteps.getGraphById(service.getGraphId());
         checkVersion(service.getVersion());
         goToVersionComparisonTab();
         nameInput.getInput().shouldHave(Condition.exactValue(service.getName()));
@@ -55,7 +58,7 @@ public class ServicePage extends BasePage {
             goToGraphTab();
             TestUtils.wait(2000);
             graphDropDown.getElement().$x(".//div[@id='selectValueWrapper']")
-                    .shouldHave(Condition.matchText(service.getGraph().getName()));
+                    .shouldHave(Condition.matchText(graph.getName()));
             graphVersionDropDown.getElement().$x(".//div[@id='selectValueWrapper']")
                     .shouldHave(Condition.exactText(service.getGraphVersion()));
         }

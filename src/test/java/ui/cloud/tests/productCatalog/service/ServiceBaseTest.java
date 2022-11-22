@@ -53,7 +53,6 @@ public class ServiceBaseTest extends BaseTest {
                 .title(TITLE)
                 .description(DESCRIPTION)
                 .version("1.0.0")
-                .graph(graph)
                 .graphId(graph.getGraphId())
                 .graphVersion("1.0.0")
                 .build()

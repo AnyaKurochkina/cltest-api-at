@@ -36,14 +36,12 @@ public class ServiceTagsTest extends ServiceBaseTest {
     @TmsLink("644929")
     @DisplayName("Удаление тегов для фильтра")
     public void deleteTagsTest() {
-        String tag = "sys_ip";
-        String excludeTag = "sys_vm_os_type";
         new IndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME);
-        addTag(tag, new String[]{"10.226.3.74", "10.226.3.75"});
-        deleteTag(tag);
-        addExcludeTag(excludeTag, new String[]{"windows", "linux"});
-        deleteExcludeTag(excludeTag);
+        addTag(tagName, new String[]{"10.226.3.74", "10.226.3.75"});
+        deleteTag(tagName);
+        addExcludeTag(excludeTagName, new String[]{"windows", "linux"});
+        deleteExcludeTag(excludeTagName);
     }
 
     private void addTag(String tagName, String[] values) {
