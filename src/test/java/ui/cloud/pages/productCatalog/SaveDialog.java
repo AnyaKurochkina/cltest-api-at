@@ -21,7 +21,7 @@ public class SaveDialog extends Dialog {
         super("Сохранить изменения?");
     }
 
-    @Step("Проверка невозможности сохранения с некорректной версией 'newVersion'")
+    @Step("Проверка невозможности сохранения с некорректной версией '{newVersion}'")
     public void checkSaveWithInvalidVersion(String newVersion, String currentVersion) {
         saveAsNextVersionCheckBox.click();
         setInputValue("Новая версия", newVersion);
@@ -30,7 +30,7 @@ public class SaveDialog extends Dialog {
         cancelButton.shouldBe(Condition.enabled).click();
     }
 
-    @Step("Сохранение с указанной версией 'newVersion'")
+    @Step("Сохранение с указанной версией '{newVersion}'")
     public void saveWithVersion(String newVersion, String alertText) {
         saveAsNextVersionCheckBox.click();
         setInputValue("Новая версия", newVersion);
@@ -38,7 +38,7 @@ public class SaveDialog extends Dialog {
         new Alert().checkText(alertText).checkColor(Alert.Color.GREEN).close();
     }
 
-    @Step("Проверка невозможности сохранения с версией некорректного формата 'newVersion'")
+    @Step("Проверка невозможности сохранения с версией некорректного формата '{newVersion}'")
     public void checkSaveWithInvalidVersionFormat(String newVersion) {
         saveAsNextVersionCheckBox.click();
         setInputValue("Новая версия", newVersion);

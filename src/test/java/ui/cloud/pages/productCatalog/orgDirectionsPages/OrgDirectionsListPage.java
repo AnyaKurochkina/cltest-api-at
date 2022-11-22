@@ -53,6 +53,7 @@ public class OrgDirectionsListPage extends BaseListPage {
     public OrgDirectionPage openOrgDirectionPage(String name) {
         inputSearch.setValue(name);
         $x("//td[@value = '" + name + "']").shouldBe(Condition.visible).click();
+        TestUtils.wait(500);
         return new OrgDirectionPage();
     }
 
