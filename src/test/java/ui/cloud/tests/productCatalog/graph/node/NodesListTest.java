@@ -51,6 +51,8 @@ public class NodesListTest extends GraphBaseTest {
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
+                .findNode(node.getName().toUpperCase(), node)
+                .findNode(node.getDescription(), node)
                 .findNode(node.getInputKey(), node)
                 .findNode(node.getOutputKey().toUpperCase(), node)
                 .findNode(node.getInputValue(), node)

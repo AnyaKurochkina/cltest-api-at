@@ -171,8 +171,8 @@ public class GraphPage extends BasePage {
         return new GraphsListPage();
     }
 
-    @Step("Редактирование поля 'Автор'")
-    public GraphPage editAuthor(String value) {
+    @Step("Задание в поле 'Автор' значения '{value}'")
+    public GraphPage setAuthor(String value) {
         goToMainTab();
         authorInput.setValue(value);
         return this;

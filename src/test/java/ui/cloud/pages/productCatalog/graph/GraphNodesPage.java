@@ -8,12 +8,14 @@ import org.openqa.selenium.Keys;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.TextArea;
+import ui.elements.TypifiedElement;
 import ui.models.Node;
 import ui.models.SubgraphNode;
 import ui.models.TemplateNode;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.actions;
+import static core.helper.StringUtils.$x;
 
 public class GraphNodesPage extends GraphPage {
 
@@ -142,10 +144,10 @@ public class GraphNodesPage extends GraphPage {
         TestUtils.scrollToTheTop();
         actions().pause(1000)
                 .moveToElement($x("//div[@class='g6-grid-container']/following-sibling::canvas"))
-                .moveByOffset(0, 60)
+                .moveByOffset(0, 80)
                 .contextClick()
                 .perform();
-        copyNode.click();
+        copyNode.scrollIntoView(TypifiedElement.scrollCenter).click();
         nodeName.shouldHave(Condition.exactValue(cloneName));
         TestUtils.wait(500);
         formAddNodeButton.click();
@@ -220,8 +222,10 @@ public class GraphNodesPage extends GraphPage {
             templateVersion.shouldHave(Condition.exactText(((TemplateNode) node).getTemplateVersion()));
         }
         paramsTab.click();
-        $x("//label[text()='Input']/../..//span[contains(text(),'" + node.getInputKey() + "')]").shouldBe(Condition.visible);
-        $x("//label[text()='Output']/../..//span[contains(text(),'" + node.getOutputKey() + "')]").shouldBe(Condition.visible);
+        $x("//form//label[text()='Input']/following::div[contains(@class,'view-lines')][1]//span[contains(text(),'{}')]",
+                node.getInputKey()).shouldBe(Condition.visible);
+        $x("//form//label[text()='Output']/following::div[contains(@class,'view-lines')][1]//span[contains(text(),'{}')]",
+                node.getOutputKey()).shouldBe(Condition.visible);
         additionalTab.click();
         numberInput.shouldHave(Condition.exactValue(node.getNumber()));
         //timeoutInput.shouldHave(Condition.exactValue(node.getTimeout()));
@@ -242,7 +246,7 @@ public class GraphNodesPage extends GraphPage {
         }
         searchNodesInput.setValue(text);
         TestUtils.wait(500);
-        $x("//div[text()='" + node.getNumber() + ". " + node.getDescription() + "']")
+        $x("//div[text()='{}. {} ({})']/..//*[name()='svg' and @class]", node.getNumber(), node.getDescription(), node.getName())
                 .shouldBe(Condition.visible);
         return this;
     }
@@ -277,7 +281,8 @@ public class GraphNodesPage extends GraphPage {
         if (node.getNumber().equals("")) {
             node.setNumber("1");
         }
-        $x("//div[text()='" + node.getNumber() + ". " + node.getDescription() + "']/..//*[name()='svg' and @class]")
+        $x("//div[text()='{}. {} ({})']/..//*[name()='svg' and @class]", node.getNumber(), node.getDescription(), node.getName())
                 .click();
+
     }
 }
