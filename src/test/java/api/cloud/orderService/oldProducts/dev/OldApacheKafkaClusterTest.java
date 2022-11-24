@@ -197,6 +197,7 @@ public class OldApacheKafkaClusterTest extends Tests {
         kafka.sendConfig();
     }
 
+    @Disabled
     @Order(13)
     @TmsLink("841718")
     @DisplayName("Перезагрузить Apache Kafka Cluster OLD")

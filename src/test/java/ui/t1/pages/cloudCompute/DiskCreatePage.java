@@ -7,14 +7,14 @@ import ui.elements.*;
 public class DiskCreatePage {
     private String availabilityZone;
     private String name;
-    private String size;
+    private Integer size;
     private String type;
 
     private SelectBox.Image marketPlaceImage;
     private String userImage;
 
     public DiskCreatePage setAvailabilityZone(String availabilityZone) {
-        DropDown.byLabel("Зона доступности").selectByValue(availabilityZone);
+        DropDown.byLabel("Зона доступности").select(availabilityZone);
         this.availabilityZone = availabilityZone;
         return this;
     }
@@ -25,8 +25,8 @@ public class DiskCreatePage {
         return this;
     }
 
-    public DiskCreatePage setSize(String size) {
-        Input.byLabel("Размер, Гб").setValue(size);
+    public DiskCreatePage setSize(Integer size) {
+        Input.byLabel("Размер, Гб").setValue(String.valueOf(size));
         this.size = size;
         return this;
     }

@@ -1,21 +1,28 @@
 package steps.stateService;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import core.enums.Role;
 import core.helper.Configure;
+import core.helper.JsonHelper;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.exception.JsonPathException;
+import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.stateService.GetItemList;
 import models.cloud.stateService.Item;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
 import ru.testit.services.LinkItem;
 import steps.Steps;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static core.helper.Configure.StateServiceURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -157,4 +164,69 @@ public class StateServiceSteps extends Steps {
                 .assertStatus(200)
                 .extractAs(Item.class);
     }
+
+    public static Stream<Map.Entry<String, List<ShortItem>>> getItems(String id){
+        List<Item> list = new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/projects/{}/items/?page=1&per_page=10000&data__state__in=off,on", id)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+//        JSONObject jsonObject = new JSONObject();
+        Map<String, List<ShortItem>> listOrders = new HashMap<>();
+        list.forEach(item -> {
+            ShortItem itemData = new ShortItem();
+
+            if(item.getType().equals("public_ip"))
+                itemData.setFloatingIpAddress(((Map<String, String>) item.getData().get("config")).get("floating_ip_address"));
+            else if(item.getType().equals("volume")){
+                itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
+                itemData.size = ((Map<String, Integer>) item.getData().get("config")).get("size");
+            }
+            else if(item.getType().equals("snapshot")){
+                itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
+                itemData.size = ((Map<String, Integer>) item.getData().get("config")).get("size");
+            }
+            else if(item.getType().equals("image")){
+                itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
+                itemData.size = ((Map<String, Integer>) item.getData().get("config")).get("size");
+            }
+            else if(item.getType().equals("instance"))
+                itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
+            else if(item.getType().equals("nic")) {
+                List<Object> ips = ((Map<String, List<Object>>) item.getData().get("config")).get("fixed_ips");
+                itemData.name = ((Map<String, String>) ips.get(0)).get("ip_address");
+            }
+
+            itemData.type = item.getType();
+            itemData.provider = (String) item.getData().get("provider");
+            itemData.srcOrderId = (String) item.getData().getOrDefault("src_order_id", "");
+            itemData.parent = (String) item.getData().getOrDefault("parent", "");
+            itemData.itemId = item.getItemId();
+
+//            jsonObject.append(item.getOrderId(), new JSONObject(JsonHelper.toJson(itemData)));
+            List<ShortItem> shortItemList = listOrders.getOrDefault(item.getOrderId(), new ArrayList<>());
+            shortItemList.add(itemData);
+            listOrders.put(item.getOrderId(), shortItemList);
+        });
+        return listOrders.entrySet().stream();
+    }
+
+
+    @Data
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class ShortItem {
+        private String name;
+        private String parent;
+        private String provider;
+        private Integer size;
+        private String srcOrderId;
+        private String type;
+        private String floatingIpAddress;
+        private String itemId;
+    }
+
+
+
+
 }

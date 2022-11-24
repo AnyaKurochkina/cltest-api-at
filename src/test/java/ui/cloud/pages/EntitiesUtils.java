@@ -5,6 +5,8 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebElement;
+import ui.elements.Alert;
+import ui.elements.Button;
 import ui.elements.Table;
 import ui.elements.TypifiedElement;
 
@@ -21,11 +23,16 @@ public class EntitiesUtils {
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
                         new ProductStatus(e).isNeedWaiting()), duration);
         Waiting.sleep(1000);
-        List<String> titles = table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")
+        List<String> titles = table.update().getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")
                 .shouldBe(CollectionCondition.sizeNotEqual(0))
                 .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                 .stream().map(e -> new ProductStatus(e).getStatus()).collect(Collectors.toList());
         log.debug("Итоговый статус: {}", titles);
+    }
+
+    public static void clickOrder(){
+        Button.byText("Заказать").click();
+        new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
     }
 
 }

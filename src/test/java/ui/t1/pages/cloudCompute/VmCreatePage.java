@@ -1,10 +1,14 @@
 package ui.t1.pages.cloudCompute;
 
+import com.codeborne.selenide.Condition;
 import lombok.Getter;
+import ui.cloud.pages.EntitiesUtils;
+import ui.elements.Alert;
 import ui.elements.Button;
 import ui.elements.DropDown;
 import ui.elements.Input;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +32,12 @@ public class VmCreatePage {
     public VmCreatePage setName(String name) {
         this.name = name;
         Input.byLabel("Имя виртуальной машины").setValue(name);
+        return this;
+    }
+
+    public VmCreatePage setAvailabilityZone(String availabilityZone) {
+        this.availabilityZone = availabilityZone;
+        DropDown.byLabel("Зона доступности").select(availabilityZone);
         return this;
     }
 
@@ -56,7 +66,11 @@ public class VmCreatePage {
     }
 
     public VmCreatePage clickOrder() {
-        Button.byText("Заказать").click();
+        EntitiesUtils.clickOrder();
+        new VmsPage.VmTable()
+                .getRowByColumnValue(VmsPage.VmTable.COLUMN_NAME, name)
+                .getElementByColumn(VmsPage.VmTable.COLUMN_STATUS)
+                .shouldBe(Condition.matchText("Включено"), Duration.ofMinutes(1));
         return this;
     }
 }

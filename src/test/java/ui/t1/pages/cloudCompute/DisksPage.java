@@ -3,15 +3,9 @@ package ui.t1.pages.cloudCompute;
 import com.codeborne.selenide.Condition;
 import ui.elements.DataTable;
 
-import static core.helper.StringUtils.$x;
-
 public class DisksPage {
 
-    public DisksPage() {
-        $x("//span[.='Диски']").shouldBe(Condition.visible);
-    }
-
-    public DiskCreatePage addVm(){
+    public DiskCreatePage addDisk(){
         new DisksPageTable().clickAdd();
         return new DiskCreatePage();
     }
