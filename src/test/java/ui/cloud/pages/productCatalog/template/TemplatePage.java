@@ -94,7 +94,7 @@ public class TemplatePage extends BasePage {
         return new TemplatePage();
     }
 
-    @Step("Сохранение шаблона без патч-версией")
+    @Step("Сохранение шаблона без патч-версии")
     public TemplatePage saveWithoutPatchVersion() {
         saveWithoutPatchVersion(saveTemplateAlertText);
         return new TemplatePage();

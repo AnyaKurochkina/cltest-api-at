@@ -193,7 +193,7 @@ public class ActionTest extends BaseTest {
         assertFalse(new IndexPage().goToActionsPage()
                 .openActionForm(name)
                 .deleteIcon()
-                .saveWithNextPatchVersion()
+                .saveWithoutPatchVersion()
                 .reTurnToActionsListPageByCancelButton()
                 .openActionForm(name)
                 .isIconExist());

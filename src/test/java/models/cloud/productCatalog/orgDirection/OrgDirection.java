@@ -2,21 +2,21 @@ package models.cloud.productCatalog.orgDirection;
 
 import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
-import core.helper.http.Http;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.ExtraData;
-import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.ProductCatalogSteps;
+import steps.productCatalog.ServiceSteps;
 
-import static core.helper.Configure.ProductCatalogURL;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static steps.productCatalog.OrgDirectionSteps.*;
 
 @Log4j2
 @Builder
@@ -40,22 +40,15 @@ public class OrgDirection extends Entity implements IProductCatalog {
     private String createDt;
     @JsonProperty("update_dt")
     private String updateDt;
-    private String jsonTemplate;
-    @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/org_direction/",
-            "productCatalog/orgDirection/orgDirection.json");
-
-    private final String productName = "/api/v1/org_direction/";
 
     @Override
     public Entity init() {
-        jsonTemplate = "productCatalog/orgDirection/orgDirection.json";
         return this;
     }
 
     @Override
     public JSONObject toJson() {
-        return JsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate("productCatalog/orgDirection/orgDirection.json")
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.description", description)
@@ -68,13 +61,12 @@ public class OrgDirection extends Entity implements IProductCatalog {
     @Override
     @Step("Создание направления")
     protected void create() {
-        if (productCatalogSteps.isExists(name)) {
-            productCatalogSteps.deleteByName(name, GetOrgDirectionListResponse.class);
+        if (isOrgDirectionExists(name)) {
+            List<String> serviceIdList = getServiceUsedOrgDirection(getOrgDirectionByName(name).getId()).jsonPath().getList("id");
+            serviceIdList.forEach(ServiceSteps::deleteServiceById);
+            deleteOrgDirectionById(getOrgDirectionByName(name).getId());
         }
-        OrgDirection createOrgDirection = new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(toJson())
-                .post(productName)
+        OrgDirection createOrgDirection = createOrgDirection(toJson())
                 .assertStatus(201)
                 .extractAs(OrgDirection.class);
         StringUtils.copyAvailableFields(createOrgDirection, this);
@@ -82,13 +74,8 @@ public class OrgDirection extends Entity implements IProductCatalog {
     }
 
     @Override
-    @Step("Удаление направления")
     protected void delete() {
-        new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(productName + id + "/")
-                .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(name));
+        deleteOrgDirectionById(id);
+        assertFalse(isOrgDirectionExists(name));
     }
 }
