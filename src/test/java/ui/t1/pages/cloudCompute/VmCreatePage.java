@@ -1,6 +1,7 @@
 package ui.t1.pages.cloudCompute;
 
 import com.codeborne.selenide.Condition;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import ui.cloud.pages.EntitiesUtils;
@@ -38,8 +39,12 @@ public class VmCreatePage {
         return this;
     }
 
-    public VmCreatePage addDisk(Disk disk){
+    public VmCreatePage addDisk(String name, int size, String type, boolean deleteOnTermination){
         new Button($x("//button[contains(@class, 'array-item-add')]")).click();
+        Input.byLabel("Имя диска", -1).setValue(name);
+        Input.byLabel("Размер диска, Гб", -1).setValue(size);
+        DropDown.byLabel("Тип", -1).selectByTextContains(type);
+        CheckBox.byLabel("Удалять вместе с виртуальной машиной", -1).setChecked(deleteOnTermination);
         return this;
     }
 
@@ -86,13 +91,5 @@ public class VmCreatePage {
                 .getElementByColumn(VmsPage.VmTable.COLUMN_STATUS)
                 .shouldBe(Condition.matchText("Включено"), Duration.ofMinutes(1));
         return this;
-    }
-
-    @Data
-    public static class Disk{
-        private String name;
-        private int size;
-        private String type;
-        private boolean deleteOnTermination;
     }
 }
