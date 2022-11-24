@@ -25,8 +25,12 @@ public class DropDown implements TypifiedElement {
         this.element = element;
     }
 
-    public static DropDown byLabel(String name) {
-        return new DropDown($x("//label[text()='{}']/following::div[1]", name));
+    public static DropDown byLabel(String label) {
+        return byLabel(label, 1);
+    }
+
+    public static DropDown byLabel(String label, int index) {
+        return new DropDown($x("(//label[text()='{}']/following::div[1])" + postfix, label, index));
     }
 
     public static DropDown byXpath(@Language("XPath") String xpath) {

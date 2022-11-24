@@ -3,10 +3,7 @@ package ui.t1.pages.cloudCompute;
 import com.codeborne.selenide.Condition;
 import lombok.Getter;
 import ui.cloud.pages.EntitiesUtils;
-import ui.elements.Alert;
-import ui.elements.Button;
-import ui.elements.DropDown;
-import ui.elements.Input;
+import ui.elements.*;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -38,6 +35,12 @@ public class VmCreatePage {
     public VmCreatePage setAvailabilityZone(String availabilityZone) {
         this.availabilityZone = availabilityZone;
         DropDown.byLabel("Зона доступности").select(availabilityZone);
+        return this;
+    }
+
+    public VmCreatePage setDeleteOnTermination(boolean deleteOnTermination) {
+        this.deleteOnTermination = deleteOnTermination;
+        CheckBox.byLabel("Удалять вместе с виртуальной машиной").setChecked(deleteOnTermination);
         return this;
     }
 

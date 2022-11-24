@@ -106,6 +106,7 @@ public class UiCloudComputeTest extends Tests {
         VmCreatePage vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
+//                .set
                 .setAvailabilityZone("ru-central1-c")
                 .setName("AT-UI-" + Math.abs(new Random().nextInt()))
                 .addSecurityGroups("default")
@@ -125,8 +126,6 @@ public class UiCloudComputeTest extends Tests {
                         .orElseThrow(() -> new NotFoundException("Не найден item с type=compute")).getItemId()))
                 .filter(i -> i.getType().equals("nic") || i.getType().equals("volume"))
                 .count());
-
-        System.out.println(1);
     }
 
 

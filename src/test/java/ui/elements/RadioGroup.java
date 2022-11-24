@@ -13,7 +13,11 @@ public class RadioGroup implements TypifiedElement{
     }
 
     public static RadioGroup byLabel(String label){
-        return new RadioGroup($x("//*[.='{}']/..//*[@role='radiogroup']", label).shouldBe(Condition.visible));
+        return byLabel(label, 1);
+    }
+
+    public static RadioGroup byLabel(String label, int index){
+        return new RadioGroup($x("(//*[.='{}']/..//*[@role='radiogroup'])" + postfix, label, index).shouldBe(Condition.visible));
     }
 
     public static RadioGroup bId(String id){

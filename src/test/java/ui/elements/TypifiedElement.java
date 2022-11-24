@@ -4,6 +4,7 @@ import com.codeborne.selenide.Selenide;
 
 public interface TypifiedElement {
     String scrollCenter = "{block: 'center'}";
+    String postfix = "[{}]";
 
     static void refresh(){
         Selenide.refresh();
