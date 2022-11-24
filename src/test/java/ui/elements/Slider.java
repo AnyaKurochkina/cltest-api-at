@@ -24,11 +24,11 @@ public class Slider extends Input {
     }
 
     @Override
-    public void setValue(String value) {
+    public void setValue(Object value) {
         input.shouldBe(Condition.visible)
                 .shouldBe(Condition.enabled)
-                .sendKeys(Keys.chord(Keys.CONTROL, "a"), value, Keys.TAB);
-        Assertions.assertEquals(value, point.getAttribute("aria-valuenow"));
+                .sendKeys(Keys.chord(Keys.CONTROL, "a"), String.valueOf(value), Keys.TAB);
+        Assertions.assertEquals(String.valueOf(value), point.getAttribute("aria-valuenow"));
     }
 
     public String getMinValue() {
