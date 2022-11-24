@@ -11,6 +11,10 @@ public interface TypifiedElement {
         checkProject();
     }
 
+    static String getIndex(int index){
+        return (index == -1)?"last()":String.valueOf(index);
+    }
+
     //TODO: До фикса доступа к балансу учеток закрываем все окна
     static void checkProject(){
 //        new Alert().checkColor(Alert.Color.GREEN).checkText("Выбран контекст").close();

@@ -19,7 +19,7 @@ public class CheckBox implements TypifiedElement{
     }
 
     public static CheckBox byLabel(String label, int index){
-        return new CheckBox($x("(//label[.='{}']//input[@type='checkbox'])" + postfix, label, index).parent().shouldBe(Condition.visible));
+        return new CheckBox($x("(//label[.='{}']//input[@type='checkbox'])" + postfix, label, TypifiedElement.getIndex(index)).parent().shouldBe(Condition.visible));
     }
 
     public void setChecked(boolean checked){

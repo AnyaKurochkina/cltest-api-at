@@ -1,13 +1,19 @@
 package ui.t1.pages.cloudCompute;
 
 import com.codeborne.selenide.Condition;
+import lombok.Data;
 import lombok.Getter;
 import ui.cloud.pages.EntitiesUtils;
-import ui.elements.*;
+import ui.elements.Button;
+import ui.elements.CheckBox;
+import ui.elements.DropDown;
+import ui.elements.Input;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+
+import static core.helper.StringUtils.$x;
 
 //new VirtualMachinePage().name("name").description("desc").addSecurityGroups("default").image(new Image("Ubuntu", "20.04")).sshKey("qw")
 @Getter
@@ -29,6 +35,11 @@ public class VmCreatePage {
     public VmCreatePage setName(String name) {
         this.name = name;
         Input.byLabel("Имя виртуальной машины").setValue(name);
+        return this;
+    }
+
+    public VmCreatePage addDisk(Disk disk){
+        new Button($x("//button[contains(@class, 'array-item-add')]")).click();
         return this;
     }
 
@@ -75,5 +86,13 @@ public class VmCreatePage {
                 .getElementByColumn(VmsPage.VmTable.COLUMN_STATUS)
                 .shouldBe(Condition.matchText("Включено"), Duration.ofMinutes(1));
         return this;
+    }
+
+    @Data
+    public static class Disk{
+        private String name;
+        private int size;
+        private String type;
+        private boolean deleteOnTermination;
     }
 }
