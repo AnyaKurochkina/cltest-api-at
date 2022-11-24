@@ -64,8 +64,7 @@ public class UiClickHouseTest extends UiProductTest {
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
-            orderPage.orderClick();
-            new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
+            EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")

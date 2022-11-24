@@ -7,11 +7,9 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Alert;
-import ui.elements.Input;
-import ui.elements.InputFile;
-import ui.elements.Table;
+import ui.elements.*;
 import ui.models.Graph;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -26,7 +24,7 @@ public class GraphsListPage extends BaseListPage {
     private final SelenideElement inputNameField = $x("//*[@name ='name']");
     private final SelenideElement inputDescriptionField = $x("//input[@name='description']");
     private final SelenideElement inputAuthorField = $x("//*[@name ='author']");
-    private final SelenideElement selectType = $x("//div[@aria-labelledby='type']");
+    private final DropDown typeDropDown = DropDown.byLabel("Тип");
     private final SelenideElement actionType = $x("//*[@data-value='action']");
     private final SelenideElement creatingType = $x("//*[@data-value='creating']");
     private final SelenideElement serviceType = $x("//*[@data-value='service']");
@@ -36,10 +34,10 @@ public class GraphsListPage extends BaseListPage {
     private final SelenideElement clearSearchButton = $x("//*[@placeholder='Поиск']/../button");
     private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
     private final SelenideElement nothingFoundMessage = $x("//td[text()='Нет данных для отображения']");
-    private final SelenideElement graphNameValidationHint = $x("//p[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
-    private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::p");
-    private final SelenideElement nameRequiredFieldHint = $x("//input[@name='name']/parent::div/following-sibling::p");
-    private final SelenideElement authorRequiredFieldHint = $x("//input[@name='author']/parent::div/following-sibling::p");
+    private final SelenideElement graphNameValidationHint = $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
+    private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::div");
+    private final SelenideElement nameRequiredFieldHint = $x("//input[@name='name']/parent::div/following-sibling::div");
+    private final SelenideElement authorRequiredFieldHint = $x("//input[@name='author']/parent::div/following-sibling::div");
     private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
 
     public GraphsListPage() {
@@ -51,7 +49,7 @@ public class GraphsListPage extends BaseListPage {
         createNewGraphButton.click();
         inputTitleField.setValue(graph.getTitle());
         inputNameField.setValue(graph.getName());
-        selectType(graph.getType());
+        typeDropDown.selectByTitle(graph.getType());
         inputDescriptionField.setValue(graph.getDescription());
         inputAuthorField.setValue(graph.getAuthor());
         createGraphButton.click();
@@ -108,7 +106,7 @@ public class GraphsListPage extends BaseListPage {
         createNewGraphButton.shouldBe(Condition.visible).click();
         inputTitleField.setValue(title);
         inputNameField.setValue(name);
-        selectType(type);
+        typeDropDown.selectByTitle(type);
         inputDescriptionField.setValue(description);
         inputAuthorField.setValue(author);
         if (title.isEmpty()) {
@@ -165,22 +163,6 @@ public class GraphsListPage extends BaseListPage {
         return this;
     }
 
-    @Step("Выбор типа графа '{type}'")
-    private void selectType(String type) {
-        selectType.click();
-        switch (type) {
-            case "creating":
-                creatingType.click();
-                break;
-            case "action":
-                actionType.click();
-                break;
-            case "service":
-                serviceType.click();
-                break;
-        }
-    }
-
     @Step("Проверка сортировки по наименованию")
     public GraphsListPage checkSortingByTitle() {
         BaseListPage.checkSortingByStringField("Наименование");
@@ -208,7 +190,7 @@ public class GraphsListPage extends BaseListPage {
     @Step("Импорт графа из файла")
     public GraphsListPage importGraph(String path) {
         importButton.click();
-        new InputFile(path).importFile();
+        new InputFile(path).importFileAndSubmit();
         new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
         return this;
     }

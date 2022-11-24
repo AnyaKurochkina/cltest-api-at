@@ -17,8 +17,12 @@ public class InputFile {
 
     }
 
-    public void importFile() {
+    public void importFileAndSubmit() {
         importFile.uploadFile(new File(path));
         submit.shouldBe(Condition.enabled).click();
+    }
+
+    public void importFile() {
+        importFile.uploadFile(new File(path));
     }
 }

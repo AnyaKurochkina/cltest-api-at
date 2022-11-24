@@ -58,8 +58,7 @@ public class UiWindowsTest extends UiProductTest {
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
-            orderPage.orderClick();
-            new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
+            EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")
@@ -117,7 +116,7 @@ public class UiWindowsTest extends UiProductTest {
     @DisplayName("UI Windows. Проверка 'Защита от удаления'")
     void checkProtectOrder() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.switchProtectOrder("Защита от удаления включена");
+        winPage.switchProtectOrder(true);
         try {
             winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
             {
@@ -127,7 +126,7 @@ public class UiWindowsTest extends UiProductTest {
             new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
             TypifiedElement.refresh();
         } finally {
-            winPage.switchProtectOrder("Защита от удаления выключена");
+            winPage.switchProtectOrder(false);
         }
     }
 

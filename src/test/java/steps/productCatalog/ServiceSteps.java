@@ -58,4 +58,12 @@ public class ServiceSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
                 .get(serviceUrl + objectId + "/");
     }
+
+    @Step("Удаление сервиса по id")
+    public static void deleteServiceById(String id) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(serviceUrl + id + "/")
+                .assertStatus(204);
+    }
 }

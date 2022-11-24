@@ -37,8 +37,8 @@ public abstract class IProductPage {
 
     protected abstract void checkPowerStatus(String expectedStatus);
 
-    SelenideElement btnHistory = $x("//button[.='История действий']");
-    SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
+    protected SelenideElement btnHistory = $x("//button[.='История действий']");
+    protected SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
     SelenideElement btnMonitoringOs = $x("//button[.='Мониторинг ОС']");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
     SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
@@ -69,7 +69,10 @@ public abstract class IProductPage {
     }
 
     @Step("Переключение 'Защита от удаления' в состояние '{expectValue}'")
-    public void switchProtectOrder(String expectValue) {
+    public void switchProtectOrder(boolean checked) {
+        String expectValue = "Защита от удаления выключена";
+        if(checked)
+            expectValue = "Защита от удаления включена";
         ProductStatus status = new ProductStatus(expectValue);
         runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить",
                 () -> Input.byLabel("Включить защиту от удаления").click(), ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
@@ -151,8 +154,13 @@ public abstract class IProductPage {
         executable.execute();
         if (params.isCheckPreBilling())
             preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+        if(params.isClickCancel())
+            textButton = "Отмена";
         SelenideElement runButton = $x("//div[@role='dialog']//button[.='{}']", textButton);
         runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if(params.isClickCancel())
+            return;
+
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(3000);

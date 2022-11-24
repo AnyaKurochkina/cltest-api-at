@@ -8,9 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.visualTeamplate.CompactTemplate;
-import models.cloud.productCatalog.visualTeamplate.FullTemplate;
-import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
+import models.cloud.productCatalog.visualTeamplate.*;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -38,9 +36,9 @@ public class VisualTemplateTest extends Tests {
     ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/item_visual_templates/",
             "productCatalog/itemVisualTemplate/createItemVisual.json");
     CompactTemplate compactTemplate = CompactTemplate.builder()
-            .name("name")
-            .type("type")
-            .status("status")
+            .name(new Name("name"))
+            .type(new Type("type"))
+            .status(new Status("status"))
             .build();
     FullTemplate fullTemplate = FullTemplate.builder()
             .type("type")
@@ -357,9 +355,9 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        assertEquals("name", visualTemplates.getCompactTemplate().getName());
-        assertEquals("status", visualTemplates.getCompactTemplate().getStatus());
-        assertEquals("type", visualTemplates.getCompactTemplate().getType());
+        assertEquals("name", visualTemplates.getCompactTemplate().getName().getValue());
+        assertEquals("status", visualTemplates.getCompactTemplate().getStatus().getValue());
+        assertEquals("type", visualTemplates.getCompactTemplate().getType().getValue());
     }
 
     @DisplayName("Удаление шаблона визуализации")

@@ -68,8 +68,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
-            orderPage.orderClick();
-            new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
+            EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowElementByColumnValue("Продукт",
                             orderPage.getLabelValue())

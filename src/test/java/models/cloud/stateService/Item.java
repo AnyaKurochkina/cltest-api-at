@@ -41,4 +41,7 @@ public class Item {
     private String status;
     private String jsonTemplate;
     private String folder;
+
+    @JsonProperty("external_provider_id")
+    private String externalProviderId;
 }
