@@ -20,7 +20,7 @@ public class Input implements TypifiedElement {
     }
 
     public static Input byLabel(String label, int index) {
-        return new Input($x("(//label[starts-with(.,'{}')]/parent::*//input)" + postfix, label, index));
+        return new Input($x("(//label[starts-with(.,'{}')]/parent::*//input)" + postfix, label, TypifiedElement.getIndex(index)));
     }
 
     public static Input byLabelV2(String label) {

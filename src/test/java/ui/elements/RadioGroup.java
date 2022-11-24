@@ -17,7 +17,7 @@ public class RadioGroup implements TypifiedElement{
     }
 
     public static RadioGroup byLabel(String label, int index){
-        return new RadioGroup($x("(//*[.='{}']/..//*[@role='radiogroup'])" + postfix, label, index).shouldBe(Condition.visible));
+        return new RadioGroup($x("(//*[.='{}']/..//*[@role='radiogroup'])" + postfix, label, TypifiedElement.getIndex(index)).shouldBe(Condition.visible));
     }
 
     public static RadioGroup bId(String id){
