@@ -43,6 +43,7 @@ public class UiCloudComputeTest extends Tests {
     }
 
     @Test
+    @DisplayName("Создание/Удаление публичного IP")
     void createPublicIp() {
         new IndexPage()
                 .goToPublicIps()
@@ -70,6 +71,7 @@ public class UiCloudComputeTest extends Tests {
 
 
     @Test
+    @DisplayName("Создание/Удаление диска")
     void createDisk() {
         DiskCreatePage disk = new IndexPage()
                 .goToDisks()
@@ -100,15 +102,48 @@ public class UiCloudComputeTest extends Tests {
     }
 
     @Test
+    @DisplayName("Создание/Удаление ВМ c одним доп диском (auto_delete = on) boot_disk_auto_delete = off")
     void createVm() {
         new IndexPage().goToSshKeys().addKey("default", "root");
-
+        String name = "AT-UI-" + Math.abs(new Random().nextInt());
         VmCreatePage vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
-//                .set
+                .setDeleteOnTermination(false)
+                .addDisk(name, 2, "SSD", true)
                 .setAvailabilityZone("ru-central1-c")
-                .setName("AT-UI-" + Math.abs(new Random().nextInt()))
+                .setName(name)
+                .addSecurityGroups("default")
+                .setImage(new SelectBox.Image("Ubuntu", "20.04"))
+                .setSshKey("default")
+                .clickOrder();
+
+        VmPage vmPage = new VmsPage().selectCompute(vm.getName()).checkCreate();
+        String orderId = vmPage.getOrderId();
+
+        List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(project.getId())
+                .filter(e -> e.getKey().equals(orderId))
+                .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с OrderId " + orderId)).getValue();
+        Assertions.assertEquals(2, items.stream()
+                .filter(i -> i.getSrcOrderId().equals(""))
+                .filter(i -> i.getParent().equals(items.stream().filter(e -> e.getType().equals("instance")).findFirst()
+                        .orElseThrow(() -> new NotFoundException("Не найден item с type=compute")).getItemId()))
+                .filter(i -> i.getType().equals("nic") || i.getType().equals("volume"))
+                .count());
+    }
+
+    @Test
+    @DisplayName("Создание ВМ c двумя доп дисками (auto_delete = on и off) boot_disk_auto_delete = on")
+    void createVm2() {
+        new IndexPage().goToSshKeys().addKey("default", "root");
+        String name = "AT-UI-" + Math.abs(new Random().nextInt());
+        VmCreatePage vm = new IndexPage()
+                .goToVirtualMachine()
+                .addVm()
+                .addDisk(name, 2, "SSD", true)
+                .addDisk(name, 3, "HDD", false)
+                .setAvailabilityZone("ru-central1-c")
+                .setName(name)
                 .addSecurityGroups("default")
                 .setImage(new SelectBox.Image("Ubuntu", "20.04"))
                 .setSshKey("default")
