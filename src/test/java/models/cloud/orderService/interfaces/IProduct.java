@@ -354,7 +354,7 @@ public abstract class IProduct extends Entity {
         if (productId == null) {
             productId = new ProductCatalogSteps("/api/v1/project/" + getProjectId() + "/products/").
                     getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(Objects.requireNonNull(getProductName()),
-                            "is_open=true&context_restrictions=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()));
+                            "is_open=true");
         }
         if (productCatalogName == null) {
             productCatalogName = getProductById(productId).getName();
