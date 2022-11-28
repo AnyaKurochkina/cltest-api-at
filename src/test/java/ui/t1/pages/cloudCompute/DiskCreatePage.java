@@ -1,6 +1,7 @@
 package ui.t1.pages.cloudCompute;
 
 import lombok.Getter;
+import ui.cloud.pages.EntitiesUtils;
 import ui.elements.*;
 
 @Getter
@@ -54,7 +55,7 @@ public class DiskCreatePage {
     }
 
     public DiskCreatePage clickOrder(){
-        Button.byText("Заказать").click();
+        EntitiesUtils.clickOrder();
         return this;
     }
 }

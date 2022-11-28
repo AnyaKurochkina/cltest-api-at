@@ -165,7 +165,7 @@ public class StateServiceSteps extends Steps {
                 .extractAs(Item.class);
     }
 
-    public static Stream<Map.Entry<String, List<ShortItem>>> getItems(String id){
+    public static List<ShortItem> getItems(String id){
         List<Item> list = new Http(StateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/items/?page=1&per_page=10000&data__state__in=off,on", id)
@@ -173,7 +173,7 @@ public class StateServiceSteps extends Steps {
                 .extractAs(GetItemList.class)
                 .getList();
 //        JSONObject jsonObject = new JSONObject();
-        Map<String, List<ShortItem>> listOrders = new HashMap<>();
+       List<ShortItem> listOrders = new ArrayList<>();
         list.forEach(item -> {
             ShortItem itemData = new ShortItem();
 
@@ -204,18 +204,19 @@ public class StateServiceSteps extends Steps {
             itemData.parent = (String) item.getData().getOrDefault("parent", "");
             itemData.itemId = item.getItemId();
 
-//            jsonObject.append(item.getOrderId(), new JSONObject(JsonHelper.toJson(itemData)));
-            List<ShortItem> shortItemList = listOrders.getOrDefault(item.getOrderId(), new ArrayList<>());
-            shortItemList.add(itemData);
-            listOrders.put(item.getOrderId(), shortItemList);
+            itemData.orderId = item.getOrderId();
+//            List<ShortItem> shortItemList = listOrders.getOrDefault(item.getOrderId(), new ArrayList<>());
+//            shortItemList.add(itemData);
+            listOrders.add(itemData);
         });
-        return listOrders.entrySet().stream();
+        return listOrders;
     }
 
 
     @Data
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ShortItem {
+        private String orderId;
         private String name;
         private String parent;
         private String provider;

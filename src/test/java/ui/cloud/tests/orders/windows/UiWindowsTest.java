@@ -57,7 +57,7 @@ public class UiWindowsTest extends UiProductTest {
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -245,7 +245,7 @@ public class UiWindowsTest extends UiProductTest {
     @DisplayName("UI Windows. Удалить")
     void deleteWindows() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.LESS, winPage::delete);
+        winPage.runActionWithCheckCost(CompareType.ZERO, winPage::delete);
     }
 
 }

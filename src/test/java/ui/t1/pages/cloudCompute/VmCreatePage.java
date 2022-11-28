@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import ui.cloud.pages.EntitiesUtils;
+import ui.cloud.pages.IProductPage;
 import ui.elements.Button;
 import ui.elements.CheckBox;
 import ui.elements.DropDown;
@@ -45,6 +46,12 @@ public class VmCreatePage {
         Input.byLabel("Размер диска, Гб", -1).setValue(size);
         DropDown.byLabel("Тип", -1).selectByTextContains(type);
         CheckBox.byLabel("Удалять вместе с виртуальной машиной", -1).setChecked(deleteOnTermination);
+        return this;
+    }
+
+    public VmCreatePage setBootSize(int bootSize) {
+        this.bootSize = bootSize;
+        Input.byLabel("Размер диска, Гб").setValue(bootSize);
         return this;
     }
 

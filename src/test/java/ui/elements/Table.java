@@ -65,6 +65,15 @@ public class Table implements TypifiedElement {
     }
 
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
+    public SelenideElement getRowElementByColumnValueContains(String column, String value) {
+        for (SelenideElement e : rows) {
+            if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().contains(value))
+                return e;
+        }
+        throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
+    }
+
+    @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
     public Row getRowByColumnValue(String column, String value) {
         for (int i = 0; i < rows.size(); i++) {
             if (rows.get(i).$$x("td").get(getHeaderIndex(column)).hover().getText().equals(value))
