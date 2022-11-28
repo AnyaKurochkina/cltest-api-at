@@ -98,7 +98,7 @@ public class CostSteps extends Steps {
                 .createObject();
         String productId = new ProductCatalogSteps("/api/v1/products/")
                 .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
-                        "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()));
+                        "is_open=true&context_restrictions=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()));
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
@@ -153,7 +153,7 @@ public class CostSteps extends Steps {
                 .createObject();
         String productId = new ProductCatalogSteps("/api/v1/products/")
                 .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
-                        "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType()).toLowerCase());
+                        "is_open=true&context_restrictions=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType()).toLowerCase());
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
         JSONObject template = JsonHelper.getJsonTemplate("/tarifficator/cost.json").build();
         JSONObject attrs = (JSONObject) product.toJson().query("/order/attrs");
