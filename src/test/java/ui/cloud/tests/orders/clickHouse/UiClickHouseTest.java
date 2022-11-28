@@ -1,5 +1,6 @@
 package ui.cloud.tests.orders.clickHouse;
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import core.helper.Configure;
@@ -13,9 +14,7 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.*;
-import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.ConfigExtension;
@@ -63,7 +62,7 @@ public class UiClickHouseTest extends UiProductTest {
             orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
-            preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())

@@ -125,7 +125,7 @@ public abstract class IProductPage {
                 .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = Dialog.byTitle(action);
         if (params.isCheckPreBilling())
-            preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+            preBillingCostAction = EntitiesUtils.getPreBillingCostAction(preBillingPriceAction);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (params.isCheckAlert())
@@ -153,7 +153,7 @@ public abstract class IProductPage {
                 .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
         if (params.isCheckPreBilling())
-            preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+            preBillingCostAction = EntitiesUtils.getPreBillingCostAction(preBillingPriceAction);
         if(params.isClickCancel())
             textButton = "Отмена";
         SelenideElement runButton = $x("//div[@role='dialog']//button[.='{}']", textButton);
@@ -276,7 +276,7 @@ public abstract class IProductPage {
             Assertions.assertEquals(preBillingCostAction, currentCost, 0.01d);
         else if (type == CompareType.ZERO) {
             Assertions.assertEquals(0.0d, preBillingCostAction, 0.001d);
-            Assertions.assertEquals(0.0d, currentCost, 0.001d);
+            Assertions.assertEquals(0.0d, getCostOrder(), 0.001d);
         }
     }
 
@@ -326,12 +326,4 @@ public abstract class IProductPage {
         return cost;
     }
 
-    @Step("Получение стоимости предбиллинга")
-    public static double getPreBillingCostAction(SelenideElement element) {
-        element.shouldBe(Condition.visible);
-        double cost = Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?\\d{1,5},\\d{2})", element.getText()))
-                .replace(',', '.'));
-        log.debug("Стоимость предбиллинга {}", cost);
-        return cost;
-    }
 }

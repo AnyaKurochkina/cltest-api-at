@@ -22,8 +22,11 @@ public class ProductInjector implements TestInstancePostProcessor {
                 IProduct product = (IProduct) clazz.newInstance();
 
                 product.setEnv("DEV");
-                if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue")) {
+                if (Configure.ENV.equals("prod")) {
                     product.setEnv("LT");
+                    product.setPlatform("OpenStack");
+                }
+                else if(Configure.ENV.equals("blue")){
                     product.setPlatform("OpenStack");
                 }
                 else

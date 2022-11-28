@@ -352,9 +352,9 @@ public abstract class IProduct extends Entity {
             label = "AT-API-" + UUID.randomUUID();
         }
         if (productId == null) {
-            productId = new ProductCatalogSteps("/api/v1/products/").
+            productId = new ProductCatalogSteps("/api/v1/projects/" + getProjectId() + "/products/").
                     getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(Objects.requireNonNull(getProductName()),
-                            "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()));
+                            "is_open=true");
         }
         if (productCatalogName == null) {
             productCatalogName = getProductById(productId).getName();

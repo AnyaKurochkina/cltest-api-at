@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import models.Entity;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.EntitiesUtils;
 import ui.cloud.pages.IProductPage;
@@ -24,6 +25,14 @@ public class IProductT1Page extends IProductPage {
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         checkPowerStatus(DiskPage.TopInfo.POWER_STATUS_DELETED);
+    }
+
+    public <T extends IProductPage> T checkCreate(){
+        waitChangeStatus();
+        checkLastAction("Развертывание");
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        Assertions.assertEquals(EntitiesUtils.getPreBillingPrice(), getCostOrder(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
+        return (T) this;
     }
 
     @Override

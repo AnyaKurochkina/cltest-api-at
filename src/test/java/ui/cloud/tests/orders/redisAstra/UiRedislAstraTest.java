@@ -1,19 +1,18 @@
 package ui.cloud.tests.orders.redisAstra;
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Redis;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -61,7 +60,7 @@ public class UiRedislAstraTest extends UiProductTest {
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
