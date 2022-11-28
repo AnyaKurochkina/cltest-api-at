@@ -96,7 +96,7 @@ public class CostSteps extends Steps {
                 .isForOrders(true)
                 .build()
                 .createObject();
-        String productId = new ProductCatalogSteps("/api/v1/project/" + product.getProjectId() + "/products/")
+        String productId = new ProductCatalogSteps("/api/v1/projects/" + product.getProjectId() + "/products/")
                 .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
                         "is_open=true");
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
@@ -151,7 +151,7 @@ public class CostSteps extends Steps {
                 .isForOrders(true)
                 .build()
                 .createObject();
-        String productId = new ProductCatalogSteps("/api/v1/project/" + product.getProjectId() + "/products/")
+        String productId = new ProductCatalogSteps("/api/v1/projects/" + product.getProjectId() + "/products/")
                 .getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(product.getProductName(),
                         "is_open=true");
         log.info("Отправка запроса на получение стоимости заказа для " + product.getProductName());
