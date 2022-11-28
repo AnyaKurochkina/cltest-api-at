@@ -1,10 +1,12 @@
 package api.cloud.productCatalog.product;
 
+import api.Tests;
 import core.helper.Configure;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.product.OnRequest;
 import models.cloud.productCatalog.product.Product;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -12,13 +14,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.ProductSteps.getCreateProductResponse;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -208,7 +210,7 @@ public class ProductNegativeTest extends Tests {
                 .getList("payment").get(0));
     }
 
-    @DisplayName("Негативный тест на cоздание продукта cо значением number меньше min значения")
+    @DisplayName("Негативный тест на создание продукта cо значением number меньше min значения")
     @TmsLink("1107460")
     @Test
     public void createProductWithDefaultNumber() {
@@ -226,5 +228,24 @@ public class ProductNegativeTest extends Tests {
         Response response = steps.createProductObject(product).assertStatus(400);
         Object msg = response.jsonPath().getList("number").get(0);
         assertEquals("Убедитесь, что это значение больше либо равно 0.", msg);
+    }
+
+    @DisplayName("Негативный тест создание продукта с недопустимым значением поля on_request")
+    @TmsLink("1322843")
+    @Test
+    public void createProductWithOnRequestInValidValuesTest() {
+        JSONObject product = Product.builder()
+                .name("create_product_with_on_request_invalid_test_api")
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
+                .info(info)
+                .onRequest(OnRequest.TEST)
+                .build()
+                .init()
+                .toJson();
+        String actualProduct = getCreateProductResponse(product)
+                .assertStatus(400).jsonPath().getList("on_request", String.class).get(0);
+        assertEquals(String.format("Значения %s нет среди допустимых вариантов.", OnRequest.TEST.getValue()), actualProduct);
     }
 }

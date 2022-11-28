@@ -78,6 +78,14 @@ public class ProductSteps extends Steps {
                 .extractAs(Product.class);
     }
 
+    @Step("Создание продукта")
+    public static Response getCreateProductResponse(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post("/api/v1/products/");
+    }
+
     @Step("Проверка сортировки списка продуктов")
     public static boolean isProductListSorted(List<Product> list) {
         if (list.isEmpty() || list.size() == 1) {
@@ -201,11 +209,10 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Импорт продукта")
-    public static void importProduct(String pathName) {
-        new Http(ProductCatalogURL)
+    public static Response importProduct(String pathName) {
+        return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(productUrl + "obj_import/", "file", new File(pathName))
-                .assertStatus(200);
+                .multiPart(productUrl + "obj_import/", "file", new File(pathName));
     }
 
     @Step("Загрузка продукта в Gitlab")

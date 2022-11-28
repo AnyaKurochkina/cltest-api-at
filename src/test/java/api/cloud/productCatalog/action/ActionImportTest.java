@@ -1,0 +1,88 @@
+package api.cloud.productCatalog.action;
+
+import api.Tests;
+import core.helper.Configure;
+import core.helper.JsonHelper;
+import core.helper.http.Response;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
+import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.action.Action;
+import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.*;
+
+import static core.helper.Configure.RESOURCE_PATH;
+import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ActionSteps.*;
+import static steps.productCatalog.ProductSteps.importProduct;
+
+@Tag("product_catalog")
+@Epic("Продуктовый каталог")
+@Feature("Действия")
+@DisabledIfEnv("prod")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class ActionImportTest extends Tests {
+
+    @DisplayName("Импорт действия")
+    @TmsLink("642433")
+    @Test
+    public void importActionTest() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
+        String actionName = new JsonPath(data).get("Action.name");
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
+        }
+        importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
+        assertTrue(isActionExists(actionName), "Действие не существует");
+        deleteActionByName(actionName);
+        assertFalse(isActionExists(actionName), "Действие существует");
+    }
+
+    @DisplayName("Импорт уже существующего действия")
+    @TmsLink("1319922")
+    @Test
+    public void importExistActionTest() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
+        String actionName = new JsonPath(data).get("Action.name");
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
+        }
+        importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(200);
+        String expectedMsg = "Версия \"1.0.0\" Action:import_action_test_api:import_action_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.";
+        Response response = importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(400);
+        assertEquals(expectedMsg, response.jsonPath().getList("errors").get(0));
+        assertTrue(isActionExists(actionName), "Действие не существует");
+        deleteActionByName(actionName);
+        assertFalse(isActionExists(actionName), "Действие существует");
+    }
+
+    @DisplayName("Импорт действия c иконкой")
+    @TmsLink("1085391")
+    @Test
+    public void importActionWithIcon() {
+        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importActionWithIcon.json");
+        String actionName = new JsonPath(data).get("Action.name");
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
+        }
+        importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithIcon.json");
+        String id = getActionIdByNameWithMultiSearch(actionName);
+        Action action = getActionById(id);
+        assertFalse(action.getIconStoreId().isEmpty());
+        assertFalse(action.getIconUrl().isEmpty());
+        assertTrue(isActionExists(actionName), "Действие не существует");
+        deleteActionByName(actionName);
+        assertFalse(isActionExists(actionName), "Действие существует");
+    }
+
+    @Test
+    @DisplayName("Негативный тест импорт действия в другой раздел")
+    @TmsLink("1319697")
+    public void importActionToAnotherSection() {
+        String expectedMsg = "['Импортируемый объект \"Action\" не соответствует разделу \"Product\"']";
+        Response response = importProduct(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(400);
+        String error = response.jsonPath().getList("errors", String.class).get(0);
+        assertEquals(expectedMsg, error);
+    }
+}

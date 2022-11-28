@@ -50,20 +50,6 @@ public class AllowedActionTest extends Tests {
         assertTrue(isAllowedActionExists(actionName));
     }
 
-    @DisplayName("Получение разрешенного действия по фильтру with_version_fields=true")
-    @TmsLink("")
-    @Test
-    public void getAllowedActionWithVersionFieldsTest() {
-        String actionName = "get_allowed_action_with_version_fields_test_api";
-        AllowedAction allowedAction = AllowedAction.builder()
-                .name(actionName)
-                .title(actionName)
-                .build()
-                .createObject();
-        AllowedAction actionWithFields = getAllowedActionByFilter(allowedAction.getId(), "with_version_fields=true");
-//        assertFalse(actionWithFields.getVe);
-    }
-
     @DisplayName("Частичное обновление разрешенного действия")
     @TmsLink("1243254")
     @Test
@@ -134,13 +120,11 @@ public class AllowedActionTest extends Tests {
     @TmsLink("1243402")
     public void loadFromGitlabAllowedAction() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
-        JSONObject jsonObject = AllowedAction.builder()
+        AllowedAction action = AllowedAction.builder()
                 .name(actionName)
                 .title(actionName)
                 .build()
-                .init()
-                .toJson();
-        AllowedAction action = createAllowedAction(jsonObject).extractAs(AllowedAction.class);
+                .createObject();
         Response response = dumpAllowedActionToGit(action.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         deleteAllowedActionById(action.getId());

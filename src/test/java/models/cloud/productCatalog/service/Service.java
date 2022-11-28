@@ -33,7 +33,7 @@ public class Service extends Entity implements IProductCatalog {
 
     private final String productName = "/api/v1/services/";
     @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/services/",
+    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/services/",
             "productCatalog/services/createServices.json");
     private String jsonTemplate;
     @JsonProperty("turn_off_inventory")

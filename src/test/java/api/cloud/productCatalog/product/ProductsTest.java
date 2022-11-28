@@ -12,6 +12,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
 import models.cloud.productCatalog.product.Categories;
+import models.cloud.productCatalog.product.OnRequest;
 import models.cloud.productCatalog.product.Product;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductSteps.*;
 import static steps.references.ReferencesStep.*;
@@ -227,7 +229,7 @@ public class ProductsTest extends Tests {
     public void importProductTest() {
         String data = JsonHelper.getStringFromFile("/productCatalog/products/importProduct.json");
         String name = new JsonPath(data).get("Product.name");
-        importProduct(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProduct.json");
+        importProduct(RESOURCE_PATH + "/json/productCatalog/products/importProduct.json").assertStatus(200);
         assertTrue(isProductExists(name));
         deleteProductByName(name);
         assertFalse(isProductExists(name));
@@ -242,7 +244,7 @@ public class ProductsTest extends Tests {
         if (isProductExists(name)) {
             deleteProductByName(name);
         }
-        importProduct(Configure.RESOURCE_PATH + "/json/productCatalog/products/importProductWithIcon.json");
+        importProduct(RESOURCE_PATH + "/json/productCatalog/products/importProductWithIcon.json").assertStatus(200);
         Product product = getProductById(getProductByName(name).getProductId());
         assertFalse(product.getIconStoreId().isEmpty());
         assertFalse(product.getIconUrl().isEmpty());
@@ -662,5 +664,50 @@ public class ProductsTest extends Tests {
                 .createObject();
         Product actualProduct = getProductById(product.getProductId());
         assertEquals(50, actualProduct.getNumber());
+    }
+
+    @DisplayName("Создание продукта c дефолтным значением on_request")
+    @TmsLink("1322845")
+    @Test
+    public void createProductWithDefaultOnRequest() {
+        String productName = "create_product_with_default_on_request";
+        Product product = Product.builder()
+                .name(productName)
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
+                .info(info)
+                .build()
+                .createObject();
+        Product actualProduct = getProductById(product.getProductId());
+        assertNull(actualProduct.getOnRequest());
+    }
+
+    @DisplayName("Создание продукта с допустимыми значениями поля on_request")
+    @TmsLink("1322847")
+    @Test
+    public void createProductWithOnRequestValidValuesTest() {
+        Product product = Product.builder()
+                .name("create_product_with_on_request_only_request")
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
+                .info(info)
+                .onRequest(OnRequest.ONLY_REQUEST)
+                .build()
+                .createObject();
+        Product productPreview = Product.builder()
+                .name("create_product_with_on_request_preview")
+                .title("AtTestApiProduct")
+                .envs(Collections.singletonList("dev"))
+                .version("1.0.0")
+                .info(info)
+                .onRequest(OnRequest.PREVIEW)
+                .build()
+                .createObject();
+        Product actualProduct = getProductById(product.getProductId());
+        Product actualProductPreview = getProductById(productPreview.getProductId());
+        assertEquals(OnRequest.ONLY_REQUEST, actualProduct.getOnRequest());
+        assertEquals(OnRequest.PREVIEW, actualProductPreview.getOnRequest());
     }
 }

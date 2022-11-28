@@ -5,6 +5,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.feedService.action.EventTypeProvider;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.ActionSteps.getActionById;
 
 @Tag("product_catalog")
@@ -40,18 +42,23 @@ public class ActionCreateWithEventTypeProviderTest extends Tests {
         assertEquals(expectedEventTypeProviderList, actualEventTypeProviderList);
     }
 
-    @DisplayName("Негативный тест на создание allowed_action c event_type_provider не из списка справочника")
+    @DisplayName("Негативный тест на создание action c event_type_provider не из списка справочника")
     @TmsLink("1267480")
     @Test
     public void createActionWithNotExistEventProviderTest() {
+        EventTypeProvider eventTypeProvider = new EventTypeProvider("test", "test");
         List<EventTypeProvider> expectedEventTypeProviderList =
-                Collections.singletonList(new EventTypeProvider("test", "test"));
+                Collections.singletonList(eventTypeProvider);
         String actionName = "create_action_with_not_exist_event_type_provider_test_api";
-        Action.builder()
+        JSONObject json = Action.builder()
                 .actionName(actionName)
                 .eventTypeProvider(expectedEventTypeProviderList)
                 .version("1.0.1")
                 .build()
-                .negativeCreateRequest(500);
+                .init()
+                .toJson();
+        String message = createAction(json).assertStatus(400).jsonPath().getList("", String.class).get(0);
+        assertEquals(String.format("['String 1: Wrong value (%s) of event_type']", eventTypeProvider.getEvent_type()),
+                message);
     }
 }

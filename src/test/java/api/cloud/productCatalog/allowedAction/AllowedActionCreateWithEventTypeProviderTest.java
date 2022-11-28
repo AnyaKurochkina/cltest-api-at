@@ -1,20 +1,22 @@
 package api.cloud.productCatalog.allowedAction;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import api.Tests;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.AllowedActionSteps.createAllowedAction;
 import static steps.productCatalog.AllowedActionSteps.getAllowedActionById;
 
 @Tag("product_catalog")
@@ -44,13 +46,18 @@ public class AllowedActionCreateWithEventTypeProviderTest extends Tests {
     @TmsLink("1267877")
     @Test
     public void createActionWithNotExistEventProviderTest() {
+        EventTypeProvider eventTypeProvider = new EventTypeProvider("test", "test");
         List<EventTypeProvider> expectedEventTypeProviderList =
-                Collections.singletonList(new EventTypeProvider("test", "test"));
-        String actionName = "create_action_test_api";
-        AllowedAction.builder()
+                Collections.singletonList(eventTypeProvider);
+        String actionName = "create_allowed_action_with_not_exist_event_type_provider_test_api";
+        JSONObject json = AllowedAction.builder()
                 .name(actionName)
                 .eventTypeProvider(expectedEventTypeProviderList)
                 .build()
-                .negativeCreateRequest(500);
+                .init()
+                .toJson();
+        String message = createAllowedAction(json).assertStatus(400).jsonPath().getList("", String.class).get(0);
+        assertEquals(String.format("['String 1: Wrong value (%s) of event_type']", eventTypeProvider.getEvent_type()),
+                message);
     }
 }

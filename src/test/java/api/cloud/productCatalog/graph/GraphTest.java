@@ -1,7 +1,6 @@
 package api.cloud.productCatalog.graph;
 
 import api.Tests;
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.http.Response;
@@ -12,13 +11,13 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.Env;
-import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.Modification;
 import models.cloud.productCatalog.graph.RootPath;
 import models.cloud.productCatalog.graph.UpdateType;
 import models.cloud.productCatalog.product.Product;
+import models.cloud.productCatalog.service.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -70,21 +69,6 @@ public class GraphTest extends Tests {
                 .createObject();
         Assertions.assertTrue(isGraphExists(graph.getName()));
         Assertions.assertFalse(isGraphExists("NoExistsAction"));
-    }
-
-    @DisplayName("Импорт графа")
-    @TmsLink("642628")
-    @Test
-    public void importGraphTest() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/graphs/importGraph.json");
-        String graphName = new JsonPath(data).get("Graph.name");
-        if (isGraphExists(graphName)) {
-            deleteGraphById(getGraphByName(graphName).getGraphId());
-        }
-        importGraph(Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json");
-        assertTrue(isGraphExists(graphName));
-        deleteGraphById(getGraphByName(graphName).getGraphId());
-        assertFalse(isGraphExists(graphName));
     }
 
     @DisplayName("Получение графа по Id")

@@ -1,12 +1,10 @@
 package api.cloud.productCatalog.action;
 
-import core.helper.Configure;
-import core.helper.JsonHelper;
+import api.Tests;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.VersionDiff;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.icon.Icon;
@@ -19,7 +17,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -144,40 +141,6 @@ public class ActionsTest extends Tests {
         assertEquals(fieldName, getAction.getLocationRestriction());
     }
 
-    @DisplayName("Импорт действия")
-    @TmsLink("642433")
-    @Test
-    public void importActionTest() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
-        String actionName = new JsonPath(data).get("Action.name");
-        if (isActionExists(actionName)) {
-            deleteActionByName(actionName);
-        }
-        importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
-        assertTrue(isActionExists(actionName), "Действие не существует");
-        deleteActionByName(actionName);
-        assertFalse(isActionExists(actionName), "Действие существует");
-    }
-
-    @DisplayName("Импорт действия c иконкой")
-    @TmsLink("1085391")
-    @Test
-    public void importActionWithIcon() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importActionWithIcon.json");
-        String actionName = new JsonPath(data).get("Action.name");
-        if (isActionExists(actionName)) {
-            deleteActionByName(actionName);
-        }
-        importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithIcon.json");
-        String id = getActionIdByNameWithMultiSearch(actionName);
-        Action action = getActionById(id);
-        assertFalse(action.getIconStoreId().isEmpty());
-        assertFalse(action.getIconUrl().isEmpty());
-        assertTrue(isActionExists(actionName), "Действие не существует");
-        deleteActionByName(actionName);
-        assertFalse(isActionExists(actionName), "Действие существует");
-    }
-
     @DisplayName("Получение действия по Id")
     @TmsLink("642436")
     @Test
@@ -204,7 +167,7 @@ public class ActionsTest extends Tests {
                 .createObject();
         Action getAction = getActionByFilter(action.getActionId(), "with_version_fields=true");
         List<String> versionFields = Arrays.asList("graph_id", "graph_version", "graph_version_pattern", "priority", "data_config_path", "data_config_key",
-                "data_config_fields", "config_restriction", "item_restriction", "available_without_money",
+                "data_config_fields", "item_restriction", "available_without_money",
                 "auto_removing_if_failed", "skip_on_prebilling", "multiple", "location_restriction", "extra_data");
         assertEquals(versionFields, getAction.getVersionFields());
     }

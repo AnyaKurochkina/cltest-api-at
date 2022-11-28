@@ -46,8 +46,6 @@ public class Action extends Entity {
     private Boolean skipOnPrebilling;
     @JsonProperty("item_restriction")
     private Object itemRestriction;
-    @JsonProperty("config_restriction")
-    private String configRestriction;
     @JsonProperty("auto_removing_if_failed")
     private Boolean autoRemovingIfFailed;
     private String title;
@@ -142,7 +140,6 @@ public class Action extends Entity {
                 .set("$.allowed_groups", allowedGroups)
                 .set("$.location_restriction", locationRestriction)
                 .set("$.context_restrictions", contextRestrictions)
-                .set("$.config_restriction", configRestriction)
                 .set("$.event_type_provider", eventTypeProvider)
                 .setIfNullRemove("$.is_safe", isSafe)
                 .setIfNullRemove("$.number", number)

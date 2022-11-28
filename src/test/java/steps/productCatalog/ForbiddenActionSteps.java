@@ -2,12 +2,15 @@ package steps.productCatalog;
 
 import core.enums.Role;
 import core.helper.http.Http;
+import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import models.cloud.productCatalog.forbiddenAction.GetForbiddenActionList;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 
+import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -21,6 +24,14 @@ public class ForbiddenActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
+    }
+
+    @Step("Создание запрещенного действия")
+    public static Response createForbiddenAction(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post(endPoint);
     }
 
     @Step("Поиск ID запрещенного действия продуктового каталога по имени с использованием multiSearch")
@@ -58,5 +69,20 @@ public class ForbiddenActionSteps extends Steps {
                 .setRole(Role.ORDER_SERVICE_ADMIN)
                 .get(endPoint + objectId + "/")
                 .extractAs(ForbiddenAction.class);
+    }
+
+    @Step("Импорт запрещенного действия")
+    public static Response importForbiddenAction(String pathName) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .multiPart(endPoint + "obj_import/", "file", new File(pathName));
+    }
+
+    @Step("Частичное обновление запрещенного действия")
+    public static Response partialUpdateForbiddenAction(Integer id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .patch(endPoint + id + "/");
     }
 }
