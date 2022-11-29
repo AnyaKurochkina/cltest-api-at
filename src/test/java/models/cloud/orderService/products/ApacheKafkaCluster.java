@@ -207,7 +207,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void upgrade281() {
-        OrderServiceSteps.executeAction("kafka_upgrade_281", this, new JSONObject("{dumb: \"empty\"}"), this.projectId);
+        OrderServiceSteps.executeAction("kafka_upgrade_281", this, new JSONObject("{dumb: \"empty\"}").put("accept", true), this.projectId);
         Assertions.assertEquals("2.13-2.8.1", OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.data.config.kafka_version"), "Версия kafka не изменилась");
     }
 
