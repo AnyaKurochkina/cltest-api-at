@@ -1,2 +1,7 @@
 [
+  {
+    "objectClassName": "models.cloud.authorizer.Organization",
+    "title": "T1-CLOUD",
+    "name": "t1-cloud"
+  }
 ]

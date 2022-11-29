@@ -30,12 +30,17 @@ import static ui.t1.pages.cloudCompute.PublicIpsPage.IpTable.COLUMN_IP;
 @Log4j2
 public class UiCloudComputeTest extends Tests {
     Project project;
+    String availabilityZone = "ru-central1-a";
+    SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
+    String hddTypeOne = "HDD";
+    String hddTypeSecond = "HDD";
 
     public UiCloudComputeTest() {
 //        Project project = Project.builder().isForOrders(true).build().createObject();
 //        String parentFolder = AuthorizerSteps.getParentProject(project.getId());
 //        this.project = Project.builder().projectName("Проект для тестов Cloud Compute").folderName(parentFolder).build().createObjectPrivateAccess();
-        this.project = Project.builder().id("proj-6opt7sq1fg").build();
+//        this.project = Project.builder().id("proj-6opt7sq1fg").build();
+        this.project = Project.builder().id("proj-0x1sunfqu2").build();
     }
 
     @BeforeEach
@@ -49,10 +54,9 @@ public class UiCloudComputeTest extends Tests {
     @Owner("Checked")
     @DisplayName("Создание/Удаление публичного IP")
     void createPublicIp() {
-        new IndexPage()
+        String ip = new IndexPage()
                 .goToPublicIps()
-                .addIp("ru-central1-c");
-        String ip = new PublicIpsPage.IpTable().getFirstValueByColumn(COLUMN_IP);
+                .addIp(availabilityZone);
         PublicIpPage ipPage = new PublicIpsPage().selectIp(ip).checkCreate();
 
         String orderId = ipPage.getOrderId();
@@ -76,7 +80,7 @@ public class UiCloudComputeTest extends Tests {
         DiskCreatePage disk = new IndexPage()
                 .goToDisks()
                 .addDisk()
-                .setAvailabilityZone("ru-central1-c")
+                .setAvailabilityZone(availabilityZone)
                 .setName("AT-UI-" + Math.abs(new Random().nextInt()))
                 .setSize(2)
                 .clickOrder();
@@ -105,11 +109,11 @@ public class UiCloudComputeTest extends Tests {
         VmCreatePage vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
-                .setImage(new SelectBox.Image("CirrOS", "1"))
+                .setImage(image)
                 .setDeleteOnTermination(false)
                 .setBootSize(5)
-                .addDisk(name, 2, "SSD", true)
-                .setAvailabilityZone("ru-central1-c")
+                .addDisk(name, 2, hddTypeOne, true)
+                .setAvailabilityZone(availabilityZone)
                 .setName(name)
                 .addSecurityGroups("default")
                 .setSshKey("default")
@@ -155,12 +159,12 @@ public class UiCloudComputeTest extends Tests {
         VmCreatePage vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
-                .setImage(new SelectBox.Image("CirrOS", "1"))
+                .setImage(image)
                 .setDeleteOnTermination(true)
                 .setBootSize(5)
-                .addDisk(name, 2, "SSD", true)
-                .addDisk(name, 3, "HDD", false)
-                .setAvailabilityZone("ru-central1-c")
+                .addDisk(name, 2, hddTypeOne, true)
+                .addDisk(name, 3, hddTypeSecond, false)
+                .setAvailabilityZone(availabilityZone)
                 .setName(name)
                 .addSecurityGroups("default")
                 .setSshKey("default")
@@ -197,6 +201,67 @@ public class UiCloudComputeTest extends Tests {
         new IndexPage().goToDisks().selectDisk(name).delete();
     }
 
+    @Test
+    @Owner("Checked")
+    @DisplayName("Создание/Удаление ВМ c публичным IP")
+    void createVmWidthPublicIp() {
+        String ip = new IndexPage()
+                .goToPublicIps()
+                .addIp(availabilityZone);
+        PublicIpPage ipPage = new PublicIpsPage().selectIp(ip).checkCreate();
+
+        String orderIdIp = ipPage.getOrderId();
+
+        new IndexPage().goToSshKeys().addKey("default", "root");
+        String name = "AT-UI-" + Math.abs(new Random().nextInt());
+        VmCreatePage vm = new IndexPage()
+                .goToVirtualMachine()
+                .addVm()
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setBootSize(2)
+                .setAvailabilityZone(availabilityZone)
+                .setName(name)
+                .addSecurityGroups("default")
+                .setSshKey("default")
+                .setPublicIp(ip)
+                .clickOrder();
+
+        VmPage vmPage = new VmsPage().selectCompute(vm.getName()).checkCreate();
+        String orderIdVm = vmPage.getOrderId();
+
+        String instanceId = StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(e-> e.getType().equals("instance"))
+                .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=instance")).getItemId();
+
+        String nicId = StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(e-> e.getType().equals("nic"))
+                .filter(e-> e.getParent().equals(instanceId))
+                .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=nic")).getItemId();
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getSrcOrderId().equals(orderIdIp))
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(i -> i.getFloatingIpAddress().equals(ip))
+                .filter(i -> i.getParent().equals(nicId))
+                .count(), "Item publicIp не соответствует условиям или не найден");
+
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .runActionWithCheckCost(CompareType.LESS, vmPage::delete);
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdIp))
+                .filter(e -> Objects.isNull(e.getParent()))
+                .count(), "Item publicIp должен вернуть свой OrderId + Parent=null");
+
+        new IndexPage().goToPublicIps().selectIp(ip).runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
+        Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream().filter(e -> Objects.nonNull(e.getFloatingIpAddress()))
+                .noneMatch(e -> e.getFloatingIpAddress().equals(ip)));
+    }
 
     @Test
     void name() {

@@ -181,15 +181,15 @@ public class StateServiceSteps extends Steps {
                 itemData.setFloatingIpAddress(((Map<String, String>) item.getData().get("config")).get("floating_ip_address"));
             else if(item.getType().equals("volume")){
                 itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
-                itemData.size = ((Map<String, Integer>) item.getData().get("config")).get("size");
+                itemData.size = ((Map<String, Number>) item.getData().get("config")).get("size").intValue();
             }
             else if(item.getType().equals("snapshot")){
                 itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
-                itemData.size = ((Map<String, Integer>) item.getData().get("config")).get("size");
+                itemData.size = ((Map<String, Number>) item.getData().get("config")).get("size").intValue();
             }
             else if(item.getType().equals("image")){
                 itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
-                itemData.size = ((Map<String, Integer>) item.getData().get("config")).get("size");
+                itemData.size = ((Map<String, Number>) item.getData().get("config")).get("size").intValue();
             }
             else if(item.getType().equals("instance"))
                 itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
