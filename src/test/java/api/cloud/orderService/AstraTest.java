@@ -39,6 +39,7 @@ public class AstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("391699")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

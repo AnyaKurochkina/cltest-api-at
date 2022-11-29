@@ -83,6 +83,7 @@ public class WindowsTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("377717")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

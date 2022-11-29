@@ -47,6 +47,7 @@ public class RedisAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("795822")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
