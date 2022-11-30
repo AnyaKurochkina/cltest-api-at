@@ -29,7 +29,7 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
     Windows product;
-    // product = Windows.builder().platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb").build().buildFromLink()
+//    Windows product = Windows.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
