@@ -10,7 +10,6 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ForbiddenActionSteps.createForbiddenAction;
@@ -21,10 +20,8 @@ import static steps.productCatalog.ForbiddenActionSteps.getForbiddenActionById;
 @Feature("Запрещенные действия")
 @DisabledIfEnv("prod")
 public class ForbiddenActionTest extends Tests {
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/forbidden_actions/",
-            "productCatalog/graphs/createGraph.json");
 
-    @DisplayName("Создание запрещенного действия действия")
+    @DisplayName("Создание запрещенного действия")
     @TmsLink("1144654")
     @Test
     public void createForbiddenActionTest() {

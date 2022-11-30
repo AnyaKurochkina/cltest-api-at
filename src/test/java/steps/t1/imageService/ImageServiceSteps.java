@@ -1,6 +1,7 @@
 package steps.t1.imageService;
 
 import core.helper.http.Http;
+import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.t1.Image;
 import models.t1.ImageGroups;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import static core.enums.Role.CLOUD_ADMIN;
 import static core.helper.Configure.ImageService;
+import static core.helper.Configure.ProductCatalogURL;
 
 public class ImageServiceSteps extends Steps {
 
@@ -23,6 +25,24 @@ public class ImageServiceSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .getList("", ImageGroups.class);
+    }
+
+    @Step("Полуение версии сервиса")
+    public static Response getImageServiceVersion() {
+       return new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .get("/version")
+                .assertStatus(200);
+    }
+
+    @Step("Получение статуса health")
+    public static String getHealthStatusImageService() {
+        return new Http(ProductCatalogURL)
+                .setRole(CLOUD_ADMIN)
+                .get("/api/v1/health/")
+                .assertStatus(200)
+                .jsonPath()
+                .getString("status");
     }
 
     @Step("Полуение списка marketing")
@@ -130,6 +150,9 @@ public class ImageServiceSteps extends Steps {
     }
 
     @Step("Частичное обновление marketing по id {id}")
+    /*
+    При обновлении маркетинга, поле name обязательно в теле запроса.
+     */
     public static void partialUpdateMarketingById(String id, JSONObject body) {
         new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
@@ -137,6 +160,7 @@ public class ImageServiceSteps extends Steps {
                 .patch("/marketing/{}", id)
                 .assertStatus(200);
     }
+
     @Step("Частичное обновление Image по id {id}")
     /*
       Метод patch для Image должен работать только на обновление информации о marketing

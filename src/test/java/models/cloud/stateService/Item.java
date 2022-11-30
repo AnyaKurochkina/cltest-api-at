@@ -21,6 +21,8 @@ public class Item {
     @JsonProperty("action_id")
     private String actionId;
     private String subtype;
+    @JsonProperty("external_provider_id")
+    private String externalProviderId;
     @JsonProperty("item_id")
     private String itemId;
     @JsonProperty("created_row_dt")
