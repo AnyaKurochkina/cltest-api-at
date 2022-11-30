@@ -33,6 +33,7 @@ public class DropDown implements TypifiedElement {
         return byLabel(label, 1);
     }
 
+    @Step("Получение DropDown по label {label} с индексом {index}")
     public static DropDown byLabel(String label, int index) {
         return new DropDown($x("(//label[text()='{}']/following::div[1])" + postfix, label, TypifiedElement.getIndex(index)));
     }

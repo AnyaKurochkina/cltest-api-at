@@ -2,6 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.Keys;
 
@@ -19,6 +20,7 @@ public class Input implements TypifiedElement {
         return byLabel(label, 1);
     }
 
+    @Step("Получение Input по label {label} с индексом {index}")
     public static Input byLabel(String label, int index) {
         return new Input($x("(//label[starts-with(.,'{}')]/parent::*//input)" + postfix, label, TypifiedElement.getIndex(index)));
     }

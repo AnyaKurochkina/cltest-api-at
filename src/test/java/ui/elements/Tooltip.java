@@ -9,7 +9,6 @@ import static core.helper.StringUtils.$x;
 public class Tooltip implements TypifiedElement {
     @Getter
     SelenideElement tooltip;
-
     SelenideElement element = $x("//div[@role='tooltip']");
 
     public Tooltip() {

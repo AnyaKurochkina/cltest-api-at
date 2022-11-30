@@ -1,6 +1,7 @@
 package ui.elements;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 
 import static api.Tests.clickableCnd;
@@ -13,6 +14,7 @@ public class Radio implements TypifiedElement {
         this.radio = radio;
     }
 
+    @Step("Получение Radio по value {value}")
     public static Radio byValue(String value){
         return new Radio($x("//input[@value='{}']", value));
     }
