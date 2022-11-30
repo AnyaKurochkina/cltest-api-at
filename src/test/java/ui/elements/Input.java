@@ -2,6 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.Keys;
 
@@ -16,7 +17,12 @@ public class Input implements TypifiedElement {
     }
 
     public static Input byLabel(String label) {
-        return new Input($x("//label[starts-with(.,'{}')]/parent::*//input", label));
+        return byLabel(label, 1);
+    }
+
+    @Step("Получение Input по label {label} с индексом {index}")
+    public static Input byLabel(String label, int index) {
+        return new Input($x("(//label[starts-with(.,'{}')]/parent::*//input)" + postfix, label, TypifiedElement.getIndex(index)));
     }
 
     public static Input byLabelV2(String label) {
@@ -40,10 +46,10 @@ public class Input implements TypifiedElement {
         return input.getValue();
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         input.shouldBe(Condition.visible).shouldBe(Condition.enabled);
         clear();
-        input.setValue(value);
+        input.setValue(String.valueOf(value));
     }
 
     public void clear() {

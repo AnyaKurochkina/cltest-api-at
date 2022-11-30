@@ -4,12 +4,14 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.intellij.lang.annotations.Language;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$$x;
 import static core.helper.StringUtils.$x;
@@ -23,10 +25,17 @@ public class DropDown implements TypifiedElement {
 
     public DropDown(SelenideElement element) {
         this.element = element;
+        if(Objects.isNull(element.getValue()))
+            Waiting.sleep(2000);
     }
 
-    public static DropDown byLabel(String name) {
-        return new DropDown($x("//label[text()='{}']/following::div[1]", name));
+    public static DropDown byLabel(String label) {
+        return byLabel(label, 1);
+    }
+
+    @Step("Получение DropDown по label {label} с индексом {index}")
+    public static DropDown byLabel(String label, int index) {
+        return new DropDown($x("(//label[text()='{}']/following::div[1])" + postfix, label, TypifiedElement.getIndex(index)));
     }
 
     public static DropDown byXpath(@Language("XPath") String xpath) {

@@ -37,8 +37,8 @@ public abstract class IProductPage {
 
     protected abstract void checkPowerStatus(String expectedStatus);
 
-    SelenideElement btnHistory = $x("//button[.='История действий']");
-    SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
+    protected SelenideElement btnHistory = $x("//button[.='История действий']");
+    protected SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
     SelenideElement btnMonitoringOs = $x("//button[.='Мониторинг ОС']");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
     SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
@@ -69,7 +69,10 @@ public abstract class IProductPage {
     }
 
     @Step("Переключение 'Защита от удаления' в состояние '{expectValue}'")
-    public void switchProtectOrder(String expectValue) {
+    public void switchProtectOrder(boolean checked) {
+        String expectValue = "Защита от удаления выключена";
+        if(checked)
+            expectValue = "Защита от удаления включена";
         ProductStatus status = new ProductStatus(expectValue);
         runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить",
                 () -> Input.byLabel("Включить защиту от удаления").click(), ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
@@ -122,7 +125,7 @@ public abstract class IProductPage {
                 .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Dialog dlgActions = Dialog.byTitle(action);
         if (params.isCheckPreBilling())
-            preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+            preBillingCostAction = EntitiesUtils.getPreBillingCostAction(preBillingPriceAction);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (params.isCheckAlert())
@@ -150,9 +153,14 @@ public abstract class IProductPage {
                 .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         executable.execute();
         if (params.isCheckPreBilling())
-            preBillingCostAction = getPreBillingCostAction(preBillingPriceAction);
+            preBillingCostAction = EntitiesUtils.getPreBillingCostAction(preBillingPriceAction);
+        if(params.isClickCancel())
+            textButton = "Отмена";
         SelenideElement runButton = $x("//div[@role='dialog']//button[.='{}']", textButton);
         runButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if(params.isClickCancel())
+            return;
+
         if (params.isCheckAlert())
             new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
         Waiting.sleep(3000);
@@ -268,7 +276,7 @@ public abstract class IProductPage {
             Assertions.assertEquals(preBillingCostAction, currentCost, 0.01d);
         else if (type == CompareType.ZERO) {
             Assertions.assertEquals(0.0d, preBillingCostAction, 0.001d);
-            Assertions.assertEquals(0.0d, currentCost, 0.001d);
+            Assertions.assertEquals(0.0d, getCostOrder(), 0.001d);
         }
     }
 
@@ -318,12 +326,4 @@ public abstract class IProductPage {
         return cost;
     }
 
-    @Step("Получение стоимости предбиллинга")
-    public static double getPreBillingCostAction(SelenideElement element) {
-        element.shouldBe(Condition.visible);
-        double cost = Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?\\d{1,5},\\d{2})", element.getText()))
-                .replace(',', '.'));
-        log.debug("Стоимость предбиллинга {}", cost);
-        return cost;
-    }
 }

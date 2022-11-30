@@ -2,6 +2,7 @@ package org.junit;
 
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
@@ -78,6 +79,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
             RemoteWebDriver driver = new RemoteWebDriver(new java.net.URL(Configuration.remote), Configuration.browserCapabilities);
             driver.setFileDetector(new LocalFileDetector());
+            WebDriverRunner.setWebDriver(driver);
         }
     }
 

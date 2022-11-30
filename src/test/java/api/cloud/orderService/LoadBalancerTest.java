@@ -53,6 +53,7 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("1286247")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

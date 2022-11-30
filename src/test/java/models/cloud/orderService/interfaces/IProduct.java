@@ -262,6 +262,7 @@ public abstract class IProduct extends Entity {
         projectId = StringUtils.findByRegex("context=([^&]*)", link);
         orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
         productId = ((String) OrderServiceSteps.getProductsField(this, "product_id"));
+        this.link = link;
         return (T) this;
     }
 
@@ -352,9 +353,9 @@ public abstract class IProduct extends Entity {
             label = "AT-API-" + UUID.randomUUID();
         }
         if (productId == null) {
-            productId = new ProductCatalogSteps("/api/v1/products/").
+            productId = new ProductCatalogSteps("/api/v1/projects/" + getProjectId() + "/products/").
                     getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(Objects.requireNonNull(getProductName()),
-                            "is_open=true&env=" + Objects.requireNonNull(project.getProjectEnvironmentPrefix().getEnvType().toLowerCase()));
+                            "is_open=true");
         }
         if (productCatalogName == null) {
             productCatalogName = getProductById(productId).getName();

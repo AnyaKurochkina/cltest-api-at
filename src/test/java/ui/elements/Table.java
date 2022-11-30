@@ -1,14 +1,12 @@
 package ui.elements;
 
 
-import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.*;
 import io.qameta.allure.Step;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
@@ -24,6 +22,8 @@ public class Table implements TypifiedElement {
     @Getter
     ElementsCollection rows;
     ElementsCollection headersCollection;
+    @Language("XPath")
+    private String xpath;
 
     protected void open() {}
 
@@ -38,7 +38,14 @@ public class Table implements TypifiedElement {
         init(table);
     }
 
+    public Table update(){
+        init($x(xpath));
+        return this;
+    }
+
     public void init(SelenideElement table) {
+        xpath = table.getSearchCriteria().replaceAll("By.xpath: ", "");
+
         $x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]").shouldNot(Condition.exist);
         $x("//table[contains(.,'Идет обработка данных')]").shouldNot(Condition.exist);
 
@@ -52,6 +59,15 @@ public class Table implements TypifiedElement {
     public SelenideElement getRowElementByColumnValue(String column, String value) {
         for (SelenideElement e : rows) {
             if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().equals(value))
+                return e;
+        }
+        throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
+    }
+
+    @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
+    public SelenideElement getRowElementByColumnValueContains(String column, String value) {
+        for (SelenideElement e : rows) {
+            if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().contains(value))
                 return e;
         }
         throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);

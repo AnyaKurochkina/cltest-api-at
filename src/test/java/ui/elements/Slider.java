@@ -2,6 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 
@@ -19,16 +20,17 @@ public class Slider extends Input {
         this.slider = e;
     }
 
+    @Step("Получение Slider по label {label}")
     public static Slider byLabel(String label) {
         return new Slider($x("(//ancestor::*[starts-with(.,'{}')]/parent::*)[last()]", label));
     }
 
     @Override
-    public void setValue(String value) {
+    public void setValue(Object value) {
         input.shouldBe(Condition.visible)
                 .shouldBe(Condition.enabled)
-                .sendKeys(Keys.chord(Keys.CONTROL, "a"), value, Keys.TAB);
-        Assertions.assertEquals(value, point.getAttribute("aria-valuenow"));
+                .sendKeys(Keys.chord(Keys.CONTROL, "a"), String.valueOf(value), Keys.TAB);
+        Assertions.assertEquals(String.valueOf(value), point.getAttribute("aria-valuenow"));
     }
 
     public String getMinValue() {

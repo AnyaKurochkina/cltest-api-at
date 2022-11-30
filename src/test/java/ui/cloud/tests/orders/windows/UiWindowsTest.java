@@ -29,7 +29,7 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
     Windows product;
-    // product = Windows.builder().platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb").build().buildFromLink()
+//    Windows product = Windows.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -57,9 +57,8 @@ public class UiWindowsTest extends UiProductTest {
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
-            orderPage.orderClick();
-            new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан");
+            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")
@@ -117,7 +116,7 @@ public class UiWindowsTest extends UiProductTest {
     @DisplayName("UI Windows. Проверка 'Защита от удаления'")
     void checkProtectOrder() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.switchProtectOrder("Защита от удаления включена");
+        winPage.switchProtectOrder(true);
         try {
             winPage.runActionWithParameters("Виртуальная машина", "Удалить", "Удалить", () ->
             {
@@ -127,7 +126,7 @@ public class UiWindowsTest extends UiProductTest {
             new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
             TypifiedElement.refresh();
         } finally {
-            winPage.switchProtectOrder("Защита от удаления выключена");
+            winPage.switchProtectOrder(false);
         }
     }
 
@@ -246,7 +245,7 @@ public class UiWindowsTest extends UiProductTest {
     @DisplayName("UI Windows. Удалить")
     void deleteWindows() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.LESS, winPage::delete);
+        winPage.runActionWithCheckCost(CompareType.ZERO, winPage::delete);
     }
 
 }

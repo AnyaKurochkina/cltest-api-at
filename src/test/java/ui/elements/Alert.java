@@ -22,6 +22,10 @@ public class Alert implements TypifiedElement {
         element.shouldBe(Condition.visible).shouldBe(Condition.matchText(".{1,}"));
     }
 
+    public static Alert byText(String text, Object... args){
+        return new Alert().checkText(text, args);
+    }
+
     @Step("Закрыть alert")
     public void close() {
         element.$("button").hover().shouldBe(Condition.enabled).click();
