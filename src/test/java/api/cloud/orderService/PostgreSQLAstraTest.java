@@ -109,6 +109,7 @@ public class PostgreSQLAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("1057050")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

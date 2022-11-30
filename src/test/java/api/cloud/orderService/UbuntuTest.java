@@ -38,6 +38,7 @@ public class UbuntuTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("391692")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -132,6 +132,7 @@ public class ScyllaDbTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("622618")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

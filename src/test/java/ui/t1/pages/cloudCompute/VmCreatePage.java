@@ -1,15 +1,13 @@
 package ui.t1.pages.cloudCompute;
 
 import com.codeborne.selenide.Condition;
+import core.utils.Waiting;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import ui.cloud.pages.EntitiesUtils;
 import ui.cloud.pages.IProductPage;
-import ui.elements.Button;
-import ui.elements.CheckBox;
-import ui.elements.DropDown;
-import ui.elements.Input;
+import ui.elements.*;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ public class VmCreatePage {
     private String flavorName;
     private String flavor;
     private String subnet;
-    private Boolean publicIp;
+    private String publicIp;
     private final List<String> securityGroups = new ArrayList<>();
     private String sshKey;
 
@@ -88,6 +86,13 @@ public class VmCreatePage {
     public VmCreatePage setSshKey(String sshKey) {
         this.sshKey = sshKey;
         DropDown.byLabel("Публичный SSH ключ").selectByTextContains(sshKey);
+        return this;
+    }
+
+    public VmCreatePage setPublicIp(String publicIp) {
+        this.publicIp = publicIp;
+        Switch.byLabel("Подключить публичный IP").setEnabled(true);
+        DropDown.byLabel("Публичный IP").select(publicIp);
         return this;
     }
 

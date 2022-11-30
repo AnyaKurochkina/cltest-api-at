@@ -92,6 +92,7 @@ public class ArtemisAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("982662")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

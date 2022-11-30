@@ -7,9 +7,10 @@ import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.Organization;
 import ui.elements.TypifiedElement;
 
+import java.util.Objects;
+
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;
-import static core.helper.Configure.getAppProp;
 
 public class LoginPage {
 
@@ -37,7 +38,7 @@ public class LoginPage {
 
     public IndexPage signIn(Role role){
         GlobalUser user = GlobalUser.builder().role(role).build().createObject();
-        return signIn(user.getUsername(), user.getPassword());
+        return signIn(Objects.requireNonNull(user.getUsername()), user.getPassword());
     }
 
 }

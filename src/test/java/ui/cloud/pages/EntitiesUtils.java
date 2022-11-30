@@ -30,7 +30,10 @@ public class EntitiesUtils {
     }
 
     public static void updatePreBillingPrice() {
-        preBillingPrice.set(getPreBillingCostAction($x("//*[@data-testid='new-order-details-price' and contains(.,',')]").shouldBe(Condition.visible)));
+        if(Product.getCalculationDetails().exists()) {
+            preBillingPrice.set(getPreBillingCostAction($x("//*[@data-testid='new-order-details-price' and contains(.,',')]").shouldBe(Condition.visible)));
+        }
+        else preBillingPrice.set(0.0);
     }
 
     @Step("Получение стоимости предбиллинга")

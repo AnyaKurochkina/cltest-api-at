@@ -57,6 +57,7 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("377795")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
