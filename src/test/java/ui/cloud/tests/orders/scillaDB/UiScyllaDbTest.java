@@ -33,8 +33,7 @@ import java.time.Duration;
 @Log4j2
 public class UiScyllaDbTest extends UiProductTest {
 
-    ScyllaDb product;
-    //product = ScyllaDb.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/01828278-e513-4685-8cdd-f0c87840ff62/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+    ScyllaDb product = ScyllaDb.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/3a445f64-a939-4d92-b967-5b545d83fb5f/main?context=proj-1oob0zjo5h&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
 
@@ -193,14 +192,14 @@ public class UiScyllaDbTest extends UiProductTest {
         ScyllaPage scyllaPage = new ScyllaPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.LESS, scyllaPage::stopSoft);
     }
-//
-//    @Test
-//    @Order(100)
-//    @TmsLink("464240")
-//    @DisplayName("UI ScyllaDB. Удаление продукта")
-//    void delete() {
-//        ScyllaPage scyllaPage = new ScyllaPage(product);
-//        scyllaPage.delete();
-//    }
+
+    @Test
+    @Order(100)
+    @TmsLink("464240")
+    @DisplayName("UI ScyllaDB. Удаление продукта")
+    void delete() {
+        ScyllaPage scyllaPage = new ScyllaPage(product);
+        scyllaPage.delete();
+    }
 
 }

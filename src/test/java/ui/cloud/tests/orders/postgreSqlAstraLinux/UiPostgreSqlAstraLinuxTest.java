@@ -33,21 +33,20 @@ import java.time.Duration;
 @Log4j2
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
-    PostgreSQL product;
-    //  roduct = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://console.blue.cloud.vtb.ru/db/orders/3519f257-1e11-4d65-a1b5-73690ce8e7f7/main?context=proj-iv550odo9a&type=project&org=vtb").build();
+    PostgreSQL product  = PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
 
-    public UiPostgreSqlAstraLinuxTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-            product = PostgreSQL.builder().env("DEV").productName("PostgreSQL (Astra Linux)").platform("OpenStack").segment("dev-srv-app").build();
-        else
-            product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-
-    }
+//    public UiPostgreSqlAstraLinuxTest() {
+//        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
+//            product = PostgreSQL.builder().env("DEV").productName("PostgreSQL (Astra Linux)").platform("OpenStack").segment("dev-srv-app").build();
+//        else
+//            product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
+//        product.init();
+//
+//    }
 
     @BeforeEach
     @Title("Авторизация на портале")

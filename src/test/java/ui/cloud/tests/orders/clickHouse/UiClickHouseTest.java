@@ -32,8 +32,7 @@ import java.time.Duration;
 @Log4j2
 public class UiClickHouseTest extends UiProductTest {
 
-    ClickHouse product;
-    //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/7080926c-4670-4857-ba74-464d2e50caf1/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
+    ClickHouse product = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

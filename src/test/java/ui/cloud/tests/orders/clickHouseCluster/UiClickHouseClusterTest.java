@@ -36,7 +36,7 @@ import static core.helper.StringUtils.$x;
 public class UiClickHouseClusterTest extends UiProductTest {
 
     ClickHouseCluster product;
-    //  product = ClickHouseCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/cffa192c-aab5-4826-9c11-a8a87b3d6684/user?context=proj-pkvckn08w9&type=project&org=vtb").build();
+    //  product = ClickHouseCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
     String nameAD= "at_ad_user";
     String nameLocalAD= "at_local_user";
     String nameGroup ="cloud-zorg-winxtkhxxdw";

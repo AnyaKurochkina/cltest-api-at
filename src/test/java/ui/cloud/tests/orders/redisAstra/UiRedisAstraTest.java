@@ -29,11 +29,9 @@ import java.time.Duration;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Log4j2
-public class UiRedislAstraTest extends UiProductTest {
+public class UiRedisAstraTest extends UiProductTest {
 
-    Redis product;
-    // product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/30e55c55-2435-4db7-81c7-bcc0caac3260/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-
+    Redis product = Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
@@ -92,15 +90,6 @@ public class UiRedislAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(5)
-    @TmsLink("796986")
-    @DisplayName("UI RedisAstra. Перезагрузить по питанию")
-    void restart() {
-        RedisAstraPage pSqlPage = new RedisAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::restart);
-    }
-
-    @Test
     @Order(9)
     @TmsLink("796991")
     @DisplayName("UI RedisAstra. Расширить диск")
@@ -137,13 +126,13 @@ public class UiRedislAstraTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::resetPassword);
     }
 
-//    @Test
-//    @Order(100)
-//    @TmsLink("796989")
-//    @DisplayName("UI RedisAstra. Удаление продукта")
-//    void delete() {
-//        RedisAstraPage pSqlPage = new RedisAstraPage(product);
-//        pSqlPage.delete();
-//    }
+    @Test
+    @Order(100)
+    @TmsLink("796989")
+    @DisplayName("UI RedisAstra. Удаление продукта")
+    void delete() {
+        RedisAstraPage pSqlPage = new RedisAstraPage(product);
+        pSqlPage.delete();
+    }
 
  }
