@@ -62,6 +62,10 @@ public class DropDown implements TypifiedElement {
     @Step("Выбрать в select элемент с названием '{value}'")
     public void selectByTextContains(String value) {
         hover();
+        if (element.$x(String.format("input[contains(@value,'%s')]", value)).exists())
+            return;
+        if (Objects.nonNull(element.getValue()) && element.getValue().contains(value))
+            return;
         element.click();
         $x("//li[contains(.,'{}')]", value)
                 .shouldBe(Condition.enabled)
