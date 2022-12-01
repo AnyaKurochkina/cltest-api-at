@@ -3,36 +3,23 @@ package ui.cloud.tests.orders.scillaDB;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.ScyllaDb;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.*;
-import ui.extesions.ConfigExtension;
+import ui.extesions.UiProductTest;
 
-@Log4j2
-@ExtendWith(ConfigExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Tags({@Tag("ui_scylla_db")})
-class UiScyllaDBCheckUntilOrderTest extends Tests {
+@Epic("UI Продукты")
+@Feature("ScyllaDB")
+@Tags({@Tag("ui"), @Tag("ui_scylla_db")})
+class UiScyllaDBCheckUntilOrderTest extends UiProductTest {
 
     ScyllaDb product;
-
-    //TODO: пока так :)
-    public UiScyllaDBCheckUntilOrderTest() {
-        if (Configure.ENV.equals("prod"))
-            product = ScyllaDb.builder().env("DEV").productName("ScyllaDB").platform("OpenStack").segment("dev-srv-app").build();
-            //product = ScyllaDb.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/41ccc48d-5dd0-4892-ae5e-3f1f360885ac/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = ScyllaDb.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-
-    }
+    // = ScyllaDb.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/3a445f64-a939-4d92-b967-5b545d83fb5f/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

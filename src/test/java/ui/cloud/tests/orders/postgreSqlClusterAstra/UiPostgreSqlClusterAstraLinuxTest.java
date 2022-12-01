@@ -3,23 +3,16 @@ package ui.cloud.tests.orders.postgreSqlClusterAstra;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.PostgresSQLCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.*;
-import ui.elements.Alert;
 import ui.elements.Graph;
-import ui.extesions.ConfigExtension;
-import ui.extesions.InterceptTestExtension;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
@@ -28,14 +21,10 @@ import static core.helper.StringUtils.$x;
 @Epic("UI Продукты")
 @Feature("PostgreSQL Cluster Astra Linux")
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
-@ExtendWith(ConfigExtension.class)
-@ExtendWith(InterceptTestExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Log4j2
 public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
-    PostgresSQLCluster product = PostgresSQLCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/714818a6-66f0-4939-830e-73cb627c5acc/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    PostgresSQLCluster product;
+    //= PostgresSQLCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/714818a6-66f0-4939-830e-73cb627c5acc/main?context=proj-1oob0zjo5h&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";

@@ -4,6 +4,8 @@ package ui.cloud.tests.orders.windows;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Windows;
@@ -17,25 +19,17 @@ import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.Product;
 import ui.cloud.pages.WindowsOrderPage;
 import ui.extesions.ConfigExtension;
+import ui.extesions.UiProductTest;
 
 import static com.codeborne.selenide.Selenide.$;
 
-@Log4j2
-@ExtendWith(ConfigExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Tags({@Tag("ui_windows")})
-class UiWindowsCheckUntilOrderTest extends Tests {
+@Epic("UI Продукты")
+@Feature("Windows")
+@Tags({@Tag("ui"), @Tag("ui_windows")})
+class UiWindowsCheckUntilOrderTest extends UiProductTest {
     Windows product;
+    //= Windows.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
-    //TODO: пока так :)
-    public UiWindowsCheckUntilOrderTest() {
-        if (Configure.ENV.equals("prod"))
-            product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = Windows.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/vm/orders?page=0&perPage=10&f[category]=vm&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=pending&context=proj-evw9xv5qao&type=project&org=vtb").build();
-        else
-            product = Windows.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-    }
 
     @BeforeEach
     @Title("Авторизация на портале")

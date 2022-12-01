@@ -1,38 +1,28 @@
 package ui.cloud.tests.orders.clickHouse;
 
-import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.ClickHouse;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.elements.Table;
-import ui.extesions.ConfigExtension;
-import ui.extesions.InterceptTestExtension;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 @Epic("UI Продукты")
 @Feature("ClickHouse")
 @Tags({@Tag("ui"), @Tag("ui_clickHouse")})
-@ExtendWith(ConfigExtension.class)
-@ExtendWith(InterceptTestExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Log4j2
 public class UiClickHouseTest extends UiProductTest {
 
-    ClickHouse product = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    ClickHouse product;
+    //= ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

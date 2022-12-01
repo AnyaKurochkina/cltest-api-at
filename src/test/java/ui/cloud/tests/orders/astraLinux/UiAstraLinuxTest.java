@@ -1,25 +1,19 @@
 package ui.cloud.tests.orders.astraLinux;
 
-import api.Tests;
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Astra;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.elements.Table;
-import ui.extesions.ConfigExtension;
-import ui.extesions.InterceptTestExtension;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
@@ -28,11 +22,6 @@ import java.util.Collections;
 @Epic("UI Продукты")
 @Feature("Astra Linux")
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
-@ExtendWith(ConfigExtension.class)
-@ExtendWith(InterceptTestExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Log4j2
 public class UiAstraLinuxTest extends UiProductTest {
 
     Astra product;
