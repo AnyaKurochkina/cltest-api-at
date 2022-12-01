@@ -31,10 +31,11 @@ public class Dialog implements TypifiedElement {
         return this;
     }
 
-    public void setDropDownValue(String label,String value){
+    public Dialog setDropDownValue(String label,String value){
         SelenideElement element = dialog.$x(String.format("descendant::div[label[starts-with(.,'%s')]]/div/input", label));
         DropDown dropDown = new DropDown(element);
-        dropDown.select(value);
+        dropDown.selectByTextContains(value);
+        return this;
     }
 
     public Dialog setTextarea(TextArea textarea, String text){
