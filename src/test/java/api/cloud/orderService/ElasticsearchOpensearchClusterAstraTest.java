@@ -61,6 +61,7 @@ public class ElasticsearchOpensearchClusterAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("796245")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -3,10 +3,11 @@ package ui.cloud.pages.productCatalog.actions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.SaveDialog;
 import models.cloud.productCatalog.enums.EventProvider;
 import models.cloud.productCatalog.enums.EventType;
+import ui.cloud.pages.productCatalog.BasePage;
+import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
@@ -19,7 +20,7 @@ import ui.elements.TypifiedElement;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ActionPage {
+public class ActionPage extends BasePage {
     private static final String saveActionAlertText = "Действие успешно изменено";
     private final SelenideElement actionsListLink = $x("//a[text() = 'Список действий']");
     private final SelenideElement inputNameField = $x("//*[@name = 'name']");
@@ -73,6 +74,12 @@ public class ActionPage {
         graphTab.click();
         TestUtils.wait(2000);
         graphVersionDropDown.selectByTitle(value);
+        return this;
+    }
+
+    @Step("Сохранение действия без патч-версии")
+    public ActionPage saveWithoutPatchVersion() {
+        saveWithoutPatchVersion(saveActionAlertText);
         return this;
     }
 

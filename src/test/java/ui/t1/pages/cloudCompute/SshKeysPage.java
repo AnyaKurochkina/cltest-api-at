@@ -1,18 +1,12 @@
 package ui.t1.pages.cloudCompute;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import org.junit.jupiter.api.Assertions;
 import ui.elements.*;
 
-import static core.helper.StringUtils.$x;
-
 public class SshKeysPage {
     public static final String SSH_KEY = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCSI82vsEXJoV4Co1HPjUd8ldwjTRbJsE27yzpc3rcxfqIrB9vte7J0YkCCXuZZsYEufIMYWXcXHOLJEqLnoJsp0EjJ5wOVBc6I10WozLm458P0mwPEbc6N5Z0MQ8gZk3i3yOap+G9owWMirlfArz2afKL4E+6rXfY+XpfPceGPJ8dGDWvuMnvwIYWenz8HwBRvQwR8FtJyUOP7sOdsuTz6T+E+qQiuvBY0ciUwAaFbGWhKtgk7dJd73ZxZIZFg3jFxySScePcEsf4nC+61siqqaSBzLk+jyNbrURTeQ0ZYoYR3jMexgUAY/8cNki89U/OfWNBG6jqCWn/K2BcgX1cl";
 
-    public SshKeysPage() {
-        $x("//span[.='SSH-ключи']").shouldBe(Condition.visible);
-    }
 
     /*
 new SshKeysPage().addKey("superKey", "root")
@@ -22,6 +16,8 @@ new SshKeysPage().deleteKey("superKey2");
      */
 
     public void addKey(String nameKey, String login) {
+        if(new KeysTable().isColumnValueEquals(KeysTable.COLUMN_NAME, nameKey))
+            return;
         new KeysTable().clickAdd();
         Dialog.byTitle("Добавление SSH-ключа")
                 .setInputValue("Название ключа", nameKey)

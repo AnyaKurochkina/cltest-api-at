@@ -24,7 +24,7 @@ public class MoonPage extends IProductPage {
     }
 
     @Override
-    void checkPowerStatus(String expectedStatus) {
+    protected void checkPowerStatus(String expectedStatus) {
         new MoonPage.VirtualMachineTable().checkPowerStatus(expectedStatus);
     }
 

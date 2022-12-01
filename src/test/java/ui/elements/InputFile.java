@@ -14,11 +14,14 @@ public class InputFile {
 
     public InputFile(String path) {
         this.path = path;
+    }
 
+    public void importFileAndSubmit() {
+        importFile.uploadFile(new File(path));
+        submit.shouldBe(Condition.enabled).click();
     }
 
     public void importFile() {
         importFile.uploadFile(new File(path));
-        submit.shouldBe(Condition.enabled).click();
     }
 }

@@ -19,6 +19,7 @@ public class SaveGraphTest extends GraphBaseTest {
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
+                .setAuthor("QA-1")
                 .saveGraphWithManualVersion("1.0.999")
                 .checkGraphVersion("1.0.999");
     }
@@ -33,7 +34,9 @@ public class SaveGraphTest extends GraphBaseTest {
                 .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.0.0", "", "QA-1"))
                 .saveGraphWithPatchVersion()
                 .checkGraphVersion("1.0.1")
+                .setAuthor("QA-2")
                 .trySaveGraphWithIncorrectVersion("1.0.0", "1.0.1")
+                .setAuthor("QA-3")
                 .trySaveGraphWithIncorrectVersion("1.0.1", "1.0.1");
     }
 
@@ -44,16 +47,19 @@ public class SaveGraphTest extends GraphBaseTest {
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
+                .setAuthor("new value")
                 .saveGraphWithManualVersion("1.0.999")
                 .checkGraphVersion("1.0.999")
                 .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.0.999", "", "QA-1"))
                 .saveGraphWithPatchVersion()
                 .checkGraphVersion("1.1.0")
+                .setAuthor("new value")
                 .saveGraphWithManualVersion("1.999.999")
                 .checkGraphVersion("1.999.999")
                 .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.999.999", "", "QA-2"))
                 .saveGraphWithPatchVersion()
                 .checkGraphVersion("2.0.0")
+                .setAuthor("new value")
                 .saveGraphWithManualVersion("999.999.999")
                 .checkVersionLimit();
     }
@@ -65,16 +71,19 @@ public class SaveGraphTest extends GraphBaseTest {
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
+                .setAuthor("new value")
                 .saveGraphWithManualVersion("1.0.999")
                 .checkGraphVersion("1.0.999")
                 .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.0.999", "", "QA-1"))
                 .checkNextVersionAndSave("1.1.0")
                 .checkGraphVersion("1.1.0")
+                .setAuthor("new value")
                 .saveGraphWithManualVersion("1.999.999")
                 .checkGraphVersion("1.999.999")
                 .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.999.999", "", "QA-2"))
                 .checkNextVersionAndSave("2.0.0")
                 .checkGraphVersion("2.0.0")
+                .setAuthor("new value")
                 .saveGraphWithManualVersion("999.999.999")
                 .checkVersionLimit();
     }

@@ -37,6 +37,7 @@ public class WildFlyAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("833651")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

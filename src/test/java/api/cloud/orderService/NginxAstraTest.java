@@ -37,6 +37,7 @@ public class NginxAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("846600")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

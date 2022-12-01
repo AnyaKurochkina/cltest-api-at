@@ -6,11 +6,13 @@ import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.orgDirection.GetOrgDirectionList;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
+import org.json.JSONObject;
 import steps.Steps;
 
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrgDirectionSteps extends Steps {
     private static final String orgDirUrl = "/api/v1/org_direction/";
@@ -32,5 +34,39 @@ public class OrgDirectionSteps extends Steps {
                 .get(orgDirUrl)
                 .assertStatus(200)
                 .extractAs(GetOrgDirectionList.class).getList();
+    }
+
+    @Step("Проверка существования направления по имени")
+    public static boolean isOrgDirectionExists(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(orgDirUrl + "exists/?name=" + name)
+                .assertStatus(200).jsonPath().get("exists");
+    }
+
+    @Step("Получение направления по имени")
+    public static OrgDirection getOrgDirectionByName(String name) {
+        List<OrgDirection> list = new Http(ProductCatalogURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get(orgDirUrl + "?{}", "name=" + name)
+                .extractAs(GetOrgDirectionList.class).getList();
+        assertEquals(name, list.get(0).getName());
+        return list.get(0);
+    }
+
+    @Step("Удаление направления по id")
+    public static void deleteOrgDirectionById(String id) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(orgDirUrl + id + "/")
+                .assertStatus(204);
+    }
+
+    @Step("Создание направления")
+    public static Response createOrgDirection(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post(orgDirUrl);
     }
 }

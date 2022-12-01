@@ -94,6 +94,7 @@ public class ClickHouseClusterTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("1161968")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

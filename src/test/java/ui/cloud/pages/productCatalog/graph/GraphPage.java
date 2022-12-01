@@ -9,6 +9,7 @@ import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
+import ui.elements.Input;
 import ui.models.Graph;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -23,14 +24,13 @@ public class GraphPage extends BasePage {
     private final SelenideElement viewJSONButton = $x("//div[text()='JSON']/parent::button");
     private final SelenideElement expandJSONView = $x("//button[@aria-label='fullscreen']");
     private final SelenideElement closeJSONView = $x("//button[@aria-label='close']");
-    private final SelenideElement mainTab = $x("//span[text()='Общая информация']//parent::button");
     private final SelenideElement nodesTab = $x("//span[text()='Узлы']//parent::button");
     private final SelenideElement modifiersTab = $x("//span[text()='Модификаторы']//parent::button");
     private final SelenideElement orderParamsTab = $x("//span[text()='Параметры заказа']//parent::button");
     private final SelenideElement auditTab = $x("//span[text()='История изменений']//parent::button");
     private final SelenideElement graphNameInput = $x("//input[@name='name']");
     private final SelenideElement graphTitleInput = $x("//input[@name='title']");
-    private final SelenideElement authorInput = $x("//input[@name = 'author']");
+    private final Input authorInput = Input.byName("author");
     private final SelenideElement graphsList = $x("//a[text()='Список графов']");
 
     public GraphPage() {
@@ -105,8 +105,7 @@ public class GraphPage extends BasePage {
 
     @Step("Переход на вкладку 'Общая информация'")
     public GraphPage goToMainTab() {
-        TestUtils.scrollToTheTop();
-        mainTab.click();
+        goToTab("Общая информация");
         return this;
     }
 
@@ -170,5 +169,12 @@ public class GraphPage extends BasePage {
         TestUtils.scrollToTheTop();
         graphsList.click();
         return new GraphsListPage();
+    }
+
+    @Step("Задание в поле 'Автор' значения '{value}'")
+    public GraphPage setAuthor(String value) {
+        goToMainTab();
+        authorInput.setValue(value);
+        return this;
     }
 }

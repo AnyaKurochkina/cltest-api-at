@@ -1,10 +1,9 @@
 package ui.cloud.pages;
 
-import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -15,6 +14,7 @@ import ui.elements.Tooltip;
 import java.time.Duration;
 
 @EqualsAndHashCode
+@Log4j2
 public class ProductStatus {
     @Getter
     String status;
@@ -28,10 +28,6 @@ public class ProductStatus {
 
     public ProductStatus(String status) {
         this.status = status;
-    }
-
-    public ProductStatus(SelenideElement e) {
-        init(e.getWrappedElement());
     }
 
     public ProductStatus(WebElement e) {

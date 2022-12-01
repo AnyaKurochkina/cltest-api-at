@@ -45,7 +45,7 @@ public class UiMoonTest extends UiProductTest {
             orderPage.getDataCentre().selectByValue(product.getDataCentre());
             orderPage.getProjectName().setValue(new Generex("moon-[a-z]{5,15}").random());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = IProductPage.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
             new OrdersPage()
                     .getRowElementByColumnValue("Продукт",

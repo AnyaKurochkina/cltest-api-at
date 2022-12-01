@@ -2,6 +2,7 @@ package org.junit;
 
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
@@ -12,8 +13,10 @@ import models.ObjectPoolService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import ru.testit.junit5.RunningHandler;
 
@@ -73,8 +76,11 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--start-maximized");
         Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
-        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true")))
-            WebDriverRunner.setWebDriver(new RemoteWebDriver(new java.net.URL(Configuration.remote), Configuration.browserCapabilities));
+        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
+            RemoteWebDriver driver = new RemoteWebDriver(new java.net.URL(Configuration.remote), Configuration.browserCapabilities);
+            driver.setFileDetector(new LocalFileDetector());
+            WebDriverRunner.setWebDriver(driver);
+        }
     }
 
     public void loadSecretJson() {

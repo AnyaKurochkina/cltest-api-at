@@ -10,10 +10,6 @@ import static core.helper.StringUtils.$x;
 
 public class SecurityGroupsPage {
 
-    public SecurityGroupsPage() {
-        $x("//span[.='Группы безопасности']").shouldBe(Condition.visible);
-    }
-
     public void addGroup(String name, String desc){
         new SecurityGroupsTable().clickAdd();
         Dialog.byTitle("Добавить группу безопасности")

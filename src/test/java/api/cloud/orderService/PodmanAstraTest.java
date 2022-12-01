@@ -37,6 +37,7 @@ public class PodmanAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("820504")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

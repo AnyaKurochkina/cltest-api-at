@@ -24,6 +24,7 @@ public class OldWindowsTest extends Tests {
             .productName("Windows")
             .build();
 
+    @Disabled
     @Order(1)
     @TmsLink("841702")
     @DisplayName("Перезагрузить Windows OLD")

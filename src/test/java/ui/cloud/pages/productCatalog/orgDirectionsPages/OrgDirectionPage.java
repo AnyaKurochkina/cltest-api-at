@@ -3,21 +3,25 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Input;
-import ui.elements.TypifiedElement;
+import ui.elements.*;
 
 import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$x;
 
 public class OrgDirectionPage {
+    private static final String TITLE = "title";
+    private static final String NAME = "name";
+    private static final String DESCRIPTION = "description";
+
     private final SelenideElement orgDirListLink = $x("//a[text() = 'Список направлений']");
     private final SelenideElement inputNameField = $x("//*[@name ='name']");
     private final SelenideElement inputTitleField = $x("//*[@name ='title']");
     private final SelenideElement inputDescriptionField = $x("//textarea[@name ='description']");
     private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
-    private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
+    private final Button cancelButton = Button.byText("Отмена");
     private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final SelenideElement id = $x("//form//p//b");
     private final SelenideElement inputId = $x("//input[@name = 'id']");
@@ -28,43 +32,32 @@ public class OrgDirectionPage {
     }
 
     public OrgDirectionPage editNameField(String name) {
-        new Input(inputNameField).setValue(name);
+        Input.byName(NAME).setValue(name);
         saveButton.scrollIntoView(TypifiedElement.scrollCenter);
         saveButton.click();
+        new Alert().checkText("Направление успешно изменено").checkColor(Alert.Color.GREEN).close();
         return this;
     }
 
-    @Step("Запонение полей title, name, description и сохранение")
+    @Step("Заполнение полей title, name, description и сохранение")
     public OrgDirectionsListPage fillAndSave(String title, String name, String description) {
-        inputTitleField.setValue(title);
-        inputNameField.setValue(name);
-        inputDescriptionField.setValue(description);
+        Input.byName(TITLE).setValue(title);
+        Input.byName(NAME).setValue(name);
+        TextArea.byName(DESCRIPTION).setValue(description);
+        new InputFile("src/test/resources/icons/testIcon.png").importFile();
+        TestUtils.wait(2000);
         TestUtils.scrollToTheBottom();
         saveButton.click();
+ //       new Alert().checkText("Направление успешно создано").checkColor(Alert.Color.GREEN).close();
         TestUtils.scrollToTheBottom();
         cancelButton.click();
         return new OrgDirectionsListPage();
     }
 
     @Step("Удаление направления")
-    public OrgDirectionPage deleteDirection() {
+    public DeleteDialog deleteDirection() {
         deleteButton.click();
-        return this;
-    }
-
-    @Step("Ввод id и удаление")
-    public OrgDirectionsListPage fillIdAndDelete() {
-        new Input(inputId).setValue(id.getText());
-        frameDeleteButton.shouldBe(Condition.enabled).click();
-        return new OrgDirectionsListPage();
-    }
-
-    @Step("Ввод невалидного id")
-    public OrgDirectionPage inputInvalidId(String dirId) {
-        new Input(inputId).setValue(dirId);
-        frameDeleteButton.shouldBe(Condition.disabled);
-        inputId.clear();
-        return this;
+        return new DeleteDialog();
     }
 
     @Step("Проверка значений полей")
@@ -77,6 +70,13 @@ public class OrgDirectionPage {
                 && Objects.requireNonNull(inputNameField.getValue()).equals(cloneName)
                 && Objects.requireNonNull(inputDescriptionField.getValue()).equals(description);
     }
+
+    @Step("Выход со страницы редактирования")
+    public OrgDirectionsListPage exitFromOrgDirectionPage() {
+        cancelButton.click();
+        return new OrgDirectionsListPage();
+    }
+
 
     @Step("Проверка изменения имени")
     public boolean isNameChanged(String name) {

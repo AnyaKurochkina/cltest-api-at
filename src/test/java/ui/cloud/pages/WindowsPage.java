@@ -34,7 +34,7 @@ public class WindowsPage extends IProductPage {
     }
 
     @Override
-    void checkPowerStatus(String expectedStatus) {
+    protected void checkPowerStatus(String expectedStatus) {
         new VirtualMachineTable().checkPowerStatus(expectedStatus);
     }
 

@@ -44,7 +44,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     }
 
     @Override
-    void checkPowerStatus(String expectedStatus) {
+    protected void checkPowerStatus(String expectedStatus) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(expectedStatus);
     }
 

@@ -2,6 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.Keys;
 
@@ -17,6 +18,7 @@ public class TextArea implements TypifiedElement {
         this.textArea = input;
     }
 
+    @Step("Получение TextArea по label {label}")
     public static TextArea byLabel(String label) {
         return new TextArea($x("//label[text()='{}']/following::textarea[1]", label));
     }

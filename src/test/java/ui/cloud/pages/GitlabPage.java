@@ -24,7 +24,7 @@ public class GitlabPage extends IProductPage {
     }
 
     @Override
-    void checkPowerStatus(String expectedStatus) {
+    protected void checkPowerStatus(String expectedStatus) {
         new GitlabPage.VirtualMachineTable().checkPowerStatus(expectedStatus);
     }
 

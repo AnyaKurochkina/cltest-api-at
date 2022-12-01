@@ -35,7 +35,7 @@ public class ClickHouseClusterPage extends IProductPage {
     }
 
     @Override
-    void checkPowerStatus(String expectedStatus) {
+    protected void checkPowerStatus(String expectedStatus) {
         new ClickHouseClusterPage.VirtualMachineTable("Роли узла").checkPowerStatus(expectedStatus);
     }
 
