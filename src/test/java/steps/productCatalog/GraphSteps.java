@@ -135,11 +135,10 @@ public class GraphSteps extends Steps {
     }
 
     @Step("Импорт графа")
-    public static void importGraph(String pathName) {
-        new Http(ProductCatalogURL)
+    public static Response importGraph(String pathName) {
+        return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(graphUrl + "obj_import/", "file", new File(pathName))
-                .assertStatus(200);
+                .multiPart(graphUrl + "obj_import/", "file", new File(pathName));
     }
 
     @Step("Получение графа по Id и Env")

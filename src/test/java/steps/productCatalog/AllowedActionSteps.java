@@ -10,6 +10,7 @@ import models.cloud.productCatalog.allowedAction.GetAllowedActionList;
 import org.json.JSONObject;
 import steps.Steps;
 
+import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -78,9 +79,7 @@ public class AllowedActionSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
-                .post(allowedUrl)
-                .assertStatus(201)
-                .compareWithJsonSchema("jsonSchema/allowedAction/postAllowedAction.json");
+                .post(allowedUrl);
     }
 
     @Step("Получение списка разрешенных действий")
@@ -149,6 +148,13 @@ public class AllowedActionSteps extends Steps {
                 .assertStatus(200)
                 .extractAs(GetAllowedActionList.class)
                 .getList();
+    }
+
+    @Step("Импорт разрешенного действия")
+    public static Response importAllowedAction(String pathName) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .multiPart(allowedUrl + "obj_import/", "file", new File(pathName));
     }
 
     public static void checkEventProviderAllowedList(List<AllowedAction> actionList, String eventType, String eventProvider) {

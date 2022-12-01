@@ -1,5 +1,6 @@
 package api.cloud.productCatalog.action;
 
+import api.Tests;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -10,7 +11,6 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import api.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -69,23 +69,23 @@ public class ActionsNegativeTest extends Tests {
         Action.builder()
                 .actionName("NameWithUppercase")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Action.builder()
                 .actionName("nameWithUppercaseInMiddle")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Action.builder()
                 .actionName("имя")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Action.builder()
                 .actionName("Имя")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Action.builder()
                 .actionName("a&b&c")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Action.builder()
                 .actionName("")
                 .build()
@@ -176,6 +176,8 @@ public class ActionsNegativeTest extends Tests {
                 .build()
                 .createObject();
         String actionId = action.getActionId();
-        partialUpdateAction(actionId, new JSONObject().put("current_version", "2")).assertStatus(500);
+        String message = partialUpdateAction(actionId, new JSONObject().put("current_version", "2")).assertStatus(400)
+                .jsonPath().getList("", String.class).get(0);
+        assertEquals("['You must specify version in pattern like \"{num}. | {num}.{num}.\"']", message);
     }
 }

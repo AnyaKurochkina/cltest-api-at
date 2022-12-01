@@ -285,7 +285,8 @@ public class OrgDirectionTest extends Tests {
                 .createObject();
         String errorMessage = steps.getDeleteObjectResponse(service.getDirectionId())
                 .assertStatus(400).jsonPath().getString("error");
-        assertEquals(String.format("Нельзя удалить направление %s. Оно используется:\nService: (name: %s)", service.getDirectionName(), service.getName()), errorMessage);
+        assertEquals(String.format("Ошибка удаления. Нельзя удалить направление %s, которое используется Сервисом: %s. Отвяжите направление от сервиса и повторите попытку",
+                service.getDirectionName(), service.getName()), errorMessage);
     }
 
     @Test

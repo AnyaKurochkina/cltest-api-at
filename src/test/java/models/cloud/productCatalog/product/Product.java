@@ -71,6 +71,8 @@ public class Product extends Entity {
     private String category;
     @JsonProperty("category_v2")
     private Categories categoryV2;
+    @JsonProperty("on_request")
+    private OnRequest onRequest;
     @JsonProperty("last_version")
     private String lastVersion;
     private Map<String, String> info;
@@ -104,8 +106,12 @@ public class Product extends Entity {
     @Override
     public JSONObject toJson() {
         String categoryV2 = null;
+        String onRequest = null;
         if (this.categoryV2 != null) {
             categoryV2 = this.categoryV2.getValue();
+        }
+        if (this.onRequest != null) {
+            onRequest = this.onRequest.getValue();
         }
         return JsonHelper.getJsonTemplate("productCatalog/products/createProduct.json")
                 .set("$.name", name)
@@ -124,6 +130,7 @@ public class Product extends Entity {
                 .set("$.in_general_list", inGeneralList)
                 .set("$.payment", payment)
                 .setIfNullRemove("$.category_v2", categoryV2)
+                .setIfNullRemove("$.on_request", onRequest)
                 .setIfNullRemove("$.number", number)
                 .set("$.allowed_groups", allowedGroups)
                 .set("$.restricted_groups", restrictedGroups)

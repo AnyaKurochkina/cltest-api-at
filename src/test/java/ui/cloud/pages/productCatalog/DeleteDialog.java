@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
@@ -46,7 +47,8 @@ public class DeleteDialog extends Dialog {
     public void inputValidIdAndDeleteNotAvailable(String alertText) {
         setInputValue("Идентификатор", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
-        new Alert().checkText(alertText);
+        SelenideElement element = StringUtils.$x("(//div[@role='alert'])[last()]");
+        new Alert(element).checkText(alertText);
         TestUtils.wait(6000);
     }
 

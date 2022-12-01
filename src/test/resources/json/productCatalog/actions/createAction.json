@@ -17,7 +17,6 @@
   "auto_removing_if_failed": false,
   "skip_on_prebilling": false,
   "event_type_provider": [],
-  "config_restriction": "",
   "item_restriction": null,
   "graph_id": "4c8477e8-cc84-49ef-949e-b9f2940f599d",
   "graph_version": "",

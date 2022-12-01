@@ -14,6 +14,10 @@ import static core.helper.StringUtils.$x;
 public class Alert implements TypifiedElement {
     SelenideElement element = $x("(//div[@role='alert' and descendant::button])[last()]");
 
+    public Alert(SelenideElement element) {
+        this.element = element;
+    }
+
     public Alert() {
         element.shouldBe(Condition.visible).shouldBe(Condition.matchText(".{1,}"));
     }

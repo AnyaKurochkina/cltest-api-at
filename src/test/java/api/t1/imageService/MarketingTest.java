@@ -64,7 +64,8 @@ public class MarketingTest extends Tests {
                 .name("partial_update_marketing_list_api_test")
                 .build()
                 .createObject();
-        partialUpdateMarketingById(marketing.getId(), new JSONObject().put("description", "test"));
+        partialUpdateMarketingById(marketing.getId(), new JSONObject().put("description", "test")
+                .put("name", marketing.getName()));
         Marketing marketingById = getMarketingById(marketing.getId());
         assertEquals("test", marketingById.getDescription());
     }

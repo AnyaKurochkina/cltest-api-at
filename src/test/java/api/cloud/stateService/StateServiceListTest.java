@@ -14,6 +14,7 @@ import steps.orderService.OrderServiceSteps;
 import steps.stateService.StateServiceSteps;
 import api.Tests;
 
+import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +57,7 @@ public class StateServiceListTest extends Tests {
         }
         List<Item> itemsProviderList = getItemsWithActionsByFilter("proj-42pomp56tw", "provider", "vsphere");
         for (Item item : itemsProviderList) {
-            assertEquals("vsphere", item.getProvider() );
+            assertEquals("vsphere", item.getProvider());
         }
     }
 
@@ -100,14 +101,15 @@ public class StateServiceListTest extends Tests {
     public void getItemListWithParentsItemsTrue() {
         List<Item> list = getItemsWithParentItem();
         for (Item item : list) {
-           if (item.getData().get("parent") != null) {
-               LinkedHashMap<String, Object> parent_item = (LinkedHashMap) item.getData().get("parent_item");
-               assertNotNull(parent_item.get("item_id"));
-               assertNotNull(parent_item.get("type"));
-               assertNotNull(parent_item.get("data"));
-           }
+            if (item.getData().get("parent") != null) {
+                LinkedHashMap<String, Object> parent_item = (LinkedHashMap) item.getData().get("parent_item");
+                assertNotNull(parent_item.get("item_id"));
+                assertNotNull(parent_item.get("type"));
+                assertNotNull(parent_item.get("data"));
+            }
         }
     }
+
     @Test
     @DisplayName("Получение списка items с параметром with_folder=true")
     @TmsLink("1283814")
@@ -115,6 +117,20 @@ public class StateServiceListTest extends Tests {
         List<Item> list = getItemsListByFilter("with_folder=true");
         for (Item item : list) {
             assertFalse(item.getFolder().isEmpty());
+        }
+    }
+
+    @Test
+    @DisplayName("Получение списка items созданных за промежуток времени")
+    @TmsLink("")
+    public void getItemListCreatedOverAPeriodOfTimeTest() {
+        ZonedDateTime startDt = ZonedDateTime.parse("2021-11-23T10:41:00.000000Z");
+        ZonedDateTime endDt = ZonedDateTime.parse("2022-11-23T12:42:00.000000Z");
+        List<Item> list = getItemsListByFilter(String.format("created_row_dt__gte=%s&created_row_dt__lt=%s", startDt.toString(), endDt.toString()));
+        for (Item item : list) {
+            ZonedDateTime createdRowDt = ZonedDateTime.parse(item.getCreatedRowDt());
+            assertTrue((createdRowDt.isAfter(startDt) || createdRowDt.isEqual(startDt)) && createdRowDt.isBefore(endDt),
+                    String.format("Дата %s itema не входит в заданный промежуток.", createdRowDt));
         }
     }
 }
