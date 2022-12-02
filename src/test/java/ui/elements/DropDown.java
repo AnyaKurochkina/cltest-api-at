@@ -33,6 +33,7 @@ public class DropDown implements TypifiedElement {
         return byLabel(label, 1);
     }
 
+    @Step("Получение DropDown по label {label} с индексом {index}")
     public static DropDown byLabel(String label, int index) {
         return new DropDown($x("(//label[text()='{}']/following::div[1])" + postfix, label, TypifiedElement.getIndex(index)));
     }
@@ -61,6 +62,10 @@ public class DropDown implements TypifiedElement {
     @Step("Выбрать в select элемент с названием '{value}'")
     public void selectByTextContains(String value) {
         hover();
+        if (element.$x(String.format("input[contains(@value,'%s')]", value)).exists())
+            return;
+        if (Objects.nonNull(element.getValue()) && element.getValue().contains(value))
+            return;
         element.click();
         $x("//li[contains(.,'{}')]", value)
                 .shouldBe(Condition.enabled)

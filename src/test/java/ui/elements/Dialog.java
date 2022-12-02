@@ -2,6 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import lombok.Getter;
 
 import static core.helper.StringUtils.$x;
@@ -18,6 +19,7 @@ public class Dialog implements TypifiedElement {
         this.dialog = $x("//h2[.='{}']/ancestor::div[@role='dialog']", title);
     }
 
+    @Step("Получение Dialog по заголовку {title}")
     public static Dialog byTitle(String title) {
         return new Dialog(title);
     }
@@ -29,10 +31,11 @@ public class Dialog implements TypifiedElement {
         return this;
     }
 
-    public void setDropDownValue(String label,String value){
+    public Dialog setDropDownValue(String label,String value){
         SelenideElement element = dialog.$x(String.format("descendant::div[label[starts-with(.,'%s')]]/div/input", label));
         DropDown dropDown = new DropDown(element);
-        dropDown.select(value);
+        dropDown.selectByTextContains(value);
+        return this;
     }
 
     public Dialog setTextarea(TextArea textarea, String text){

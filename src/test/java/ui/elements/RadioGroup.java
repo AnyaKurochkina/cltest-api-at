@@ -2,6 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static core.helper.StringUtils.$x;
 
@@ -16,6 +17,7 @@ public class RadioGroup implements TypifiedElement{
         return byLabel(label, 1);
     }
 
+    @Step("Получение RadioGroup по label {label} с индексом {index}")
     public static RadioGroup byLabel(String label, int index){
         return new RadioGroup($x("(//*[.='{}']/..//*[@role='radiogroup'])" + postfix, label, TypifiedElement.getIndex(index)).shouldBe(Condition.visible));
     }

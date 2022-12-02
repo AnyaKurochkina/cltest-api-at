@@ -35,6 +35,7 @@ public class OldWildFlyTest extends Tests {
         wildFly.expandMountPoint();
     }
 
+    @Disabled
     @Order(2)
     @TmsLink("841694")
     @DisplayName("Перезагрузить WildFly Astra OLD")

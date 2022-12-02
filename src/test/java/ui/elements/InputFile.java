@@ -14,7 +14,6 @@ public class InputFile {
 
     public InputFile(String path) {
         this.path = path;
-
     }
 
     public void importFileAndSubmit() {
