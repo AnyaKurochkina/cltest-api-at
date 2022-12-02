@@ -124,11 +124,10 @@ public class ActionSteps extends Steps {
     }
 
     @Step("Импорт действия продуктового каталога")
-    public static void importAction(String pathName) {
-        new Http(ProductCatalogURL)
+    public static Response importAction(String pathName) {
+        return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(actionUrl + "obj_import/", "file", new File(pathName))
-                .assertStatus(200);
+                .multiPart(actionUrl + "obj_import/", "file", new File(pathName));
     }
 
     @Step("Копирование действия по Id")

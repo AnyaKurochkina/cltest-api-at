@@ -314,7 +314,7 @@ public class Http {
                                 String.format("[%s ms] %s %s (%s)\n", response.getTime(), method, (host + path), response.getHeader("x-request-id")));
         }
         if (isLogged)
-            log.debug(String.format("RESPONSE (%s): %s\n\n", response.getHeader("x-request-id"), response.getBody().asPrettyString()));
+            log.debug(String.format("RESPONSE (%d) (%s): %s\n\n", Objects.requireNonNull(response).getStatusCode(), response.getHeader("x-request-id"), response.getBody().asPrettyString()));
         return new Response(response, this);
     }
 

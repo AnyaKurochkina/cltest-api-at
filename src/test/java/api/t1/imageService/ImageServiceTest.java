@@ -1,5 +1,7 @@
 package api.t1.imageService;
 
+import api.Tests;
+import core.helper.http.Response;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -10,7 +12,6 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import api.Tests;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -116,11 +117,29 @@ public class ImageServiceTest extends Tests {
                 .createObject();
         ImageGroups updatedImageGroups = ImageGroups.builder()
                 .name("partial_update_image_groups_test_api")
-                .tags(Arrays.asList("tag_update"))
+                .tags(Collections.singletonList("tag_update"))
                 .distro("distro_update")
                 .build();
         JSONObject jsonObject = updatedImageGroups.init().toJson();
         partialUpdateImageGroupById(imageGroups.getId(), jsonObject);
         assertEquals(getImageGroup(imageGroups.getId()).getTags(), updatedImageGroups.getTags());
+    }
+
+    @DisplayName("Получение версии сервиса образов")
+    @TmsLink("1327691")
+    @Test
+    public void getImageServiceVersionTest() {
+        Response resp = getImageServiceVersion();
+        assertNotNull(resp.jsonPath().get("build"));
+        assertNotNull(resp.jsonPath().get("date"));
+        assertNotNull(resp.jsonPath().get("git_hash"));
+        assertNotNull(resp.jsonPath().get("stage"));
+    }
+
+    @DisplayName("Получение статуса health")
+    @TmsLink("1327717")
+    @Test
+    public void healthImageServiceTest() {
+        assertEquals("ok", getHealthStatusImageService());
     }
 }

@@ -34,8 +34,6 @@ public class AllowedAction extends Entity {
     private List<EventTypeProvider> eventTypeProvider;
     @JsonProperty("environment_type_restriction")
     private List<String> environmentTypeRestriction;
-    @JsonProperty("config_restriction")
-    private Object configRestriction;
     @JsonProperty("update_dt")
     private String updateDt;
     private String name;
@@ -69,7 +67,6 @@ public class AllowedAction extends Entity {
                 .set("$.action", actionId)
                 .set("$.item_restriction", itemRestriction)
                 .set("$.event_type_provider", eventTypeProvider)
-                .set("$.config_restriction", configRestriction)
                 .set("$.environment_type_restriction", environmentTypeRestriction)
                 .set("$.context_restrictions", contextRestriction)
                 .build();
@@ -79,6 +76,8 @@ public class AllowedAction extends Entity {
     protected void create() {
         deleteAllowedActionIfExist();
         AllowedAction createAllowedAction = createAllowedAction(toJson())
+                .assertStatus(201)
+                .compareWithJsonSchema("jsonSchema/allowedAction/postAllowedAction.json")
                 .extractAs(AllowedAction.class);
         StringUtils.copyAvailableFields(createAllowedAction, this);
         assertNotNull(actionId, "Действие с именем: " + name + ", не создался");

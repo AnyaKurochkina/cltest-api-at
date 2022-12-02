@@ -59,9 +59,6 @@
               "type": "array",
               "items": {}
             },
-            "config_restriction": {
-              "type": "string"
-            },
             "item_restriction": {
               "type": "string"
             },
@@ -87,7 +84,6 @@
             "title",
             "description",
             "event_type_provider",
-            "config_restriction",
             "item_restriction",
             "environment_type_restriction",
             "action"

@@ -39,7 +39,7 @@ public class ImageTest {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1263406")
     @DisplayName("Обновление marketing у Image")
     public void updateImageMarketingInfoTest() {
         Marketing expectedMarketing = Marketing.builder()
