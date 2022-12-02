@@ -109,7 +109,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
 
     @Test
     @Order(6)
-    @TmsLink("")
+    @TmsLink("1305356")
     @DisplayName("UI ApacheKafkaCluster. Обновить кластерный сертификат(аварийно)")
     void updateCertificateEmergency() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
@@ -201,7 +201,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
 
     @Test
     @Order(16)
-    @TmsLink("")
+    @TmsLink("852011")
     @DisplayName("UI ApacheKafkaCluster.Проверка имени кластера на уникальность")
     void checkNameCluster() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
@@ -274,7 +274,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
 
     @Test
     @Order(24)
-    @TmsLink("")
+    @TmsLink("852012")
     @DisplayName("UI ApacheKafkaCluster.Проверить конфигурацию")
     void checkConfiguration() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
@@ -283,7 +283,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
 
     @Test
     @Order(100)
-    @TmsLink("")
+    @TmsLink("852007")
     @DisplayName("UI ApacheKafkaCluster. Удаление продукта")
     void delete() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
