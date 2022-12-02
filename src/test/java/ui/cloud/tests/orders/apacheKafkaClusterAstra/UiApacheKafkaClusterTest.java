@@ -21,7 +21,7 @@ import java.time.Duration;
 public class UiApacheKafkaClusterTest extends UiProductTest {
 
     ApacheKafkaCluster product;
-    //= ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/25771046-8bce-407d-bbcd-7ca3fe38a051/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    //=ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/16c2f0a8-ce63-42f6-b512-ceb7fda27e09/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
