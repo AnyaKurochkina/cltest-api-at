@@ -264,6 +264,7 @@ public class UiCloudComputeTest extends Tests {
     }
 
     @Test
+    @Owner("Checked")
     @DisplayName("Подключить/Отключить диск")
     void attachDisk() {
         new IndexPage().goToSshKeys().addKey("default", "root");
@@ -322,7 +323,60 @@ public class UiCloudComputeTest extends Tests {
         new IndexPage()
                 .goToDisks()
                 .selectDisk(disk.getName())
+                .runActionWithCheckCost(CompareType.LESS, updatedDiskPage::delete);
+    }
+
+    @Test
+    @DisplayName("Подключить/Отключить IP")
+    void attachIp() {
+        new IndexPage().goToSshKeys().addKey("default", "root");
+        String vmName = "AT-UI-" + Math.abs(new Random().nextInt());
+        VmCreatePage vm = new IndexPage()
+                .goToVirtualMachine()
+                .addVm()
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setAvailabilityZone(availabilityZone)
+                .setName(vmName)
+                .addSecurityGroups("default")
+                .setSshKey("default")
+                .clickOrder();
+        VmPage vmPage = new VmsPage().selectCompute(vm.getName()).checkCreate();
+        String orderIdVm = vmPage.getOrderId();
+
+        String ip = new IndexPage()
+                .goToPublicIps()
+                .addIp(availabilityZone);
+        PublicIpPage ipPage = new PublicIpsPage().selectIp(ip).checkCreate();
+        ipPage.runActionWithCheckCost(CompareType.EQUALS,  () -> ipPage.attachComputeIp(vm.getName()));
+
+//        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+//                .filter(e -> e.getOrderId().equals(orderIdVm))
+//                .filter(e -> e.getSrcOrderId().equals(orderIdDisk))
+//                .filter(e -> e.getSize().equals(6))
+//                .count(), "Item volume не соответствует условиям или не найден");
+
+        PublicIpPage newIpPage = new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .selectNetworkInterface()
+                .selectIp(ip);
+        newIpPage.runActionWithCheckCost(CompareType.EQUALS, newIpPage::detachComputeIp);
+
+//        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+//                .filter(e -> e.getOrderId().equals(orderIdDisk))
+//                .filter(e -> e.getSize().equals(6))
+//                .filter(e -> Objects.isNull(e.getParent()))
+//                .count(), "Item volume не соответствует условиям или не найден");
+
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
                 .runActionWithCheckCost(CompareType.LESS, vmPage::delete);
+        new IndexPage()
+                .goToPublicIps()
+                .selectIp(ip)
+                .runActionWithCheckCost(CompareType.LESS, newIpPage::delete);
     }
 
     @Test
