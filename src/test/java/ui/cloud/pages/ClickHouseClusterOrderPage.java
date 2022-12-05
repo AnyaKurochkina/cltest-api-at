@@ -16,11 +16,11 @@ public class ClickHouseClusterOrderPage extends Product {
     DropDown platform = DropDown.byLabel("Платформа");
     DropDown osVersion = DropDown.byLabel("Версия ОС");
     DropDown group = DropDown.byLabel("Группы");
-    DropDown roleServer = DropDown.byLabel("Роль сервера. (данное поле влияет на именование)");
     DropDown dataCentre = DropDown.byLabel("Дата-центр");
     DropDown segment = DropDown.byLabel("Сетевой сегмент");
     DropDown numberNodes = DropDown.byLabel("Количество нод кластера по типу");
-    DropDown configure = DropDown.byLabel("Конфигурация Core/RAM");
+    DropDown configureCh = DropDown.byLabel("Конфигурация Core/RAM ClickHouse");
+    DropDown configureZ = DropDown.byLabel("Конфигурация Core/RAM Zookeeper");
     Input countVm = Input.byLabel("Количество");
     Input label = Input.byLabel("Метка");
     Input nameUser = Input.byLabel("Имя пользователя (админ с полными правами)");

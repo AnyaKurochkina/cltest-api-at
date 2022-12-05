@@ -40,6 +40,7 @@ class UiWindowsCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("975914")
+    @Order(1)
     @DisplayName("UI Windows. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

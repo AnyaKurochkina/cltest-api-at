@@ -30,6 +30,7 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1151310")
+    @Order(1)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

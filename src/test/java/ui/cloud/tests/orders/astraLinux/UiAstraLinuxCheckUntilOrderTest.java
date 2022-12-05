@@ -29,12 +29,13 @@ class UiAstraLinuxCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1235787")
+    @Order(1)
     @DisplayName("UI AstraLinux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
-        ScyllaDbOrderPage orderPage = new ScyllaDbOrderPage();
+        AstraLinuxOrderPage orderPage = new AstraLinuxOrderPage();
 
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.getOrderBtn().shouldBe(Condition.disabled);

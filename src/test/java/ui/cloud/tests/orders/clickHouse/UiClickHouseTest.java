@@ -48,9 +48,12 @@ public class UiClickHouseTest extends UiProductTest {
             orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMaxFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
+            orderPage.getGroup2().select(accessGroup.getPrefixName());
+            orderPage.getGroup3().select(accessGroup.getPrefixName());
+            orderPage.getGroup4().select(accessGroup.getPrefixName());
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();
             new OrdersPage()

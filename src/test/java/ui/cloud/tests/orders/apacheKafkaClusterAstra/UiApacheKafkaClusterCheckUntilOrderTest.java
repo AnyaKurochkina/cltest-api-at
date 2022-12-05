@@ -31,6 +31,7 @@ class UiApacheKafkaClusterCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1235642")
+    @Order(1)
     @DisplayName("UI RedisAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

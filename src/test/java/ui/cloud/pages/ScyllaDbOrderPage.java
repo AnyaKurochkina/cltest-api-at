@@ -18,8 +18,8 @@ public class ScyllaDbOrderPage extends Product {
 
     DropDown platform = DropDown.byLabel("Платформа");
     DropDown osVersion = DropDown.byLabel("Версия ОС");
+    DropDown scyllaDbVersion = DropDown.byLabel("Версия ScyllaDB");
     DropDown group = DropDown.byLabel("Группы");
-    DropDown roleServer = DropDown.byLabel("Роль сервера. (данное поле влияет на именование)");
     DropDown dataCentre = DropDown.byLabel("Дата-центр");
     DropDown segment = DropDown.byLabel("Сетевой сегмент");
     DropDown configure = DropDown.byLabel("Конфигурация Core/RAM");
@@ -34,7 +34,7 @@ public class ScyllaDbOrderPage extends Product {
     }
 
     public void checkOrderDetails(){
-        if(getCalculationDetails().shouldBe(Condition.visible).exists())
+        if(getCalculationDetails().shouldBe().exists())
         {
             getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         }

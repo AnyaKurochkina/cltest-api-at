@@ -30,6 +30,7 @@ class UiScyllaDBCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1190976")
+    @Order(1)
     @DisplayName("UI ScyllaDb. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
