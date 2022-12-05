@@ -43,7 +43,7 @@ public class ProductStatus {
         WebDriver webDriver = WebDriverRunner.getWebDriver();
         WebDriverWait wait = new WebDriverWait(webDriver,20);
         Actions builder = new Actions(webDriver);
-        wait.until((ExpectedCondition<Boolean>) driver -> {
+        wait.until(driver -> {
             builder.moveToElement(e).pause(Duration.ofSeconds(1)).perform();
             return Tooltip.isVisible();
         });
