@@ -81,12 +81,12 @@ public abstract class IProductPage {
     }
 
     public SelenideElement getBtnAction(String header) {
-        return $x("//ancestor::*[.='{}']/parent::*//button[@id='actions-menu-button']", header);
+        return $x("//*[.='{}']/parent::*//button[@id='actions-menu-button']", header);
     }
 
     @Step("Получение таблицы по заголовку")
     public Table getTableByHeader(String header) {
-        return new Table($$x("//ancestor::*[.='{}']/parent::*//table", header).filter(Condition.visible).first());
+        return new Table($$x("//*[.='{}']/parent::*//table", header).filter(Condition.visible).first());
     }
 
     @Step("Получение label")
