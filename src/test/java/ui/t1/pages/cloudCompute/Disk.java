@@ -5,9 +5,9 @@ import ui.cloud.tests.ActionParameters;
 import ui.elements.CheckBox;
 import ui.elements.Dialog;
 
-import static ui.t1.pages.cloudCompute.VmPage.DiskInfo.COLUMN_NAME;
+import static ui.t1.pages.cloudCompute.Vm.DiskInfo.COLUMN_NAME;
 
-public class DiskPage extends IProductT1Page {
+public class Disk extends IProductT1Page {
 
     public void attachComputeVolume(String vmName, boolean deleteOnTermination) {
         runActionWithParameters(BLOCK_PARAMETERS, "Подключить к виртуальной машине", "Подтвердить", () ->
@@ -20,6 +20,7 @@ public class DiskPage extends IProductT1Page {
     public void detachComputeVolume() {
         String name = new TopInfo().getFirstValueByColumn(COLUMN_NAME);
         runActionWithoutParameters(BLOCK_PARAMETERS, "Отключить диск от виртуальной машины");
-        Assertions.assertFalse(new VmPage.DiskInfo().isColumnValueEquals(COLUMN_NAME, name));
+        Assertions.assertFalse(new Vm.DiskInfo().isColumnValueEquals(COLUMN_NAME, name));
     }
+
 }

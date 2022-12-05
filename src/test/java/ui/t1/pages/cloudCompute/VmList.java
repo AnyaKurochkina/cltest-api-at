@@ -3,16 +3,16 @@ package ui.t1.pages.cloudCompute;
 import com.codeborne.selenide.Condition;
 import ui.elements.DataTable;
 
-public class VmsPage {
+public class VmList {
 
-    public VmCreatePage addVm(){
+    public VmCreate addVm(){
         new VmTable().clickAdd();
-        return new VmCreatePage();
+        return new VmCreate();
     }
 
-    public VmPage selectCompute(String name){
+    public Vm selectCompute(String name){
         new VmTable().getRowElementByColumnValue(VmTable.COLUMN_NAME, name).shouldBe(Condition.visible).click();
-        return new VmPage();
+        return new Vm();
     }
 
     public static class VmTable extends DataTable {

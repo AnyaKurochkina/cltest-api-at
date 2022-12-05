@@ -7,9 +7,9 @@ import ui.cloud.pages.EntitiesUtils;
 import ui.elements.DataTable;
 import ui.elements.DropDown;
 
-import static ui.t1.pages.cloudCompute.PublicIpsPage.IpTable.COLUMN_IP;
+import static ui.t1.pages.cloudCompute.PublicIpList.IpTable.COLUMN_IP;
 
-public class PublicIpsPage {
+public class PublicIpList {
 
     //new PublicIpsPage().addIp("ru-central1-c");
     public String addIp(String availabilityZone) {
@@ -25,9 +25,9 @@ public class PublicIpsPage {
         return newIp;
     }
 
-    public PublicIpPage selectIp(String name){
+    public PublicIp selectIp(String name){
         new IpTable().getRowElementByColumnValue(COLUMN_IP, name).shouldBe(Condition.visible).click();
-        return new PublicIpPage();
+        return new PublicIp();
     }
 
     public static class IpTable extends DataTable {

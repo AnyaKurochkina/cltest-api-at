@@ -3,18 +3,18 @@ package ui.t1.pages.cloudCompute;
 import com.codeborne.selenide.Condition;
 import ui.elements.Table;
 
-import static ui.t1.pages.cloudCompute.VmPage.DiskInfo.COLUMN_NAME;
+import static ui.t1.pages.cloudCompute.Vm.DiskInfo.COLUMN_NAME;
 
-public class VmPage extends IProductT1Page {
+public class Vm extends IProductT1Page {
 
-    public DiskPage selectDisk(String disk){
+    public Disk selectDisk(String disk){
         new DiskInfo().getRowElementByColumnValue(COLUMN_NAME, disk).shouldBe(Condition.visible).click();
-        return new DiskPage();
+        return new Disk();
     }
 
-    public NetworkInterfacePage selectNetworkInterface(){
-        new DiskInfo().getRowByIndex(0).shouldBe(Condition.visible).click();
-        return new NetworkInterfacePage();
+    public NetworkInterface selectNetworkInterface(){
+        new NetworkInfo().getRowByIndex(0).shouldBe(Condition.visible).click();
+        return new NetworkInterface();
     }
 
     public static class DiskInfo extends Table {

@@ -2,21 +2,19 @@ package ui.t1.pages.cloudCompute;
 
 import com.codeborne.selenide.Condition;
 import ui.elements.DataTable;
-import ui.elements.Menu;
-import ui.elements.Table;
 
-import static ui.t1.pages.cloudCompute.DisksPage.DisksPageTable.COLUMN_NAME;
+import static ui.t1.pages.cloudCompute.DiskList.DisksPageTable.COLUMN_NAME;
 
-public class DisksPage {
+public class DiskList {
 
-    public DiskCreatePage addDisk(){
+    public DiskCreate addDisk(){
         new DisksPageTable().clickAdd();
-        return new DiskCreatePage();
+        return new DiskCreate();
     }
 
-    public DiskPage selectDisk(String name){
+    public Disk selectDisk(String name){
         new DisksPageTable().getRowElementByColumnValueContains(COLUMN_NAME, name).shouldBe(Condition.visible).click();
-        return new DiskPage();
+        return new Disk();
     }
 
 //    public Menu getMenuRow(String disk){

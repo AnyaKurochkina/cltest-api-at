@@ -3,7 +3,7 @@ package ui.t1.pages.cloudCompute;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Dialog;
 
-public class PublicIpPage extends IProductT1Page {
+public class PublicIp extends IProductT1Page {
 
     public void attachComputeIp(String vmName) {
         runActionWithParameters(BLOCK_PARAMETERS, "Подключить к виртуальной машине", "Подтвердить", () ->
@@ -25,6 +25,6 @@ public class PublicIpPage extends IProductT1Page {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        checkPowerStatus(DiskPage.TopInfo.POWER_STATUS_DELETED);
+        checkPowerStatus(Disk.TopInfo.POWER_STATUS_DELETED);
     }
 }
