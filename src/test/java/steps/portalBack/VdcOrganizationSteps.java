@@ -3,7 +3,7 @@ package steps.portalBack;
 import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
-import models.cloud.portalBack.VmWareOrganization;
+import models.t1.portalBack.VmWareOrganization;
 import org.json.JSONObject;
 import steps.Steps;
 

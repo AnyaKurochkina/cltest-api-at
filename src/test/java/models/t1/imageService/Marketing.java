@@ -1,4 +1,4 @@
-package models.t1;
+package models.t1.imageService;
 
 import core.helper.JsonHelper;
 import core.helper.StringUtils;

@@ -7,7 +7,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
-import models.cloud.portalBack.VmWareOrganization;
+import models.t1.portalBack.VmWareOrganization;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
