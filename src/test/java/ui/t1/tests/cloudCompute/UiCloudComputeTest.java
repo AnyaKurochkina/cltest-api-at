@@ -380,7 +380,9 @@ public class UiCloudComputeTest extends Tests {
 
     @Test
     void name() {
-
+        new IndexPage().goToVirtualMachine().getVmList().forEach(e -> new IndexPage().goToVirtualMachine().selectCompute(e).delete());
+        new IndexPage().goToDisks().getDiskList().forEach(e -> new IndexPage().goToDisks().selectDisk(e).delete());
+        new IndexPage().goToPublicIps().getIpList().forEach(e -> new IndexPage().goToPublicIps().selectIp(e).delete());
 
 //        DiskCreatePage disk = new IndexPage()
 //                .goDisks()

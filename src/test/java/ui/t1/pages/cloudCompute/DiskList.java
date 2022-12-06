@@ -3,6 +3,8 @@ package ui.t1.pages.cloudCompute;
 import com.codeborne.selenide.Condition;
 import ui.elements.DataTable;
 
+import java.util.List;
+
 import static ui.t1.pages.cloudCompute.DiskList.DisksPageTable.COLUMN_NAME;
 
 public class DiskList {
@@ -17,9 +19,9 @@ public class DiskList {
         return new Disk();
     }
 
-//    public Menu getMenuRow(String disk){
-//        return new Menu(new DisksPageTable().getRowByColumnValueContains(COLUMN_NAME, disk).getElementByColumn("").$x("button"));
-//    }
+    public List<String> getDiskList(){
+        return new DisksPageTable().getColumnValuesList(COLUMN_NAME);
+    }
 
     public static class DisksPageTable extends DataTable {
         public static final String COLUMN_NAME = "Имя";

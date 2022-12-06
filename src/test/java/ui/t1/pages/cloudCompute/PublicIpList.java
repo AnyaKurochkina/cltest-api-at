@@ -7,6 +7,8 @@ import ui.cloud.pages.EntitiesUtils;
 import ui.elements.DataTable;
 import ui.elements.DropDown;
 
+import java.util.List;
+
 import static ui.t1.pages.cloudCompute.PublicIpList.IpTable.COLUMN_IP;
 
 public class PublicIpList {
@@ -25,9 +27,13 @@ public class PublicIpList {
         return newIp;
     }
 
-    public PublicIp selectIp(String name){
+    public PublicIp selectIp(String name) {
         new IpTable().getRowElementByColumnValue(COLUMN_IP, name).shouldBe(Condition.visible).click();
         return new PublicIp();
+    }
+
+    public List<String> getIpList() {
+        return new IpTable().getColumnValuesList(COLUMN_IP);
     }
 
     public static class IpTable extends DataTable {

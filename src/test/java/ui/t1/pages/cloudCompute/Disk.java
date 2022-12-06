@@ -1,5 +1,6 @@
 package ui.t1.pages.cloudCompute;
 
+import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.CheckBox;
@@ -23,4 +24,13 @@ public class Disk extends IProductT1Page {
         Assertions.assertFalse(new Vm.DiskInfo().isColumnValueEquals(COLUMN_NAME, name));
     }
 
+    public void createSnapshot(String name) {
+        runActionWithParameters(BLOCK_PARAMETERS, "Создать снимок", "Подтвердить", () ->
+                Dialog.byTitle("Создать снимок").setInputValue("Название снимка", name));
+    }
+
+    public Snapshot selectSnapshot(String snapshot){
+        getTableByHeader("Снимки").getRowElementByColumnValue("Имя", snapshot).shouldBe(Condition.visible).click();
+        return new Snapshot();
+    }
 }

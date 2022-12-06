@@ -29,20 +29,20 @@ new SshKeysPage().deleteKey("superKey2");
     }
 
     public void copyKey(String nameKey) {
-        new Menu(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Скопировать");
+        Menu.byElement(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Скопировать");
         new Alert().checkText("SSH-ключ {} скопирован", nameKey).checkColor(Alert.Color.GREEN);
         Assertions.assertEquals(SSH_KEY, Selenide.clipboard().getText());
     }
 
     public void deleteKey(String nameKey) {
-        new Menu(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Удалить");
+        Menu.byElement(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Удалить");
         Dialog.byTitle("Подтверждение удаления").clickButton("Удалить");
         new Alert().checkText("SSH-ключ {} удален успешно", nameKey).checkColor(Alert.Color.GREEN);
         Assertions.assertFalse(new KeysTable().isColumnValueEquals(KeysTable.COLUMN_NAME, nameKey));
     }
 
     public void editKey(String nameKey, String newNameKey) {
-        new Menu(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Редактировать");
+        Menu.byElement(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Редактировать");
         Dialog.byTitle("Редактирование SSH-ключа")
                 .setInputValue("Название ключа", newNameKey)
                 .clickButton("Сохранить");

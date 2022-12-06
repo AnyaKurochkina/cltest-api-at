@@ -86,7 +86,7 @@ public abstract class IProductPage {
 
     @Step("Получение таблицы по заголовку")
     public Table getTableByHeader(String header) {
-        return new Table($$x("//*[.='{}']/parent::*//table", header).filter(Condition.visible).first());
+        return new Table($$x("(//*[text() = '{}']/ancestor-or-self::*[count(.//table) = 1])[last()]//table", header).filter(Condition.visible).first());
     }
 
     @Step("Получение label")
@@ -120,9 +120,7 @@ public abstract class IProductPage {
         if (Objects.nonNull(params.getNode())) {
             params.getNode().scrollIntoView(scrollCenter).click();
         }
-        button.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
-        $$x("//li[.='{}']", action).shouldBe(CollectionCondition.anyMatch("Ожидание отображения пункта меню", WebElement::isDisplayed))
-                .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        Menu.byElement(button).select(action);
         Dialog dlgActions = Dialog.byTitle(action);
         if (params.isCheckPreBilling())
             preBillingCostAction = EntitiesUtils.getPreBillingCostAction(preBillingPriceAction);
@@ -148,9 +146,7 @@ public abstract class IProductPage {
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
         }
-        button.shouldBe(activeCnd).scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
-        $$x("//li[.='{}']", action).shouldBe(CollectionCondition.anyMatch("Ожидание отображения пункта меню", WebElement::isDisplayed))
-                .filter(Condition.visible).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        Menu.byElement(button).select(action);
         executable.execute();
         if (params.isCheckPreBilling())
             preBillingCostAction = EntitiesUtils.getPreBillingCostAction(preBillingPriceAction);

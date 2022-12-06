@@ -3,6 +3,10 @@ package ui.t1.pages.cloudCompute;
 import com.codeborne.selenide.Condition;
 import ui.elements.DataTable;
 
+import java.util.List;
+
+import static ui.t1.pages.cloudCompute.VmList.VmTable.COLUMN_NAME;
+
 public class VmList {
 
     public VmCreate addVm(){
@@ -11,8 +15,12 @@ public class VmList {
     }
 
     public Vm selectCompute(String name){
-        new VmTable().getRowElementByColumnValue(VmTable.COLUMN_NAME, name).shouldBe(Condition.visible).click();
+        new VmTable().getRowElementByColumnValue(COLUMN_NAME, name).shouldBe(Condition.visible).click();
         return new Vm();
+    }
+
+    public List<String> getVmList(){
+        return new VmTable().getColumnValuesList(COLUMN_NAME);
     }
 
     public static class VmTable extends DataTable {

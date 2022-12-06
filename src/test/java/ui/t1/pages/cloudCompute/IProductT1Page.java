@@ -58,7 +58,7 @@ public class IProductT1Page extends IProductPage {
     }
 
     public String getOrderId() {
-        new Menu(getBtnAction("Действия")).select("Скопировать ID");
+        Menu.byElement(getBtnAction("Действия")).select("Скопировать ID");
         new Alert().checkText("ID скопирован").checkColor(Alert.Color.GREEN).close();
         return Selenide.clipboard().getText();
     }
