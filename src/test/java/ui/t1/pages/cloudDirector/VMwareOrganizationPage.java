@@ -47,7 +47,7 @@ public class VMwareOrganizationPage {
 
     @Step("Удаление пользователя")
     public void deleteUser(String userName) {
-        new Menu(new UsersTable().getRowByColumnValue(UsersTable.COLUMN_NAME, userName).getElementByColumn(""))
+        Menu.byElement(new UsersTable().getRowByColumnValue(UsersTable.COLUMN_NAME, userName).getElementByColumn(""))
                 .select("Удалить");
         Dialog.byTitle("Подтверждение удаления").clickButton("Удалить");
         new Alert().checkText("Пользователь {} удален", userName).checkColor(Alert.Color.GREEN);
