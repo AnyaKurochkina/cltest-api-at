@@ -14,5 +14,6 @@ import java.util.List;
 public class FullTemplate {
 
     private String type;
+    private String name;
     private List<Object> value;
 }

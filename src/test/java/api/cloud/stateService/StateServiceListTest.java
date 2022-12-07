@@ -122,11 +122,11 @@ public class StateServiceListTest extends Tests {
 
     @Test
     @DisplayName("Получение списка items созданных за промежуток времени")
-    @TmsLink("")
+    @TmsLink("1343112")
     public void getItemListCreatedOverAPeriodOfTimeTest() {
-        ZonedDateTime startDt = ZonedDateTime.parse("2021-11-23T10:41:00.000000Z");
+        ZonedDateTime startDt = ZonedDateTime.parse("2022-11-23T10:41:00.000000Z");
         ZonedDateTime endDt = ZonedDateTime.parse("2022-11-23T12:42:00.000000Z");
-        List<Item> list = getItemsListByFilter(String.format("created_row_dt__gte=%s&created_row_dt__lt=%s", startDt.toString(), endDt.toString()));
+        List<Item> list = getItemsListByFilter(String.format("created_row_dt__gte=%s&created_row_dt__lt=%s", startDt, endDt));
         for (Item item : list) {
             ZonedDateTime createdRowDt = ZonedDateTime.parse(item.getCreatedRowDt());
             assertTrue((createdRowDt.isAfter(startDt) || createdRowDt.isEqual(startDt)) && createdRowDt.isBefore(endDt),

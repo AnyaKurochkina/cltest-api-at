@@ -78,23 +78,23 @@ public class OrgDirectionNegativeTest extends Tests {
         OrgDirection.builder()
                 .name("NameWithUppercase")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         OrgDirection.builder()
                 .name("nameWithUppercaseInMiddle")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         OrgDirection.builder()
                 .name("имя")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         OrgDirection.builder()
                 .name("Имя")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         OrgDirection.builder()
                 .name("a&b&c")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         OrgDirection.builder()
                 .name("")
                 .build()
