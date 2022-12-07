@@ -167,6 +167,7 @@ public class ProductListTest extends Tests {
 
     @DisplayName("Получение списка products export в форматах xml/csv/json")
     @TmsLink("1081759")
+    @Disabled
     @Test
     public void getProductExportListXml() {
         String xml = "xml";
