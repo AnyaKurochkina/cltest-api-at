@@ -4,6 +4,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import ui.t1.pages.cloudCompute.*;
+import ui.t1.pages.cloudDirector.CloudDirectorPage;
 
 import static com.codeborne.selenide.Selenide.$x;
 

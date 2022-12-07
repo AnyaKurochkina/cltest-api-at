@@ -1,4 +1,4 @@
-package models.t1;
+package models.t1.imageService;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;

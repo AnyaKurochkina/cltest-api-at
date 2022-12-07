@@ -34,7 +34,13 @@ public class Dialog implements TypifiedElement {
     public Dialog setDropDownValue(String label,String value){
         SelenideElement element = dialog.$x(String.format("descendant::div[label[starts-with(.,'%s')]]/div/input", label));
         DropDown dropDown = new DropDown(element);
-        dropDown.selectByTextContains(value);
+        dropDown.select(value);
+        return this;
+    }
+
+    public Dialog setDropDownValue(SelenideElement element, String value) {
+        DropDown dropDown = new DropDown(element);
+        dropDown.select(value);
         return this;
     }
 

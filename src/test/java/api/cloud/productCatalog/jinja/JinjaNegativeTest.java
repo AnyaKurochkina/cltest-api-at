@@ -79,23 +79,23 @@ public class JinjaNegativeTest extends Tests {
         Action.builder()
                 .actionName("NameWithUppercase")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Action.builder()
                 .actionName("nameWithUppercaseInMiddle")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Action.builder()
                 .actionName("имя")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Action.builder()
                 .actionName("Имя")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Action.builder()
                 .actionName("a&b&c")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Action.builder()
                 .actionName("")
                 .build()

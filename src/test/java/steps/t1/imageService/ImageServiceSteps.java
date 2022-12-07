@@ -3,9 +3,9 @@ package steps.t1.imageService;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
-import models.t1.Image;
-import models.t1.ImageGroups;
-import models.t1.Marketing;
+import models.t1.imageService.Image;
+import models.t1.imageService.ImageGroups;
+import models.t1.imageService.Marketing;
 import org.json.JSONObject;
 import steps.Steps;
 
