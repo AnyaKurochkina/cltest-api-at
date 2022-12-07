@@ -28,7 +28,7 @@ import java.util.Random;
 @Log4j2
 public class UiCloudComputeTest extends Tests {
     Project project;
-    String availabilityZone = "ru-central1-a";
+    String availabilityZone = "ru-central1-c";
     SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
     String hddTypeOne = "HDD";
     String hddTypeSecond = "HDD";
@@ -37,8 +37,8 @@ public class UiCloudComputeTest extends Tests {
 //        Project project = Project.builder().isForOrders(true).build().createObject();
 //        String parentFolder = AuthorizerSteps.getParentProject(project.getId());
 //        this.project = Project.builder().projectName("Проект для тестов Cloud Compute").folderName(parentFolder).build().createObjectPrivateAccess();
-//        this.project = Project.builder().id("proj-6opt7sq1fg").build();
-        this.project = Project.builder().id("proj-0x1sunfqu2").build();
+        this.project = Project.builder().id("proj-6opt7sq1fg").build();
+//        this.project = Project.builder().id("proj-0x1sunfqu2").build();
     }
 
     @BeforeEach
@@ -376,6 +376,83 @@ public class UiCloudComputeTest extends Tests {
                 .goToPublicIps()
                 .selectIp(ip)
                 .runActionWithCheckCost(CompareType.LESS, newIpPage::delete);
+    }
+
+    @Test
+    @DisplayName("Создать снимок из отключенного диска")
+    void createSnapshotFromDetachDisk() {
+        new IndexPage().goToSshKeys().addKey("default", "root");
+        String vmName = "AT-UI-" + Math.abs(new Random().nextInt());
+        VmCreate vm = new IndexPage()
+                .goToVirtualMachine()
+                .addVm()
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setAvailabilityZone(availabilityZone)
+                .setName(vmName)
+                .addSecurityGroups("default")
+                .setSshKey("default")
+                .clickOrder();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        String orderIdVm = vmPage.getOrderId();
+
+
+        DiskCreate disk = new IndexPage()
+                .goToDisks()
+                .addDisk()
+                .setAvailabilityZone(availabilityZone)
+                .setName("DISK-" + Math.abs(new Random().nextInt()))
+                .setSize(4)
+                .clickOrder();
+        //Todo: Временный фикс
+        Waiting.sleep(40000);
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
+        String orderIdDisk = diskPage.getOrderId();
+
+        String snapshotName = "SNAP-" + disk.getName();
+        diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(snapshotName));
+
+        Snapshot snapshotPage = new IndexPage().goToSnapshots().selectSnapshot(snapshotName)/*.checkCreate()*/;
+
+        String volumeId = StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdDisk))
+                .filter(e-> e.getType().equals("volume"))
+                .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=volume")).getItemId();
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdDisk))
+                .filter(e -> e.getSrcOrderId().equals(orderIdDisk))
+                .filter(e -> e.getSize().equals(disk.getSize()))
+                .filter(e -> e.getParent().equals(volumeId))
+                .filter(e -> e.getType().equals("snapshot"))
+                .count(), "Item snapshot не соответствует условиям или не найден");
+
+        Disk updateDisk = new DiskList().selectDisk(disk.getName());
+        updateDisk.runActionWithCheckCost(CompareType.EQUALS, () -> updateDisk.attachComputeVolume(vm.getName(), false));
+
+        String instanceId = StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(e-> e.getType().equals("instance"))
+                .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=instance")).getItemId();
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(i -> i.getType().equals("snapshot"))
+                .filter(e -> e.getParent().equals(volumeId))
+                .count(), "Item snapshot не соответствует условиям или не найден");
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(i -> i.getType().equals("volume"))
+                .filter(e -> e.getParent().equals(instanceId))
+                .count(), "Item volume не соответствует условиям или не найден");
+
+
+
+
+        snapshotPage.runActionWithCheckCost(CompareType.LESS, snapshotPage::delete);
+        new IndexPage()
+                .goToDisks()
+                .selectDisk(disk.getName())
+                .runActionWithCheckCost(CompareType.LESS, diskPage::delete);
     }
 
     @Test

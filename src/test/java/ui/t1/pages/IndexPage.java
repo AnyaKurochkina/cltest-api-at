@@ -14,6 +14,7 @@ public class IndexPage {
     final SelenideElement linkCloudDirector = $x("//a[.='Cloud Director']");
     final SelenideElement linkDisks = $x("//a[.='Диски']");
     final SelenideElement linkSshKeys = $x("//a[.='SSH-ключи']");
+    final SelenideElement linkSnapshots = $x("//a[.='Снимки']");
     final SelenideElement linkVirtualMachines = $x("//a[.='Виртуальные машины']");
     final SelenideElement linkSecurityGroups = $x("//a[.='Группы безопасности']");
     final SelenideElement linkPublicIps = $x("//a[.='Публичные IP-адреса']");
@@ -56,6 +57,13 @@ public class IndexPage {
         linkCloudEngine.click();
         linkDisks.click();
         return new DiskList();
+    }
+
+    @Step("Переход на страницу Снимки")
+    public SnapshotList goToSnapshots() {
+        linkCloudEngine.click();
+        linkSnapshots.click();
+        return new SnapshotList();
     }
 
     @Step("Переход на страницу Публичные IP-адреса")
