@@ -9,8 +9,9 @@ import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.cloud.productCatalog.action.Action;
 import models.cloud.feedService.action.EventTypeProvider;
+import models.cloud.productCatalog.action.Action;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
@@ -59,7 +60,9 @@ public class ForbiddenAction extends Entity {
         jsonTemplate = "productCatalog/forbiddenAction/createForbiddenAction.json";
         productName = "/api/v1/forbidden_actions/";
         if (actionId == null) {
-            Action action = Action.builder().actionName("action_for_forbidden_action_api_test").build().createObject();
+            Action action = Action.builder().actionName(RandomStringUtils.randomAlphabetic(10).toLowerCase())
+                    .build()
+                    .createObject();
             actionId = action.getActionId();
         }
         return this;
