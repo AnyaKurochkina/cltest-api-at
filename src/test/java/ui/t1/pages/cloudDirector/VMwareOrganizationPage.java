@@ -36,7 +36,7 @@ public class VMwareOrganizationPage {
         new UsersTable().clickAdd();
         Dialog.byTitle("Добавить пользователя")
                 .setInputValue("Логин локального пользователя", login)
-                .setDropDownValue(roleDropDown, role)
+                .setDropDownValue(new DropDown(roleDropDown), role)
                 .setInputValue("Пароль", password)
                 .setInputValue("Подтверждение пароля", password)
                 .clickButton("Добавить");

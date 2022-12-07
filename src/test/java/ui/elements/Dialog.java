@@ -38,8 +38,7 @@ public class Dialog implements TypifiedElement {
         return this;
     }
 
-    public Dialog setDropDownValue(SelenideElement element, String value) {
-        DropDown dropDown = new DropDown(element);
+    public Dialog setDropDownValue(DropDown dropDown, String value) {
         dropDown.select(value);
         return this;
     }
