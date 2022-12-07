@@ -13,10 +13,10 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.Objects;
 
-import static com.codeborne.selenide.Selenide.$$x;
-import static core.helper.StringUtils.$x;
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
+import static com.codeborne.selenide.Selenide.$$x;
+import static core.helper.StringUtils.$x;
 
 public class DropDown implements TypifiedElement {
     private final ElementsCollection options = $$x("//ul[@role='listbox']/li");
@@ -25,8 +25,6 @@ public class DropDown implements TypifiedElement {
 
     public DropDown(SelenideElement element) {
         this.element = element;
-        if(Objects.isNull(element.getValue()))
-            Waiting.sleep(2000);
     }
 
     public static DropDown byLabel(String label) {
@@ -105,6 +103,9 @@ public class DropDown implements TypifiedElement {
     }
 
     public DropDown hover() {
+        if (Objects.isNull(element.getValue())) {
+            Waiting.sleep(2000);
+        }
         element.scrollIntoView(scrollCenter);
         element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
         return this;
