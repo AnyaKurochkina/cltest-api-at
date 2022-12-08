@@ -17,6 +17,7 @@ import models.cloud.subModels.KafkaTopic;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+import steps.references.ReferencesStep;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -203,7 +204,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void upgradeVersion() {
-        OrderServiceSteps.executeAction("kafka_release_upgrade_version", this, new JSONObject("{dumb: \"empty\"}"), this.projectId);
+        OrderServiceSteps.executeAction("kafka_release_upgrade_version", this, new JSONObject().put("accept", true), this.projectId);
     }
 
     public void upgrade281() {
@@ -216,15 +217,23 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     @SneakyThrows
-    public void updateCerts() {
+    @Override
+    protected void updateCerts(String action) {
         Date dateBeforeUpdate;
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
-        super.updateCerts("kafka_update_certs");
+        OrderServiceSteps.executeAction(action, this, new JSONObject().put("accept", true), this.getProjectId());
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
-//        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
         Assertions.assertNotEquals(0, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
+    }
+
+    public void updateCerts() {
+        updateCerts("kafka_update_certs");
+    }
+
+    public void updateCertsInterrupting() {
+        updateCerts("kafka_update_certs_interrupting");
     }
 
     public void expandMountPoint() {
@@ -239,7 +248,7 @@ public class ApacheKafkaCluster extends IProduct {
         int size = 10;
         String mount = "/app";
         Float sizeBefore = (Float) OrderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount, mount));
-        OrderServiceSteps.executeAction("kafka_expand_mount_point", this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}"), this.getProjectId());
+        OrderServiceSteps.executeAction("kafka_expand_mount_point", this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}").put("accept", true), this.getProjectId());
         float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
         Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }

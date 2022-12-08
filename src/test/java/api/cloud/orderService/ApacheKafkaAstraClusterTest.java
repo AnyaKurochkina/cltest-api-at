@@ -52,6 +52,15 @@ public class ApacheKafkaAstraClusterTest extends Tests {
         }
     }
 
+    @TmsLink("1348294")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить кластерный сертификат (аварийно) {0}")
+    void updateCertsInterrupting(ApacheKafkaCluster product) {
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.updateCertsInterrupting();
+        }
+    }
 
     @TmsLinks({@TmsLink("847099"),@TmsLink("847105")})
     @Tag("actions")
