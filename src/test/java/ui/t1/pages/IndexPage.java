@@ -1,5 +1,6 @@
 package ui.t1.pages;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
@@ -18,6 +19,10 @@ public class IndexPage {
     final SelenideElement linkVirtualMachines = $x("//a[.='Виртуальные машины']");
     final SelenideElement linkSecurityGroups = $x("//a[.='Группы безопасности']");
     final SelenideElement linkPublicIps = $x("//a[.='Публичные IP-адреса']");
+
+    public static void go() {
+        $x("//img[contains(@alt,'logo')]").shouldBe(Condition.visible).click();
+    }
 
     @Step("Переход на страницу T1 Cloud Engine")
     public CloudEngine goToCloudEngine() {

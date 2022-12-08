@@ -51,8 +51,8 @@ public class IProductT1Page extends IProductPage {
 
     @Override
     public void waitChangeStatus(Duration duration) {
-//        if(waitStatus.exists())
-            waitStatus.shouldNot(Condition.visible, duration);
+        if(waitStatus.exists())
+            waitStatus.scrollIntoView(TypifiedElement.scrollCenter).shouldNot(Condition.visible, duration);
 //        else
 //            EntitiesUtils.waitStatus(new TopInfo(), Disk.TopInfo.POWER_STATUS_DELETED, duration);
     }

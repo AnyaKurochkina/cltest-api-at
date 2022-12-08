@@ -264,6 +264,8 @@ public abstract class IProductPage {
         TypifiedElement.refresh();
         currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
         Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
+        if(currentCost == preBillingCostAction && preBillingCostAction == 0)
+            return;
         if (type == CompareType.MORE)
             Assertions.assertTrue(preBillingCostAction > currentCost, String.format("%f <= %f", preBillingCostAction, currentCost));
         else if (type == CompareType.LESS)
