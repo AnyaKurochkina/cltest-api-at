@@ -194,6 +194,8 @@ public class ClickHouse extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.clickhouse_user_ad_groups[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.clickhouse_app_admin_ad_groups[0].groups[0]", accessGroup.getPrefixName())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.clickhouse_user", clickhouseUser)
                 .set("$.order.attrs.clickhouse_password", clickhousePassword)

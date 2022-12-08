@@ -41,6 +41,30 @@
             "cloud-crux-vasilev"
           ]
         }
+      ],
+      "system_adm_groups": [
+        {
+          "role": "system_adm_groups",
+          "groups": [
+            "cloud-plux-group-at"
+          ]
+        }
+      ],
+      "clickhouse_user_ad_groups": [
+        {
+          "role": "clickhouse_user_ad_groups",
+          "groups": [
+            "cloud-plux-group-at"
+          ]
+        }
+      ],
+      "clickhouse_app_admin_ad_groups": [
+        {
+          "role": "clickhouse_app_admin_ad_groups",
+          "groups": [
+            "cloud-plux-group-at"
+          ]
+        }
       ]
     },
     "count": 1,
