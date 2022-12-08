@@ -25,7 +25,7 @@ public class EntitiesUtils {
 
     private static final ThreadLocal<Double> preBillingPrice = new ThreadLocal<>();
 
-    public static double getPreBillingPrice() {
+    public static Double getPreBillingPrice() {
         return preBillingPrice.get();
     }
 
@@ -33,7 +33,7 @@ public class EntitiesUtils {
         if(Product.getCalculationDetails().exists()) {
             preBillingPrice.set(getPreBillingCostAction($x("//*[@data-testid='new-order-details-price' and contains(.,',')]").shouldBe(Condition.visible)));
         }
-        else preBillingPrice.set(0.0);
+        else preBillingPrice.set(null);
     }
 
     @Step("Получение стоимости предбиллинга")
@@ -56,6 +56,12 @@ public class EntitiesUtils {
                 .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                 .stream().map(e -> new ProductStatus(e).getStatus()).collect(Collectors.toList());
         log.debug("Итоговый статус: {}", titles);
+    }
+
+    public static void waitStatus(Table table, String status, Duration duration) {
+        table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")
+                .shouldBe(CollectionCondition.anyMatch("Ожидание заверешения действия", e ->
+                        new ProductStatus(e).getStatus().equals(status)), duration);
     }
 
     public static void clickOrder(){

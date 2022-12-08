@@ -28,6 +28,7 @@
           "file_system": "xfs"
         }
       ],
+      "clickhouse_users": "user",
       "clickhouse_db": "dbname",
       "ad_integration": true,
       "ch_customer_password": "XcMYBatz2KNlctnmRYitgcSNQxQejZKV4I71lJGu8t",
@@ -39,6 +40,30 @@
           "role": "superuser",
           "groups": [
             "cloud-crux-vasilev"
+          ]
+        }
+      ],
+      "system_adm_groups": [
+        {
+          "role": "system_adm_groups",
+          "groups": [
+            "cloud-plux-group-at"
+          ]
+        }
+      ],
+      "clickhouse_user_ad_groups": [
+        {
+          "role": "clickhouse_user_ad_groups",
+          "groups": [
+            "cloud-plux-group-at"
+          ]
+        }
+      ],
+      "clickhouse_app_admin_ad_groups": [
+        {
+          "role": "clickhouse_app_admin_ad_groups",
+          "groups": [
+            "cloud-plux-group-at"
           ]
         }
       ]
