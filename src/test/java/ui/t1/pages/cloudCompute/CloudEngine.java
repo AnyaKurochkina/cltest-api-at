@@ -5,7 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 
 import static core.helper.StringUtils.$x;
 
-public class CloudEnginePage {
+public class CloudEngine {
     SelenideElement btnConnect = $x("//button[.='Подключить']");
     SelenideElement connected = $x("//*[.='Сервис Cloud Compute подключен']");
 

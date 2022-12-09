@@ -4,6 +4,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import ui.t1.pages.cloudCompute.*;
+import ui.t1.pages.cloudDirector.CloudDirectorPage;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -18,9 +19,9 @@ public class IndexPage {
     final SelenideElement linkPublicIps = $x("//a[.='Публичные IP-адреса']");
 
     @Step("Переход на страницу T1 Cloud Engine")
-    public CloudEnginePage goToCloudEngine() {
+    public CloudEngine goToCloudEngine() {
         linkCloudEngine.click();
-        return new CloudEnginePage();
+        return new CloudEngine();
     }
 
     @Step("Переход на страницу Cloud Director")
@@ -30,37 +31,37 @@ public class IndexPage {
     }
 
     @Step("Переход на страницу SSH-ключи")
-    public SshKeysPage goToSshKeys() {
+    public SshKeyList goToSshKeys() {
         linkCloudEngine.click();
         linkSshKeys.click();
-        return new SshKeysPage();
+        return new SshKeyList();
     }
 
     @Step("Переход на страницу Виртуальные машины")
-    public VmsPage goToVirtualMachine() {
+    public VmList goToVirtualMachine() {
         linkCloudEngine.click();
         linkVirtualMachines.click();
-        return new VmsPage();
+        return new VmList();
     }
 
     @Step("Переход на страницу Группы безопасности")
-    public SecurityGroupsPage goToSecurityGroups() {
+    public SecurityGroupList goToSecurityGroups() {
         linkCloudEngine.click();
         linkSecurityGroups.click();
-        return new SecurityGroupsPage();
+        return new SecurityGroupList();
     }
 
     @Step("Переход на страницу Диски")
-    public DisksPage goToDisks() {
+    public DiskList goToDisks() {
         linkCloudEngine.click();
         linkDisks.click();
-        return new DisksPage();
+        return new DiskList();
     }
 
     @Step("Переход на страницу Публичные IP-адреса")
-    public PublicIpsPage goToPublicIps() {
+    public PublicIpList goToPublicIps() {
         linkCloudEngine.click();
         linkPublicIps.click();
-        return new PublicIpsPage();
+        return new PublicIpList();
     }
 }

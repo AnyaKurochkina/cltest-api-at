@@ -82,11 +82,11 @@ public class ServiceNegativeTest extends Tests {
     @TmsLink("643518")
     @Test
     public void createServiceWithInvalidCharacters() {
-        Service.builder().name("NameWithUppercase").build().negativeCreateRequest(500);
-        Service.builder().name("nameWithUppercaseInMiddle").build().negativeCreateRequest(500);
-        Service.builder().name("имя").build().negativeCreateRequest(500);
-        Service.builder().name("Имя").build().negativeCreateRequest(500);
-        Service.builder().name("a&b&c").build().negativeCreateRequest(500);
+        Service.builder().name("NameWithUppercase").build().negativeCreateRequest(400);
+        Service.builder().name("nameWithUppercaseInMiddle").build().negativeCreateRequest(400);
+        Service.builder().name("имя").build().negativeCreateRequest(400);
+        Service.builder().name("Имя").build().negativeCreateRequest(400);
+        Service.builder().name("a&b&c").build().negativeCreateRequest(400);
         Service.builder().name("").build().negativeCreateRequest(400);
         Service.builder().name(" ").build().negativeCreateRequest(400);
     }
@@ -129,7 +129,7 @@ public class ServiceNegativeTest extends Tests {
                 .version("1.0.0")
                 .build().createObject();
         String serviceId = service.getId();
-        steps.partialUpdateObject(serviceId, new JSONObject().put("current_version", "2")).assertStatus(500);
+        steps.partialUpdateObject(serviceId, new JSONObject().put("current_version", "2")).assertStatus(400);
     }
 
     @DisplayName("Негативный тест на создание сервиса c пустым полем start_btn_label")

@@ -33,6 +33,12 @@ public class Table implements TypifiedElement {
         init(table);
     }
 
+    public Table(String columnName, int index) {
+        open();
+        table = $x("(//table[thead/tr/th[.='{}']])" + TypifiedElement.postfix, columnName, TypifiedElement.getIndex(index)).shouldBe(Condition.visible);
+        init(table);
+    }
+
     public Table(SelenideElement table) {
         open();
         init(table);

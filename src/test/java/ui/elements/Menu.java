@@ -1,20 +1,52 @@
 package ui.elements;
 
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.SelenideElement;
+import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.WebElement;
+
+import java.time.Duration;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
-import static core.helper.StringUtils.$x;
+import static core.helper.StringUtils.$$x;
 
-public class Menu implements TypifiedElement{
+public class Menu implements TypifiedElement {
     SelenideElement element;
 
-    public Menu(SelenideElement element) {
-        this.element = element.shouldBe(activeCnd).shouldBe(clickableCnd);
+    private Menu(SelenideElement element) {
+        this.element = element.shouldBe(activeCnd);
     }
 
-    public void select(String item){
-        element.click();
-        $x("//ul/li[.='{}']", item).shouldBe(activeCnd).shouldBe(clickableCnd).click();
+    public static Menu byElement(SelenideElement element){
+        return new Menu(element);
+    }
+
+    public void select(String item) {
+        element.scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).shouldBe(new ClickAndRunMenu(item), Duration.ofSeconds(3));
+        getItem(item).hover().shouldBe(clickableCnd).click();
+    }
+
+    private SelenideElement getItem(String item) {
+        return $$x("//ul/li[.='{}']", item).filter(Condition.visible).first();
+    }
+
+    private class ClickAndRunMenu extends Condition {
+        private final String item;
+
+        public ClickAndRunMenu(String item) {
+            super("Ожидание отображения меню");
+            this.item = item;
+        }
+
+        @Override
+        public boolean apply(@NotNull Driver driver, @NotNull WebElement webElement) {
+            if (getItem(item).isDisplayed())
+                return true;
+            if (webElement.isDisplayed())
+                webElement.click();
+            return getItem(item).isDisplayed();
+        }
     }
 }

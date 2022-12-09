@@ -8,4 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Status {
     private String value;
+    private String label;
+    private String type;
+
+    public Status(String value) {
+        this.value = value;
+    }
 }

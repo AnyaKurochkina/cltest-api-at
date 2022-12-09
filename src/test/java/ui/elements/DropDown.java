@@ -25,7 +25,7 @@ public class DropDown implements TypifiedElement {
 
     public DropDown(SelenideElement element) {
         this.element = element;
-        if(Objects.isNull(element.getValue()))
+        if (Objects.isNull(element.getValue()))
             Waiting.sleep(2000);
     }
 
@@ -62,6 +62,10 @@ public class DropDown implements TypifiedElement {
     @Step("Выбрать в select элемент с названием '{value}'")
     public void selectByTextContains(String value) {
         hover();
+        if (element.$x(String.format("input[contains(@value,'%s')]", value)).exists())
+            return;
+        if (Objects.nonNull(element.getValue()) && element.getValue().contains(value))
+            return;
         element.click();
         $x("//li[contains(.,'{}')]", value)
                 .shouldBe(Condition.enabled)
@@ -126,6 +130,10 @@ public class DropDown implements TypifiedElement {
 
     public String getValue() {
         return element.$x("input").getValue();
+    }
+
+    public String getText() {
+        return element.getText();
     }
 
     private boolean isDataValue() {

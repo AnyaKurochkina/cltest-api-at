@@ -23,4 +23,7 @@ public class CompactTemplate {
     private Object params;
     @JsonProperty("Endpoint")
     private String endpoint;
+    @JsonProperty("system")
+    private Object system;
+    private Object bootable;
 }

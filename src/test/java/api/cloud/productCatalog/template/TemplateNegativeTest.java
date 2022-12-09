@@ -94,23 +94,23 @@ public class TemplateNegativeTest extends Tests {
         Template.builder()
                 .name("NameWithUppercase")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Template.builder()
                 .name("nameWithUppercaseInMiddle")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Template.builder()
                 .name("имя")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Template.builder()
                 .name("Имя")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Template.builder()
                 .name("a&b&c")
                 .build()
-                .negativeCreateRequest(500);
+                .negativeCreateRequest(400);
         Template.builder()
                 .name("")
                 .build()

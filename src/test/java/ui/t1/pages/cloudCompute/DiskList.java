@@ -2,26 +2,26 @@ package ui.t1.pages.cloudCompute;
 
 import com.codeborne.selenide.Condition;
 import ui.elements.DataTable;
-import ui.elements.Menu;
-import ui.elements.Table;
 
-import static ui.t1.pages.cloudCompute.DisksPage.DisksPageTable.COLUMN_NAME;
+import java.util.List;
 
-public class DisksPage {
+import static ui.t1.pages.cloudCompute.DiskList.DisksPageTable.COLUMN_NAME;
 
-    public DiskCreatePage addDisk(){
+public class DiskList {
+
+    public DiskCreate addDisk(){
         new DisksPageTable().clickAdd();
-        return new DiskCreatePage();
+        return new DiskCreate();
     }
 
-    public DiskPage selectDisk(String name){
+    public Disk selectDisk(String name){
         new DisksPageTable().getRowElementByColumnValueContains(COLUMN_NAME, name).shouldBe(Condition.visible).click();
-        return new DiskPage();
+        return new Disk();
     }
 
-//    public Menu getMenuRow(String disk){
-//        return new Menu(new DisksPageTable().getRowByColumnValueContains(COLUMN_NAME, disk).getElementByColumn("").$x("button"));
-//    }
+    public List<String> getDiskList(){
+        return new DisksPageTable().getColumnValuesList(COLUMN_NAME);
+    }
 
     public static class DisksPageTable extends DataTable {
         public static final String COLUMN_NAME = "Имя";

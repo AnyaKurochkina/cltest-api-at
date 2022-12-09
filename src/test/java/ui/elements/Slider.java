@@ -22,7 +22,7 @@ public class Slider extends Input {
 
     @Step("Получение Slider по label {label}")
     public static Slider byLabel(String label) {
-        return new Slider($x("(//ancestor::*[starts-with(.,'{}')]/parent::*)[last()]", label));
+        return new Slider($x("(//*[starts-with(.,'{}')]/parent::*)[last()]", label));
     }
 
     @Override
