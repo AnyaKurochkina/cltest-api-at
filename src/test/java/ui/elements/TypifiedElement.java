@@ -22,6 +22,7 @@ public interface TypifiedElement {
             super("Wait time");
             this.ms = ms;
         }
+
         @Override
         public boolean apply(@NotNull Driver driver, @NotNull WebElement webElement) {
             Waiting.sleep(ms);
@@ -29,27 +30,27 @@ public interface TypifiedElement {
         }
     }
 
-    static void refresh(){
+    static void refresh() {
         Selenide.refresh();
         checkProject();
     }
 
-//  *[contains(text(), '₽/сут.')]    button[.='Действия']
-    static SelenideElement getNearElement(@Language("XPath")String xpathSearchElement, @Language("XPath")String xpathNearElement){
-        return $$x(String.format("(//%s/ancestor-or-self::*[count(.//%s) = 1])[last()]//%s", xpathNearElement, xpathSearchElement,xpathSearchElement)).filter(Condition.visible).first();
+    //  *[contains(text(), '₽/сут.')]    button[.='Действия']
+    static SelenideElement getNearElement(@Language("XPath") String xpathSearchElement, @Language("XPath") String xpathNearElement) {
+        return $$x(String.format("(//%s/ancestor-or-self::*[count(.//%s) = 1])[last()]//%s", xpathNearElement, xpathSearchElement, xpathSearchElement)).filter(Condition.visible).first();
     }
 
-    static String getIndex(int index){
-        return (index == -1)?"last()":String.valueOf(index);
+    static String getIndex(int index) {
+        return (index == -1) ? "last()" : String.valueOf(index);
     }
 
     //TODO: До фикса доступа к балансу учеток закрываем все окна
-    static void checkProject(){
+    static void checkProject() {
 //        new Alert().checkColor(Alert.Color.GREEN).checkText("Выбран контекст").close();
         new Alert().closeAll();
     }
 
-    static void open(String url){
+    static void open(String url) {
         Selenide.open(url);
         checkProject();
     }

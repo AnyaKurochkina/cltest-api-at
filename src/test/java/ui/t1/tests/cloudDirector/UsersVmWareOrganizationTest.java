@@ -20,7 +20,6 @@ import java.util.UUID;
 
 import static steps.portalBack.VdcOrganizationSteps.createVMwareOrganization;
 import static steps.portalBack.VdcOrganizationSteps.deleteVMwareOrganization;
-import static steps.portalBack.VdcOrganizationUserSteps.createVMwareUser;
 
 @ExtendWith(ConfigExtension.class)
 @Epic("Cloud Director")
@@ -65,18 +64,60 @@ public class UsersVmWareOrganizationTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
-    @DisplayName("VMware. Удаление пользователя")
-    void deleteUserTest() {
-        String userName = "test_user";
+    @TmsLink("558975")
+    @DisplayName("VMware. Изменить пароль.")
+    void changeUserPasswordTest() {
+        String userName = "change_password_test";
         String name = UUID.randomUUID().toString().substring(25);
         VmWareOrganization vmWareOrganization = createVMwareOrganization(name, project.getId());
-        createVMwareUser(userName, project.getId(), vmWareOrganization.getName());
         try {
             new IndexPage()
                     .goToCloudDirector()
                     .goToOrganization(vmWareOrganization.getName())
                     .goToUsers()
+                    .addUser(userName, "vApp User", "12345678")
+                    .changeUserPassword(userName, "87654321");
+        } finally {
+            deleteVMwareOrganization(project.getId(), vmWareOrganization.getName());
+        }
+    }
+
+    @Test
+    @TmsLink("147526")
+    @DisplayName("VMware. Редактирование пользователя.")
+    void editUserTest() {
+        String userName = "edit_user_test";
+        String fio = "Ivan Ivanov";
+        String email = "test@test.ru";
+        String role = "vApp Author";
+        String name = UUID.randomUUID().toString().substring(25);
+        VmWareOrganization vmWareOrganization = createVMwareOrganization(name, project.getId());
+        try {
+            new IndexPage()
+                    .goToCloudDirector()
+                    .goToOrganization(vmWareOrganization.getName())
+                    .goToUsers()
+                    .addUser(userName, "vApp User", "12345678")
+                    .editUser(userName, fio, email, role)
+                    .compareUserFields(userName, fio, email, role);
+        } finally {
+            deleteVMwareOrganization(project.getId(), vmWareOrganization.getName());
+        }
+    }
+
+    @Test
+    @TmsLink("147528")
+    @DisplayName("VMware. Удаление пользователя")
+    void deleteUserTest() {
+        String userName = "test_user";
+        String name = UUID.randomUUID().toString().substring(25);
+        VmWareOrganization vmWareOrganization = createVMwareOrganization(name, project.getId());
+        try {
+            new IndexPage()
+                    .goToCloudDirector()
+                    .goToOrganization(vmWareOrganization.getName())
+                    .goToUsers()
+                    .addUser(userName, "vApp User", "12345678")
                     .deleteUser(userName);
         } finally {
             deleteVMwareOrganization(project.getId(), vmWareOrganization.getName());

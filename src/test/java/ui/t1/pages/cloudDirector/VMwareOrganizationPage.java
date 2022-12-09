@@ -8,6 +8,7 @@ import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VMwareOrganizationPage {
@@ -40,9 +41,35 @@ public class VMwareOrganizationPage {
                 .setInputValue("Пароль", password)
                 .setInputValue("Подтверждение пароля", password)
                 .clickButton("Добавить");
-        TestUtils.wait(1000);
-        assertTrue(new UsersTable().isColumnValueEquals(UsersTable.COLUMN_NAME, login));
+        TestUtils.wait(2000);
+        assertTrue(new UsersTable().isColumnValueEquals(UsersTable.COLUMN_NAME, login), "Пользователь отсутсвует.");
         return this;
+    }
+
+    @Step("Редактирование пользователя")
+    public VMwareOrganizationPage editUser(String login, String fio, String email, String role) {
+        Menu.byElement(new UsersTable().getRowByColumnValue(UsersTable.COLUMN_NAME, login).getElementByColumn(""))
+                .select("Редактировать");
+        TestUtils.wait(1000);
+        Dialog.byTitle("Редактировать пользователя")
+                .setInputValue("ФИО", fio)
+                .setInputValue("Email", email)
+                .setDropDownValue(new DropDown(roleDropDown), role)
+                .clickButton("Сохранить");
+        TestUtils.wait(2000);
+        assertTrue(new UsersTable().isColumnValueEquals(UsersTable.COLUMN_NAME, login), "Пользователь отсутсвует.");
+        return this;
+    }
+
+    @Step("Изменение пароля пользователя")
+    public void changeUserPassword(String userName, String password) {
+        Menu.byElement(new UsersTable().getRowByColumnValue(UsersTable.COLUMN_NAME, userName).getElementByColumn(""))
+                .select("Изменить пароль");
+        Dialog.byTitle("Редактирование пароля")
+                .setInputValue("Новый пароль", password)
+                .setInputValue("Подтверждение пароля", password)
+                .clickButton("Сохранить");
+        new Alert().checkText("Пароль успешно изменен").checkColor(Alert.Color.GREEN);
     }
 
     @Step("Удаление пользователя")
@@ -51,8 +78,20 @@ public class VMwareOrganizationPage {
                 .select("Удалить");
         Dialog.byTitle("Подтверждение удаления").clickButton("Удалить");
         new Alert().checkText("Пользователь {} удален", userName).checkColor(Alert.Color.GREEN);
+        TestUtils.wait(2000);
+        Assertions.assertFalse(new UsersTable().isColumnValueEquals(UsersTable.COLUMN_NAME, userName), "Пользователь найден");
+    }
+
+    public void compareUserFields(String login, String fio, String email, String role) {
+        Menu.byElement(new UsersTable().getRowByColumnValue(UsersTable.COLUMN_NAME, login).getElementByColumn(""))
+                .select("Редактировать");
         TestUtils.wait(1000);
-        Assertions.assertFalse(new UsersTable().isColumnValueEquals(UsersTable.COLUMN_NAME, userName));
+        assertEquals(fio, Dialog.byTitle("Редактировать пользователя")
+                .getInputValue("ФИО"));
+        assertEquals(email, Dialog.byTitle("Редактировать пользователя")
+                .getInputValue("Email"));
+        assertEquals(role, Dialog.byTitle("Редактировать пользователя")
+                .getDropDownText(new DropDown(roleDropDown)));
     }
 
     private static class UsersTable extends DataTable {
