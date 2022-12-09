@@ -48,10 +48,6 @@ public class Dialog implements TypifiedElement {
         return this;
     }
 
-    public String getDropDownText(DropDown dropDown) {
-        return dropDown.getText();
-    }
-
     public Dialog setTextarea(TextArea textarea, String text){
         textarea.setValue(text);
         return this;
