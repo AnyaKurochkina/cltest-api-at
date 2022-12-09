@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Db;
@@ -39,8 +38,10 @@ public class ScyllaDbCluster extends IProduct {
     Flavor flavor;
     @Builder.Default
     public List<Db> database = new ArrayList<>();
+//    @Builder.Default
+//    public List<DbUser> usersWidthPermission = new ArrayList<>();
     @Builder.Default
-    public List<DbUser> users = new ArrayList<>();
+    public List<String> users = new ArrayList<>();
 
     public Integer dc1;
     public Integer dc2;
@@ -114,9 +115,12 @@ public class ScyllaDbCluster extends IProduct {
 
     // [a-z0-9]+ 3-16
     public void createDbmsUser(String username, String password, String role) {
+        if(users.contains(username))
+            return;
         OrderServiceSteps.executeAction("scylladb_create_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\",\"dbms_role\":\"%s\"}", username, password, role)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)), "Имя пользователя отличается от создаваемого");
         log.info("createDbmsUser = " + username);
+        users.add(username);
         save();
     }
 
@@ -124,7 +128,7 @@ public class ScyllaDbCluster extends IProduct {
     public void addPermissionsUser(String dbName, String username){
         OrderServiceSteps.executeAction("scylladb_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\"}", dbName, username)));
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, username)), "Права пользователю не выданы");
-        users.add(new DbUser(dbName, username));
+//        usersWidthPermission.add(new DbUser(dbName, username));
         log.info("addPermissionsUser = " + username);
         save();
     }
@@ -132,7 +136,7 @@ public class ScyllaDbCluster extends IProduct {
     public void removePermissionsUser(String dbName, String username){
         OrderServiceSteps.executeAction("scylladb_remove_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\"}", dbName, username)));
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, username)), "Права у пользователя остались");
-        users.remove(new DbUser(dbName, username));
+//        usersWidthPermission.remove(new DbUser(dbName, username));
         log.info("removePermissionsUser = " + username);
         save();
     }
@@ -147,6 +151,7 @@ public class ScyllaDbCluster extends IProduct {
         OrderServiceSteps.executeAction("scylladb_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)),
                 String.format("Пользователь: %s не удалился", username));
+        users.remove(username);
         save();
     }
 
