@@ -67,9 +67,9 @@ public class ScyllaDbCluster extends IProduct {
         if (dc1 == null)
             dc1 = 3;
         if (dc2 == null)
-            dc1 = 0;
+            dc2 = 0;
         if (dc3 == null)
-            dc1 = 0;
+            dc3 = 0;
         return this;
     }
 
@@ -80,7 +80,6 @@ public class ScyllaDbCluster extends IProduct {
     }
 
     public JSONObject toJson() {
-        Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(getProjectId()).build().createObject();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
