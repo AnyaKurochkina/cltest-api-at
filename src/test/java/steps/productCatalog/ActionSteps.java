@@ -22,6 +22,7 @@ import static steps.productCatalog.ProductCatalogSteps.delNoDigOrLet;
 public class ActionSteps extends Steps {
 
     private static final String actionUrl = "/api/v1/actions/";
+    private static final String actionUrlV2 = "/api/v2/actions/";
 
     @Step("Получение списка действий продуктового каталога")
     public static List<Action> getActionList() {
@@ -95,9 +96,12 @@ public class ActionSteps extends Steps {
         return actionId;
     }
 
-    @Step("Удаление действия по имени")
+    @Step("Удаление действия по имени {name}")
     public static void deleteActionByName(String name) {
-        deleteActionById(getActionIdByNameWithMultiSearch(name));
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(actionUrlV2 + name + "/")
+                .assertStatus(204);
     }
 
     @Step("Проверка существования действия по имени")
@@ -113,6 +117,14 @@ public class ActionSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(actionUrl + objectId + "/")
+                .extractAs(Action.class);
+    }
+
+    @Step("Получение действия по имени {name}")
+    public static Action getActionByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(actionUrlV2 + name + "/")
                 .extractAs(Action.class);
     }
 
@@ -139,12 +151,29 @@ public class ActionSteps extends Steps {
                 .extractAs(Action.class);
     }
 
+    @Step("Копирование действия по имени {name}")
+    public static Action copyActionByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(actionUrlV2 + name + "/copy/")
+                .assertStatus(200)
+                .extractAs(Action.class);
+    }
+
     @Step("Частичное обновление действия")
     public static Response partialUpdateAction(String id, JSONObject object) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(actionUrl + id + "/");
+    }
+
+    @Step("Частичное обновление действия по имени {name}")
+    public static Response partialUpdateActionByName(String name, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .patch(actionUrlV2 + name + "/");
     }
 
     @Step("Получение списка действия по имени")
@@ -252,6 +281,15 @@ public class ActionSteps extends Steps {
                 .assertStatus(201);
     }
 
+    @Step("Загрузка действия в Gitlab по имени {name}")
+    public static Response dumpActionToGitByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(actionUrlV2 + name + "/dump_to_bitbucket/")
+                .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
+                .assertStatus(201);
+    }
+
     @Step("Выгрузка действия из Gitlab")
     public static void loadActionFromGit(JSONObject body) {
         new Http(ProductCatalogURL)
@@ -317,5 +355,21 @@ public class ActionSteps extends Steps {
             }
         }
         return false;
+    }
+
+    @Step("Экспорт действия по Id")
+    public static void exportActionById(String objectId) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(actionUrl + objectId + "/obj_export/")
+                .assertStatus(200);
+    }
+
+    @Step("Экспорт действия по имени {name}")
+    public static void exportActionByName(String name) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(actionUrlV2 + name + "/obj_export/")
+                .assertStatus(200);
     }
 }

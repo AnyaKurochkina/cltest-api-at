@@ -8,7 +8,7 @@ import ui.elements.Table;
 
 import static core.helper.StringUtils.$x;
 
-public class SecurityGroupsPage {
+public class SecurityGroupList {
 
     public void addGroup(String name, String desc){
         new SecurityGroupsTable().clickAdd();

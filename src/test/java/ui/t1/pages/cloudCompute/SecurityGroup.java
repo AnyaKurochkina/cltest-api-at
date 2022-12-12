@@ -11,7 +11,7 @@ import ui.elements.Table;
 import static core.helper.StringUtils.$x;
 
 @Getter
-public class SecurityGroupPage {
+public class SecurityGroup {
     final SelenideElement btnAddRule = $x("//button[.='Добавить']");
 
     public Rule addRole(){

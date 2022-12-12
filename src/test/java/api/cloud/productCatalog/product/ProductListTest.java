@@ -1,7 +1,6 @@
 package api.cloud.productCatalog.product;
 
 import api.Tests;
-import core.helper.http.Response;
 import httpModels.productCatalog.product.getProducts.getProductsExportList.ExportItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -10,11 +9,11 @@ import models.cloud.authorizer.Project;
 import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.Product;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import steps.resourceManager.ResourceManagerSteps;
 
 import java.util.List;
 
@@ -113,27 +112,28 @@ public class ProductListTest extends Tests {
         productList.forEach(item -> assertFalse(item.getInGeneralList()));
     }
 
-    //todo Убрать хардкод проекта логику прохождения по списку убрать.
+    //todo Передалать тест в связи с изменениями.Убрали оргинфо и envs.
     @DisplayName("Получение списка продуктов по контексту id проекта")
+    @Disabled
     @TmsLink("1039087")
     @Test
     public void getProductListWithProjectContext() {
-        Project project = Project.builder().build().createObject();
-        Response resp = ResourceManagerSteps.getProjectById(project.getId(), "project_environment");
-        String org = resp.jsonPath().getString("data.organization");
-        String infSys = resp.jsonPath().getString("data.information_system_id");
-        String envType = resp.jsonPath().getString("data.project_environment.environment_type").toLowerCase();
-        List<Product> list = getProductListByProjectContext(project.getId());
-        for (Product item : list) {
-            List<httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem> list1 = steps
-                    .getProductOrgInfoSystemById(item.getProductId()).getList();
-            assertTrue(steps.isOrgContains(list1, org));
-            for (httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem item1 : list1) {
-                List<String> informationSystems = item1.getInformationSystems();
-                assertTrue(informationSystems.contains(infSys) || informationSystems.isEmpty());
-            }
-            assertTrue(item.getEnvs().contains(envType));
-        }
+//        Project project = Project.builder().build().createObject();
+//        Response resp = ResourceManagerSteps.getProjectById(project.getId(), "project_environment");
+//        String org = resp.jsonPath().getString("data.organization");
+//        String infSys = resp.jsonPath().getString("data.information_system_id");
+//        String envType = resp.jsonPath().getString("data.project_environment.environment_type").toLowerCase();
+//        List<Product> list = getProductListByProjectContext(project.getId());
+//        for (Product item : list) {
+//            List<httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem> list1 = steps
+//                    .getProductOrgInfoSystemById(item.getProductId()).getList();
+//            assertTrue(steps.isOrgContains(list1, org));
+//            for (httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem item1 : list1) {
+//                List<String> informationSystems = item1.getInformationSystems();
+//                assertTrue(informationSystems.contains(infSys) || informationSystems.isEmpty());
+//            }
+//            assertTrue(item.getEnvs().contains(envType));
+//        }
     }
 
     @DisplayName("Получение списка категорий доступных по контексту id проекта")
@@ -167,6 +167,7 @@ public class ProductListTest extends Tests {
 
     @DisplayName("Получение списка products export в форматах xml/csv/json")
     @TmsLink("1081759")
+    @Disabled
     @Test
     public void getProductExportListXml() {
         String xml = "xml";

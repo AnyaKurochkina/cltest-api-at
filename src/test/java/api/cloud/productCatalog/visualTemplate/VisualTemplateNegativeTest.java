@@ -54,10 +54,10 @@ public class VisualTemplateNegativeTest extends Tests {
                 .set("event_provider", Collections.singletonList("docker"))
                 .set("event_type", Collections.singletonList("app"))
                 .set("is_active", true).build();
-        Response response = steps.createProductObject(jsonObject).assertStatus(422);
+        Response response = steps.createProductObject(jsonObject).assertStatus(400);
+        String expectedMsg = "['Объект не может быть создан так как event_type или event_provider имеют пересечение с другими объектами']";
         steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
-        assertEquals(name, response.jsonPath().get("name[0]").toString());
-        assertEquals(visualTemplates.getId(), response.jsonPath().get("id[0]").toString());
+        assertEquals(expectedMsg, response.jsonPath().getList("", String.class).get(0));
     }
 
     @DisplayName("Негативный тест на получение шаблона визуализации по Id без токена")
@@ -99,11 +99,11 @@ public class VisualTemplateNegativeTest extends Tests {
     @Test
     public void createVisualTemplateWithInvalidCharacters() {
         assertAll("Шаблона визуализации создался с недопустимым именем",
-                () -> steps.createProductObject(steps.createJsonObject("NameWithUppercase")).assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("имя")).assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("Имя")).assertStatus(500),
-                () -> steps.createProductObject(steps.createJsonObject("a&b&c")).assertStatus(500),
+                () -> steps.createProductObject(steps.createJsonObject("NameWithUppercase")).assertStatus(400),
+                () -> steps.createProductObject(steps.createJsonObject("nameWithUppercaseInMiddle")).assertStatus(400),
+                () -> steps.createProductObject(steps.createJsonObject("имя")).assertStatus(400),
+                () -> steps.createProductObject(steps.createJsonObject("Имя")).assertStatus(400),
+                () -> steps.createProductObject(steps.createJsonObject("a&b&c")).assertStatus(400),
                 () -> steps.createProductObject(steps.createJsonObject("")).assertStatus(400),
                 () -> steps.createProductObject(steps.createJsonObject(" ")).assertStatus(400)
         );
@@ -114,6 +114,6 @@ public class VisualTemplateNegativeTest extends Tests {
     @Test
     public void createInvalidVisualTemplate() {
         steps.createProductObject(JsonHelper.getJsonFromFile("productCatalog/itemVisualTemplate/InvalidItemVisual.json"))
-                .assertStatus(500);
+                .assertStatus(400);
     }
 }
