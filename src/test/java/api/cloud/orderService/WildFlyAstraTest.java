@@ -128,22 +128,13 @@ public class WildFlyAstraTest extends Tests {
         }
     }
 
-    @TmsLink("1356702")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Остановить сервис {0}")
-    void stopService(WildFly product) {
-        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.stopService();
-        }
-    }
-
-    @TmsLink("1356700")
+    @TmsLinks({@TmsLink("1356700"),@TmsLink("1356702")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Запустить сервис {0}")
     void startService(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.stopService();
             wildFly.startService();
         }
     }
