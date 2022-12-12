@@ -288,7 +288,7 @@ public class VisualTemplateTest extends Tests {
         String name = "get_by_provider_type_item_visual_template_test_api";
         ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
-                .eventProvider(Collections.singletonList("docker"))
+                .eventProvider(Collections.singletonList("hcp"))
                 .eventType(Collections.singletonList("app"))
                 .compactTemplate(compactTemplate)
                 .fullTemplate(fullTemplate)

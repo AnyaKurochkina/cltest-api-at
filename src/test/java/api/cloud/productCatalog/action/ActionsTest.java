@@ -266,14 +266,14 @@ public class ActionsTest extends Tests {
     @DisplayName("Экспорт действия по Id")
     @TmsLink("642499")
     @Test
-    public void exportActionById() {
+    public void exportActionByIdTest() {
         String actionName = "action_export_test_api";
         Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
-        steps.exportById(action.getActionId());
+        exportActionById(action.getActionId());
     }
 
     //todo Добавить проверку на allowed groups

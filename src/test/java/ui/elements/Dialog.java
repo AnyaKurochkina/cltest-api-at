@@ -31,10 +31,19 @@ public class Dialog implements TypifiedElement {
         return this;
     }
 
-    public Dialog setDropDownValue(String label,String value){
+    public String getInputValue(String label){
         SelenideElement element = dialog.$x(String.format("descendant::div[label[starts-with(.,'%s')]]/div/input", label));
-        DropDown dropDown = new DropDown(element);
-        dropDown.selectByTextContains(value);
+        return new Input(element).getValue();
+    }
+
+    public Dialog setDropDownValue(String label,String value){
+        DropDown dropDown = DropDown.byLabel(label);
+        dropDown.select(value);
+        return this;
+    }
+
+    public Dialog setDropDownValue(DropDown dropDown, String value) {
+        dropDown.select(value);
         return this;
     }
 

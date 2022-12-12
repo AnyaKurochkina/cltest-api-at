@@ -55,10 +55,6 @@
             "number": {
               "type": "integer"
             },
-            "envs": {
-              "type": "array",
-              "items": {}
-            },
             "category": {
               "type": "string"
             },
@@ -107,7 +103,6 @@
             "description",
             "is_open",
             "number",
-            "envs",
             "category",
             "category_v2",
             "payment",

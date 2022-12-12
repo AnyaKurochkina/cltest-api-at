@@ -10,6 +10,7 @@ import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.NotFoundException;
+import ru.testit.annotations.BeforeAll;
 import ru.testit.annotations.Title;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
@@ -22,9 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import static ui.t1.pages.cloudCompute.PublicIpsPage.IpTable.COLUMN_IP;
-
 @ExtendWith(ConfigExtension.class)
+@ExtendWith(BeforeAllExtension.class)
 @Epic("Cloud Compute")
 @Tags({@Tag("ui_cloud_compute")})
 @Log4j2
@@ -34,6 +34,8 @@ public class UiCloudComputeTest extends Tests {
     SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
     String hddTypeOne = "HDD";
     String hddTypeSecond = "HDD";
+    String securityGroup = "default";
+    String sshKey = "default";
 
     public UiCloudComputeTest() {
 //        Project project = Project.builder().isForOrders(true).build().createObject();
@@ -50,6 +52,12 @@ public class UiCloudComputeTest extends Tests {
                 .signIn(Role.CLOUD_ADMIN);
     }
 
+    @BeforeAll
+    public void beforeAll() {
+        new IndexPage().goToSshKeys().addKey(sshKey, "root");
+        IndexPage.go();
+    }
+
     @Test
     @Owner("Checked")
     @DisplayName("Создание/Удаление публичного IP")
@@ -57,7 +65,7 @@ public class UiCloudComputeTest extends Tests {
         String ip = new IndexPage()
                 .goToPublicIps()
                 .addIp(availabilityZone);
-        PublicIpPage ipPage = new PublicIpsPage().selectIp(ip).checkCreate();
+        PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
 
         String orderId = ipPage.getOrderId();
 
@@ -77,7 +85,7 @@ public class UiCloudComputeTest extends Tests {
     @Test
     @DisplayName("Создание/Удаление диска")
     void createDisk() {
-        DiskCreatePage disk = new IndexPage()
+        DiskCreate disk = new IndexPage()
                 .goToDisks()
                 .addDisk()
                 .setAvailabilityZone(availabilityZone)
@@ -87,7 +95,7 @@ public class UiCloudComputeTest extends Tests {
 
         //Todo: Временный фикс
         Waiting.sleep(40000);
-        DiskPage diskPage = new DisksPage().selectDisk(disk.getName()).checkCreate();
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
 
         String orderId = diskPage.getOrderId();
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
@@ -104,9 +112,8 @@ public class UiCloudComputeTest extends Tests {
     @Test
     @DisplayName("Создание/Удаление ВМ c одним доп диском (auto_delete = on) boot_disk_auto_delete = off")
     void createVm() {
-        new IndexPage().goToSshKeys().addKey("default", "root");
         String name = "AT-UI-" + Math.abs(new Random().nextInt());
-        VmCreatePage vm = new IndexPage()
+        VmCreate vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
                 .setImage(image)
@@ -115,11 +122,11 @@ public class UiCloudComputeTest extends Tests {
                 .addDisk(name, 2, hddTypeOne, true)
                 .setAvailabilityZone(availabilityZone)
                 .setName(name)
-                .addSecurityGroups("default")
-                .setSshKey("default")
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
                 .clickOrder();
 
-        VmPage vmPage = new VmsPage().selectCompute(vm.getName()).checkCreate();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         String orderId = vmPage.getOrderId();
 
         final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(project.getId());
@@ -154,9 +161,8 @@ public class UiCloudComputeTest extends Tests {
     @Owner("Checked")
     @DisplayName("Создание ВМ c двумя доп дисками (auto_delete = on и off) boot_disk_auto_delete = on")
     void createVm2() {
-        new IndexPage().goToSshKeys().addKey("default", "root");
         String name = "AT-UI-" + Math.abs(new Random().nextInt());
-        VmCreatePage vm = new IndexPage()
+        VmCreate vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
                 .setImage(image)
@@ -166,11 +172,11 @@ public class UiCloudComputeTest extends Tests {
                 .addDisk(name, 3, hddTypeSecond, false)
                 .setAvailabilityZone(availabilityZone)
                 .setName(name)
-                .addSecurityGroups("default")
-                .setSshKey("default")
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
                 .clickOrder();
 
-        VmPage vmPage = new VmsPage().selectCompute(vm.getName()).checkCreate();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         String orderId = vmPage.getOrderId();
 
         final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(project.getId());
@@ -208,13 +214,12 @@ public class UiCloudComputeTest extends Tests {
         String ip = new IndexPage()
                 .goToPublicIps()
                 .addIp(availabilityZone);
-        PublicIpPage ipPage = new PublicIpsPage().selectIp(ip).checkCreate();
+        PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
 
         String orderIdIp = ipPage.getOrderId();
 
-        new IndexPage().goToSshKeys().addKey("default", "root");
         String name = "AT-UI-" + Math.abs(new Random().nextInt());
-        VmCreatePage vm = new IndexPage()
+        VmCreate vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
                 .setImage(image)
@@ -222,23 +227,23 @@ public class UiCloudComputeTest extends Tests {
                 .setBootSize(2)
                 .setAvailabilityZone(availabilityZone)
                 .setName(name)
-                .addSecurityGroups("default")
-                .setSshKey("default")
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
                 .setPublicIp(ip)
                 .clickOrder();
 
-        VmPage vmPage = new VmsPage().selectCompute(vm.getName()).checkCreate();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         String orderIdVm = vmPage.getOrderId();
 
         String instanceId = StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
-                .filter(e-> e.getType().equals("instance"))
+                .filter(e -> e.getType().equals("instance"))
                 .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=instance")).getItemId();
 
         String nicId = StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
-                .filter(e-> e.getType().equals("nic"))
-                .filter(e-> e.getParent().equals(instanceId))
+                .filter(e -> e.getType().equals("nic"))
+                .filter(e -> e.getParent().equals(instanceId))
                 .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=nic")).getItemId();
 
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
@@ -264,24 +269,24 @@ public class UiCloudComputeTest extends Tests {
     }
 
     @Test
+    @Owner("Checked")
     @DisplayName("Подключить/Отключить диск")
     void attachDisk() {
-        new IndexPage().goToSshKeys().addKey("default", "root");
         String vmName = "AT-UI-" + Math.abs(new Random().nextInt());
-        VmCreatePage vm = new IndexPage()
+        VmCreate vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .setAvailabilityZone(availabilityZone)
                 .setName(vmName)
-                .addSecurityGroups("default")
-                .setSshKey("default")
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
                 .clickOrder();
-        VmPage vmPage = new VmsPage().selectCompute(vm.getName()).checkCreate();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         String orderIdVm = vmPage.getOrderId();
 
-        DiskCreatePage disk = new IndexPage()
+        DiskCreate disk = new IndexPage()
                 .goToDisks()
                 .addDisk()
                 .setAvailabilityZone(availabilityZone)
@@ -290,7 +295,7 @@ public class UiCloudComputeTest extends Tests {
                 .clickOrder();
         //Todo: Временный фикс
         Waiting.sleep(40000);
-        DiskPage diskPage = new DisksPage().selectDisk(disk.getName()).checkCreate();
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
         String orderIdDisk = diskPage.getOrderId();
 
         diskPage.runActionWithCheckCost(CompareType.EQUALS, () -> diskPage.attachComputeVolume(vm.getName(), true));
@@ -303,7 +308,7 @@ public class UiCloudComputeTest extends Tests {
                 .filter(e -> e.getSize().equals(6))
                 .count(), "Item volume не соответствует условиям или не найден");
 
-        DiskPage updatedDiskPage = new IndexPage()
+        Disk updatedDiskPage = new IndexPage()
                 .goToVirtualMachine()
                 .selectCompute(vm.getName())
                 .selectDisk(disk.getName());
@@ -322,12 +327,165 @@ public class UiCloudComputeTest extends Tests {
         new IndexPage()
                 .goToDisks()
                 .selectDisk(disk.getName())
+                .runActionWithCheckCost(CompareType.LESS, updatedDiskPage::delete);
+    }
+
+    @Test
+    @Owner("Checked")
+    @DisplayName("Подключить/Отключить IP")
+    void attachIp() {
+        String vmName = "AT-UI-" + Math.abs(new Random().nextInt());
+        VmCreate vm = new IndexPage()
+                .goToVirtualMachine()
+                .addVm()
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setAvailabilityZone(availabilityZone)
+                .setName(vmName)
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
+                .clickOrder();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        String orderIdVm = vmPage.getOrderId();
+
+        String ip = new IndexPage()
+                .goToPublicIps()
+                .addIp(availabilityZone);
+        PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
+        String orderIdIp = ipPage.getOrderId();
+        ipPage.runActionWithCheckCost(CompareType.EQUALS, () -> ipPage.attachComputeIp(vm.getName()));
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(e -> e.getSrcOrderId().equals(orderIdIp))
+                .filter(e -> e.getFloatingIpAddress().equals(ip))
+                .count(), "Item ip не соответствует условиям или не найден");
+
+        PublicIp newIpPage = new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .selectNetworkInterface()
+                .selectIp(ip);
+        newIpPage.runActionWithCheckCost(CompareType.EQUALS, newIpPage::detachComputeIp);
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdIp))
+                .filter(e -> e.getFloatingIpAddress().equals(ip))
+                .filter(e -> Objects.isNull(e.getParent()))
+                .count(), "Item ip не соответствует условиям или не найден");
+
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
                 .runActionWithCheckCost(CompareType.LESS, vmPage::delete);
+        new IndexPage()
+                .goToPublicIps()
+                .selectIp(ip)
+                .runActionWithCheckCost(CompareType.LESS, newIpPage::delete);
+    }
+
+    @Test
+    @Owner("Checked")
+    @DisplayName("Подключить/Отключить диск со снимком к вм")
+    void createSnapshotFromDetachDisk() {
+        String vmName = "AT-UI-" + Math.abs(new Random().nextInt());
+        VmCreate vm = new IndexPage()
+                .goToVirtualMachine()
+                .addVm()
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setAvailabilityZone(availabilityZone)
+                .setName(vmName)
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
+                .clickOrder();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        String orderIdVm = vmPage.getOrderId();
+
+
+        DiskCreate disk = new IndexPage()
+                .goToDisks()
+                .addDisk()
+                .setAvailabilityZone(availabilityZone)
+                .setName("DISK-" + Math.abs(new Random().nextInt()))
+                .setSize(4)
+                .clickOrder();
+        //Todo: Временный фикс
+        Waiting.sleep(40000);
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
+        String orderIdDisk = diskPage.getOrderId();
+
+        String snapshotName = "SNAP-" + disk.getName();
+        diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(snapshotName));
+
+        new IndexPage().goToSnapshots().selectSnapshot(snapshotName)/*.checkCreate()*/;
+
+        String volumeId = StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdDisk))
+                .filter(e -> e.getType().equals("volume"))
+                .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=volume")).getItemId();
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdDisk))
+                .filter(e -> e.getSize().equals(disk.getSize()))
+                .filter(e -> e.getParent().equals(volumeId))
+                .filter(e -> e.getType().equals("snapshot"))
+                .count(), "Item snapshot не соответствует условиям или не найден");
+
+        Disk updateDisk = new IndexPage().goToDisks().selectDisk(disk.getName());
+        updateDisk.runActionWithCheckCost(CompareType.EQUALS, () -> updateDisk.attachComputeVolume(vm.getName(), false));
+
+        String instanceId = StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(e -> e.getType().equals("instance"))
+                .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=instance")).getItemId();
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(e -> e.getType().equals("snapshot"))
+                .filter(e -> e.getParent().equals(volumeId))
+                .count(), "Item snapshot не соответствует условиям или не найден");
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(e -> e.getType().equals("volume"))
+                .filter(e -> e.getParent().equals(instanceId))
+                .filter(e -> e.getSrcOrderId().equals(orderIdDisk))
+                .count(), "Item volume не соответствует условиям или не найден");
+
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .selectDisk(disk.getName())
+                .runActionWithCheckCost(CompareType.LESS, diskPage::detachComputeVolume);
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdDisk))
+                .filter(e -> Objects.isNull(e.getParent()))
+                .count(), "Item volume не соответствует условиям или не найден");
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdDisk))
+                .filter(e -> Objects.nonNull(e.getParent()))
+                .filter(e -> e.getParent().equals(volumeId))
+                .count(), "Item snapshot не соответствует условиям или не найден");
+
+        new IndexPage()
+                .goToDisks()
+                .selectDisk(disk.getName())
+                .runActionWithCheckCost(CompareType.LESS, diskPage::delete);
+        Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdDisk))
+                .count());
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
     }
 
     @Test
     void name() {
-
+        new IndexPage().goToVirtualMachine().getVmList().forEach(e -> new IndexPage().goToVirtualMachine().selectCompute(e).delete());
+        new IndexPage().goToDisks().getDiskList().forEach(e -> new IndexPage().goToDisks().selectDisk(e).delete());
+        new IndexPage().goToPublicIps().getIpList().forEach(e -> new IndexPage().goToPublicIps().selectIp(e).delete());
 
 //        DiskCreatePage disk = new IndexPage()
 //                .goDisks()

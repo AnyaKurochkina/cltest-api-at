@@ -13,10 +13,10 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.Objects;
 
-import static com.codeborne.selenide.Selenide.$$x;
-import static core.helper.StringUtils.$x;
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
+import static com.codeborne.selenide.Selenide.$$x;
+import static core.helper.StringUtils.$x;
 
 public class DropDown implements TypifiedElement {
     private final ElementsCollection options = $$x("//ul[@role='listbox']/li");
@@ -25,8 +25,6 @@ public class DropDown implements TypifiedElement {
 
     public DropDown(SelenideElement element) {
         this.element = element;
-        if(Objects.isNull(element.getValue()))
-            Waiting.sleep(2000);
     }
 
     public static DropDown byLabel(String label) {
@@ -49,12 +47,12 @@ public class DropDown implements TypifiedElement {
     @Step("Выбрать в select элемент с названием '{value}'")
     public void select(String value) {
         hover();
-        if (element.$x(String.format("input[@value='%s']", value)).exists())
+        if (element.$x(String.format("input[starts-with(@value,'%s')]", value)).exists())
             return;
         if (element.getText().equals(value))
             return;
         element.click();
-        $x("//li[.='{}']", value)
+        $x("//li[starts-with(.,'{}')]", value)
                 .shouldBe(Condition.enabled)
                 .click();
     }
@@ -105,6 +103,9 @@ public class DropDown implements TypifiedElement {
     }
 
     public DropDown hover() {
+        if (Objects.isNull(element.getValue())) {
+            Waiting.sleep(2000);
+        }
         element.scrollIntoView(scrollCenter);
         element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
         return this;
@@ -112,7 +113,7 @@ public class DropDown implements TypifiedElement {
 
     @Step("Очистить select")
     public DropDown clear() {
-        element.scrollIntoView(scrollCenter).$x("descendant::button[@aria-label='Clear']").hover().click();
+        element.scrollIntoView(scrollCenter).hover().$x("descendant::button[@aria-label='Clear']").shouldBe(Condition.visible).click();
         return this;
     }
 

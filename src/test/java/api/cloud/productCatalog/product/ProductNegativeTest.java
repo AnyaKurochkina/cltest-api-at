@@ -1,7 +1,6 @@
 package api.cloud.productCatalog.product;
 
 import api.Tests;
-import core.helper.Configure;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -15,12 +14,12 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ProductSteps.getCreateProductResponse;
+import static steps.productCatalog.ProductSteps.partialUpdateProduct;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -42,7 +41,6 @@ public class ProductNegativeTest extends Tests {
         Product product = Product.builder()
                 .name("get_by_id_product_without_token_test_api")
                 .title("AtTestApiProduct")
-                .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .info(info)
                 .build()
@@ -57,7 +55,6 @@ public class ProductNegativeTest extends Tests {
         Product product = Product.builder()
                 .name("update_product_without_token_test_api")
                 .title("AtTestApiProduct")
-                .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .info(info)
                 .build()
@@ -73,7 +70,6 @@ public class ProductNegativeTest extends Tests {
         Product product = Product.builder()
                 .name("update_to_current_version_product_test_api")
                 .title("AtTestApiProduct")
-                .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .info(info)
                 .build()
@@ -90,7 +86,6 @@ public class ProductNegativeTest extends Tests {
         Product product = Product.builder()
                 .name("clone_product_negative_test_api")
                 .title("AtTestApiProduct")
-                .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .info(info)
                 .build()
@@ -105,7 +100,6 @@ public class ProductNegativeTest extends Tests {
         Product product = Product.builder()
                 .name("create_product_with_same_name_test_api")
                 .title("AtTestApiProduct")
-                .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .info(info)
                 .build()
@@ -117,11 +111,11 @@ public class ProductNegativeTest extends Tests {
     @TmsLink("643423")
     @Test
     public void createProductWithInvalidCharacters() {
-        Product.builder().name("NameWithUppercase").build().negativeCreateRequest(500);
-        Product.builder().name("nameWithUppercaseInMiddle").build().negativeCreateRequest(500);
-        Product.builder().name("имя").build().negativeCreateRequest(500);
-        Product.builder().name("Имя").build().negativeCreateRequest(500);
-        Product.builder().name("a&b&c").build().negativeCreateRequest(500);
+        Product.builder().name("NameWithUppercase").build().negativeCreateRequest(400);
+        Product.builder().name("nameWithUppercaseInMiddle").build().negativeCreateRequest(400);
+        Product.builder().name("имя").build().negativeCreateRequest(400);
+        Product.builder().name("Имя").build().negativeCreateRequest(400);
+        Product.builder().name("a&b&c").build().negativeCreateRequest(400);
         Product.builder().name("").build().negativeCreateRequest(400);
         Product.builder().name(" ").build().negativeCreateRequest(400);
     }
@@ -133,7 +127,6 @@ public class ProductNegativeTest extends Tests {
         Product product = Product.builder()
                 .name("delete_product_without_token_test_api")
                 .title("AtTestApiProduct")
-                .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .info(info)
                 .build()
@@ -152,7 +145,9 @@ public class ProductNegativeTest extends Tests {
                 .version("1.0.0")
                 .build().createObject();
         String productId = product.getProductId();
-        steps.partialUpdateObject(productId, new JSONObject().put("current_version", "2")).assertStatus(500);
+        String error = partialUpdateProduct(productId, new JSONObject().put("current_version", "2")).assertStatus(400).jsonPath()
+                .getList("", String.class).get(0);
+        assertEquals(error, "['You must specify version in pattern like \"{num}. | {num}.{num}.\"']");
     }
 
     @Test
@@ -163,14 +158,13 @@ public class ProductNegativeTest extends Tests {
         Product product = Product.builder()
                 .name(productName)
                 .title("AtTestApiProduct")
-                .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .info(info)
                 .build()
                 .createObject();
         Response response = steps.partialUpdateObject(product.getProductId(), new JSONObject().put("category_v2", "test"));
-        assertEquals("Значения test нет среди допустимых вариантов.", response.jsonPath()
-                .getList("category_v2").get(0));
+        assertEquals("['Значения (test) нет среди допустимых вариантов в ProductCategoriesV2']", response.jsonPath()
+                .getList("", String.class).get(0));
     }
 
     @Test
@@ -199,7 +193,6 @@ public class ProductNegativeTest extends Tests {
         Product product = Product.builder()
                 .name(productName)
                 .title("AtTestApiProduct")
-                .envs(Collections.singletonList(Configure.ENV))
                 .version("1.0.0")
                 .info(info)
                 .build()
@@ -218,7 +211,6 @@ public class ProductNegativeTest extends Tests {
         JSONObject product = Product.builder()
                 .name(productName)
                 .title("AtTestApiProduct")
-                .envs(Collections.singletonList("dev"))
                 .version("1.0.0")
                 .number(-1)
                 .info(info)
@@ -237,7 +229,6 @@ public class ProductNegativeTest extends Tests {
         JSONObject product = Product.builder()
                 .name("create_product_with_on_request_invalid_test_api")
                 .title("AtTestApiProduct")
-                .envs(Collections.singletonList("dev"))
                 .version("1.0.0")
                 .info(info)
                 .onRequest(OnRequest.TEST)

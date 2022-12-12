@@ -7,7 +7,6 @@ import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.productCatalog.graph.Graph;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
@@ -40,8 +39,6 @@ public class Product extends Entity {
     private String iconUrl;
     @JsonProperty("version_create_dt")
     private String versionCreateDt;
-    @JsonProperty("envs")
-    private List<String> envs;
     @JsonProperty("description")
     private String description;
     @JsonProperty("graph_version")
@@ -117,7 +114,6 @@ public class Product extends Entity {
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.graph_id", graphId)
-                .set("$.envs", new JSONArray(envs))
                 .set("$.version", version)
                 .set("$.category", category)
                 .set("$.info", info)

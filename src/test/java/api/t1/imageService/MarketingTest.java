@@ -3,7 +3,7 @@ package api.t1.imageService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.t1.Marketing;
+import models.t1.imageService.Marketing;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

@@ -2,11 +2,14 @@ package ui.elements;
 
 import com.codeborne.selenide.SelenideElement;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 
-public class DataTable extends Table{
+public class DataTable extends Table {
     SelenideElement recordCount;
     SelenideElement selectPage;
     SelenideElement nextPage;
@@ -23,7 +26,14 @@ public class DataTable extends Table{
         previousPage = parent.$x("button[contains(@aria-label,'Предыдущая')]");
     }
 
-    public void clickAdd(){
+    public void clickAdd() {
         btnAdd.shouldBe(activeCnd).shouldBe(clickableCnd).click();
+    }
+
+    public List<String> getColumnValuesList(String column) {
+        List<String> values = new ArrayList<>();
+        for (int i = 0; i < rowSize(); i++)
+            values.add(getValueByColumnInRow(i, column).getText());
+        return values;
     }
 }
