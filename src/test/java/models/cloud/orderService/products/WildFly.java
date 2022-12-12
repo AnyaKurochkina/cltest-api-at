@@ -103,22 +103,6 @@ public class WildFly extends IProduct {
         OrderServiceSteps.executeAction("wildfly_sync", this, null, this.getProjectId());
     }
 
-    public void updateOs() {
-        OrderServiceSteps.executeAction("wildfly_update_os", this, new JSONObject().put("accept", true), this.getProjectId());
-    }
-
-    public void stopService() {
-        OrderServiceSteps.executeAction("wildfly_stop_wf", this, new JSONObject().put("accept", true), this.getProjectId());
-    }
-
-    public void startService() {
-        OrderServiceSteps.executeAction("wildfly_start_wf", this, new JSONObject().put("dumb", "empty"), this.getProjectId());
-    }
-
-    public void restartService() {
-        OrderServiceSteps.executeAction("wildfly_restart_wf", this, new JSONObject().put("accept", true), this.getProjectId());
-    }
-
     //Добавление пользователя WildFly
     public void addUser(String username, String role) {
         OrderServiceSteps.executeAction("wildfly_add_user", this,

@@ -118,46 +118,6 @@ public class WildFlyAstraTest extends Tests {
         }
     }
 
-    @TmsLink("1356699")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить ОС сервера {0}")
-    void updateOs(WildFly product) {
-        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.updateOs();
-        }
-    }
-
-    @TmsLink("1356702")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Остановить сервис {0}")
-    void stopService(WildFly product) {
-        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.stopService();
-        }
-    }
-
-    @TmsLink("1356700")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Запустить сервис {0}")
-    void startService(WildFly product) {
-        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.startService();
-        }
-    }
-
-    @TmsLink("1356703")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезапустить сервис {0}")
-    void restartService(WildFly product) {
-        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.restartService();
-        }
-    }
-
     @TmsLinks({@TmsLink("989482"),@TmsLink("989486")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
