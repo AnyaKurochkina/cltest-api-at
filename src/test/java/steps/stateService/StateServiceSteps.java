@@ -1,6 +1,7 @@
 package steps.stateService;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.gson.Gson;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
@@ -209,6 +210,7 @@ public class StateServiceSteps extends Steps {
 //            shortItemList.add(itemData);
             listOrders.add(itemData);
         });
+        log.debug("getItems: {}", JsonHelper.toJson(listOrders));
         return listOrders;
     }
 

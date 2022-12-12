@@ -1,0 +1,55 @@
+{
+  "order": {
+    "project_name": "proj-1oob0zjo5h",
+    "product_id": "a148e2cb-b009-4297-9f7f-95a8ed700ed5",
+    "attrs": {
+      "domain": "test.vtb.ru",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m8",
+        "uuid": "930a8be8-1c71-4730-b881-0633a56b7f2b",
+        "memory": 8
+      },
+      "platform": "OpenStack",
+      "on_backup": false,
+      "extra_nics": [],
+      "on_support": true,
+      "os_version": "1.7",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "test-srv-perf"
+      },
+      "ad_integration": true,
+      "extra_mounts_log": [
+        {
+          "path": "/app/scylla/logs",
+          "size": 30,
+          "file_system": "xfs"
+        }
+      ],
+      "scylladb_version": "4.6.3",
+      "extra_mounts_data": [
+        {
+          "path": "/app/scylla/data",
+          "size": 100,
+          "file_system": "xfs"
+        }
+      ],
+      "scylla_cluster_configuration": {
+        "dc1": 3,
+        "dc2": 0,
+        "dc3": 0
+      },
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-d5zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "ScyllaDB Cluster Astra"
+  }
+}

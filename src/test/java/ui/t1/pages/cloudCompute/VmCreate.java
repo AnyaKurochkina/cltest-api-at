@@ -8,6 +8,7 @@ import ui.elements.*;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static core.helper.StringUtils.$x;
 
@@ -25,7 +26,7 @@ public class VmCreate {
     private String flavor;
     private String subnet;
     private String publicIp;
-    private final List<String> securityGroups = new ArrayList<>();
+    private List<String> securityGroups;
     private String sshKey;
 
     public VmCreate setName(String name) {
@@ -68,8 +69,13 @@ public class VmCreate {
     }
 
     public VmCreate addSecurityGroups(String securityGroups) {
+        DropDown dropDown = DropDown.byLabel("Группы безопасности сетевого интерфейса");
+        if(Objects.isNull(this.securityGroups)){
+            this.securityGroups = new ArrayList<>();
+            dropDown.clear();
+        }
         this.securityGroups.add(securityGroups);
-        DropDown.byLabel("Группы безопасности сетевого интерфейса").select(securityGroups);
+        dropDown.select(securityGroups);
         return this;
     }
 

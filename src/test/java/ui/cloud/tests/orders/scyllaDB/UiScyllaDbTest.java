@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders.scillaDB;
+package ui.cloud.tests.orders.scyllaDB;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
