@@ -118,6 +118,7 @@ public class Graph extends Entity implements IProductCatalog {
                 .set("$.allowed_developers", allowedDevelopers)
                 .set("$.restricted_developers", restrictedDevelopers)
                 .setIfNullRemove("$.modifications", mod)
+                .setIfNullRemove("$.json_schema", jsonSchema)
                 .build();
     }
 
@@ -125,7 +126,7 @@ public class Graph extends Entity implements IProductCatalog {
     @Step("Создание графа")
     protected void create() {
         deleteIfExist(name);
-        Graph graph = createGraph(toJson());
+        Graph graph = createGraph(toJson()).assertStatus(201).extractAs(Graph.class);
         StringUtils.copyAvailableFields(graph, this);
         Assertions.assertNotNull(graphId, "Граф с именем: " + name + ", не создался");
     }
