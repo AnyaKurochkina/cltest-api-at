@@ -16,7 +16,9 @@ public class PublicIpList {
     //new PublicIpsPage().addIp("ru-central1-c");
     public String addIp(String availabilityZone) {
         IpTable ipTable = new IpTable();
-        String oldIp = ipTable.getFirstValueByColumn(COLUMN_IP);
+        String oldIp = "";
+        if(ipTable.rowSize() > 0)
+            oldIp = ipTable.getFirstValueByColumn(COLUMN_IP);
         ipTable.clickAdd();
         DropDown.byLabel("Зона доступности").select(availabilityZone);
         EntitiesUtils.clickOrder();
