@@ -15,6 +15,7 @@ import steps.authorizer.AuthorizerSteps;
 import ui.cloud.pages.LoginPage;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
+import ui.t1.pages.cloudDirector.CloudDirectorPage;
 
 import java.util.UUID;
 
@@ -42,8 +43,7 @@ public class VmWareOrganizationTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginPage(project.getId())
-                .signIn(Role.CLOUD_ADMIN);
+        new LoginPage(project.getId()).signIn(Role.CLOUD_ADMIN);
     }
 
     @Test
@@ -75,14 +75,13 @@ public class VmWareOrganizationTest extends Tests {
     @TmsLink("147521")
     @DisplayName("VMware. Удаление организации.")
     void deleteVMwareOrganizationTest() {
-        String name = UUID.randomUUID().toString().substring(25);
-        VmWareOrganization vmWareOrganization = createVMwareOrganization(name, project.getId());
+        String orgName = new IndexPage()
+                .goToCloudDirector()
+                .create(UUID.randomUUID().toString().substring(25));
         try {
-            new IndexPage()
-                    .goToCloudDirector()
-                    .delete(vmWareOrganization.getName());
-        } finally {
-            deleteVMwareOrganization(project.getId(), vmWareOrganization.getName());
+            new CloudDirectorPage().delete(orgName);
+        } catch (Exception e) {
+            deleteVMwareOrganization(project.getId(), orgName);
         }
     }
 
