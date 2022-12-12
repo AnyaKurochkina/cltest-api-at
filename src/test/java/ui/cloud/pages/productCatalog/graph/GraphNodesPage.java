@@ -144,7 +144,7 @@ public class GraphNodesPage extends GraphPage {
         TestUtils.scrollToTheTop();
         actions().pause(1000)
                 .moveToElement($x("//div[@class='g6-grid-container']/following-sibling::canvas"))
-                .moveByOffset(0, 80)
+                .moveByOffset(0, 70)
                 .contextClick()
                 .perform();
         copyNode.scrollIntoView(TypifiedElement.scrollCenter).click();

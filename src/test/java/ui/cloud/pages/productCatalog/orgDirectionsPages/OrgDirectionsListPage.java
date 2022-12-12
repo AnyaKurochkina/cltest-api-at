@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
@@ -58,8 +59,9 @@ public class OrgDirectionsListPage extends BaseListPage {
     @Step("Переход на страницу редактирования направления с именем {name}")
     public OrgDirectionPage openOrgDirectionPage(String name) {
         Input.byPlaceholder("Поиск").setValue(name);
-        TestUtils.wait(1000);
+        Waiting.sleep(1000);
         new Table("Код направления").getRowElementByColumnValue("Код направления", name).click();
+        Waiting.sleep(1000);
         return new OrgDirectionPage();
     }
 
