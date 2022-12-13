@@ -97,7 +97,7 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
             throw testThrow;
     }
 
-    private String getDisplayName(Method before) {
+    public static String getDisplayName(Method before) {
         String displayName = before.getName();
         if (before.isAnnotationPresent(DisplayName.class))
             displayName = before.getAnnotation(DisplayName.class).value();
@@ -105,7 +105,7 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
     }
 
     @Step
-    public void invoke(Method method, Object obj, String title) throws Throwable {
+    public static void invoke(Method method, Object obj, String title) throws Throwable {
         modifyStep(title);
         method.invoke(obj);
     }

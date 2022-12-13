@@ -2,19 +2,29 @@ package ui.t1.pages.cloudCompute;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.EntitiesUtils;
 import ui.cloud.pages.IProductPage;
+import ui.cloud.pages.ProductStatus;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
 import java.time.Duration;
+import java.util.Objects;
+
+import static core.helper.StringUtils.$x;
 
 public class IProductT1Page extends IProductPage {
     private static final String COLUMN_POWER = "Статус";
     public static final String BLOCK_PARAMETERS = "Основные параметры";
+    private final SelenideElement waitStatus = $x("//*[.='Обновляется информация о заказе']");
+
+    public IProductT1Page() {
+        new TopInfo();
+    }
 
     public void delete() {
         switchProtectOrder(false);
@@ -27,34 +37,36 @@ public class IProductT1Page extends IProductPage {
     }
 
     public <T extends IProductPage> T checkCreate(){
-        waitChangeStatus();
         checkLastAction("Развертывание");
         btnGeneralInfo.shouldBe(Condition.enabled).click();
-        Assertions.assertEquals(EntitiesUtils.getPreBillingPrice(), getCostOrder(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
+        if(Objects.nonNull(EntitiesUtils.getPreBillingPrice()))
+            Assertions.assertEquals(EntitiesUtils.getPreBillingPrice(), getCostOrder(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
         return (T) this;
     }
 
     @Override
     public void waitChangeStatus() {
-        EntitiesUtils.waitChangeStatus(new TopInfo(), Duration.ofMinutes(1));
+        waitChangeStatus(Duration.ofMinutes(1));
     }
 
     @Override
     public void waitChangeStatus(Duration duration) {
-        EntitiesUtils.waitChangeStatus(new TopInfo(), duration);
+        if(waitStatus.exists())
+            waitStatus.scrollIntoView(TypifiedElement.scrollCenter).shouldNot(Condition.visible, duration);
+//        else
+//            EntitiesUtils.waitStatus(new TopInfo(), Disk.TopInfo.POWER_STATUS_DELETED, duration);
     }
 
     @Override
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
-        //Todo: пока нет промежуточного статуса
-        Waiting.sleep(15000);
-        TypifiedElement.refresh();
-
-        btnHistory.shouldBe(Condition.enabled).click();
-        History history = new History();
-        checkErrorByStatus(history.lastActionStatus());
-        Assertions.assertEquals(history.lastActionName(), action, "Название последнего действия не соответствует ожидаемому");
+        if(btnHistory.exists()) {
+            TypifiedElement.refresh();
+            btnHistory.shouldBe(Condition.enabled).click();
+            History history = new History();
+            checkErrorByStatus(history.lastActionStatus());
+            Assertions.assertEquals(history.lastActionName(), action, "Название последнего действия не соответствует ожидаемому");
+        }
     }
 
     public String getOrderId() {
@@ -65,8 +77,6 @@ public class IProductT1Page extends IProductPage {
 
     @Override
     public void switchProtectOrder(boolean checked) {
-        //Todo: сейчас кнопка активна до загрузки меню
-        Waiting.sleep(1000);
         ActionParameters params = ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build();
         runActionWithParameters("Действия", "Защита от удаления", "Подтвердить",
                 () -> {
