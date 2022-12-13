@@ -61,6 +61,8 @@ public class Table implements TypifiedElement {
         headers = headersCollection.shouldBe(CollectionCondition.allMatch("", WebElement::isDisplayed)).texts();
     }
 
+    @Deprecated
+    //Use getRowByColumnValue(..).get()
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
     public SelenideElement getRowElementByColumnValue(String column, String value) {
         for (SelenideElement e : rows) {
@@ -71,18 +73,28 @@ public class Table implements TypifiedElement {
     }
 
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
-    public SelenideElement getRowElementByColumnValueContains(String column, String value) {
-        for (SelenideElement e : rows) {
-            if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().contains(value))
-                return e;
+    public Row getRowByColumnValue(String column, String value) {
+        Row row;
+        try {
+            row = getRowByColumnIndex(getHeaderIndex(column), value);
+        } catch (NotFoundException e) {
+            throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
         }
-        throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
+        return row;
+    }
+
+    public Row getRowByColumnIndex(int index, String value) {
+        for (int i = 0; i < rows.size(); i++) {
+            if (rows.get(i).$$x("td").get(index).hover().getText().equals(value))
+                return new Row(i);
+        }
+        throw new NotFoundException();
     }
 
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
-    public Row getRowByColumnValue(String column, String value) {
+    public Row getRowByColumnValueContains(String column, String value) {
         for (int i = 0; i < rows.size(); i++) {
-            if (rows.get(i).$$x("td").get(getHeaderIndex(column)).hover().getText().equals(value))
+            if (rows.get(i).$$x("td").get(getHeaderIndex(column)).hover().getText().contains(value))
                 return new Row(i);
         }
         throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
@@ -111,6 +123,7 @@ public class Table implements TypifiedElement {
         return rows.size();
     }
 
+
     @Step("Проверка, что в колонке '{column}' есть значение, содержащее '{value}'")
     public boolean isColumnValueContains(String column, String value) {
         if(isEmpty())
@@ -122,9 +135,16 @@ public class Table implements TypifiedElement {
         return false;
     }
 
+    @Deprecated
+    //Use getRow(0).get()
     public SelenideElement getRowByIndex(int index) {
         Assertions.assertTrue(rows.size() > index, "Индекс больше кол-ва строк");
         return rows.get(index);
+    }
+
+    public Row getRow(int index) {
+        Assertions.assertTrue(rows.size() > index, "Индекс больше кол-ва строк");
+        return new Row(index);
     }
 
     /**
@@ -141,12 +161,26 @@ public class Table implements TypifiedElement {
     public class Row {
         int row;
 
+        public SelenideElement get(){
+            return getRowByIndex(row);
+        }
+
         public String getValueByColumn(String column) {
             return getValueByColumnInRow(row, column).hover().getText();
         }
 
         public SelenideElement getElementByColumn(String column) {
             return getValueByColumnInRow(row, column);
+        }
+
+        public SelenideElement getElementByColumnIndex(int column) {
+            SelenideElement element;
+            try {
+                element = get().$$x("td").get(column);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new NotFoundException("Нет колонки с индексом " + column);
+            }
+            return element;
         }
     }
 
