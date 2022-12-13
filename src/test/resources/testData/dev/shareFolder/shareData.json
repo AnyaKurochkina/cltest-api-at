@@ -1,29 +1,29 @@
 [
   {
     "objectClassName": "models.cloud.authorizer.Project",
-    "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
-    "id": "proj-3d1jt57gm3",
-    "projectName": "DSO_AUTOTEST",
+    "informationSystem": "c9fd31c7-25a5-45ca-863c-18425d1ae927",
+    "id": "proj-ncvgiblq34",
+    "projectName": "regress DEV",
     "isForOrders":true,
     "projectEnvironmentPrefix": {
-      "env": "DSO",
-      "id": "7f7beb92-9901-43b7-9391-7ea72474863d",
-      "projectEnvironmentId": "3d294e04-13c5-439a-9397-6b79a140b7f2",
+      "env": "DEV",
+      "id": "f59b2f0f-8a0d-43af-8ff7-707e8ad39c1b",
+      "projectEnvironmentId": "de8426e7-d10a-42bf-94ef-f8b9e7f300ea",
       "envType": "DEV"
     }
   },
   {
     "objectClassName": "models.cloud.portalBack.AccessGroup",
-    "prefixName": "cloud-crux-proj-3d1jt57gm3",
+    "prefixName": "cloud-crux-for-api-tests",
     "users": [],
     "isDeleted": false,
-    "projectName": "proj-3d1jt57gm3"
+    "projectName": "proj-ncvgiblq34"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
-    "id": "sa_proj-3d1jt57gm3-ez",
-    "secret": "c83a5f3a35ec9bb29c0a409414fde2bf",
-    "projectId": "proj-3d1jt57gm3"
+    "id": "sa_proj-ncvgiblq34-89",
+    "secret": "b209d0c369ba9d84fb90c313d6d50be1",
+    "projectId": "proj-ncvgiblq34"
   },
   {
     "objectClassName": "models.cloud.authorizer.InformationSystem",

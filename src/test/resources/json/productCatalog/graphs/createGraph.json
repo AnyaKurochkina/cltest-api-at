@@ -7,6 +7,7 @@
   "graph": [],
   "type": "action",
   "version": "1.0.0",
+  "json_schema" : {},
   "allowed_developers": [
 
   ],

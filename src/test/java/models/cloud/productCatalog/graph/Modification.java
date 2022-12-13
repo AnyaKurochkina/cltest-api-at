@@ -1,6 +1,5 @@
 package models.cloud.productCatalog.graph;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.productCatalog.Env;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 @Log4j2
@@ -19,8 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Modification {
     String name;
-    @JsonIgnore
-    LinkedHashMap<String, Object> data;
+    Object data;
     List<Env> envs;
     Integer order;
     String path;
