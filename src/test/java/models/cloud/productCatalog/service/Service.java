@@ -2,10 +2,8 @@ package models.cloud.productCatalog.service;
 
 import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import core.enums.Role;
 import core.helper.JsonHelper;
-import core.helper.http.Http;
-import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
+import core.helper.StringUtils;
 import httpModels.productCatalog.service.createService.response.DataSource;
 import httpModels.productCatalog.service.createService.response.ExtraData;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
@@ -21,13 +19,14 @@ import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static steps.productCatalog.ServiceSteps.*;
 
 @Log4j2
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Setter
 public class Service extends Entity implements IProductCatalog {
 
@@ -35,7 +34,6 @@ public class Service extends Entity implements IProductCatalog {
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/services/",
             "productCatalog/services/createServices.json");
-    private String jsonTemplate;
     @JsonProperty("turn_off_inventory")
     private Boolean turnOffInventory;
     @JsonProperty("current_version")
@@ -113,7 +111,6 @@ public class Service extends Entity implements IProductCatalog {
 
     @Override
     public Entity init() {
-        jsonTemplate = "productCatalog/services/createServices.json";
         if (graphId == null) {
             Graph graph = Graph.builder().name("graph_for_services_api_test").build().createObject();
             graphId = graph.getGraphId();
@@ -131,7 +128,7 @@ public class Service extends Entity implements IProductCatalog {
 
     @Override
     public JSONObject toJson() {
-        return JsonHelper.getJsonTemplate(jsonTemplate)
+        return JsonHelper.getJsonTemplate("productCatalog/services/createServices.json")
                 .set("$.name", name)
                 .set("$.graph_id", graphId)
                 .set("$.graph_version", graphVersion)
@@ -153,30 +150,20 @@ public class Service extends Entity implements IProductCatalog {
     }
 
     @Override
-    @Step("Создание сервиса")
     protected void create() {
-        if (productCatalogSteps.isExists(name)) {
+        if (isServiceExists(name)) {
             productCatalogSteps.deleteByName(name, GetServiceListResponse.class);
         }
-        CreateServiceResponse createServiceResponse = new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(toJson())
-                .post(productName)
-                .assertStatus(201)
-                .extractAs(CreateServiceResponse.class);
-        id = createServiceResponse.getId();
-        directionName = createServiceResponse.getDirectionName();
+        Service service = createService(toJson()).assertStatus(201)
+                .extractAs(Service.class);
+        StringUtils.copyAvailableFields(service, this);
         Assertions.assertNotNull(id, "Сервис с именем: " + name + ", не создался");
     }
 
     @Override
     @Step("Удаление сервиса")
     protected void delete() {
-        new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(productName + id + "/")
-                .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, jsonTemplate);
-        Assertions.assertFalse(productCatalogSteps.isExists(name));
+        deleteServiceById(id);
+        Assertions.assertFalse(isServiceExists(name));
     }
 }

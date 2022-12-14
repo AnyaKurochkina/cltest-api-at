@@ -90,7 +90,7 @@ public class VMwareOrganizationPage {
                 .getInputValue("ФИО"));
         assertEquals(email, Dialog.byTitle("Редактировать пользователя")
                 .getInputValue("Email"));
-        assertEquals(role, new DropDown(roleDropDown).getText());
+        assertEquals(role, roleDropDown.getText());
     }
 
     private static class UsersTable extends DataTable {
