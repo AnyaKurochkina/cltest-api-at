@@ -41,7 +41,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         if (title == null)
             title = new Generex("[a-z]{5,18}").random();
         if (role == null)
-            role = Role.CLOUD_ADMIN;
+            role = Role.VIEWER;
         if (projectId == null)
             projectId = ((Project) Project.builder().build().createObject()).getId();
         return this;
@@ -114,7 +114,8 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
                 .patch("/v1/projects/{}/service_accounts/{}", projectId, id)
                 .assertStatus(200)
                 .jsonPath();
-
+        role = newRole;
+        save();
         Assertions.assertTrue((Boolean) jsonPath.get(String.format("data.roles.any{it.name='%s'}", newRole)));
     }
 
