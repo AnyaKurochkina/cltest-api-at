@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
+import static ui.t1.pages.cloudCompute.Vm.DiskInfo.COLUMN_NAME;
+import static ui.t1.pages.cloudCompute.Vm.DiskInfo.COLUMN_SYSTEM;
+
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(BeforeAllExtension.class)
 @Epic("Cloud Compute")
@@ -35,14 +38,14 @@ public class UiCloudComputeTest extends Tests {
     String hddTypeOne = "HDD";
     String hddTypeSecond = "HDD";
     String securityGroup = "default";
-    String sshKey = "default";
+    String sshKey = "default1";
 
     public UiCloudComputeTest() {
 //        Project project = Project.builder().isForOrders(true).build().createObject();
 //        String parentFolder = AuthorizerSteps.getParentProject(project.getId());
 //        this.project = Project.builder().projectName("Проект для тестов Cloud Compute").folderName(parentFolder).build().createObjectPrivateAccess();
 //        this.project = Project.builder().id("proj-6opt7sq1fg").build();
-        this.project = Project.builder().id("proj-0x1sunfqu2").build();
+        this.project = Project.builder().id("proj-2cdvptgjx7").build();
     }
 
     @BeforeEach
@@ -76,8 +79,8 @@ public class UiCloudComputeTest extends Tests {
                 .count(), "Поиск item, где orderId = srcOrderId & floatingIpAddress == " + ip);
 
         ipPage.runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
-        Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream().filter(e -> Objects.nonNull(e.getFloatingIpAddress()))
-                .noneMatch(e -> e.getFloatingIpAddress().equals(ip)));
+        Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream()
+                .noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
     }
 
 
@@ -149,10 +152,10 @@ public class UiCloudComputeTest extends Tests {
                 .filter(e -> {
                     if (!e.getOrderId().equals(e.getSrcOrderId()))
                         return false;
-                    if (e.getSize() != 5)
+                    if (!e.getSize().equals(vm.getBootSize()))
                         return false;
                     return !Objects.nonNull(e.getParent());
-                }).count(), "Должен быть один item с новим orderId, size=3 и parent=null");
+                }).count(), "Должен быть один item с новим orderId, size и parent=null");
 
         new IndexPage().goToDisks().selectDisk(name).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
     }
@@ -186,7 +189,6 @@ public class UiCloudComputeTest extends Tests {
                         () -> new NotFoundException("Не найден item с type=compute")).getItemId()))
                 .filter(i -> i.getType().equals("nic") || i.getType().equals("volume"))
                 .count(), "Должно быть 4 item's (nic & volume)");
-
 
         new IndexPage()
                 .goToVirtualMachine()
@@ -264,8 +266,8 @@ public class UiCloudComputeTest extends Tests {
                 .count(), "Item publicIp должен вернуть свой OrderId + Parent=null");
 
         new IndexPage().goToPublicIps().selectIp(ip).runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
-        Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream().filter(e -> Objects.nonNull(e.getFloatingIpAddress()))
-                .noneMatch(e -> e.getFloatingIpAddress().equals(ip)));
+        Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream()
+                .noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
     }
 
     @Test
@@ -464,8 +466,7 @@ public class UiCloudComputeTest extends Tests {
 
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
-                .filter(e -> Objects.nonNull(e.getParent()))
-                .filter(e -> e.getParent().equals(volumeId))
+                .filter(e -> Objects.equals(e.getParent(), volumeId))
                 .count(), "Item snapshot не соответствует условиям или не найден");
 
         new IndexPage()
@@ -479,6 +480,54 @@ public class UiCloudComputeTest extends Tests {
                 .goToVirtualMachine()
                 .selectCompute(vm.getName())
                 .runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
+    }
+
+    @Test
+    @Owner("Checked")
+    @DisplayName("Создание снимка системного диска и удаление вместе с вм")
+    void createSnapshotFromAttachDisk() {
+        String name = "AT-UI-" + Math.abs(new Random().nextInt());
+        VmCreate vm = new IndexPage()
+                .goToVirtualMachine()
+                .addVm()
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setAvailabilityZone(availabilityZone)
+                .setName(name)
+                .setBootSize(7)
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
+                .clickOrder();
+
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        String orderIdVm = vmPage.getOrderId();
+        Disk disk = vmPage.selectDisk(new Vm.DiskInfo().getRowByColumnValue(COLUMN_SYSTEM, "Да").getValueByColumn(COLUMN_NAME));
+        String orderIdDisk = disk.getOrderId();
+        disk.runActionWithCheckCost(CompareType.MORE, () -> disk.createSnapshot(name));
+        new IndexPage().goToSnapshots().selectSnapshot(name).checkCreate();
+
+        String volumeId = StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdDisk))
+                .filter(e -> e.getType().equals("volume"))
+                .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=volume")).getItemId();
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(e -> e.getType().equals("snapshot"))
+                .filter(e -> e.getParent().equals(volumeId))
+                .count(), "Item snapshot не соответствует условиям или не найден");
+
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
+
+        Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .count());
+        Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> !Objects.equals(e.getSize(), vm.getBootSize()))
+                .count());
     }
 
     @Test

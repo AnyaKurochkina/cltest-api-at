@@ -33,6 +33,8 @@ public class IProductT1Page extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
+        //Todo: пока слип
+        Waiting.sleep(15000);
         checkPowerStatus(Disk.TopInfo.POWER_STATUS_DELETED);
     }
 
