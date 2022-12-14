@@ -400,7 +400,7 @@ public class OrderServiceSteps extends Steps {
 //            item.setId(jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action)));
 //            item.setName(jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.actions.find{it.name.contains('%s')}.name", action, action)));
 //        }
-        String actions = Arrays.toString(jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.item_id", filter)).toArray());
+        String actions = Arrays.toString(jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.actions.title", filter)).toArray());
         Assertions.assertNotNull(item.getId(), "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
 
         return item;
