@@ -30,6 +30,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
     String id;
     String title;
     String jsonTemplate;
+    Role role;
 
     @Singular
     public List<String> roles;
@@ -39,6 +40,8 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         jsonTemplate = "/authorizer/service_accounts.json";
         if (title == null)
             title = new Generex("[a-z]{5,18}").random();
+        if (role == null)
+            role = Role.CLOUD_ADMIN;
         if (projectId == null)
             projectId = ((Project) Project.builder().build().createObject()).getId();
         return this;
@@ -47,6 +50,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.service_account.title", title)
+                .set("$.service_account.policy.bindings.[0].role", role.toString())
                 .build();
     }
 
@@ -101,9 +105,9 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
     }
 
     @Step("Изменение сервисного аккаунта")
-    public void editServiceAccount(String title) {
+    public void editServiceAccount(String title, Role newRole) {
         JsonPath jsonPath = JsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.service_account.policy.bindings.[0].role", "roles/viewer")
+                .set("$.service_account.policy.bindings.[0].role", newRole.toString())
                 .set("$.service_account.title", title)
                 .send(Configure.IamURL)
                 .setRole(Role.CLOUD_ADMIN)
@@ -111,7 +115,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
                 .assertStatus(200)
                 .jsonPath();
 
-        Assertions.assertTrue((Boolean) jsonPath.get("data.roles.any{it.name='roles/viewer'}"));
+        Assertions.assertTrue((Boolean) jsonPath.get(String.format("data.roles.any{it.name='%s'}", newRole)));
     }
 
     @Override
