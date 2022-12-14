@@ -96,8 +96,6 @@ public class UiCloudComputeTest extends Tests {
                 .setSize(2)
                 .clickOrder();
 
-        //Todo: Временный фикс
-        Waiting.sleep(40000);
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
 
         String orderId = diskPage.getOrderId();
@@ -295,14 +293,11 @@ public class UiCloudComputeTest extends Tests {
                 .setName("AT-UI-" + Math.abs(new Random().nextInt()))
                 .setSize(6)
                 .clickOrder();
-        //Todo: Временный фикс
-        Waiting.sleep(40000);
+
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
         String orderIdDisk = diskPage.getOrderId();
 
         diskPage.runActionWithCheckCost(CompareType.EQUALS, () -> diskPage.attachComputeVolume(vm.getName(), true));
-        //Todo: Временный фикс
-        Waiting.sleep(40000);
 
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
@@ -412,8 +407,7 @@ public class UiCloudComputeTest extends Tests {
                 .setName("DISK-" + Math.abs(new Random().nextInt()))
                 .setSize(4)
                 .clickOrder();
-        //Todo: Временный фикс
-        Waiting.sleep(40000);
+
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
         String orderIdDisk = diskPage.getOrderId();
 

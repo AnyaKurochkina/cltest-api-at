@@ -5,28 +5,29 @@ import ui.elements.DataTable;
 
 import java.util.List;
 
-import static ui.t1.pages.cloudCompute.DiskList.DisksPageTable.COLUMN_NAME;
+import static ui.t1.pages.cloudCompute.DiskList.DiskTable.COLUMN_NAME;
 
 public class DiskList {
 
     public DiskCreate addDisk(){
-        new DisksPageTable().clickAdd();
+        new DiskTable().clickAdd();
         return new DiskCreate();
     }
 
     public Disk selectDisk(String name){
-        new DisksPageTable().getRowByColumnValueContains(COLUMN_NAME, name).get().shouldBe(Condition.visible).click();
+        new DiskTable().getRowByColumnValueContains(COLUMN_NAME, name).get().shouldBe(Condition.visible).click();
         return new Disk();
     }
 
     public List<String> getDiskList(){
-        return new DisksPageTable().getColumnValuesList(COLUMN_NAME);
+        return new DiskTable().getColumnValuesList(COLUMN_NAME);
     }
 
-    public static class DisksPageTable extends DataTable {
+    public static class DiskTable extends DataTable {
         public static final String COLUMN_NAME = "Имя";
+        public static final String COLUMN_DATE = "Дата создания";
 
-        public DisksPageTable() {
+        public DiskTable() {
             super(COLUMN_NAME);
         }
     }

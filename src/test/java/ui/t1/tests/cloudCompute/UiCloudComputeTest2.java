@@ -62,6 +62,7 @@ public class UiCloudComputeTest2 extends Tests {
     }
 
     @Test
+    @Owner("checked")
     @DisplayName("Подключение диска из снимка на базе подключенного диска")
     void createSnapshotFromAttachDisk() {
         String name = "AT-UI-" + Math.abs(new Random().nextInt());
@@ -97,6 +98,45 @@ public class UiCloudComputeTest2 extends Tests {
                 .goToVirtualMachine()
                 .selectCompute(vm.getName())
                 .runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
+    }
+
+    @Test
+//    @Owner("checked")
+    @DisplayName("Создание образа из диска")
+    void createImageFromAttachDisk() {
+        String name = "AT-UI-" + Math.abs(new Random().nextInt());
+        DiskCreate disk = new IndexPage()
+                .goToDisks()
+                .addDisk()
+                .setAvailabilityZone(availabilityZone)
+                .setName(name)
+                .setSize(2)
+                .clickOrder();
+
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
+        diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createImage(name));
+        Image imagePage = new IndexPage().goToImages().selectImage(name).checkCreate();
+        String orderIdImage = imagePage.getOrderId();
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdImage))
+                .filter(e -> e.getSrcOrderId().equals(""))
+                .filter(e -> e.getParent().equals(""))
+                .count(), "Item image не соответствует условиям или не найден");
+
+        new IndexPage()
+                .goToDisks()
+                .selectDisk(name)
+                .runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
+
+        new IndexPage()
+                .goToImages()
+                .selectImage(name)
+                .runActionWithCheckCost(CompareType.ZERO, imagePage::delete);
+
+        Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdImage))
+                .count(), "Item image не соответствует условиям или не найден");
     }
 
 

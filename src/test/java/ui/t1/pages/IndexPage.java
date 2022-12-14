@@ -19,6 +19,7 @@ public class IndexPage {
     final SelenideElement linkVirtualMachines = $x("//a[.='Виртуальные машины']");
     final SelenideElement linkSecurityGroups = $x("//a[.='Группы безопасности']");
     final SelenideElement linkPublicIps = $x("//a[.='Публичные IP-адреса']");
+    final SelenideElement linkImages = $x("//a[.='Образы']");
 
     public static void go() {
         $x("//img[contains(@alt,'logo')]").shouldBe(Condition.visible).click();
@@ -69,6 +70,13 @@ public class IndexPage {
         linkCloudEngine.click();
         linkSnapshots.click();
         return new SnapshotList();
+    }
+
+    @Step("Переход на страницу Образы")
+    public ImageList goToImages() {
+        linkCloudEngine.click();
+        linkImages.click();
+        return new ImageList();
     }
 
     @Step("Переход на страницу Публичные IP-адреса")

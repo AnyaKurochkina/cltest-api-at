@@ -8,12 +8,12 @@ import static ui.t1.pages.cloudCompute.Vm.DiskInfo.COLUMN_NAME;
 public class Vm extends IProductT1Page {
 
     public Disk selectDisk(String disk){
-        new DiskInfo().getRowElementByColumnValue(COLUMN_NAME, disk).shouldBe(Condition.visible).click();
+        new DiskInfo().getRowByColumnValue(COLUMN_NAME, disk).get().shouldBe(Condition.visible).click();
         return new Disk();
     }
 
     public NetworkInterface selectNetworkInterface(){
-        new NetworkInfo().getRowByIndex(0).shouldBe(Condition.visible).click();
+        new NetworkInfo().getRow(0).get().shouldBe(Condition.visible).click();
         return new NetworkInterface();
     }
 

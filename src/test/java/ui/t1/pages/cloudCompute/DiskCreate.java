@@ -1,8 +1,11 @@
 package ui.t1.pages.cloudCompute;
 
+import com.codeborne.selenide.Condition;
 import lombok.Getter;
 import ui.cloud.pages.EntitiesUtils;
 import ui.elements.*;
+
+import java.time.Duration;
 
 @Getter
 public class DiskCreate {
@@ -56,6 +59,10 @@ public class DiskCreate {
 
     public DiskCreate clickOrder(){
         EntitiesUtils.clickOrder();
+        new DiskList.DiskTable()
+                .getRowByColumnValue(DiskList.DiskTable.COLUMN_NAME, name)
+                .getElementByColumn(DiskList.DiskTable.COLUMN_DATE)
+                .shouldNot(Condition.exactText(""), Duration.ofMinutes(1));
         return this;
     }
 }

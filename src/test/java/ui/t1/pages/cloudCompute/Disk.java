@@ -29,6 +29,11 @@ public class Disk extends IProductT1Page {
                 Dialog.byTitle("Создать снимок").setInputValue("Название снимка", name));
     }
 
+    public void createImage(String name) {
+        runActionWithParameters(BLOCK_PARAMETERS, "Создать образ из диска", "Подтвердить", () ->
+                Dialog.byTitle("Создать образ из диска").setInputValue("Имя образа", name));
+    }
+
     public Snapshot selectSnapshot(String snapshot){
         getTableByHeader("Снимки").getRowElementByColumnValue("Имя", snapshot).shouldBe(Condition.visible).click();
         return new Snapshot();
