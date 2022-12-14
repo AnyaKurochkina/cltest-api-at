@@ -113,7 +113,7 @@ public class GraphNegativeTest extends Tests {
     }
 
     @DisplayName("Негативный тест на создание графа с неуникальным значением поля envs в модификациях")
-    @TmsLink("")
+    @TmsLink("1353676")
     @Test
     public void createGraphsWithNotUniqueEnvsFieldInMod() {
         Env env = Env.DEV;
@@ -138,8 +138,8 @@ public class GraphNegativeTest extends Tests {
         assertEquals(String.format("Env field values are not unique: %s", env.getValue()), error);
     }
 
-    @DisplayName("Негативный тест на создание графа с невалидным значением поля envs в модификациях")
-    @TmsLink("")
+    @DisplayName("Негативный тест на создание графа с не валидным значением поля envs в модификациях")
+    @TmsLink("1353678")
     @Test
     public void createGraphsWithInvalidEnvsFieldInMod() {
         Env env = Env.SOME_VALUE;

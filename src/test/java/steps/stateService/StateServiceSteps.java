@@ -1,9 +1,9 @@
 package steps.stateService;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.gson.Gson;
 import core.enums.Role;
 import core.helper.Configure;
+import core.helper.JsonHelper;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;

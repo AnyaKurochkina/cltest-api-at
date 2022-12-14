@@ -22,7 +22,7 @@ import static steps.productCatalog.ActionSteps.*;
 public class ActionByNameTest {
 
     @DisplayName("Получение действия по имени")
-    @TmsLink("")
+    @TmsLink("1358558")
     @Test
     public void getActionByNameTest() {
         String actionName = "get_action_by_name_example_test_api";
@@ -36,7 +36,7 @@ public class ActionByNameTest {
     }
 
     @DisplayName("Обновление действия по имени")
-    @TmsLink("")
+    @TmsLink("1358561")
     @Test
     public void patchTest() {
         String actionName = "action_patch_by_name_test_api";
@@ -52,7 +52,7 @@ public class ActionByNameTest {
 
     @Test
     @DisplayName("Удаление действия по имени")
-    @TmsLink("")
+    @TmsLink("1358562")
     public void deleteActionByNameTest() {
         String actionName = "action_delete_by_name_test_api";
         JSONObject jsonObject = Action.builder()
@@ -67,7 +67,7 @@ public class ActionByNameTest {
     }
 
     @DisplayName("Копирование действия по имени")
-    @TmsLink("")
+    @TmsLink("1358563")
     @Test
     public void copyActionByNameTest() {
         String actionName = "clone_action_by_name_test_api";
@@ -101,7 +101,7 @@ public class ActionByNameTest {
     }
 
     @DisplayName("Экспорт действия по имени")
-    @TmsLink("")
+    @TmsLink("1358566")
     @Test
     public void exportActionByNameTest() {
         String actionName = "action_export_by_name_test_api";
