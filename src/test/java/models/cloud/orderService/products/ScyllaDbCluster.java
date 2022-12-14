@@ -53,8 +53,8 @@ public class ScyllaDbCluster extends IProduct {
         if(productName == null)
             productName = "ScyllaDB Cluster Astra";
         initProduct();
-        if (domain == null)
-            domain = OrderServiceSteps.getDomainBySegment(this, segment);
+//        if (domain == null)
+//            domain = OrderServiceSteps.getDomainBySegment(this, segment);
         if(flavor == null)
             flavor = getMinFlavor();
         if(osVersion == null)
@@ -77,6 +77,7 @@ public class ScyllaDbCluster extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
+        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 

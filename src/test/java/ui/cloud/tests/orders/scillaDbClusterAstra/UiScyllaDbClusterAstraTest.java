@@ -1,4 +1,5 @@
-package ui.cloud.tests.orders.scyllaDB;
+package ui.cloud.tests.orders.scillaDbClusterAstra;
+
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
@@ -6,7 +7,8 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.ScyllaDb;
+
+import models.cloud.orderService.products.ScyllaDbCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
@@ -17,33 +19,34 @@ import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 @Epic("UI Продукты")
-@Feature("ScyllaDB")
-@Tags({@Tag("ui"), @Tag("ui_scylla_db")})
-public class UiScyllaDbTest extends UiProductTest {
+@Feature("ScyllaDbClusterAstra")
+@Tags({@Tag("ui"), @Tag("ui_scylla_db_cluster_astra")})
+public class UiScyllaDbClusterAstraTest extends UiProductTest{
 
-    ScyllaDb product;
-    //=ScyllaDb.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/3a445f64-a939-4d92-b967-5b545d83fb5f/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    ScyllaDbCluster product;
+    //=ScyllaDbCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/b43cfbed-d5ba-4061-a1e7-0bbde210db2b/main?context=proj-1oob0zjo5h&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
 
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
+       /// product.setProductName(""); Для Rhel версии
         new LoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
     @Test
-    @TmsLink("464084")
+    @TmsLink("")
     @Order(1)
-    @DisplayName("UI ScyllaDB. Заказ")
+    @DisplayName("UI Scylla_db_cluster_astra. Заказ")
     void orderScyllaDB() {
         double preBillingProductPrice;
         try {
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
-            ScyllaDbOrderPage orderPage = new ScyllaDbOrderPage();
+            ScyllaDbClusterOrderPage orderPage = new ScyllaDbClusterOrderPage();
             orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
@@ -58,14 +61,14 @@ public class UiScyllaDbTest extends UiProductTest {
                     .getElementByColumn("Продукт")
                     .hover()
                     .click();
-            ScyllaPage scyllaPages = new ScyllaPage(product);
+            ScyllaDbClusterPage scyllaPages = new ScyllaDbClusterPage(product);
             scyllaPages.waitChangeStatus(Duration.ofMinutes(25));
             scyllaPages.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
         }
-        ScyllaPage scyllaPage = new ScyllaPage(product);
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         Assertions.assertEquals(preBillingProductPrice, scyllaPage.getCostOrder(), 0.01);
     }
 
@@ -73,9 +76,9 @@ public class UiScyllaDbTest extends UiProductTest {
     @Test
     @TmsLink("1236730")
     @Order(2)
-    @DisplayName("UI ScyllaDB. Проверка полей заказа")
+    @DisplayName("UI Scylla_db_cluster_astra. Проверка полей заказа")
     void checkHeaderHistoryTable() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
         scyllaPage.checkHeadersHistory();
         scyllaPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
@@ -83,57 +86,48 @@ public class UiScyllaDbTest extends UiProductTest {
     }
 
     @Test
-    @Order(5)
-    @TmsLink("464235")
-    @DisplayName("UI ScyllaDB. Перезагрузить по питанию")
-    void restart() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
-        scyllaPage.runActionWithCheckCost(CompareType.EQUALS, scyllaPage::restart);
-    }
-
-    @Test
     @Order(9)
-    @TmsLink("464279")
-    @DisplayName("UI ScyllaDB. Расширить диск")
+    @TmsLink("")
+    @DisplayName("UI Scylla_db_cluster_astra. Расширить диск")
     void expandDisk() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
-        scyllaPage.runActionWithCheckCost(CompareType.MORE, () -> scyllaPage.enlargeDisk("/app/scylla/data", "20", new Table("Размер, Гб").getRowByIndex(0)));
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
+        scyllaPage.runActionWithCheckCost(CompareType.MORE, () -> scyllaPage.enlargeDisk("/app/scylla/data", "20", new Table("Роли узла").getRow(0).get()));
     }
 
     @Test
     @Order(11)
-    @TmsLink("1190981")
-    @DisplayName("UI ScyllaDB. Проверить конфигурацию")
+    @TmsLink("")
+    @DisplayName("UI Scylla_db_cluster_astra. Проверить конфигурацию")
     void vmActCheckConfig() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
-        scyllaPage.runActionWithCheckCost(CompareType.EQUALS, scyllaPage::checkConfiguration);
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
+        scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.checkConfiguration(new Table("Роли узла").getRow(0).get()));
     }
 
     @Test
     @Order(12)
-    @TmsLink("464341")
-    @DisplayName("UI ScyllaDB. Создание БД")
+    @TmsLink("")
+    @DisplayName("UI Scylla_db_cluster_astra. Создание БД")
     void createDb() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.createDb(nameDb));
     }
 
     @Test
     @Order(16)
-    @TmsLink("629611")
-    @DisplayName("UI ScyllaDB. Добавить пользователя")
+    @TmsLink("")
+    @DisplayName("UI Scylla_db_cluster_astra. Добавить пользователя")
     void addUserDb() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.createDb(nameDb));
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.addUserDb(shortNameUserDB));
     }
 
     @Test
     @Order(17)
-    @TmsLink("629634")
-    @DisplayName("UI ScyllaDB. Сбросить пароль пользователя БД")
+    @TmsLink("")
+    @DisplayName("UI Scylla_db_cluster_astra. Сбросить пароль пользователя БД")
     void resetPasswordUserDb() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.createDb(nameDb));
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.addUserDb(shortNameUserDB));
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.resetPasswordUserDb(shortNameUserDB));
@@ -141,11 +135,11 @@ public class UiScyllaDbTest extends UiProductTest {
 
     @Test
     @Order(18)
-    @TmsLink("629635")
-    @DisplayName("UI ScyllaDB. Удалить пользователя БД")
+    @TmsLink("")
+    @DisplayName("UI Scylla_db_cluster_astra. Удалить пользователя БД")
     void
     deleteUserDb() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.createDb(nameDb));
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.addUserDb(shortNameUserDB));
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.deleteUserDb(shortNameUserDB));
@@ -153,42 +147,30 @@ public class UiScyllaDbTest extends UiProductTest {
 
     @Test
     @Order(19)
-    @TmsLink("629649")
-    @DisplayName("UI ScyllaDB. Удаление БД")
+    @TmsLink("")
+    @DisplayName("UI Scylla_db_cluster_astra. Удаление БД")
     void removeDb() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.createDb(nameDb));
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.removeDb(nameDb));
     }
 
     @Test
-    @Order(20)
-    @TmsLinks({@TmsLink("464218"), @TmsLink("464284")})
-    @Disabled
-    @DisplayName("UI ScyllaDB. Выключить принудительно / Включить")
-    void stopHard() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
-        scyllaPage.runActionWithCheckCost(CompareType.LESS, scyllaPage::stopHard);
-        scyllaPage.runActionWithCheckCost(CompareType.MORE, scyllaPage::start);
+    @Order(17)
+    @TmsLink("")
+    @DisplayName("UI Scylla_db_cluster_astra. Мониторинг ОС")
+    void monitoringOs() {
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
+        scyllaPage.checkClusterMonitoringOs();
     }
 
-    @Test
-    @Order(21)
-    @TmsLink("464202")
-    @Disabled
-    @DisplayName("UI ScyllaDB. Выключить")
-    void stopSoft() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
-        scyllaPage.runActionWithCheckCost(CompareType.LESS, scyllaPage::stopSoft);
-    }
-
-    @Test
-    @Order(100)
-    @TmsLink("464240")
-    @DisplayName("UI ScyllaDB. Удаление продукта")
-    void delete() {
-        ScyllaPage scyllaPage = new ScyllaPage(product);
-        scyllaPage.delete();
-    }
+//    @Test
+//    @Order(100)
+//    @TmsLink("")
+//    @DisplayName("UI Scylla_db_cluster_astra. Удаление продукта")
+//    void delete() {
+//        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
+//        scyllaPage.delete();
+//    }
 
 }

@@ -73,7 +73,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
     }
 
     public void delete() {
-        runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
+        runActionWithParameters(BLOCK_CLUSTER, "Удалить рекурсивно", "Удалить", () ->
         {
             Dialog dlgActions = new Dialog("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
@@ -200,7 +200,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
 
 //createAclTopics2(Arrays.asList("1", "2", "11", "5", "100500"));
 // если список одинаков для тестов то выносим в поле класса
-    public void createAclTopics2(List<String> names) {
+    public void createTopics2(List<String> names) {
         btnTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         //получаем список topics, в котором нет созданных топиков
         List<String> topics = names.stream().filter(topic -> !new Table(HEADER_NAME_TOPIC).isColumnValueEquals(HEADER_NAME_TOPIC, topic)).collect(Collectors.toList());
@@ -350,25 +350,12 @@ public class ApacheKafkaClusterPage extends IProductPage {
     }
 
     public void checkNameCluster() {
-
         String nameCluster = new Table("Имя кластера").getFirstValueByColumn("Имя кластера");
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-            product = ApacheKafkaCluster.builder().env("LT").platform("OpenStack").segment("dev-srv-app").build();
-        else
-            product = ApacheKafkaCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
-        ApacheKafkaClusterOrderPage orderPage = new ApacheKafkaClusterOrderPage();
-
-        //Проверка кнопки Заказать на неактивность, до заполнения полей
-        orderPage.getOrderBtn().shouldBe(Condition.disabled);
-
-        //Проверка Детали заказа
-        orderPage.getNameCluster().setValue(nameCluster);
+        new ApacheKafkaClusterOrderPage().getNameCluster().setValue(nameCluster);
         new Alert().checkColor(Alert.Color.RED).checkText("Значение поля не уникально").close();
-
     }
 
 

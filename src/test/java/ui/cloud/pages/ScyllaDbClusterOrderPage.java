@@ -11,7 +11,7 @@ import java.util.UUID;
 import static com.codeborne.selenide.Selenide.$x;
 
 @Getter
-public class ScyllaDbOrderPage extends Product {
+public class ScyllaDbClusterOrderPage extends Product {
 
     SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
     SelenideElement hardDrive2 = $x("(//div[contains(text(),'Жесткий диск')])[2]");
@@ -28,13 +28,13 @@ public class ScyllaDbOrderPage extends Product {
 
     String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
-    public ScyllaDbOrderPage() {
+    public ScyllaDbClusterOrderPage() {
         label.setValue(labelValue);
         platform.getElement().shouldBe(Condition.enabled);
     }
 
     public void checkOrderDetails(){
-        if(getCalculationDetails().shouldBe().exists())
+        if(getCalculationDetails().shouldBe(Condition.visible).exists())
         {
             getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         }

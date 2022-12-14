@@ -22,7 +22,7 @@ import java.time.Duration;
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
     PostgreSQL product;
-    //= PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    //= PostgreSQL.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/ba244d94-18cc-488f-b5c9-b21b712c89d7/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";

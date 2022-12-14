@@ -15,13 +15,14 @@ import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
+import java.util.Arrays;
+
 @Epic("UI Продукты")
-@Feature("Windows")
+@Feature("ApacheKafkaCluster")
 @Tags({@Tag("ui"), @Tag("ui_ApacheKafkaCluster")})
 public class UiApacheKafkaClusterTest extends UiProductTest {
 
-    ApacheKafkaCluster product;
-    //=ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/16c2f0a8-ce63-42f6-b512-ceb7fda27e09/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    ApacheKafkaCluster product=ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/bc629d27-c320-4b3a-89ee-3b005a3e7dd1/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -29,43 +30,43 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         new LoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
-
-    @Test
-    @TmsLink("851992")
-    @Order(1)
-    @DisplayName("UI ApacheKafkaCluster. Заказ")
-    void orderPostgreSQL() {
-        double preBillingProductPrice;
-        try {
-            new IndexPage()
-                    .clickOrderMore()
-                    .selectProduct(product.getProductName());
-            ApacheKafkaClusterOrderPage orderPage = new ApacheKafkaClusterOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
-            EntitiesUtils.clickOrder();
-            new OrdersPage()
-                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-                    .getElementByColumn("Продукт")
-                    .hover()
-                    .click();
-            ApacheKafkaClusterPage pSqlPages = new ApacheKafkaClusterPage(product);
-            pSqlPages.waitChangeStatus(Duration.ofMinutes(25));
-            pSqlPages.checkLastAction("Развертывание");
-        } catch (Throwable e) {
-            product.setError(e.toString());
-            throw e;
-        }
-        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
-        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getCostOrder(), 0.01);
-    }
-
+//
+//    @Test
+//    @TmsLink("851992")
+//    @Order(1)
+//    @DisplayName("UI ApacheKafkaCluster. Заказ")
+//    void orderPostgreSQL() {
+//        double preBillingProductPrice;
+//        try {
+//            new IndexPage()
+//                    .clickOrderMore()
+//                    .selectProduct(product.getProductName());
+//            ApacheKafkaClusterOrderPage orderPage = new ApacheKafkaClusterOrderPage();
+//            orderPage.getOsVersion().select(product.getOsVersion());
+//            orderPage.getSegment().selectByValue(product.getSegment());
+//            orderPage.getPlatform().selectByValue(product.getPlatform());
+//            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+//            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+//            orderPage.getGroup().select(accessGroup.getPrefixName());
+//            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
+//            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+//            EntitiesUtils.clickOrder();
+//            new OrdersPage()
+//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+//                    .getElementByColumn("Продукт")
+//                    .hover()
+//                    .click();
+//            ApacheKafkaClusterPage pSqlPages = new ApacheKafkaClusterPage(product);
+//            pSqlPages.waitChangeStatus(Duration.ofMinutes(25));
+//            pSqlPages.checkLastAction("Развертывание");
+//        } catch (Throwable e) {
+//            product.setError(e.toString());
+//            throw e;
+//        }
+//        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+//        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getCostOrder(), 0.01);
+//    }
+//
 
     @Test
     @TmsLink("1319683")
@@ -181,14 +182,14 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/app", "20", new Table("Роли узла").getRowByIndex(0)));
     }
 
-    @Test
-    @Order(14)
-    @TmsLink("851993")
-    @DisplayName("UI ApacheKafkaCluster.Пакетное создание Topic-ов")
-    void createTopics() {
-        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.createTopics("1","2"));
-    }
+//    @Test
+//    @Order(14)
+//    @TmsLink("851993")
+//    @DisplayName("UI ApacheKafkaCluster.Пакетное создание Topic-ов")
+//    void createTopics() {
+//        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.createTopics2(Arrays.asList("1","2")));
+//    }
 
     @Test
     @Order(15)
@@ -281,13 +282,13 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::checkConfiguration);
     }
 
-    @Test
-    @Order(100)
-    @TmsLink("852007")
-    @DisplayName("UI ApacheKafkaCluster. Удаление продукта")
-    void delete() {
-        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.ZERO, pSqlPage::delete);
-    }
+//    @Test
+//    @Order(100)
+//    @TmsLink("852007")
+//    @DisplayName("UI ApacheKafkaCluster. Удаление продукта")
+//    void delete() {
+//        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.ZERO, pSqlPage::delete);
+//    }
 
  }
