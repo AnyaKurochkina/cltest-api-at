@@ -1,6 +1,7 @@
 package api.cloud.orderService;
 
 import api.Tests;
+import com.mifmif.common.regex.Generex;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -29,9 +30,6 @@ public class LoadBalancerTest extends Tests {
             Server.builder().address("10.226.99.132").port(443).name("d5soul-ngc005lk.corp.dev.vtb").build());
     List<Server> serversHttp = Arrays.asList(Server.builder().address("10.226.48.194").port(80).name("d5soul-ngc004lk.corp.dev.vtb").build(),
             Server.builder().address("10.226.99.132").port(80).name("d5soul-ngc005lk.corp.dev.vtb").build());
-
-//    final LoadBalancer balancer = LoadBalancer.builder().password("1zEcE3blgEjejN7S").build()
-//            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/network/orders/f149c836-782a-448f-bf41-8c8aea503f4f/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @TmsLink("1286242")
     @Tag("actions")
@@ -201,7 +199,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             balancer.addGslb(Gslb.builder()
-                    .globalname("tcp-public")
+                    .globalname("tcp-public-" + balancer.getEnv())
                     .frontend(frontend)
                     .build());
         }
@@ -215,7 +213,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addHttpSimple(balancer);
             balancer.addGslb(Gslb.builder()
-                    .globalname("http-public")
+                    .globalname("http-public-" + balancer.getEnv())
                     .frontend(frontend)
                     .healthCheckParams(Gslb.HealthCheckParams.builder()
                             .urlPath("/")
@@ -260,7 +258,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             Gslb gslb = Gslb.builder()
-                    .globalname("tcp-public")
+                    .globalname("tcp-public" + balancer.getEnv())
                     .frontend(frontend)
                     .build();
             balancer.addGslb(gslb);
