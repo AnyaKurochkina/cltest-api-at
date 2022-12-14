@@ -7,7 +7,6 @@ import core.helper.StringUtils;
 import httpModels.productCatalog.service.createService.response.DataSource;
 import httpModels.productCatalog.service.createService.response.ExtraData;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
-import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -161,7 +160,6 @@ public class Service extends Entity implements IProductCatalog {
     }
 
     @Override
-    @Step("Удаление сервиса")
     protected void delete() {
         deleteServiceById(id);
         Assertions.assertFalse(isServiceExists(name));

@@ -3,7 +3,6 @@ package steps.productCatalog;
 import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
-import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.service.GetServiceList;
 import models.cloud.productCatalog.service.Service;
@@ -38,11 +37,12 @@ public class ServiceSteps extends Steps {
     }
 
     @Step("Получение сервиса по Id")
-    public static GetServiceResponse getServiceById(String objectId) {
+    public static Service getServiceById(String objectId) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(serviceUrl + objectId + "/")
-                .extractAs(GetServiceResponse.class);
+                .assertStatus(200)
+                .extractAs(Service.class);
     }
 
     @Step("Получение сервиса по имени {name}")
