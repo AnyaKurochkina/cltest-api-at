@@ -16,7 +16,7 @@ public class Backend {
     String mode = "tcp";
     List<Server> servers;
     @Builder.Default
-    Boolean advancedCheck = false;
+    Boolean advancedCheck = true;
     @Builder.Default
     String balancingAlgorithm = "leastconn";
     @Builder.Default
@@ -24,7 +24,9 @@ public class Backend {
     @Builder.Default
     Integer checkFall = 3;
     @Builder.Default
-    Integer checkPort = 80;
+    String checkSsl = "disabled";
+    @Builder.Default
+    String match = "status";
     @Builder.Default
     Integer checkRise = 3;
     @Builder.Default
