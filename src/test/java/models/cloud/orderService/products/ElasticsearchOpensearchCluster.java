@@ -58,8 +58,8 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        flavorData = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_data:DEV").get(0);
-        flavorMaster = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_master:DEV").get(0);
+        flavorData = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:data:" + envType() + ":" + getEnv().toLowerCase()).get(0);
+        flavorMaster = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:master:" + envType() + ":" + getEnv().toLowerCase()).get(0);
 //        flavorKibana = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_kibana:DEV").get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
@@ -88,7 +88,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     }
 
     public void addKibana(){
-        Flavor flavorKibana = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch:kibana:" + envType() + ":" + getEnv().toLowerCase()).get(0);
+        Flavor flavorKibana = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:kibana:" + envType() + ":" + getEnv().toLowerCase()).get(0);
         JSONObject object = JsonHelper.getJsonTemplate("/orders/elastic_open_search_add_kibana.json")
                 .set("$.flavor_kibana", new JSONObject(flavorKibana.toString()))
                 .set("$.kibana_password", kibanaPassword)
