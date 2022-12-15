@@ -20,7 +20,7 @@ public class MarketingInfoListPage extends BaseListPage {
         pageTitle.shouldBe(Condition.visible);
     }
 
-    @Step("Проверка заголовков списка групп образов")
+    @Step("Проверка заголовков списка маркетинговой информации")
     public MarketingInfoListPage checkHeaders() {
         Table table = new Table(nameColumn);
         assertEquals(0, table.getHeaderIndex("Имя"));
@@ -37,7 +37,7 @@ public class MarketingInfoListPage extends BaseListPage {
         return this;
     }
 
-    @Step("Проверка маркетинговой информации, содержащей в имени '{name}'")
+    @Step("Просмотр маркетинговой информации, содержащей в имени '{name}'")
     public MarketingInfoListPage view(String name) {
         Table table = new Table(nameColumn);
         SelenideElement row = table.getRowByColumnValueContains(nameColumn, name).get();
@@ -45,9 +45,9 @@ public class MarketingInfoListPage extends BaseListPage {
         return this;
     }
 
-    @Step("Проверка содержания '{name}' в заголовке при просмотре маркетинговой информации")
-    public MarketingInfoListPage checkInfoTitleContains(String name) {
-        $x("//div[contains(text(),'{}')]", name).shouldBe(Condition.visible);
+    @Step("Проверка содержания '{value}' в заголовке при просмотре маркетинговой информации")
+    public MarketingInfoListPage checkInfoTitleContains(String value) {
+        $x("//div[contains(text(),'{}')]", value).shouldBe(Condition.visible);
         return this;
     }
 }
