@@ -5,12 +5,14 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
+import ui.elements.DropDown;
 import ui.elements.Table;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static core.helper.StringUtils.$x;
 
 public class BaseListPage {
 
@@ -20,7 +22,9 @@ public class BaseListPage {
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
     private static final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private static final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
+    protected final SelenideElement nextPageButtonV2 = $x("//button[@aria-label='Следующая страница, выбрать']");
     protected final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
+    private final DropDown recordsPerPageDropDown = DropDown.byXpath("//div[text()='Записей на странице:']");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
@@ -104,6 +108,19 @@ public class BaseListPage {
     public BaseListPage lastPage() {
         TestUtils.scrollToTheBottom();
         lastPageButton.click();
+        return this;
+    }
+
+    @Step("Проверка номера страницы '{number}'")
+    public BaseListPage checkPageNumber(int number) {
+        $x("//button[contains(@aria-label, 'Страница {}')]", number).shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Изменение количества отображаемых строк на '{number}'")
+    public BaseListPage setRecordsPerPage(int number) {
+        recordsPerPageDropDown.selectByDivText(Integer.toString(number));
+        Assertions.assertEquals(Integer.toString(number), recordsPerPageDropDown.getElement().$x(".//span").getText());
         return this;
     }
 }
