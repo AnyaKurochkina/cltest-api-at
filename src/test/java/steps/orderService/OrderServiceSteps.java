@@ -16,7 +16,6 @@ import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.orderService.ResourcePool;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.orderService.interfaces.ProductStatus;
-import models.cloud.subModels.Item;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
@@ -145,25 +144,25 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Отправка action {action}")
     public static Response sendAction(String action, IProduct product, JSONObject jsonData, String projectId, String filter) {
-        Item item = getItemIdByOrderIdAndActionTitle(action, product, filter);
+        String item = getItemIdByOrderIdAndActionTitle(action, product, filter);
         return JsonHelper.getJsonTemplate("/actions/template.json")
-                .set("$.item_id", item.getId())
+                .set("$.item_id", item)
                 .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
                 .setProjectId(projectId)
-                .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
+                .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), action);
     }
 
     //{"order":{"attrs":{"client_types":"own","name":"dfghjkl","owner_cert":"dfghjkl"},"graph_version":"1.0.7"},"item_id":"ad08595a-c325-5434-9e5b-3d8b1bda7306"}
     @Step("Отправка action {action}")
     public static Response sendAction(String action, IProduct product, JSONObject jsonData, String filter) {
-        Item item = getItemIdByOrderIdAndActionTitle(action, product, filter);
+        String item = getItemIdByOrderIdAndActionTitle(action, product, filter);
         return JsonHelper.getJsonTemplate("/actions/template.json")
-                .set("$.item_id", item.getId())
+                .set("$.item_id", item)
                 .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
                 .setRole(Role.ORDER_SERVICE_ADMIN)
-                .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), item.getName());
+                .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), action);
     }
 
     @Step("Добавление действия {actionName} заказа и регистрация его в авторайзере")
@@ -212,16 +211,16 @@ public class OrderServiceSteps extends Steps {
     public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId, String filter) {
         //Получение item'ов для экшена
         waitStatus(Duration.ofMinutes(10), product);
-        Item item = getItemIdByOrderIdAndActionTitle(action, product, filter);
+        String item = getItemIdByOrderIdAndActionTitle(action, product, filter);
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
         //TODO: Возможно стоит сделать более детальную проверку на значение
 
         AtomicReference<Float> costPreBilling = new AtomicReference<>();
         AtomicReference<String> actionId = new AtomicReference<>();
 
-        Assertions.assertAll("Проверка выполнения action - " + item.getName() + " у продукта " + product.getOrderId(),
+        Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
-                    costPreBilling.set(CostSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
+                    costPreBilling.set(CostSteps.getCostAction(action, item, product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
                 () -> {
@@ -261,16 +260,16 @@ public class OrderServiceSteps extends Steps {
     @Step("Выполнение action \"{action}\"")
     public static void executeAction(String action, IProduct product, JSONObject jsonData) {
         //Получение item'ов для экшена
-        Item item = getItemIdByOrderIdAndActionTitle(action, product, "");
+        String item = getItemIdByOrderIdAndActionTitle(action, product, "");
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
         //TODO: Возможно стоит сделать более детальную проверку на значение
 
         AtomicReference<Float> costPreBilling = new AtomicReference<>();
         AtomicReference<String> actionId = new AtomicReference<>();
 
-        Assertions.assertAll("Проверка выполнения action - " + item.getName() + " у продукта " + product.getOrderId(),
+        Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
-                    costPreBilling.set(CostSteps.getCostAction(item.getName(), item.getId(), product, jsonData));
+                    costPreBilling.set(CostSteps.getCostAction(action, item, product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
                 () -> {
@@ -379,7 +378,8 @@ public class OrderServiceSteps extends Steps {
      * @param product продукт
      * @return - возвращаем ID айтема
      */
-    public static Item getItemIdByOrderIdAndActionTitle(String action, IProduct product, String filter) {
+    public static String getItemIdByOrderIdAndActionTitle(String action, IProduct product, String filter) {
+        String id;
         log.info("Получение item_id для " + Objects.requireNonNull(action));
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
@@ -388,22 +388,14 @@ public class OrderServiceSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath();
 
-        Item item = new Item();
         if (!filter.equals(""))
             filter = "it.data.config." + filter + " && ";
-        //Получаем все item ID по name, например: "expand_mount_point"
-        item.setId(jsonPath.get(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action)));
-        //Получаем все item name
-        item.setName(jsonPath.get(String.format("data.find{it.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.name", action, action)));
-        //Достаем item ID и item name и сохраняем в объект Item
-//        if (item.getId() == null) {
-//            item.setId(jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.item_id", action)));
-//            item.setName(jsonPath.get(String.format("data.find{it.actions.find{it.name.contains('%s')}}.actions.find{it.name.contains('%s')}.name", action, action)));
-//        }
-        String actions = Arrays.toString(jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.actions.title", filter)).toArray());
-        Assertions.assertNotNull(item.getId(), "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
+        id = jsonPath.getString(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action));
 
-        return item;
+        String actions = Arrays.toString(jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.actions.title", filter)).toArray());
+        Assertions.assertNotEquals("", id, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
+
+        return id;
     }
 
     /**
