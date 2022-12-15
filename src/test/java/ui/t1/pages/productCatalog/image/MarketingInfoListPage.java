@@ -41,7 +41,7 @@ public class MarketingInfoListPage extends BaseListPage {
     public MarketingInfoListPage view(String name) {
         Table table = new Table(nameColumn);
         SelenideElement row = table.getRowByColumnValueContains(nameColumn, name).get();
-        row.$x(".//a[contains(@href,'marketing')]").click();
+        row.$x(".//a[contains(@href,'/marketing/')]").click();
         return this;
     }
 
