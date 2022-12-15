@@ -42,7 +42,7 @@ public class ImageGroupsListPage extends BaseListPage {
     @Step("Раскрытие информации по группе образов")
     public ImageGroupsListPage showImageGroupInfo(int rowNumber) {
         Table imagesTable = new Table(titleColumn);
-        SelenideElement row = imagesTable.getRowByIndex(rowNumber);
+        SelenideElement row = imagesTable.getRow(rowNumber).get();
         row.$x(".//td[last()]//button").click();
         Table imageGroupInfoTable = new Table(osVersionColumn);
         assertEquals(0, imageGroupInfoTable.getHeaderIndex("Имя"));
@@ -56,7 +56,7 @@ public class ImageGroupsListPage extends BaseListPage {
     @Step("Скрытие информации по группе образов")
     public ImageGroupsListPage hideImageGroupInfo(int rowNumber) {
         Table imagesTable = new Table(titleColumn);
-        SelenideElement row = imagesTable.getRowByIndex(rowNumber);
+        SelenideElement row = imagesTable.getRow(rowNumber).get();
         row.$x(".//td[last()]//button").click();
         row.$x("following::th[text()='" + osVersionColumn + "']").shouldNotBe(Condition.visible);
         return this;

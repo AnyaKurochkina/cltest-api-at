@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
+import ui.elements.Button;
 import ui.elements.DropDown;
 import ui.elements.Table;
 
@@ -22,7 +23,7 @@ public class BaseListPage {
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
     private static final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
     private static final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
-    protected final SelenideElement nextPageButtonV2 = $x("//button[@aria-label='Следующая страница, выбрать']");
+    protected final Button nextPageButtonV2 = Button.byAriaLabel("Следующая страница, выбрать");
     protected final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
     private final DropDown recordsPerPageDropDown = DropDown.byXpath("//div[text()='Записей на странице:']");
 
@@ -71,7 +72,7 @@ public class BaseListPage {
 
     @Step("Раскрытие меню действий для строки, содержащей в столбце 'columnName' значение 'value'")
     public static void openActionMenu(String columnName, String value) {
-        new Table(columnName).getRowElementByColumnValue(columnName, value).$x(".//button[@id = 'actions-menu-button']")
+        new Table(columnName).getRowByColumnValue(columnName, value).get().$x(".//button[@id = 'actions-menu-button']")
                 .click();
         TestUtils.wait(500);
     }
@@ -79,20 +80,20 @@ public class BaseListPage {
     @Step("Проверка, что строка, содержащая в столбце '{columnName}' значение '{value}', подсвечена как ранее выбранная")
     public static void checkRowIsHighlighted(String columnName, String value) {
         Table table = new Table(columnName);
-        Assertions.assertTrue(table.getRowElementByColumnValue(columnName, value)
+        Assertions.assertTrue(table.getRowByColumnValue(columnName, value).get()
                 .getCssValue("color").contains("196, 202, 212"));
     }
 
     @Step("Выполнение действия копирования для строки, содержащей в столбце '{columnName}' значение '{value}'")
     public static void copy(String columnName, String value) {
-        new Table(columnName).getRowElementByColumnValue(columnName, value).$x(".//button[@id = 'actions-menu-button']")
+        new Table(columnName).getRowByColumnValue(columnName, value).get().$x(".//button[@id = 'actions-menu-button']")
                 .click();
         copyAction.click();
     }
 
     @Step("Выполнение действия удаления для строки, содержащей в столбце '{columnName}' значение '{value}'")
     public static void delete(String columnName, String value) {
-        new Table(columnName).getRowElementByColumnValue(columnName, value).$x(".//button[@id = 'actions-menu-button']")
+        new Table(columnName).getRowByColumnValue(columnName, value).get().$x(".//button[@id = 'actions-menu-button']")
                 .click();
         deleteAction.click();
     }

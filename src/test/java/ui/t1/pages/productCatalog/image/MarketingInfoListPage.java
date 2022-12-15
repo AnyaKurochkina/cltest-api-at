@@ -40,7 +40,7 @@ public class MarketingInfoListPage extends BaseListPage {
     @Step("Проверка маркетинговой информации, содержащей в имени '{name}'")
     public MarketingInfoListPage view(String name) {
         Table table = new Table(nameColumn);
-        SelenideElement row = table.getRowElementByColumnValueContains(nameColumn, name);
+        SelenideElement row = table.getRowByColumnValueContains(nameColumn, name).get();
         row.$x(".//a[contains(@href,'marketing')]").click();
         return this;
     }
