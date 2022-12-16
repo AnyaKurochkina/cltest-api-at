@@ -30,11 +30,18 @@ public class ImageGroups extends Entity {
     private List<Object> tags;
     private String distro;
     private String logo;
+    @JsonProperty("logo_id")
+    private String logoId;
     @JsonProperty("synced_at")
     private String syncedAt;
 
     @Override
     public Entity init() {
+        if (logoId == null) {
+            Logo createLogo = Logo.builder().build().createObject();
+            logoId = createLogo.getId();
+            logo = createLogo.getLogo();
+        }
         return this;
     }
 
@@ -47,13 +54,15 @@ public class ImageGroups extends Entity {
                 .set("$.tags", tags)
                 .set("$.distro", distro)
                 .set("$.synced_at", syncedAt)
+                .set("$.logo", logo)
+                .set("$.logo_id", logoId)
                 .build();
     }
 
     @Override
     protected void create() {
-        if(isImageGroupExist(name, false)) {
-            deleteImageGroupById(id);
+        if(isImageGroupExist(name, true)) {
+            deleteImageGroupByName(name);
         }
         ImageGroups imageGroup = createImageGroup(toJson());
         StringUtils.copyAvailableFields(imageGroup, this);
