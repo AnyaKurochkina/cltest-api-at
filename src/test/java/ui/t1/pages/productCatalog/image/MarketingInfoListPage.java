@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.elements.Table;
 
+import java.util.Arrays;
+
 import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,9 +25,8 @@ public class MarketingInfoListPage extends BaseListPage {
     @Step("Проверка заголовков списка маркетинговой информации")
     public MarketingInfoListPage checkHeaders() {
         Table table = new Table(nameColumn);
-        assertEquals(0, table.getHeaderIndex("Имя"));
-        assertEquals(1, table.getHeaderIndex("Идентификатор"));
-        assertEquals(2, table.getHeaderIndex("На поддержке"));
+        assertEquals(Arrays.asList("Имя", "Идентификатор", "На поддержке"),
+                table.getNotEmptyHeaders());
         return this;
     }
 

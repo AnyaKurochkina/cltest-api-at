@@ -8,6 +8,8 @@ import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.elements.Button;
 import ui.elements.Table;
 
+import java.util.Arrays;
+
 import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,18 +27,9 @@ public class ImagesListPage extends BaseListPage {
     @Step("Проверка заголовков списка образов")
     public ImagesListPage checkImagesListHeaders() {
         Table imagesTable = new Table(imageNameColumn);
-        assertEquals(0, imagesTable.getHeaderIndex("Имя"));
-        assertEquals(1, imagesTable.getHeaderIndex("ID Marketplace"));
-        assertEquals(2, imagesTable.getHeaderIndex("ID платформы"));
-        assertEquals(3, imagesTable.getHeaderIndex("Дата создания"));
-        assertEquals(4, imagesTable.getHeaderIndex("Дата изменения"));
-        assertEquals(5, imagesTable.getHeaderIndex("Дистрибутив"));
-        assertEquals(6, imagesTable.getHeaderIndex("Версия"));
-        assertEquals(7, imagesTable.getHeaderIndex("Архитектура"));
-        assertEquals(8, imagesTable.getHeaderIndex("Зона доступности"));
-        assertEquals(9, imagesTable.getHeaderIndex("Статус"));
-        assertEquals(10, imagesTable.getHeaderIndex("Теги"));
-        assertEquals(11, imagesTable.getHeaderIndex("Информация"));
+        assertEquals(Arrays.asList("Имя", "ID Marketplace", "ID платформы", "Дата создания", "Дата изменения",
+                        "Дистрибутив", "Версия", "Архитектура", "Зона доступности", "Статус", "Теги", "Информация"),
+                imagesTable.getNotEmptyHeaders());
         return this;
     }
 

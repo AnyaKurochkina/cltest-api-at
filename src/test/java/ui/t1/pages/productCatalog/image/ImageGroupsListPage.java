@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.elements.Table;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
+
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,12 +26,9 @@ public class ImageGroupsListPage extends BaseListPage {
 
     @Step("Проверка заголовков списка групп образов")
     public ImageGroupsListPage checkImageGroupsListHeaders() {
-        Table imagesTable = new Table(titleColumn);
-        assertEquals(0, imagesTable.getHeaderIndex("Имя"));
-        assertEquals(1, imagesTable.getHeaderIndex("Название"));
-        assertEquals(2, imagesTable.getHeaderIndex("Теги"));
-        assertEquals(3, imagesTable.getHeaderIndex("Дистрибутив"));
-        assertEquals(4, imagesTable.getHeaderIndex("Дата и время синхронизации"));
+        Table table = new Table(titleColumn);
+        assertEquals(Arrays.asList("Имя", "Название", "Теги", "Дистрибутив", "Дата и время синхронизации"),
+                table.getNotEmptyHeaders());
         return this;
     }
 

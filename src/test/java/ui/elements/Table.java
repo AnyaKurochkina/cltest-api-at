@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static core.helper.StringUtils.$x;
@@ -204,4 +205,8 @@ public class Table implements TypifiedElement {
         return getValueByColumnInRow(0, column);
     }
 
+    public List<String> getNotEmptyHeaders() {
+        headers.removeAll(Arrays.asList(""));
+        return headers;
+    }
 }
