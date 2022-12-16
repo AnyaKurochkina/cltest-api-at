@@ -11,7 +11,9 @@ import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static api.Tests.activeCnd;
@@ -198,7 +200,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
         }
     }
 
-//createAclTopics2(Arrays.asList("1", "2", "11", "5", "100500"));
+    //createAclTopics2(Arrays.asList("1", "2", "11", "5", "100500"));
 // если список одинаков для тестов то выносим в поле класса
     public void createTopics2(List<String> names) {
         btnTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -265,6 +267,45 @@ public class ApacheKafkaClusterPage extends IProductPage {
             Assertions.assertEquals(nameT1, new Table(HEADER_ACL).getRowByColumnValue(HEADER_ACL, nameT1).getValueByColumn(HEADER_ACL),
                     "Ошибка создания ACL на топик");
         }
+    }
+
+/* EXAMPLE:
+new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build())
+            .createAclTopics2(
+            AclTransaction.builder().certificate("cert1").type(AclTransaction.Type.BY_NAME).mask("name1").build(),
+                AclTransaction.builder().certificate("cert2").type(AclTransaction.Type.BY_MASK).mask("mask").build(),
+                AclTransaction.builder().certificate("cert2").type(AclTransaction.Type.ALL_TRANSACTION).mask("*").build(),
+                AclTransaction.builder().certificate("cert1").type(AclTransaction.Type.BY_NAME).mask("name2").build());
+*/
+    public void createAclTopics2(AclTransaction... transactions) {
+        btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        List<AclTransaction> acls = Arrays.stream(transactions)
+                .filter(acl -> !new Table(HEADER_ACL_TRANSACTION).isColumnValueEquals(HEADER_ACL_TRANSACTION, acl.mask)).collect(Collectors.toList());
+        if (acls.isEmpty())
+            return;
+        runActionWithParameters("ACL на транзакции", "Пакетное создание ACL на транзакцию Kafka", "Подтвердить", () -> {
+            Dialog.byTitle("Пакетное создание ACL на транзакцию Kafka");
+            for (int i = 0; i < acls.size(); i++) {
+                if (i != 0)
+                    btnAdd.shouldBe(Condition.enabled).click();
+                AclTransaction acl = acls.get(i);
+                Input.byLabel("Common Name сертификата клиента", i + 1).setValue(acl.certificate);
+                RadioGroup radioGroup = RadioGroup.byLabel("Введите идентификатор транзакции", i + 1);
+                if (acl.type == AclTransaction.Type.BY_MASK)
+                    Input.byLabel("Введите префикс идентификатора транзакции", -1).setValue(acl.mask);
+                if (acl.type == AclTransaction.Type.BY_NAME) {
+                    radioGroup.select("По имени");
+                    Input.byLabel("Введите идентификатор транзакции", -1).setValue(acl.mask);
+                }
+                if (acl.type == AclTransaction.Type.ALL_TRANSACTION) {
+                    radioGroup.select("Все транзакции");
+                    DropDown.byLabel("Префикс", -1).select(acl.mask);
+                }
+            }
+        });
+        btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        Assertions.assertEquals(new ArrayList<>(), acls.stream().filter(acl -> !new Table(HEADER_ACL_TRANSACTION).isColumnValueEquals(HEADER_ACL_TRANSACTION, acl.mask))
+                .collect(Collectors.toList()), "Не все acl были созданы");
     }
 
     public void dellAclTopics(String nameT1, String nameT2) {
