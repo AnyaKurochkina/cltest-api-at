@@ -2,7 +2,6 @@ package ui.t1.tests.cloudCompute;
 
 import api.Tests;
 import core.enums.Role;
-import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import lombok.extern.log4j.Log4j2;
@@ -15,6 +14,7 @@ import ru.testit.annotations.Title;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.LoginPage;
+import ui.t1.pages.cloudCompute.SelectBox;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudCompute.*;
@@ -93,7 +93,7 @@ public class UiCloudComputeTest extends Tests {
                 .addDisk()
                 .setAvailabilityZone(availabilityZone)
                 .setName("AT-UI-" + Math.abs(new Random().nextInt()))
-                .setSize(2)
+                .setSize(2L)
                 .clickOrder();
 
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
@@ -101,7 +101,7 @@ public class UiCloudComputeTest extends Tests {
         String orderId = diskPage.getOrderId();
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
-                .filter(i -> i.getSize().equals(disk.getSize()))
+                .filter(i -> Objects.equals(i.getSize(), disk.getSize()))
                 .filter(i -> i.getSrcOrderId().equals(orderId))
                 .count(), "Поиск item, где orderId = srcOrderId & size == " + disk.getSize());
 
@@ -150,7 +150,7 @@ public class UiCloudComputeTest extends Tests {
                 .filter(e -> {
                     if (!e.getOrderId().equals(e.getSrcOrderId()))
                         return false;
-                    if (!e.getSize().equals(vm.getBootSize()))
+                    if (!Objects.equals(e.getSize(), vm.getBootSize()))
                         return false;
                     return !Objects.nonNull(e.getParent());
                 }).count(), "Должен быть один item с новим orderId, size и parent=null");
@@ -291,7 +291,7 @@ public class UiCloudComputeTest extends Tests {
                 .addDisk()
                 .setAvailabilityZone(availabilityZone)
                 .setName("AT-UI-" + Math.abs(new Random().nextInt()))
-                .setSize(6)
+                .setSize(6L)
                 .clickOrder();
 
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
@@ -302,7 +302,7 @@ public class UiCloudComputeTest extends Tests {
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .filter(e -> e.getSrcOrderId().equals(orderIdDisk))
-                .filter(e -> e.getSize().equals(6))
+                .filter(e -> e.getSize().equals(6L))
                 .count(), "Item volume не соответствует условиям или не найден");
 
         Disk updatedDiskPage = new IndexPage()
@@ -313,7 +313,7 @@ public class UiCloudComputeTest extends Tests {
 
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
-                .filter(e -> e.getSize().equals(6))
+                .filter(e -> e.getSize().equals(6L))
                 .filter(e -> Objects.isNull(e.getParent()))
                 .count(), "Item volume не соответствует условиям или не найден");
 
@@ -405,7 +405,7 @@ public class UiCloudComputeTest extends Tests {
                 .addDisk()
                 .setAvailabilityZone(availabilityZone)
                 .setName("DISK-" + Math.abs(new Random().nextInt()))
-                .setSize(4)
+                .setSize(4L)
                 .clickOrder();
 
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();

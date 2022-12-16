@@ -19,7 +19,8 @@ public class VmCreate {
     private String description;
     private String availabilityZone;
     private SelectBox.Image image;
-    private Integer bootSize;
+    private String userImage;
+    private Long bootSize;
     private String bootType;
     private Boolean deleteOnTermination;
     private String flavorName;
@@ -44,7 +45,7 @@ public class VmCreate {
         return this;
     }
 
-    public VmCreate setBootSize(int bootSize) {
+    public VmCreate setBootSize(long bootSize) {
         this.bootSize = bootSize;
         Input.byLabel("Размер диска, Гб").setValue(bootSize);
         return this;
@@ -82,6 +83,12 @@ public class VmCreate {
     public VmCreate setImage(SelectBox.Image image) {
         this.image = image;
         SelectBox.setMarketPlaceImage(image);
+        return this;
+    }
+
+    public VmCreate setUserImage(String image) {
+        this.userImage = image;
+        SelectBox.setUserImage(image);
         return this;
     }
 

@@ -2,24 +2,22 @@ package ui.t1.tests.cloudCompute;
 
 import api.Tests;
 import core.enums.Role;
-import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.NotFoundException;
 import ru.testit.annotations.BeforeAll;
 import ru.testit.annotations.Title;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.LoginPage;
+import ui.t1.pages.cloudCompute.SelectBox;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudCompute.*;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -101,16 +99,16 @@ public class UiCloudComputeTest2 extends Tests {
     }
 
     @Test
-//    @Owner("checked")
+    @Owner("checked")
     @DisplayName("Создание образа из диска")
-    void createImageFromAttachDisk() {
+    void createImageFromDisk() {
         String name = "AT-UI-" + Math.abs(new Random().nextInt());
         DiskCreate disk = new IndexPage()
                 .goToDisks()
                 .addDisk()
                 .setAvailabilityZone(availabilityZone)
                 .setName(name)
-                .setSize(2)
+                .setSize(2L)
                 .clickOrder();
 
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
@@ -139,24 +137,167 @@ public class UiCloudComputeTest2 extends Tests {
                 .count(), "Item image не соответствует условиям или не найден");
     }
 
+    @Test
+    @Owner("checked")
+    @DisplayName("Создание диска из образа MarketPlace")
+    void creatDiskFromImage() {
+        String name = "AT-UI-" + Math.abs(new Random().nextInt());
+        DiskCreate disk = new IndexPage()
+                .goToDisks()
+                .addDisk()
+                .setAvailabilityZone(availabilityZone)
+                .setName(name)
+                .setMarketPlaceImage(image)
+                .setSize(5L)
+                .clickOrder();
 
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
+        String orderId = diskPage.getOrderId();
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderId))
+                .filter(i -> Objects.equals(i.getSize(), disk.getSize()))
+                .filter(i -> i.getSrcOrderId().equals(orderId))
+                .count(), "Поиск item, где orderId = srcOrderId & size == " + disk.getSize());
+
+        new IndexPage()
+                .goToDisks()
+                .selectDisk(name)
+                .runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
+
+        Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderId))
+                .count(), "Item disk не соответствует условиям или не найден");
+    }
+
+    @Test
+    @Owner("checked")
+    @DisplayName("Создание диска из пользовательского образа")
+    void creatDiskFromUserImage() {
+        String name = "AT-UI-" + Math.abs(new Random().nextInt());
+        DiskCreate disk = new IndexPage()
+                .goToDisks()
+                .addDisk()
+                .setAvailabilityZone(availabilityZone)
+                .setName(name)
+                .setSize(2L)
+                .clickOrder();
+
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
+        diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createImage(name));
+        Image imagePage = new IndexPage().goToImages().selectImage(name).checkCreate();
+
+        new IndexPage()
+                .goToDisks()
+                .selectDisk(name)
+                .runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
+
+        String newName = "AT-UI-" + Math.abs(new Random().nextInt());
+        DiskCreate newDisk = new IndexPage()
+                .goToDisks()
+                .addDisk()
+                .setAvailabilityZone(availabilityZone)
+                .setName(newName)
+                .setUserImage(name)
+                .setSize(5L)
+                .clickOrder();
+
+        Disk newDiskPage = new DiskList().selectDisk(newDisk.getName()).checkCreate();
+        String orderId = newDiskPage.getOrderId();
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderId))
+                .filter(i -> Objects.equals(i.getSize(), newDisk.getSize()))
+                .filter(i -> i.getSrcOrderId().equals(orderId))
+                .count(), "Поиск item, где orderId = srcOrderId & size == " + newDisk.getSize());
+
+        new IndexPage()
+                .goToDisks()
+                .selectDisk(newName)
+                .runActionWithCheckCost(CompareType.ZERO, newDiskPage::delete);
+
+        Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderId))
+                .count(), "Item disk не соответствует условиям или не найден");
+
+        new IndexPage()
+                .goToImages()
+                .selectImage(name)
+                .runActionWithCheckCost(CompareType.ZERO, imagePage::delete);
+    }
+
+    @Owner("Checked")
+    @Test
+    @DisplayName("Создание ВМ c пользовательским образом")
+    void createVmWidthUserImage() {
+        String name = "AT-UI-" + Math.abs(new Random().nextInt());
+        DiskCreate disk = new IndexPage()
+                .goToDisks()
+                .addDisk()
+                .setAvailabilityZone(availabilityZone)
+                .setName(name)
+                .setSize(2L)
+                .clickOrder();
+
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
+        diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createImage(name));
+        Image imagePage = new IndexPage().goToImages().selectImage(name).checkCreate();
+
+        new IndexPage()
+                .goToDisks()
+                .selectDisk(name)
+                .runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
+
+        VmCreate vm = new IndexPage()
+                .goToVirtualMachine()
+                .addVm()
+                .setUserImage(name)
+                .setDeleteOnTermination(true)
+                .setAvailabilityZone(availabilityZone)
+                .setName(name)
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
+                .clickOrder();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(name)
+                .runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
+
+        new IndexPage()
+                .goToImages()
+                .selectImage(name)
+                .runActionWithCheckCost(CompareType.ZERO, imagePage::delete);
+    }
 
     @Test
     void name() {
         new IndexPage().goToVirtualMachine().getVmList().forEach(e -> new IndexPage().goToVirtualMachine().selectCompute(e).delete());
         new IndexPage().goToDisks().getDiskList().forEach(e -> new IndexPage().goToDisks().selectDisk(e).delete());
+        new IndexPage().goToImages().geImageList().forEach(e -> new IndexPage().goToImages().selectImage(e).delete());
+        new IndexPage().goToSnapshots().geSnapshotList().forEach(e -> new IndexPage().goToSnapshots().selectSnapshot(e).delete());
         new IndexPage().goToPublicIps().getIpList().forEach(e -> new IndexPage().goToPublicIps().selectIp(e).delete());
 
-//        DiskCreatePage disk = new IndexPage()
-//                .goDisks()
-//                .addVm()
-//                .setMarketPlaceImage(new SelectBox.Image("Ubuntu", "20.04"))
-//                .setSize("5")
-//                .setType("SSD")
-//                .setName("Test-AT")
-//                .clickOrder();
-//
-//        DiskPage diskPage = new DisksPage().selectDisk(disk.getName());
+//        new IndexPage().goToVirtualMachine().getVmList().parallelStream().forEach(e -> {
+//            new LoginPage(project.getId()).signIn(Role.CLOUD_ADMIN);
+//            new IndexPage().goToVirtualMachine().selectCompute(e).delete();
+//        });
+//        new IndexPage().goToDisks().getDiskList().parallelStream().forEach(e -> {
+//            new LoginPage(project.getId()).signIn(Role.CLOUD_ADMIN);
+//            new IndexPage().goToDisks().selectDisk(e).delete();
+//        });
+//        new IndexPage().goToImages().geImageList().parallelStream().forEach(e -> {
+//            new LoginPage(project.getId()).signIn(Role.CLOUD_ADMIN);
+//            new IndexPage().goToImages().selectImage(e).delete();
+//        });
+//        new IndexPage().goToSnapshots().geSnapshotList().parallelStream().forEach(e -> {
+//            new LoginPage(project.getId()).signIn(Role.CLOUD_ADMIN);
+//            new IndexPage().goToSnapshots().selectSnapshot(e).delete();
+//        });
+//        new IndexPage().goToPublicIps().getIpList().parallelStream().forEach(e -> {
+//            new LoginPage(project.getId()).signIn(Role.CLOUD_ADMIN);
+//            new IndexPage().goToPublicIps().selectIp(e).delete();
+//        });
 
 
         System.out.println(1);

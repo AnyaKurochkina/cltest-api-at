@@ -9,7 +9,7 @@ import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 
-import static core.helper.StringUtils.$$x;
+import static core.helper.StringUtils.$x;
 
 public interface TypifiedElement {
     String scrollCenter = "{block: 'center'}";
@@ -37,7 +37,7 @@ public interface TypifiedElement {
 
     //  *[contains(text(), '₽/сут.')]    button[.='Действия']
     static SelenideElement getNearElement(@Language("XPath") String xpathSearchElement, @Language("XPath") String xpathNearElement) {
-        return $$x(String.format("(//%s/ancestor-or-self::*[count(.//%s) = 1])[last()]//%s", xpathNearElement, xpathSearchElement, xpathSearchElement)).filter(Condition.visible).first();
+        return $x(String.format("(//%s/ancestor-or-self::*[count(.//%s) = 1])[last()]//%s", xpathNearElement, xpathSearchElement, xpathSearchElement));
     }
 
     static String getIndex(int index) {

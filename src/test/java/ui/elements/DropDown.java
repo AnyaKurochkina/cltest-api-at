@@ -123,7 +123,7 @@ public class DropDown implements TypifiedElement {
         if (element.$x(String.format("input[@value='%s']", value)).exists())
             return;
         element.click();
-        $x("//*[@title = '{}']", value)
+        $x("//*[starts-with(@title, '{}')]", value)
                 .shouldBe(activeCnd)
                 .hover().shouldBe(clickableCnd)
                 .click();

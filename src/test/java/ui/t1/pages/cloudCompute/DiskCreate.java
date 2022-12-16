@@ -11,7 +11,7 @@ import java.time.Duration;
 public class DiskCreate {
     private String availabilityZone;
     private String name;
-    private Integer size;
+    private Long size;
     private String type;
 
     private SelectBox.Image marketPlaceImage;
@@ -29,7 +29,7 @@ public class DiskCreate {
         return this;
     }
 
-    public DiskCreate setSize(Integer size) {
+    public DiskCreate setSize(Long size) {
         Input.byLabel("Размер, Гб").setValue(String.valueOf(size));
         this.size = size;
         return this;
@@ -43,7 +43,6 @@ public class DiskCreate {
 
     public DiskCreate setMarketPlaceImage(SelectBox.Image marketPlaceImage) {
         Switch.byLabel("Создать из образа").setEnabled(true);
-        Radio.byValue("MarketPlace").checked();
         SelectBox.setMarketPlaceImage(marketPlaceImage);
         this.marketPlaceImage = marketPlaceImage;
         return this;
@@ -51,8 +50,7 @@ public class DiskCreate {
 
     public DiskCreate setUserImage(String userImage) {
         Switch.byLabel("Создать из образа").setEnabled(true);
-        Radio.byValue("Пользовательские").checked();
-        //Todo: доделать выбор образа
+        SelectBox.setUserImage(userImage);
         this.userImage = userImage;
         return this;
     }
