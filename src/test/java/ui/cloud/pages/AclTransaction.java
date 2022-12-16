@@ -8,7 +8,7 @@ public class AclTransaction {
     String mask;
     Type type;
 
-    enum Type {
+    public enum Type {
         BY_MASK,
         BY_NAME,
         ALL_TRANSACTION;

@@ -2,7 +2,6 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import core.helper.Configure;
 import models.cloud.orderService.products.ApacheKafkaCluster;
 import models.cloud.subModels.Flavor;
 import org.jetbrains.annotations.NotNull;
@@ -30,8 +29,8 @@ public class ApacheKafkaClusterPage extends IProductPage {
     private static final String HEADER_NAME_CLUSTER = "Имя кластера";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String STATUS = "Роли узла";
-    private static final String HEADER_ACL = "Маска";
-    private static final String HEADER_ACL_TRANSACTION = "Идентификатор транзакции или маска";
+    private static final String HEADER_ACL = "CN сертификата клиента";
+    private static final String HEADER_ACL_TRANSACTION = "CN сертификата клиента";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_ACL_IDEMPOTENT = "CN сертификата клиента";
 
@@ -174,7 +173,10 @@ public class ApacheKafkaClusterPage extends IProductPage {
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
-        expandDisk(name, size, node);
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+         runActionWithParameters(BLOCK_CLUSTER, "Увеличить дисковое пространство", "Подтвердить",
+                        () -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size));
+         //expandDisk(name, size, node);
         btnGeneralInfo.shouldBe(Condition.enabled).click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         node.scrollIntoView(scrollCenter).click();
@@ -200,18 +202,18 @@ public class ApacheKafkaClusterPage extends IProductPage {
         }
     }
 
-    //createAclTopics2(Arrays.asList("1", "2", "11", "5", "100500"));
+    //createTopics2(Arrays.asList("1", "2", "11", "5", "100500"));
 // если список одинаков для тестов то выносим в поле класса
     public void createTopics2(List<String> names) {
         btnTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         //получаем список topics, в котором нет созданных топиков
         List<String> topics = names.stream().filter(topic -> !new Table(HEADER_NAME_TOPIC).isColumnValueEquals(HEADER_NAME_TOPIC, topic)).collect(Collectors.toList());
-        //если список пуст, то выходим из функции, т.к. смысла запускать действия нет
+        //если список содержит указанный элемент, то выходим из функции, т.к. смысла запускать действия нет
         if (topics.isEmpty())
             return;
         runActionWithParameters("Список топиков", "Пакетное создание Topic-ов Kafka", "Подтвердить", () -> {
             Dialog.byTitle("Пакетное создание Topic-ов Kafka");
-            //перебираем список тописков и вставляем по индексу в конкретный инпут (+1 т.к. у элементов отсчет с 1 а не с 0 как в цикле)
+            //перебираем список топиков и вставляем по индексу в конкретный инпут (+1 т.к. у элементов отсчет с 1 а не с 0 как в цикле)
             for (int i = 0; i < topics.size(); i++) {
                 //на первом топике жать + не нужно
                 if (i != 0)
@@ -225,53 +227,70 @@ public class ApacheKafkaClusterPage extends IProductPage {
                 .filter(topic -> !new Table(HEADER_NAME_TOPIC).isColumnValueEquals(HEADER_NAME_TOPIC, topic)).collect(Collectors.toList()), "Не все топики были созданы");
     }
 
-    public void changeParamTopics(String nameT1) {
+    public void changeParamTopics(List<String> names) {
         btnTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (!(new Table(HEADER_NAME_TOPIC).isColumnValueContains(HEADER_NAME_TOPIC, names.get(0)))) createTopics2(names);
         runActionWithParameters("Список топиков", "Изменить параметр топиков Kafka Cluster", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Изменить параметр топиков Kafka Cluster");
-            dlg.setDropDownValue("Топик *", nameT1);
+            DropDown.byLabel("Топик").select(names.get(0));
+//            DropDown.byLabel("Топик *").selectByValue(names.get(0));
+//            Input.byLabel("Топик *").setValue(names.get(0));
             DropDown.byLabel("Тип очистки").select("compact");
         });
         btnTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Assertions.assertEquals(nameT1, new Table(HEADER_NAME_TOPIC).getRowByColumnValue(HEADER_NAME_TOPIC, nameT1).getValueByColumn(HEADER_NAME_TOPIC),
+        Assertions.assertEquals(names.get(0), new Table(HEADER_NAME_TOPIC).getRowByColumnValue(HEADER_NAME_TOPIC, names.get(0)).getValueByColumn(HEADER_NAME_TOPIC),
                 "Ошибка создания топика");
     }
 
-    public void dellTopics(String nameT1, String nameT2) {
-
+    public void dellTopics(List<String> names) {
         btnTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (!(new Table(HEADER_NAME_TOPIC).isColumnValueContains(HEADER_NAME_TOPIC, nameT1))) {
-            createTopics(nameT1, nameT2);
+        List<String> topics = names.stream().filter(topic -> new Table(HEADER_NAME_TOPIC).isColumnValueEquals(HEADER_NAME_TOPIC, topic)).collect(Collectors.toList());
+        if (topics.isEmpty()) {
+            createTopics2(names);
         }
         runActionWithParameters("Список топиков", "Пакетное удаление Topic-ов Kafka", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Пакетное удаление Topic-ов Kafka");
-            dlg.setDropDownValue("Имена Topic-ов", nameT1);
-            dlg.setDropDownValue("Имена Topic-ов", nameT2);
+            for (int i = 0; i < names.size(); i++) {
+                dlg.setDropDownValue("Имена Topic-ов", names.get(i));
+            }
         });
         btnTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Assertions.assertFalse(new Table(HEADER_NAME_TOPIC).isColumnValueEquals("", nameT1), "Топик не удален");
+        Assertions.assertEquals(new ArrayList<>(), topics.stream()
+                .filter(topic -> new Table(HEADER_NAME_TOPIC).isColumnValueEquals(HEADER_NAME_TOPIC, topic)).collect(Collectors.toList()), "Не все топики были удалены");
     }
 
-    public void createAclTopics(String nameT1, String nameT2) {
+    public void createAclTopics(List<String> names) {
         btnAclTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (!(new Table(HEADER_ACL).isColumnValueContains(HEADER_ACL, nameT1))) {
-            runActionWithParameters("ACL на топики", "Пакетное создание ACL Kafka", "Подтвердить", () -> {
-                Input.byLabel("Common Name сертификата клиента").setValue(nameT1);
-                Input.byLabel("Маска имени топика").setValue(nameT1);
-                btnAdd.shouldBe(Condition.enabled).click();
-                Input.byLabel("Common Name сертификата клиента", 2).setValue(nameT2);
-                RadioGroup.byLabel("Выберите топик *", 2).select("По имени");
-                DropDown.byLabel("Топики").select(nameT1);
-            });
-            btnAclTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            Assertions.assertEquals(nameT1, new Table(HEADER_ACL).getRowByColumnValue(HEADER_ACL, nameT1).getValueByColumn(HEADER_ACL),
-                    "Ошибка создания ACL на топик");
-        }
+        List<String> topicsAcl = names.stream().filter(topic -> !new Table(HEADER_ACL).isColumnValueEquals(HEADER_ACL, topic)).collect(Collectors.toList());
+        //если список содержит указанный элемент, то выходим из функции, т.к. смысла запускать действия нет
+        if (topicsAcl.isEmpty())
+            return;
+        runActionWithParameters("ACL на топики", "Пакетное создание ACL Kafka", "Подтвердить", () -> {
+            for (int i = 0; i < topicsAcl.size(); i++) {
+                //на первом топике жать + не нужно
+                if (i != 0)
+                    btnAdd.shouldBe(Condition.enabled).click();
+                Input.byLabel("Common Name сертификата клиента", i + 1).setValue(topicsAcl.get(i));
+                Input.byLabel("Маска имени топика").setValue(topicsAcl.get(i));
+                if (i == 1) {
+                    //Input.byLabel("Common Name сертификата клиента", 2).setValue(nameT2);
+                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(topicsAcl.get(i))).select("По имени");
+                    DropDown.byLabel("Топики").select(topicsAcl.get(i));
+                }
+                if (i == 2) {
+                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(topicsAcl.get(i))).select("Все топики");
+                }
+            }
+        });
+        btnAclTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        Assertions.assertEquals(new ArrayList<>(), topicsAcl.stream()
+                .filter(topic -> !new Table(HEADER_ACL)
+                        .isColumnValueEquals(HEADER_ACL, topic))
+                .collect(Collectors.toList()), "Не все топики ACL были созданы");
     }
 
 /* EXAMPLE:
-new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build())
-            .createAclTopics2(
+new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build()).createAclTopics2(
             AclTransaction.builder().certificate("cert1").type(AclTransaction.Type.BY_NAME).mask("name1").build(),
                 AclTransaction.builder().certificate("cert2").type(AclTransaction.Type.BY_MASK).mask("mask").build(),
                 AclTransaction.builder().certificate("cert2").type(AclTransaction.Type.ALL_TRANSACTION).mask("*").build(),
@@ -308,65 +327,105 @@ new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build())
                 .collect(Collectors.toList()), "Не все acl были созданы");
     }
 
-    public void dellAclTopics(String nameT1, String nameT2) {
+
+    public void dellAclTopics(List<String> names) {
         btnAclTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (!(new Table(HEADER_ACL).isColumnValueContains(HEADER_ACL, nameT1))) {
-            createAclTopics(nameT1, nameT2);
+        List<String> topicsAcl = names.stream().filter(topic -> new Table(HEADER_ACL).isColumnValueEquals(HEADER_ACL, topic)).collect(Collectors.toList());
+        //если список содержит указанный элемент, то выходим из функции, т.к. смысла запускать действия нет
+        if (topicsAcl.isEmpty()) {
+            createAclTopics(names);
         }
         runActionWithParameters("ACL на топики", "Пакетное удаление ACL Kafka", "Подтвердить", () -> {
-            DropDown.byLabel("Common Name сертификата клиента").select(nameT1);
-            Input.byLabel("Маска имени топика").setValue(nameT1);
-            btnAdd.shouldBe(Condition.enabled).click();
-            DropDown.byLabel("Common Name сертификата клиента", 2).select(nameT2);
-            RadioGroup.byLabel("Выберите топик *", 2).select("По имени");
-            DropDown.byLabel("Топики").select(nameT1);
+            for (int i = 0; i < names.size(); i++) {
+                //на первом топике жать + не нужно
+                if (i != 0) {
+                    btnAdd.shouldBe(Condition.enabled).click();
+                }
+                DropDown.byLabel("Common Name сертификата клиента", i + 1).select(names.get(i));
+                Input.byLabel("Маска имени топика").setValue(names.get(i));
+                if (i == 1) {
+                    //Input.byLabel("Common Name сертификата клиента", 2).setValue(nameT2);
+                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(names.get(i))).select("По имени");
+                    DropDown.byLabel("Топики").select(names.get(i));
+                }
+                if (i == 2) {
+                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(names.get(i))).select("Все топики");
+                }
+            }
         });
         btnAclTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Assertions.assertFalse(new Table(HEADER_ACL).isColumnValueEquals("", nameT1), "ТопикACL не удален");
+        Assertions.assertEquals(new ArrayList<>(), topicsAcl.stream()
+                .filter(topic -> new Table(HEADER_ACL)
+                        .isColumnValueEquals(HEADER_ACL, topic))
+                .collect(Collectors.toList()), "Не все топики ACL были удалены");
     }
 
-    public void createAclTrans(String nameT1, String nameT2) {
+    public void createAclTransaction(List<String> names) {
         btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (!(new Table(HEADER_ACL_TRANSACTION).isColumnValueContains(HEADER_ACL_TRANSACTION, nameT1))) {
-            runActionWithParameters("ACL на транзакции", "Пакетное создание ACL на транзакцию Kafka", "Подтвердить", () -> {
-                Input.byLabel("Common Name сертификата клиента").setValue(nameT1);
-                Input.byLabel("Введите префикс идентификатора транзакции").setValue(nameT1);
-                btnAdd.shouldBe(Condition.enabled).click();
-                Input.byLabel("Common Name сертификата клиента", 2).setValue(nameT2);
-                RadioGroup.byLabel("Введите идентификатор транзакции *", 2).select("По имени");
-                Input.byLabel("Введите идентификатор транзакции *", 7).setValue(nameT1);
-                btnAdd.shouldBe(Condition.enabled).click();
-                Input.byLabel("Common Name сертификата клиента", 3).setValue(nameT1);
-                RadioGroup.byLabel("Введите идентификатор транзакции *", 3).select("Все транзакции");
-            });
-            btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            Assertions.assertEquals(nameT1, new Table(HEADER_ACL_TRANSACTION).getRowByColumnValue(HEADER_ACL_TRANSACTION, nameT1).getValueByColumn(HEADER_ACL_TRANSACTION),
-                    "Ошибка создания ACL на транзакции");
-        }
-    }
-
-    public void dellAclTrans(String nameT1, String nameT2) {
-        btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (!(new Table(HEADER_ACL_TRANSACTION).isColumnValueContains(HEADER_ACL_TRANSACTION, nameT1))) {
-            createAclTrans(nameT1, nameT2);
-        }
-        runActionWithParameters("ACL на транзакции", "Пакетное удаление ACL на транзакцию Kafka", "Подтвердить", () -> {
-            DropDown.byLabel("Common Name сертификата клиента").select(nameT1);
-            Input.byLabel("Введите префикс идентификатора транзакции").setValue(nameT1);
-            btnAdd.shouldBe(Condition.enabled).click();
-            DropDown.byLabel("Common Name сертификата клиента", 2).select(nameT2);
-            RadioGroup.byLabel("Введите идентификатор транзакции *", 2).select("По имени");
-            Input.byLabel("Введите идентификатор транзакции *", 7).setValue(nameT1);
-            btnAdd.shouldBe(Condition.enabled).click();
-            DropDown.byLabel("Common Name сертификата клиента", 3).select(nameT1);
-            RadioGroup.byLabel("Введите идентификатор транзакции *", 3).select("Все транзакции");
-
+        List<String> topicsAclTransaction = names.stream()
+                .filter(topic -> !new Table(HEADER_ACL_TRANSACTION)
+                        .isColumnValueEquals(HEADER_ACL_TRANSACTION, topic))
+                .collect(Collectors.toList());
+        //если список содержит указанный элемент, то выходим из функции, т.к. смысла запускать действия нет
+        if (topicsAclTransaction.isEmpty())
+            return;
+        runActionWithParameters("ACL на транзакции", "Пакетное создание ACL на транзакцию Kafka", "Подтвердить", () -> {
+            for (int i = 0; i < topicsAclTransaction.size(); i++) {
+                //на первом топике жать + не нужно
+                if (i != 0)
+                    btnAdd.shouldBe(Condition.enabled).click();
+                Input.byLabel("Common Name сертификата клиента", i + 1).setValue(topicsAclTransaction.get(i));
+                Input.byLabel("Введите префикс идентификатора транзакции").setValue(topicsAclTransaction.get(i));
+                if (i == 1) {
+                    //Input.byLabel("Common Name сертификата клиента", 2).setValue(nameT2);
+                    RadioGroup.byLabel("Введите идентификатор транзакции *", Integer.parseInt(topicsAclTransaction.get(i))).select("По имени");
+                    Input.byLabel("Введите идентификатор транзакции *", 7).setValue(topicsAclTransaction.get(i));
+                    //DropDown.byLabel("Топики").select(topicsAclTransaction.get(i));
+                }
+                if (i == 2) {
+                    RadioGroup.byLabel("Введите идентификатор транзакции *", Integer.parseInt(topicsAclTransaction.get(i))).select("Все транзакции");
+                }
+            }
         });
         btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Assertions.assertFalse(new Table(HEADER_ACL_TRANSACTION).isColumnValueEquals("", nameT1), "ACLTransaction не удален");
+        Assertions.assertEquals(new ArrayList<>(), topicsAclTransaction.stream()
+                .filter(topic -> !new Table(HEADER_ACL_TRANSACTION)
+                        .isColumnValueEquals(HEADER_ACL_TRANSACTION, topic))
+                .collect(Collectors.toList()), "Не все ACL на транзакции были созданы");
     }
 
-    public void createAclIdemp(String nameT1) {
+    public void dellAclTransaction(List<String> names) {
+        btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        List<String> topicsAclTransaction = names.stream().filter(topic -> new Table(HEADER_ACL_TRANSACTION).isColumnValueEquals(HEADER_ACL_TRANSACTION, topic)).collect(Collectors.toList());
+        //если список содержит указанный элемент, то выходим из функции, т.к. смысла запускать действия нет
+        if (topicsAclTransaction.isEmpty()) {
+            createAclTransaction(names);
+        }
+        runActionWithParameters("ACL на транзакции", "Пакетное удаление ACL на транзакцию Kafka", "Подтвердить", () -> {
+            for (int i = 0; i < names.size(); i++) {
+                //на первом топике жать + не нужно
+                if (i != 0)
+                    btnAdd.shouldBe(Condition.enabled).click();
+                DropDown.byLabel("Common Name сертификата клиента", i + 1).select(names.get(i));
+                Input.byLabel("Введите префикс идентификатора транзакции").setValue(names.get(i));
+                if (i == 1) {
+                    //Input.byLabel("Common Name сертификата клиента", 2).setValue(nameT2);
+                    RadioGroup.byLabel("Введите идентификатор транзакции *", Integer.parseInt(names.get(i))).select("По имени");
+                    Input.byLabel("Введите идентификатор транзакции *", 7).setValue(names.get(i));
+                    //DropDown.byLabel("Топики").select(topicsAclTransaction.get(i));
+                }
+                if (i == 2) {
+                    RadioGroup.byLabel("Введите идентификатор транзакции *", Integer.parseInt(names.get(i))).select("Все транзакции");
+                }
+        }});
+        btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        Assertions.assertEquals(new ArrayList<>(), topicsAclTransaction.stream()
+                .filter(topic -> new Table(HEADER_ACL_TRANSACTION)
+                        .isColumnValueEquals(HEADER_ACL_TRANSACTION, topic))
+                .collect(Collectors.toList()), "Не все топики ACL на транзакции были удалены");
+    }
+
+    public void createAclIdempotent(String nameT1) {
         btnIdempAcl.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_ACL_IDEMPOTENT).isColumnValueContains(HEADER_ACL_IDEMPOTENT, nameT1))) {
             runActionWithParameters("Идемпотентных ACL", "Создание идемпотентных ACL Kafka", "Подтвердить", () -> {
@@ -378,10 +437,10 @@ new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build())
         }
     }
 
-    public void dellAclIdemp(String nameT1) {
+    public void dellAclIdempotent(String nameT1) {
         btnIdempAcl.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_ACL_IDEMPOTENT).isColumnValueContains(HEADER_ACL_IDEMPOTENT, nameT1))) {
-            createAclIdemp(nameT1);
+            createAclIdempotent(nameT1);
         }
         runActionWithParameters("Идемпотентных ACL", "Удаление идемпотентных ACL Kafka", "Подтвердить", () -> {
             Input.byLabel("Common Name сертификата клиента").setValue(nameT1);
@@ -394,7 +453,7 @@ new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build())
         String nameCluster = new Table("Имя кластера").getFirstValueByColumn("Имя кластера");
         new IndexPage()
                 .clickOrderMore()
-                .selectProduct(product.getProductName());
+                .selectProduct("Apache Kafka Cluster Astra");
         new ApacheKafkaClusterOrderPage().getNameCluster().setValue(nameCluster);
         new Alert().checkColor(Alert.Color.RED).checkText("Значение поля не уникально").close();
     }

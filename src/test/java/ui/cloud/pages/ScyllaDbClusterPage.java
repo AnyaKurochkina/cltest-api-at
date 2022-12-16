@@ -4,9 +4,11 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import models.cloud.orderService.products.ScyllaDbCluster;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.function.Executable;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
+import ui.elements.DropDown;
 import ui.elements.Table;
 
 import static core.helper.StringUtils.$x;
@@ -19,6 +21,7 @@ public class ScyllaDbClusterPage extends IProductPage {
     private static final String BLOCK_AT_DB_ADMIN = "at_db_admin";
     private static final String BLOCK_DB_AT_USER = "at_db_at_user";
     private static final String BLOCK_DB_USERS = "Пользователи";
+    private static final String BLOCK_ACCESS = "Доступ";
     private static final String HEADER_NAME_USER_DB = "Имя";
     private static final String HEADER_NAME_DB = "Имя базы данных";
     private static final String HEADER_DB_USERS_ROLE = "Роль";
@@ -108,6 +111,26 @@ public class ScyllaDbClusterPage extends IProductPage {
             Assertions.assertTrue(new Table(HEADER_DB_USERS_ROLE).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb), "Пользователь не существует");
         }
     }
+    public void addRightsUser(String nameDb,String nameUserDb) {
+        new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+        if (!(new Table(HEADER_NAME_USER_DB,2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb))) {
+            runActionWithParameters(BLOCK_ACCESS, "Добавить права доступа пользователю БД", "Подтвердить", () -> {
+                Dialog dlg = Dialog.byTitle("Добавить права доступа пользователю БД");
+                DropDown.byLabel("Имя базы данных").select(nameDb);
+                DropDown.byLabel("Имя пользователя").select(nameUserDb);
+            });
+            btnGeneralInfo.shouldBe(Condition.enabled).click();
+            Assertions.assertTrue(
+                    new Table(HEADER_NAME_USER_DB,2).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb), "Ошибка добавления прав доступа");
+        }}
+
+    public void deleteRightsUser(String nameUserDb) {
+        new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+        if (new Table(HEADER_NAME_USER_DB,2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb)) {
+            runActionWithoutParameters2(nameUserDb,2,"Удалить права доступа пользователю БД");
+        Assertions.assertFalse(new Table(HEADER_NAME_USER_DB,2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb), "Ошибка удаления прав доступа");
+        }
+    }
 
     public void removeDb(String name) {
         new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -148,6 +171,9 @@ public class ScyllaDbClusterPage extends IProductPage {
             runActionWithoutParameters(nameUser, "Удалить пользователя");
             Assertions.assertTrue(noDataUser.exists(), "Ошибка удаления пользователя БД");
         }
+    }
+    public void runActionWithoutParameters2(String headerBlock,int index, String action) {
+        runActionWithoutParameters(getBtnAction(headerBlock,index), action, ActionParameters.builder().build());
     }
 
     public class VirtualMachineTable extends VirtualMachine {
