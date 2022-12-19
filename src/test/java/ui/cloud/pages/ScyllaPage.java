@@ -101,7 +101,7 @@ public class ScyllaPage extends IProductPage {
                 Dialog dlg = Dialog.byTitle("Добавить пользователя");
                 dlg.setInputValue("Имя пользователя", nameUserDb);
                 generatePassButton.shouldBe(Condition.enabled).click();
-                new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+                Alert.green("Значение скопировано");
             });
         btnGeneralInfo.shouldBe(Condition.enabled).click();
             Assertions.assertTrue(new Table(HEADER_DB_USERS_ROLE).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb), "Пользователь не существует");
@@ -135,7 +135,7 @@ public class ScyllaPage extends IProductPage {
         runActionWithParameters(nameUserDB, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
-            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+            Alert.green("Значение скопировано");
         });
     }
 

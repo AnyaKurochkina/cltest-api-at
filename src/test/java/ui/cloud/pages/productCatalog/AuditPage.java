@@ -7,10 +7,7 @@ import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.graph.GraphPage;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Alert;
-import ui.elements.DropDown;
-import ui.elements.Input;
-import ui.elements.Table;
+import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -124,8 +121,7 @@ public class AuditPage extends GraphPage {
     private void checkAuditIsLoaded() {
         if ($x("//div[text()='Дата и время']/ancestor::table//td[text()='Нет данных для отображения']").exists()) {
             TestUtils.wait(2000);
-            Selenide.refresh();
-            new Alert().close();
+            TypifiedElement.refresh();
             new GraphPage().goToAuditTab();
         }
     }
