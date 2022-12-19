@@ -19,6 +19,10 @@ public class Button implements TypifiedElement {
         return new Button($x("//button[.='{}']", text));
     }
 
+    public static Button byAriaLabel(String value) {
+        return new Button($x("//button[@aria-label='{}']", value));
+    }
+
     public void click() {
         button.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
     }

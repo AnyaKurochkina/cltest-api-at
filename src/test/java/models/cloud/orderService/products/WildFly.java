@@ -88,7 +88,7 @@ public class WildFly extends IProduct {
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate')}.data.config.certificate.end_date"));
-        super.updateCerts("wildfly_update_certs");
+        OrderServiceSteps.executeAction("wildfly_update_certs", this, new JSONObject().put("accept", true), this.getProjectId());
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate')}.data.config.certificate.end_date"));
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
 
@@ -101,6 +101,22 @@ public class WildFly extends IProduct {
 
     public void syncDev() {
         OrderServiceSteps.executeAction("wildfly_sync", this, null, this.getProjectId());
+    }
+
+    public void updateOs() {
+        OrderServiceSteps.executeAction("wildfly_update_os", this, new JSONObject().put("accept", true), this.getProjectId());
+    }
+
+    public void stopService() {
+        OrderServiceSteps.executeAction("wildfly_stop_wf", this, new JSONObject().put("accept", true), this.getProjectId());
+    }
+
+    public void startService() {
+        OrderServiceSteps.executeAction("wildfly_start_wf", this, new JSONObject().put("dumb", "empty"), this.getProjectId());
+    }
+
+    public void restartService() {
+        OrderServiceSteps.executeAction("wildfly_restart_wf", this, new JSONObject().put("accept", true), this.getProjectId());
     }
 
     //Добавление пользователя WildFly

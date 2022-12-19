@@ -5,9 +5,6 @@
     "attrs": {
       "domain": "corp.dev.vtb",
       "platform": "OpenStack",
-      "boot_disk": {
-        "size": 30
-      },
       "flavor_ch": {
         "cpus": 4,
         "name": "c4m8",

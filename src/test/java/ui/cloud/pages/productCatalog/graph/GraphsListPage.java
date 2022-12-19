@@ -25,9 +25,6 @@ public class GraphsListPage extends BaseListPage {
     private final SelenideElement inputDescriptionField = $x("//input[@name='description']");
     private final SelenideElement inputAuthorField = $x("//*[@name ='author']");
     private final DropDown typeDropDown = DropDown.byLabel("Тип");
-    private final SelenideElement actionType = $x("//*[@data-value='action']");
-    private final SelenideElement creatingType = $x("//*[@data-value='creating']");
-    private final SelenideElement serviceType = $x("//*[@data-value='service']");
     private final SelenideElement createGraphButton = $x("//*[text()='Создать']/..");
     private final Input searchInput = Input.byPlaceholder("Поиск");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
