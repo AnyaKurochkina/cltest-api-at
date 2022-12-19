@@ -1,7 +1,13 @@
 [
   {
     "objectClassName": "models.cloud.authorizer.Organization",
-    "title": "T1-CLOUD",
-    "name": "t1-cloud"
+    "title": "VTB тест",
+    "name": "org-q1lnk42588"
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.Project",
+    "id": "proj-gz1ztc9y5r",
+    "projectName": "AT_UI",
+    "isForOrders": true
   }
 ]

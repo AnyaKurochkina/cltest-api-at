@@ -6,7 +6,6 @@ import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import httpModels.productCatalog.graphs.getUsedList.GetUsedListResponse;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
-import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -118,27 +117,26 @@ public class Graph extends Entity implements IProductCatalog {
                 .set("$.allowed_developers", allowedDevelopers)
                 .set("$.restricted_developers", restrictedDevelopers)
                 .setIfNullRemove("$.modifications", mod)
+                .setIfNullRemove("$.json_schema", jsonSchema)
                 .build();
     }
 
     @Override
-    @Step("Создание графа")
     protected void create() {
         deleteIfExist(name);
-        Graph graph = createGraph(toJson());
+        Graph graph = createGraph(toJson()).assertStatus(201).extractAs(Graph.class);
         StringUtils.copyAvailableFields(graph, this);
         Assertions.assertNotNull(graphId, "Граф с именем: " + name + ", не создался");
     }
 
     @Override
-    @Step("Удаление графа")
     protected void delete() {
         deleteGraphById(graphId);
         Assertions.assertFalse(isGraphExists(name));
     }
 
     private void deleteIfExist(String name) {
-        if (productCatalogSteps.isExists(name)) {
+        if (isGraphExists(name)) {
             String id = getGraphByName(name).getGraphId();
             List<GetUsedListResponse> list = getObjectArrayUsedGraph(id).getList("", GetUsedListResponse.class);
             for (GetUsedListResponse resp : list) {

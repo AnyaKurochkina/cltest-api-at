@@ -1,19 +1,27 @@
 package api.cloud.productCatalog.graph;
 
+import api.Tests;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.Env;
 import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.graph.Modification;
+import models.cloud.productCatalog.graph.RootPath;
+import models.cloud.productCatalog.graph.UpdateType;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.GraphSteps.createGraph;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -102,5 +110,57 @@ public class GraphNegativeTest extends Tests {
     public void getGraphsByNotExistId() {
         Response response = steps.getResponseGraphListById("not-exist-id");
         assertEquals("Введите правильный UUID.", response.jsonPath().getList("id").get(0));
+    }
+
+    @DisplayName("Негативный тест на создание графа с неуникальным значением поля envs в модификациях")
+    @TmsLink("1353676")
+    @Test
+    public void createGraphsWithNotUniqueEnvsFieldInMod() {
+        Env env = Env.DEV;
+        Modification jsonSchema = Modification.builder()
+                .name("json_schema_dev_mod")
+                .envs(Arrays.asList(env, env, env))
+                .order(1)
+                .path("title")
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data("dev_title")
+                .build();
+        JSONObject jsonObject = Graph.builder()
+                .name("create_graph_with_not_unique_envs_field")
+                .version("1.0.0")
+                .modifications(Collections.singletonList(jsonSchema))
+                .build()
+                .init()
+                .toJson();
+        String error = createGraph(jsonObject).assertStatus(400).jsonPath()
+                .getList("modifications[0].non_field_errors", String.class).get(0);
+        assertEquals(String.format("Env field values are not unique: %s", env.getValue()), error);
+    }
+
+    @DisplayName("Негативный тест на создание графа с не валидным значением поля envs в модификациях")
+    @TmsLink("1353678")
+    @Test
+    public void createGraphsWithInvalidEnvsFieldInMod() {
+        Env env = Env.SOME_VALUE;
+        Modification jsonSchema = Modification.builder()
+                .name("json_schema_dev_mod")
+                .envs(Collections.singletonList(env))
+                .order(1)
+                .path("title")
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data("dev_title")
+                .build();
+        JSONObject jsonObject = Graph.builder()
+                .name("create_graph_with_invalid_envs_field_in_mod_test_api")
+                .version("1.0.0")
+                .modifications(Collections.singletonList(jsonSchema))
+                .build()
+                .init()
+                .toJson();
+        String error = createGraph(jsonObject).assertStatus(400).jsonPath()
+                .getList("modifications[0].non_field_errors", String.class).get(0);
+        assertEquals(String.format("Env field values are not valid: %s", env.getValue()), error);
     }
 }

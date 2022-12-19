@@ -76,13 +76,11 @@ public class GraphSteps extends Steps {
     }
 
     @Step("Создание графа")
-    public static Graph createGraph(JSONObject body) {
+    public static Response createGraph(JSONObject body) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
-                .post(graphUrl)
-                .assertStatus(201)
-                .extractAs(Graph.class);
+                .post(graphUrl);
     }
 
     @Step("Получение графа по Id {objectId}")
@@ -222,5 +220,14 @@ public class GraphSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(graphUrl + objectId + "/copy/")
                 .assertStatus(200);
+    }
+
+    @Step("Получение графа по Id и контексту")
+    public static Graph getGraphByIdContext(String projectId, String objectId) {
+       return new Http(ProductCatalogURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/projects/{}/graphs/{}/", projectId, objectId)
+                .assertStatus(200)
+                .extractAs(Graph.class);
     }
 }

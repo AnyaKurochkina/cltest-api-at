@@ -17,6 +17,7 @@ import static core.helper.Configure.ProductCatalogURL;
 public class ServiceSteps extends Steps {
 
     private static String serviceUrl = "/api/v1/services/";
+    private static String serviceUrlV2 = "/api/v2/services/";
 
     @Step("Получение списка Сервисов продуктового каталога")
     public static List<Service> getServiceList() {
@@ -44,6 +45,14 @@ public class ServiceSteps extends Steps {
                 .extractAs(GetServiceResponse.class);
     }
 
+    @Step("Получение сервиса по имени {name}")
+    public static Service getServiceByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(serviceUrlV2  + name + "/")
+                .extractAs(Service.class);
+    }
+
     @Step("Получение сервиса по Id и фильтру {filter}")
     public static Service getServiceByIdAndFilter(String objectId, String filter) {
         return new Http(ProductCatalogURL)
@@ -65,5 +74,55 @@ public class ServiceSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(serviceUrl + id + "/")
                 .assertStatus(204);
+    }
+
+    @Step("Удаление сервиса по имени {name}")
+    public static void deleteServiceByName(String name) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(serviceUrlV2 + name + "/")
+                .assertStatus(204);
+    }
+
+    @Step("Проверка существования сервиса по имени")
+    public static boolean isServiceExists(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(serviceUrl + "exists/?name=" + name)
+                .assertStatus(200).jsonPath().get("exists");
+    }
+
+    @Step("Частичное обновление сервиса по имени {name}")
+    public static Response partialUpdateServiceByName(String name, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .patch(serviceUrlV2 + name + "/");
+    }
+
+    @Step("Копирование сервиса по имени {name}")
+    public static Service copyServiceByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(serviceUrlV2 + name + "/copy/")
+                .assertStatus(200)
+                .extractAs(Service.class);
+    }
+
+    @Step("Загрузка сервиса в Gitlab по имени {name}")
+    public static Response dumpServiceToGitByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(serviceUrlV2 + name + "/dump_to_bitbucket/")
+                .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
+                .assertStatus(201);
+    }
+
+    @Step("Экспорт сервиса по имени {name}")
+    public static void exportServiceByName(String name) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(serviceUrlV2 + name + "/obj_export/")
+                .assertStatus(200);
     }
 }
