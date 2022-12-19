@@ -35,7 +35,7 @@ public class OrgDirectionPage {
         Input.byName(NAME).setValue(name);
         saveButton.scrollIntoView(TypifiedElement.scrollCenter);
         saveButton.click();
-        new Alert().checkText("Направление успешно изменено").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Направление успешно изменено");
         return this;
     }
 

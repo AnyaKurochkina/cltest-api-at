@@ -43,7 +43,7 @@ public class CloudDirectorPage {
         Dialog dialog = Dialog.byTitle("Создать VMware организацию");
         dialog.setInputValue("Название", name);
         dialog.clickButton("Создать");
-        new Alert().checkText("Организация с таким именем уже существует в vDC").checkColor(Alert.Color.RED);
+        Alert.green("Организация с таким именем уже существует в vDC");
         dialog.getDialog().shouldBe(Condition.visible);
     }
 
@@ -54,7 +54,7 @@ public class CloudDirectorPage {
         Dialog dialog = Dialog.byTitle("Удаление");
         dialog.setInputValue("Идентификатор", dialog.getDialog().find("b").innerText());
         dialog.clickButton("Удалить");
-        new Alert().checkText(String.format("VMware организация %s удалена успешно", name)).checkColor(Alert.Color.GREEN).close();
+        Alert.green("VMware организация {} удалена успешно", name);
     }
 
     public VMwareOrganizationPage goToOrganization(String name) {

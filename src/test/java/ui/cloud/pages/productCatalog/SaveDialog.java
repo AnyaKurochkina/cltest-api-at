@@ -35,7 +35,7 @@ public class SaveDialog extends Dialog {
         saveAsNextVersionCheckBox.click();
         setInputValue("Новая версия", newVersion);
         saveButton.shouldBe(Condition.enabled).click();
-        new Alert().checkText(alertText).checkColor(Alert.Color.GREEN).close();
+        Alert.green(alertText);
     }
 
     @Step("Проверка невозможности сохранения с версией некорректного формата '{newVersion}'")
@@ -50,7 +50,7 @@ public class SaveDialog extends Dialog {
     @Step("Сохранение со следующей патч версией")
     public void saveWithNextPatchVersion(String alertText) {
         saveButton.shouldBe(Condition.enabled).click();
-        new Alert().checkText(alertText).checkColor(Alert.Color.GREEN).close();
+        Alert.green(alertText);
     }
 
     @Step("Сохранение со следующей патч версией без проверки уведомления")
@@ -63,6 +63,6 @@ public class SaveDialog extends Dialog {
         saveAsNextVersionCheckBox.click();
         newVersionInput.getInput().shouldHave(Condition.exactValue(nextVersion));
         saveButton.shouldBe(Condition.enabled).click();
-        new Alert().checkText(alertText).checkColor(Alert.Color.GREEN).close();
+        Alert.green(alertText);
     }
 }

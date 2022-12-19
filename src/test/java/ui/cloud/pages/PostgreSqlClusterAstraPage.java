@@ -130,7 +130,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
                 Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя базы данных", name);
                 generatePassButton.shouldBe(Condition.enabled).click();
-                new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+                Alert.green("Значение скопировано");
             });
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             Assertions.assertEquals(name, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, name).getValueByColumn(HEADER_NAME_DB));
@@ -165,7 +165,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
                 dlg.setInputValue("Имя пользователя", nameUserDb);
                 dlg.setInputValue("Комментарий", comment);
                 generatePassButton.shouldBe(Condition.enabled).click();
-                new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+                Alert.green("Значение скопировано");
             });
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             Assertions.assertTrue(new Table(HEADER_NAME_DB).isColumnValueContains("", nameDb + "_" + nameUserDb), "Пользователь не существует");
@@ -226,18 +226,18 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_AT_DB_ADMIN, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = Dialog.byTitle("Сбросить пароль");
+            Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
-            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+            Alert.green("Значение скопировано");
         });
     }
 
     public void resetPasswordUserDb(String nameUserDB) {
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(nameUserDB, "Сбросить пароль", "Подтвердить", () -> {
-            Dialog dlg = Dialog.byTitle("Сбросить пароль");
+            Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
-            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+            Alert.green("Значение скопировано");
         });
     }
 
