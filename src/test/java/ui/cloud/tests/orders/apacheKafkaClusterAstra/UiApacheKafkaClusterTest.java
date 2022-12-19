@@ -1,16 +1,19 @@
 package ui.cloud.tests.orders.apacheKafkaClusterAstra;
 
+import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.ApacheKafkaCluster;
+import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,7 +22,7 @@ import java.util.List;
 @Tags({@Tag("ui"), @Tag("ui_ApacheKafkaCluster")})
 public class UiApacheKafkaClusterTest extends UiProductTest {
     List<String> name= Arrays.asList("1","2");
-    ApacheKafkaCluster product=ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/167f0fc4-254d-4b5e-b27c-35e7166b2264/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    ApacheKafkaCluster product=ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/25fec085-7636-4fd1-9280-151afe496e4e/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -27,7 +30,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         new LoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
-//
+
 //    @Test
 //    @TmsLink("851992")
 //    @Order(1)
@@ -63,7 +66,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
 //        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
 //        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getCostOrder(), 0.01);
 //    }
-//
+
 
 //    @Test
 //    @TmsLink("1319683")

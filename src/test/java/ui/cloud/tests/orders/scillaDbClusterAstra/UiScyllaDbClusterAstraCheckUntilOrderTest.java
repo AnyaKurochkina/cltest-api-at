@@ -29,7 +29,7 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends UiProductTest {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1368045")
     @Order(1)
     @DisplayName("UI Scylla_db_cluster_astra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {

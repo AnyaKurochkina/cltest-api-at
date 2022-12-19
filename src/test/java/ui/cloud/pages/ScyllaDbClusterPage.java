@@ -65,7 +65,7 @@ public class ScyllaDbClusterPage extends IProductPage {
     }
 
     public void delete() {
-        runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
+        runActionWithParameters(BLOCK_APP, "Удалить кластер", "Удалить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
