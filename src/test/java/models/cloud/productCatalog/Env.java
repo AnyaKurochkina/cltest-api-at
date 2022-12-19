@@ -6,6 +6,7 @@ public enum Env {
     DEV("dev"),
     TEST("test"),
     PROD("prod"),
+    TEST_LT("test_lt"),
     SOME_VALUE("dsfsdfsdf");
     private final String value;
 

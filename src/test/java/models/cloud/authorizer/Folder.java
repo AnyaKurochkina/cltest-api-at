@@ -102,7 +102,8 @@ public class Folder extends Entity {
     @Override
     @Step("Создание папки")
     protected void create() {
-        String url = kind.equals(BUSINESS_BLOCK) ? "/v1/organizations/vtb/folders" : String.format("/v1/folders/%s/folders", parentId);
+        Organization org = Organization.builder().build().createObject();
+        String url = kind.equals(BUSINESS_BLOCK) ? String.format("/v1/organizations/%s/folders", org.getName()) : String.format("/v1/folders/%s/folders", parentId);
         name = new Http(Configure.ResourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
