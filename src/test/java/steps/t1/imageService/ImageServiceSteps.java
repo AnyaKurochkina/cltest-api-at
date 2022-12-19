@@ -5,11 +5,13 @@ import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.t1.imageService.Image;
 import models.t1.imageService.ImageGroups;
+import models.t1.imageService.Logo;
 import models.t1.imageService.Marketing;
 import org.json.JSONObject;
 import steps.Steps;
 
 import java.util.List;
+import java.util.Objects;
 
 import static core.enums.Role.CLOUD_ADMIN;
 import static core.helper.Configure.ImageService;
@@ -17,11 +19,13 @@ import static core.helper.Configure.ProductCatalogURL;
 
 public class ImageServiceSteps extends Steps {
 
+    private static final String apiUrl = "/api/v1";
+
     @Step("Полуение списка image groups")
     public static List<ImageGroups> getImageGroupsList(boolean isNeedAll) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
-                .get("/image_groups?need_all={}", isNeedAll)
+                .get(apiUrl + "/image_groups?need_all={}", isNeedAll)
                 .assertStatus(200)
                 .jsonPath()
                 .getList("", ImageGroups.class);
@@ -29,9 +33,9 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Полуение версии сервиса")
     public static Response getImageServiceVersion() {
-       return new Http(ImageService)
+        return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
-                .get("/version")
+                .get(apiUrl + "/version")
                 .assertStatus(200);
     }
 
@@ -49,17 +53,27 @@ public class ImageServiceSteps extends Steps {
     public static List<Marketing> getMarketingList() {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
-                .get("/marketing")
+                .get(apiUrl + "/marketing")
                 .assertStatus(200)
                 .jsonPath()
                 .getList("", Marketing.class);
+    }
+
+    @Step("Полуение списка Logo")
+    public static List<Logo> getLogoList() {
+        return new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .get(apiUrl + "/logo")
+                .assertStatus(200)
+                .jsonPath()
+                .getList("", Logo.class);
     }
 
     @Step("Полуение списка image")
     public static List<Image> getImageList() {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
-                .get("/images")
+                .get(apiUrl + "/images")
                 .assertStatus(200)
                 .jsonPath()
                 .getList("", Image.class);
@@ -69,7 +83,7 @@ public class ImageServiceSteps extends Steps {
     public static List<ImageGroups> getImageGroupsListByRegion(String region) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
-                .get("/image_groups?availability_zone={}", region)
+                .get(apiUrl + "/image_groups?availability_zone={}", region)
                 .assertStatus(200)
                 .jsonPath()
                 .getList("", ImageGroups.class);
@@ -79,16 +93,36 @@ public class ImageServiceSteps extends Steps {
     public static ImageGroups getImageGroup(String id) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
-                .get("/image_groups/{}", id)
+                .get(apiUrl + "/image_groups/{}", id)
                 .assertStatus(200)
                 .extractAs(ImageGroups.class);
+    }
+
+    @Step("Получение logo по id {id}")
+    public static Logo getLogoById(String id) {
+        return new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .get(apiUrl + "/logo/{}", id)
+                .assertStatus(200)
+                .extractAs(Logo.class);
+    }
+
+    @Step("Получение image groups по name {name}")
+    public static ImageGroups getImageGroupByName(String name) {
+        List<ImageGroups> imageGroupList = getImageGroupsList(true);
+        for (ImageGroups imageGroup : imageGroupList) {
+            if (imageGroup.getName().equals(name)) {
+                return imageGroup;
+            }
+        }
+        return null;
     }
 
     @Step("Получение marketing по id {id}")
     public static Marketing getMarketingById(String id) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
-                .get("/marketing/{}", id)
+                .get(apiUrl + "/marketing/{}", id)
                 .assertStatus(200)
                 .extractAs(Marketing.class);
     }
@@ -108,7 +142,7 @@ public class ImageServiceSteps extends Steps {
     public static Image getImageById(String id) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
-                .get("/images/{}", id)
+                .get(apiUrl + "/images/{}", id)
                 .assertStatus(200)
                 .extractAs(Image.class);
     }
@@ -128,7 +162,16 @@ public class ImageServiceSteps extends Steps {
     public static void deleteImageGroupById(String id) {
         new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
-                .delete("/image_groups/{}", id)
+                .delete(apiUrl + "/image_groups/{}", id)
+                .assertStatus(200);
+    }
+
+    @Step("Удаление image groups по name {name}")
+    public static void deleteImageGroupByName(String name) {
+        String id = Objects.requireNonNull(getImageGroupByName(name)).getId();
+        new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .delete(apiUrl + "/image_groups/{}", id)
                 .assertStatus(200);
     }
 
@@ -136,8 +179,23 @@ public class ImageServiceSteps extends Steps {
     public static void deleteMarketingById(String id) {
         new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
-                .delete("/marketing/{}", id)
+                .delete(apiUrl + "/marketing/{}", id)
                 .assertStatus(200);
+    }
+
+    @Step("Удаление logo по id {id}")
+    public static Response deleteLogoById(String id) {
+        return new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .delete(apiUrl + "/logo/{}", id)
+                .assertStatus(200);
+    }
+
+    @Step("Удаление logo по id {id}")
+    public static Response getDeleteLogoByIdResponse(String id) {
+        return new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .delete(apiUrl + "/logo/{}", id);
     }
 
     @Step("Частичное обновление image groups по id {id}")
@@ -145,7 +203,16 @@ public class ImageServiceSteps extends Steps {
         new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .body(body)
-                .patch("/image_groups/{}", id)
+                .patch(apiUrl + "/image_groups/{}", id)
+                .assertStatus(200);
+    }
+
+    @Step("Частичное обновление logo по id {id}")
+    public static void partialUpdateLogoById(String id, JSONObject body) {
+        new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .body(body)
+                .patch(apiUrl + "/logo/{}", id)
                 .assertStatus(200);
     }
 
@@ -157,7 +224,7 @@ public class ImageServiceSteps extends Steps {
         new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .body(body)
-                .patch("/marketing/{}", id)
+                .patch(apiUrl + "/marketing/{}", id)
                 .assertStatus(200);
     }
 
@@ -170,7 +237,7 @@ public class ImageServiceSteps extends Steps {
         new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .body(body)
-                .patch("/marketing/{}", id)
+                .patch(apiUrl + "/marketing/{}", id)
                 .assertStatus(200);
     }
 
@@ -179,7 +246,7 @@ public class ImageServiceSteps extends Steps {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
-                .post("/image_groups")
+                .post(apiUrl + "/image_groups")
                 .assertStatus(200)
                 .extractAs(ImageGroups.class);
     }
@@ -189,9 +256,19 @@ public class ImageServiceSteps extends Steps {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
-                .post("/marketing")
+                .post(apiUrl+ "/marketing")
                 .assertStatus(200)
                 .extractAs(Marketing.class);
+    }
+
+    @Step("Создание Logo")
+    public static Logo createLogo(JSONObject object) {
+        return new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .body(object)
+                .post(apiUrl + "/logo")
+                .assertStatus(200)
+                .extractAs(Logo.class);
     }
 
     @Step("Проверка существования image group c именем {name}")
@@ -199,6 +276,17 @@ public class ImageServiceSteps extends Steps {
         List<ImageGroups> imageGroupList = getImageGroupsList(isNeedAll);
         for (ImageGroups imageGroup : imageGroupList) {
             if (imageGroup.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Step("Проверка существования logo по id {id}")
+    public static boolean isLogoExist(String id) {
+        List<Logo> logoList = getLogoList();
+        for (Logo logo : logoList) {
+            if (logo.getId().equals(id)) {
                 return true;
             }
         }

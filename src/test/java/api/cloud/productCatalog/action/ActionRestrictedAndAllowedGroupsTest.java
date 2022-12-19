@@ -1,8 +1,10 @@
 package api.cloud.productCatalog.action;
 
+import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.authorizer.GlobalUser;
 import models.cloud.productCatalog.action.Action;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +30,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void actionRestrictedGroupRealmLevelTest() {
         Action action = Action.builder()
-                .actionName("action_for_restricted_group_api_test")
+                .actionName("action_for_restricted_group_api_test2")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("qa-admin"))
                 .build()
@@ -113,6 +115,44 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
                 .actionName("action_for_restricted_group_api_test")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
+                .build()
+                .createObject();
+        Action actionById = getActionById(action.getActionId());
+        assertNotNull(actionById);
+        String msg = getActionViewerById(action.getActionId()).assertStatus(404).jsonPath().getString("detail");
+        assertEquals("Страница не найдена.", msg);
+    }
+
+    @DisplayName("Создание действия с ограничением по имени пользователя в restricted_group")
+    @TmsLink("1361613")
+    @Test
+    public void actionWithUserNameInRestrictedGroupTest() {
+        GlobalUser user = GlobalUser.builder()
+                .role(Role.PRODUCT_CATALOG_VIEWER)
+                .build().createObject();
+        Action action = Action.builder()
+                .actionName("action_with_user_name_in_restriction_group_api_test")
+                .version("1.0.1")
+                .restrictedGroups(Collections.singletonList(user.getUsername()))
+                .build()
+                .createObject();
+        Action actionById = getActionById(action.getActionId());
+        assertNotNull(actionById);
+        String msg = getActionViewerById(action.getActionId()).assertStatus(404).jsonPath().getString("detail");
+        assertEquals("Страница не найдена.", msg);
+    }
+
+    @DisplayName("Создание действия с ограничением по имени в allowed_group")
+    @TmsLink("1361615")
+    @Test
+    public void actionWithUserNameInAllowedGroupTest() {
+        GlobalUser user = GlobalUser.builder()
+                .role(Role.PRODUCT_CATALOG_ADMIN)
+                .build().createObject();
+        Action action = Action.builder()
+                .actionName("action_with_user_name_in_allowed_group_api_test")
+                .version("1.0.1")
+                .allowedGroups(Collections.singletonList(user.getUsername()))
                 .build()
                 .createObject();
         Action actionById = getActionById(action.getActionId());
