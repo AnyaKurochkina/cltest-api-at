@@ -25,9 +25,6 @@ public class GraphsListPage extends BaseListPage {
     private final SelenideElement inputDescriptionField = $x("//input[@name='description']");
     private final SelenideElement inputAuthorField = $x("//*[@name ='author']");
     private final DropDown typeDropDown = DropDown.byLabel("Тип");
-    private final SelenideElement actionType = $x("//*[@data-value='action']");
-    private final SelenideElement creatingType = $x("//*[@data-value='creating']");
-    private final SelenideElement serviceType = $x("//*[@data-value='service']");
     private final SelenideElement createGraphButton = $x("//*[text()='Создать']/..");
     private final Input searchInput = Input.byPlaceholder("Поиск");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
@@ -59,7 +56,7 @@ public class GraphsListPage extends BaseListPage {
     @Step("Копирование графа '{name}'")
     public GraphsListPage copyGraph(String name) {
         new BaseListPage().copy(graphNameColumn, name);
-        new Alert().checkText("Граф успешно скопирован").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Граф успешно скопирован");
         cancelButton.shouldBe(Condition.enabled).click();
         return this;
     }
@@ -191,7 +188,7 @@ public class GraphsListPage extends BaseListPage {
     public GraphsListPage importGraph(String path) {
         importButton.click();
         new InputFile(path).importFileAndSubmit();
-        new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Импорт выполнен успешно");
         return this;
     }
 

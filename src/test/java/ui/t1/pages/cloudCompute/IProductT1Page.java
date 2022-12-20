@@ -8,7 +8,6 @@ import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.EntitiesUtils;
 import ui.cloud.pages.IProductPage;
-import ui.cloud.pages.ProductStatus;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
@@ -73,7 +72,7 @@ public class IProductT1Page extends IProductPage {
 
     public String getOrderId() {
         Menu.byElement(getBtnAction("Действия")).select("Скопировать ID");
-        new Alert().checkText("ID скопирован").checkColor(Alert.Color.GREEN).close();
+        Alert.green("ID скопирован");
         return Selenide.clipboard().getText();
     }
 

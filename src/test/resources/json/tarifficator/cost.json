@@ -11,9 +11,6 @@
         "memory": 1
       },
       "platform": "Nutanix",
-      "boot_disk": {
-        "size": 30
-      },
       "extra_nics": [],
       "on_support": false,
       "os_version": "8.latest",

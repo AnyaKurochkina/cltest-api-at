@@ -67,7 +67,7 @@ public class EntitiesUtils {
     public static void clickOrder(){
         updatePreBillingPrice();
         Button.byText("Заказать").click();
-        new Alert().checkColor(Alert.Color.GREEN).checkText("Заказ успешно создан").close();
+        Alert.green("Заказ успешно создан");
     }
 
 }

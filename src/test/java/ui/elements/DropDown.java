@@ -18,6 +18,7 @@ import static api.Tests.clickableCnd;
 import static com.codeborne.selenide.Selenide.$$x;
 import static core.helper.StringUtils.$x;
 
+@Deprecated
 public class DropDown implements TypifiedElement {
     private final ElementsCollection options = $$x("//ul[@role='listbox']/li");
     @Getter
@@ -73,9 +74,9 @@ public class DropDown implements TypifiedElement {
     @Step("Выбрать в select элемент с текстом '{value}'")
     public void selectByDivText(String value) {
         element.shouldBe(clickableCnd).click();
-        $x("//li/div[text()='{}']", value)
-                .shouldBe(Condition.enabled)
-                .click();
+        SelenideElement item = $x("//li/div[text()='{}']", value).exists() ? $x("//li/div[text()='{}']", value)
+                : $x("//div[@role='listbox']//div[text()='{}']", value);
+            item.shouldBe(Condition.enabled).click();
     }
 
     @Step("Выбрать в select элемент со значением '{value}'")

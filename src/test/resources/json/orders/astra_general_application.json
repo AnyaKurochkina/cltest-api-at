@@ -11,9 +11,6 @@
         "memory": 4
       },
       "platform": "OpenStack",
-      "boot_disk": {
-        "size": 30
-      },
       "extra_nics": [],
       "on_support": false,
       "os_version": "2.12",

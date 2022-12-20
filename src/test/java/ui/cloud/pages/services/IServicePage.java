@@ -26,7 +26,7 @@ public class IServicePage {
 
     public void run() {
         btnRun.shouldBe(activeCnd).click();
-        new Alert().checkText("Успешно создано действие " + serviceName).checkColor(Alert.Color.GREEN).close();
+        Alert.green("Успешно создано действие " + serviceName);
         EntitiesUtils.waitChangeStatus(new Runs(), Duration.ofSeconds(30));
         Assertions.assertEquals(ProductStatus.SUCCESS, new Runs().getStatus());
     }

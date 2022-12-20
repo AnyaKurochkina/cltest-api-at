@@ -1,7 +1,6 @@
 package steps.stateService;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.gson.Gson;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
@@ -10,20 +9,18 @@ import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.Data;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.stateService.GetItemList;
 import models.cloud.stateService.Item;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
 import ru.testit.services.LinkItem;
 import steps.Steps;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static core.helper.Configure.StateServiceURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -164,6 +161,14 @@ public class StateServiceSteps extends Steps {
                 .get("/api/v1/items/{}/?{}", id, filter)
                 .assertStatus(200)
                 .extractAs(Item.class);
+    }
+
+    @Step("Получение статистики по Items и контексту")
+    public static Response getItemStatByProjectId(String projectId) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/projects/{}/items/stats/", projectId)
+                .assertStatus(200);
     }
 
     public static List<ShortItem> getItems(String id){

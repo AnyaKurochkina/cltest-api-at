@@ -551,7 +551,7 @@ public class ProductCatalogSteps {
     public List<ExportItem> getProductsExportList() {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(" /api/v1/products/product_list_export/")
+                .get("/api/v1/products/product_list_export/")
                 .assertStatus(200)
                 .extractAs(GetProductsExportList.class).getList();
 

@@ -1,5 +1,6 @@
 package api.cloud.stateService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.orderService.OrderServiceSteps;
 import steps.stateService.StateServiceSteps;
-import api.Tests;
 
 import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
@@ -118,6 +118,14 @@ public class StateServiceListTest extends Tests {
         for (Item item : list) {
             assertFalse(item.getFolder().isEmpty());
         }
+    }
+
+    @Test
+    @DisplayName("Получение статистики по Items")
+    @TmsLink("1350167")
+    public void getItemsStatTest() {
+        Project project = Project.builder().build().createObject();
+        getItemStatByProjectId(project.getId()).compareWithJsonSchema("jsonSchema/ItemsStatSchema.json");
     }
 
     @Test

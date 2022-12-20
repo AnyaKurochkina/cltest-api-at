@@ -20,7 +20,7 @@ public class BasePage {
     @Step("Сохранение объекта без изменения версии")
     public BasePage saveWithoutPatchVersion(String alertText) {
         saveButton.shouldBe(Condition.enabled).click();
-        new Alert().checkText(alertText).checkColor(Alert.Color.GREEN).close();
+        Alert.green(alertText);
         return this;
     }
 

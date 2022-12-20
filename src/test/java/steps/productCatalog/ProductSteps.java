@@ -16,11 +16,11 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ProductCatalogSteps.delNoDigOrLet;
 
 public class ProductSteps extends Steps {
     private static final String productUrl = "/api/v1/products/";
+    private static final String productUrlV2 = "/api/v2/products/";
 
     @Step("Получение списка Продуктов")
     public static List<Product> getProductList() {
@@ -58,14 +58,12 @@ public class ProductSteps extends Steps {
                 .extractAs(GetProductList.class).getList();
     }
 
-    @Step("Получение продукта по имени")
+    @Step("Получение продукта по имени {name}")
     public static Product getProductByName(String name) {
-        List<Product> list = new Http(ProductCatalogURL)
-                .setRole(Role.CLOUD_ADMIN)
-                .get(productUrl + "?{}", "name=" + name)
-                .extractAs(GetProductList.class).getList();
-        assertEquals(name, list.get(0).getName());
-        return list.get(0);
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(productUrlV2  + name + "/")
+                .extractAs(Product.class);
     }
 
     @Step("Создание продукта")
@@ -107,6 +105,14 @@ public class ProductSteps extends Steps {
 
     @Step("Получение продукта по Id")
     public static Product getProductById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(productUrl + objectId + "/")
+                .extractAs(Product.class);
+    }
+
+    @Step("Получение продукта по Id")
+    public static Product getProductByCloudAdmin(String objectId) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get(productUrl + objectId + "/")
@@ -184,6 +190,14 @@ public class ProductSteps extends Steps {
                 .patch(productUrl + id + "/");
     }
 
+    @Step("Частичное обновление продукта по имени {name}")
+    public static Response partialUpdateProductByName(String name, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .patch(productUrlV2 + name + "/");
+    }
+
     @Step("Обновление продукта")
     public static Product updateProduct(String id, JSONObject body) {
         return new Http(ProductCatalogURL)
@@ -215,11 +229,28 @@ public class ProductSteps extends Steps {
                 .multiPart(productUrl + "obj_import/", "file", new File(pathName));
     }
 
+    @Step("Экспорт продукта по имени {name}")
+    public static void exportProductByName(String name) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(productUrlV2 + name + "/obj_export/")
+                .assertStatus(200);
+    }
+
     @Step("Загрузка продукта в Gitlab")
     public static Response dumpProductToBitbucket(String id) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(productUrl + id + "/dump_to_bitbucket/")
+                .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
+                .assertStatus(201);
+    }
+
+    @Step("Загрузка продукта в Gitlab по имени {name}")
+    public static Response dumpProductToGitByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(productUrlV2 + name + "/dump_to_bitbucket/")
                 .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
                 .assertStatus(201);
     }
@@ -258,9 +289,21 @@ public class ProductSteps extends Steps {
                 .assertStatus(200);
     }
 
-    @Step("Удаление объекта продуктового каталога по имени")
+    @Step("Копирование продукта по имени {name}")
+    public static Product copyProductByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(productUrlV2 + name + "/copy/")
+                .assertStatus(200)
+                .extractAs(Product.class);
+    }
+
+    @Step("Удаление продукта по имени {name}")
     public static void deleteProductByName(String name) {
-        deleteProductById(getProductObjectIdByNameWithMultiSearch(name));
+            new Http(ProductCatalogURL)
+                    .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                    .delete(productUrlV2 + name + "/")
+                    .assertStatus(204);
     }
 
     @Step("Получение info продукта")

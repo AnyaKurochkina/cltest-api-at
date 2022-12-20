@@ -108,7 +108,7 @@ public class OrderTemplatesListPage {
         typeInput.select(template.getEventType().get(0));
         providerInput.select(template.getEventProvider().get(0));
         createButton.click();
-        new Alert().checkText("Шаблон успешно создан").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Шаблон успешно создан");
         return new OrderTemplatePage();
     }
 
@@ -191,7 +191,7 @@ public class OrderTemplatesListPage {
     @Step("Копирование шаблона '{name}'")
     public OrderTemplatePage copyTemplate(String name) {
         new BaseListPage().copy(columnName, name);
-        new Alert().checkText("Шаблон скопирован").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Шаблон скопирован");
         TestUtils.wait(500);
         return new OrderTemplatePage();
     }
