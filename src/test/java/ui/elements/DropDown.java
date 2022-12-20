@@ -18,6 +18,7 @@ import static api.Tests.clickableCnd;
 import static com.codeborne.selenide.Selenide.$$x;
 import static core.helper.StringUtils.$x;
 
+@Deprecated
 public class DropDown implements TypifiedElement {
     private final ElementsCollection options = $$x("//ul[@role='listbox']/li");
     @Getter
