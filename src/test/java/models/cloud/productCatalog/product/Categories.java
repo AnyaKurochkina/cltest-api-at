@@ -22,7 +22,8 @@ public enum Categories {
     SAAS("saas"),
     QA_TEST("qa_test"),
     OMNI_SERVICES("omni_services"),
-    DEFAULT_VALUE(null);
+    PRODUCT_TEMPLATE("product_template"),
+    COMPLEX_REQUEST("complex_request");
     private final String value;
 
     Categories(final String value) {
