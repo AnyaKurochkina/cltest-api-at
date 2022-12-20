@@ -32,13 +32,13 @@ public class Select implements TypifiedElement {
         return byLabel(label, 1);
     }
 
-    @Step("Получение DropDown по label {label} с индексом {index}")
+    @Step("Получение Select по label {label} с индексом {index}")
     public static Select byLabel(String label, int index) {
         return new Select($x("(//label[text()='{}']/following::div[1])" + postfix, label, TypifiedElement.getIndex(index)));
     }
 
-    public static DropDown byInputName(String name) {
-        return new DropDown($x("//div[input[@name='{}']]", name));
+    public static Select byInputName(String name) {
+        return new Select($x("//div[input[@name='{}']]", name));
     }
 
     public Select hover() {
