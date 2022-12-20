@@ -98,7 +98,7 @@ public class ClickHousePage extends IProductPage {
         runActionWithParameters(HEADER_DB_OWNER, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
-            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+            Alert.green("Значение скопировано");
         });
     }
 
@@ -107,7 +107,7 @@ public class ClickHousePage extends IProductPage {
         runActionWithParameters(HEADER_DB_USERS, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
-            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+            Alert.green("Значение скопировано");
         });
     }
 

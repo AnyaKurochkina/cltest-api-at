@@ -12,9 +12,6 @@
       },
       "password": "W1clvyliiSCyE0gs",
       "platform": "vSphere",
-      "boot_disk": {
-        "size": 30
-      },
       "on_support": true,
       "os_version": "8.4",
       "data_center": "5",

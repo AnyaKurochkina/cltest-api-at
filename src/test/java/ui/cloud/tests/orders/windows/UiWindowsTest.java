@@ -123,7 +123,7 @@ public class UiWindowsTest extends UiProductTest {
                 Dialog dlgActions = Dialog.byTitle("Удаление");
                 dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
-            new Alert().checkColor(Alert.Color.RED).checkText("Заказ защищен от удаления").close();
+            Alert.red("Заказ защищен от удаления");
             TypifiedElement.refresh();
         } finally {
             winPage.switchProtectOrder(false);

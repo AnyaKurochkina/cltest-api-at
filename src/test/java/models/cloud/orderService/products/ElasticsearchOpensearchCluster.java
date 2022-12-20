@@ -58,8 +58,8 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
-        flavorData = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_data:DEV").get(0);
-        flavorMaster = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_master:DEV").get(0);
+        flavorData = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:data:" + envType() + ":" + getEnv().toLowerCase()).get(0);
+        flavorMaster = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:master:" + envType() + ":" + getEnv().toLowerCase()).get(0);
 //        flavorKibana = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_kibana:DEV").get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
@@ -88,14 +88,11 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     }
 
     public void addKibana(){
-        Flavor flavorKibana = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_kibana:DEV").get(0);
-        AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
+        Flavor flavorKibana = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:kibana:" + envType() + ":" + getEnv().toLowerCase()).get(0);
         JSONObject object = JsonHelper.getJsonTemplate("/orders/elastic_open_search_add_kibana.json")
-                .set("$.default_nic.net_segment", segment)
                 .set("$.flavor_kibana", new JSONObject(flavorKibana.toString()))
-                .set("$.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
-                .set("$.data_center", dataCentre)
                 .set("$.kibana_password", kibanaPassword)
+                .set("$.on_support", isTest())
                 .build();
         OrderServiceSteps.executeAction("add_dedicated_kibana_node", this, object, this.getProjectId());
     }

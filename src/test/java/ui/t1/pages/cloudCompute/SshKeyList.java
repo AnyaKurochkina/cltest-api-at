@@ -24,20 +24,20 @@ new SshKeysPage().deleteKey("superKey2");
                 .setInputValue("Логин пользователя", login)
                 .setTextarea(TextArea.byName("sshKeyData"), SSH_KEY)
                 .clickButton("Добавить");
-        new Alert().checkText("SSH-ключ {} создан успешно", nameKey).checkColor(Alert.Color.GREEN);
+        Alert.green("SSH-ключ {} создан успешно", nameKey);
         Assertions.assertTrue(new KeysTable().isColumnValueEquals(KeysTable.COLUMN_NAME, nameKey));
     }
 
     public void copyKey(String nameKey) {
         Menu.byElement(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Скопировать");
-        new Alert().checkText("SSH-ключ {} скопирован", nameKey).checkColor(Alert.Color.GREEN);
+        Alert.green("SSH-ключ {} скопирован", nameKey);
         Assertions.assertEquals(SSH_KEY, Selenide.clipboard().getText());
     }
 
     public void deleteKey(String nameKey) {
         Menu.byElement(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Удалить");
         Dialog.byTitle("Подтверждение удаления").clickButton("Удалить");
-        new Alert().checkText("SSH-ключ {} удален успешно", nameKey).checkColor(Alert.Color.GREEN);
+        Alert.green("SSH-ключ {} удален успешно", nameKey);
         Assertions.assertFalse(new KeysTable().isColumnValueEquals(KeysTable.COLUMN_NAME, nameKey));
     }
 

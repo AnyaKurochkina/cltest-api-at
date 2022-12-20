@@ -88,7 +88,7 @@ public class WildFly extends IProduct {
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate')}.data.config.certificate.end_date"));
-        super.updateCerts("wildfly_update_certs");
+        OrderServiceSteps.executeAction("wildfly_update_certs", this, new JSONObject().put("accept", true), this.getProjectId());
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate')}.data.config.certificate.end_date"));
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
 

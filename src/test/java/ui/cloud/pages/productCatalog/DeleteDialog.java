@@ -33,28 +33,27 @@ public class DeleteDialog extends Dialog {
     public void inputValidIdAndDelete() {
         setInputValue("Идентификатор", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
-        new Alert().checkText("Удаление выполнено успешно").checkColor(Alert.Color.GREEN);
+        Alert.green("Удаление выполнено успешно");
     }
 
     @Step("Вводим верный id")
     public void inputValidIdAndDelete(String alertText) {
         setInputValue("Идентификатор", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
-        new Alert().checkText(alertText).checkColor(Alert.Color.GREEN);
+        Alert.green(alertText);
     }
 
     @Step("Вводим верный id")
     public void inputValidIdAndDeleteNotAvailable(String alertText) {
         setInputValue("Идентификатор", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
-        SelenideElement element = StringUtils.$x("(//div[@role='alert'])[last()]");
-        new Alert(element).checkText(alertText);
+        Alert.green(alertText);
         TestUtils.wait(6000);
     }
 
     @Step("Подтверждение удаления объекта")
     public void submitAndDelete(String alertText) {
         deleteButton.shouldBe(Condition.enabled).click();
-        new Alert().checkText(alertText).checkColor(Alert.Color.GREEN);
+        Alert.green(alertText);
     }
 }

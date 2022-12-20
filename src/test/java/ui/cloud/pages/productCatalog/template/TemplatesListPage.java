@@ -56,7 +56,7 @@ public class TemplatesListPage extends BaseListPage {
         output.setValue(template.getOutput());
         printedOutput.setValue(template.getPrintedOutput());
         saveButton.shouldBe(Condition.enabled).click();
-        new Alert().checkText("Шаблон успешно создан").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Шаблон успешно создан");
         TestUtils.wait(2000);
         return new TemplatePage();
     }
@@ -203,7 +203,7 @@ public class TemplatesListPage extends BaseListPage {
     @Step("Копирование шаблона '{name}'")
     public TemplatesListPage copyTemplate(String name) {
         new BaseListPage().copy(columnName, name);
-        new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Копирование выполнено успешно");
         cancelButton.shouldBe(Condition.enabled).click();
         return this;
     }
@@ -212,7 +212,7 @@ public class TemplatesListPage extends BaseListPage {
     public TemplatesListPage importTemplate(String path) {
         importButton.click();
         new InputFile(path).importFileAndSubmit();
-        new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Импорт выполнен успешно");
         return this;
     }
 }

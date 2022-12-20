@@ -55,7 +55,7 @@ public class ActionsListPage extends BaseListPage {
     public ActionPage copyAction(String name) {
         openActionMenu(name);
         copyAction.click();
-        new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN);
+        Alert.green("Копирование выполнено успешно");
         return new ActionPage();
     }
 
@@ -84,7 +84,7 @@ public class ActionsListPage extends BaseListPage {
     public ActionsListPage importAction(String path) {
         importButton.scrollIntoView(TypifiedElement.scrollCenter).click();
         new InputFile(path).importFileAndSubmit();
-        new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Импорт выполнен успешно");
         return this;
     }
 
