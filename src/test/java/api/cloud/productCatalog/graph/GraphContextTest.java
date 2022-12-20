@@ -32,7 +32,10 @@ public class GraphContextTest extends Tests {
     Project project;
 
     public GraphContextTest() {
-        project = Project.builder().build().createObject();
+        project = Project.builder()
+                .isForOrders(true)
+                .build()
+                .createObject();
     }
 
     @DisplayName("Получение графа c модификаторами для текущей среды по контексту")
@@ -56,7 +59,7 @@ public class GraphContextTest extends Tests {
         String uiData = "ui_schema_dev_title";
         Modification uiSchema = Modification.builder()
                 .name("ui_schema_dev_mod")
-                .envs(Collections.singletonList(Env.DEV))
+                .envs(Collections.singletonList(env))
                 .order(2)
                 .path("title")
                 .rootPath(RootPath.UI_SCHEMA)
@@ -66,7 +69,7 @@ public class GraphContextTest extends Tests {
         String dataStatic = "static_data_dev_title";
         Modification staticData = Modification.builder()
                 .name("static_data_dev_mod")
-                .envs(Collections.singletonList(Env.DEV))
+                .envs(Collections.singletonList(env))
                 .order(3)
                 .path("title")
                 .rootPath(RootPath.STATIC_DATA)

@@ -1,12 +1,10 @@
 package api.cloud.productCatalog.product;
 
 import api.Tests;
-import httpModels.productCatalog.product.getProducts.getProductsExportList.ExportItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
-import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.Product;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Disabled;
@@ -15,11 +13,14 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductSteps.*;
+import static steps.references.ReferencesStep.getPagesByName;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -142,7 +143,7 @@ public class ProductListTest extends Tests {
     public void getCategoriesWithProjectContext() {
         Project project = Project.builder().build().createObject();
         List<String> actualList = steps.getAvailableCategoriesByContextProject(project.getId());
-        List<String> categoriesList = Categories.getCategoriesList();
+        Collection<String> categoriesList = getPagesByName("ProductCategoriesV2").jsonPath().getObject("[0].data", Map.class).values();
         assertTrue(categoriesList.containsAll(actualList));
     }
 
@@ -151,31 +152,8 @@ public class ProductListTest extends Tests {
     @Test
     public void getCategories() {
         List<String> actualList = steps.getAvailableCategories();
-        List<String> categoriesList = Categories.getCategoriesList();
+        Collection<String> categoriesList = getPagesByName("ProductCategoriesV2").jsonPath().getObject("[0].data", Map.class).values();
         assertTrue(categoriesList.containsAll(actualList));
-    }
-
-    @DisplayName("Получение списка products export")
-    @TmsLink("1061110")
-    @Test
-    public void getProductExportList() {
-        List<ExportItem> productsExportList = steps.getProductsExportList();
-        for (ExportItem item : productsExportList) {
-            assertNotNull(item.getOrgInfoSystems());
-        }
-    }
-
-    @DisplayName("Получение списка products export в форматах xml/csv/json")
-    @TmsLink("1081759")
-    @Disabled
-    @Test
-    public void getProductExportListXml() {
-        String xml = "xml";
-        assertEquals(xml, steps.getProductsExportListInFormat(xml).getContentType());
-        String csv = "csv";
-        assertEquals(csv, steps.getProductsExportListInFormat(csv).getContentType());
-        String json = "json";
-        assertEquals(json, steps.getProductsExportListInFormat(json).getContentType());
     }
 
     @DisplayName("Получение списка продуктов отсортированного по статусу")
