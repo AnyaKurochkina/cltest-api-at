@@ -4,5 +4,7 @@
   ],
   "distro": "string",
   "name": "string",
-  "title": "at_test"
+  "title": "at_test",
+  "logo": "",
+  "logo_id": ""
 }

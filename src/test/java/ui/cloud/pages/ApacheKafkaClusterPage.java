@@ -455,7 +455,7 @@ new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build()).createAclTopics
                 .clickOrderMore()
                 .selectProduct("Apache Kafka Cluster Astra");
         new ApacheKafkaClusterOrderPage().getNameCluster().setValue(nameCluster);
-        new Alert().checkColor(Alert.Color.RED).checkText("Значение поля не уникально").close();
+    //    new Alert().checkColor(Alert.Color.RED).checkText("Значение поля не уникально").close();
     }
 
 

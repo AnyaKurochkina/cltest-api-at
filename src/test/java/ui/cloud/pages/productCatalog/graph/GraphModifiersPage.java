@@ -51,7 +51,7 @@ public class GraphModifiersPage extends GraphPage {
         pathInput.setValue(modifier.getPath());
         modifierData.setValue(modifier.getModifierData());
         formSaveButton.click();
-        new Alert().checkText(saveGraphAlertText).checkColor(Alert.Color.GREEN).close();
+        Alert.green(saveGraphAlertText);
         return this;
     }
 
@@ -86,7 +86,7 @@ public class GraphModifiersPage extends GraphPage {
         modifierData.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         modifierData.setValue(modifier.getModifierData());
         formSaveButton.click();
-        new Alert().checkText(saveGraphAlertText).checkColor(Alert.Color.GREEN).close();
+        Alert.green(saveGraphAlertText);
         return this;
     }
 

@@ -56,7 +56,7 @@ public class GraphsListPage extends BaseListPage {
     @Step("Копирование графа '{name}'")
     public GraphsListPage copyGraph(String name) {
         new BaseListPage().copy(graphNameColumn, name);
-        new Alert().checkText("Граф успешно скопирован").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Граф успешно скопирован");
         cancelButton.shouldBe(Condition.enabled).click();
         return this;
     }
@@ -188,7 +188,7 @@ public class GraphsListPage extends BaseListPage {
     public GraphsListPage importGraph(String path) {
         importButton.click();
         new InputFile(path).importFileAndSubmit();
-        new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Импорт выполнен успешно");
         return this;
     }
 

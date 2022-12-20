@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 import static core.helper.Configure.OrderServiceURL;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static steps.productCatalog.GraphSteps.getGraphByIdAndEnv;
-import static steps.productCatalog.ProductSteps.getProductById;
+import static steps.productCatalog.ProductSteps.getProductByCloudAdmin;
 
 
 @SuperBuilder
@@ -286,7 +286,7 @@ public abstract class IProduct extends Entity {
 
     @SneakyThrows
     protected String getRandomOsVersion() {
-        Product productResponse = getProductById(getProductId());
+        Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
         String urlAttrs = JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("os_version")))
                 .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')");
@@ -296,7 +296,7 @@ public abstract class IProduct extends Entity {
 
     @SneakyThrows
     public String getFilter() {
-        Product productResponse = getProductById(getProductId());
+        Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
         return JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
                 .getString("'ui:options'.filter");
@@ -304,7 +304,7 @@ public abstract class IProduct extends Entity {
 
     @SneakyThrows
     protected boolean getSupport() {
-        Product productResponse = getProductById(getProductId());
+        Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
         Boolean support = (Boolean) graphResponse.getStaticData().get("on_support");
         if(Objects.isNull(support)) {
@@ -316,7 +316,7 @@ public abstract class IProduct extends Entity {
 
     @SneakyThrows
     protected String getRandomProductVersionByPathEnum(String path) {
-        Product productResponse = getProductById(getProductId());
+        Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
         return Objects.requireNonNull(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getJsonSchema().get("properties")))
                 .getString(path + ".collect{e -> e}.shuffled()[0]"), "Версия продукта не найдена");
@@ -357,7 +357,7 @@ public abstract class IProduct extends Entity {
                             "is_open=true");
         }
         if (productCatalogName == null) {
-            productCatalogName = getProductById(productId).getName();
+            productCatalogName = getProductByCloudAdmin(productId).getName();
         }
     }
 
@@ -378,7 +378,7 @@ public abstract class IProduct extends Entity {
 
     @SneakyThrows
     private JSONObject deleteObjectIfNotFoundInUiSchema(JSONObject jsonObject, String productId) {
-        Product productResponse = getProductById(productId);
+        Product productResponse = getProductByCloudAdmin(productId);
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
         List<String> parameters = (List<String>) graphResponse.getUiSchema().get("ui:order");
         if (Objects.isNull(parameters))

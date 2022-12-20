@@ -1,70 +1,71 @@
 package ui.elements;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.ex.ElementNotFound;
+import com.codeborne.selenide.*;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.WebElement;
 
+import java.util.Collections;
+import java.util.Objects;
+
+import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
+import static org.openqa.selenium.support.Color.fromString;
 
 public class Alert implements TypifiedElement {
-    SelenideElement element = $x("(//div[@role='alert' and descendant::button])[last()]");
+    SelenideElement element;
 
     public Alert(SelenideElement element) {
         this.element = element;
     }
 
-    public Alert() {
-        element.shouldBe(Condition.visible).shouldBe(Condition.matchText(".{1,}"));
+    private Alert() {}
+
+    private ElementsCollection getElements() {
+        if (Objects.nonNull(element))
+            return new ElementsCollection((Driver) Selenide.webdriver(), Collections.singletonList(element));
+        return $$x("(//div[@role='alert'])").shouldBe(CollectionCondition.anyMatch("Не найден alert", WebElement::isDisplayed));
     }
 
-    public static Alert byText(String text, Object... args){
-        return new Alert().checkText(text, args);
+    public static Alert green(String text, Object... args) {
+        return new Alert().check(Color.GREEN, text, args);
     }
 
-    @Step("Закрыть alert")
-    public void close() {
-        element.$("button").hover().shouldBe(Condition.enabled).click();
-        element.shouldNotBe(Condition.visible);
+    public static Alert red(String text, Object... args) {
+        return new Alert().check(Color.RED, text, args);
     }
 
-    @Step("Проверка alert на вхождение текста {text}")
-    public Alert checkText(String text, Object... args) {
-        text = StringUtils.format(text,args);
-        String message = element.getText();
-        Assertions.assertTrue(message.toLowerCase().contains(text.toLowerCase()), String.format("Alert с сообщением '%s' не содержит текст '%s'", message, text));
+    public void waitClose(){
+        element.shouldNot(Condition.visible);
+    }
+
+    @Step("Проверка alert на цвет {color} и вхождение текста {text}")
+    public Alert check(Color color, String text, Object... args) {
+        String message = StringUtils.format(text, args);
+        element = getElements().filter(Condition.visible).stream()
+                        .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
+                .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
         return this;
     }
 
-    @Step("Проверка alert на цвет {color}")
-    public Alert checkColor(Color color) {
-        Assertions.assertEquals(color.toString(), org.openqa.selenium.support.Color.fromString(element.getCssValue("background-color")).asHex(),
-                "Произошла ошибка: " + element.getText());
-        return this;
-    }
-
-    public void closeAll(){
-        while (element.exists() && element.isDisplayed()){
-            try {
-                close();
-            }
-            catch (ElementNotFound ignored){}
+    public static void closeAll() {
+        SelenideElement e = new Alert().getElements().first();
+        while (e.exists() && e.isDisplayed()) {
             Waiting.sleep(2000);
         }
     }
 
     public enum Color {
-        RED("#d32f2f"),
-        GREEN("#43a047");
+        RED("#d92020"),
+        GREEN("#1ba049");
         @Getter
         String color;
 
-        @Override
-        public String toString() {
+        public String getValue() {
             return color;
         }
 

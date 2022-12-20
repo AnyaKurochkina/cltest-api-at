@@ -361,7 +361,6 @@ public class GraphTest extends Tests {
                 .updateType(UpdateType.DELETE)
                 .rootPath(RootPath.UI_SCHEMA)
                 .build();
-        JsonHelper.toJson(mod);
         Graph graph = Graph.builder()
                 .name("create_graph_with_update_type_delete")
                 .modifications(Collections.singletonList(mod))
@@ -398,5 +397,29 @@ public class GraphTest extends Tests {
         Graph copyGraph = getGraphById(copyGraphId);
         assertEquals(modName, copyGraph.getModifications().get(0).getName());
         deleteGraphById(copyGraphId);
+    }
+
+    @DisplayName("Создание графа с модификацией в среде TEST_LT")
+    @TmsLink("")
+    @Test
+    public void createGraphWithModInTestLtEnv() {
+        Modification mod = Modification.builder()
+                .name("mod1")
+                .data(new LinkedHashMap<String, Object>() {{
+                    put("test", "test");
+                }})
+                .envs(Collections.singletonList(Env.TEST_LT))
+                .order(1)
+                .path("")
+                .updateType(UpdateType.DELETE)
+                .rootPath(RootPath.UI_SCHEMA)
+                .build();
+        Graph graph = Graph.builder()
+                .name("create_graph_with_mod_in_test_env")
+                .modifications(Collections.singletonList(mod))
+                .build()
+                .createObject();
+        Graph actualGraph = getGraphById(graph.getGraphId());
+        assertEquals(Env.TEST_LT, actualGraph.getModifications().get(0).getEnvs().get(0));
     }
 }

@@ -108,7 +108,7 @@ public class ClickHouseClusterPage extends IProductPage {
             Dialog dlg = Dialog.byTitle("Создать локальную УЗ");
             dlg.setInputValue("Имя пользователя", name);
             generatePassButton.shouldBe(Condition.enabled).click();
-            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+            Alert.green("Значение скопировано");
         });
         btnUsers.shouldBe(Condition.enabled).click();
         Assertions.assertTrue(getBtnAction("at_local_user").exists(), "Ошибка создания УЗ");
@@ -119,7 +119,7 @@ public class ClickHouseClusterPage extends IProductPage {
         runActionWithParameters(name, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
-            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+            Alert.green("Значение скопировано");
         });
     }
 
@@ -149,7 +149,7 @@ public class ClickHouseClusterPage extends IProductPage {
         runActionWithParameters(name, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
-            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+            Alert.green("Значение скопировано");
         });
     }
 

@@ -76,7 +76,7 @@ public class RedisAstraPage extends IProductPage {
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
-            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+            Alert.green("Значение скопировано");
         });
     }
 
@@ -149,7 +149,7 @@ public class RedisAstraPage extends IProductPage {
                 Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя базы данных", name);
                 generatePassButton.shouldBe(Condition.enabled).click();
-                new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+                Alert.green("Значение скопировано");
             });
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             Assertions.assertEquals(name, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, name).getValueByColumn(HEADER_NAME_DB));
@@ -167,7 +167,7 @@ public class RedisAstraPage extends IProductPage {
                 dlg.setInputValue("Имя пользователя", nameUserDb);
                 dlg.setInputValue("Комментарий", comment);
                 generatePassButton.shouldBe(Condition.enabled).click();
-                new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+                Alert.green("Значение скопировано");
             });
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             Assertions.assertTrue(new Table(HEADER_NAME_DB).isColumnValueContains("", nameDb + "_" + nameUserDb), "Пользователь не существует");
@@ -207,7 +207,7 @@ public class RedisAstraPage extends IProductPage {
         runActionWithParameters(nameUserDB, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
-            new Alert().checkText("Значение скопировано").checkColor(Alert.Color.GREEN).close();
+            Alert.green("Значение скопировано");
         });
     }
 

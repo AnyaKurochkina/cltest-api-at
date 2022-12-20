@@ -106,6 +106,14 @@ public class ProductSteps extends Steps {
     @Step("Получение продукта по Id")
     public static Product getProductById(String objectId) {
         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(productUrl + objectId + "/")
+                .extractAs(Product.class);
+    }
+
+    @Step("Получение продукта по Id")
+    public static Product getProductByCloudAdmin(String objectId) {
+        return new Http(ProductCatalogURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get(productUrl + objectId + "/")
                 .extractAs(Product.class);
