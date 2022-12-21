@@ -24,13 +24,13 @@ public class Alert implements TypifiedElement {
         this.element = element;
     }
 
-    private Alert() {}
+    private Alert() {
+    }
 
     private ElementsCollection getElements() {
         if (Objects.nonNull(element))
             return new ElementsCollection((Driver) Selenide.webdriver(), Collections.singletonList(element));
-        return $$x("(//div[@role='alert'])").shouldBe(CollectionCondition.anyMatch("Не найден alert", WebElement::isDisplayed))
-                .shouldBe(CollectionCondition.anyMatch("", e -> Pattern.compile(".+").matcher(e.getText()).find()));
+        return $$x("(//div[@role='alert'])").shouldBe(CollectionCondition.anyMatch("Не найден alert", WebElement::isDisplayed));
     }
 
     public static Alert green(String text, Object... args) {
@@ -41,21 +41,16 @@ public class Alert implements TypifiedElement {
         return new Alert().check(Color.RED, text, args);
     }
 
-    public void waitClose(){
+    public void waitClose() {
         element.shouldNot(Condition.visible);
     }
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
-        try {
-            String message = StringUtils.format(text, args);
-            element = getElements().filter(Condition.visible).stream()
-                            .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
-                    .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
-        } catch (NotFoundException e) {
-            DataFileHelper.write("ALERT.log", WebDriverRunner.getWebDriver().getPageSource());
-        }
-
+        String message = StringUtils.format(text, args);
+        element = getElements().filter(Condition.visible).stream()
+                .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
+                .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
         return this;
     }
 
