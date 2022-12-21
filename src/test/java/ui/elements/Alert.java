@@ -5,15 +5,15 @@ import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
-import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 
 import java.util.Collections;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
+import static com.codeborne.selenide.Selenide.executeJavaScript;
 import static core.helper.StringUtils.$$x;
-import static core.helper.StringUtils.$x;
 import static org.openqa.selenium.support.Color.fromString;
 
 public class Alert implements TypifiedElement {
@@ -28,7 +28,8 @@ public class Alert implements TypifiedElement {
     private ElementsCollection getElements() {
         if (Objects.nonNull(element))
             return new ElementsCollection((Driver) Selenide.webdriver(), Collections.singletonList(element));
-        return $$x("(//div[@role='alert'])").shouldBe(CollectionCondition.anyMatch("Не найден alert", WebElement::isDisplayed));
+        return $$x("(//div[@role='alert'])").shouldBe(CollectionCondition.anyMatch("Не найден alert", WebElement::isDisplayed))
+                .shouldBe(CollectionCondition.anyMatch("", e -> Pattern.compile(".+").matcher(e.getText()).find()));
     }
 
     public static Alert green(String text, Object... args) {
@@ -55,7 +56,8 @@ public class Alert implements TypifiedElement {
     public static void closeAll() {
         SelenideElement e = new Alert().getElements().first();
         while (e.exists() && e.isDisplayed()) {
-            Waiting.sleep(2000);
+            Waiting.sleep(3000);
+            executeJavaScript("arguments[0].style.display = 'none'", e);
         }
     }
 
