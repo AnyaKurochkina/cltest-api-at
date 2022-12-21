@@ -167,7 +167,7 @@ public class ClickHouseClusterPage extends IProductPage {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_GROUP_AD, "Добавить пользовательскую группу", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Добавить пользовательскую группу");
-            dlg.setDropDownValue("Группы", nameGroup);
+            dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
         Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка создания AD");
@@ -176,7 +176,7 @@ public class ClickHouseClusterPage extends IProductPage {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_GROUP_ADMIN, "Добавить группу администраторов", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Добавить группу администраторов");
-            dlg.setDropDownValue("Группы", nameGroup);
+            dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
         Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка создания AD");

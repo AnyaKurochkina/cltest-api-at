@@ -8,7 +8,7 @@ public class PublicIp extends IProductT1Page {
     public void attachComputeIp(String vmName) {
         runActionWithParameters(BLOCK_PARAMETERS, "Подключить к виртуальной машине", "Подтвердить", () ->
                         Dialog.byTitle("Подключить к виртуальной машине")
-                                .setDropDownValue("Доступные виртуальные машины", vmName),
+                                .setSelectValue("Доступные виртуальные машины", vmName),
                 ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).build());
     }
 

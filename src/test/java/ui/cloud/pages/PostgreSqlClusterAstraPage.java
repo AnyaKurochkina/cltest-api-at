@@ -161,7 +161,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Добавить пользователя");
-                dlg.setDropDownValue("Имя базы данных", nameDb);
+                dlg.setSelectValue("Имя базы данных", nameDb);
                 dlg.setInputValue("Имя пользователя", nameUserDb);
                 dlg.setInputValue("Комментарий", comment);
                 generatePassButton.shouldBe(Condition.enabled).click();

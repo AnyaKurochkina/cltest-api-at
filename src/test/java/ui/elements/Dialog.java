@@ -36,14 +36,14 @@ public class Dialog implements TypifiedElement {
         return new Input(element).getValue();
     }
 
-    public Dialog setDropDownValue(String label,String value){
-        DropDown dropDown = DropDown.byLabel(label);
-        dropDown.select(value);
+    public Dialog setSelectValue(String label, String value){
+        Select select = Select.byLabel(label);
+        select.setStart(value);
         return this;
     }
 
-    public Dialog setDropDownValue(DropDown dropDown, String value) {
-        dropDown.select(value);
+    public Dialog setSelectValue(Select select, String value) {
+        select.set(value);
         return this;
     }
 

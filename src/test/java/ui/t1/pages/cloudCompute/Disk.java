@@ -13,7 +13,7 @@ public class Disk extends IProductT1Page {
     public void attachComputeVolume(String vmName, boolean deleteOnTermination) {
         runActionWithParameters(BLOCK_PARAMETERS, "Подключить к виртуальной машине", "Подтвердить", () ->
                         Dialog.byTitle("Подключить к виртуальной машине")
-                                .setDropDownValue("Доступные виртуальные машины", vmName + ":")
+                                .setSelectValue("Доступные виртуальные машины", vmName + ":")
                                 .setCheckBox(CheckBox.byLabel("Удалять вместе с виртуальной машиной"), deleteOnTermination),
                 ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).build());
     }

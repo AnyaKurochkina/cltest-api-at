@@ -16,10 +16,7 @@ import ui.cloud.pages.WindowsPage;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudCompute.SelectBox;
-import ui.t1.pages.cloudCompute.Vm;
-import ui.t1.pages.cloudCompute.VmCreate;
-import ui.t1.pages.cloudCompute.VmList;
+import ui.t1.pages.cloudCompute.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -163,7 +160,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
 
     @Test
     @TmsLinks({@TmsLink("1248845"), @TmsLink("1248846")})
-    @DisplayName("Cloud Compute. Виртуальные машины. Остановить")
+    @DisplayName("Cloud Compute. Виртуальные машины. Остановить/Запустить")
     void stopAndStartVm() {
         VmCreate vm = new IndexPage()
                 .goToVirtualMachine()
@@ -180,6 +177,50 @@ public class VirtualMachineTest extends AbstractComputeTest {
         vmPage.runActionWithCheckCost(CompareType.LESS, vmPage::stop);
         vmPage.runActionWithCheckCost(CompareType.MORE, vmPage::start);
         vmPage.delete();
+    }
+
+    @Test
+    @TmsLink("1248853")
+    @DisplayName("Cloud Compute. Виртуальные машины. Подключить IP")
+    void attachAndDetachIp() {
+        VmCreate vm = new IndexPage()
+                .goToVirtualMachine()
+                .addVm()
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setAvailabilityZone(availabilityZone)
+                .setName(getRandomName())
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
+                .clickOrder();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        String orderIdVm = vmPage.getOrderId();
+
+        String ip = new IndexPage()
+                .goToPublicIps()
+                .addIp(availabilityZone);
+        PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
+        String orderIdIp = ipPage.getOrderId();
+
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .runActionWithCheckCost(CompareType.MORE, () -> vmPage.attachIp(ip));
+
+        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+                .filter(e -> e.getOrderId().equals(orderIdVm))
+                .filter(e -> e.getSrcOrderId().equals(orderIdIp))
+                .filter(e -> e.getFloatingIpAddress().equals(ip))
+                .count(), "Item ip не соответствует условиям или не найден");
+
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .runActionWithCheckCost(CompareType.LESS, vmPage::delete);
+        new IndexPage()
+                .goToPublicIps()
+                .selectIp(ip)
+                .runActionWithCheckCost(CompareType.LESS, ipPage::delete);
     }
 
     @Test
