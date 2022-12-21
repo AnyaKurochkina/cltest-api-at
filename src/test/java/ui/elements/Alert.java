@@ -28,7 +28,8 @@ public class Alert implements TypifiedElement {
     private ElementsCollection getElements() {
         if (Objects.nonNull(element))
             return new ElementsCollection((Driver) Selenide.webdriver(), Collections.singletonList(element));
-        return $$x("(//div[@role='alert'])").shouldBe(CollectionCondition.anyMatch("Не найден alert", WebElement::isDisplayed));
+        return $$x("(//div[@role='alert' and @aria-live])")
+                .shouldBe(CollectionCondition.anyMatch("Не найден alert", WebElement::isDisplayed));
     }
 
     public static Alert green(String text, Object... args) {

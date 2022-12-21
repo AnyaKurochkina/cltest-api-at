@@ -8,6 +8,8 @@
   "type": "action",
   "version": "1.0.0",
   "json_schema" : {},
+  "ui_schema" : {},
+  "static_data" : {},
   "allowed_developers": [
 
   ],

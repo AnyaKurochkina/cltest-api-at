@@ -69,7 +69,7 @@ public class ImageServiceSteps extends Steps {
                 .getList("", Logo.class);
     }
 
-    @Step("Полуение списка image")
+    @Step("Получение списка image")
     public static List<Image> getImageList() {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)

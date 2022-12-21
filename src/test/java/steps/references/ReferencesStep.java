@@ -157,6 +157,14 @@ public class ReferencesStep extends Steps {
                 .extractAs(Pages.class);
     }
 
+    @Step("Получение Pages по имени {name}")
+    public static Response getPagesByName(String name) {
+        return new Http(ReferencesURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/pages/?name={}", name)
+                .assertStatus(200);
+    }
+
     @Step("Получение списка directories для приватных ролей")
     public static List<Directories> getPrivateDirectoriesList() {
         String jsonArray = new Http(ReferencesURL)
