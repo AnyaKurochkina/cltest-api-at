@@ -1,6 +1,7 @@
 package ui.elements;
 
 import com.codeborne.selenide.*;
+import core.helper.DataFileHelper;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -46,10 +47,15 @@ public class Alert implements TypifiedElement {
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
-        String message = StringUtils.format(text, args);
-        element = getElements().filter(Condition.visible).stream()
-                        .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
-                .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
+        try {
+            String message = StringUtils.format(text, args);
+            element = getElements().filter(Condition.visible).stream()
+                            .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
+                    .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
+        } catch (NotFoundException e) {
+            DataFileHelper.write("ALERT.log", WebDriverRunner.getWebDriver().getPageSource());
+        }
+
         return this;
     }
 
