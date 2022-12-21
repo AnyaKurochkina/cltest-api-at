@@ -259,33 +259,32 @@ public class ApacheKafkaClusterPage extends IProductPage {
                 .filter(topic -> new Table(HEADER_NAME_TOPIC).isColumnValueEquals(HEADER_NAME_TOPIC, topic)).collect(Collectors.toList()), "Не все топики были удалены");
     }
 
-    public void createAclTopics(List<String> names) {
+    public void createAclTopics(AclTopic... aclTopics) {
         btnAclTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        List<String> topicsAcl = names.stream().filter(topic -> !new Table(HEADER_ACL).isColumnValueEquals(HEADER_ACL, topic)).collect(Collectors.toList());
-        //если список содержит указанный элемент, то выходим из функции, т.к. смысла запускать действия нет
-        if (topicsAcl.isEmpty())
+        List<AclTopic> aclTopic = Arrays.stream(aclTopics)
+                .filter(acl -> !new Table(HEADER_ACL).isColumnValueEquals(HEADER_ACL, acl.mask)).collect(Collectors.toList());
+        if (aclTopic.isEmpty())
             return;
         runActionWithParameters("ACL на топики", "Пакетное создание ACL Kafka", "Подтвердить", () -> {
-            for (int i = 0; i < topicsAcl.size(); i++) {
-                //на первом топике жать + не нужно
+            for (int i = 0; i < aclTopic.size(); i++) {
                 if (i != 0)
                     btnAdd.shouldBe(Condition.enabled).click();
-                Input.byLabel("Common Name сертификата клиента", i + 1).setValue(topicsAcl.get(i));
-                Input.byLabel("Маска имени топика").setValue(topicsAcl.get(i));
-                if (i == 1) {
-                    //Input.byLabel("Common Name сертификата клиента", 2).setValue(nameT2);
-                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(topicsAcl.get(i))).select("По имени");
-                    DropDown.byLabel("Топики").select(topicsAcl.get(i));
+                AclTopic acl = aclTopic.get(i);
+                Input.byLabel("Common Name сертификата клиента", i + 1).setValue(acl.certificate);
+                RadioGroup radioGroup = RadioGroup.byLabel("Выберите топик", i + 1);
+                if (acl.type == AclTopic.Type.BY_MASK)
+                    Input.byLabel("Маска имени топика", -1).setValue(acl.mask);
+                if (acl.type == AclTopic.Type.BY_NAME) {
+                    radioGroup.select("По имени");
+                    DropDown.byLabel("Топики", -1).select(acl.mask);
                 }
-                if (i == 2) {
-                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(topicsAcl.get(i))).select("Все топики");
+                if (acl.type == AclTopic.Type.ALL_TOPIC) {
+                    radioGroup.select("Все топики");
                 }
             }
         });
-        btnAclTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Assertions.assertEquals(new ArrayList<>(), topicsAcl.stream()
-                .filter(topic -> !new Table(HEADER_ACL)
-                        .isColumnValueEquals(HEADER_ACL, topic))
+        btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        Assertions.assertEquals(new ArrayList<>(), aclTopic.stream().filter(acl -> !new Table(HEADER_ACL).isColumnValueEquals(HEADER_ACL, acl.mask))
                 .collect(Collectors.toList()), "Не все топики ACL были созданы");
     }
 
@@ -321,42 +320,57 @@ new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build()).createAclTopics
                     DropDown.byLabel("Префикс", -1).select(acl.mask);
                 }
             }
-        },ActionParameters.builder().checkAlert(false).build());
+        });//,ActionParameters.builder().checkAlert(false).build()
         btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Assertions.assertEquals(new ArrayList<>(), acls.stream().filter(acl -> !new Table(HEADER_ACL_ID_TRANSACTION).isColumnValueEquals(HEADER_ACL_ID_TRANSACTION, acl.mask))
                 .collect(Collectors.toList()), "Не все acl были созданы");
     }
 
 
-    public void dellAclTopics(List<String> names) {
+    public void dellAclTopics(AclTopic... aclTopics ) {
         btnAclTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        List<String> topicsAcl = names.stream().filter(topic -> new Table(HEADER_ACL).isColumnValueEquals(HEADER_ACL, topic)).collect(Collectors.toList());
-        //если список содержит указанный элемент, то выходим из функции, т.к. смысла запускать действия нет
-        if (topicsAcl.isEmpty()) {
-            createAclTopics(names);
+        List<AclTopic> aclTopic = Arrays.stream(aclTopics)
+                .filter(acl -> new Table(HEADER_ACL).isColumnValueEquals(HEADER_ACL, acl.mask)).collect(Collectors.toList());
+        if (aclTopic.isEmpty()) {
+            createAclTopics(aclTopics);
         }
         runActionWithParameters("ACL на топики", "Пакетное удаление ACL Kafka", "Подтвердить", () -> {
-            for (int i = 0; i < names.size(); i++) {
-                //на первом топике жать + не нужно
-                if (i != 0) {
+            for (int i = 0; i < aclTopic.size(); i++) {
+                if (i != 0)
                     btnAdd.shouldBe(Condition.enabled).click();
+                AclTopic topicAcl = aclTopic.get(i);
+                DropDown.byLabel("Common Name сертификата клиента", i + 1).select(topicAcl.certificate);
+                RadioGroup radioGroup = RadioGroup.byLabel("Выберите топик", i + 1);
+                if (topicAcl.type == AclTopic.Type.BY_MASK)
+                    Input.byLabel("Маска имени топика", -1).setValue(topicAcl.mask);
+                if (topicAcl.type == AclTopic.Type.BY_NAME) {
+                    radioGroup.select("По имени");
+                    DropDown.byLabel("Топики", -1).select(topicAcl.mask);
                 }
-                DropDown.byLabel("Common Name сертификата клиента", i + 1).select(names.get(i));
-                Input.byLabel("Маска имени топика").setValue(names.get(i));
-                if (i == 1) {
-                    //Input.byLabel("Common Name сертификата клиента", 2).setValue(nameT2);
-                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(names.get(i))).select("По имени");
-                    DropDown.byLabel("Топики").select(names.get(i));
-                }
-                if (i == 2) {
-                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(names.get(i))).select("Все топики");
+                if (topicAcl.type == AclTopic.Type.ALL_TOPIC) {
+                    radioGroup.select("Все топики");
                 }
             }
-        });
-        btnAclTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Assertions.assertEquals(new ArrayList<>(), topicsAcl.stream()
-                .filter(topic -> new Table(HEADER_ACL)
-                        .isColumnValueEquals(HEADER_ACL, topic))
+
+//            for (int i = 0; i < names.size(); i++) {
+//                //на первом топике жать + не нужно
+//                if (i != 0) {
+//                    btnAdd.shouldBe(Condition.enabled).click();
+//                }
+//                DropDown.byLabel("Common Name сертификата клиента", i + 1).select(names.get(i));
+//                Input.byLabel("Маска имени топика").setValue(names.get(i));
+//                if (i == 1) {
+//                    //Input.byLabel("Common Name сертификата клиента", 2).setValue(nameT2);
+//                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(names.get(i))).select("По имени");
+//                    DropDown.byLabel("Топики").select(names.get(i));
+//                }
+//                if (i == 2) {
+//                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(names.get(i))).select("Все топики");
+//                }
+//            }
+        },ActionParameters.builder().checkAlert(false).build());
+        btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        Assertions.assertEquals(new ArrayList<>(), aclTopic.stream().filter(topicAcl -> new Table(HEADER_ACL).isColumnValueEquals(HEADER_ACL, topicAcl.mask))
                 .collect(Collectors.toList()), "Не все топики ACL были удалены");
     }
 
@@ -420,7 +434,7 @@ new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build()).createAclTopics
                     DropDown.byLabel("Префикс", -1).select(acl.mask);
                 }
 
-        }});
+        }},ActionParameters.builder().checkPreBilling(false).build());
         btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Assertions.assertEquals(new ArrayList<>(), acls.stream().filter(acl -> new Table(HEADER_ACL_ID_TRANSACTION).isColumnValueEquals(HEADER_ACL_ID_TRANSACTION, acl.mask))
                 .collect(Collectors.toList()), "Не все топики ACL на транзакции были удалены");
