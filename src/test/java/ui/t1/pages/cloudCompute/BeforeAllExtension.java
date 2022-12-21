@@ -20,7 +20,7 @@ public class BeforeAllExtension implements InvocationInterceptor {
     @SneakyThrows
     public void interceptTestMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
         if (!runBeforeAll.contains(extensionContext.getParent().orElseThrow(Exception::new).getUniqueId())) {
-            Method before = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods())
+            Method before = Arrays.stream(extensionContext.getRequiredTestClass().getMethods())
                     .filter(method -> method.isAnnotationPresent(BeforeAll.class))
                     .findFirst()
                     .orElseThrow(() -> new Exception("В классе нет методов с BeforeAll"));

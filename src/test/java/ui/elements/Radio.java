@@ -24,7 +24,7 @@ public class Radio implements TypifiedElement {
     }
 
     public void checked(){
-        radio.shouldBe(clickableCnd).click();
+        radio.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         Assertions.assertTrue(isChecked());
     }
 }

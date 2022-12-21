@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import lombok.AllArgsConstructor;
 import ui.elements.DropDown;
 import ui.elements.Radio;
+import ui.elements.Select;
 import ui.elements.TypifiedElement;
 
 import static api.Tests.activeCnd;
@@ -27,7 +28,7 @@ public class SelectBox implements TypifiedElement {
 
     public static void setUserImage(String image) {
         Radio.byValue("Пользовательские").checked();
-        new DropDown(TypifiedElement.getNearElement("select", "*[.='Пользовательские']").parent()).selectByTitle(image);
+        new Select(TypifiedElement.getNearElement("select", "*[.='Пользовательские']").parent()).set(image);
     }
 
     private void select(String text) {

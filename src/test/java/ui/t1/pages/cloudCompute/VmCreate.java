@@ -36,11 +36,21 @@ public class VmCreate {
         return this;
     }
 
-    public VmCreate addDisk(String name, int size, String type, boolean deleteOnTermination){
+    public VmCreate setFlavorName(String flavorName) {
+        this.flavorName = Select.byLabel("Серия").set(flavorName);
+        return this;
+    }
+
+    public VmCreate setFlavor(String flavor) {
+        this.flavor = Select.byLabel("CPU / RAM").set(flavor);
+        return this;
+    }
+
+    public VmCreate addDisk(String name, int size, String type, boolean deleteOnTermination) {
         new Button($x("//button[contains(@class, 'array-item-add')]")).click();
         Input.byLabel("Имя диска", -1).setValue(name);
         Input.byLabel("Размер диска, Гб", -1).setValue(size);
-        DropDown.byLabel("Тип", -1).selectByTextContains(type);
+        Select.byLabel("Тип", -1).setContains(type);
         CheckBox.byLabel("Удалять вместе с виртуальной машиной", -1).setChecked(deleteOnTermination);
         return this;
     }
@@ -51,9 +61,18 @@ public class VmCreate {
         return this;
     }
 
+    public VmCreate setBootType(String type) {
+        this.bootType = Select.byLabel("Тип", 1).setContains(type);
+        return this;
+    }
+
+    public VmCreate setSubnet(String subnet) {
+        this.subnet = Select.byLabel("Подсеть", 1).set(subnet);
+        return this;
+    }
+
     public VmCreate setAvailabilityZone(String availabilityZone) {
-        this.availabilityZone = availabilityZone;
-        DropDown.byLabel("Зона доступности").select(availabilityZone);
+        this.availabilityZone = Select.byLabel("Зона доступности").set(availabilityZone);
         return this;
     }
 
@@ -70,13 +89,13 @@ public class VmCreate {
     }
 
     public VmCreate addSecurityGroups(String securityGroups) {
-        DropDown dropDown = DropDown.byLabel("Группы безопасности сетевого интерфейса");
-        if(Objects.isNull(this.securityGroups)){
+        Select select = Select.byLabel("Группы безопасности сетевого интерфейса");
+        if (Objects.isNull(this.securityGroups)) {
             this.securityGroups = new ArrayList<>();
-            dropDown.clear();
+            select.clear();
         }
         this.securityGroups.add(securityGroups);
-        dropDown.select(securityGroups);
+        select.set(securityGroups);
         return this;
     }
 
@@ -93,15 +112,18 @@ public class VmCreate {
     }
 
     public VmCreate setSshKey(String sshKey) {
-        this.sshKey = sshKey;
-        DropDown.byLabel("Публичный SSH ключ").selectByTextContains(sshKey);
+        this.sshKey = Select.byLabel("Публичный SSH ключ").setContains(sshKey);
+        return this;
+    }
+
+    public VmCreate setSwitchPublicIp(boolean checked){
+        Switch.byLabel("Подключить публичный IP").setEnabled(checked);
         return this;
     }
 
     public VmCreate setPublicIp(String publicIp) {
-        this.publicIp = publicIp;
-        Switch.byLabel("Подключить публичный IP").setEnabled(true);
-        DropDown.byLabel("Публичный IP").select(publicIp);
+        setSwitchPublicIp(true);
+        this.publicIp = Select.byLabel("Публичный IP").set(publicIp);
         return this;
     }
 

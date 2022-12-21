@@ -16,7 +16,7 @@ public class IndexPage {
     final SelenideElement linkDisks = $x("//a[.='Диски']");
     final SelenideElement linkSshKeys = $x("//a[.='SSH-ключи']");
     final SelenideElement linkSnapshots = $x("//a[.='Снимки']");
-    final SelenideElement linkVirtualMachines = $x("//a[.='Виртуальные машины']");
+    final SelenideElement linkVirtualMachines = $x("//a[.='Серверы']");
     final SelenideElement linkSecurityGroups = $x("//a[.='Группы безопасности']");
     final SelenideElement linkPublicIps = $x("//a[.='Публичные IP-адреса']");
     final SelenideElement linkImages = $x("//a[.='Образы']");

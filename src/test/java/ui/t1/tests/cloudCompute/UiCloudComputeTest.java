@@ -109,54 +109,6 @@ public class UiCloudComputeTest extends Tests {
         Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream().noneMatch(e -> e.getOrderId().equals(orderId)));
     }
 
-    @Owner("Checked")
-    @Test
-    @DisplayName("Создание/Удаление ВМ c одним доп диском (auto_delete = on) boot_disk_auto_delete = off")
-    void createVm() {
-        String name = "AT-UI-" + Math.abs(new Random().nextInt());
-        VmCreate vm = new IndexPage()
-                .goToVirtualMachine()
-                .addVm()
-                .setImage(image)
-                .setDeleteOnTermination(false)
-                .setBootSize(5)
-                .addDisk(name, 2, hddTypeOne, true)
-                .setAvailabilityZone(availabilityZone)
-                .setName(name)
-                .addSecurityGroups(securityGroup)
-                .setSshKey(sshKey)
-                .clickOrder();
-
-        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
-        String orderId = vmPage.getOrderId();
-
-        final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(project.getId());
-        Assertions.assertEquals(3, items.stream().filter(e -> e.getOrderId().equals(orderId))
-                .filter(e -> e.getSrcOrderId().equals(""))
-                .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance")).findFirst().orElseThrow(
-                        () -> new NotFoundException("Не найден item с type=compute")).getItemId()))
-                .filter(i -> i.getType().equals("nic") || i.getType().equals("volume"))
-                .count(), "Должно быть 4 item's (nic & volume)");
-
-        new IndexPage()
-                .goToVirtualMachine()
-                .selectCompute(vm.getName())
-                .runActionWithCheckCost(CompareType.LESS, vmPage::delete);
-
-        final List<StateServiceSteps.ShortItem> items2 = StateServiceSteps.getItems(project.getId());
-        Assertions.assertTrue(items2.stream().noneMatch(e -> e.getOrderId().equals(orderId)), "Существуют item's с orderId=" + orderId);
-        Assertions.assertEquals(1, items2.stream().filter(i -> Objects.nonNull(i.getName()))
-                .filter(i -> i.getName().startsWith(vm.getName()))
-                .filter(e -> {
-                    if (!e.getOrderId().equals(e.getSrcOrderId()))
-                        return false;
-                    if (!Objects.equals(e.getSize(), vm.getBootSize()))
-                        return false;
-                    return !Objects.nonNull(e.getParent());
-                }).count(), "Должен быть один item с новим orderId, size и parent=null");
-
-        new IndexPage().goToDisks().selectDisk(name).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
-    }
 
     @Test
     @Owner("Checked")
@@ -524,24 +476,4 @@ public class UiCloudComputeTest extends Tests {
                 .count());
     }
 
-    @Test
-    void name() {
-        new IndexPage().goToVirtualMachine().getVmList().forEach(e -> new IndexPage().goToVirtualMachine().selectCompute(e).delete());
-        new IndexPage().goToDisks().getDiskList().forEach(e -> new IndexPage().goToDisks().selectDisk(e).delete());
-        new IndexPage().goToPublicIps().getIpList().forEach(e -> new IndexPage().goToPublicIps().selectIp(e).delete());
-
-//        DiskCreatePage disk = new IndexPage()
-//                .goDisks()
-//                .addVm()
-//                .setMarketPlaceImage(new SelectBox.Image("Ubuntu", "20.04"))
-//                .setSize("5")
-//                .setType("SSD")
-//                .setName("Test-AT")
-//                .clickOrder();
-//
-//        DiskPage diskPage = new DisksPage().selectDisk(disk.getName());
-
-
-        System.out.println(1);
-    }
 }

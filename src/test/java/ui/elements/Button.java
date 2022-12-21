@@ -2,11 +2,13 @@ package ui.elements;
 
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import lombok.Getter;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 
+@Getter
 public class Button implements TypifiedElement {
     private final SelenideElement button;
 
