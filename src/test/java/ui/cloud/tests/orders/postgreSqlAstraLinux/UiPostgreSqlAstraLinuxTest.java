@@ -128,7 +128,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 //        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
 //        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", new Table("Роли узла").getRowByIndex(0)));
 //    }
-
+//
 //
 //    @Test
 //    @Order(10)

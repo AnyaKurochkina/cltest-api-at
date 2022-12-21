@@ -211,28 +211,32 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
 //    }
 //
 //
+//    @Test
+//    @Order(17)
+//    @TmsLink("851995")
+//    @DisplayName("UI ApacheKafkaCluster.Пакетное создание ACL Kafka")
+//    void createAclTopics() {
+//        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->
+//        new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build()).createAclTransaction2(
+//                AclTransaction.builder().certificate("cert1").type(AclTransaction.Type.BY_NAME).mask("name1").build(),
+//                AclTransaction.builder().certificate("cert2").type(AclTransaction.Type.BY_MASK).mask("mask").build(),
+//                AclTransaction.builder().certificate("cert2").type(AclTransaction.Type.ALL_TRANSACTION).mask("*").build(),
+//                AclTransaction.builder().certificate("cert1").type(AclTransaction.Type.BY_NAME).mask("name2").build()));
+//    }
+//
     @Test
-    @Order(17)
-    @TmsLink("851995")
-    @DisplayName("UI ApacheKafkaCluster.Пакетное создание ACL Kafka")
-    void createAclTopics() {
-      //  ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
-      //  pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.createAclTopics2( AclTransaction ));
-        new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build()).createAclTopics2(
+    @Order(18)
+    @TmsLink("851996")
+    @DisplayName("UI ApacheKafkaCluster.Пакетное удаление ACL Kafka")
+    void dellAclTopics() {
+        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build()).dellAclTransaction(
                 AclTransaction.builder().certificate("cert1").type(AclTransaction.Type.BY_NAME).mask("name1").build(),
                 AclTransaction.builder().certificate("cert2").type(AclTransaction.Type.BY_MASK).mask("mask").build(),
                 AclTransaction.builder().certificate("cert2").type(AclTransaction.Type.ALL_TRANSACTION).mask("*").build(),
-                AclTransaction.builder().certificate("cert1").type(AclTransaction.Type.BY_NAME).mask("name2").build());
+                AclTransaction.builder().certificate("cert1").type(AclTransaction.Type.BY_NAME).mask("name2").build()));
     }
-//
-//    @Test
-//    @Order(18)
-//    @TmsLink("851996")
-//    @DisplayName("UI ApacheKafkaCluster.Пакетное удаление ACL Kafka")
-//    void dellAclTopics() {
-//        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
-//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.dellAclTopics(name));
-//    }
 //
 //    @Test
 //    @Order(19)

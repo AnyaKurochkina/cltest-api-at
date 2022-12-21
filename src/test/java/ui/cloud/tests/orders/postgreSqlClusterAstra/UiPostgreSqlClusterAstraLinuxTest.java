@@ -104,62 +104,93 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::getActualConfiguration);
     }
 
-    @Test
-    @Order(7)
-    @TmsLink("851813")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить default_transaction_isolation на REPEATABLE READ")
-    void changeTransactionIsolation() {
-        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeTransactionIsolation("REPEATABLE READ"));
-    }
-
-    @Test
-    @Order(8)
-    @TmsLink("851811")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить max_connections")
-    void changeMaxConnections() {
-        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
-    }
-
-
-    @Test
-    @Order(9)
-    @TmsLink("851714")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Расширить диск")
-    void expandDisk() {
-        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", node));
-    }
-
-    @Test
-    @Order(11)
-    @TmsLink("852936")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверить конфигурацию")
-    void vmActCheckConfig() {
-        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::checkConfiguration);
-    }
-
-    @Test
-    @Order(12)
-    @TmsLink("851716")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Создание БД")
-    void createDb() {
-        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
-    }
-
-
-    @Test
-    @Order(13)
-    @TmsLink("1171491")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Актуализировать extensions")
-    void updateExtensions() {
-        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.updateExtensions(nameDb));
-    }
+//
+//    @Test
+//    @TmsLink("1236731")
+//    @Order(2)
+//    @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверка полей заказа")
+//    void checkHeaderHistoryTable() {
+//        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+//        pSqlPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+//        pSqlPage.checkHeadersHistory();
+//        pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+//        new Graph().checkGraph();
+//    }
+//
+//    @Test
+//    @Order(5)
+//    @TmsLink("851706")
+//    @DisplayName("UI PostgreSQL Cluster Astra Linux. Перезагрузить по питанию")
+//    void restart() {
+//        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::restart);
+//    }
+//
+//    @Test
+//    @Order(6)
+//    @TmsLink("851809")
+//    @DisplayName("UI PostgreSQL Cluster Astra Linux. Получить актуальную конфигурацию")
+//    void getActualConfiguration() {
+//        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::getActualConfiguration);
+//    }
+//
+//    @Test
+//    @Order(7)
+//    @TmsLink("851813")
+//    @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить default_transaction_isolation на REPEATABLE READ")
+//    void changeTransactionIsolation() {
+//        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeTransactionIsolation("REPEATABLE READ"));
+//    }
+//
+//    @Test
+//    @Order(8)
+//    @TmsLink("851811")
+//    @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить max_connections")
+//    void changeMaxConnections() {
+//        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
+//    }
+//
+//
+//    @Test
+//    @Order(9)
+//    @TmsLink("851714")
+//    @DisplayName("UI PostgreSQL Cluster Astra Linux. Расширить диск")
+//    void expandDisk() {
+//        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", node));
+//    }
+//
+//    @Test
+//    @Order(11)
+//    @TmsLink("852936")
+//    @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверить конфигурацию")
+//    void vmActCheckConfig() {
+//        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::checkConfiguration);
+//    }
+//
+//    @Test
+//    @Order(12)
+//    @TmsLink("851716")
+//    @DisplayName("UI PostgreSQL Cluster Astra Linux. Создание БД")
+//    void createDb() {
+//        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+//    }
+//
+//
+//    @Test
+//    @Order(13)
+//    @TmsLink("1171491")
+//    @DisplayName("UI PostgreSQL Cluster Astra Linux. Актуализировать extensions")
+//    void updateExtensions() {
+//        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.updateExtensions(nameDb));
+//    }
 
     @Test
     @Order(14)

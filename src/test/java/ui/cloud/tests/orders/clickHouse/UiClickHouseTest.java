@@ -21,7 +21,7 @@ import java.time.Duration;
 @Tags({@Tag("ui"), @Tag("ui_clickHouse")})
 public class UiClickHouseTest extends UiProductTest {
 
-    ClickHouse product= ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/276610e8-d20e-4a2f-8d3a-26eefe59a3fc/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    ClickHouse product= ClickHouse.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/9c52fb20-f8cf-41ce-bc38-6bbbc0b54f96/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

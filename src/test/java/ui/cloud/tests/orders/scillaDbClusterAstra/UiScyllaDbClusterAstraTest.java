@@ -181,7 +181,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     }
 
     @Test
-    @Order(17)
+    @Order(22)
     @TmsLink("1368052")
     @DisplayName("UI Scylla_db_cluster_astra. Мониторинг ОС")
     void monitoringOs() {

@@ -24,8 +24,7 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
 public class UiAstraLinuxTest extends UiProductTest {
 
-    Astra product;
-    //product = Astra.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    Astra product = Astra.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/a440fef7-5a90-4390-b5d4-9f884ebc8a13/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -33,42 +32,42 @@ public class UiAstraLinuxTest extends UiProductTest {
         new LoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
-
-    @Test
-    @TmsLink("378275")
-    @Order(1)
-    @DisplayName("UI Astra. Заказ")
-    void orderScyllaDB() {
-        double preBillingProductPrice;
-        try {
-            new IndexPage()
-                    .clickOrderMore()
-                    .selectProduct(product.getProductName());
-            AstraLinuxOrderPage orderPage = new AstraLinuxOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
-            orderPage.orderClick();
-            new OrdersPage()
-                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-                    .getElementByColumn("Продукт")
-                    .hover()
-                    .click();
-            AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-            astraLinuxPage.waitChangeStatus(Duration.ofMinutes(25));
-            astraLinuxPage.checkLastAction("Развертывание");
-        } catch (Throwable e) {
-            product.setError(e.toString());
-            throw e;
-        }
-        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        Assertions.assertEquals(preBillingProductPrice, astraLinuxPage.getCostOrder(), 0.01);
-    }
+//
+//    @Test
+//    @TmsLink("378275")
+//    @Order(1)
+//    @DisplayName("UI Astra. Заказ")
+//    void orderScyllaDB() {
+//        double preBillingProductPrice;
+//        try {
+//            new IndexPage()
+//                    .clickOrderMore()
+//                    .selectProduct(product.getProductName());
+//            AstraLinuxOrderPage orderPage = new AstraLinuxOrderPage();
+//            orderPage.getOsVersion().select(product.getOsVersion());
+//            orderPage.getSegment().selectByValue(product.getSegment());
+//            orderPage.getPlatform().selectByValue(product.getPlatform());
+//            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+//            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+//            orderPage.getGroup().select(accessGroup.getPrefixName());
+//            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
+//            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+//            orderPage.orderClick();
+//            new OrdersPage()
+//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+//                    .getElementByColumn("Продукт")
+//                    .hover()
+//                    .click();
+//            AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+//            astraLinuxPage.waitChangeStatus(Duration.ofMinutes(25));
+//            astraLinuxPage.checkLastAction("Развертывание");
+//        } catch (Throwable e) {
+//            product.setError(e.toString());
+//            throw e;
+//        }
+//        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+//        Assertions.assertEquals(preBillingProductPrice, astraLinuxPage.getCostOrder(), 0.01);
+//    }
 
 
     @Test
