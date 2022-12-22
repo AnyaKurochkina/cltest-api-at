@@ -27,9 +27,7 @@ public class Alert implements TypifiedElement {
     private ElementsCollection getElements() {
         if (Objects.nonNull(element))
             return new ElementsCollection((Driver) Selenide.webdriver(), Collections.singletonList(element));
-        return $$x("(//div[@role='alert' and @aria-live])")
-                .shouldBe(CollectionCondition.anyMatch("Alert не найден", WebElement::isDisplayed))
-                .shouldBe(CollectionCondition.noneMatch("Alert не найден", e -> e.getText().equals("")));
+        return $$x("(//div[@role='alert' and @aria-live])");
     }
 
     public static Alert green(String text, Object... args) {
@@ -47,7 +45,9 @@ public class Alert implements TypifiedElement {
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
         String message = StringUtils.format(text, args);
-        element = getElements().filter(Condition.visible).stream()
+        element = getElements().shouldBe(CollectionCondition.anyMatch("Alert не найден", WebElement::isDisplayed))
+                .shouldBe(CollectionCondition.noneMatch("Alert не найден", e -> e.getText().equals("")))
+                .filter(Condition.visible).stream()
                 .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
                 .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
         waitClose();
