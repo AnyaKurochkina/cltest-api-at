@@ -14,5 +14,13 @@
       "file_system": "xfs"
     }
   ],
+  "ad_logon_grants": [
+    {
+      "role": "superuser",
+      "groups": [
+        "cloud-plux-group-at"
+      ]
+    }
+  ],
   "kibana_password": "Aa56Rrdsfdfd"
 }
