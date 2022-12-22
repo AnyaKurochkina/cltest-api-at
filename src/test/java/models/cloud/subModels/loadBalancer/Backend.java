@@ -18,6 +18,8 @@ public class Backend {
     @Builder.Default
     Boolean advancedCheck = true;
     @Builder.Default
+    Integer checkPort = 80;
+    @Builder.Default
     String balancingAlgorithm = "leastconn";
     @Builder.Default
     String advCheck = "httpchk";
