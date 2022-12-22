@@ -26,7 +26,8 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_podman")})
 public class UiPodmanTest extends UiProductTest {
 
-    Podman product= Podman.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/containers/orders/af70df85-c2f2-4141-9676-f321e18aa54d/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    Podman product;
+    //= Podman.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/containers/orders/af70df85-c2f2-4141-9676-f321e18aa54d/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -34,42 +35,42 @@ public class UiPodmanTest extends UiProductTest {
         new LoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
-//
-//    @Test
-//    @TmsLink("851389")
-//    @Order(1)
-//    @DisplayName("UI Podman. Заказ")
-//    void orderScyllaDB() {
-//        double preBillingProductPrice;
-//        try {
-//            new IndexPage()
-//                    .clickOrderMore()
-//                    .selectProduct(product.getProductName());
-//            PodmanOrderPage orderPage = new PodmanOrderPage();
-//            orderPage.getOsVersion().select(product.getOsVersion());
-//            orderPage.getSegment().selectByValue(product.getSegment());
-//            orderPage.getPlatform().selectByValue(product.getPlatform());
-//            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
-//            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-//            orderPage.getGroup().select(accessGroup.getPrefixName());
-//            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-//            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
-//            orderPage.orderClick();
-//            new OrdersPage()
-//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-//                    .getElementByColumn("Продукт")
-//                    .hover()
-//                    .click();
-//            PodmanPage podmanPage = new PodmanPage(product);
-//            podmanPage.waitChangeStatus(Duration.ofMinutes(25));
-//            podmanPage.checkLastAction("Развертывание");
-//        } catch (Throwable e) {
-//            product.setError(e.toString());
-//            throw e;
-//        }
-//        PodmanPage podmanPage = new PodmanPage(product);
-//        Assertions.assertEquals(preBillingProductPrice, podmanPage.getCostOrder(), 0.01);
-//    }
+
+    @Test
+    @TmsLink("851389")
+    @Order(1)
+    @DisplayName("UI Podman. Заказ")
+    void orderScyllaDB() {
+        double preBillingProductPrice;
+        try {
+            new IndexPage()
+                    .clickOrderMore()
+                    .selectProduct(product.getProductName());
+            PodmanOrderPage orderPage = new PodmanOrderPage();
+            orderPage.getOsVersion().select(product.getOsVersion());
+            orderPage.getSegment().selectByValue(product.getSegment());
+            orderPage.getPlatform().selectByValue(product.getPlatform());
+            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+            orderPage.getGroup().select(accessGroup.getPrefixName());
+            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
+            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            orderPage.orderClick();
+            new OrdersPage()
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
+                    .hover()
+                    .click();
+            PodmanPage podmanPage = new PodmanPage(product);
+            podmanPage.waitChangeStatus(Duration.ofMinutes(25));
+            podmanPage.checkLastAction("Развертывание");
+        } catch (Throwable e) {
+            product.setError(e.toString());
+            throw e;
+        }
+        PodmanPage podmanPage = new PodmanPage(product);
+        Assertions.assertEquals(preBillingProductPrice, podmanPage.getCostOrder(), 0.01);
+    }
 
 
     @Test

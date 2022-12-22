@@ -21,7 +21,8 @@ import java.time.Duration;
 @Tags({@Tag("ui"), @Tag("ui_clickHouse")})
 public class UiClickHouseTest extends UiProductTest {
 
-    ClickHouse product= ClickHouse.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/9c52fb20-f8cf-41ce-bc38-6bbbc0b54f96/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    ClickHouse product;
+    //= ClickHouse.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/9c52fb20-f8cf-41ce-bc38-6bbbc0b54f96/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -30,46 +31,46 @@ public class UiClickHouseTest extends UiProductTest {
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
-//    @Test
-//    @TmsLink("330312")
-//    @Order(1)
-//    @DisplayName("UI ClickHouse. Заказ")
-//    void orderClickHouse() {
-//        double preBillingProductPrice;
-//        try {
-//            new IndexPage()
-//                    .clickOrderMore()
-//                    .selectProduct(product.getProductName());
-//            ClickHouseOrderPage orderPage = new ClickHouseOrderPage();
-//            orderPage.getOsVersion().select(product.getOsVersion());
-//            orderPage.getNameUser().setValue("at_user");
-//            orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-//            orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
-//            orderPage.getSegment().selectByValue(product.getSegment());
-//            orderPage.getPlatform().selectByValue(product.getPlatform());
-//            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMaxFlavor()));
-//            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-//            orderPage.getGroup().select(accessGroup.getPrefixName());
-//            orderPage.getGroup2().select(accessGroup.getPrefixName());
-//            orderPage.getGroup3().select(accessGroup.getPrefixName());
-//            orderPage.getGroup4().select(accessGroup.getPrefixName());
-//            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
-//            EntitiesUtils.clickOrder();
-//            new OrdersPage()
-//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-//                    .getElementByColumn("Продукт")
-//                    .hover()
-//                    .click();
-//            ClickHousePage clickHousePages = new ClickHousePage(product);
-//            clickHousePages.waitChangeStatus(Duration.ofMinutes(25));
-//            clickHousePages.checkLastAction("Развертывание");
-//        } catch (Throwable e) {
-//            product.setError(e.toString());
-//            throw e;
-//        }
-//        ClickHousePage clickHousePage = new ClickHousePage(product);
-//        Assertions.assertEquals(preBillingProductPrice, clickHousePage.getCostOrder(), 0.01);
-//    }
+    @Test
+    @TmsLink("330312")
+    @Order(1)
+    @DisplayName("UI ClickHouse. Заказ")
+    void orderClickHouse() {
+        double preBillingProductPrice;
+        try {
+            new IndexPage()
+                    .clickOrderMore()
+                    .selectProduct(product.getProductName());
+            ClickHouseOrderPage orderPage = new ClickHouseOrderPage();
+            orderPage.getOsVersion().select(product.getOsVersion());
+            orderPage.getNameUser().setValue("at_user");
+            orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
+            orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
+            orderPage.getSegment().selectByValue(product.getSegment());
+            orderPage.getPlatform().selectByValue(product.getPlatform());
+            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMaxFlavor()));
+            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+            orderPage.getGroup().select(accessGroup.getPrefixName());
+            orderPage.getGroup2().select(accessGroup.getPrefixName());
+            orderPage.getGroup3().select(accessGroup.getPrefixName());
+            orderPage.getGroup4().select(accessGroup.getPrefixName());
+            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            EntitiesUtils.clickOrder();
+            new OrdersPage()
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
+                    .hover()
+                    .click();
+            ClickHousePage clickHousePages = new ClickHousePage(product);
+            clickHousePages.waitChangeStatus(Duration.ofMinutes(25));
+            clickHousePages.checkLastAction("Развертывание");
+        } catch (Throwable e) {
+            product.setError(e.toString());
+            throw e;
+        }
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        Assertions.assertEquals(preBillingProductPrice, clickHousePage.getCostOrder(), 0.01);
+    }
 
     @Test
     @TmsLink("1236735")

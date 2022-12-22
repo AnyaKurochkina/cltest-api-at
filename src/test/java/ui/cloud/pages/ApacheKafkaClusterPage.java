@@ -351,24 +351,7 @@ new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build()).createAclTopics
                     radioGroup.select("Все топики");
                 }
             }
-
-//            for (int i = 0; i < names.size(); i++) {
-//                //на первом топике жать + не нужно
-//                if (i != 0) {
-//                    btnAdd.shouldBe(Condition.enabled).click();
-//                }
-//                DropDown.byLabel("Common Name сертификата клиента", i + 1).select(names.get(i));
-//                Input.byLabel("Маска имени топика").setValue(names.get(i));
-//                if (i == 1) {
-//                    //Input.byLabel("Common Name сертификата клиента", 2).setValue(nameT2);
-//                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(names.get(i))).select("По имени");
-//                    DropDown.byLabel("Топики").select(names.get(i));
-//                }
-//                if (i == 2) {
-//                    RadioGroup.byLabel("Выберите топик *", Integer.parseInt(names.get(i))).select("Все топики");
-//                }
-//            }
-        },ActionParameters.builder().checkAlert(false).build());
+        }//,ActionParameters.builder().checkAlert(false).build());
         btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Assertions.assertEquals(new ArrayList<>(), aclTopic.stream().filter(topicAcl -> new Table(HEADER_ACL).isColumnValueEquals(HEADER_ACL, topicAcl.mask))
                 .collect(Collectors.toList()), "Не все топики ACL были удалены");

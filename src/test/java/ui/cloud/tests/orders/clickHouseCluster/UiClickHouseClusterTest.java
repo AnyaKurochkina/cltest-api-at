@@ -23,7 +23,8 @@ import static core.helper.StringUtils.$x;
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 public class UiClickHouseClusterTest extends UiProductTest {
 
-    ClickHouseCluster product = ClickHouseCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/92d7ddfa-73ff-4b99-b38c-e1d4e412bbc7/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    ClickHouseCluster product;
+    //= ClickHouseCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/92d7ddfa-73ff-4b99-b38c-e1d4e412bbc7/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     String nameAD= "at_ad_user";
     String nameLocalAD= "at_local_user";
@@ -37,133 +38,133 @@ public class UiClickHouseClusterTest extends UiProductTest {
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
-//    @Test
-//    @TmsLink("1138094")
-//    @Order(1)
-//    @DisplayName("UI ClickHouse Cluster. Заказ")
-//    void orderClickHouseCluster() {
-//        double preBillingProductPrice;
-//        try {
-//            new IndexPage()
-//                    .clickOrderMore()
-//                    .selectProduct(product.getProductName());
-//            ClickHouseClusterOrderPage orderPage = new ClickHouseClusterOrderPage();
-//            orderPage.getOsVersion().select(product.getOsVersion());
-//            orderPage.getNameCluster().setValue("cluster");
-//            orderPage.getNameUser().setValue("at_user");
-//            orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-//            orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
-//            orderPage.getSegment().selectByValue(product.getSegment());
-//            orderPage.getPlatform().selectByValue(product.getPlatform());
-//            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-//            orderPage.getGroup().select(accessGroup.getPrefixName());
-//            orderPage.getGroup2().select(accessGroup.getPrefixName());
-//            orderPage.getGroup3().select(accessGroup.getPrefixName());
-//            orderPage.getGroup4().select(accessGroup.getPrefixName());
-//            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-//            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
-//            EntitiesUtils.clickOrder();
-//            new OrdersPage()
-//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-//                    .getElementByColumn("Продукт")
-//                    .hover()
-//                    .click();
-//            ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-//            clickHouseClusterPage.waitChangeStatus(Duration.ofMinutes(25));
-//            clickHouseClusterPage.checkLastAction("Развертывание");
-//        } catch (Throwable e) {
-//            product.setError(e.toString());
-//            throw e;
-//        }
-//        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-//        Assertions.assertEquals(preBillingProductPrice, clickHouseClusterPage.getCostOrder(), 0.01);
-//    }
+    @Test
+    @TmsLink("1138094")
+    @Order(1)
+    @DisplayName("UI ClickHouse Cluster. Заказ")
+    void orderClickHouseCluster() {
+        double preBillingProductPrice;
+        try {
+            new IndexPage()
+                    .clickOrderMore()
+                    .selectProduct(product.getProductName());
+            ClickHouseClusterOrderPage orderPage = new ClickHouseClusterOrderPage();
+            orderPage.getOsVersion().select(product.getOsVersion());
+            orderPage.getNameCluster().setValue("cluster");
+            orderPage.getNameUser().setValue("at_user");
+            orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
+            orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
+            orderPage.getSegment().selectByValue(product.getSegment());
+            orderPage.getPlatform().selectByValue(product.getPlatform());
+            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+            orderPage.getGroup().select(accessGroup.getPrefixName());
+            orderPage.getGroup2().select(accessGroup.getPrefixName());
+            orderPage.getGroup3().select(accessGroup.getPrefixName());
+            orderPage.getGroup4().select(accessGroup.getPrefixName());
+            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
+            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            EntitiesUtils.clickOrder();
+            new OrdersPage()
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
+                    .hover()
+                    .click();
+            ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+            clickHouseClusterPage.waitChangeStatus(Duration.ofMinutes(25));
+            clickHouseClusterPage.checkLastAction("Развертывание");
+        } catch (Throwable e) {
+            product.setError(e.toString());
+            throw e;
+        }
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        Assertions.assertEquals(preBillingProductPrice, clickHouseClusterPage.getCostOrder(), 0.01);
+    }
 
-//
-//    @Test
-//    @TmsLink("1236734")
-//    @Order(2)
-//    @DisplayName("UI ClickHouse Cluster. Проверка полей заказа")
-//    void
-//    checkHeaderHistoryTable() {
-//        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-//        clickHouseClusterPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
-//        clickHouseClusterPage.checkHeadersHistory();
-//        clickHouseClusterPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-//        new Graph().checkGraph();
-//    }
-//
-//    @Test
-//    @Order(3)
-//    @TmsLink("1138093")
-//    @DisplayName("UI ClickHouse Cluster. Перезагрузить по питанию")
-//    void restart() {
-//        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-//        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::restart);
-//    }
-//
-//
-//    @Test
-//    @Order(4)
-//    @TmsLink("1138087")
-//    @DisplayName("UI ClickHouse Cluster. Расширить диск")
-//    void expandDisk() {
-//        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-//        clickHouseClusterPage.runActionWithCheckCost(CompareType.MORE, () -> clickHouseClusterPage.enlargeDisk("/app/clickhouse", "20", node));
-//    }
-//
-//    @Test
-//    @Order(5)
-//    @TmsLink("1162629")
-//    @DisplayName("UI ClickHouse Cluster. Проверить конфигурацию")
-//    void vmActCheckConfig() {
-//        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-//        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::checkConfiguration);
-//    }
-//
-//    @Test
-//    @Order(6)
-//    @TmsLink("1152772")
-//    @DisplayName("UI ClickHouse Cluster. Cоздание локальной УЗ")
-//    void createLocalAccount() {
-//        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-//        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.createLocalAccount(nameLocalAD));
-//    }
-//
-//    @Test
-//    @Order(7)
-//    @TmsLink("1149195")
-//    @DisplayName("UI ClickHouse Cluster. Cбросить пароль локальной УЗ")
-//    void resetPasswordLA() {
-//        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-//        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.resetPasswordLA(nameLocalAD));
-//    }
-//
-//    @Test
-//    @Order(8)
-//    @TmsLink("1152774")
-//    @DisplayName("UI ClickHouse Cluster. Добавление УЗ AD")
-//    void addAccountAD() {
-//        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-//        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.addAccountAD(nameAD));
-//    }
-//
-//    @Test
-//    @Order(10)
-//    @TmsLink("1152773")
-//    @DisplayName("UI ClickHouse Cluster. Удаление локальной УЗ")
-//    void deleteLocalAccount() {
-//        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-//        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteLocalAccount(nameLocalAD));
-//    }
-//    @Test
-//    @Order(11)
-//    @TmsLink("1152780")
-//    @DisplayName("UI ClickHouse Cluster. Удаление УЗ АD")
-//    void deleteAccountAD() {
-//        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-//        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteAccountAD(nameAD));
-//    }
+
+    @Test
+    @TmsLink("1236734")
+    @Order(2)
+    @DisplayName("UI ClickHouse Cluster. Проверка полей заказа")
+    void
+    checkHeaderHistoryTable() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        clickHouseClusterPage.checkHeadersHistory();
+        clickHouseClusterPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        new Graph().checkGraph();
+    }
+
+    @Test
+    @Order(3)
+    @TmsLink("1138093")
+    @DisplayName("UI ClickHouse Cluster. Перезагрузить по питанию")
+    void restart() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::restart);
+    }
+
+
+    @Test
+    @Order(4)
+    @TmsLink("1138087")
+    @DisplayName("UI ClickHouse Cluster. Расширить диск")
+    void expandDisk() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.MORE, () -> clickHouseClusterPage.enlargeDisk("/app/clickhouse", "20", node));
+    }
+
+    @Test
+    @Order(5)
+    @TmsLink("1162629")
+    @DisplayName("UI ClickHouse Cluster. Проверить конфигурацию")
+    void vmActCheckConfig() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::checkConfiguration);
+    }
+
+    @Test
+    @Order(6)
+    @TmsLink("1152772")
+    @DisplayName("UI ClickHouse Cluster. Cоздание локальной УЗ")
+    void createLocalAccount() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.createLocalAccount(nameLocalAD));
+    }
+
+    @Test
+    @Order(7)
+    @TmsLink("1149195")
+    @DisplayName("UI ClickHouse Cluster. Cбросить пароль локальной УЗ")
+    void resetPasswordLA() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.resetPasswordLA(nameLocalAD));
+    }
+
+    @Test
+    @Order(8)
+    @TmsLink("1152774")
+    @DisplayName("UI ClickHouse Cluster. Добавление УЗ AD")
+    void addAccountAD() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.addAccountAD(nameAD));
+    }
+
+    @Test
+    @Order(10)
+    @TmsLink("1152773")
+    @DisplayName("UI ClickHouse Cluster. Удаление локальной УЗ")
+    void deleteLocalAccount() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteLocalAccount(nameLocalAD));
+    }
+    @Test
+    @Order(11)
+    @TmsLink("1152780")
+    @DisplayName("UI ClickHouse Cluster. Удаление УЗ АD")
+    void deleteAccountAD() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteAccountAD(nameAD));
+    }
 
     @Test
     @Order(12)
