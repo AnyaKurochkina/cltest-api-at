@@ -1,20 +1,19 @@
 package ui.elements;
 
 import com.codeborne.selenide.*;
-import core.helper.DataFileHelper;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
-import static com.codeborne.selenide.Selenide.executeJavaScript;
 import static core.helper.StringUtils.$$x;
+import static core.helper.StringUtils.$x;
 import static org.openqa.selenium.support.Color.fromString;
 
 public class Alert implements TypifiedElement {
@@ -29,8 +28,8 @@ public class Alert implements TypifiedElement {
     private ElementsCollection getElements() {
         if (Objects.nonNull(element))
             return new ElementsCollection((Driver) Selenide.webdriver(), Collections.singletonList(element));
-        return $$x("(//div[@role='alert'])").shouldBe(CollectionCondition.anyMatch("Не найден alert", WebElement::isDisplayed))
-                .shouldBe(CollectionCondition.anyMatch("", e -> Pattern.compile(".+").matcher(e.getText()).find()));
+        return $$x("(//div[@role='alert' and @aria-live])")
+                .shouldBe(CollectionCondition.anyMatch("Не найден alert", WebElement::isDisplayed));
     }
 
     public static Alert green(String text, Object... args) {
@@ -47,23 +46,17 @@ public class Alert implements TypifiedElement {
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
-        try {
-            String message = StringUtils.format(text, args);
-            element = getElements().filter(Condition.visible).stream()
-                            .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
-                    .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
-        } catch (NotFoundException e) {
-            DataFileHelper.write("ALERT.log", WebDriverRunner.getWebDriver().getPageSource());
-        }
-
+        String message = StringUtils.format(text, args);
+        element = getElements().filter(Condition.visible).stream()
+                        .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
+                .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
         return this;
     }
 
     public static void closeAll() {
         SelenideElement e = new Alert().getElements().first();
         while (e.exists() && e.isDisplayed()) {
-            Waiting.sleep(3000);
-            executeJavaScript("arguments[0].style.display = 'none'", e);
+            Waiting.sleep(2000);
         }
     }
 

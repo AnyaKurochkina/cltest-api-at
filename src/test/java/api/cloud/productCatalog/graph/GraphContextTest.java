@@ -2,11 +2,11 @@ package api.cloud.productCatalog.graph;
 
 
 import api.Tests;
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
+import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.productCatalog.Env;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.Modification;
@@ -32,21 +32,22 @@ public class GraphContextTest extends Tests {
     Project project;
 
     public GraphContextTest() {
-        project = Project.builder().build().createObject();
+
+        project = Project.builder()
+                .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
+                .isForOrders(true)
+                .build()
+                .createObject();
     }
 
     @DisplayName("Получение графа c модификаторами для текущей среды по контексту")
     @TmsLink("1353529")
     @Test
     public void getGraphWithModsToCurrentEnvByContextTest() {
-        Env env = Env.DEV;
-        if (Configure.ENV.equals("ift")) {
-            env = Env.TEST;
-        }
         String jsonData = "dev_title";
         Modification jsonSchema = Modification.builder()
                 .name("json_schema_dev_mod")
-                .envs(Collections.singletonList(env))
+                .envs(Collections.singletonList(Env.DEV))
                 .order(1)
                 .path("title")
                 .rootPath(RootPath.JSON_SCHEMA)
@@ -98,14 +99,10 @@ public class GraphContextTest extends Tests {
     @TmsLink("1353531")
     @Test
     public void getGraphWithModsToAnotherEnvByContextTest() {
-        Env env = Env.TEST;
-        if (Configure.ENV.equals("ift")) {
-            env = Env.DEV;
-        }
         String jsonData = "dev_title";
         Modification jsonSchema = Modification.builder()
                 .name("json_schema_dev_mod")
-                .envs(Collections.singletonList(env))
+                .envs(Collections.singletonList(Env.TEST))
                 .order(1)
                 .path("title")
                 .rootPath(RootPath.JSON_SCHEMA)
@@ -116,7 +113,7 @@ public class GraphContextTest extends Tests {
         Graph graph = Graph.builder()
                 .name("get_graph_with_mods_another_env_by_context_test_api")
                 .version("1.0.0")
-                .modifications(Arrays.asList(jsonSchema))
+                .modifications(Collections.singletonList(jsonSchema))
                 .jsonSchema(new LinkedHashMap<String, Object>() {{
                     put("title", titleValue);
                 }})
