@@ -351,7 +351,7 @@ new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build()).createAclTopics
                     radioGroup.select("Все топики");
                 }
             }
-        }//,ActionParameters.builder().checkAlert(false).build());
+        });
         btnAclTrans.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Assertions.assertEquals(new ArrayList<>(), aclTopic.stream().filter(topicAcl -> new Table(HEADER_ACL).isColumnValueEquals(HEADER_ACL, topicAcl.mask))
                 .collect(Collectors.toList()), "Не все топики ACL были удалены");

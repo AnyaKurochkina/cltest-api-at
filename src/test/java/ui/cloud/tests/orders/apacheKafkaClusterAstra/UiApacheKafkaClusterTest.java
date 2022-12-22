@@ -10,6 +10,7 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
+import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
@@ -36,7 +37,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @TmsLink("851992")
     @Order(1)
     @DisplayName("UI ApacheKafkaCluster. Заказ")
-    void orderPostgreSQL() {
+    void orderApacheKafkaCluster() {
         double preBillingProductPrice;
         try {
             new IndexPage()
