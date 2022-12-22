@@ -6,6 +6,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
 import java.util.Collections;
@@ -39,8 +40,9 @@ public class Alert implements TypifiedElement {
     }
 
     public void waitClose() {
-        if(element.exists())
+        try {
             element.shouldNot(Condition.visible);
+        } catch (StaleElementReferenceException ignored) {}
     }
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
