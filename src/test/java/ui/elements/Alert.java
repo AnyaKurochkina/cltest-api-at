@@ -39,7 +39,8 @@ public class Alert implements TypifiedElement {
     }
 
     public void waitClose() {
-        element.shouldNot(Condition.visible);
+        if(element.exists())
+            element.shouldNot(Condition.visible);
     }
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
