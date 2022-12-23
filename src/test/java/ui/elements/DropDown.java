@@ -71,11 +71,11 @@ public class DropDown implements TypifiedElement {
                 .click();
     }
 
-    @Step("Выбрать в select элемент с текстом '{value}'")
+    @Step("Выбрать в select элемент с текстом '{value}' в div")
     public void selectByDivText(String value) {
         element.shouldBe(clickableCnd).click();
         SelenideElement item = $x("//li/div[text()='{}']", value).exists() ? $x("//li/div[text()='{}']", value)
-                : $x("//div[@role='listbox']//div[text()='{}']", value);
+                : $x("//div[@role='listbox' or contains(@class,'dropdown-container')]//div[text()='{}']", value);
             item.shouldBe(Condition.enabled).click();
     }
 
