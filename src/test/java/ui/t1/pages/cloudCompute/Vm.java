@@ -5,12 +5,12 @@ import ui.elements.Dialog;
 import ui.elements.Select;
 import ui.elements.Table;
 
-import static ui.t1.pages.cloudCompute.Vm.DiskInfo.COLUMN_NAME;
+import static ui.t1.pages.cloudCompute.Disk.DiskInfo.COLUMN_NAME;
 
 public class Vm extends IProductT1Page {
 
     public Disk selectDisk(String disk) {
-        new DiskInfo().getRowByColumnValue(COLUMN_NAME, disk).get().shouldBe(Condition.visible).click();
+        new Disk.DiskInfo().getRowByColumnValue(COLUMN_NAME, disk).get().shouldBe(Condition.visible).click();
         return new Disk();
     }
 
@@ -19,6 +19,10 @@ public class Vm extends IProductT1Page {
                 Dialog.byTitle("Подключить публичный IP")
                         .setSelectValue("Сетевой интерфейс", Select.RANDOM_VALUE)
                         .setSelectValue("Публичный IP", ip));
+    }
+
+    public void getLink() {
+        runActionWithoutParameters(BLOCK_PARAMETERS, "Получить ссылку на консоль");
     }
 
     public void stop() {
@@ -34,15 +38,6 @@ public class Vm extends IProductT1Page {
     public NetworkInterface selectNetworkInterface() {
         new NetworkInfo().getRow(0).get().shouldBe(Condition.visible).click();
         return new NetworkInterface();
-    }
-
-    public static class DiskInfo extends Table {
-        public static final String COLUMN_SYSTEM = "Системный";
-        public static final String COLUMN_NAME = "Имя";
-
-        public DiskInfo() {
-            super(COLUMN_SYSTEM);
-        }
     }
 
     public static class NetworkInfo extends Table {

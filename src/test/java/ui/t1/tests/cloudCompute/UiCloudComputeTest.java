@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import static ui.t1.pages.cloudCompute.Vm.DiskInfo.COLUMN_NAME;
-import static ui.t1.pages.cloudCompute.Vm.DiskInfo.COLUMN_SYSTEM;
+import static ui.t1.pages.cloudCompute.Disk.DiskInfo.COLUMN_NAME;
+import static ui.t1.pages.cloudCompute.Disk.DiskInfo.COLUMN_SYSTEM;
 
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(BeforeAllExtension.class)
@@ -81,32 +81,6 @@ public class UiCloudComputeTest extends Tests {
         ipPage.runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
         Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream()
                 .noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
-    }
-
-
-    @Owner("Checked")
-    @Test
-    @DisplayName("Создание/Удаление диска")
-    void createDisk() {
-        DiskCreate disk = new IndexPage()
-                .goToDisks()
-                .addDisk()
-                .setAvailabilityZone(availabilityZone)
-                .setName("AT-UI-" + Math.abs(new Random().nextInt()))
-                .setSize(2L)
-                .clickOrder();
-
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
-
-        String orderId = diskPage.getOrderId();
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
-                .filter(e -> e.getOrderId().equals(orderId))
-                .filter(i -> Objects.equals(i.getSize(), disk.getSize()))
-                .filter(i -> i.getSrcOrderId().equals(orderId))
-                .count(), "Поиск item, где orderId = srcOrderId & size == " + disk.getSize());
-
-        diskPage.runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
-        Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream().noneMatch(e -> e.getOrderId().equals(orderId)));
     }
 
 
@@ -218,65 +192,6 @@ public class UiCloudComputeTest extends Tests {
         new IndexPage().goToPublicIps().selectIp(ip).runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
         Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream()
                 .noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
-    }
-
-    @Test
-    @Owner("Checked")
-    @DisplayName("Подключить/Отключить диск")
-    void attachDisk() {
-        String vmName = "AT-UI-" + Math.abs(new Random().nextInt());
-        VmCreate vm = new IndexPage()
-                .goToVirtualMachine()
-                .addVm()
-                .setImage(image)
-                .setDeleteOnTermination(true)
-                .setAvailabilityZone(availabilityZone)
-                .setName(vmName)
-                .addSecurityGroups(securityGroup)
-                .setSshKey(sshKey)
-                .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
-        String orderIdVm = vmPage.getOrderId();
-
-        DiskCreate disk = new IndexPage()
-                .goToDisks()
-                .addDisk()
-                .setAvailabilityZone(availabilityZone)
-                .setName("AT-UI-" + Math.abs(new Random().nextInt()))
-                .setSize(6L)
-                .clickOrder();
-
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
-        String orderIdDisk = diskPage.getOrderId();
-
-        diskPage.runActionWithCheckCost(CompareType.EQUALS, () -> diskPage.attachComputeVolume(vm.getName(), true));
-
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
-                .filter(e -> e.getOrderId().equals(orderIdVm))
-                .filter(e -> e.getSrcOrderId().equals(orderIdDisk))
-                .filter(e -> e.getSize().equals(6L))
-                .count(), "Item volume не соответствует условиям или не найден");
-
-        Disk updatedDiskPage = new IndexPage()
-                .goToVirtualMachine()
-                .selectCompute(vm.getName())
-                .selectDisk(disk.getName());
-        updatedDiskPage.runActionWithCheckCost(CompareType.EQUALS, updatedDiskPage::detachComputeVolume);
-
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
-                .filter(e -> e.getOrderId().equals(orderIdDisk))
-                .filter(e -> e.getSize().equals(6L))
-                .filter(e -> Objects.isNull(e.getParent()))
-                .count(), "Item volume не соответствует условиям или не найден");
-
-        new IndexPage()
-                .goToVirtualMachine()
-                .selectCompute(vm.getName())
-                .runActionWithCheckCost(CompareType.LESS, vmPage::delete);
-        new IndexPage()
-                .goToDisks()
-                .selectDisk(disk.getName())
-                .runActionWithCheckCost(CompareType.LESS, updatedDiskPage::delete);
     }
 
     @Test
@@ -447,7 +362,7 @@ public class UiCloudComputeTest extends Tests {
 
         Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         String orderIdVm = vmPage.getOrderId();
-        Disk disk = vmPage.selectDisk(new Vm.DiskInfo().getRowByColumnValue(COLUMN_SYSTEM, "Да").getValueByColumn(COLUMN_NAME));
+        Disk disk = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(COLUMN_SYSTEM, "Да").getValueByColumn(COLUMN_NAME));
         String orderIdDisk = disk.getOrderId();
         disk.runActionWithCheckCost(CompareType.MORE, () -> disk.createSnapshot(name));
         new IndexPage().goToSnapshots().selectSnapshot(name).checkCreate();

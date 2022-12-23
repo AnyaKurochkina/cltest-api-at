@@ -10,7 +10,7 @@ import static core.helper.StringUtils.$x;
 
 public class SecurityGroupList {
 
-    public void addGroup(String name, String desc){
+    public void addGroup(String name, String desc) {
         new SecurityGroupsTable().clickAdd();
         Dialog.byTitle("Добавить группу безопасности")
                 .setInputValue("Имя", name)
@@ -21,13 +21,13 @@ public class SecurityGroupList {
         //TODO: нужна проверка стутуса
     }
 
-    public void deleteGroup(String name){
+    public void deleteGroup(String name) {
         new SecurityGroupsTable().getRowByColumnValue(SecurityGroupsTable.COLUMN_NAME, name).getElementByColumn("").$("button").click();
         //TODO: нужна проверка отсутствия группы
     }
 
-    public void selectGroup(String name){
-        new SecurityGroupsTable().getRowElementByColumnValue(SecurityGroupsTable.COLUMN_NAME, name).click();
+    public void selectGroup(String name) {
+        new SecurityGroupsTable().getRowByColumnValue(SecurityGroupsTable.COLUMN_NAME, name).get().click();
         $x("//span[.='{}']", name).shouldBe(Condition.visible);
     }
 

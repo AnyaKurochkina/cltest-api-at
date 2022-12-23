@@ -5,7 +5,9 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.function.Executable;
 import ui.cloud.pages.EntitiesUtils;
 import ui.cloud.pages.IProductPage;
 import ui.cloud.tests.ActionParameters;
@@ -14,7 +16,10 @@ import ui.elements.*;
 import java.time.Duration;
 import java.util.Objects;
 
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
+import static ui.elements.TypifiedElement.scrollCenter;
 
 public class IProductT1Page extends IProductPage {
     private static final String COLUMN_POWER = "Статус";
@@ -36,6 +41,7 @@ public class IProductT1Page extends IProductPage {
         Waiting.sleep(15000);
         checkPowerStatus(Disk.TopInfo.POWER_STATUS_DELETED);
     }
+
 
     public <T extends IProductPage> T checkCreate(){
         checkLastAction("Развертывание");

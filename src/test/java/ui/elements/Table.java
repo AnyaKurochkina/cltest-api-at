@@ -159,19 +159,20 @@ public class Table implements TypifiedElement {
     }
 
     @AllArgsConstructor
+    @Getter
     public class Row {
-        int row;
+        int index;
 
         public SelenideElement get(){
-            return getRowByIndex(row);
+            return getRowByIndex(index);
         }
 
         public String getValueByColumn(String column) {
-            return getValueByColumnInRow(row, column).hover().getText();
+            return getValueByColumnInRow(index, column).hover().getText();
         }
 
         public SelenideElement getElementByColumn(String column) {
-            return getValueByColumnInRow(row, column);
+            return getValueByColumnInRow(index, column);
         }
 
         public SelenideElement getElementByColumnIndex(int column) {

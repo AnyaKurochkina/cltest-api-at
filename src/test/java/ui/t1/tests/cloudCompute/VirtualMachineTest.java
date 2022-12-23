@@ -79,6 +79,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
 
 
     @Test
+    @TmsLinks({@TmsLink("1248928"), @TmsLink("1249417")})
     @DisplayName("Создание/Удаление ВМ c одним доп диском (auto_delete = on) boot_disk_auto_delete = off")
     void createVmWithoutBootDiskAutoDelete() {
         String name = getRandomName();
@@ -224,27 +225,47 @@ public class VirtualMachineTest extends AbstractComputeTest {
     }
 
     @Test
-    void name() {
-        new IndexPage().goToVirtualMachine().getVmList().forEach(e -> {
-            try {
-                new IndexPage().goToVirtualMachine().selectCompute(e).delete();
-            } catch (Throwable ignored) {
-                TypifiedElement.refresh();
-            }
-        });
-        new IndexPage().goToDisks().getDiskList().forEach(e -> {
-            try {
-                new IndexPage().goToDisks().selectDisk(e).delete();
-            } catch (Throwable ignored) {
-                TypifiedElement.refresh();
-            }
-        });
-        new IndexPage().goToPublicIps().getIpList().forEach(e -> {
-            try {
-                new IndexPage().goToPublicIps().selectIp(e).delete();
-            } catch (Throwable ignored) {
-                TypifiedElement.refresh();
-            }
-        });
+    @TmsLink("1248862")
+    @DisplayName("Cloud Compute. Виртуальные машины. Получить ссылку на консоль")
+    void getConsoleLink() {
+        VmCreate vm = new IndexPage()
+                .goToVirtualMachine()
+                .addVm()
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setAvailabilityZone(availabilityZone)
+                .setName(getRandomName())
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
+                .clickOrder();
+
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        vmPage.runActionWithCheckCost(CompareType.EQUALS, vmPage::getLink);
+        vmPage.delete();
     }
+
+//    @Test
+//    void name() {
+//        new IndexPage().goToVirtualMachine().getVmList().forEach(e -> {
+//            try {
+//                new IndexPage().goToVirtualMachine().selectCompute(e).delete();
+//            } catch (Throwable ignored) {
+//                TypifiedElement.refresh();
+//            }
+//        });
+//        new IndexPage().goToDisks().getDiskList().forEach(e -> {
+//            try {
+//                new IndexPage().goToDisks().selectDisk(e).delete();
+//            } catch (Throwable ignored) {
+//                TypifiedElement.refresh();
+//            }
+//        });
+//        new IndexPage().goToPublicIps().getIpList().forEach(e -> {
+//            try {
+//                new IndexPage().goToPublicIps().selectIp(e).delete();
+//            } catch (Throwable ignored) {
+//                TypifiedElement.refresh();
+//            }
+//        });
+//    }
 }

@@ -20,6 +20,8 @@ public class IndexPage {
     final SelenideElement linkSecurityGroups = $x("//a[.='Группы безопасности']");
     final SelenideElement linkPublicIps = $x("//a[.='Публичные IP-адреса']");
     final SelenideElement linkImages = $x("//a[.='Образы']");
+    final SelenideElement linkNetworkInterfaces = $x("//a[.='Сетевые интерфейсы']");
+    final SelenideElement linkHistory = $x("//a[.='История действий']");
 
     public static void go() {
         $x("//img[contains(@alt,'logo')]").shouldBe(Condition.visible).click();
@@ -35,6 +37,13 @@ public class IndexPage {
     public CloudDirectorPage goToCloudDirector() {
         linkCloudDirector.click();
         return new CloudDirectorPage();
+    }
+
+    @Step("Переход на страницу История действий")
+    public ComputeHistory goToHistory() {
+        linkCloudEngine.click();
+        linkHistory.click();
+        return new ComputeHistory();
     }
 
     @Step("Переход на страницу SSH-ключи")
@@ -63,6 +72,13 @@ public class IndexPage {
         linkCloudEngine.click();
         linkDisks.click();
         return new DiskList();
+    }
+
+    @Step("Переход на страницу Сетевые интерфейсы")
+    public NetworkInterfaceList goToNetworkInterfaces() {
+        linkCloudEngine.click();
+        linkNetworkInterfaces.click();
+        return new NetworkInterfaceList();
     }
 
     @Step("Переход на страницу Снимки")

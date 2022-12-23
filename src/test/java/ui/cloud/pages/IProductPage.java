@@ -32,7 +32,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Getter
 public abstract class IProductPage {
     IProduct product;
-    Double preBillingCostAction;
+    protected Double preBillingCostAction;
     SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
 
     protected abstract void checkPowerStatus(String expectedStatus);
@@ -44,7 +44,7 @@ public abstract class IProductPage {
     SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
 
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
-    private final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
+    protected final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
 
     public IProductPage(IProduct product) {
         if (Objects.nonNull(product.getError()))
@@ -135,7 +135,6 @@ public abstract class IProductPage {
             waitChangeStatus();
         if (params.isCheckLastAction())
             checkLastAction(action);
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
     }
 
     @SneakyThrows

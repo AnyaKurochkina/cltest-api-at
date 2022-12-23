@@ -1,12 +1,15 @@
 package ui.t1.pages.cloudCompute;
 
 import com.codeborne.selenide.Condition;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.CheckBox;
 import ui.elements.Dialog;
+import ui.elements.Input;
+import ui.elements.Table;
 
-import static ui.t1.pages.cloudCompute.Vm.DiskInfo.COLUMN_NAME;
+import static ui.t1.pages.cloudCompute.Disk.DiskInfo.COLUMN_NAME;
 
 public class Disk extends IProductT1Page {
 
@@ -18,10 +21,16 @@ public class Disk extends IProductT1Page {
                 ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).build());
     }
 
+    @Step("Расширить диск на {size}ГБ")
+    public void expandDisk(int size) {
+        runActionWithParameters(BLOCK_PARAMETERS, "Расширить диск", "Подтвердить", () -> Input.byLabel("Новый размер диска").setValue(size));
+        Assertions.assertEquals(String.valueOf(size), new DiskInfo().getFirstValueByColumn("Размер, Гб"));
+    }
+
     public void detachComputeVolume() {
         String name = new TopInfo().getFirstValueByColumn(COLUMN_NAME);
         runActionWithoutParameters(BLOCK_PARAMETERS, "Отключить диск от виртуальной машины");
-        Assertions.assertFalse(new Vm.DiskInfo().isColumnValueEquals(COLUMN_NAME, name));
+        Assertions.assertFalse(new DiskInfo().isColumnValueEquals(COLUMN_NAME, name));
     }
 
     public void createSnapshot(String name) {
@@ -35,7 +44,16 @@ public class Disk extends IProductT1Page {
     }
 
     public Snapshot selectSnapshot(String snapshot){
-        getTableByHeader("Снимки").getRowElementByColumnValue("Имя", snapshot).shouldBe(Condition.visible).click();
+        getTableByHeader("Снимки").getRowByColumnValue("Имя", snapshot).get().shouldBe(Condition.visible).click();
         return new Snapshot();
+    }
+
+    public static class DiskInfo extends Table {
+        public static final String COLUMN_SYSTEM = "Системный";
+        public static final String COLUMN_NAME = "Имя";
+
+        public DiskInfo() {
+            super(COLUMN_SYSTEM);
+        }
     }
 }
