@@ -150,7 +150,7 @@ public class LoadBalancer extends IProduct {
                 String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не удален");
         backends.remove(backend);
         save();
-        if(!isTest())
+        if (!isTest())
             Assertions.assertFalse(isStateContains(backend.getBackendName()));
     }
 
@@ -161,7 +161,7 @@ public class LoadBalancer extends IProduct {
                 String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не удален");
         frontends.remove(frontend);
         save();
-        if(!isTest())
+        if (!isTest())
             Assertions.assertFalse(isStateContains(frontend.getFrontendName()));
     }
 
