@@ -5,6 +5,7 @@ import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.graph.GetGraphList;
 import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
@@ -28,6 +29,16 @@ public class GraphSteps extends Steps {
                 .compareWithJsonSchema("jsonSchema/getGraphListSchema.json")
                 .assertStatus(200)
                 .extractAs(GetGraphList.class).getList();
+    }
+
+    @Step("Получение Meta данных списка графов продуктового каталога")
+    public static Meta getMetaGraphList() {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl)
+                .compareWithJsonSchema("jsonSchema/getActionListSchema.json")
+                .assertStatus(200)
+                .extractAs(GetGraphList.class).getMeta();
     }
 
     @Step("Получение массива объектов использующих граф")
@@ -81,6 +92,14 @@ public class GraphSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(graphUrl);
+    }
+
+    @Step("Создание графа")
+    public static Graph createGraph(String name) {
+        return Graph.builder()
+                .name(name)
+                .build()
+                .createObject();
     }
 
     @Step("Получение графа по Id {objectId}")
@@ -229,5 +248,80 @@ public class GraphSteps extends Steps {
                 .get("/api/v1/projects/{}/graphs/{}/", projectId, objectId)
                 .assertStatus(200)
                 .extractAs(Graph.class);
+    }
+
+    @Step("Удаление графа по Id без токена")
+    public static Response deleteGraphByIdWithOutToken(String id) {
+        return new Http(ProductCatalogURL)
+                .setWithoutToken()
+                .delete(graphUrl + id + "/").assertStatus(401);
+    }
+
+    @Step("Получение графа по Id без токена")
+    public static Response getGraphByIdWithOutToken(String objectId) {
+        return new Http(ProductCatalogURL).setWithoutToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + objectId + "/").assertStatus(401);
+    }
+
+    @Step("Копирование графа по Id без ключа")
+    public static String copyGraphByIdWithOutToken(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .setWithoutToken()
+                .post(graphUrl + objectId + "/copy/")
+                .assertStatus(401).jsonPath().getString("error.message");
+    }
+
+    @Step("Частичное обновление графа без токена")
+    public static String partialUpdateGraphWithOutToken(String id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setWithoutToken()
+                .body(object)
+                .patch(graphUrl + id + "/")
+                .assertStatus(401).jsonPath().getString("error.message");
+    }
+
+    @Step("Получение списка графов по Id")
+    public static Response getGraphListById(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + "?id=" + id);
+    }
+
+    @Step("Получение списка графов по нескольким Id")
+    public static List<Graph> getGraphListByIds(String... id) {
+        String ids = String.join(",", id);
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + "?id__in=" + ids)
+                .assertStatus(200)
+                .extractAs(GetGraphList.class).getList();
+    }
+
+    @Step("Получение списка графов по фильтру Id содержит")
+    public static List<Graph> getGraphListByContainsId(String value) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + "?id__contains=" + value)
+                .assertStatus(200)
+                .extractAs(GetGraphList.class).getList();
+    }
+
+    @Step("Получение списка графов используя multisearch")
+    public static List<Graph> getGraphListWithMultiSearch(String str) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + "?multisearch=" + str)
+                .assertStatus(200)
+                .extractAs(GetGraphList.class).getList();
+    }
+
+    @Step("Получение списка версий графов")
+    public static Response getGraphVersionList(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + id + "/version_list/")
+                .assertStatus(200);
     }
 }

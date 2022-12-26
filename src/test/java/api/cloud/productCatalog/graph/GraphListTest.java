@@ -1,28 +1,23 @@
 package api.cloud.productCatalog.graph;
 
-import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
-import models.cloud.productCatalog.graph.GraphItem;
-import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
-import httpModels.productCatalog.graphs.getGraphsList.response.ListItem;
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.graph.GetGraphList;
 import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.graph.GraphItem;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.util.List;
 
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.productCatalog.GraphSteps.getGraphById;
-import static steps.productCatalog.GraphSteps.getGraphList;
+import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.ProductCatalogSteps.isSorted;
 
 @Tag("product_catalog")
@@ -30,9 +25,6 @@ import static steps.productCatalog.ProductCatalogSteps.isSorted;
 @Feature("Графы")
 @DisabledIfEnv("prod")
 public class GraphListTest extends Tests {
-
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/graphs/",
-            "productCatalog/graphs/createGraph.json");
 
     @DisplayName("Получение списка графов по title используя multisearch")
     @TmsLink("806274")
@@ -45,11 +37,8 @@ public class GraphListTest extends Tests {
                 .title(graphTitle)
                 .build()
                 .createObject();
-        List<ItemImpl> list = steps.getProductObjectListWithMultiSearch(GetGraphsListResponse.class, graphTitle);
-        for (ItemImpl item : list) {
-            ListItem listItem = (ListItem) item;
-            assertTrue(listItem.getTitle().contains(graphTitle));
-        }
+        List<Graph> list = getGraphListWithMultiSearch(graphTitle);
+        list.forEach(x -> assertTrue(x.getTitle().contains(graphTitle)));
     }
 
     @DisplayName("Получение списка графа")
@@ -64,7 +53,7 @@ public class GraphListTest extends Tests {
     @TmsLink("679029")
     @Test
     public void getMeta() {
-        String str = steps.getMeta(GetGraphsListResponse.class).getNext();
+        String str = getMetaGraphList().getNext();
         String url = getAppProp("url.kong");
         if (!(str == null)) {
             assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
@@ -83,12 +72,12 @@ public class GraphListTest extends Tests {
                 .build()
                 .createObject();
         String graphId = graph.getGraphId();
-        steps.partialUpdateObject(graphId, new JSONObject().put("title", "title_update"));
-        steps.partialUpdateObject(graphId, new JSONObject().put("title", "title_update2"));
-        steps.partialUpdateObject(graphId, new JSONObject().put("title", "title_update3"));
-        GetGraphResponse getGraphResponse = (GetGraphResponse) steps.getById(graphId, GetGraphResponse.class);
+        partialUpdateGraph(graphId, new JSONObject().put("title", "title_update"));
+        partialUpdateGraph(graphId, new JSONObject().put("title", "title_update2"));
+        partialUpdateGraph(graphId, new JSONObject().put("title", "title_update3"));
+        Graph getGraphResponse = getGraphById(graphId);
         List<String> versionList = getGraphResponse.getVersionList();
-        List<String> actualVersionList = steps.getVersionJsonPath(graphId).getList("");
+        List<String> actualVersionList = getGraphVersionList(graphId).jsonPath().getList("");
         assertEquals(versionList, actualVersionList);
     }
 
@@ -122,9 +111,9 @@ public class GraphListTest extends Tests {
                 .title(graphTitle)
                 .build()
                 .createObject();
-        List<ListItem> graphList = steps.getGraphListById(graph.getGraphId());
+        List<Graph> graphList = getGraphListById(graph.getGraphId()).extractAs(GetGraphList.class).getList();
         assertEquals(1, graphList.size());
-        ListItem listItem = graphList.get(0);
+        Graph listItem = graphList.get(0);
         assertEquals(graphName, listItem.getName());
     }
 
@@ -142,7 +131,7 @@ public class GraphListTest extends Tests {
                 .title("second_graph_list_by_ids_filter_test_api")
                 .build()
                 .createObject();
-        List<ListItem> graphList = steps.getGraphListByIds(firstGraph.getGraphId(), secondGraph.getGraphId());
+        List<Graph> graphList = getGraphListByIds(firstGraph.getGraphId(), secondGraph.getGraphId());
         assertEquals(2, graphList.size());
     }
 
@@ -155,10 +144,10 @@ public class GraphListTest extends Tests {
                 .title("graph_list_by_id_contains_filter_test_api")
                 .build()
                 .createObject();
-        List<ListItem> graphList = steps.getGraphListByContainsId(graph.getGraphId());
+        List<Graph> graphList = getGraphListByContainsId(graph.getGraphId());
         assertEquals(1, graphList.size());
-        ListItem listItem = graphList.get(0);
-        assertEquals(graph.getGraphId(), listItem.getId());
+        Graph listItem = graphList.get(0);
+        assertEquals(graph.getGraphId(), listItem.getGraphId());
 
     }
 }

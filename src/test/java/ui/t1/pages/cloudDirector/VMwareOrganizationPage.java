@@ -4,8 +4,12 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+import ui.cloud.pages.EntitiesUtils;
+import ui.cloud.pages.ProductStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
+
+import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,6 +48,24 @@ public class VMwareOrganizationPage {
         TestUtils.wait(2000);
         assertTrue(new UsersTable().isColumnValueEquals(UsersTable.COLUMN_NAME, login), "Пользователь отсутсвует.");
         return this;
+    }
+
+    @Step("Создание виртуального дата центра")
+    public VMwareOrganizationPage addDataCentre(String name) {
+        new DataCentreTable().clickAdd();
+        return new DataCentreCreatePage()
+                .setDataCentreName(name)
+                .orderDataCentre();
+    }
+
+    @Step("Ожидание смены статуса")
+    public void waitChangeStatus() {
+        EntitiesUtils.waitChangeStatus(new DataCentreTable(), Duration.ofMinutes(8));
+    }
+
+    @Step("Получение статуса дата-центра")
+    public ProductStatus getDataCentreStatus() {
+        return new DataCentreTable().getStatus();
     }
 
     @Step("Редактирование пользователя")
@@ -98,6 +120,18 @@ public class VMwareOrganizationPage {
 
         public UsersTable() {
             super(COLUMN_NAME);
+        }
+    }
+
+    private static class DataCentreTable extends DataTable {
+        public static final String COLUMN_NAME = "Название";
+
+        public DataCentreTable() {
+            super(COLUMN_NAME);
+        }
+
+        public ProductStatus getStatus() {
+            return new ProductStatus(getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[name()='svg']"));
         }
     }
 }

@@ -3,6 +3,7 @@ package api.cloud.productCatalog.action;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.feedService.action.EventTypeProvider;
 import org.json.JSONObject;
@@ -57,8 +58,8 @@ public class ActionCreateWithEventTypeProviderTest extends Tests {
                 .build()
                 .init()
                 .toJson();
-        String message = createAction(json).assertStatus(400).jsonPath().getList("", String.class).get(0);
-        assertEquals(String.format("['String 1: Wrong value (%s) of event_type']", eventTypeProvider.getEvent_type()),
+        String message = createAction(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals(String.format("String 1: Wrong value (%s) of event_type", eventTypeProvider.getEvent_type()),
                 message);
     }
 }

@@ -8,6 +8,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.authorizer.Project;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
 import models.cloud.productCatalog.product.Categories;
@@ -374,9 +375,10 @@ public class ProductsTest extends Tests {
         partialUpdateProduct(productTest.getProductId(), new JSONObject()
                 .put("max_count", 5)
                 .put("version", "999.999.999"));
-        partialUpdateProduct(productTest.getProductId(), new JSONObject()
+        String message = partialUpdateProduct(productTest.getProductId(), new JSONObject()
                 .put("max_count", 6))
-                .assertStatus(500);
+                .assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Version counter full [999, 999, 999]", message);
     }
 
     @DisplayName("Получение значения ключа info")

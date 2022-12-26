@@ -1,4 +1,4 @@
-package httpModels.productCatalog.graphs.getUsedList;
+package models.cloud.productCatalog.graph;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

@@ -4,6 +4,7 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import org.json.JSONObject;
@@ -44,7 +45,7 @@ public class ForbiddenActionNegativeTest extends Tests {
                 .build()
                 .init()
                 .toJson();
-        String msg = createForbiddenAction(json).jsonPath().getList("non_field_errors", String.class).get(0);
+        String msg = createForbiddenAction(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals("Поля action, direction должны производить массив с уникальными значениями.", msg);
     }
 }

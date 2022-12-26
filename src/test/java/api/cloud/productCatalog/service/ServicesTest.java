@@ -13,6 +13,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
 import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.icon.Icon;
@@ -352,8 +353,9 @@ public class ServicesTest extends Tests {
         assertEquals("2.0.0", currentVersion);
         steps.partialUpdateObject(services.getId(), new JSONObject().put("service_info", "service_version_test_api5")
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(services.getId(), new JSONObject().put("service_info", "service_version_test_api6"))
-                .assertStatus(500);
+        String message = steps.partialUpdateObject(services.getId(), new JSONObject().put("service_info", "service_version_test_api6"))
+                .assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Version counter full [999, 999, 999]", message);
     }
 
     @DisplayName("Сортировка сервисов по статусу")

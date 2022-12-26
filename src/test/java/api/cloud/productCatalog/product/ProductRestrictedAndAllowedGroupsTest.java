@@ -6,6 +6,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.product.Product;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -36,8 +37,8 @@ public class ProductRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Product productById = getProductById(product.getProductId());
         assertNotNull(productById);
-        String msg = getProductViewerById(product.getProductId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getProductViewerById(product.getProductId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Product matches the given query.", msg);
     }
 
     @DisplayName("Создание продукта с ограничением allowed_group на уровне realm")
@@ -52,8 +53,8 @@ public class ProductRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Product productById = getProductById(product.getProductId());
         assertNotNull(productById);
-        String msg = getProductViewerById(product.getProductId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getProductViewerById(product.getProductId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Product matches the given query.", msg);
     }
 
     @DisplayName("Создание продукта с ограничением restricted_group на уровне realm и ограничением allowed_group на уровне account")
@@ -69,8 +70,8 @@ public class ProductRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Product productById = getProductById(product.getProductId());
         assertNotNull(productById);
-        String msg = getProductViewerById(product.getProductId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getProductViewerById(product.getProductId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Product matches the given query.", msg);
     }
 
     @DisplayName("Создание продукта с ограничением allowed_group на уровне realm и ограничением restricted_group на уровне account")
@@ -86,8 +87,8 @@ public class ProductRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Product productById = getProductById(product.getProductId());
         assertNotNull(productById);
-        String msg = getProductViewerById(product.getProductId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getProductViewerById(product.getProductId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Product matches the given query.", msg);
     }
 
     @DisplayName("Создание продукта с ограничением allowed_group на уровне account")
@@ -102,8 +103,8 @@ public class ProductRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Product productById = getProductById(product.getProductId());
         assertNotNull(productById);
-        String msg = getProductViewerById(product.getProductId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getProductViewerById(product.getProductId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Product matches the given query.", msg);
     }
 
     @DisplayName("Создание продукта с ограничением restricted_group на уровне account")
@@ -118,8 +119,8 @@ public class ProductRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Product productById = getProductById(product.getProductId());
         assertNotNull(productById);
-        String msg = getProductViewerById(product.getProductId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getProductViewerById(product.getProductId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Product matches the given query.", msg);
     }
 
     @DisplayName("Создание продукта с ограничением по имени пользователя в restricted_group")
@@ -137,8 +138,8 @@ public class ProductRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Product productById = getProductById(product.getProductId());
         assertNotNull(productById);
-        String msg = getProductViewerById(product.getProductId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getProductViewerById(product.getProductId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Product matches the given query.", msg);
     }
 
     @DisplayName("Создание продукта с ограничением по имени в allowed_group")
@@ -156,7 +157,7 @@ public class ProductRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Product productById = getProductById(product.getProductId());
         assertNotNull(productById);
-        String msg = getProductViewerById(product.getProductId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getProductViewerById(product.getProductId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Product matches the given query.", msg);
     }
 }
