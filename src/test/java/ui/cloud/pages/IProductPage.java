@@ -127,7 +127,7 @@ public abstract class IProductPage {
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (params.isCheckAlert())
-            new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
+            Alert.green(action);
         Waiting.sleep(2000);
         if (Objects.nonNull(params.getNode()))
             goToCluster();
@@ -158,7 +158,7 @@ public abstract class IProductPage {
             return;
 
         if (params.isCheckAlert())
-            new Alert().checkText(action).checkColor(Alert.Color.GREEN).close();
+            Alert.green(action);
         Waiting.sleep(3000);
         if (Objects.nonNull(params.getNode())) {
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();

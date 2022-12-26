@@ -13,4 +13,6 @@ public class Server {
     Integer port;
     String name;
     String address;
+    @Builder.Default
+    String sendProxy = "disabled";
 }

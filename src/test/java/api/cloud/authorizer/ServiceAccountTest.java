@@ -1,5 +1,6 @@
 package api.cloud.authorizer;
 
+import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -35,7 +36,7 @@ public class ServiceAccountTest extends Tests {
     void editServiceAccount() {
         String title = "deleteServiceAccount";
         try (ServiceAccount account = ServiceAccount.builder().title(title).build().createObjectExclusiveAccess()) {
-            account.editServiceAccount(title);
+            account.editServiceAccount(title, Role.ACCESS_GROUP_ADMIN);
         }
     }
 

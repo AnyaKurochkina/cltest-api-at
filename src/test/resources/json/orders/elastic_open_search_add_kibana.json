@@ -1,12 +1,5 @@
 {
-  "boot_disk": {
-    "size": 30
-  },
-  "extra_nics": [],
   "on_support": false,
-  "default_nic": {
-    "net_segment": "dev-srv-app"
-  },
   "flavor_kibana": {
     "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
     "cpus": 2,
@@ -29,6 +22,5 @@
       ]
     }
   ],
-  "data_center": "5",
   "kibana_password": "Aa56Rrdsfdfd"
 }

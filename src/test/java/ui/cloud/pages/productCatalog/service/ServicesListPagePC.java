@@ -102,7 +102,7 @@ public class ServicesListPagePC extends BaseListPage {
         }
         descriptionInput.setValue(service.getDescription());
         createButton.click();
-        new Alert().checkText("Сервис успешно создан").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Сервис успешно создан");
         return new ServicePage();
     }
 
@@ -232,7 +232,7 @@ public class ServicesListPagePC extends BaseListPage {
     @Step("Копирование сервиса '{service.name}'")
     public ServicesListPagePC copyService(Service service) {
         new BaseListPage().copy(columnName, service.getName());
-        new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Копирование выполнено успешно");
         return this;
     }
 

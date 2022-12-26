@@ -91,7 +91,7 @@ public class VMwareOrganizationPage {
                 .setInputValue("Новый пароль", password)
                 .setInputValue("Подтверждение пароля", password)
                 .clickButton("Сохранить");
-        new Alert().checkText("Пароль успешно изменен").checkColor(Alert.Color.GREEN);
+        Alert.green("Пароль успешно изменен");
     }
 
     @Step("Удаление пользователя")
@@ -99,7 +99,7 @@ public class VMwareOrganizationPage {
         Menu.byElement(new UsersTable().getRowByColumnValue(UsersTable.COLUMN_NAME, userName).getElementByColumn(""))
                 .select("Удалить");
         Dialog.byTitle("Подтверждение удаления").clickButton("Удалить");
-        new Alert().checkText("Пользователь {} удален", userName).checkColor(Alert.Color.GREEN);
+        Alert.green("Пользователь {} удален", userName);
         TestUtils.wait(2000);
         Assertions.assertFalse(new UsersTable().isColumnValueEquals(UsersTable.COLUMN_NAME, userName), "Пользователь найден");
     }

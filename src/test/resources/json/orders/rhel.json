@@ -11,9 +11,6 @@
 				"memory": 1
 			},
 			"platform": "vSphere",
-			"boot_disk": {
-				"size": 30
-			},
 			"extra_nics": [],
 			"on_support": true,
 			"os_version": "8.4",

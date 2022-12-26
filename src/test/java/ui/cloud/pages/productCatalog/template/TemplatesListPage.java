@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog.template;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
@@ -56,7 +57,7 @@ public class TemplatesListPage extends BaseListPage {
         output.setValue(template.getOutput());
         printedOutput.setValue(template.getPrintedOutput());
         saveButton.shouldBe(Condition.enabled).click();
-        new Alert().checkText("Шаблон успешно создан").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Шаблон успешно создан");
         TestUtils.wait(2000);
         return new TemplatePage();
     }
@@ -195,15 +196,15 @@ public class TemplatesListPage extends BaseListPage {
     @Step("Поиск и открытие страницы шаблона '{name}'")
     public TemplatePage findAndOpenTemplatePage(String name) {
         search(name);
-        new Table(columnName).getRowElementByColumnValue(columnName, name).click();
-        TestUtils.wait(600);
+        new Table(columnName).getRowByColumnValue(columnName, name).get().click();
+        Waiting.sleep(1000);
         return new TemplatePage();
     }
 
     @Step("Копирование шаблона '{name}'")
     public TemplatesListPage copyTemplate(String name) {
         new BaseListPage().copy(columnName, name);
-        new Alert().checkText("Копирование выполнено успешно").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Копирование выполнено успешно");
         cancelButton.shouldBe(Condition.enabled).click();
         return this;
     }
@@ -212,7 +213,7 @@ public class TemplatesListPage extends BaseListPage {
     public TemplatesListPage importTemplate(String path) {
         importButton.click();
         new InputFile(path).importFileAndSubmit();
-        new Alert().checkText("Импорт выполнен успешно").checkColor(Alert.Color.GREEN).close();
+        Alert.green("Импорт выполнен успешно");
         return this;
     }
 }
