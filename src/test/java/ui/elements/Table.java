@@ -2,17 +2,25 @@ package ui.elements;
 
 
 import com.codeborne.selenide.*;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.Language;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static core.helper.StringUtils.$x;
 
@@ -207,7 +215,8 @@ public class Table implements TypifiedElement {
     }
 
     public List<String> getNotEmptyHeaders() {
-        headers.removeAll(Arrays.asList(""));
-        return headers;
+        List<String> list = new ArrayList<>(headers);
+        list.removeAll(Collections.singletonList(""));
+        return list;
     }
 }

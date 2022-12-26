@@ -2,11 +2,13 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import ui.elements.Alert;
 import ui.elements.Button;
@@ -69,5 +71,4 @@ public class EntitiesUtils {
         Button.byText("Заказать").click();
         Alert.green("Заказ успешно создан");
     }
-
 }

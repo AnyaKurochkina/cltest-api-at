@@ -1,13 +1,22 @@
 package ui.t1.pages;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
-import ui.t1.pages.cloudCompute.*;
+import org.openqa.selenium.WebElement;
+import ui.elements.Menu;
+import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
+import ui.t1.pages.cloudEngine.vpc.NetworkList;
+import ui.t1.pages.cloudEngine.vpc.PublicIpList;
+import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
 
-import static com.codeborne.selenide.Selenide.$x;
+import static core.helper.StringUtils.$$x;
+import static core.helper.StringUtils.$x;
+
 
 @Getter
 public class IndexPage {
@@ -22,9 +31,17 @@ public class IndexPage {
     final SelenideElement linkImages = $x("//a[.='Образы']");
     final SelenideElement linkNetworkInterfaces = $x("//a[.='Сетевые интерфейсы']");
     final SelenideElement linkHistory = $x("//a[.='История действий']");
+    final SelenideElement linkNetworks = $x("//a[.='Сети']");
+
+    final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
     public static void go() {
         $x("//img[contains(@alt,'logo')]").shouldBe(Condition.visible).click();
+    }
+
+    public Profile goToProfile(){
+        Menu.byElement(linkProfile.should(CollectionCondition.anyMatch("", WebElement::isDisplayed)).filter(Condition.visible).first()).select("Профиль");
+        return new Profile();
     }
 
     @Step("Переход на страницу T1 Cloud Engine")
@@ -72,6 +89,13 @@ public class IndexPage {
         linkCloudEngine.click();
         linkDisks.click();
         return new DiskList();
+    }
+
+    @Step("Переход на страницу Сетевые интерфейсы")
+    public NetworkList goToNetworks() {
+        linkCloudEngine.click();
+        linkNetworks.click();
+        return new NetworkList();
     }
 
     @Step("Переход на страницу Сетевые интерфейсы")
