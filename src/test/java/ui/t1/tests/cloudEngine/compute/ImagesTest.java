@@ -8,6 +8,7 @@ import ui.cloud.pages.CompareType;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.*;
+import ui.t1.tests.cloudEngine.AbstractComputeTest;
 
 import java.util.Random;
 

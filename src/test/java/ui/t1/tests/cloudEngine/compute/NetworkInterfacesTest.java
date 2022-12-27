@@ -11,6 +11,7 @@ import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.PublicIp;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
+import ui.t1.tests.cloudEngine.AbstractComputeTest;
 
 import static core.utils.AssertUtils.AssertHeaders;
 

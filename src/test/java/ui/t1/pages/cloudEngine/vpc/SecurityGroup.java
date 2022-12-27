@@ -1,51 +1,43 @@
 package ui.t1.pages.cloudEngine.vpc;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import lombok.Getter;
-import org.junit.jupiter.api.Assertions;
-import ui.elements.CheckBox;
-import ui.elements.Dialog;
-import ui.elements.Table;
+import ui.elements.*;
+
+import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
+import static ui.t1.pages.cloudEngine.vpc.SecurityGroup.RulesTable.COLUMN_DESC;
 
 @Getter
 public class SecurityGroup {
-    final SelenideElement btnAddRule = $x("//button[.='Добавить']");
+    Button btnAddRule = Button.byElement($x("//button[.='Добавить']"));
 
-    public Rule addRole(){
+    public Rule addRule() {
+        btnAddRule.click();
         return new Rule();
     }
 
-    public static class Rule {
-        Dialog dlg;
-        String description;
-
-        public Rule setDescription(String description) {
-            dlg.setInputValue("Описание", description);
-            return this;
-        }
-
-        public Rule set(boolean checked) {
-            dlg.setCheckBox(CheckBox.byLabel("Любой"), checked);
-            return this;
-        }
-
-        public void clickAdd() {
-            dlg.clickButton("Добавить");
-            dlg.getDialog().shouldNotBe(Condition.visible);
-            Assertions.assertTrue(new SecurityGroupTable().isColumnValueEquals(SecurityGroupTable.COLUMN_DESC, description));
-            //TODO: нужна проверка стутуса
-        }
+    public void deleteRule(String rule) {
+        RulesTable.removeRule(rule).click();
+        Waiting.findWidthRefresh(() -> !new RulesTable().isColumnValueEquals(COLUMN_DESC, rule), Duration.ofMinutes(1));
     }
 
 
-    private static class SecurityGroupTable extends Table {
-        public static final String COLUMN_DESC = "Описание";
+    public static class RulesTable extends Table {
+        static final String COLUMN_DESC = "Описание";
+        static final String COLUMN_STATUS = "Статус";
 
-        public SecurityGroupTable() {
+        public RulesTable() {
             super(COLUMN_DESC);
+        }
+
+        public static Row getRule(String rule) {
+            return new RulesTable().getRowByColumnValue(COLUMN_DESC, rule);
+        }
+
+        public static Button removeRule(String rule) {
+            return Button.byElement(getRule(rule).get().$("button"));
         }
     }
 }

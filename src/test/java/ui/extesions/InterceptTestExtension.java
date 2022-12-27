@@ -151,7 +151,7 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
             new ConfigExtension().afterEach(extensionContext);
         if (clazz.equals(BeforeEach.class))
             new ConfigExtension().beforeEach(extensionContext);
-        List<Method> list = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods()).filter(method -> method.isAnnotationPresent(clazz)).collect(Collectors.toList());
+        List<Method> list = Arrays.stream(extensionContext.getRequiredTestClass().getMethods()).filter(method -> method.isAnnotationPresent(clazz)).collect(Collectors.toList());
         for (Method m : list) {
             try {
                 m.setAccessible(true);

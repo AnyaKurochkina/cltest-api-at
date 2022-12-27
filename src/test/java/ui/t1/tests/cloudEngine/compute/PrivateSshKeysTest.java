@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
+import ui.t1.tests.cloudEngine.AbstractComputeTest;
 
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

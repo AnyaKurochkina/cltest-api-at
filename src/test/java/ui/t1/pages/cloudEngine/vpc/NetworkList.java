@@ -27,9 +27,10 @@ public class NetworkList {
         Waiting.findWidthRefresh(() -> !new NetworksTable().isColumnValueEquals(NetworksTable.COLUMN_NAME, name), Duration.ofMinutes(1));
     }
 
-    public void selectNetwork(String name) {
+    public Network selectNetwork(String name) {
         new NetworksTable().getRowByColumnValue(NetworksTable.COLUMN_NAME, name).get().click();
         $x("//span[.='{}']", name).shouldBe(Condition.visible);
+        return new Network();
     }
 
     public static class NetworksTable extends DataTable {

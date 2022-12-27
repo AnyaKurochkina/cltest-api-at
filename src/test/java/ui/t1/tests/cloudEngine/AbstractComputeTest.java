@@ -1,4 +1,4 @@
-package ui.t1.tests.cloudEngine.compute;
+package ui.t1.tests.cloudEngine;
 
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
@@ -21,13 +21,13 @@ import ui.t1.pages.cloudEngine.compute.SelectBox;
 @Epic("Cloud Compute")
 @Tags({@Tag("ui_cloud_compute")})
 public abstract class AbstractComputeTest {
-    Project project;
-    String availabilityZone = "ru-central1-a";
-    SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
-    String hddTypeOne = "HDD";
-    String hddTypeSecond = "HDD";
-    String securityGroup = "default";
-    String sshKey = "default";
+    protected Project project;
+    protected String availabilityZone = "ru-central1-a";
+    protected SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
+    protected String hddTypeOne = "HDD";
+    protected String hddTypeSecond = "HDD";
+    protected String securityGroup = "default";
+    protected String sshKey = "default";
 
     public AbstractComputeTest() {
 //        Project project = Project.builder().isForOrders(true).build().createObject();
@@ -39,7 +39,7 @@ public abstract class AbstractComputeTest {
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new LoginPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN);
     }
