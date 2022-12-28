@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import lombok.Getter;
 import ui.elements.DropDown;
 import ui.elements.Input;
+import ui.elements.Select;
 
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ public class WindowsOrderPage extends Product {
     DropDown roleServer = DropDown.byLabel("Роль сервера. (данное поле влияет на именование)");
     DropDown dataCentre = DropDown.byLabel("Дата-центр");
     DropDown segment = DropDown.byLabel("Сетевой сегмент");
-    DropDown configure = DropDown.byLabel("Конфигурация Core/RAM");
+    Select configure = Select.byLabel("Конфигурация Core/RAM");
     Input countVm = Input.byLabel("Количество");
     Input label = Input.byLabel("Метка");
 

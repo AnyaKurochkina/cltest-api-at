@@ -62,7 +62,7 @@ class UiWindowsCheckUntilOrderTest extends UiProductTest {
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
         orderPage.getRoleServer().selectByValue(product.getRole());
-        orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+        orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
         new WindowsOrderPage().checkOrderDetails();

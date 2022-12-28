@@ -25,7 +25,7 @@ import java.util.Collections;
 public class UiAstraLinuxTest extends UiProductTest {
 
     Astra product;
-    //= Astra.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/a440fef7-5a90-4390-b5d4-9f884ebc8a13/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    //= Astra.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/db59f555-5480-4437-b721-d083a4785714/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -48,7 +48,7 @@ public class UiAstraLinuxTest extends UiProductTest {
             orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
