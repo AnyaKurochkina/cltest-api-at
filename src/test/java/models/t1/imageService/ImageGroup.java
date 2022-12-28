@@ -17,6 +17,7 @@ import static steps.t1.imageService.ImageServiceSteps.*;
 @Log4j2
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
