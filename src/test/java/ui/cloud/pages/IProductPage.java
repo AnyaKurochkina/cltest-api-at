@@ -35,7 +35,7 @@ public abstract class IProductPage {
     IProduct product;
     Double preBillingCostAction;
     SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
-
+    SelenideElement currentProduct = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
     protected abstract void checkPowerStatus(String expectedStatus);
 
     protected SelenideElement btnHistory = $x("//button[.='История действий']");
