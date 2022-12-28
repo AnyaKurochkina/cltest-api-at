@@ -91,6 +91,7 @@ public class AstraLinuxPage extends IProductPage {
     public void addGroup(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
+            Waiting.sleep(2000);
             Select.byLabel("Роль").set(role);
             groups.forEach(group -> Select.byLabel("Группы").set(group));
         });
