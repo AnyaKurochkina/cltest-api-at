@@ -42,11 +42,11 @@ public class Select implements TypifiedElement {
     }
 
     public Select hover() {
+        element.scrollIntoView(scrollCenter);
+        element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
         if (getValue().equals("")) {
             Waiting.sleep(2000);
         }
-        element.scrollIntoView(scrollCenter);
-        element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
         return this;
     }
 
