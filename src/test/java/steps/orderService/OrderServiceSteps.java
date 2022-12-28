@@ -392,7 +392,10 @@ public class OrderServiceSteps extends Steps {
             filter = "it.data.config." + filter + " && ";
         id = jsonPath.getString(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action));
 
-        String actions = Arrays.toString(jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.actions.title", filter)).toArray());
+        List<Object> pathList = jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.actions.title", filter));
+        String actions = "-";
+        if(Objects.nonNull(pathList))
+            actions = Arrays.toString(pathList.toArray());
         Assertions.assertNotEquals("", id, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
 
         return id;
