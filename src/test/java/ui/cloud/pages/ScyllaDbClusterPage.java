@@ -126,7 +126,7 @@ public class ScyllaDbClusterPage extends IProductPage {
     public void deleteRightsUser(String nameUserDb) {
         new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         if (new Table(HEADER_NAME_USER_DB,2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb)) {
-            runActionWithoutParameters2(nameUserDb,2,"Удалить права доступа пользователю БД");
+            runActionWithoutParameters(getBtnAction(nameUserDb, 2), "Удалить права доступа пользователю БД");
         Assertions.assertFalse(new Table(HEADER_NAME_USER_DB,2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb), "Ошибка удаления прав доступа");
         }
     }
@@ -170,9 +170,6 @@ public class ScyllaDbClusterPage extends IProductPage {
             runActionWithoutParameters(nameUser, "Удалить пользователя");
             Assertions.assertTrue(new Table(HEADER_DB_USERS_ROLE).isEmpty(), "Ошибка удаления пользователя БД");
         }
-    }
-    public void runActionWithoutParameters2(String headerBlock,int index, String action) {
-        runActionWithoutParameters(getBtnAction(headerBlock,index), action, ActionParameters.builder().build());
     }
 
     public class VirtualMachineTable extends VirtualMachine {
