@@ -152,7 +152,14 @@ public class UiAstraLinuxTest extends UiProductTest {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.MORE, astraLinuxPage::changeConfiguration);
     }
-
+    @Test
+    @Order(12)
+    @TmsLink("1164676")
+    @DisplayName("UI AstraLinux. Мониторинг ОС")
+    void monitoringOs() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.checkMonitoringOs();
+    }
 
     @Test
     @Order(100)
