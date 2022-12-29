@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog.template;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
@@ -195,8 +196,8 @@ public class TemplatesListPage extends BaseListPage {
     @Step("Поиск и открытие страницы шаблона '{name}'")
     public TemplatePage findAndOpenTemplatePage(String name) {
         search(name);
-        new Table(columnName).getRowElementByColumnValue(columnName, name).click();
-        TestUtils.wait(600);
+        new Table(columnName).getRowByColumnValue(columnName, name).get().click();
+        Waiting.sleep(1000);
         return new TemplatePage();
     }
 

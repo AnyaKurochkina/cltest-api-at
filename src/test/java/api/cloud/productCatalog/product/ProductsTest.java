@@ -583,7 +583,6 @@ public class ProductsTest extends Tests {
                 .title("AtTestApiProduct")
                 .version("1.0.0")
                 .info(info)
-                .categoryV2(Categories.DEFAULT_VALUE)
                 .build()
                 .createObject();
         Product createdProduct = getProductById(product.getProductId());

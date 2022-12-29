@@ -89,9 +89,12 @@ public class ElasticsearchOpensearchCluster extends IProduct {
 
     public void addKibana(){
         Flavor flavorKibana = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:kibana:" + envType() + ":" + getEnv().toLowerCase()).get(0);
+        AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
         JSONObject object = JsonHelper.getJsonTemplate("/orders/elastic_open_search_add_kibana.json")
                 .set("$.flavor_kibana", new JSONObject(flavorKibana.toString()))
                 .set("$.kibana_password", kibanaPassword)
+                .set("$.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+                .remove("$.ad_logon_grants", isTest())
                 .set("$.on_support", isTest())
                 .build();
         OrderServiceSteps.executeAction("add_dedicated_kibana_node", this, object, this.getProjectId());
