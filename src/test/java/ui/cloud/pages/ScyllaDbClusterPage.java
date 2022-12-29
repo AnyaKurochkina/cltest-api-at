@@ -34,8 +34,6 @@ public class ScyllaDbClusterPage extends IProductPage {
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
-    SelenideElement noDataDb = $x("(//*[text() = 'Базы данных']/ancestor-or-self::*[count(.//table) = 1])[last()]//table/tbody/tr/td[text() = 'Нет данных для отображения']");
-    SelenideElement noDataUser = $x("(//div[contains(@class,'BoxWrapper') and descendant::div[text()='Пользователи' and not(ancestor::*[@hidden])] and descendant::*[text()='Нет данных для отображения']])[last()]");
 
 
     public ScyllaDbClusterPage(ScyllaDbCluster product) {
@@ -88,7 +86,7 @@ public class ScyllaDbClusterPage extends IProductPage {
 
     public void createDb(String name) {
         new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
-        if (noDataDb.exists() || !(new Table("").isColumnValueEquals(HEADER_NAME_DB, name))) {
+        if (new Table(HEADER_NAME_DB).isEmpty()) {
             runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя хранилища ключей", name);
@@ -100,7 +98,7 @@ public class ScyllaDbClusterPage extends IProductPage {
 
     public void addUserDb(String nameUserDb) {
         new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
-        if (!(new Table(HEADER_NAME_USER_DB).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb))) {
+        if (new Table(HEADER_DB_USERS_ROLE).isEmpty()) {
             runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Добавить пользователя");
                 dlg.setInputValue("Имя пользователя", nameUserDb);
@@ -111,6 +109,7 @@ public class ScyllaDbClusterPage extends IProductPage {
             Assertions.assertTrue(new Table(HEADER_DB_USERS_ROLE).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb), "Пользователь не существует");
         }
     }
+
     public void addRightsUser(String nameDb,String nameUserDb) {
         new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         if (!(new Table(HEADER_NAME_USER_DB,2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb))) {
@@ -169,7 +168,7 @@ public class ScyllaDbClusterPage extends IProductPage {
     public void deleteUserDb(String nameUser) {
         if (new Table(HEADER_DB_USERS_ROLE).isColumnValueContains(HEADER_NAME_USER_DB, nameUser)) {
             runActionWithoutParameters(nameUser, "Удалить пользователя");
-            Assertions.assertTrue(noDataUser.exists(), "Ошибка удаления пользователя БД");
+            Assertions.assertTrue(new Table(HEADER_DB_USERS_ROLE).isEmpty(), "Ошибка удаления пользователя БД");
         }
     }
     public void runActionWithoutParameters2(String headerBlock,int index, String action) {
