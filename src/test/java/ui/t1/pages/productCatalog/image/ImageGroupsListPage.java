@@ -81,7 +81,7 @@ public class ImageGroupsListPage extends BaseListPage {
         setTags(imageGroup);
         distroInput.setValue(imageGroup.getDistro());
         addButton.click();
-        Alert.green("Группа образов спешно добавлена");
+        Alert.green("Группа образов успешно добавлена");
         return this;
     }
 

@@ -107,6 +107,17 @@ public class ImageServiceSteps extends Steps {
                 .extractAs(Logo.class);
     }
 
+    @Step("Получение logo по name '{name}'")
+    public static Logo getLogoByName(String name) {
+        List<Logo> logoList = getLogoList();
+        for (Logo logo : logoList) {
+            if (logo.getName().equals(name)) {
+                return logo;
+            }
+        }
+        return null;
+    }
+
     @Step("Получение image groups по name {name}")
     public static ImageGroup getImageGroupByName(String name) {
         List<ImageGroup> imageGroupList = getImageGroupsList(true);
