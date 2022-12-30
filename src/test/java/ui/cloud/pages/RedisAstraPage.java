@@ -106,7 +106,7 @@ public class RedisAstraPage extends IProductPage {
         runActionWithParameters(BLOCK_APP, "Изменить default_transaction_isolation", "Подтвердить", () -> {
             DropDown.byLabel("default_transaction_isolation").select(value);
         });
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         Assertions.assertEquals(value.toLowerCase(), default_transaction_isolation.getText(), "default_transaction_isolation " +
                 "не соответствует установленному значению ");
     }
@@ -117,7 +117,7 @@ public class RedisAstraPage extends IProductPage {
             Dialog dlg = Dialog.byTitle("Изменить max_connections");
             dlg.setInputValue("max_connections", value);
         });
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         Assertions.assertEquals(value, max_connections.getText(), "Максимальное количество подключений " +
                 "не соответствует установленному значению ");
     }
@@ -133,7 +133,7 @@ public class RedisAstraPage extends IProductPage {
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
@@ -192,7 +192,7 @@ public class RedisAstraPage extends IProductPage {
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
         expandDisk(name, size, node);
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +

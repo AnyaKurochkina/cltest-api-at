@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import java.util.Collections;
 import java.util.Objects;
 
+import static com.codeborne.selenide.Selenide.executeJavaScript;
 import static core.helper.StringUtils.$$x;
 import static org.openqa.selenium.support.Color.fromString;
 
@@ -58,9 +59,10 @@ public class Alert implements TypifiedElement {
     }
 
     public static void closeAll() {
-        SelenideElement e = new Alert().getElements().first();
+        SelenideElement e = new Alert().getElements().first().shouldBe(Condition.visible);
         while (e.exists() && e.isDisplayed()) {
-            Waiting.sleep(2000);
+            executeJavaScript("arguments[0].style.display = 'none'", e);
+            Waiting.sleep(3000);
         }
     }
 

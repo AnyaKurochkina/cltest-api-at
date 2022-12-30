@@ -89,7 +89,7 @@ public class ScyllaPage extends IProductPage {
                 Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя хранилища ключей", name);
             });
-            btnGeneralInfo.shouldBe(Condition.enabled).click();
+            btnGeneralInfo.click();
             Assertions.assertTrue(new Table(HEADER_NAME_DB).isColumnValueContains(HEADER_NAME_DB, name), "БД не существует");
         }
     }
@@ -103,7 +103,7 @@ public class ScyllaPage extends IProductPage {
                 generatePassButton.shouldBe(Condition.enabled).click();
                 Alert.green("Значение скопировано");
             });
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
             Assertions.assertTrue(new Table(HEADER_DB_USERS_ROLE).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb), "Пользователь не существует");
         }
     }
@@ -120,7 +120,7 @@ public class ScyllaPage extends IProductPage {
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
         expandDisk(name, size, node);
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
                 Integer.parseInt(size));

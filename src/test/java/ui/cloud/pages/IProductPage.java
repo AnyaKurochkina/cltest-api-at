@@ -38,7 +38,7 @@ public abstract class IProductPage {
     protected abstract void checkPowerStatus(String expectedStatus);
 
     protected SelenideElement btnHistory = $x("//button[.='История действий']");
-    protected SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
+    protected Button btnGeneralInfo = Button.byElement($x("//button[.='Общая информация']"));
     SelenideElement btnMonitoringOs = $x("//button[.='Мониторинг ОС']");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
     SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
@@ -51,7 +51,7 @@ public abstract class IProductPage {
             throw new CreateEntityException(String.format("Продукт необходимый для выполнения теста был создан с ошибкой:\n%s", product.getError()));
         if (Objects.nonNull(product.getLink()))
             TypifiedElement.open(product.getLink());
-        btnGeneralInfo.shouldBe(Condition.enabled);
+        btnGeneralInfo.getButton().shouldBe(Condition.enabled);
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
         product.addLinkProduct();
         this.product = product.buildFromLink();
@@ -286,7 +286,7 @@ public abstract class IProductPage {
 
         @Override
         protected void open() {
-            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            btnGeneralInfo.click();
         }
 
         public VirtualMachine(String columnName) {
@@ -316,9 +316,7 @@ public abstract class IProductPage {
 
     @Step("Получение стоимости заказа")
     public double getCostOrder() {
-        currentPriceOrder.shouldBe(Condition.visible, Duration.ofMinutes(3));
-        double cost = Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?\\d{1,5},\\d{2})", currentPriceOrder.getText()))
-                .replace(',', '.'));
+        double cost = EntitiesUtils.getPreBillingCostAction(currentPriceOrder.shouldBe(Condition.visible, Duration.ofMinutes(3)));
         log.debug("Стоимость заказа {}", cost);
         return cost;
     }

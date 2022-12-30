@@ -14,7 +14,7 @@ import java.time.Duration;
 import static ui.t1.pages.cloudEngine.compute.ComputeHistory.COLUMN_OPERATION;
 import static ui.t1.pages.cloudEngine.compute.ComputeHistory.COLUMN_STATUS;
 
-public class IProductListT1Page extends IProductT1Page {
+public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
     private String productLink;
 
 

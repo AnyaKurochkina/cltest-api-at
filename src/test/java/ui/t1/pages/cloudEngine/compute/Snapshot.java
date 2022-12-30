@@ -2,7 +2,7 @@ package ui.t1.pages.cloudEngine.compute;
 
 import ui.elements.Dialog;
 
-public class Snapshot extends IProductT1Page {
+public class Snapshot extends IProductT1Page<Snapshot> {
 
     public void delete() {
         runActionWithoutParameters(BLOCK_PARAMETERS, "Удалить");

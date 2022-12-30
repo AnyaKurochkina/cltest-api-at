@@ -1,4 +1,4 @@
-package ui.t1.tests.cloudEngine.vpc;
+package ui.t1.tests.engine.vpc;
 
 import io.qameta.allure.TmsLink;
 import org.junit.BlockTests;
@@ -6,11 +6,10 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.vpc.Network;
 import ui.t1.pages.cloudEngine.vpc.Rule;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroup;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
-import ui.t1.tests.cloudEngine.AbstractComputeTest;
+import ui.t1.tests.engine.AbstractComputeTest;
 
 import static core.utils.AssertUtils.AssertHeaders;
 

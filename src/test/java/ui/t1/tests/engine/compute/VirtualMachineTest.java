@@ -1,4 +1,4 @@
-package ui.t1.tests.cloudEngine.compute;
+package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.SelenideElement;
 import com.mifmif.common.regex.Generex;
@@ -19,7 +19,7 @@ import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.PublicIp;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
-import ui.t1.tests.cloudEngine.AbstractComputeTest;
+import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.util.List;
 import java.util.Objects;
@@ -48,7 +48,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setBootSize(2)
-                .setBootType(hddTypeOne)
+                .setBootType(hddTypeFirst)
                 .setSubnet(Select.RANDOM_VALUE)
                 .setSshKey(sshKey);
         SelenideElement button = Button.byText("Заказать").getButton();
@@ -69,16 +69,15 @@ public class VirtualMachineTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины. Создание Образ Fedora")
     void createAltPlatform() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setAvailabilityZone(availabilityZone)
                 .setImage(new SelectBox.Image("Fedora", "36"))
                 .setName(getRandomName())
                 .setDeleteOnTermination(true)
-                .setAvailabilityZone(availabilityZone)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        ((Vm) new VmList().selectCompute(vm.getName()).checkCreate()).delete();
+        new VmList().selectCompute(vm.getName()).checkCreate().delete();
     }
-
 
     @Test
     @TmsLinks({@TmsLink("1248928"), @TmsLink("1249417")})
@@ -88,11 +87,11 @@ public class VirtualMachineTest extends AbstractComputeTest {
         VmCreate vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
+                .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(false)
                 .setBootSize(5)
-                .addDisk(name, 2, hddTypeOne, true)
-                .setAvailabilityZone(availabilityZone)
+                .addDisk(name, 2, hddTypeFirst, true)
                 .setName(name)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
@@ -136,9 +135,9 @@ public class VirtualMachineTest extends AbstractComputeTest {
         VmCreate vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
+                .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
-                .setAvailabilityZone(availabilityZone)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
@@ -168,9 +167,9 @@ public class VirtualMachineTest extends AbstractComputeTest {
         VmCreate vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
+                .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
-                .setAvailabilityZone(availabilityZone)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
@@ -189,9 +188,9 @@ public class VirtualMachineTest extends AbstractComputeTest {
         VmCreate vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
+                .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
-                .setAvailabilityZone(availabilityZone)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
@@ -233,9 +232,9 @@ public class VirtualMachineTest extends AbstractComputeTest {
         VmCreate vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
+                .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
-                .setAvailabilityZone(availabilityZone)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)

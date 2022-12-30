@@ -1,4 +1,4 @@
-package ui.t1.tests.cloudEngine.compute;
+package ui.t1.tests.engine.compute;
 
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -15,7 +15,7 @@ import ui.elements.TypifiedElement;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.*;
-import ui.t1.tests.cloudEngine.AbstractComputeTest;
+import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.util.Objects;
 
@@ -39,8 +39,8 @@ public class SnapshotTest extends AbstractComputeTest {
     @TmsLink("1249427")
     @DisplayName("Подключение диска из снимка на базе подключенного диска")
     void createSnapshotFromAttachDisk() {
-        VmCreate vm = new IndexPage().goToVirtualMachine().addVm().setImage(image).setDeleteOnTermination(true)
-                .setAvailabilityZone(availabilityZone).setName(getRandomName()).addSecurityGroups(securityGroup).setSshKey(sshKey).clickOrder();
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm().setAvailabilityZone(availabilityZone).setImage(image)
+                .setDeleteOnTermination(true).setName(getRandomName()).addSecurityGroups(securityGroup).setSshKey(sshKey).clickOrder();
 
         Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(COLUMN_SYSTEM, "Да").getValueByColumn(COLUMN_NAME));

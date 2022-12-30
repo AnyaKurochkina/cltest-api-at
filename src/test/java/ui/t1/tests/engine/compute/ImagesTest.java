@@ -1,4 +1,4 @@
-package ui.t1.tests.cloudEngine.compute;
+package ui.t1.tests.engine.compute;
 
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
@@ -8,9 +8,7 @@ import ui.cloud.pages.CompareType;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.*;
-import ui.t1.tests.cloudEngine.AbstractComputeTest;
-
-import java.util.Random;
+import ui.t1.tests.engine.AbstractComputeTest;
 
 import static core.utils.AssertUtils.AssertHeaders;
 
@@ -27,33 +25,25 @@ public class ImagesTest extends AbstractComputeTest {
 
     @Test
     @TmsLink("1307076")
-    @DisplayName("Создание ВМ c пользовательским образом")
-    void createVmWidthUserImage() {
-        String name = "AT-UI-" + Math.abs(new Random().nextInt());
-        DiskCreate disk = new IndexPage()
-                .goToDisks()
-                .addDisk()
-                .setAvailabilityZone(availabilityZone)
-                .setName(name)
-                .setSize(2L)
-                .clickOrder();
-
+    @DisplayName("Cloud Compute. Образы. Виртуальная машина с диском с образа")
+    void createVmWidthUserImage() {;
+        DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(getRandomName()).clickOrder();
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
-        diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createImage(name));
-        Image imagePage = new IndexPage().goToImages().selectImage(name).checkCreate();
+        diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createImage(disk.getName()));
+        Image imagePage = new IndexPage().goToImages().selectImage(disk.getName()).checkCreate();
 
         new IndexPage()
                 .goToDisks()
-                .selectDisk(name)
+                .selectDisk(disk.getName())
                 .runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
 
         VmCreate vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
-                .setUserImage(name)
-                .setDeleteOnTermination(true)
                 .setAvailabilityZone(availabilityZone)
-                .setName(name)
+                .setUserImage(disk.getName())
+                .setDeleteOnTermination(true)
+                .setName(disk.getName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
@@ -61,12 +51,12 @@ public class ImagesTest extends AbstractComputeTest {
 
         new IndexPage()
                 .goToVirtualMachine()
-                .selectCompute(name)
+                .selectCompute(disk.getName())
                 .runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
 
         new IndexPage()
                 .goToImages()
-                .selectImage(name)
+                .selectImage(disk.getName())
                 .runActionWithCheckCost(CompareType.ZERO, imagePage::delete);
     }
 }

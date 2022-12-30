@@ -92,7 +92,7 @@ public class UiScyllaDbTest extends Tests {
     @DisplayName("UI ScyllaDB. Проверка полей заказа")
     void checkHeaderHistoryTable() {
         ScyllaPage scyllaPage = new ScyllaPage(product);
-        scyllaPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        scyllaPage.getBtnGeneralInfo().click();
         scyllaPage.checkHeadersHistory();
         scyllaPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();

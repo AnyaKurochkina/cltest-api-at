@@ -13,7 +13,6 @@ import static ui.t1.pages.cloudEngine.vpc.PublicIpList.IpTable.COLUMN_IP;
 
 public class PublicIpList {
 
-    //new PublicIpsPage().addIp("ru-central1-c");
     public String addIp(String availabilityZone) {
         IpTable ipTable = new IpTable();
         String oldIp = "";

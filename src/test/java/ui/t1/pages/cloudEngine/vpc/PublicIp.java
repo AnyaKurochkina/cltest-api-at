@@ -5,7 +5,7 @@ import ui.elements.Dialog;
 import ui.t1.pages.cloudEngine.compute.Disk;
 import ui.t1.pages.cloudEngine.compute.IProductT1Page;
 
-public class PublicIp extends IProductT1Page {
+public class PublicIp extends IProductT1Page<PublicIp> {
 
     public void attachComputeIp(String vmName) {
         runActionWithParameters(BLOCK_PARAMETERS, "Подключить к виртуальной машине", "Подтвердить", () ->

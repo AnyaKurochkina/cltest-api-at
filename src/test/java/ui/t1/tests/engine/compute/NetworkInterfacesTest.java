@@ -1,4 +1,4 @@
-package ui.t1.tests.cloudEngine.compute;
+package ui.t1.tests.engine.compute;
 
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -11,7 +11,7 @@ import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.PublicIp;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
-import ui.t1.tests.cloudEngine.AbstractComputeTest;
+import ui.t1.tests.engine.AbstractComputeTest;
 
 import static core.utils.AssertUtils.AssertHeaders;
 
@@ -31,9 +31,9 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Сетевые интерфейсы. Подключить/Отключить публичный IP")
     void attachIp() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
-                .setAvailabilityZone(availabilityZone)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
@@ -53,9 +53,9 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Сетевые интерфейсы. Изменить группы безопасности")
     void changeSecurityGroup() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
-                .setAvailabilityZone(availabilityZone)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)

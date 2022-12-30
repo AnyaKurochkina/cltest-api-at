@@ -102,7 +102,7 @@ public class UiClickHouseClusterTest extends Tests {
     void
     checkHeaderHistoryTable() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        clickHouseClusterPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        clickHouseClusterPage.getBtnGeneralInfo().click();
         clickHouseClusterPage.checkHeadersHistory();
         clickHouseClusterPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();

@@ -1,5 +1,6 @@
 package ui.cloud.tests.orders.postgreSqlClusterAstra;
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
@@ -12,9 +13,7 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.*;
-import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.extesions.ConfigExtension;
 import ui.extesions.InterceptTestExtension;
@@ -97,7 +96,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверка полей заказа")
     void checkHeaderHistoryTable() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        pSqlPage.getBtnGeneralInfo().click();
         pSqlPage.checkHeadersHistory();
         pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();

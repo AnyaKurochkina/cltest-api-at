@@ -7,7 +7,7 @@ import ui.elements.Table;
 
 import static ui.t1.pages.cloudEngine.compute.Disk.DiskInfo.COLUMN_NAME;
 
-public class Vm extends IProductT1Page {
+public class Vm extends IProductT1Page<Vm> {
 
     public Disk selectDisk(String disk) {
         new Disk.DiskInfo().getRowByColumnValue(COLUMN_NAME, disk).get().shouldBe(Condition.visible).click();

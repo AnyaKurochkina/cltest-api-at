@@ -1,4 +1,4 @@
-package ui.t1.tests.cloudEngine;
+package ui.t1.tests.engine;
 
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
@@ -19,12 +19,12 @@ import ui.t1.pages.cloudEngine.compute.SelectBox;
 @Log4j2
 @ExtendWith(ConfigExtension.class)
 @Epic("Cloud Compute")
-@Tags({@Tag("ui_cloud_compute")})
+@Tags({@Tag("t1_ui_cloud_compute")})
 public abstract class AbstractComputeTest {
     protected Project project;
     protected String availabilityZone = "ru-central1-a";
     protected SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
-    protected String hddTypeOne = "HDD";
+    protected String hddTypeFirst = "SSD";
     protected String hddTypeSecond = "HDD";
     protected String securityGroup = "default";
     protected String sshKey = "default";

@@ -12,7 +12,6 @@ import java.util.Objects;
 
 import static core.helper.StringUtils.$x;
 
-//new VirtualMachinePage().name("name").description("desc").addSecurityGroups("default").image(new Image("Ubuntu", "20.04")).sshKey("qw")
 @Getter
 public class VmCreate {
     private String name;

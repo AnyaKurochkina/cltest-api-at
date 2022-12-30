@@ -89,7 +89,7 @@ public class UiRedislAstraTest extends Tests {
     @DisplayName("UI RedisAstra. Проверка полей заказа")
     void checkHeaderHistoryTable() {
         RedisAstraPage pSqlPage = new RedisAstraPage(product);
-        pSqlPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        pSqlPage.getBtnGeneralInfo().click();
         pSqlPage.checkHeadersHistory();
         pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();

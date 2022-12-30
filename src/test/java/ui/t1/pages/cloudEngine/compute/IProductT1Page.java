@@ -11,12 +11,14 @@ import ui.cloud.pages.IProductPage;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 import java.time.Duration;
 import java.util.Objects;
 
 import static core.helper.StringUtils.$x;
 
-public class IProductT1Page extends IProductPage {
+public class IProductT1Page<C extends IProductT1Page> extends IProductPage {
     private static final String COLUMN_POWER = "Статус";
     public static final String BLOCK_PARAMETERS = "Основные параметры";
     private final SelenideElement waitStatus = $x("//*[.='Обновляется информация о заказе']");
@@ -37,13 +39,12 @@ public class IProductT1Page extends IProductPage {
         checkPowerStatus(Disk.TopInfo.POWER_STATUS_DELETED);
     }
 
-
-    public <T extends IProductPage> T checkCreate(){
+    public C checkCreate(){
         checkLastAction("Развертывание");
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         if(Objects.nonNull(EntitiesUtils.getPreBillingPrice()))
             Assertions.assertEquals(EntitiesUtils.getPreBillingPrice(), getCostOrder(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
-        return (T) this;
+        return (C) this;
     }
 
     @Override
