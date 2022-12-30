@@ -1,6 +1,7 @@
 package ui.cloud.tests.orders.postgreSqlClusterAstra;
 
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
@@ -16,7 +17,7 @@ import ui.extesions.UiProductTest;
 @Epic("UI Продукты")
 @Feature("PostgreSQL Cluster Astra Linux")
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
-class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends UiProductTest {
+class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
 
     PostgresSQLCluster product;
     //= PostgresSQLCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/714818a6-66f0-4939-830e-73cb627c5acc/main?context=proj-1oob0zjo5h&type=project&org=vtb");
@@ -30,7 +31,6 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1151310")
-    @Order(1)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

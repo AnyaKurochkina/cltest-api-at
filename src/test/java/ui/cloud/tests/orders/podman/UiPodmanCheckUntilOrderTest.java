@@ -1,5 +1,6 @@
 package ui.cloud.tests.orders.podman;
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
@@ -16,7 +17,7 @@ import ui.extesions.UiProductTest;
 @Epic("UI Продукты")
 @Feature("Podman")
 @Tags({@Tag("ui"), @Tag("ui_podman")})
-class UiPodmanCheckUntilOrderTest extends UiProductTest {
+class UiPodmanCheckUntilOrderTest extends Tests {
 
     Podman product;
     //product = Podman.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
@@ -30,7 +31,6 @@ class UiPodmanCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1349839")
-    @Order(1)
     @DisplayName("UI Podman. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

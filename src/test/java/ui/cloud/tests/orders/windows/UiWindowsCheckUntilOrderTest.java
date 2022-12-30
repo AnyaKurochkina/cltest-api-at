@@ -26,7 +26,7 @@ import static com.codeborne.selenide.Selenide.$;
 @Epic("UI Продукты")
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
-class UiWindowsCheckUntilOrderTest extends UiProductTest {
+class UiWindowsCheckUntilOrderTest extends Tests {
     Windows product;
     //= Windows.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
@@ -40,7 +40,6 @@ class UiWindowsCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("975914")
-    @Order(1)
     @DisplayName("UI Windows. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

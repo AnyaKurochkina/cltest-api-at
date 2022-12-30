@@ -1,6 +1,7 @@
 package ui.cloud.tests.orders.postgreSqlAstraLinux;
 
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.TmsLink;
@@ -21,7 +22,7 @@ import ui.extesions.UiProductTest;
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tags({@Tag("ui_postgre_sql_astra")})
-class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends UiProductTest {
+class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
 
     PostgreSQL product;
     //= PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
@@ -35,7 +36,6 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1139488")
-    @Order(1)
     @DisplayName("UI PostgreSQLAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

@@ -1,5 +1,6 @@
 package ui.cloud.tests.orders.ubuntuLinux;
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
@@ -16,7 +17,7 @@ import ui.extesions.UiProductTest;
 @Epic("UI Продукты")
 @Feature("Ubuntu Linux")
 @Tags({@Tag("ui"), @Tag("ui_ubuntu_linux")})
-class UiUbuntuLinuxCheckUntilOrderTest extends UiProductTest {
+class UiUbuntuLinuxCheckUntilOrderTest extends Tests {
 
     Ubuntu product;
     //product = Ubuntu.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
@@ -30,7 +31,6 @@ class UiUbuntuLinuxCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1342205")
-    @Order(1)
     @DisplayName("UI UbuntuLinux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

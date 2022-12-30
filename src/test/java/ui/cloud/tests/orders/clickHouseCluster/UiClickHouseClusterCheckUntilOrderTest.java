@@ -1,6 +1,7 @@
 package ui.cloud.tests.orders.clickHouseCluster;
 
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
@@ -16,7 +17,7 @@ import ui.extesions.UiProductTest;
 @Epic("UI Продукты")
 @Feature("ClickHouse Cluster")
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
-class UiClickHouseClusterCheckUntilOrderTest extends UiProductTest {
+class UiClickHouseClusterCheckUntilOrderTest extends Tests {
 
     ClickHouseCluster product;
     //  product = ClickHouseCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
@@ -30,7 +31,6 @@ class UiClickHouseClusterCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1177391")
-    @Order(1)
     @DisplayName("UI ClickHouse Cluster. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

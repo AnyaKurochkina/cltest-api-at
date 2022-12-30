@@ -20,7 +20,7 @@ import ui.extesions.UiProductTest;
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tags({@Tag("ui_redis_astra")})
-class UiRedisAstraCheckUntilOrderTest extends UiProductTest {
+class UiRedisAstraCheckUntilOrderTest extends Tests {
 
     Redis product;
     // =Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
@@ -35,7 +35,6 @@ class UiRedisAstraCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1235642")
-    @Order(1)
     @DisplayName("UI RedisAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

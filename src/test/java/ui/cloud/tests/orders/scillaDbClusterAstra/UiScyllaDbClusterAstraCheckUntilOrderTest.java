@@ -1,6 +1,7 @@
 package ui.cloud.tests.orders.scillaDbClusterAstra;
 
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
@@ -16,7 +17,7 @@ import ui.extesions.UiProductTest;
 @Epic("UI Продукты")
 @Feature("ScyllaDbClusterAstra")
 @Tags({@Tag("ui"), @Tag("ui_scylla_db_cluster_astra")})
-class UiScyllaDbClusterAstraCheckUntilOrderTest extends UiProductTest {
+class UiScyllaDbClusterAstraCheckUntilOrderTest extends Tests {
 
     ScyllaDbCluster product;
     // = ScyllaDbCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/3a445f64-a939-4d92-b967-5b545d83fb5f/main?context=proj-1oob0zjo5h&type=project&org=vtb");
@@ -30,7 +31,6 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1368045")
-    @Order(1)
     @DisplayName("UI Scylla_db_cluster_astra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

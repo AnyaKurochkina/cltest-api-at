@@ -1,5 +1,6 @@
 package ui.cloud.tests.orders.astraLinux;
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
@@ -15,7 +16,7 @@ import ui.extesions.UiProductTest;
 @Epic("UI Продукты")
 @Feature("Astra Linux")
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
-class UiAstraLinuxCheckUntilOrderTest extends UiProductTest {
+class UiAstraLinuxCheckUntilOrderTest extends Tests {
 
     Astra product;
     //product = Astra.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
@@ -29,7 +30,6 @@ class UiAstraLinuxCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1235787")
-    @Order(1)
     @DisplayName("UI AstraLinux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
