@@ -2,47 +2,31 @@ package ui.cloud.tests.orders.postgreSqlAstraLinux;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.PostgreSQL;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.*;
-import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
-import ui.extesions.ConfigExtension;
-import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
-
-@ExtendWith(ConfigExtension.class)
-@ExtendWith(InterceptTestExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_postgre_sql_astra")})
-@Log4j2
-public class UiPostgreSqlAstraLinuxTest extends Tests {
+@Epic("UI Продукты")
+@Feature("PostgreSQL (Astra Linux)")
+@Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
+public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
     PostgreSQL product;
+    //= PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/e28773e9-9701-4ba9-9aca-dc72febf292d/main?context=proj-ln4zg69jek&type=project&org=vtb");
+
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
-
-    public UiPostgreSqlAstraLinuxTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-            product = PostgreSQL.builder().env("DEV").productName("PostgreSQL (Astra Linux)").platform("OpenStack").segment("dev-srv-app").build();
-            // product = PostgreSQL.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/ec7fe6a7-bc5c-4bb0-bdf8-ea776f9b2639/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = PostgreSQL.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-
-    }
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -65,7 +49,7 @@ public class UiPostgreSqlAstraLinuxTest extends Tests {
             orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);

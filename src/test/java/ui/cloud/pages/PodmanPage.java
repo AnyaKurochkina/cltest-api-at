@@ -2,15 +2,15 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.Astra;
+import models.cloud.orderService.products.Podman;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
+import ui.cloud.tests.ActionParameters;
 import ui.elements.Dialog;
 import ui.elements.DropDown;
-import ui.elements.Select;
 import ui.elements.Table;
 
 import java.util.List;
@@ -20,44 +20,45 @@ import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
-public class AstraLinuxPage extends IProductPage {
+public class PodmanPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String HEADER_NAME_DB = "Имя базы данных";
-    private static final String POWER = "Питание";
+    private static final String POWER = "Статус";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
 
-    public AstraLinuxPage(Astra product) {
+    public PodmanPage(Podman product) {
         super(product);
     }
 
     @Override
     protected void checkPowerStatus(String expectedStatus) {
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(expectedStatus);
+        new PodmanPage.VirtualMachineTable(POWER).checkPowerStatus(expectedStatus);
     }
 
     public void start() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_OFF);
         runActionWithoutParameters(BLOCK_APP, "Включить");
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopSoft() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить");
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
-    public void checkConfiguration() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
+    public void checkConfiguration(SelenideElement node) {
+        node.scrollIntoView(scrollCenter).click();
+        checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(node).build());
     }
 
     public void changeConfiguration() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
@@ -67,55 +68,64 @@ public class AstraLinuxPage extends IProductPage {
     }
 
     public void delete() {
-        runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
+        runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new PodmanPage.VirtualMachineTable(POWER).checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void restart() {
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        new PodmanPage.VirtualMachineTable(POWER).checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Перезагрузить по питанию");
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        new PodmanPage.VirtualMachineTable(POWER).checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopHard() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     @Step("Добавить новые группы {group} с ролью {role}")
-    public void addGroup(String role, List<String> groups) {
+    public void addGroup(String role, List<String> groups,SelenideElement node) {
+        node.scrollIntoView(scrollCenter).click();
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
-            Select.byLabel("Роль").set(role);
-            groups.forEach(group -> Select.byLabel("Группы").set(group));
-        });
-        groups.forEach(group -> Assertions.assertTrue(new AstraLinuxPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+            DropDown.byLabel("Роль").selectByTextContains(role);
+            groups.forEach(group -> DropDown.byLabel("Группы").select(group));
+        },ActionParameters.builder().node(node).build());
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        node.scrollIntoView(scrollCenter).click();
+        groups.forEach(group -> Assertions.assertTrue(new PodmanPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
 
     @Step("Изменить состав групп у роли {role} на {groups}")
-    public void updateGroup(String role, List<String> groups) {
+    public void updateGroup(String role, List<String> groups,SelenideElement node) {
+        node.scrollIntoView(scrollCenter).click();
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        runActionWithParameters(new AstraLinuxPage.RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
+        runActionWithParameters(new PodmanPage.RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
             DropDown groupsElement = DropDown.byLabel("Группы").clear();
             groups.forEach(groupsElement::select);
-        });
-        groups.forEach(group -> Assertions.assertTrue(new AstraLinuxPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+        },ActionParameters.builder().node(node).build());
+        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        node.scrollIntoView(scrollCenter).click();
+        groups.forEach(group -> Assertions.assertTrue(new PodmanPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
 
     @Step("Удалить группу доступа с ролью {role}")
-    public void deleteGroup(String role) {
+    public void deleteGroup(String role,SelenideElement node) {
+        node.scrollIntoView(scrollCenter).click();
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        runActionWithoutParameters(new AstraLinuxPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
-        Assertions.assertThrows(NotFoundException.class, () -> new AstraLinuxPage.RoleTable().getRoleRow(role));
+        runActionWithoutParameters(new PodmanPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа",ActionParameters.builder().node(node).build());
+        node.scrollIntoView(scrollCenter).click();
+        Assertions.assertThrows(NotFoundException.class, () -> new PodmanPage.RoleTable().getRoleRow(role));
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
 
     public void issueClientCertificate(String nameCertificate) {
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        new PodmanPage.VirtualMachineTable(POWER).checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_VM, "Выпустить клиентский сертификат", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Выпустить клиентский сертификат");
             dlg.setInputValue("Клиентская часть имени сертификата", nameCertificate);
@@ -124,7 +134,7 @@ public class AstraLinuxPage extends IProductPage {
     }
 
     public void removeDb(String name) {
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        new PodmanPage.VirtualMachineTable(POWER).checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
         if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
             runActionWithoutParameters(name, "Удалить БД");
             Assertions.assertFalse(new Table("").isColumnValueEquals("", name), "БД существует");

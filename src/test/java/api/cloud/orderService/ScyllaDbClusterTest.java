@@ -4,13 +4,11 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.ScyllaDb;
+
 import models.cloud.orderService.products.ScyllaDbCluster;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;

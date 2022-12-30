@@ -1,44 +1,28 @@
 package ui.cloud.tests.orders.clickHouse;
 
-import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.ClickHouse;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.elements.Table;
-import ui.extesions.ConfigExtension;
-import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
-
-@ExtendWith(ConfigExtension.class)
-@ExtendWith(InterceptTestExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_clickHouse")})
-@Log4j2
-public class UiClickHouseTest extends Tests {
+@Epic("UI Продукты")
+@Feature("ClickHouse")
+@Tags({@Tag("ui"), @Tag("ui_clickHouse")})
+public class UiClickHouseTest extends UiProductTest {
 
     ClickHouse product;
-
-    public UiClickHouseTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-            product = ClickHouse.builder().productName("ClickHouse").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/7080926c-4670-4857-ba74-464d2e50caf1/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = ClickHouse.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-
-    }
+    //= ClickHouse.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/9c52fb20-f8cf-41ce-bc38-6bbbc0b54f96/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -64,9 +48,12 @@ public class UiClickHouseTest extends Tests {
             orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getConfigure().set(Product.getFlavor(product.getMaxFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
+            orderPage.getGroup2().select(accessGroup.getPrefixName());
+            orderPage.getGroup3().select(accessGroup.getPrefixName());
+            orderPage.getGroup4().select(accessGroup.getPrefixName());
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();
             new OrdersPage()

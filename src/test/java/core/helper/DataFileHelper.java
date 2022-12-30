@@ -17,9 +17,9 @@ public class DataFileHelper {
      * Запись текста в файл
      * @param fileName имя файла в корне проекта или полный путь к файлу + именем
      * @param text текст который нужен для записи в файл
-     * @throws IOException - в случае ошибок ввода вывода
      */
-    public static void write(String fileName, String text) throws IOException {
+    @SneakyThrows
+    public static void write(String fileName, String text) {
         //Paths.get(fileName).toFile().getParentFile().mkdirs();
         Files.write(Paths.get(fileName), text.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }

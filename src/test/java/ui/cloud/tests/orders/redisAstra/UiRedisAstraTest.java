@@ -1,43 +1,28 @@
 package ui.cloud.tests.orders.redisAstra;
 
-import api.Tests;
+
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Redis;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.elements.Table;
-import ui.extesions.ConfigExtension;
-import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
-
-@ExtendWith(ConfigExtension.class)
-@ExtendWith(InterceptTestExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_redis_astra")})
-@Log4j2
-public class UiRedislAstraTest extends Tests {
+@Epic("UI Продукты")
+@Feature("Redis (Astra)")
+@Tags({@Tag("ui"), @Tag("ui_redis_astra")})
+public class UiRedisAstraTest extends UiProductTest {
 
     Redis product;
-
-    public UiRedislAstraTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-         product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-        // product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/30e55c55-2435-4db7-81c7-bcc0caac3260/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = Redis.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-    }
-
+    //= Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
@@ -60,7 +45,7 @@ public class UiRedislAstraTest extends Tests {
             orderPage.getGeneratePassButton().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
@@ -93,15 +78,6 @@ public class UiRedislAstraTest extends Tests {
         pSqlPage.checkHeadersHistory();
         pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();
-    }
-
-    @Test
-    @Order(5)
-    @TmsLink("796986")
-    @DisplayName("UI RedisAstra. Перезагрузить по питанию")
-    void restart() {
-        RedisAstraPage pSqlPage = new RedisAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::restart);
     }
 
     @Test
@@ -141,13 +117,13 @@ public class UiRedislAstraTest extends Tests {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::resetPassword);
     }
 
-//    @Test
-//    @Order(100)
-//    @TmsLink("796989")
-//    @DisplayName("UI RedisAstra. Удаление продукта")
-//    void delete() {
-//        RedisAstraPage pSqlPage = new RedisAstraPage(product);
-//        pSqlPage.delete();
-//    }
+    @Test
+    @Order(100)
+    @TmsLink("796989")
+    @DisplayName("UI RedisAstra. Удаление продукта")
+    void delete() {
+        RedisAstraPage pSqlPage = new RedisAstraPage(product);
+        pSqlPage.delete();
+    }
 
  }

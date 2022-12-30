@@ -3,49 +3,32 @@ package ui.cloud.tests.orders.postgreSqlClusterAstra;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
-import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.PostgresSQLCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.*;
-import ui.elements.Alert;
 import ui.elements.Graph;
-import ui.extesions.ConfigExtension;
-import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
-
-@ExtendWith(ConfigExtension.class)
-@ExtendWith(InterceptTestExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_postgre_sql_cluster_astra")})
-@Log4j2
-public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
+@Epic("UI Продукты")
+@Feature("PostgreSQL Cluster Astra Linux")
+@Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
+public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
     PostgresSQLCluster product;
+    //= PostgresSQLCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/714818a6-66f0-4939-830e-73cb627c5acc/main?context=proj-1oob0zjo5h&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
     SelenideElement node = $x("(//td[.='postgresql'])[1]");
-
-    public UiPostgreSqlClusterAstraLinuxTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-          product = PostgresSQLCluster.builder().env("DEV").productName("PostgreSQL Cluster Astra Linux").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-//        product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/4ae82e4a-50fd-4786-afc5-cc4ff8f0bab5/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = PostgresSQLCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-
-    }
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -68,7 +51,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends Tests {
             orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
