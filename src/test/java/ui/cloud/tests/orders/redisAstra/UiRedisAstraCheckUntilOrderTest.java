@@ -14,10 +14,12 @@ import ru.testit.annotations.Title;
 import api.Tests;
 import ui.cloud.pages.*;
 import ui.extesions.ConfigExtension;
+import ui.extesions.ProductInjector;
 import ui.extesions.UiProductTest;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
+@ExtendWith(ProductInjector.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tags({@Tag("ui_redis_astra")})
 class UiRedisAstraCheckUntilOrderTest extends Tests {

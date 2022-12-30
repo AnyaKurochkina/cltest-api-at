@@ -19,11 +19,14 @@ import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.Product;
 import ui.cloud.pages.WindowsOrderPage;
 import ui.extesions.ConfigExtension;
+import ui.extesions.ProductInjector;
 import ui.extesions.UiProductTest;
 
 import static com.codeborne.selenide.Selenide.$;
 
 @Epic("UI Продукты")
+@ExtendWith(ConfigExtension.class)
+@ExtendWith(ProductInjector.class)
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 class UiWindowsCheckUntilOrderTest extends Tests {

@@ -41,8 +41,7 @@ public class ClickHouseClusterOrderPage extends Product {
     }
 
     public void checkOrderDetails(){
-        if(getCalculationDetails().exists())
-        {
+        if (getCalculationDetails().shouldBe(Condition.visible).exists()) {
             getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         }
         getProcessor().shouldBe(Condition.visible);

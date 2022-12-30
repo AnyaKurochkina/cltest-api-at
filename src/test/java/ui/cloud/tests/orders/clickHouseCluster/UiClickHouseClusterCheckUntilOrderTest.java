@@ -10,11 +10,16 @@ import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
+import ui.extesions.ConfigExtension;
+import ui.extesions.ProductInjector;
 import ui.extesions.UiProductTest;
 
 @Epic("UI Продукты")
+@ExtendWith(ConfigExtension.class)
+@ExtendWith(ProductInjector.class)
 @Feature("ClickHouse Cluster")
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 class UiClickHouseClusterCheckUntilOrderTest extends Tests {

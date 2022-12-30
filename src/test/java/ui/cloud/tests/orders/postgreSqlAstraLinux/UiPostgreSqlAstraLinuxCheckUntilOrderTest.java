@@ -16,9 +16,12 @@ import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.PostgreSqlAstraOrderPage;
 import ui.cloud.pages.Product;
 import ui.extesions.ConfigExtension;
+import ui.extesions.ProductInjector;
 import ui.extesions.UiProductTest;
 
 @Log4j2
+@ExtendWith(ConfigExtension.class)
+@ExtendWith(ProductInjector.class)
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tags({@Tag("ui_postgre_sql_astra")})

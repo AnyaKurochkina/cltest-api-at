@@ -10,11 +10,16 @@ import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Ubuntu;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
+import ui.extesions.ConfigExtension;
+import ui.extesions.ProductInjector;
 import ui.extesions.UiProductTest;
 
 @Epic("UI Продукты")
+@ExtendWith(ConfigExtension.class)
+@ExtendWith(ProductInjector.class)
 @Feature("Ubuntu Linux")
 @Tags({@Tag("ui"), @Tag("ui_ubuntu_linux")})
 class UiUbuntuLinuxCheckUntilOrderTest extends Tests {

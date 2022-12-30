@@ -10,11 +10,16 @@ import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Podman;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
+import ui.extesions.ConfigExtension;
+import ui.extesions.ProductInjector;
 import ui.extesions.UiProductTest;
 
 @Epic("UI Продукты")
+@ExtendWith(ConfigExtension.class)
+@ExtendWith(ProductInjector.class)
 @Feature("Podman")
 @Tags({@Tag("ui"), @Tag("ui_podman")})
 class UiPodmanCheckUntilOrderTest extends Tests {

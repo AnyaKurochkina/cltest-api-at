@@ -1,5 +1,6 @@
 package ui.cloud.tests.orders.apacheKafkaClusterAstra;//package ui.cloud.tests.orders.apacheKafkaClusterAstra;
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
@@ -8,15 +9,20 @@ import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.ApacheKafkaCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
+import ui.extesions.ConfigExtension;
+import ui.extesions.ProductInjector;
 import ui.extesions.UiProductTest;
 
 
 @Epic("UI Продукты")
+@ExtendWith(ConfigExtension.class)
+@ExtendWith(ProductInjector.class)
 @Feature("ApacheKafkaCluster")
 @Tags({@Tag("ui"), @Tag("ui_ApacheKafkaCluster")})
-class UiApacheKafkaClusterCheckUntilOrderTest extends UiProductTest {
+class UiApacheKafkaClusterCheckUntilOrderTest extends Tests {
 
     ApacheKafkaCluster product;
     //= ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/25771046-8bce-407d-bbcd-7ca3fe38a051/main?context=proj-1oob0zjo5h&type=project&org=vtb");
@@ -31,7 +37,6 @@ class UiApacheKafkaClusterCheckUntilOrderTest extends UiProductTest {
 
     @Test
     @TmsLink("1235642")
-    @Order(1)
     @DisplayName("UI RedisAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

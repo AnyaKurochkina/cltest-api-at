@@ -9,11 +9,15 @@ import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.Astra;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
-import ui.extesions.UiProductTest;
+import ui.extesions.ConfigExtension;
+import ui.extesions.ProductInjector;
 
 @Epic("UI Продукты")
+@ExtendWith(ConfigExtension.class)
+@ExtendWith(ProductInjector.class)
 @Feature("Astra Linux")
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
 class UiAstraLinuxCheckUntilOrderTest extends Tests {
@@ -55,5 +59,4 @@ class UiAstraLinuxCheckUntilOrderTest extends Tests {
         orderPage.getGroup().select(accessGroup.getPrefixName());
         new AstraLinuxOrderPage().checkOrderDetails();
     }
-
 }
