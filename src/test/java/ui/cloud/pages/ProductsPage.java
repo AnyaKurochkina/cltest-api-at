@@ -10,7 +10,6 @@ public class ProductsPage {
     ElementsCollection products = $$x("//img/ancestor::button//h4");
 
     public void selectProduct(String product){
-        products.find(Condition.exactText(product)).$("img").hover()
-                .shouldBe(clickableCnd).click();
+        products.find(Condition.exactText(product)).hover().shouldBe(clickableCnd).click();
     }
 }
