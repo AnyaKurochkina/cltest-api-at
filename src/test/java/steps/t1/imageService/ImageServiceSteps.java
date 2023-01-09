@@ -231,13 +231,13 @@ public class ImageServiceSteps extends Steps {
     @Step("Частичное обновление Image по id {id}")
     /*
       Метод patch для Image должен работать только на обновление информации о marketing
-      в body метода передается json в формате : {"marketing_id" : "id"}
+      в body метода передается json в формате : {"marketing_info_id" : "id"}
      */
     public static void partialUpdateImageById(String id, JSONObject body) {
         new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .body(body)
-                .patch(apiUrl + "/marketing/{}", id)
+                .patch(apiUrl + "/images/{}", id)
                 .assertStatus(200);
     }
 

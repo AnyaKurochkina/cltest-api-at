@@ -43,7 +43,8 @@ public class CloudDirectorPage {
         Dialog dialog = Dialog.byTitle("Создать VMware организацию");
         dialog.setInputValue("Название", name);
         dialog.clickButton("Создать");
-        Alert.green("Организация с таким именем уже существует в vDC");
+        TestUtils.wait(1000);
+        Alert.red("Организация с таким именем уже существует в vDC");
         dialog.getDialog().shouldBe(Condition.visible);
     }
 
@@ -58,7 +59,7 @@ public class CloudDirectorPage {
     }
 
     public VMwareOrganizationPage goToOrganization(String name) {
-        new VmWareOrganizationList().getRowElementByColumnValue(VmWareOrganizationList.ORGANIZATION_NAME, name).click();
+        new VmWareOrganizationList().getRowByColumnValue(VmWareOrganizationList.ORGANIZATION_NAME, name).get().click();
         return new VMwareOrganizationPage();
     }
 

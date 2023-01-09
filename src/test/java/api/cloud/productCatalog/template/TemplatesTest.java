@@ -11,6 +11,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.icon.Icon;
@@ -218,8 +219,9 @@ public class TemplatesTest extends Tests {
         assertEquals("2.0.0", currentVersion);
         steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 4)
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 5))
-                .assertStatus(500);
+         String errorMessage = steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 5))
+                .assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+         assertEquals("Version counter full [999, 999, 999]", errorMessage);
     }
 
     @DisplayName("Проверка сортировки по дате создания в шаблонах")
@@ -342,7 +344,7 @@ public class TemplatesTest extends Tests {
         JSONObject obj = new JSONObject().put("graph", list);
         partialUpdateGraph(graph.getGraphId(), obj);
         String errMsg = steps.getDeleteObjectResponse(Integer.toString(template.getId())).assertStatus(400)
-                .jsonPath().getString("err");
+                .extractAs(ErrorMessage.class).getMessage();
         String expectedErrorMessage = String.format("Нельзя удалить шаблон: %s. Он используется:\nGraph: (name: %s, version: %s)"
         , template.getName(), graph.getName(), "1.0.1");
         assertEquals(expectedErrorMessage, errMsg);

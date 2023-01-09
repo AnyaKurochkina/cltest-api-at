@@ -36,7 +36,7 @@ public class GraphSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(graphUrl)
-                .compareWithJsonSchema("jsonSchema/getActionListSchema.json")
+                .compareWithJsonSchema("jsonSchema/getGraphListSchema.json")
                 .assertStatus(200)
                 .extractAs(GetGraphList.class).getMeta();
     }

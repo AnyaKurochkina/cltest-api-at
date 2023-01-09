@@ -32,6 +32,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ServiceSteps.deleteServiceById;
 import static steps.productCatalog.ServiceSteps.getServiceByIdAndFilter;
 
 @Tag("product_catalog")
@@ -247,9 +248,9 @@ public class ServicesTest extends Tests {
                 .build()
                 .createObject();
         String serviceId = serviceIsPublished.getId();
-        Response deleteResponse = steps.getDeleteObjectResponse(serviceId).assertStatus(403);
+        String errorMessage = steps.getDeleteObjectResponse(serviceId).assertStatus(403).extractAs(ErrorMessage.class).getMessage();
         steps.partialUpdateObject(serviceId, new JSONObject().put("is_published", false));
-        assertEquals(errorText, deleteResponse.jsonPath().get("error"));
+        assertEquals(errorText, errorMessage);
     }
 
     @DisplayName("Проверка независимого от версии поля is_published в сервисах")
@@ -392,7 +393,7 @@ public class ServicesTest extends Tests {
                 .description("at_tests")
                 .build()
                 .createObject();
-        service.deleteObject();
+        deleteServiceById(service.getId());
     }
 
     @Test

@@ -359,12 +359,13 @@ public class ActionsTest extends Tests {
     @TmsLink("642530")
     public void deleteAction() {
         String actionName = "action_delete_test_api";
-        Action action = Action.builder()
+        JSONObject action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
                 .build()
-                .createObject();
-        deleteActionById(action.getActionId());
+                .toJson();
+        String id = createAction(action).extractAs(Action.class).getActionId();
+        deleteActionById(id);
         assertFalse(isActionExists(actionName));
     }
 

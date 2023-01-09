@@ -17,7 +17,6 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static steps.productCatalog.ActionSteps.getActionViewerById;
 import static steps.productCatalog.ServiceSteps.getServiceById;
 import static steps.productCatalog.ServiceSteps.getServiceViewerById;
 
@@ -140,7 +139,7 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Service serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getActionViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
         assertEquals("No Service matches the given query.", msg);
     }
 
@@ -159,7 +158,7 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Service serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getActionViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
         assertEquals("No Service matches the given query.", msg);
     }
 }

@@ -184,7 +184,7 @@ public class ProductsTest extends Tests {
                 .build()
                 .createObject();
         String actualErrorMsg = getDeleteProductResponse(productIsOpenTrue.getProductId())
-                .assertStatus(403).jsonPath().get("error");
+                .assertStatus(403).extractAs(ErrorMessage.class).getMessage();
         assertEquals("Deletion not allowed (is_open=True)", actualErrorMsg);
     }
 
