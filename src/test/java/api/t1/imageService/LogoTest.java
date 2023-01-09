@@ -4,7 +4,7 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.t1.imageService.ImageGroups;
+import models.t1.imageService.ImageGroup;
 import models.t1.imageService.Logo;
 import models.t1.imageService.Marketing;
 import org.json.JSONObject;
@@ -101,7 +101,7 @@ public class LogoTest extends Tests {
                 .osDistro("delete_test_distro")
                 .build()
                 .createObject();
-        ImageGroups.builder()
+        ImageGroup.builder()
                 .name("image_group_for_logo_api_test")
                 .logoId(logo.getId())
                 .build()

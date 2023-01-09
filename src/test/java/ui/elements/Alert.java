@@ -1,6 +1,7 @@
 package ui.elements;
 
 import com.codeborne.selenide.*;
+import com.codeborne.selenide.ex.ElementShouldNot;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -42,7 +43,7 @@ public class Alert implements TypifiedElement {
     public void waitClose() {
         try {
             element.shouldNot(Condition.visible);
-        } catch (StaleElementReferenceException ignored) {}
+        } catch (ElementShouldNot ignored) {}
     }
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")

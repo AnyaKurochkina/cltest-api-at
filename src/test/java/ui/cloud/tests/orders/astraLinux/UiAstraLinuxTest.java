@@ -1,46 +1,31 @@
 package ui.cloud.tests.orders.astraLinux;
 
-import api.Tests;
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
-import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Astra;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.elements.Table;
-import ui.extesions.ConfigExtension;
-import ui.extesions.InterceptTestExtension;
+import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
-
-@ExtendWith(ConfigExtension.class)
-@ExtendWith(InterceptTestExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags({@Tag("ui_astra_linux")})
-@Log4j2
-public class UiAstraLinuxTest extends Tests {
+@Epic("UI Продукты")
+@Feature("Astra Linux")
+@Tags({@Tag("ui"), @Tag("ui_astra_linux")})
+public class UiAstraLinuxTest extends UiProductTest {
 
     Astra product;
-
-    public UiAstraLinuxTest() {
-        if (Configure.ENV.equals("prod") || Configure.ENV.equals("blue"))
-            product = Astra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = Astra.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/compute/orders/7f5a1f6b-5478-4a2c-b0d1-33f3460d8429/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = Astra.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-    }
+    //= Astra.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/db59f555-5480-4437-b721-d083a4785714/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -63,7 +48,7 @@ public class UiAstraLinuxTest extends Tests {
             orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
@@ -167,7 +152,14 @@ public class UiAstraLinuxTest extends Tests {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.MORE, astraLinuxPage::changeConfiguration);
     }
-
+    @Test
+    @Order(12)
+    @TmsLink("1164676")
+    @DisplayName("UI AstraLinux. Мониторинг ОС")
+    void monitoringOs() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.checkMonitoringOs();
+    }
 
     @Test
     @Order(100)

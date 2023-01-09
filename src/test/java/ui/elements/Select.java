@@ -7,6 +7,7 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import org.intellij.lang.annotations.Language;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -37,16 +38,20 @@ public class Select implements TypifiedElement {
         return new Select($x("(//label[text()='{}']/following::div[1])" + postfix, label, TypifiedElement.getIndex(index)));
     }
 
+    public static Select byXpath(@Language("XPath") String xpath) {
+        return new Select($x(xpath));
+    }
+
     public static Select byInputName(String name) {
         return new Select($x("//div[input[@name='{}']]", name));
     }
 
     public Select hover() {
+        element.scrollIntoView(scrollCenter);
+        element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
         if (getValue().equals("")) {
             Waiting.sleep(2000);
         }
-        element.scrollIntoView(scrollCenter);
-        element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
         return this;
     }
 

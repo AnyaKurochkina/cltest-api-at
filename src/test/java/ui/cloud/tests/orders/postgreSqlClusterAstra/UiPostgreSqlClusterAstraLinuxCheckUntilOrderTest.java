@@ -1,38 +1,31 @@
 package ui.cloud.tests.orders.postgreSqlClusterAstra;
 
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.PostgresSQLCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.*;
 import ui.extesions.ConfigExtension;
+import ui.extesions.ProductInjector;
+import ui.extesions.UiProductTest;
 
-@Log4j2
+@Epic("UI Продукты")
 @ExtendWith(ConfigExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Tags({@Tag("ui_postgre_sql_cluster_astra")})
+@ExtendWith(ProductInjector.class)
+@Feature("PostgreSQL Cluster Astra Linux")
+@Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
 
     PostgresSQLCluster product;
-
-    //TODO: пока так :)
-    public UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest() {
-        if (Configure.ENV.equals("prod"))
-            product = PostgresSQLCluster.builder().env("DEV").productName("PostgreSQL Cluster Astra Linux").platform("OpenStack").segment("dev-srv-app").build();
-            //product = PostgresSQLCluster.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/41ccc48d-5dd0-4892-ae5e-3f1f360885ac/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = PostgresSQLCluster.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-
-    }
+    //= PostgresSQLCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/714818a6-66f0-4939-830e-73cb627c5acc/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -49,21 +42,13 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
         PostgreSqlClusterAstraOrderPage orderPage = new PostgreSqlClusterAstraOrderPage();
-
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.getOrderBtn().shouldBe(Condition.disabled);
-
-        //Проверка поля Кол-во
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "1");
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "1");
-
         //Проверка Детали заказа
         orderPage.getOsVersion().select(product.getOsVersion());
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+        orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
         new PostgreSqlClusterAstraOrderPage().checkOrderDetails();

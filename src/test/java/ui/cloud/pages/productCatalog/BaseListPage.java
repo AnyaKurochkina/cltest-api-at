@@ -1,12 +1,15 @@
 package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Button;
 import ui.elements.DropDown;
+import ui.elements.Select;
 import ui.elements.Table;
 
 import java.time.LocalDateTime;
@@ -25,7 +28,7 @@ public class BaseListPage {
     private static final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     protected final Button nextPageButtonV2 = Button.byAriaLabel("Следующая страница, выбрать");
     protected final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
-    private final DropDown recordsPerPageDropDown = DropDown.byXpath("//div[text()='Записей на странице:']");
+    private final Select recordsPerPageDropDown = Select.byXpath("//div[text()='Записей на странице:']");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
@@ -120,7 +123,8 @@ public class BaseListPage {
 
     @Step("Изменение количества отображаемых строк на '{number}'")
     public BaseListPage setRecordsPerPage(int number) {
-        recordsPerPageDropDown.selectByDivText(Integer.toString(number));
+        WebDriverRunner.getWebDriver().manage().window().maximize();
+        recordsPerPageDropDown.set(Integer.toString(number));
         Assertions.assertEquals(Integer.toString(number), recordsPerPageDropDown.getElement().$x(".//span").getText());
         return this;
     }

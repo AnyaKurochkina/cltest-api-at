@@ -23,7 +23,7 @@ public class ProductInjector implements TestInstancePostProcessor {
 
                 product.setEnv("DEV");
                 if (Configure.ENV.equals("prod")) {
-                    product.setEnv("LT");
+                    product.setEnv("DEV");
                     product.setPlatform("OpenStack");
                 }
                 else if(Configure.ENV.equals("blue")){

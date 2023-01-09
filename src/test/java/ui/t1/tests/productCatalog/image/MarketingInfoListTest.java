@@ -1,6 +1,7 @@
 package ui.t1.tests.productCatalog.image;
 
 import com.codeborne.selenide.Selenide;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import ui.cloud.tests.productCatalog.BaseTest;
 import ui.t1.pages.ControlPanelIndexPage;
 import ui.t1.pages.productCatalog.image.MarketingInfoListPage;
 
+@Feature("Образы.Маркетинговая информация")
 public class MarketingInfoListTest extends BaseTest {
 
     @Test

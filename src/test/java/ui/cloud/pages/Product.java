@@ -23,7 +23,7 @@ public class Product {
     private final SelenideElement linuxOS = $x("//div[contains(text(),'ОС linux')]");
 
     public static SelenideElement getCalculationDetails() {
-        return $x("//*[text()='Детали заказа']");
+        return $x("(//div[text()='Детали заказа'])[2]");
     }
 
     public void orderClick() {
