@@ -3,11 +3,11 @@ package api.cloud.productCatalog.forbiddenAction;
 import api.Tests;
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -66,9 +66,8 @@ public class ForbiddenActionImportTest extends Tests {
     @DisplayName("Негативный тест импорт запрещенного действия в другой раздел")
     @TmsLink("1320775")
     public void importForbiddenActionToAnotherSection() {
-        String expectedMsg = "['Импортируемый объект \"ForbiddenAction\" не соответствует разделу \"Product\"']";
-        Response response = importProduct(PATHNAME).assertStatus(400);
-        String error = response.jsonPath().getList("errors", String.class).get(0);
+        String expectedMsg = "Импортируемый объект \"ForbiddenAction\" не соответствует разделу \"Product\"";
+        String error = importProduct(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals(expectedMsg, error);
     }
 }

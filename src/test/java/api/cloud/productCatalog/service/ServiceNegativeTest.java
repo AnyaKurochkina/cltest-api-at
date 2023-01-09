@@ -1,8 +1,10 @@
 package api.cloud.productCatalog.service;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -10,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -129,7 +130,9 @@ public class ServiceNegativeTest extends Tests {
                 .version("1.0.0")
                 .build().createObject();
         String serviceId = service.getId();
-        steps.partialUpdateObject(serviceId, new JSONObject().put("current_version", "2")).assertStatus(400);
+        String message = steps.partialUpdateObject(serviceId, new JSONObject().put("current_version", "2")).assertStatus(400)
+                .extractAs(ErrorMessage.class).getMessage();
+        assertEquals("You must specify version in pattern like \"{num}. | {num}.{num}.\"", message);
     }
 
     @DisplayName("Негативный тест на создание сервиса c пустым полем start_btn_label")
@@ -142,9 +145,9 @@ public class ServiceNegativeTest extends Tests {
                 .description("ServiceForAT")
                 .startBtnLabel("")
                 .build().init().toJson();
-        Object str = steps.createProductObject(json)
+        String str = steps.createProductObject(json)
                 .assertStatus(400)
-                .jsonPath().getList("start_btn_label").get(0);
+                .extractAs(ErrorMessage.class).getMessage();
         assertEquals("Это поле не может быть пустым.", str);
     }
 }

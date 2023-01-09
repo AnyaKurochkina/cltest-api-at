@@ -9,7 +9,6 @@ import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
-import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import httpModels.productCatalog.productOrgInfoSystem.createInfoSystem.CreateInfoSystemResponse;
 import httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.GetInfoSystemListResponse;
 import io.qameta.allure.Step;
@@ -305,75 +304,11 @@ public class ProductCatalogSteps {
                 .assertStatus(200).jsonPath();
     }
 
-    @Step("Получение списка графов по Id")
-    public List<httpModels.productCatalog.graphs.getGraphsList.response.ListItem> getGraphListById(String id) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + "?id=" + id)
-                .assertStatus(200)
-                .extractAs(GetGraphsListResponse.class).getList();
-    }
-
-    @Step("Получение списка графов по Id")
-    public Response getResponseGraphListById(String id) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + "?id=" + id)
-                .assertStatus(400);
-    }
-
-    @Step("Получение списка графов по нескольким Id")
-    public List<httpModels.productCatalog.graphs.getGraphsList.response.ListItem> getGraphListByIds(String... id) {
-        String ids = String.join(",", id);
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + "?id__in=" + ids)
-                .assertStatus(200)
-                .extractAs(GetGraphsListResponse.class).getList();
-    }
-
-    @Step("Получение списка графов по фильтру Id содержит")
-    public List<httpModels.productCatalog.graphs.getGraphsList.response.ListItem> getGraphListByContainsId(String value) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + "?id__contains=" + value)
-                .assertStatus(200)
-                .extractAs(GetGraphsListResponse.class).getList();
-    }
-
-    @Step("Получение объекта продуктового каталога по имени")
-    public GetListImpl getObjectListByName(String name, Class<?> clazz) {
-        return (GetListImpl) new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + "?name=" + name)
-                .assertStatus(200)
-                .extractAs(clazz);
-    }
-
-    @Step("Получение списка объектов продуктового каталога по именам")
-    public GetListImpl getObjectsListByNames(Class<?> clazz, String... name) {
-        String names = String.join(",", name);
-        return (GetListImpl) new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + "?name__in=" + names)
-                .assertStatus(200)
-                .extractAs(clazz);
-    }
-
     @Step("Получение объекта продуктового каталога по title")
     public GetListImpl getObjectByTitle(String title, Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(productName + "?title=" + title)
-                .assertStatus(200)
-                .extractAs(clazz);
-    }
-
-    @Step("Получение объекта продуктового каталога по type")
-    public GetListImpl getObjectListByType(String type, Class<?> clazz) {
-        return (GetListImpl) new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + "?type=" + type)
                 .assertStatus(200)
                 .extractAs(clazz);
     }

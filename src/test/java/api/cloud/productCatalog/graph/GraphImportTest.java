@@ -3,11 +3,11 @@ package api.cloud.productCatalog.graph;
 import api.Tests;
 import core.helper.Configure;
 import core.helper.JsonHelper;
-import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ErrorMessage;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 
@@ -50,8 +50,8 @@ public class GraphImportTest extends Tests {
         }
         importGraph(PATHNAME).assertStatus(200);
         String expectedMsg = "Версия \"1.0.0\" Graph:import_graph_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.";
-        Response response = importGraph(PATHNAME).assertStatus(400);
-        assertEquals(expectedMsg, response.jsonPath().getList("errors").get(0));
+        String message = importGraph(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals(expectedMsg, message);
         assertTrue(isGraphExists(graphName), "Граф не существует");
         deleteGraphById(getGraphByName(graphName).getGraphId());
         assertFalse(isGraphExists(graphName), "Граф существует");
@@ -62,8 +62,7 @@ public class GraphImportTest extends Tests {
     @TmsLink("1320923")
     public void importGraphToAnotherSection() {
         String expectedMsg = "['Импортируемый объект \"Graph\" не соответствует разделу \"Product\"']";
-        Response response = importProduct(PATHNAME).assertStatus(400);
-        String error = response.jsonPath().getList("errors", String.class).get(0);
-        assertEquals(expectedMsg, error);
+        String message = importProduct(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals(expectedMsg, message);
     }
 }

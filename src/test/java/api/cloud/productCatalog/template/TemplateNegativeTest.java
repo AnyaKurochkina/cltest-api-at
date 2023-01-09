@@ -3,6 +3,7 @@ package api.cloud.productCatalog.template;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.template.Template;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -83,7 +84,7 @@ public class TemplateNegativeTest extends Tests {
                 .build()
                 .init()
                 .toJson();
-        String errorMessage = createTemplate(json).assertStatus(400).jsonPath().getList("run", String.class).get(0);
+        String errorMessage = createTemplate(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals("Это поле не может быть пустым.", errorMessage);
     }
 

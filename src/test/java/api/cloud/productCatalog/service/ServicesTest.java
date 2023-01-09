@@ -13,6 +13,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
 import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.icon.Icon;
@@ -31,6 +32,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ServiceSteps.deleteServiceById;
 import static steps.productCatalog.ServiceSteps.getServiceByIdAndFilter;
 
 @Tag("product_catalog")
@@ -246,9 +248,9 @@ public class ServicesTest extends Tests {
                 .build()
                 .createObject();
         String serviceId = serviceIsPublished.getId();
-        Response deleteResponse = steps.getDeleteObjectResponse(serviceId).assertStatus(403);
+        String errorMessage = steps.getDeleteObjectResponse(serviceId).assertStatus(403).extractAs(ErrorMessage.class).getMessage();
         steps.partialUpdateObject(serviceId, new JSONObject().put("is_published", false));
-        assertEquals(errorText, deleteResponse.jsonPath().get("error"));
+        assertEquals(errorText, errorMessage);
     }
 
     @DisplayName("Проверка независимого от версии поля is_published в сервисах")
@@ -352,8 +354,9 @@ public class ServicesTest extends Tests {
         assertEquals("2.0.0", currentVersion);
         steps.partialUpdateObject(services.getId(), new JSONObject().put("service_info", "service_version_test_api5")
                 .put("version", "999.999.999"));
-        steps.partialUpdateObject(services.getId(), new JSONObject().put("service_info", "service_version_test_api6"))
-                .assertStatus(500);
+        String message = steps.partialUpdateObject(services.getId(), new JSONObject().put("service_info", "service_version_test_api6"))
+                .assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Version counter full [999, 999, 999]", message);
     }
 
     @DisplayName("Сортировка сервисов по статусу")
@@ -390,7 +393,7 @@ public class ServicesTest extends Tests {
                 .description("at_tests")
                 .build()
                 .createObject();
-        service.deleteObject();
+        deleteServiceById(service.getId());
     }
 
     @Test

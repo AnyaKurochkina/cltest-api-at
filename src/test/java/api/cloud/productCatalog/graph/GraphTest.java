@@ -1,16 +1,13 @@
 package api.cloud.productCatalog.graph;
 
 import api.Tests;
-import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.http.Response;
-import httpModels.productCatalog.graphs.getGraph.response.GetGraphResponse;
-import httpModels.productCatalog.graphs.getGraphsList.response.GetGraphsListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.Env;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.Modification;
@@ -25,7 +22,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -43,18 +39,11 @@ import static steps.productCatalog.GraphSteps.*;
 @DisabledIfEnv("prod")
 public class GraphTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/graphs/",
-            "productCatalog/graphs/createGraph.json");
-
     @DisplayName("Создание графа")
     @TmsLink("642536")
     @Test
-    public void createGraph() {
-        Graph graph = Graph.builder()
-                .name("create_graph_test_api")
-                .version("1.0.0")
-                .build()
-                .createObject();
+    public void createGraphTest() {
+        Graph graph = createGraph("create_graph_test_api");
         Graph createdGraph = getGraphById(graph.getGraphId());
         assertEquals(graph, createdGraph);
     }
@@ -63,10 +52,7 @@ public class GraphTest extends Tests {
     @TmsLink("642540")
     @Test
     public void checkGraphExists() {
-        Graph graph = Graph.builder()
-                .name("graph_check_exist_test_api")
-                .build()
-                .createObject();
+        Graph graph = createGraph("graph_check_exist_test_api");
         Assertions.assertTrue(isGraphExists(graph.getName()));
         Assertions.assertFalse(isGraphExists("NoExistsAction"));
     }
@@ -75,10 +61,7 @@ public class GraphTest extends Tests {
     @TmsLink("642631")
     @Test
     public void getGraphByIdTest() {
-        Graph graph = Graph.builder()
-                .name("graph_get_by_id_test_api")
-                .build()
-                .createObject();
+        Graph graph = createGraph("graph_get_by_id_test_api");
         Graph getGraph = getGraphById(graph.getGraphId());
         assertEquals(graph.getName(), getGraph.getName());
     }
@@ -87,10 +70,7 @@ public class GraphTest extends Tests {
     @TmsLink("1284435")
     @Test
     public void getGraphByIdAndVersionFieldsTest() {
-        Graph graph = Graph.builder()
-                .name("graph_get_by_id_and_version_fields_test_api")
-                .build()
-                .createObject();
+        Graph graph = createGraph("graph_get_by_id_and_version_fields_test_api");
         Graph getGraph = getGraphByIdAndFilter(graph.getGraphId(), "with_version_fields=true");
         assertFalse(getGraph.getVersionFields().isEmpty());
     }
@@ -149,23 +129,26 @@ public class GraphTest extends Tests {
                 .build()
                 .createObject();
         getGraphByNameWithPublicToken(graph.getName());
-        createGraphWithPublicToken(steps
-                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
-        partialUpdateGraphWithPublicToken(graph.getGraphId(),
-                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
-        putGraphByIdWithPublicToken(graph.getGraphId(), steps
-                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
-        deleteGraphWithPublicToken(graph.getGraphId()).assertStatus(403);
+        JSONObject jsonObject = Graph.builder()
+                .name("create_object_with_public_token_api")
+                .build()
+                .toJson();
+        String message = createGraphWithPublicToken(jsonObject).assertStatus(403).jsonPath().getString("error.code");
+        assertEquals("access_denied", message);
+        message = partialUpdateGraphWithPublicToken(graph.getGraphId(),
+                new JSONObject().put("description", "UpdateDescription")).assertStatus(403).jsonPath().getString("error.code");
+        assertEquals("access_denied", message);
+        putGraphByIdWithPublicToken(graph.getGraphId(), jsonObject).assertStatus(403).jsonPath().getString("error.code");
+        assertEquals("access_denied", message);
+        deleteGraphWithPublicToken(graph.getGraphId()).assertStatus(403).jsonPath().getString("error.code");
+        assertEquals("access_denied", message);
     }
 
     @DisplayName("Копирование графа по Id")
     @TmsLink("642640")
     @Test
     public void copyGraphByIdTest() {
-        Graph graph = Graph.builder()
-                .name("graph_clone_test_api")
-                .build()
-                .createObject();
+        Graph graph = createGraph("graph_clone_test_api");
         String cloneName = graph.getName() + "-clone";
         copyGraphById(graph.getGraphId());
         assertTrue(isGraphExists(cloneName));
@@ -209,74 +192,53 @@ public class GraphTest extends Tests {
         partialUpdateGraph(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", false)
                 .put("version", "1.999.999"));
         partialUpdateGraph(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true));
-        currentVersion = steps.getById(graphTest.getGraphId(), GetGraphResponse.class).getVersion();
+        currentVersion = getGraphById(graphTest.getGraphId()).getVersion();
         assertEquals("2.0.0", currentVersion);
         partialUpdateGraph(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", false)
                 .put("version", "999.999.999"));
-        partialUpdateGraph(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true))
-                .assertStatus(500);
-    }
-
-    @DisplayName("Проверка отсутствия ' в значениях ключя template_id")
-    @TmsLink("642683")
-    @Test
-    public void checkKeys() {
-        steps.createProductObject(steps.createJsonObject("api_test"));
-        steps.partialUpdateObject(steps
-                .getProductObjectIdByNameWithMultiSearch("api_test", GetGraphsListResponse.class), JsonHelper.getJsonTemplate("productCatalog/graphs/patch.json")
-                .build());
-        String id = steps.getProductObjectIdByNameWithMultiSearch("api_test", GetGraphsListResponse.class);
-        JsonPath jsonPath = steps.getJsonPath(id);
-        assertFalse(jsonPath.getString("graph[0].template_id").contains("'"));
-        steps.getDeleteObjectResponse(steps
-                .getProductObjectIdByNameWithMultiSearch("api_test", GetGraphsListResponse.class)).assertStatus(204);
+        String message = partialUpdateGraph(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true))
+                .assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Version counter full [999, 999, 999]", message);
     }
 
     @DisplayName("Попытка удаления графа используемого в продукте, действии и сервисе")
     @TmsLink("642692")
     @Test
     public void deleteUsedGraph() {
-        Graph mainGraph = Graph.builder()
-                .name("main_graph")
-                .build()
-                .createObject();
+        Graph mainGraph = createGraph("main_graph");
         String mainGraphId = mainGraph.getGraphId();
         partialUpdateGraph(mainGraphId, new JSONObject().put("description", "updateVersion2.0")
                 .put("version", "2.0.0"));
         partialUpdateGraph(mainGraphId, new JSONObject().put("description", "updateVersion3.0")
                 .put("version", "3.0.0"));
 
-        Product.builder()
+        Product product = Product.builder()
                 .name("product_for_graph_test_api")
                 .graphId(mainGraphId)
                 .build().createObject();
 
-        Service.builder()
+        Service service = Service.builder()
                 .name("service_for_graph_test_api")
                 .graphId(mainGraphId)
                 .build().createObject();
 
-        Action.builder()
+        Action action = Action.builder()
                 .actionName("action_for_graph_test_api")
                 .graphId(mainGraphId)
                 .build().createObject();
 
-        String deleteResponse = getDeleteResponse(mainGraphId)
-                .assertStatus(400)
-                .jsonPath()
-                .get("err");
+        String deleteResponse = getDeleteResponse(mainGraphId).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         String version = StringUtils.findByRegex("version: ([0-9.]+)\\)", deleteResponse);
         assertEquals("1.0.0", version);
+        assertEquals(String.format("Нельзя удалить граф: %s. Он используется:\nProduct: (name: %s, version: 1.0.0)\nAction: (name: %s, version: 1.0.0)\nService: (name: %s, version: 1.0.3)",
+                mainGraph.getName(), product.getName(), action.getActionName(), service.getName()), deleteResponse);
     }
 
     @DisplayName("Удаление графа")
     @TmsLink("642697")
     @Test
     public void deleteGraph() {
-        Graph graph = Graph.builder()
-                .name("delete_graph_test_api")
-                .build()
-                .createObject();
+        Graph graph = createGraph("delete_graph_test_api");
         deleteGraphById(graph.getGraphId());
     }
 
@@ -400,7 +362,7 @@ public class GraphTest extends Tests {
     }
 
     @DisplayName("Создание графа с модификацией в среде TEST_LT")
-    @TmsLink("")
+    @TmsLink("1378600")
     @Test
     public void createGraphWithModInTestLtEnv() {
         Modification mod = Modification.builder()
