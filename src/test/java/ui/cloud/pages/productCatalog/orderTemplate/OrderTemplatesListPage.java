@@ -10,10 +10,7 @@ import org.openqa.selenium.WebElement;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Alert;
-import ui.elements.DropDown;
-import ui.elements.Input;
-import ui.elements.Table;
+import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,8 +23,8 @@ public class OrderTemplatesListPage {
     private final Input titleInput = Input.byName("title");
     private final Input nameInput = Input.byName("name");
     private final Input descriptionInput = Input.byName("description");
-    private final DropDown typeInput = DropDown.byInputName("event_type");
-    private final DropDown providerInput = DropDown.byInputName("event_provider");
+    private final Select typeInput = Select.byInputName("event_type");
+    private final Select providerInput = Select.byInputName("event_provider");
     private final SelenideElement titleRequiredFieldHint =
             $x("//input[@name='title']/parent::div/following-sibling::p[text()='Необходимо ввести наименование шаблона']");
     private final SelenideElement nameRequiredFieldHint =
@@ -39,9 +36,9 @@ public class OrderTemplatesListPage {
     private final SelenideElement createButton = $x("//div[text()='Создать']/parent::button");
     private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
     private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
-    private final DropDown typeDropDown = DropDown.byLabel("Тип");
-    private final DropDown providerDropDown = DropDown.byLabel("Провайдер");
-    private final DropDown stateDropDown = DropDown.byLabel("Состояние");
+    private final Select typeDropDown = Select.byLabel("Тип");
+    private final Select providerDropDown = Select.byLabel("Провайдер");
+    private final Select stateDropDown = Select.byLabel("Состояние");
     private final WebElement applyFiltersButton = $x("//button[div[text()='Применить']]");
     private final WebElement clearFiltersButton = $x("//button[text()='Сбросить фильтры']");
 
@@ -105,8 +102,8 @@ public class OrderTemplatesListPage {
         titleInput.setValue(template.getTitle());
         nameInput.setValue(template.getName());
         descriptionInput.setValue(template.getDescription());
-        typeInput.select(template.getEventType().get(0));
-        providerInput.select(template.getEventProvider().get(0));
+        typeInput.set(template.getEventType().get(0));
+        providerInput.set(template.getEventProvider().get(0));
         createButton.click();
         Alert.green("Шаблон успешно создан");
         return new OrderTemplatePage();
@@ -183,7 +180,7 @@ public class OrderTemplatesListPage {
     @Step("Поиск и открытие страницы шаблона '{name}'")
     public OrderTemplatePage findAndOpenTemplatePage(String name) {
         search(name);
-        new Table(columnName).getRowElementByColumnValue(columnName, name).click();
+        new Table(columnName).getRowByColumnValue(columnName, name).get().click();
         TestUtils.wait(600);
         return new OrderTemplatePage();
     }
@@ -205,19 +202,19 @@ public class OrderTemplatesListPage {
 
     @Step("Выбор в фильтре по типу значения '{value}'")
     public OrderTemplatesListPage setTypeFilter(String value) {
-        typeDropDown.selectByDivText(value);
+        typeDropDown.set(value);
         return this;
     }
 
     @Step("Выбор в фильтре по провайдеру значения '{value}'")
     public OrderTemplatesListPage setProviderFilter(String value) {
-        providerDropDown.selectByDivText(value);
+        providerDropDown.set(value);
         return this;
     }
 
     @Step("Выбор в фильтре по состоянию значения '{value}'")
     public OrderTemplatesListPage setStateFilter(String value) {
-        stateDropDown.selectByDivText(value);
+        stateDropDown.set(value);
         return this;
     }
 

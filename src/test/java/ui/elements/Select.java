@@ -7,6 +7,7 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import org.intellij.lang.annotations.Language;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -35,6 +36,10 @@ public class Select implements TypifiedElement {
     @Step("Получение Select по label {label} с индексом {index}")
     public static Select byLabel(String label, int index) {
         return new Select($x("(//label[text()='{}']/following::div[1])" + postfix, label, TypifiedElement.getIndex(index)));
+    }
+
+    public static Select byXpath(@Language("XPath") String xpath) {
+        return new Select($x(xpath));
     }
 
     public static Select byInputName(String name) {

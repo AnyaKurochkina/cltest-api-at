@@ -17,11 +17,12 @@ import static steps.t1.imageService.ImageServiceSteps.*;
 @Log4j2
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public class ImageGroups extends Entity {
+public class ImageGroup extends Entity {
 
     private String id;
     private String name;
@@ -64,7 +65,7 @@ public class ImageGroups extends Entity {
         if(isImageGroupExist(name, true)) {
             deleteImageGroupByName(name);
         }
-        ImageGroups imageGroup = createImageGroup(toJson());
+        ImageGroup imageGroup = createImageGroup(toJson());
         StringUtils.copyAvailableFields(imageGroup, this);
         assertNotNull(id, "ImageGroup с именем: " + name + ", не создался");
     }
