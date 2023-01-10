@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.EntitiesUtils;
 import ui.elements.DataTable;
 import ui.elements.DropDown;
+import ui.elements.Select;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class PublicIpList {
         if(ipTable.rowSize() > 0)
             oldIp = ipTable.getFirstValueByColumn(COLUMN_IP);
         ipTable.clickAdd();
-        DropDown.byLabel("Зона доступности").select(availabilityZone);
+        Select.byLabel("Зона доступности").set(availabilityZone);
         EntitiesUtils.clickOrder();
         //Todo: пока нет сокетов
         Waiting.sleep(40000);

@@ -21,7 +21,7 @@ public class Network {
 
     public void deleteSubnet(String subnet) {
         SubnetListInfo.getMenuSubnet(subnet).select("Удалить");
-        Waiting.findWidthRefresh(() -> !new SubnetListInfo().isColumnValueEquals(subnet, COLUMN_NAME), Duration.ofMinutes(1));
+        Waiting.findWidthRefresh(() -> !new SubnetListInfo().isColumnValueEquals(COLUMN_NAME, subnet), Duration.ofMinutes(1));
     }
 
     @Getter

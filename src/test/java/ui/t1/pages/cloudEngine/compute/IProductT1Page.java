@@ -23,9 +23,7 @@ public class IProductT1Page<C extends IProductT1Page> extends IProductPage {
     public static final String BLOCK_PARAMETERS = "Основные параметры";
     private final SelenideElement waitStatus = $x("//*[.='Обновляется информация о заказе']");
 
-    public IProductT1Page() {
-        new TopInfo();
-    }
+    public IProductT1Page() {}
 
     public void delete() {
         switchProtectOrder(false);

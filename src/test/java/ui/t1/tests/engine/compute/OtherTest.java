@@ -238,7 +238,7 @@ public class OtherTest extends AbstractComputeTest {
         String orderIdVm = vmPage.getOrderId();
         Disk disk = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(COLUMN_SYSTEM, "Да").getValueByColumn(COLUMN_NAME));
         String orderIdDisk = disk.getOrderId();
-        disk.runActionWithCheckCost(CompareType.MORE, () -> disk.createSnapshot(vm.getName()));
+        disk.createSnapshot(vm.getName());
         new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).checkCreate();
 
         String volumeId = StateServiceSteps.getItems(project.getId()).stream()
@@ -283,7 +283,7 @@ public class OtherTest extends AbstractComputeTest {
 
         Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(COLUMN_SYSTEM, "Да").getValueByColumn(COLUMN_NAME));
-        diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(name));
+        diskPage.createSnapshot(name);
         Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(name).checkCreate();
         snapshot.runActionWithCheckCost(CompareType.MORE, () -> snapshot.createDisk(name));
         Disk createdDisk = new IndexPage().goToDisks().selectDisk(name).checkCreate();

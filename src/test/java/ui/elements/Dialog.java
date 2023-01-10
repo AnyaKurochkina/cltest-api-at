@@ -2,6 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 
@@ -59,6 +60,7 @@ public class Dialog implements TypifiedElement {
 
     public void clickButton(String btn) {
         dialog.$x("descendant::button[.='" + btn + "']").shouldBe(Condition.enabled).click();
+        Waiting.sleep(200);
     }
 
 }

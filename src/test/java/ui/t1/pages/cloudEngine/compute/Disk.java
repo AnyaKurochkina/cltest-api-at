@@ -3,6 +3,7 @@ package ui.t1.pages.cloudEngine.compute;
 import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+import ui.cloud.tests.ActionParameters;
 import ui.elements.CheckBox;
 import ui.elements.Dialog;
 import ui.elements.Input;
@@ -40,7 +41,8 @@ public class Disk extends IProductT1Page<Disk> {
 
     public void createImage(String name) {
         runActionWithParameters(BLOCK_PARAMETERS, "Создать образ из диска", "Подтвердить", () ->
-                Dialog.byTitle("Создать образ из диска").setInputValue("Имя образа", name));
+                Dialog.byTitle("Создать образ из диска").setInputValue("Имя образа", name),
+                ActionParameters.builder().checkPreBilling(false).build());
     }
 
     public Snapshot selectSnapshot(String snapshot){

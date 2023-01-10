@@ -27,7 +27,7 @@ public class SelectBox implements TypifiedElement {
 
     public static void setUserImage(String image) {
         Radio.byValue("Пользовательские").checked();
-        new Select(TypifiedElement.getNearElement("select", "*[.='Пользовательские']").parent()).set(image);
+        new Select(TypifiedElement.getNearElement("select", "*[.='Пользовательские']").parent()).setStart(image);
     }
 
     private void select(String text) {

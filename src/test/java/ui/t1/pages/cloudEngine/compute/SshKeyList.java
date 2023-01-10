@@ -21,20 +21,20 @@ public class SshKeyList {
     }
 
     public void copyKey(String nameKey) {
-        Menu.byElement(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Скопировать");
+        KeysTable.getMenuKey(nameKey).select("Скопировать");
         Alert.green("SSH-ключ {} скопирован", nameKey);
         Assertions.assertEquals(SSH_KEY, Selenide.clipboard().getText());
     }
 
     public void deleteKey(String nameKey) {
-        Menu.byElement(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Удалить");
+        KeysTable.getMenuKey(nameKey).select("Удалить");
         Dialog.byTitle("Подтверждение удаления").clickButton("Удалить");
         Alert.green("SSH-ключ {} удален успешно", nameKey);
         Assertions.assertFalse(new KeysTable().isColumnValueEquals(KeysTable.COLUMN_NAME, nameKey));
     }
 
     public void editKey(String nameKey, String newNameKey) {
-        Menu.byElement(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumn("")).select("Редактировать");
+        KeysTable.getMenuKey(nameKey).select("Редактировать");
         Dialog.byTitle("Редактирование SSH-ключа")
                 .setInputValue("Название ключа", newNameKey)
                 .clickButton("Сохранить");
@@ -46,6 +46,10 @@ public class SshKeyList {
 
         public KeysTable() {
             super(COLUMN_NAME);
+        }
+
+        public static Menu getMenuKey(String nameKey){
+            return Menu.byElement(new KeysTable().getRowByColumnValue(KeysTable.COLUMN_NAME, nameKey).getElementByColumnIndex(5));
         }
     }
 }

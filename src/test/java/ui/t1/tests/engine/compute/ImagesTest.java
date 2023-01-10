@@ -19,14 +19,14 @@ public class ImagesTest extends AbstractComputeTest {
     @TmsLink("1249434")
     @DisplayName("Cloud Compute. Образы")
     void snapshotList() {
-        new IndexPage().goToDisks();
+        new IndexPage().goToImages();
         AssertHeaders(new ImageList.ImageTable(),"", "Имя", "Зона доступности", "Формат диска", "Размер, МБ", "Дата обновления", "");
     }
 
     @Test
     @TmsLink("1307076")
     @DisplayName("Cloud Compute. Образы. Виртуальная машина с диском с образа")
-    void createVmWidthUserImage() {;
+    void createVmWidthUserImage() {
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(getRandomName()).clickOrder();
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createImage(disk.getName()));

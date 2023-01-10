@@ -1,5 +1,6 @@
 package ui.t1.pages.cloudEngine.compute;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import ui.elements.DataTable;
 import ui.elements.Dialog;
@@ -16,6 +17,11 @@ public class NetworkInterfaceList extends IProductListT1Page {
         return new Menu(new NetworkInterfaceTable().getRowByColumnValue(COLUMN_VM, vm).getIndex());
     }
 
+    public NetworkInterface selectNetworkInterfaceByVm(String vm) {
+        new NetworkInterfaceTable().getRowByColumnValue(COLUMN_VM, vm).getElementByColumn("IP адрес").shouldBe(Condition.visible).click();
+        return new NetworkInterface();
+    }
+
     public class Menu {
         private final int index;
 
@@ -26,10 +32,6 @@ public class NetworkInterfaceList extends IProductListT1Page {
         public void attachIp(String ip) {
             runActionWithParameters(getMenuElement(index), "Подключить публичный IP", "Подтвердить", () ->
                     Dialog.byTitle("Подключить публичный IP").setSelectValue("Публичный IP", ip));
-        }
-
-        public void detachIp() {
-            runActionWithoutParameters(getMenuElement(index), "Отключить от сетевого интерфейса");
         }
 
         public void updateSecurityGroups(String... groups) {

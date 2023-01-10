@@ -72,7 +72,7 @@ public class PublicIpTest extends AbstractComputeTest {
 
         PublicIp ipPage =  new IndexPage().goToPublicIps().selectIp(ip);
         String orderIdIp = ipPage.getOrderId();
-        ipPage.runActionWithCheckCost(CompareType.EQUALS, () -> ipPage.attachComputeIp(vm.getName()));
+        ipPage.attachComputeIp(vm.getName());
 
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))

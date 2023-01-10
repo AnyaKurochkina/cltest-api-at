@@ -10,13 +10,11 @@ public class PublicIp extends IProductT1Page<PublicIp> {
     public void attachComputeIp(String vmName) {
         runActionWithParameters(BLOCK_PARAMETERS, "Подключить к виртуальной машине", "Подтвердить", () ->
                         Dialog.byTitle("Подключить к виртуальной машине")
-                                .setSelectValue("Доступные виртуальные машины", vmName),
-                ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).build());
+                                .setSelectValue("Доступные виртуальные машины", vmName));
     }
 
     public void detachComputeIp() {
-        runActionWithoutParameters(BLOCK_PARAMETERS, "Отключить от сетевого интерфейса",
-                ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).build());
+        runActionWithoutParameters(BLOCK_PARAMETERS, "Отключить от сетевого интерфейса");
     }
 
     @Override

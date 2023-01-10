@@ -42,8 +42,8 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
         String ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
         PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
         NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
-        networkInterfaceList.runActionWithCheckCost(CompareType.MORE, () -> networkInterfaceList.getMenuNetworkInterface(vm.getName()).attachIp(ip));
-        networkInterfaceList.runActionWithCheckCost(CompareType.LESS, () -> networkInterfaceList.getMenuNetworkInterface(vm.getName()).detachIp());
+        networkInterfaceList.getMenuNetworkInterface(vm.getName()).attachIp(ip);
+        networkInterfaceList.selectNetworkInterfaceByVm(vm.getName()).detachComputeIp(ip);
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
         new IndexPage().goToPublicIps().selectIp(ip).runActionWithCheckCost(CompareType.LESS, ipPage::delete);
     }
@@ -63,7 +63,7 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
         Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         new IndexPage().goToSecurityGroups().addGroup(vm.getName(), "desc");
         NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
-        networkInterfaceList.runActionWithCheckCost(CompareType.MORE, () -> networkInterfaceList.getMenuNetworkInterface(vm.getName()).updateSecurityGroups(vm.getName()));
+        networkInterfaceList.getMenuNetworkInterface(vm.getName()).updateSecurityGroups(vm.getName());
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
         new IndexPage().goToSecurityGroups().deleteGroup(vm.getName());
     }

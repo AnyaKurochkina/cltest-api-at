@@ -31,8 +31,8 @@ public class SnapshotTest extends AbstractComputeTest {
     @TmsLink("1249426")
     @DisplayName("Cloud Compute. Снимки")
     void snapshotList() {
-        new IndexPage().goToDisks();
-        AssertHeaders(new DiskList.DiskTable(),"", "Имя", "Описание", "Зона доступности", "Источник", "Размер, ГБ", "Дата", "");
+        new IndexPage().goToSnapshots();
+        AssertHeaders(new SnapshotList.SnapshotsTable(),"", "Имя", "Описание", "Зона доступности", "Источник", "Размер, ГБ", "Дата", "");
     }
 
     @Test

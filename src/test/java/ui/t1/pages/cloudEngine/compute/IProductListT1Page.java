@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import ui.elements.TypifiedElement;
+import ui.t1.pages.IndexPage;
 
 import java.time.Duration;
 
@@ -21,6 +22,7 @@ public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
     @Override
     public void waitChangeStatus(){
         productLink = WebDriverRunner.getWebDriver().getCurrentUrl();
+        new IndexPage().goToHistory();
         ComputeHistory.getLastActionStatus().shouldBe(new FinalStatus(), Duration.ofMinutes(1));
     }
 
