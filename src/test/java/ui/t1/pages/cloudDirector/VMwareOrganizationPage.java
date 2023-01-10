@@ -65,8 +65,9 @@ public class VMwareOrganizationPage {
     }
 
     @Step("Ожидание смены статуса")
-    public void waitChangeStatus() {
+    public VMwareOrganizationPage waitChangeStatus() {
         EntitiesUtils.waitChangeStatus(new DataCentreTable(), Duration.ofMinutes(8));
+        return this;
     }
 
     @Step("Получение статуса дата-центра")

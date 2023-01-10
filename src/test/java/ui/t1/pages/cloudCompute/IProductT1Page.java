@@ -18,6 +18,7 @@ import static core.helper.StringUtils.$x;
 public class IProductT1Page extends IProductPage {
     private static final String COLUMN_POWER = "Статус";
     public static final String BLOCK_PARAMETERS = "Основные параметры";
+    public static final String INFO_DATA_CENTRE = "Информация о Виртуальном дата-центре";
     private final SelenideElement waitStatus = $x("//*[.='Обновляется информация о заказе']");
 
     public IProductT1Page() {

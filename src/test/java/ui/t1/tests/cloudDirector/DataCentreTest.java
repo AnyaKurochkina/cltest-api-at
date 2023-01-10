@@ -5,21 +5,20 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
 import models.t1.portalBack.VmWareOrganization;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import steps.authorizer.AuthorizerSteps;
+import ui.cloud.pages.CompareType;
 import ui.cloud.pages.LoginPage;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
+import ui.t1.pages.cloudDirector.DataCentrePage;
 
 import java.util.UUID;
 
@@ -51,16 +50,18 @@ public class DataCentreTest extends Tests {
     }
 
     @Test
-    @TmsLink("147532")
+    @TmsLinks({@TmsLink("147532"), @TmsLink("158903")})
+    @DisplayName("VMware. Создание/Удаление VDC. Allocation Pool")
     public void createDataCentre() {
         String name = UUID.randomUUID().toString().substring(25);
         VmWareOrganization vmWareOrganization = createVMwareOrganization(name, project.getId());
         String dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase();
-        new IndexPage().goToCloudDirector()
+        DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .addDataCentre(dataCentreName)
-                .waitChangeStatus();
-        new VMwareOrganizationPage().selectDataCentre(dataCentreName).checkCreate();
-
+                .waitChangeStatus()
+                .selectDataCentre(dataCentreName)
+                .checkCreate();
+        dataCentrePage.runActionWithCheckCost(CompareType.ZERO, dataCentrePage::delete);
     }
 }
