@@ -8,10 +8,8 @@
   ],
   "links": [
     {
-      "id": "df",
       "title": "test",
-      "link": "link",
-      "value": "lidsfsdnk"
+      "link": "link"
     }
   ],
   "tech_support": "tech_support test api",

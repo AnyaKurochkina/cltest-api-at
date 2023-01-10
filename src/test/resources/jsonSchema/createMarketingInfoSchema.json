@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "logo": {
+      "type": "string"
+    },
+    "logo_id": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "support": {
+      "type": "boolean"
+    },
+    "use_examples": {
+      "type": ["array", "null"],
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "links": {
+      "type": ["array", "null"],
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "link": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "link"
+          ]
+        }
+      ]
+    },
+    "tech_support": {
+      "type": ["string", "null"]
+    },
+    "type_paid": {
+      "type": ["array", "null"],
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "licence_agreement": {
+      "type": ["string", "null"]
+    },
+    "publisher": {
+      "type": ["array", "null"],
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "logo",
+    "logo_id",
+    "description",
+    "support",
+    "use_examples",
+    "links",
+    "tech_support",
+    "type_paid",
+    "licence_agreement",
+    "publisher"
+  ]
+}
